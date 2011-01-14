@@ -1,0 +1,7 @@
+Sterling Hirsh
+Roid Rage: 3D!
+
+Compile with `make`. Run with `make run`.
+This should work on Linux or OSX. I have not tested it on windows, and I would be surprised if it ran properly.
+
+Detailed information and commentary about the program and its code can be found in the accompanying website.
