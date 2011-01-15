@@ -10,9 +10,9 @@
 #define __MESH3D_H__
 
 #include <vector>
-#include "MeshPoint.h"
-#include "Face3D.h"
-#include "Vector3D.h"
+#include "Graphics/MeshPoint.h"
+#include "Graphics/Face3D.h"
+#include "Utility/Vector3D.h"
 
 class Mesh3D {
    public:

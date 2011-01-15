@@ -1,15 +1,15 @@
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
-   CFLAGS=-lGL -lglut -g
+   CFLAGS=-lGL -lGLU -lglut -g
 else
    CFLAGS=-framework GLUT -framework OpenGL -g
 endif
 
 PROGNAME=asteroids
-FILES=main.cpp Vector3D.cpp GlutUtility.cpp Asteroid3D.cpp AsteroidShip.cpp AsteroidShot.cpp AsteroidShotBeam.cpp
+FILES=main.cpp Utility/Vector3D.cpp Graphics/GlutUtility.cpp Items/Asteroid3D.cpp Items/AsteroidShip.cpp Shots/AsteroidShot.cpp Shots/AsteroidShotBeam.cpp
 
 all:
-	g++ ${CFLAGS} -Wall -o ${PROGNAME} ${FILES}
+	g++ ${CFLAGS} -I. -iquote -Wall -o ${PROGNAME} ${FILES}
 
 run:
 	./${PROGNAME}

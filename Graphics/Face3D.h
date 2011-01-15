@@ -15,7 +15,7 @@
 #include <GL/glut.h>
 #endif
 
-#include "Vector3D.h"
+#include "Utility/Vector3D.h"
 
 struct Face3D {
    int p1, p2, p3;

@@ -7,7 +7,7 @@
 #else
 #include <GL/glut.h>
 #endif
-#include "GlutUtility.h"
+#include "Graphics/GlutUtility.h"
 
 using namespace std;
 

@@ -7,11 +7,11 @@
 #ifndef __ASTEROIDSHIP_H__
 #define __ASTEROIDSHIP_H__
 
-#include "Point3D.h"
-#include "Vector3D.h"
-#include "AsteroidShot.h"
-#include "AsteroidShotBeam.h"
-#include "GlutUtility.h"
+#include "Utility/Point3D.h"
+#include "Utility/Vector3D.h"
+#include "Shots/AsteroidShot.h"
+#include "Shots/AsteroidShotBeam.h"
+#include "Graphics/GlutUtility.h"
 #include <list>
 
 // Later we'll put in a model for the ship.

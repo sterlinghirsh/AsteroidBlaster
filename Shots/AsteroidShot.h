@@ -7,10 +7,10 @@
 #ifndef __ASTEROIDSHOT_H__
 #define __ASTEROIDSHOT_H__
 
-#include "Point3D.h"
-#include "Vector3D.h"
-#include "GlutUtility.h"
-#include "Asteroid3D.h"
+#include "Utility/Point3D.h"
+#include "Utility/Vector3D.h"
+#include "Graphics/GlutUtility.h"
+#include "Items/Asteroid3D.h"
 
 extern materialStruct ShotMaterial;
 

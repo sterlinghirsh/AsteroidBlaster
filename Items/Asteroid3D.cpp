@@ -4,10 +4,10 @@
  * A randomly generated asteroid object.
  */
 
-#include "GlutUtility.h"
-#include "Sprite.h"
+#include "Graphics/GlutUtility.h"
+#include "Graphics/Sprite.h"
 #include <algorithm>
-#include "Asteroid3D.h"
+#include "Items/Asteroid3D.h"
 
 using namespace std;
 
@@ -120,7 +120,7 @@ void Asteroid3D::updatePosition(double timeDiff) {
 bool Asteroid3D::handleHit(list<Asteroid3D*>& asteroids) {
    const int explosionFactor = 3;
    Sprite::sprites.push_back(
-      new Sprite("SkybusterExplosion.bmp", 4, 5, 20, 
+      new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20, 
        position, radius * explosionFactor, radius * explosionFactor));
 
    if (radius > 0.5) {

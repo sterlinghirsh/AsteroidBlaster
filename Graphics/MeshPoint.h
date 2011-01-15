@@ -9,8 +9,8 @@
 #ifndef __MESHPOINT_H__
 #define __MESHPOINT_H__
 
-#include "Point3D.h"
-#include "Vector3D.h"
+#include "Utility/Point3D.h"
+#include "Utility/Vector3D.h"
 
 struct MeshPoint : public Point3D {
    Vector3D normal;

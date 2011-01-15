@@ -14,8 +14,8 @@
 #include <GL/glut.h>
 #endif
 
-#include "TextureImporter.h"
-#include "AsteroidShip.h"
+#include "Graphics/TextureImporter.h"
+#include "Items/AsteroidShip.h"
 #include <string>
 
 class Skybox {

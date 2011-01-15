@@ -16,7 +16,7 @@
 #endif
 
 #include <stdio.h>
-#include "GlutUtility.h"
+#include "Graphics/GlutUtility.h"
 
 struct Point3D {
    double x, y, z;

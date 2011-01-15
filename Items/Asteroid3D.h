@@ -7,8 +7,8 @@
 #ifndef __ASTEROID3D_H__
 #define __ASTEROID3D_H__
 
-#include "Mesh3D.h"
-#include "Point3D.h"
+#include "Graphics/Mesh3D.h"
+#include "Utility/Point3D.h"
 #include <list>
 
 class Asteroid3D {

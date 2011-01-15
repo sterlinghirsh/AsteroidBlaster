@@ -6,14 +6,20 @@
 #include <math.h>
 #include <list>
 
-#include "GlutUtility.h"
-#include "Face3D.h"
-#include "Point3D.h"
-#include "Asteroid3D.h"
-#include "AsteroidShip.h"
-#include "TextureImporter.h"
-#include "Skybox.h"
-#include "Sprite.h"
+#include "Graphics/GlutUtility.h"
+#include "Graphics/Face3D.h"
+#include "Utility/Point3D.h"
+#include "Items/Asteroid3D.h"
+#include "Items/AsteroidShip.h"
+#include "Graphics/TextureImporter.h"
+#include "Graphics/Skybox.h"
+#include "Graphics/Sprite.h"
+
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 using namespace std;
 
@@ -361,12 +367,12 @@ int main( int argc, char** argv ) {
 
   init_headlight();
   init_tex();
-   skybox = new Skybox("stars.bmp");
+   skybox = new Skybox("Images/stars.bmp");
   glutSetCursor(GLUT_CURSOR_NONE);
 
   // Preload texture.
-  new TextureImporter("SkybusterExplosion.bmp");
-  glutFullScreen();
+  new TextureImporter("Images/SkybusterExplosion.bmp");
+  //glutFullScreen();
   
   glutMainLoop();
 }
