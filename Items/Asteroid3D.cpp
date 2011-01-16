@@ -26,8 +26,12 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    const int hbands = 10 + (rand() % 20);
    const int vbands = 10 + (rand() % 20);
    double theta, phi;
-   MeshPoint* points [hbands][vbands];
-   int pointNums [hbands][vbands];
+   //FIXME so apperantly hbands and vbands cause serious error when
+   //      compiling in VS C++ 2008. Might need optimization.
+   const int maxhbands = 30;
+   const int maxvbands = 30;
+   MeshPoint* points  [maxhbands][maxvbands];
+   int pointNums [maxhbands][maxvbands];
 
    rotationAmount = 0;
    radius = r;
