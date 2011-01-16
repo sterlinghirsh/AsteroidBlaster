@@ -4,6 +4,8 @@
  * 10-19-10
  *
  * Point3D: A class to store a face in 3D space.
+ * I decided not to make a .cpp for this since it's so simple.
+ * The points (p1-3) that this stores key into an array in the enclosing Mesh3D object.
  */
 
 #ifndef __FACE3D_H__

@@ -6,8 +6,9 @@
 
 #include "Graphics/GlutUtility.h"
 #include "Graphics/Sprite.h"
-#include <algorithm>
 #include "Items/Asteroid3D.h"
+#include <algorithm>
+#include <math.h>
 
 using namespace std;
 

@@ -6,7 +6,8 @@ else
 endif
 
 PROGNAME=asteroids
-FILES=main.cpp Utility/Vector3D.cpp Graphics/GlutUtility.cpp Items/Asteroid3D.cpp Items/AsteroidShip.cpp Shots/AsteroidShot.cpp Shots/AsteroidShotBeam.cpp
+
+FILES=main.cpp Utility/Vector3D.cpp Graphics/GlutUtility.cpp Items/Asteroid3D.cpp Items/AsteroidShip.cpp Shots/AsteroidShot.cpp Shots/AsteroidShotBeam.cpp Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Sprite.cpp Graphics/TextureImporter.cpp
 
 all:
 	g++ ${CFLAGS} -I. -iquote -Wall -o ${PROGNAME} ${FILES}

@@ -14,15 +14,8 @@
 
 struct MeshPoint : public Point3D {
    Vector3D normal;
-   MeshPoint(float xIn = 0, float yIn = 0, float zIn = 0) :
-    Point3D(xIn, yIn, zIn) { 
-      normal.updateMagnitude(0, 0, 0);
-   }
-   void draw(bool drawNormal) {
-      if (drawNormal)
-         normal.addNormal();
-      glVertex3f(x, y, z);
-   }
+   MeshPoint(float xIn = 0, float yIn = 0, float zIn = 0);
+   void draw(bool drawNormal);
 };
 
 #endif
