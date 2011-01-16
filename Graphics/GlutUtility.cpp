@@ -3,10 +3,21 @@
  * GlutUtility.c
  * Functions that aid with glut.
  */
+
 #include <math.h>
 #include <algorithm>
+
+#ifdef WIN32
+#include <winsock2.h>
+#include <windows.h>
+#include <cmath>
+#endif
+
 #include "GlutUtility.h"
+
+#if defined(UNIX) || defined(LINUX)
 #include <sys/time.h>
+#endif
 
 int GW, GH, mouseX, mouseY;
 unsigned long curFrame;
@@ -42,15 +53,30 @@ double p2iy(int yp) {
 }
 
 int w2px(double xw) {
+   int answer = 0;
    double d = ((GW - 1.0) / 2.0);
    double c = ((1 - GW) * GH) / (-2.0 * GW);
-   return round((xw * c) + d);
+#ifdef WIN32
+   answer = floor((xw * c) + d+0.5);
+#else 
+   answer = round((xw * c) + d);
+#endif
+
+   return answer;
 }
 
 int w2py(double yw) {
+   int answer = 0;
    double e = ((GH - 1) / 2.0);
    double f = e;
-   return flopY(round((yw * e) + f));
+
+#ifdef WIN32
+   answer = flopY(floor((yw * e) + f)+0.5);
+#else 
+   answer = flopY(round((yw * e) + f));
+#endif
+
+   return answer;
 }
 
 /* Maintain Aspect Ratio */
@@ -101,22 +127,19 @@ double randdouble() {
 }
 
 double doubleTime() {
+   double answer = 0;
+#ifdef WIN32
+   SYSTEMTIME st;
+   GetSystemTime(&st);
+   answer = (double)(st.wSecond) + ((st.wMilliseconds) / 1000.0);
+#else 
    static struct timeval tp;
    gettimeofday(&tp, NULL);
-   
-   //printf("Sec: %ld, Usec: %d\n", tp.tv_sec, tp.tv_usec);
-   return (double)(tp.tv_sec) + ((tp.tv_usec) / 1000000.0);
-   /*
-      // Doesn't work on OSX
-   static struct timespec tp;
-   if (!clock_gettime(CLOCK_REALTIME, &tp)) {
-      perror("Clock: ");
-      exit(EXIT_FAILURE);
-   }
-   return (double)(tp.tv_sec) + (tp.tv_nsec);
-   */
-   // Old way got funky.
-   //return (double) clock() / (double) CLOCKS_PER_SEC;
+   answer = (double)(tp.tv_sec) + ((tp.tv_usec) / 1000000.0);
+#endif
+
+   return answer;
+
 }
 
 void drawCylinder(double radius, double length) {
