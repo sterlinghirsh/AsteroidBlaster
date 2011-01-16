@@ -20,7 +20,13 @@ CC=g++
 
 PROGNAME=AsteroidBlaster
 
-FILES=main.cpp Utility/Vector3D.cpp Graphics/GlutUtility.cpp Items/Asteroid3D.cpp Items/AsteroidShip.cpp Shots/AsteroidShot.cpp Shots/AsteroidShotBeam.cpp Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Sprite.cpp Graphics/TextureImporter.cpp
+UTILITYFILES=Utility/Vector3D.cpp
+GRAPHICSFILES=Graphics/GlutUtility.cpp Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Sprite.cpp Graphics/TextureImporter.cpp
+ITEMSFILES=Items/Asteroid3D.cpp Items/AsteroidShip.cpp
+SHOTSFILES=Shots/AsteroidShot.cpp Shots/AsteroidShotBeam.cpp
+AIFILES=
+NETWORKFILES=
+FILES=main.cpp $(UTILITYFILES) $(GRAPHICSFILES) $(ITEMSFILES) $(SHOTSFILES) $(AIFILES) $(NETWORKFILES)
 
 OBJECTS=$(FILES:.cpp=.o)
 
