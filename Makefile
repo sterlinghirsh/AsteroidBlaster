@@ -1,16 +1,40 @@
+# AsteroidBlaster Makefile by Sterling Hirsh
+# Uses uname to decide whether it's on Linux or OSX so it can tell which libs to include.
+
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
-   CFLAGS=-lGL -lGLU -lglut -g
+   PLATFORMSPECIFICCFLAGS=
+   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -g
 else
-   CFLAGS=-framework GLUT -framework OpenGL -g
+   PLATFORMSPECIFICCFLAGS=
+   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -g
 endif
 
-PROGNAME=asteroids
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS)
+
+# -I. -iquote makes it so quoted #includes look in ./
+# -Wall makes warnings appear
+# -c makes .o files
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c
+CC=g++
+
+PROGNAME=AsteroidBlaster
 
 FILES=main.cpp Utility/Vector3D.cpp Graphics/GlutUtility.cpp Items/Asteroid3D.cpp Items/AsteroidShip.cpp Shots/AsteroidShot.cpp Shots/AsteroidShotBeam.cpp Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Sprite.cpp Graphics/TextureImporter.cpp
 
-all:
-	g++ ${CFLAGS} -I. -iquote -Wall -o ${PROGNAME} ${FILES}
+OBJECTS=$(FILES:.cpp=.o)
+
+#all:
+#	g++ ${CFLAGS} -o ${PROGNAME} ${FILES}
+
+all: $(FILES) $(PROGNAME)
+
+$(PROGNAME): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
+
 
 run:
 	./${PROGNAME}
@@ -26,3 +50,6 @@ valgrind:
 
 gdb:
 	gdb ./${PROGNAME}
+
+clean:
+	rm -f *.o */*.o ${PROGNAME} ${PROGNAME}.dSYM

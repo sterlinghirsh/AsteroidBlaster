@@ -15,7 +15,7 @@
 
 #include "GlutUtility.h"
 
-#if defined(UNIX) || defined(LINUX)
+#ifndef WIN32
 #include <sys/time.h>
 #endif
 

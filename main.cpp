@@ -337,7 +337,7 @@ int main( int argc, char** argv ) {
    GH = 600;
   glutInitWindowSize(GW, GH); 
   glutInitWindowPosition(100, 100);
-  glutCreateWindow("Roid Rage 3D!");
+  glutCreateWindow("Asteroid Blaster");
   glClearColor(0.0, 0.0, 0.0, 1.0);
   startx = starty = 0;
   for (int i = 0; i < 15; ++i) {
