@@ -326,7 +326,7 @@ void mouse(int button, int state, int x, int y) {
 }
 
 
-int main( int argc, char** argv ) {
+int main(int argc, char* argv[]) {
 
    srand(time(NULL));
   
