@@ -1,0 +1,40 @@
+/**
+ * BitmapTextDisplay
+ * Class to store one element of data which will be displayed via text in the corner of the screen.
+ * Acceptable format is <string>, <string string string>, <string int string>, or <string double, string>
+ * Taylor Arnicar / Sterling Hirsh
+ * 1-19-11
+ */
+
+#include "Utility/Point3D.h"
+#include <string>
+
+class BitmapTextDisplay {
+   // private variables go here
+   std::string textToDisplay;
+   int xCoord, yCoord;
+
+   // Function used to draw an entire string to the screen at a certain position
+   void renderBitmapString(std::string str);
+
+   public:
+      
+      //Constructor if you are displaying one string
+      BitmapTextDisplay(std::string text, double x, double y);
+      // Constructor if you are displaying multiple strings
+      BitmapTextDisplay(std::string preText, std::string body, std::string postText, double x, double y);
+      // Constructor if you are displaying an int
+      BitmapTextDisplay(std::string preText, int body, std::string postText, double x, double y);
+      // Constructor if you are displaying a double
+      BitmapTextDisplay(std::string preText, double body, std::string postText, double x, double y);
+
+      // Destructor
+      virtual ~BitmapTextDisplay();
+
+      // Sets the position where the text will be drawn
+      virtual void setPosition(double x, double y);
+      // Gets the position of the text, and puts it into x and y
+      virtual void getPosition(double &x, double &y);
+      // Takes in the x and y position of where to draw the text
+      virtual void draw();
+};

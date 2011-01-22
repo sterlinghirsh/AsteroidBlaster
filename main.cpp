@@ -40,35 +40,6 @@ Skybox* skybox;
 
 double displayTime = 0;
 
-materialStruct WhiteTransparent = {
-  {0.5, 0.5, 0.5, 0.5},
-  {0.0, 0.0, 0.0, 0.0},
-  {0.0, 0.0, 0.0, 0.0},
-  {0.0}
-};
-
-/*
-materialStruct RedFlat = {
-  {0.3, 0.0, 0.0, 1.0},
-  {0.9, 0.0, 0.0, 1.0},
-  {0.0, 0.0, 0.0, 1.0},
-  {0.0}
-};
-materialStruct GreenShiny = {
-  {0.0, 0.3, 0.0, 1.0},
-  {0.0, 0.9, 0.0, 1.0},
-  {0.2, 1.0, 0.2, 1.0},
-  {8.0}
-};
-*/
-
-materialStruct Rock = {
-   {0.0, 0.0, 0.0, 1.0},
-   {0.6, 0.6, 0.5, 1.0},
-   {.5, 0.5, 0.5, 1.0},
-   {1}
-};
-
 void init_headlight() {
    glEnable(ship.headlight);
    // headlight_amb is defined in AsteroidShip.h

@@ -37,6 +37,7 @@ class Vector3D {
       void updateMagnitude(double, double, double);
       void updateMagnitude(Point3D, Point3D);
       void updateMagnitude(Point3D);
+      void updateMagnitude(Vector3D&);
       void updatePosition(double, double, double);
       void updatePosition(Point3D);
       void update(double, double, double, double, double, double);
@@ -50,6 +51,12 @@ class Vector3D {
       void setLength(double);
       void glTranslate(double length);
       Vector3D getNormalVector();
+      void negativeX();
+      void negativeY();
+      void negativeZ();
+      void positiveX();
+      void positiveY();
+      void positiveZ();
       void print() {
          printf("Vector: (%f, %f, %f)\n", xMag, yMag, zMag);
       }

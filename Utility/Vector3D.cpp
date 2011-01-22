@@ -36,6 +36,10 @@ void Vector3D::updateMagnitude(Point3D point) {
    updateMagnitude(point.x, point.y, point.z);
 }
 
+void Vector3D::updateMagnitude(Vector3D& inVector) {
+   updateMagnitude(inVector.xMag, inVector.yMag, inVector.zMag);
+}
+
 void Vector3D::updateMagnitude(Point3D p1, Point3D p2) {
    updateMagnitude(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
 }
@@ -246,3 +250,36 @@ Vector3D Vector3D::getNormalVector() {
    Vector3D normal(cross(otherPoint));
    return normal;
 }
+
+void Vector3D::negativeX() {
+   if (xMag > 0)
+      xMag = 0 - xMag;
+}
+
+void Vector3D::positiveX() {
+   if (xMag < 0)
+      xMag = 0 - xMag;
+}
+
+
+void Vector3D::negativeY() {
+   if (yMag > 0)
+      yMag = 0 - yMag;
+}
+
+void Vector3D::positiveY() {
+   if (yMag < 0)
+      yMag = 0 - yMag;
+}
+
+
+void Vector3D::negativeZ() {
+   if (zMag > 0)
+      zMag = 0 - zMag;
+}
+
+void Vector3D::positiveZ() {
+   if (zMag < 0)
+      zMag = 0 - zMag;
+}
+

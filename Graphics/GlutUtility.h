@@ -56,6 +56,12 @@ void usePerspective();
 void drawCylinder(double radius, double length);
 void init_tex();
 
+extern materialStruct GreenShiny;
+extern materialStruct BlueShiny;
+extern materialStruct RedFlat;
+extern materialStruct WhiteTransparent;
+extern materialStruct Rock;
+
 typedef struct RGB {
   GLubyte r;
   GLubyte g; 
