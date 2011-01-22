@@ -16,6 +16,12 @@ struct Point3D {
    double x, y, z;
    Point3D(double xIn = 0, double yIn = 0, double zIn = 0) :
     x(xIn), y(yIn), z(zIn) {}
+
+   void clone(Point3D* other) {
+      x = other->x;
+      y = other->y;
+      z = other->z;
+   }
    
    double distanceFrom(Point3D& rhs) {
       return distance3D(rhs.x - x, rhs.y - y, rhs.z - z);

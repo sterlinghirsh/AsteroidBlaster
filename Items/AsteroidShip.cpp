@@ -168,7 +168,7 @@ void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
    list<Asteroid3D*>::iterator asteroid = asteroids.begin();
    for (asteroid = asteroids.begin(); asteroid != asteroids.end(); ++asteroid) {
       // Distance to ship.
-      distance = position->distanceFrom((*asteroid)->position);
+      distance = position->distanceFrom(*(*asteroid)->position);
       if (distance < shipRadius + (*asteroid)->collisionRadius) {
          // TEMP. We should kill the ship.
          asteroid = asteroids.erase(asteroid);

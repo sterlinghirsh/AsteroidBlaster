@@ -12,7 +12,7 @@
 using namespace std;
 
 Sprite::Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
- Point3D* posIn, double drawWidth, double drawHeight) {
+ Point3D posIn, double drawWidth, double drawHeight) : position(posIn) {
    framesX = framesXIn;
    framesY = framesYIn;
    framesPerSecond = fpsIn;
@@ -21,7 +21,6 @@ Sprite::Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn,
    frameWidth = 1.0 / framesX;
    frameHeight = 1.0 / framesY;
    texture = new TextureImporter(filename);
-   position = posIn;
    materialStruct WhiteSolid = {
      {1, 1, 1, 1},
      {0.0, 0.0, 0.0, 0.0},
@@ -39,7 +38,7 @@ bool Sprite::draw(Point3D* eyePoint) {
    // Also update the current frame.
    
    Vector3D forward(0, 0, 1);
-   Vector3D toCamera(*position, *eyePoint);
+   Vector3D toCamera(position, *eyePoint);
    Vector3D cross = forward.cross(toCamera);
 
    double angle = forward.getAngleInDegrees(toCamera);
@@ -52,7 +51,7 @@ bool Sprite::draw(Point3D* eyePoint) {
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
    glPushMatrix();
-   glTranslatef(position->x, position->y, position->z);
+   position.glTranslate();
    glRotatef(angle, cross.xMag, cross.yMag, cross.zMag);
    
    double topLeftX = (curFrame % framesX) * frameWidth;

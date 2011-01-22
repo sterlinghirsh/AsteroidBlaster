@@ -84,7 +84,7 @@ bool AsteroidShotBeam::checkHit(Asteroid3D* asteroid) {
    if (hitYet && curFrame != lastHitFrame)
       return false;
    Vector3D positionVector(position);
-   Vector3D asteroidVector(asteroid->position);
+   Vector3D asteroidVector(*asteroid->position);
 
    // asteroidVector now is how far from the ship it is.
    asteroidVector.subtractUpdate(positionVector);

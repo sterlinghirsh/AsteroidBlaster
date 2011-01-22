@@ -45,6 +45,6 @@ void AsteroidShot::updatePosition(double timeDiff) {
 }
 
 bool AsteroidShot::checkHit(Asteroid3D* asteroid) {
-   double distance = position.distanceFrom(asteroid->position);
+   double distance = position.distanceFrom(*asteroid->position);
    return distance < asteroid->collisionRadius;
 }

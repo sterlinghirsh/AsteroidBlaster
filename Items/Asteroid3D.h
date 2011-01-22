@@ -9,9 +9,10 @@
 
 #include "Graphics/Mesh3D.h"
 #include "Utility/Point3D.h"
+#include "Utility/Object3D.h"
 #include <list>
 
-class Asteroid3D {
+class Asteroid3D : public Object3D {
    public:
       double radius;
       Mesh3D mesh;
@@ -20,8 +21,6 @@ class Asteroid3D {
       double rotationAmount;
       double scalex, scaley, scalez;
       double worldSize;
-      Point3D position;
-      Vector3D direction;
       double sizeX, sizeY, sizeZ, collisionRadius;
       
       Asteroid3D(double r, double worldSizeIn);

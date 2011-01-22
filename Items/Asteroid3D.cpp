@@ -12,10 +12,11 @@
 
 using namespace std;
 
-Asteroid3D::Asteroid3D(double r, double worldSizeIn) {
-   position.x = randdouble() * worldSizeIn - worldSizeIn / 2;  
-   position.y = randdouble() * worldSizeIn - worldSizeIn / 2;  
-   position.z = randdouble() * worldSizeIn - worldSizeIn / 2;  
+Asteroid3D::Asteroid3D(double r, double worldSizeIn) : 
+ Object3D(0, 0, 0, 0) {
+   position->x = randdouble() * worldSizeIn - worldSizeIn / 2;  
+   position->y = randdouble() * worldSizeIn - worldSizeIn / 2;  
+   position->z = randdouble() * worldSizeIn - worldSizeIn / 2;  
    InitAsteroid(r, worldSizeIn);
 }
 
@@ -47,8 +48,9 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    rotationSpeed = randdouble() * 100; // Degrees per sec.
    rotationVector.randomMagnitude();
 
-   direction.randomMagnitude();
-   direction.setLength(randdouble() * 3); // Units per sec.
+   velocity = new Vector3D(0, 0, 0);
+   velocity->randomMagnitude();
+   velocity->setLength(randdouble() * 3); // Units per sec.
 
    for (int h = 0; h < hbands; ++h) {
          phi = (pi / 2) - 
@@ -99,7 +101,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 
 void Asteroid3D::draw(bool drawSmooth = true) {
    glPushMatrix();
-   glTranslatef(position.x, position.y, position.z);
+   glTranslatef(position->x, position->y, position->z);
    glRotatef(rotationAmount, rotationVector.xMag,
          rotationVector.yMag, rotationVector.zMag);
    glScalef(scalex, scaley, scalez);
@@ -108,25 +110,25 @@ void Asteroid3D::draw(bool drawSmooth = true) {
 }
 
 void Asteroid3D::updatePosition(double timeDiff) {
-   position.x += direction.xMag * timeDiff;
-   position.y += direction.yMag * timeDiff;
-   position.z += direction.zMag * timeDiff;
+   position->x += velocity->xMag * timeDiff;
+   position->y += velocity->yMag * timeDiff;
+   position->z += velocity->zMag * timeDiff;
    rotationAmount += rotationSpeed * timeDiff;
    
    // reflect
-   if (position.x + collisionRadius > worldSize / 2)  direction.xMag = -fabs(direction.xMag);
-   if (position.x - collisionRadius < -worldSize / 2) direction.xMag =  fabs(direction.xMag);
-   if (position.y + collisionRadius > worldSize / 2)  direction.yMag = -fabs(direction.yMag);
-   if (position.y - collisionRadius < -worldSize / 2) direction.yMag =  fabs(direction.yMag);
-   if (position.z + collisionRadius > worldSize / 2)  direction.zMag = -fabs(direction.zMag);
-   if (position.z - collisionRadius < -worldSize / 2) direction.zMag =  fabs(direction.zMag);
+   if (position->x + collisionRadius > worldSize / 2)  velocity->xMag = -fabs(velocity->xMag);
+   if (position->x - collisionRadius < -worldSize / 2) velocity->xMag =  fabs(velocity->xMag);
+   if (position->y + collisionRadius > worldSize / 2)  velocity->yMag = -fabs(velocity->yMag);
+   if (position->y - collisionRadius < -worldSize / 2) velocity->yMag =  fabs(velocity->yMag);
+   if (position->z + collisionRadius > worldSize / 2)  velocity->zMag = -fabs(velocity->zMag);
+   if (position->z - collisionRadius < -worldSize / 2) velocity->zMag =  fabs(velocity->zMag);
 }
 
 bool Asteroid3D::handleHit(list<Asteroid3D*>& asteroids) {
    const int explosionFactor = 3;
    Sprite::sprites.push_back(
       new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20, 
-       &position, radius * explosionFactor, radius * explosionFactor));
+       *position, radius * explosionFactor, radius * explosionFactor));
 
    if (radius > 0.5) {
       for (int i = 0; i < 3; ++i) {
@@ -138,9 +140,11 @@ bool Asteroid3D::handleHit(list<Asteroid3D*>& asteroids) {
 
 Asteroid3D* Asteroid3D::makeChild() {
    Asteroid3D* asteroid = new Asteroid3D(radius/2, worldSize);
-   asteroid->direction = asteroid->direction.scalarMultiply(2);
-   asteroid->direction.addUpdate(direction);
-   asteroid->position = position;
+   //asteroid->velocity = asteroid->velocity->scalarMultiply(2);
+   // Make this scalarMultiplyUpdate(2);
+   asteroid->velocity->addUpdate(*asteroid->velocity);
+   asteroid->velocity->addUpdate(*velocity);
+   asteroid->position->clone(position);
 
    return asteroid;
 }
