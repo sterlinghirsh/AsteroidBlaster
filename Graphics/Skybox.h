@@ -9,7 +9,7 @@
 #define __SKYBOX_H__
 
 #include "Graphics/TextureImporter.h"
-#include "Items/AsteroidShip.h"
+#include "Graphics/Camera.h"
 #include <string>
 
 class Skybox {
@@ -18,7 +18,7 @@ class Skybox {
       TextureImporter* tex;
 
       Skybox(std::string filename);
-      void draw(AsteroidShip& ship);
+      void draw(Camera* camera);
 
    private:
       void drawcube();

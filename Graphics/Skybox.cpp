@@ -20,13 +20,13 @@ Skybox::Skybox(std::string filename) {
    tex = new TextureImporter(filename);
 }
 
-void Skybox::draw(AsteroidShip& ship) {
+void Skybox::draw(Camera* camera) {
    glDisable(GL_DEPTH_TEST);
    glDisable(GL_LIGHTING);
    glPushMatrix();
    glLoadIdentity();
    glEnable(GL_TEXTURE_2D);
-   ship.setCamera(false);
+   camera->setCamera(false);
    glScalef(3, 3, 3);
    drawcube();
 

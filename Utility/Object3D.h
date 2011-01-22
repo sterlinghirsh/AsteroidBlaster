@@ -11,7 +11,6 @@
 #include "Utility/Point3D.h"
 #include "Utility/Vector3D.h"
 #include "Graphics/GlutUtility.h"
-#include "Graphics/Camera.h"
 
 class Object3D {
    public:
@@ -31,7 +30,6 @@ class Object3D {
       virtual ~Object3D();
       virtual void update(double timeDifference);
       virtual void draw();
-      virtual void setCamera(Camera& viewCamera);
       virtual void setYawSpeed(double radiansPerSecond);
       virtual void setPitchSpeed(double radiansPerSecond);
       virtual void setRollSpeed(double radiansPerSecond);
@@ -40,11 +38,11 @@ class Object3D {
       virtual void drawBoundingBox();
 
    private:
+
+   protected:
       void yaw(double angle);
       void roll(double angle);
       void pitch(double angle);
-
-   protected:
       virtual void setCorners(bool deleteFirst = true);
 };
 

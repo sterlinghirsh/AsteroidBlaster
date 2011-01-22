@@ -126,7 +126,7 @@ bool Asteroid3D::handleHit(list<Asteroid3D*>& asteroids) {
    const int explosionFactor = 3;
    Sprite::sprites.push_back(
       new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20, 
-       position, radius * explosionFactor, radius * explosionFactor));
+       &position, radius * explosionFactor, radius * explosionFactor));
 
    if (radius > 0.5) {
       for (int i = 0; i < 3; ++i) {

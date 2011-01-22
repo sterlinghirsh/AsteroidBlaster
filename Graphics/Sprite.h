@@ -26,13 +26,13 @@ class Sprite {
       double frameHeight;
       double startTime;
       materialStruct curMaterial;
-      Point3D position;
+      Point3D *position;
       static std::list<Sprite*> sprites;
       bool oneShot;
 
       Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
-       Point3D& posIn, double drawWidth, double drawHeight);
-      bool draw(Point3D& eyePoint);
+       Point3D* posIn, double drawWidth, double drawHeight);
+      bool draw(Point3D* eyePoint);
 };
 
 #endif

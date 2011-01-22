@@ -20,6 +20,12 @@ Camera::Camera(bool lockUp) {
    lockUpVector = lockUp;
 }
 
+Camera::Camera(Object3D* object) {
+   lockUpVector = false;
+   offset = new Vector3D(0, 0, 0);
+   viewFrom(object);
+}
+
 Camera::~Camera() {
    delete position;
    delete up;
@@ -44,11 +50,11 @@ void Camera::setCamera(bool setPosition) {
    }
 }
 
-void Camera::setCamera(Point3D& newPosition, Vector3D& upIn, 
- Vector3D& rightIn, Vector3D& forwardIn) {
-   position->x = newPosition.x;
-   position->y = newPosition.y;
-   position->z = newPosition.z;
+void Camera::setCamera(Point3D* newPosition, Vector3D* upIn, 
+ Vector3D* rightIn, Vector3D* forwardIn) {
+   position->x = newPosition->x;
+   position->y = newPosition->y;
+   position->z = newPosition->z;
    if (!lockUpVector)
       up->updateMagnitude(upIn);
    right->updateMagnitude(rightIn);
@@ -56,3 +62,12 @@ void Camera::setCamera(Point3D& newPosition, Vector3D& upIn,
    setCamera(true);
 }
 
+/**
+ * Bind the camera to some Object3D.
+ */
+void Camera::viewFrom(Object3D* object) {
+   position = object->position;
+   up = object->up;
+   forward = object->forward;
+   right = object->right;
+}

@@ -12,7 +12,7 @@
 using namespace std;
 
 Sprite::Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
- Point3D& posIn, double drawWidth, double drawHeight) {
+ Point3D* posIn, double drawWidth, double drawHeight) {
    framesX = framesXIn;
    framesY = framesYIn;
    framesPerSecond = fpsIn;
@@ -34,12 +34,12 @@ Sprite::Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn,
    oneShot = true;
 }
       
-bool Sprite::draw(Point3D& eyePoint) {
+bool Sprite::draw(Point3D* eyePoint) {
    // Do rotation and translation here.
    // Also update the current frame.
    
    Vector3D forward(0, 0, 1);
-   Vector3D toCamera(position, eyePoint);
+   Vector3D toCamera(*position, *eyePoint);
    Vector3D cross = forward.cross(toCamera);
 
    double angle = forward.getAngleInDegrees(toCamera);
@@ -52,7 +52,7 @@ bool Sprite::draw(Point3D& eyePoint) {
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
    glPushMatrix();
-   glTranslatef(position.x, position.y, position.z);
+   glTranslatef(position->x, position->y, position->z);
    glRotatef(angle, cross.xMag, cross.yMag, cross.zMag);
    
    double topLeftX = (curFrame % framesX) * frameWidth;

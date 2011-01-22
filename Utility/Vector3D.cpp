@@ -36,8 +36,12 @@ void Vector3D::updateMagnitude(Point3D point) {
    updateMagnitude(point.x, point.y, point.z);
 }
 
-void Vector3D::updateMagnitude(Vector3D& inVector) {
+void Vector3D::updateMagnitude(Vector3D inVector) {
    updateMagnitude(inVector.xMag, inVector.yMag, inVector.zMag);
+}
+
+void Vector3D::updateMagnitude(Vector3D* inVector) {
+   updateMagnitude(inVector->xMag, inVector->yMag, inVector->zMag);
 }
 
 void Vector3D::updateMagnitude(Point3D p1, Point3D p2) {

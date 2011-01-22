@@ -37,7 +37,8 @@ class Vector3D {
       void updateMagnitude(double, double, double);
       void updateMagnitude(Point3D, Point3D);
       void updateMagnitude(Point3D);
-      void updateMagnitude(Vector3D&);
+      void updateMagnitude(Vector3D);
+      void updateMagnitude(Vector3D*);
       void updatePosition(double, double, double);
       void updatePosition(Point3D);
       void update(double, double, double, double, double, double);

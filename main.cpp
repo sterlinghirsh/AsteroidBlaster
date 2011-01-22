@@ -10,10 +10,12 @@
 #include "Graphics/Face3D.h"
 #include "Utility/Point3D.h"
 #include "Items/Asteroid3D.h"
-#include "Items/AsteroidShip.h"
+#include "Items/Asteroidship.h"
 #include "Graphics/TextureImporter.h"
 #include "Graphics/Skybox.h"
 #include "Graphics/Sprite.h"
+#include "Graphics/Camera.h"
+#include "Items/BoundingSpace.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -34,18 +36,20 @@ std::map<string, int> TextureImporter::texIDMap;
 
 list<Asteroid3D*> asteroids;
 
-AsteroidShip ship(GL_LIGHT0, WORLD_SIZE);
+AsteroidShip *ship;
 
 Skybox* skybox;
+Camera* camera;
+BoundingSpace* cube;
 
 double displayTime = 0;
 
-void init_headlight() {
-   glEnable(ship.headlight);
-   // headlight_amb is defined in AsteroidShip.h
-   glLightfv(ship.headlight, GL_AMBIENT, headlight_amb);
-   glLightfv(ship.headlight, GL_DIFFUSE, headlight_diff);
-   glLightfv(ship.headlight, GL_SPECULAR, headlight_spec);
+void init_light() {
+   glEnable(GL_LIGHT0);
+   // headlight_amb is defined in Asteroidship->h
+   glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
   glShadeModel(GL_SMOOTH);
   glEnable(GL_NORMALIZE);
 }
@@ -61,7 +65,7 @@ void drawAsteroids() {
 void drawSprites() {
    list<Sprite*>::iterator sprite = Sprite::sprites.begin();
    for (; sprite != Sprite::sprites.end(); sprite++) {
-      if (!(*sprite)->draw(ship.position)) {
+      if (!(*sprite)->draw(ship->position)) {
          sprite = Sprite::sprites.erase(sprite);
          continue;
       }
@@ -150,10 +154,10 @@ void display() {
   glMatrixMode(GL_MODELVIEW);
     
   glPushMatrix();
+  skybox->draw(camera);
 
-  ship.setCamera();
-  skybox->draw(ship);
-  ship.draw();
+  camera->setCamera(true);
+  ship->draw();
   drawAsteroids();
   drawGrid();
   drawSprites();
@@ -167,20 +171,20 @@ void display() {
 }
 
 void checkCollisions() {
-   ship.checkAsteroidCollisions(asteroids);
+   ship->checkAsteroidCollisions(asteroids);
 }
 
 void keyboard(unsigned char key, int x, int y ) {
   switch( key ) {
-    case 'a': ship.startYaw(1); break;
-    case 'd': ship.startYaw(-1); break;
-    case 'w': ship.forwardAcceleration(10); break;
-    case 's': ship.forwardAcceleration(-10); break;
-    case 'q': ship.rightAcceleration(-10); break;
-    case 'e': ship.rightAcceleration(10); break;
-    case ' ': ship.upAcceleration(10); break;
-    case 'c': ship.upAcceleration(-10); break;
-    case 'b': ship.brake(2); break;
+    case 'a': ship->startYaw(1); break;
+    case 'd': ship->startYaw(-1); break;
+    case 'w': ship->forwardAcceleration(10); break;
+    case 's': ship->forwardAcceleration(-10); break;
+    case 'q': ship->rightAcceleration(-10); break;
+    case 'e': ship->rightAcceleration(10); break;
+    case ' ': ship->upAcceleration(10); break;
+    case 'c': ship->upAcceleration(-10); break;
+    case 'b': ship->brake(2); break;
   }
 
   glutPostRedisplay();
@@ -189,14 +193,14 @@ void keyboard(unsigned char key, int x, int y ) {
 void keyUp(unsigned char key, int x, int y) {
    switch (key) {
       case 'a':
-      case 'd': ship.noYaw(); break;
+      case 'd': ship->startYaw(0); break;
       case 'w':
-      case 's': ship.forwardAcceleration(0); break;
+      case 's': ship->forwardAcceleration(0); break;
       case 'q': 
-      case 'e': ship.rightAcceleration(0); break;
+      case 'e': ship->rightAcceleration(0); break;
       case ' ': 
-      case 'c': ship.upAcceleration(0); break;
-      case 'b': ship.noBrake(); break;
+      case 'c': ship->upAcceleration(0); break;
+      case 'b': ship->brake(0); break;
    }
    glutPostRedisplay();
 }
@@ -211,7 +215,7 @@ void passiveMouse(int x, int y) {
 
 void mouseMove(int x, int y) {
    passiveMouse(x, y);
-   ship.updateShotDirection(p2wx(x), p2wy(y));
+   ship->updateShotDirection(p2wx(x), p2wy(y));
 }
 
 void timerFunc() {
@@ -236,16 +240,17 @@ void timerFunc() {
    totalTime += timeDiff;
 
    startTime = doubleTime();
-   ship.updatePosition(timeDiff, rollAmount, pitchAmount);
+   ship->updatePosition(timeDiff, rollAmount, pitchAmount);
    updatePositionTime += doubleTime() - startTime;
    startTime = doubleTime();
-   ship.keepFiring();
+   ship->keepFiring();
    firingTime += doubleTime() - startTime;
    
    startTime = doubleTime();
    list<Asteroid3D*>::iterator asteroid = asteroids.begin();
    for (asteroid = asteroids.begin(); asteroid != asteroids.end(); ++asteroid)
       (*asteroid)->updatePosition(timeDiff);
+   cube->constrain(ship);
    asteroidUpdateTime += doubleTime() - startTime;
    
    startTime = doubleTime();
@@ -267,11 +272,12 @@ void timerFunc() {
        100 * totalTime);
        */
 
-      Vector3D actualShipSpeed(lastShipPosition, ship.position);
+      Vector3D actualShipSpeed(lastShipPosition, *ship->position);
       /*printf("ActualShipSpeed: %f, NominalShipspeed: %f\n", actualShipSpeed.getLength(),
-       ship.velocity.getLength());
+       ship->velocity.getLength());
        */
-      lastShipPosition = ship.position;
+      // Copy
+      lastShipPosition = *ship->position;
 
       frames = 0;
       updatePositionTime = collisionDetectionTime = asteroidUpdateTime = firingTime = displayTime = totalTime = 0;
@@ -282,16 +288,16 @@ void timerFunc() {
 void mouse(int button, int state, int x, int y) {
    if (button == GLUT_LEFT_BUTTON) {
       if (state == GLUT_DOWN)
-         ship.fireLasers(p2wx(x), p2wy(y), 0);
+         ship->fireLasers(p2wx(x), p2wy(y), 0);
       else
-         ship.stopLasers(0);
+         ship->stopLasers(0);
    }
    
    if (button == GLUT_RIGHT_BUTTON) {
       if (state == GLUT_DOWN)
-         ship.fireLasers(p2wx(x), p2wy(y), 1);
+         ship->fireLasers(p2wx(x), p2wy(y), 1);
       else
-         ship.stopLasers(1);
+         ship->stopLasers(1);
    }
    glutPostRedisplay();
 }
@@ -336,7 +342,7 @@ int main(int argc, char* argv[]) {
   quadric = gluNewQuadric();
   gluQuadricNormals(quadric, GLU_SMOOTH);
 
-  init_headlight();
+  init_light();
   init_tex();
    skybox = new Skybox("Images/stars.bmp");
   glutSetCursor(GLUT_CURSOR_NONE);
@@ -344,6 +350,9 @@ int main(int argc, char* argv[]) {
   // Preload texture.
   new TextureImporter("Images/SkybusterExplosion.bmp");
   //glutFullScreen();
+  ship = new AsteroidShip(GL_LIGHT0, WORLD_SIZE);
+  camera = new Camera(ship);
+  cube = new BoundingSpace(WORLD_SIZE / 2, 0, 0, 0);
   
   glutMainLoop();
 }

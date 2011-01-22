@@ -79,11 +79,6 @@ void Object3D::draw() {
    glPopMatrix();
 }
 
-void Object3D::setCamera(Camera& viewCamera) {
-   if (position != NULL)
-      viewCamera.setCamera(*position, *up, *right, *forward);
-}
-
 /**
  * These three are setters for pitch, roll, yaw.
  * They must be set back to 0 after the pitch is complete.

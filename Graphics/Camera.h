@@ -14,6 +14,7 @@
 
 #include "Utility/Point3D.h"
 #include "Utility/Vector3D.h"
+#include "Utility/Object3D.h"
 
 class Camera {
    public:
@@ -23,10 +24,12 @@ class Camera {
       bool lockUpVector;
 
       Camera(bool lockUp);
+      Camera(Object3D*);
       virtual ~Camera();
       void setCamera(bool setPosition = true);
-      void setCamera(Point3D& newPosition, Vector3D& upIn, 
-       Vector3D& rightIn, Vector3D& forwardIn);
+      void setCamera(Point3D* newPosition, Vector3D* upIn, 
+       Vector3D* rightIn, Vector3D* forwardIn);
+      void viewFrom(Object3D* object);
 };
 
 #endif

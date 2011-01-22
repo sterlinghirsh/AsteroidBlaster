@@ -12,6 +12,7 @@
 #include "Shots/AsteroidShot.h"
 #include "Shots/AsteroidShotBeam.h"
 #include "Graphics/GlutUtility.h"
+#include "Utility/Object3D.h"
 #include <list>
 
 // Later we'll put in a model for the ship.
@@ -21,14 +22,8 @@ extern GLfloat headlight_amb[4];
 extern GLfloat headlight_diff[4];
 extern GLfloat headlight_spec[4];
 
-class AsteroidShip {
+class AsteroidShip : public Object3D {
    public:
-      Point3D position;
-      Vector3D forward;
-      Vector3D up;
-      Vector3D velocity;
-      Vector3D acceleration;
-      Vector3D right;
       Vector3D shotDirection;
       int headlight; // GL_LIGHT0
       double forwardAccel; // Units per second^2
@@ -56,25 +51,18 @@ class AsteroidShip {
       double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.
       
       AsteroidShip(int headlightIn, double worldSizeIn);
-      void setCamera(bool setPosition = true);
       void startYaw(double yawAmountIn);
-      void noYaw();
       void updateAcceleration();
-      void noAccel();
       void brake(double brakeFactorIn);
-      void noBrake();
       void forwardAcceleration(double newAcc);
       void rightAcceleration(double newAcc);
       void upAcceleration(double newAcc);
       void updatePosition(double timeDiff, double rollAmount, double pitchAmount);
-      void yaw(double angle);
-      void roll(double angle);
-      void pitch(double angle);
       void updateShotDirection(double xOffset, double yOffset);
       void keepFiring();
       void fireLasers(double xOffset, double yOffset, int weapon);
       void stopLasers(int weapon);
-      void draw();
+      virtual void draw();
       void checkAsteroidCollisions(std::list<Asteroid3D*>& asteroids);
    private:
       double brakeFactor;
