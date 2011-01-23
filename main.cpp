@@ -260,7 +260,7 @@ void keyUp(unsigned char key, int x, int y) {
 void passiveMouse(int x, int y) {
    xdouble = p2wx(x);
    ydouble = p2wy(y);
-   double angleScale = 1;
+   const double angleScale = 1;
    rollAmount = clamp(xdouble * fabs(xdouble) * angleScale, -1, 1);
    pitchAmount = clamp(-ydouble * fabs(ydouble) * angleScale, -1, 1);
 }

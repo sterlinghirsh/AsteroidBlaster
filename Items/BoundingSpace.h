@@ -11,7 +11,6 @@
 class BoundingSpace {
    public:
       double extent; // Only one var instead of min/max x, y, z
-      Point3D* position;
       double xMax, xMin, yMax, yMin, zMax, zMin;
 
       BoundingSpace(double extentIn, double x, double y, double z);

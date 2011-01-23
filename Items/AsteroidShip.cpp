@@ -19,9 +19,14 @@ GLfloat headlight_diff[4] = {0.8, 0.8, 0.8, 1.0};
 GLfloat headlight_spec[4] = {0.8, 0.8, 0.8, 1.0};
 
 AsteroidShip::AsteroidShip(int headlightIn, double worldSizeIn) : 
- shotDirection(0, 0, 1), headlight(headlightIn), worldSize(worldSizeIn), Object3D(0, 0, 0, 0) {
+ Object3D(0, 0, 0, 0),
+ shotDirection(0, 0, 1), 
+ headlight(headlightIn), 
+ worldSize(worldSizeIn) {
+   velocity = new Vector3D(0, 0, 0);
+   acceleration = new Vector3D(0, 0, 0);
    brakeFactor = 0;
-   forwardAccel = 0;
+   forwardAccel = rightAccel = upAccel = 0;
    yawFactor = 1;
    rollFactor = pitchFactor = 2;
    yawAmount = 0;
@@ -37,8 +42,6 @@ AsteroidShip::AsteroidShip(int headlightIn, double worldSizeIn) :
    up->updateMagnitude(0, 1, 0);
    right->updateMagnitude(-1, 0, 0);
    fireShots = fireBeams = false;
-   acceleration = new Vector3D(0, 0, 0);
-   velocity = new Vector3D(0, 0, 0);
    shotPhi = shotTheta = 0;
 }
       
@@ -87,16 +90,6 @@ void AsteroidShip::updatePosition(double timeDiff,
 
    Object3D::update(timeDiff);
    
-   // reflect
-   /*
-   if (position.x + shipRadius > worldSize / 2)  velocity.xMag = -fabs(velocity.xMag);
-   else if (position.x - shipRadius < -worldSize / 2) velocity.xMag =  fabs(velocity.xMag);
-   if (position.y + shipRadius > worldSize / 2)  velocity.yMag = -fabs(velocity.yMag);
-   else if (position.y - shipRadius < -worldSize / 2) velocity.yMag =  fabs(velocity.yMag);
-   if (position.z + shipRadius > worldSize / 2)  velocity.zMag = -fabs(velocity.zMag);
-   else if (position.z - shipRadius < -worldSize / 2) velocity.zMag =  fabs(velocity.zMag);
-   */
-
    roll(timeDiff * rollAmount * pitchFactor);
    pitch(timeDiff * pitchAmount * pitchFactor);
    yaw(timeDiff * yawAmount * yawFactor);

@@ -7,11 +7,11 @@
 
 #include "Utility/Object3D.h"
 
-Object3D::Object3D(double x, double y, double z, GLuint displayListIn) {
+Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
+ position(new Point3D(x, y, z)) {
    minX = minY = minZ = -0.5;
    maxX = maxY = maxZ =  0.5;
    displayList = displayListIn;
-   position = new Point3D(x, y, z);
    velocity = NULL;
    acceleration = NULL;
    axis = NULL;

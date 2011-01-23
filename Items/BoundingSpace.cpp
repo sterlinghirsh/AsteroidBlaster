@@ -9,17 +9,15 @@
 
 BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z) {
    extent = extentIn;
-   position = new Point3D(x, y, z);
-   xMax = position->x + extent;
-   yMax = position->y + extent;
-   zMax = position->z + extent;
-   xMin = position->x - extent;
-   yMin = position->y - extent;
-   zMin = position->z - extent;
+   xMax = x + extent;
+   yMax = y + extent;
+   zMax = z + extent;
+   xMin = x - extent;
+   yMin = y - extent;
+   zMin = z - extent;
 }
 
 BoundingSpace::~BoundingSpace() {
-   delete position;
 }
 
 void BoundingSpace::constrain(Object3D* item) {
