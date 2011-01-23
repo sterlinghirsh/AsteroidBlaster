@@ -10,7 +10,7 @@
 #include "Graphics/Face3D.h"
 #include "Utility/Point3D.h"
 #include "Items/Asteroid3D.h"
-#include "Items/Asteroidship.h"
+#include "Items/AsteroidShip.h"
 #include "Graphics/TextureImporter.h"
 #include "Graphics/Skybox.h"
 #include "Graphics/Sprite.h"
