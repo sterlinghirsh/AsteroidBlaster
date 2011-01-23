@@ -13,6 +13,8 @@ class BitmapTextDisplay {
    // private variables go here
    std::string textToDisplay;
    int xCoord, yCoord;
+   float r, g, b;
+   void* font;
 
    // Function used to draw an entire string to the screen at a certain position
    void renderBitmapString(std::string str);
@@ -31,6 +33,10 @@ class BitmapTextDisplay {
       // Destructor
       virtual ~BitmapTextDisplay();
 
+      // Sets the font to be used
+      virtual void setFont(int newFont);
+      // Sets the color of the text
+      virtual void setColor(float newR, float newG, float newB);
       // Sets the position where the text will be drawn
       virtual void setPosition(double x, double y);
       // Gets the position of the text, and puts it into x and y

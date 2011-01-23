@@ -1,10 +1,13 @@
 /**
- * Asteroids -- IN 3D!
- * Sterling Hirsh
- * Final Project for CPE 471 Fall 2010
+ * Asteroid Blaster -- IN 3D!
+ * Graphics Team: Sterling Hirsh, Taylor Arnicar, Ryuho Kudo, Jake Juszak, Chris Brenton
+ * AI Team: Taylor Arnicar, Mike Smith, Sean Ghiocel
+ * Justin Kuehn, 
+ * Final Project for CPE 476 - Winter & Spring 2011
  */
 #include <math.h>
 #include <list>
+#include <sstream>
 
 #include "Graphics/GlutUtility.h"
 #include "Graphics/Face3D.h"
@@ -16,6 +19,7 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/Camera.h"
 #include "Items/BoundingSpace.h"
+#include "Utility/BitmapTextDisplay.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -33,6 +37,10 @@ double startx, starty;
 int TextureImporter::curTexID;
 list<Sprite*> Sprite::sprites;
 std::map<string, int> TextureImporter::texIDMap;
+/* The list of all text objects to be drawn each frame.
+   If you want some text drawn, add it to this list.
+*/
+list<BitmapTextDisplay*> allTexts;
 
 list<Asteroid3D*> asteroids;
 
@@ -43,6 +51,8 @@ Camera* camera = NULL;
 BoundingSpace* cube = NULL;
 
 double displayTime = 0;
+// This string contains the FPS to be printed to the screen each frame
+string curFPS;
 
 void init_light() {
    glEnable(GL_LIGHT0);
@@ -72,6 +82,35 @@ void drawSprites() {
    }
 }
 
+/* Draw all of the text in the allTexts list to the screen.
+   This function should be called once per display loop.
+   We do all of the looking at, lighting changes, etc. one time here to improve efficiency.
+*/
+void drawAllText() {
+   list<BitmapTextDisplay*>::iterator thisText;
+   
+   glPushMatrix();
+      /* Set the camera using the location of your eye, the location where you're looking at, and the up vector.
+         The camera is set to be just 0.25 behind where you're looking at. */
+      gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
+      // Use orthonormal view so the text stays perpendicular to the camera at all times.
+      useOrtho();
+      // We need to disable the lighting temporarily in order to set the color properly.
+      glDisable(GL_LIGHTING);
+      
+      // Draw all of the BitmapTextDisplay objects
+      for (thisText = allTexts.begin(); thisText !=allTexts.end(); ++thisText) {
+         (*thisText)->draw();
+      }
+      
+      glEnable(GL_LIGHTING);
+      usePerspective();
+
+   glPopMatrix();
+}
+
+/* Draw the bounding box grid on the world.
+*/
 void drawGrid() {
    const double wall = WORLD_SIZE / 2;
    const double alpha = 1;
@@ -147,12 +186,25 @@ void drawCrosshair() {
    glPopMatrix();
 }
 
+/* Update the values contained in all of the texts.
+   Clear the list, then re-make it.
+*/
+void updateText() {
+   allTexts.clear();
+   allTexts.push_back(new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20));
+}
+
 void display() {
   double startTime = doubleTime();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
+  // Update the values of all of the text objects.
+  updateText();
+  // Draw all of the text objects to the screen.
+  drawAllText();
+  
   glMatrixMode(GL_MODELVIEW);
-    
+  
   glPushMatrix();
   skybox->draw(camera);
 
@@ -235,6 +287,12 @@ void timerFunc() {
       return;
    }
    double timeDiff = curTime - lastTime;
+   // Print the timeDiff out to the curFPS string to be displayed on screen.
+   // TODO: See if I can optimize this
+   std::ostringstream sstream;
+   sstream << 1 / timeDiff;
+   curFPS = sstream.str();
+   
    //printf("curTime: %f, lastTime: %f, timeDiff: %f\n", curTime, lastTime, timeDiff);
    ++frames;
    totalTime += timeDiff;
@@ -303,6 +361,11 @@ void mouse(int button, int state, int x, int y) {
    glutPostRedisplay();
 }
 
+// Set up our text objects to be displayed on screen. This modifies the allTexts list.
+void createHUDText() {
+   curFPS = "A";
+   allTexts.push_back(new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20));
+}
 
 int main(int argc, char* argv[]) {
 
@@ -321,6 +384,9 @@ int main(int argc, char* argv[]) {
   for (int i = 0; i < 15; ++i) {
     asteroids.push_back(new Asteroid3D(10 + (10 * randdouble()), WORLD_SIZE));
   }
+  
+  // Set up our text objects & HUD text elements. This modifies the allTexts list.
+  createHUDText();
   
   //register glut callback functions
   glutDisplayFunc( display );
