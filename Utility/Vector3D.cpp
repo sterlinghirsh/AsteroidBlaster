@@ -212,7 +212,7 @@ void Vector3D::setCamera(double upx = 0, double upy = 1, double upz = 0) {
  * Found the body of this function at:
  * http://www.blitzbasic.com/Community/posts.php?topic=57616
  */
-void Vector3D::rotate(double angle, Vector3D& axis) {
+void Vector3D::rotate(double angle, const Vector3D& axis) {
    double x = xMag;
    double y = yMag;
    double z = zMag;

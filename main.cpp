@@ -36,11 +36,11 @@ std::map<string, int> TextureImporter::texIDMap;
 
 list<Asteroid3D*> asteroids;
 
-AsteroidShip *ship;
+AsteroidShip *ship = NULL;
 
-Skybox* skybox;
-Camera* camera;
-BoundingSpace* cube;
+Skybox* skybox = NULL;
+Camera* camera = NULL;
+BoundingSpace* cube = NULL;
 
 double displayTime = 0;
 
@@ -250,6 +250,7 @@ void timerFunc() {
    list<Asteroid3D*>::iterator asteroid = asteroids.begin();
    for (asteroid = asteroids.begin(); asteroid != asteroids.end(); ++asteroid)
       (*asteroid)->updatePosition(timeDiff);
+
    cube->constrain(ship);
    asteroidUpdateTime += doubleTime() - startTime;
    
@@ -335,13 +336,7 @@ int main(int argc, char* argv[]) {
    
   glEnable(GL_LIGHTING);
   glEnable(GL_BLEND);
-
-  glutIdleFunc(timerFunc);
   
-  materials(Rock);
-  quadric = gluNewQuadric();
-  gluQuadricNormals(quadric, GLU_SMOOTH);
-
   init_light();
   init_tex();
    skybox = new Skybox("Images/stars.bmp");
@@ -353,6 +348,13 @@ int main(int argc, char* argv[]) {
   ship = new AsteroidShip(GL_LIGHT0, WORLD_SIZE);
   camera = new Camera(ship);
   cube = new BoundingSpace(WORLD_SIZE / 2, 0, 0, 0);
+
+  materials(Rock);
+  quadric = gluNewQuadric();
+  gluQuadricNormals(quadric, GLU_SMOOTH);
+  glutIdleFunc(timerFunc);
+  
+
   
   glutMainLoop();
 }

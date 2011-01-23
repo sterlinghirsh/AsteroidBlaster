@@ -22,6 +22,12 @@ struct Point3D {
       y = other->y;
       z = other->z;
    }
+
+   void update(double x2, double y2, double z2) {
+      x = x2;
+      y = y2;
+      z = z2;
+   }
    
    double distanceFrom(Point3D& rhs) {
       return distance3D(rhs.x - x, rhs.y - y, rhs.z - z);

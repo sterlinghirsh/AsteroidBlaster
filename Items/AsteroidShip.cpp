@@ -19,7 +19,7 @@ GLfloat headlight_diff[4] = {0.8, 0.8, 0.8, 1.0};
 GLfloat headlight_spec[4] = {0.8, 0.8, 0.8, 1.0};
 
 AsteroidShip::AsteroidShip(int headlightIn, double worldSizeIn) : 
- headlight(headlightIn), worldSize(worldSizeIn), Object3D(0, 0, 0, 0) {
+ shotDirection(0, 0, 1), headlight(headlightIn), worldSize(worldSizeIn), Object3D(0, 0, 0, 0) {
    brakeFactor = 0;
    forwardAccel = 0;
    yawFactor = 1;
@@ -31,12 +31,15 @@ AsteroidShip::AsteroidShip(int headlightIn, double worldSizeIn) :
    timeOfLastBeam = 0;
    lastGunFired = 0;
    shipRadius = 1;
+   maxX = maxY = maxZ = 1;
+   minX = minY = minZ = -1;
    forward->updateMagnitude(0, 0, 1);
    up->updateMagnitude(0, 1, 0);
    right->updateMagnitude(-1, 0, 0);
    fireShots = fireBeams = false;
    acceleration = new Vector3D(0, 0, 0);
    velocity = new Vector3D(0, 0, 0);
+   shotPhi = shotTheta = 0;
 }
       
 void AsteroidShip::startYaw(double yawAmountIn) {
@@ -98,7 +101,6 @@ void AsteroidShip::updatePosition(double timeDiff,
    pitch(timeDiff * pitchAmount * pitchFactor);
    yaw(timeDiff * yawAmount * yawFactor);
 
-   Vector3D tempShotDir;
    // iterate throught shots
    double curTime = doubleTime();
    for (shotIter = shots.begin(); shotIter != shots.end(); ++shotIter) {
@@ -191,7 +193,7 @@ void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
 }
 
 void AsteroidShip::updateShotDirectionVector() {
-   shotDirection = *forward;
+   shotDirection.updateMagnitude(forward);
    shotDirection.rotate(shotPhi, *right);
    shotDirection.rotate(shotTheta, *up);
 }

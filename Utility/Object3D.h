@@ -24,7 +24,6 @@ class Object3D {
       bool lockUpVector;
       double yawSpeed, pitchSpeed, rollSpeed;
       double angle;
-      Point3D* corners[8];
 
       Object3D(double x, double y, double z, GLuint displayListIn);
       virtual ~Object3D();
@@ -43,7 +42,6 @@ class Object3D {
       void yaw(double angle);
       void roll(double angle);
       void pitch(double angle);
-      virtual void setCorners(bool deleteFirst = true);
 };
 
 #endif

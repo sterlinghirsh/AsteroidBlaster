@@ -22,7 +22,6 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) {
    forward = new Vector3D(0, 0, 1);
    lockUpVector = false;
    yawSpeed = pitchSpeed = rollSpeed = 0;
-   setCorners(false);
 }
 
 Object3D::~Object3D() {
@@ -40,23 +39,6 @@ Object3D::~Object3D() {
       delete forward;
    if (axis != NULL)
       delete axis;
-   for (int i = 0; i < 8; ++i)
-      delete corners[i];
-}
-
-void Object3D::setCorners(bool deleteFirst) {
-   if (deleteFirst) {
-      for (int i = 0; i < 8; ++i)
-         delete corners[i];
-   }
-   corners[0] = new Point3D(minX, minY, minZ);
-   corners[1] = new Point3D(minX, minY, maxZ);
-   corners[2] = new Point3D(minX, maxY, minZ);
-   corners[3] = new Point3D(minX, maxY, maxZ);
-   corners[4] = new Point3D(maxX, minY, minZ);
-   corners[5] = new Point3D(maxX, minY, maxZ);
-   corners[6] = new Point3D(maxX, maxY, minZ);
-   corners[7] = new Point3D(maxX, maxY, maxZ);
 }
 
 void Object3D::update(double timeDifference) {
