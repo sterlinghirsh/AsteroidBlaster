@@ -20,6 +20,10 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
    InitAsteroid(r, worldSizeIn);
 }
 
+Asteroid3D::~Asteroid3D() {
+   
+}
+
 void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    double tempRad;
    double x, y, z;

@@ -24,6 +24,7 @@ class Asteroid3D : public Object3D {
       double sizeX, sizeY, sizeZ, collisionRadius;
       
       Asteroid3D(double r, double worldSizeIn);
+      virtual ~Asteroid3D();
       void InitAsteroid(double r, double worldSizeIn);
       void draw(bool drawSmooth);
       void updatePosition(double timeDiff);
