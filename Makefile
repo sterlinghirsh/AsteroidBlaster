@@ -4,18 +4,18 @@
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
    PLATFORMSPECIFICCFLAGS=
-   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -g
+   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut
 else
    PLATFORMSPECIFICCFLAGS=
-   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -g
+   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL
 endif
 
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS)
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g
 
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c -g
 CC=g++
 
 PROGNAME=AsteroidBlaster
@@ -52,7 +52,7 @@ turnin:
 	handin zwood csc471finalwebs2
 
 valgrind:
-	valgrind ./${PROGNAME}
+	valgrind --leak-check=full ./${PROGNAME}
 
 gdb:
 	gdb ./${PROGNAME}
