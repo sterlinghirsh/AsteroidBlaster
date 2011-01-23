@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="AsteroidBlaster"
 	ProjectGUID="{65AFD54C-7383-4947-BE28-D2E5C6684A29}"
+	RootNamespace="AsteroidBlaster"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -39,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="D:\College\AsteroidBlaster"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +63,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -110,12 +112,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="D:\College\AsteroidBlaster"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;GLUT_BUILDING_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				WarnAsError="false"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -130,9 +134,11 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
+				SubSystem="1"
+				OptimizeReferences="0"
+				EnableCOMDATFolding="0"
+				EntryPointSymbol=""
+				ResourceOnlyDLL="false"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -183,6 +189,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Utility\BitmapTextDisplay.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Items\BoundingSpace.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Graphics\Camera.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Items\Enemy.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Graphics\Face3D.h"
 				>
 			</File>
@@ -195,7 +217,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Graphics\MeshImporter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\graphics\MeshPoint.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utility\Object3D.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Items\Player.h"
 				>
 			</File>
 			<File
@@ -224,6 +258,14 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\Images\SkybusterExplosion.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Images\stars.bmp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Source Files"
@@ -247,11 +289,59 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Utility\BitmapTextDisplay.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Items\BoundingSpace.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Graphics\Camera.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Items\Enemy.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\graphics\GlutUtility.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Graphics\Mesh3D.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Graphics\MeshImporter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Graphics\MeshPoint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Utility\Object3D.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Items\Player.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Graphics\Skybox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Graphics\Sprite.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Graphics\TextureImporter.cpp"
 				>
 			</File>
 			<File

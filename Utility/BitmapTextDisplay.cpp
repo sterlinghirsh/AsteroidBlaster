@@ -80,7 +80,7 @@ void BitmapTextDisplay :: getPosition(double* x, double* y)
 void BitmapTextDisplay :: renderBitmapString(std::string str) {
 
    glRasterPos2f(p2wx(xCoord), p2wy(yCoord));
-   for (int i = 0; i < str.length(); i++) {
+   for (unsigned i = 0; i < str.length(); i++) {
      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[i]);
    }
 }

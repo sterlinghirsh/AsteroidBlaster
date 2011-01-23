@@ -14,6 +14,7 @@
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
+#define GLUT_DISABLE_ATEXIT_HACK 
 #include <GL/glut.h>
 #endif
 
