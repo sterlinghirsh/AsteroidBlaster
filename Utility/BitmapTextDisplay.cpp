@@ -11,11 +11,15 @@
 #include "Graphics/GlutUtility.h"
 #include "Utility/BitmapTextDisplay.h"
 #include <stdio.h>
-#include <sstream>
+
+std::ostringstream BitmapTextDisplay :: sstream;
 
 // Constructor if you are displaying one string
 BitmapTextDisplay :: BitmapTextDisplay(std::string text, double x, double y) {
    textToDisplay = text;
+   // Set the pre & post strings for this BitmapTextDisplay to be empty.
+   pre = "";
+   post = "";
    xCoord = x;
    yCoord = y;
    // Set the default color to white
@@ -26,6 +30,9 @@ BitmapTextDisplay :: BitmapTextDisplay(std::string text, double x, double y) {
 // Constructor if you are displaying multiple strings
 BitmapTextDisplay :: BitmapTextDisplay(std::string preText, std::string body, std::string postText, double x, double y) {
    textToDisplay = preText + body + postText;
+   // Set the pre & post strings for this BitmapTextDisplay accordingly.
+   pre = preText;
+   post = postText;
    xCoord = x;
    yCoord = y;
    // Set the default color to white
@@ -35,10 +42,13 @@ BitmapTextDisplay :: BitmapTextDisplay(std::string preText, std::string body, st
 
 // Constructor if you are displaying an int
 BitmapTextDisplay :: BitmapTextDisplay(std::string preText, int body, std::string postText, double x, double y) {
-   std::ostringstream sstream;
    sstream << preText << body << postText;
    // Get a string out of the osteringstream
    textToDisplay = sstream.str();
+   sstream.str("");
+   // Set the pre & post strings for this BitmapTextDisplay accordingly.
+   pre = preText;
+   post = postText;
 
 /*
    textToDisplay = preText;
@@ -56,10 +66,13 @@ BitmapTextDisplay :: BitmapTextDisplay(std::string preText, int body, std::strin
 
 // Constructor if you are displaying a double
 BitmapTextDisplay :: BitmapTextDisplay(std::string preText, double body, std::string postText, double x, double y) {
-   std::ostringstream sstream;
    sstream << preText << body << postText;
    // Get a string out of the osteringstream
    textToDisplay = sstream.str();
+   sstream.str("");
+   // Set the pre & post strings for this BitmapTextDisplay accordingly.
+   pre = preText;
+   post = postText;
    xCoord = x;
    yCoord = y;
    // Set the default color to white
@@ -69,7 +82,30 @@ BitmapTextDisplay :: BitmapTextDisplay(std::string preText, double body, std::st
 
 // Destructor
 BitmapTextDisplay :: ~BitmapTextDisplay() {
-// TODO: WRITE A DESTRUCTOR HERE. IT WILL BE CALLED UPON CLEARING THE LIST OF TEXT OBJECTS EVERY FARME.
+   // There's not a whole lot to destruct here.
+   // Possibly call delete font; ?
+}
+
+// Update the middle body text
+void BitmapTextDisplay :: updateBody(std::string newText) {
+   textToDisplay = pre + newText + post;
+}
+
+// Update the middle body int
+void BitmapTextDisplay :: updateBody(int newInt) {
+   sstream.str("");
+   sstream << pre << newInt << post;
+   // Get a string out of the osteringstream
+   textToDisplay = sstream.str();
+
+}
+
+// Update the middle body double
+void BitmapTextDisplay :: updateBody(double newDouble) {
+   sstream.str("");
+   sstream << pre << newDouble << post;
+   // Get a string out of the osteringstream
+   textToDisplay = sstream.str();
 }
 
 /* Possible font constants include:

@@ -11,6 +11,8 @@
 
 using namespace std;
 
+list<Sprite*> Sprite::sprites;
+
 Sprite::Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
  Point3D posIn, double drawWidth, double drawHeight) : position(posIn) {
    framesX = framesXIn;

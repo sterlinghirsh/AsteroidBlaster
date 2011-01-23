@@ -35,12 +35,12 @@ double xdouble = 0, ydouble = 0;
 double rollAmount = 0, pitchAmount = 0;
 double startx, starty;
 int TextureImporter::curTexID;
-list<Sprite*> Sprite::sprites;
 std::map<string, int> TextureImporter::texIDMap;
-/* The list of all text objects to be drawn each frame.
-   If you want some text drawn, add it to this list.
+
+/* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
+   update it in updateText(), and make it draw in drawAllText().
 */
-list<BitmapTextDisplay*> allTexts;
+BitmapTextDisplay* FPStext, *objectsText, *objectsCollidedText, *scoreText, *timeText, *gameOverText;
 
 list<Asteroid3D*> asteroids;
 
@@ -51,8 +51,8 @@ Camera* camera = NULL;
 BoundingSpace* cube = NULL;
 
 double displayTime = 0;
-// This string contains the FPS to be printed to the screen each frame
-string curFPS;
+// This double contains the FPS to be printed to the screen each frame.
+double curFPS = 0;
 
 void init_light() {
    glEnable(GL_LIGHT0);
@@ -87,7 +87,6 @@ void drawSprites() {
    We do all of the looking at, lighting changes, etc. one time here to improve efficiency.
 */
 void drawAllText() {
-   list<BitmapTextDisplay*>::iterator thisText;
    
    glPushMatrix();
       /* Set the camera using the location of your eye, the location where you're looking at, and the up vector.
@@ -98,14 +97,11 @@ void drawAllText() {
       // We need to disable the lighting temporarily in order to set the color properly.
       glDisable(GL_LIGHTING);
       
-      // Draw all of the BitmapTextDisplay objects
-      for (thisText = allTexts.begin(); thisText !=allTexts.end(); ++thisText) {
-         (*thisText)->draw();
-      }
+      // Draw all of the BitmapTextDisplay objects.
+      FPStext->draw();
       
       glEnable(GL_LIGHTING);
       usePerspective();
-
    glPopMatrix();
 }
 
@@ -190,8 +186,7 @@ void drawCrosshair() {
    Clear the list, then re-make it.
 */
 void updateText() {
-   allTexts.clear();
-   allTexts.push_back(new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20));
+   FPStext->updateBody(curFPS);
 }
 
 void display() {
@@ -289,9 +284,10 @@ void timerFunc() {
    double timeDiff = curTime - lastTime;
    // Print the timeDiff out to the curFPS string to be displayed on screen.
    // TODO: See if I can optimize this
-   std::ostringstream sstream;
-   sstream << 1 / timeDiff;
-   curFPS = sstream.str();
+   //std::ostringstream sstream;
+   //sstream << 1 / timeDiff;
+//   curFPS = sstream.str();
+   curFPS = 1/timeDiff;
    
    //printf("curTime: %f, lastTime: %f, timeDiff: %f\n", curTime, lastTime, timeDiff);
    ++frames;
@@ -361,10 +357,9 @@ void mouse(int button, int state, int x, int y) {
    glutPostRedisplay();
 }
 
-// Set up our text objects to be displayed on screen. This modifies the allTexts list.
+// Set up our text objects to be displayed on screen.
 void createHUDText() {
-   curFPS = "A";
-   allTexts.push_back(new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20));
+   FPStext = new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20);
 }
 
 int main(int argc, char* argv[]) {
@@ -385,7 +380,7 @@ int main(int argc, char* argv[]) {
     asteroids.push_back(new Asteroid3D(10 + (10 * randdouble()), WORLD_SIZE));
   }
   
-  // Set up our text objects & HUD text elements. This modifies the allTexts list.
+  // Set up our text objects & HUD text elements.
   createHUDText();
   
   //register glut callback functions

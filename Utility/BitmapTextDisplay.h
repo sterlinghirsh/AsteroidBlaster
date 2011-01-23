@@ -8,14 +8,16 @@
 
 #include "Utility/Point3D.h"
 #include <string>
+#include <sstream>
 
 class BitmapTextDisplay {
    // private variables go here
-   std::string textToDisplay;
+   std::string textToDisplay, pre, post;
    int xCoord, yCoord;
    float r, g, b;
    void* font;
-
+   static std::ostringstream sstream;
+   
    // Function used to draw an entire string to the screen at a certain position
    void renderBitmapString(std::string str);
 
@@ -33,6 +35,12 @@ class BitmapTextDisplay {
       // Destructor
       virtual ~BitmapTextDisplay();
 
+      // Sets the new body text to be used
+      virtual void updateBody(std::string newText);
+      // Sets the new body text to be used
+      virtual void updateBody(int newInt);
+      // Sets the new body text to be used
+      virtual void updateBody(double newDouble);
       // Sets the font to be used
       virtual void setFont(int newFont);
       // Sets the color of the text
