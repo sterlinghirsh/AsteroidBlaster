@@ -47,10 +47,13 @@ class AsteroidShip : public Object3D {
       double worldSize;
       bool fireShots;
       bool fireBeams;
+      int score, health;
 
       double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.
       
       AsteroidShip(int headlightIn, double worldSizeIn);
+      int getHealth();
+      int getScore();
       void startYaw(double yawAmountIn);
       void updateAcceleration();
       void brake(double brakeFactorIn);

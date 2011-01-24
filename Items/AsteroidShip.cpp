@@ -6,6 +6,7 @@
 
 #include "AsteroidShip.h"
 #include <math.h>
+#include <time.h>
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
@@ -17,6 +18,7 @@ GLfloat headlight_pos[4] = {0, 0, -1, 0};
 GLfloat headlight_amb[4] = {1, 1, 1, 1};
 GLfloat headlight_diff[4] = {0.8, 0.8, 0.8, 1.0};
 GLfloat headlight_spec[4] = {0.8, 0.8, 0.8, 1.0};
+
 
 AsteroidShip::AsteroidShip(int headlightIn, double worldSizeIn) : 
  Object3D(0, 0, 0, 0),
@@ -43,8 +45,26 @@ AsteroidShip::AsteroidShip(int headlightIn, double worldSizeIn) :
    right->updateMagnitude(-1, 0, 0);
    fireShots = fireBeams = false;
    shotPhi = shotTheta = 0;
+   // The ship's score. This number is displayed to the screen.
+   score = 0;
+   // The ship's health. This number is displayed to the screen.
+   health = 100;
 }
-      
+
+/**
+ * Retrieve the ship's health.
+ */
+int AsteroidShip::getHealth() {
+   return health;
+}
+
+/**
+ * Retrieve the ship's score.
+ */
+int AsteroidShip::getScore() {
+   return score;
+}
+
 void AsteroidShip::startYaw(double yawAmountIn) {
    yawAmount = yawAmountIn;
 }
@@ -165,8 +185,10 @@ void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
       // Distance to ship.
       distance = position->distanceFrom(*(*asteroid)->position);
       if (distance < shipRadius + (*asteroid)->collisionRadius) {
-         // TEMP. We should kill the ship.
+         // TEMP. We should damage the ship.
          asteroid = asteroids.erase(asteroid);
+         score += (*asteroid)->collisionRadius * (rand()%3 + 1);
+         health -= (*asteroid)->collisionRadius/2;
          continue;
       }
       for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {

@@ -1,8 +1,7 @@
 /**
  * Asteroid Blaster -- IN 3D!
  * Graphics Team: Sterling Hirsh, Taylor Arnicar, Ryuho Kudo, Jake Juszak, Chris Brenton
- * AI Team: Taylor Arnicar, Mike Smith, Sean Ghiocel
- * Justin Kuehn, 
+ * AI Team: Taylor Arnicar, Mike Smith, Sean Ghiocel, Justin Kuehn
  * Final Project for CPE 476 - Winter & Spring 2011
  */
 #include <math.h>
@@ -43,10 +42,6 @@ double rollAmount = 0, pitchAmount = 0;
 double startx, starty;
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
-
-/* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
-   update it in updateText(), and make it draw in drawAllText().
-*/
 
 GameState* gameState = NULL;
 
@@ -298,8 +293,8 @@ void mouseButton(SDL_Event event){
 int main(int argc, char* argv[]) {
 
    srand(time(NULL));
-   GW = 800;
-   GH = 600;
+   GW = 1024;
+   GH = 768;
    //set up my window
    glutInit(&argc, argv);
    //glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);

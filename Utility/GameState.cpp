@@ -17,7 +17,11 @@ GameState::GameState(double worldSizeIn) {
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
    // Set up our text objects to be displayed on screen.
    curFPS = 0;
-   FPStext = new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20);
+   FPSText = new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20);
+   numAsteroidsText = new BitmapTextDisplay("Asteroids Remaining: ", (int)asteroids.size(), "", 10, 40);
+   scoreText = new BitmapTextDisplay("Score: ", ship->getScore(), "", 10, 60);
+   healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 80);
+   
    initAsteroids();
 }
 
@@ -81,7 +85,10 @@ void GameState::drawAllText() {
    glDisable(GL_LIGHTING);
    
    // Draw all of the BitmapTextDisplay objects.
-   FPStext->draw();
+   FPSText->draw();
+   numAsteroidsText->draw();
+   scoreText->draw();
+   healthText->draw();
    
    glEnable(GL_LIGHTING);
    usePerspective();
@@ -93,7 +100,10 @@ void GameState::drawAllText() {
  * Clear the list, then re-make it.
  */
 void GameState::updateText() {
-   FPStext->updateBody(curFPS);
+   FPSText->updateBody(curFPS);
+   numAsteroidsText->updateBody((int)asteroids.size());
+   scoreText->updateBody(ship->getScore());
+   healthText->updateBody(ship->getHealth());
 }
 
 void GameState::checkCollisions() {

@@ -27,12 +27,13 @@ class GameState {
       Skybox* skybox;
       std::list<Object3D*> objects;
       std::list<Asteroid3D*> asteroids;
-      BitmapTextDisplay *FPStext, 
-                        *objectsText, 
-                        *objectsCollidedText, 
+      /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
+       * update it in updateText(), and make it draw in drawAllText().
+       */
+      BitmapTextDisplay *FPSText, 
+                        *numAsteroidsText, 
                         *scoreText, 
-                        *timeText, 
-                        *gameOverText;
+                        *healthText;
       std::list<Asteroid3D*>::iterator asteroid;
 
       GameState(double worldSize);
