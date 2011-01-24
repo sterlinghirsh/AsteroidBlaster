@@ -38,7 +38,7 @@ void GameState::update(double timeDiff) {
    if(ship->getHealth() <= 0){
       gameIsRunning = false;
    }
-   else if (ship->score >= 500){
+   else if (ship->score >= 4000){
       gameIsRunning = false;
    }
    
@@ -127,7 +127,7 @@ void GameState::checkCollisions() {
 }  
 
 void GameState::initAsteroids() {
-   for (int i = 0; i < 15; ++i) {
+   for (int i = 0; i < 5; ++i) {
       asteroids.push_back(new Asteroid3D(10 + (10 * randdouble()), worldSize));
    }
 }
