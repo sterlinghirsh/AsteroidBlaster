@@ -27,9 +27,16 @@
 #include <GL/glut.h>
 #endif
 
+#include "SDL.h"
+Uint8* _keys;
+
 using namespace std;
 
 #define WORLD_SIZE 80.0
+bool running = true;
+
+
+const double angleScale = 1;
 
 double xdouble = 0, ydouble = 0;
 double rollAmount = 0, pitchAmount = 0;
@@ -159,51 +166,71 @@ void display() {
 
   glPopMatrix();
 
-  glutSwapBuffers();
+  SDL_GL_SwapBuffers();
   displayTime += doubleTime() - startTime;
   ++curFrame;
 }
 
-void keyboard(unsigned char key, int x, int y ) {
-  switch( key ) {
-    case 'a': gameState->ship->startYaw(1); break;
-    case 'd': gameState->ship->startYaw(-1); break;
-    case 'w': gameState->ship->forwardAcceleration(10); break;
-    case 's': gameState->ship->forwardAcceleration(-10); break;
-    case 'q': gameState->ship->rightAcceleration(-10); break;
-    case 'e': gameState->ship->rightAcceleration(10); break;
-    case ' ': gameState->ship->upAcceleration(10); break;
-    case 'c': gameState->ship->upAcceleration(-10); break;
-    case 'b': gameState->ship->brake(2); break;
+GLboolean CheckKeys()
+{
+  bool moved = false;
+  if (_keys[SDLK_ESCAPE])
+  {
+    return true;
   }
-}
-
-void keyUp(unsigned char key, int x, int y) {
-   switch (key) {
-      case 'a':
-      case 'd': gameState->ship->startYaw(0); break;
-      case 'w':
-      case 's': gameState->ship->forwardAcceleration(0); break;
-      case 'q': 
-      case 'e': gameState->ship->rightAcceleration(0); break;
-      case ' ': 
-      case 'c': gameState->ship->upAcceleration(0); break;
-      case 'b': gameState->ship->brake(0); break;
+  
+   if (_keys[SDLK_a]) {
+      gameState->ship->startYaw(1);
    }
+   else if(_keys[SDLK_d]){
+      gameState->ship->startYaw(-1);
+   }
+   else{
+      gameState->ship->startYaw(0);
+   }
+   
+   
+   if (_keys[SDLK_w]) {
+      gameState->ship->forwardAcceleration(10);
+   }
+   else if(_keys[SDLK_s]){
+      gameState->ship->forwardAcceleration(-10);
+   }
+   else{
+      gameState->ship->forwardAcceleration(0);
+   }
+
+   if (_keys[SDLK_q]) {
+      gameState->ship->rightAcceleration(-10);
+   }
+   else if(_keys[SDLK_e]){
+      gameState->ship->rightAcceleration(10);
+   }
+   else{
+      gameState->ship->rightAcceleration(0);
+   }
+
+   if (_keys[SDLK_SPACE]) {
+      gameState->ship->upAcceleration(10);
+   }
+   else if(_keys[SDLK_c]) {
+      gameState->ship->upAcceleration(-10);
+   }
+   else{
+      gameState->ship->upAcceleration(0);
+   }
+
+   if (_keys[SDLK_b]) {
+      gameState->ship->brake(2);
+   }
+   else{
+      gameState->ship->brake(0);
+   }
+   
+  return false;
 }
 
-void passiveMouse(int x, int y) {
-   xdouble = p2wx(x);
-   ydouble = p2wy(y);
-   const double angleScale = 1;
-   rollAmount = clamp(xdouble * fabs(xdouble) * angleScale, -1, 1);
-   pitchAmount = clamp(-ydouble * fabs(ydouble) * angleScale, -1, 1);
-}
 
-void mouseMove(int x, int y) {
-   passiveMouse(x, y);
-   gameState->ship->updateShotDirection(p2wx(x), p2wy(y));
-}
 
 void timerFunc() {
    static unsigned long lastSecond = 0;
@@ -211,7 +238,6 @@ void timerFunc() {
    static double lastTime = 0;
    static double totalTime = 0;
    static Point3D lastShipPosition(0, 0, 0);
-   double startTime;
    double curTime = doubleTime();
    if (lastTime == 0) {
       lastTime = curTime;
@@ -228,8 +254,6 @@ void timerFunc() {
    gameState->update(timeDiff);
 
    gameState->checkCollisions();
-
-   glutPostRedisplay();
    
    lastTime = curTime;
    // Stats
@@ -239,67 +263,124 @@ void timerFunc() {
    }
 }
 
-void mouse(int button, int state, int x, int y) {
-   if (button == GLUT_LEFT_BUTTON) {
-      if (state == GLUT_DOWN)
-         gameState->ship->fireLasers(p2wx(x), p2wy(y), 0);
-      else
-         gameState->ship->stopLasers(0);
+void mouseUpdate(int x, int y){
+   xdouble = p2wx(x);
+   ydouble = p2wy(y);
+   gameState->ship->updateShotDirection(xdouble, ydouble);
+   rollAmount = clamp(xdouble * fabs(xdouble) * angleScale, -1, 1);
+   pitchAmount = clamp(-ydouble * fabs(ydouble) * angleScale, -1, 1);
+}
+
+void mouseButton(SDL_Event event){
+   if(event.type == SDL_MOUSEBUTTONDOWN)
+   {
+      printf("Mouse button %d pressed at (%d,%d)\n",event.button.button, event.button.x, event.button.y);
+      if(event.button.button == 1){
+         gameState->ship->fireLasers(p2wx(event.button.x), p2wy(event.button.y), 0);         
+      }
+      else if(event.button.button == 3){
+         gameState->ship->fireLasers(p2wx(event.button.x), p2wy(event.button.y), 1);         
+      }
    }
-   
-   if (button == GLUT_RIGHT_BUTTON) {
-      if (state == GLUT_DOWN)
-         gameState->ship->fireLasers(p2wx(x), p2wy(y), 1);
-      else
+   if (event.type == SDL_MOUSEBUTTONUP)
+   {
+      printf("Mouse button %d up at (%d,%d)\n",event.button.button, event.button.x, event.button.y);
+      gameState->ship->stopLasers(event.button.button);
+      if(event.button.button == 1){
+         gameState->ship->stopLasers(0);      
+      }
+      else if(event.button.button == 3){
          gameState->ship->stopLasers(1);
+      }
    }
 }
 
 int main(int argc, char* argv[]) {
 
    srand(time(NULL));
-  
-  //set up my window
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
    GW = 800;
    GH = 600;
-  glutInitWindowSize(GW, GH); 
-  glutInitWindowPosition(100, 100);
-  glutCreateWindow("Asteroid Blaster");
-  glClearColor(0.0, 0.0, 0.0, 1.0);
-  startx = starty = 0;
-  
-  
-  //register glut callback functions
-  glutDisplayFunc( display );
-  glutReshapeFunc( reshape );
-  glutKeyboardFunc(keyboard);
-  glutKeyboardUpFunc(keyUp);
-  glutMouseFunc(mouse);
-  glutMotionFunc(mouseMove);
-  glutPassiveMotionFunc(passiveMouse);
-  glEnable(GL_DEPTH_TEST);
-  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
+   //set up my window
+   glutInit(&argc, argv);
+   //glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
    
-  glEnable(GL_LIGHTING);
-  glEnable(GL_BLEND);
+  //SDL INITIALIZATIONS
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	{
+		cout << "Unable to initialize SDL: " << SDL_GetError() << endl;
+		exit(1);
+	}
+
+	if (SDL_SetVideoMode(GW, GH, 0, SDL_OPENGL) == NULL)
+	{
+		cout << "Unable to create OpenGL scene: " << SDL_GetError() << endl;
+		exit(2);
+	}
+
+	SDL_Init(SDL_INIT_TIMER);
+   //SDL_AddTimer(Uint32 (100), spawnGameObj, param);
+   //SDL_AddTimer(Uint32 (10), gameObjStep, param);
+
+   SDL_WM_SetCaption("Asteroid Blaster", 0);
   
-  init_light();
-  init_tex();
-  glutSetCursor(GLUT_CURSOR_NONE);
 
-  // Preload texture.
-  new TextureImporter("Images/SkybusterExplosion.bmp");
-  //glutFullScreen();
+   glClearColor(0.0, 0.0, 0.0, 1.0);
+   startx = starty = 0;
 
-  materials(Rock);
-  quadric = gluNewQuadric();
-  gluQuadricNormals(quadric, GLU_SMOOTH);
-  glutIdleFunc(timerFunc);
 
-  gameState = new GameState(WORLD_SIZE);
-  
-  glutMainLoop();
+   //register glut callback functions
+   /*glutDisplayFunc( display );
+   glutReshapeFunc( reshape );
+   glutKeyboardFunc(keyboard);
+   glutKeyboardUpFunc(keyUp);
+   glutMouseFunc(mouse);
+   glutMotionFunc(mouseMove);
+   glutPassiveMotionFunc(passiveMouse);*/
+   glEnable(GL_DEPTH_TEST);
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+
+   glEnable(GL_LIGHTING);
+   glEnable(GL_BLEND);
+
+   init_light();
+   init_tex();
+   SDL_ShowCursor(SDL_DISABLE);
+
+   // Preload texture.
+   new TextureImporter("Images/SkybusterExplosion.bmp");
+   //glutFullScreen();
+
+   materials(Rock);
+   quadric = gluNewQuadric();
+   //gluQuadricNormals(quadric, GLU_SMOOTH);
+   //glutIdleFunc(timerFunc);
+
+
+   gameState = new GameState(WORLD_SIZE);
+
+   while (running) {
+      timerFunc();
+      display();
+
+      SDL_Event event;
+      float mouseButtonDown = 0;
+      while (SDL_PollEvent(&event)) {
+         if (event.type == SDL_QUIT) {
+           running = 0;
+         }
+         if (event.type == SDL_MOUSEMOTION) {
+            mouseUpdate(event.button.x,event.button.y);
+         }     
+         if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
+            mouseButton(event);
+         }
+
+         _keys = SDL_GetKeyState(NULL);
+      }
+      if (CheckKeys()) {
+         running = 0;
+      }
+
+   }
 }
