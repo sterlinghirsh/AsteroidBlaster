@@ -21,35 +21,28 @@ BoundingSpace::~BoundingSpace() {
 }
 
 void BoundingSpace::constrain(Object3D* item) {
-   double itemXMax = item->position->x + item->maxX;
-   double itemYMax = item->position->y + item->maxY;
-   double itemZMax = item->position->z + item->maxZ;
-   double itemXMin = item->position->x + item->minX;
-   double itemYMin = item->position->y + item->minY;
-   double itemZMin = item->position->z + item->minZ;
-
-   if (itemXMax > xMax) {
+   if (item->maxPosition->x > xMax) {
       item->position->x = xMax - item->maxX;
       item->velocity->negativeX();
    }
-   if (itemYMax > yMax) {
+   if (item->maxPosition->y > yMax) {
       item->position->y = yMax - item->maxY;
       item->velocity->negativeY();
    }
-   if (itemZMax > zMax) {
+   if (item->maxPosition->z > zMax) {
       item->position->z = zMax - item->maxZ;
       item->velocity->negativeZ();
    }
 
-   if (itemXMin < xMin) {
+   if (item->minPosition->x < xMin) {
       item->position->x = xMin - item->minX;
       item->velocity->positiveX();
    }
-   if (itemYMin < yMin) {
+   if (item->minPosition->y < yMin) {
       item->position->y = yMin - item->minY;
       item->velocity->positiveY();
    }
-   if (itemZMin < zMin) {
+   if (item->minPosition->z < zMin) {
       item->position->z = zMin - item->minZ;
       item->velocity->positiveZ();
    }

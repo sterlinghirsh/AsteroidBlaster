@@ -11,6 +11,10 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
  position(new Point3D(x, y, z)) {
    minX = minY = minZ = -0.5;
    maxX = maxY = maxZ =  0.5;
+   minPosition = new Point3D(0, 0, 0);
+   maxPosition = new Point3D(0, 0, 0);
+   minXRank = minYRank = minZRank = maxXRank = maxYRank = maxZRank = 0;
+   updateBoundingBox();
    displayList = displayListIn;
    velocity = NULL;
    acceleration = NULL;
@@ -25,6 +29,10 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
 }
 
 Object3D::~Object3D() {
+   if (minPosition != NULL)
+      delete minPosition;
+   if (maxPosition != NULL)
+      delete maxPosition;
    if (position != NULL)
       delete position;
    if (velocity != NULL)
@@ -49,6 +57,7 @@ void Object3D::update(double timeDifference) {
    yaw(yawSpeed * timeDifference);
    roll(rollSpeed * timeDifference);
    pitch(pitchSpeed * timeDifference);
+   updateBoundingBox();
 }
 
 void Object3D::draw() {
@@ -117,28 +126,21 @@ void Object3D::pitch(double angle) {
  */
 bool Object3D::detectCollision(Object3D* other, bool checkOther) {
    // Do checks here.
-   // Add position to min/max.
-   double tempMinX = minX + position->x;
-   double tempMaxX = maxX + position->x;
-   double tempMinY = minY + position->y;
-   double tempMaxY = maxY + position->y;
-   double tempMinZ = minZ + position->z;
-   double tempMaxZ = maxZ + position->z;
-   // The other object's bounding box boundries
-   double otherTempMinX = other->minX + other->position->x;
-   double otherTempMaxX = other->maxX + other->position->x;
-   double otherTempMinY = other->minY + other->position->y;
-   double otherTempMaxY = other->maxY + other->position->y;
-   double otherTempMinZ = other->minZ + other->position->z;
-   double otherTempMaxZ = other->maxZ + other->position->z;
 
    // Whether or not there's collisions in each of the dimensions
-   bool xIntersect = (tempMinX >= otherTempMinX && tempMinX <= otherTempMaxX) ||
-                     (tempMaxX >= otherTempMinX && tempMaxX <= otherTempMaxX);
-   bool yIntersect = (tempMinY >= otherTempMinY && tempMinY <= otherTempMaxY) ||
-                     (tempMaxY >= otherTempMinY && tempMaxY <= otherTempMaxY);
-   bool zIntersect = (tempMinZ >= otherTempMinZ && tempMinZ <= otherTempMaxZ) ||
-                     (tempMaxZ >= otherTempMinZ && tempMaxZ <= otherTempMaxZ);
+   bool xIntersect = (minPosition->x >= other->minPosition->x &&
+                      minPosition->x <= other->maxPosition->x) ||
+                     (maxPosition->x >= other->maxPosition->x &&
+                      maxPosition->x <= other->maxPosition->x);
+   bool yIntersect = (minPosition->y >= other->minPosition->y &&
+                      minPosition->y <= other->maxPosition->y) ||
+                     (maxPosition->y >= other->maxPosition->y &&
+                      maxPosition->y <= other->maxPosition->y);
+   bool zIntersect = (minPosition->z >= other->minPosition->z &&
+                      minPosition->z <= other->maxPosition->z) ||
+                     (maxPosition->z >= other->maxPosition->z &&
+                      maxPosition->z <= other->maxPosition->z);
+
    /* If there was any sort of collision, handle it. Else if we should be checking the other's
       collision detection, do so and return that result. Otherwise, all collision detection failed.
     */
@@ -179,4 +181,11 @@ void Object3D::drawBoundingBox() {
    glEnd();
    glPopMatrix();
    glEnable(GL_LIGHTING);
+}
+
+void Object3D::updateBoundingBox() {
+   minPosition->clone(position);
+   maxPosition->clone(position);
+   minPosition->offsetBy(minX, minY, minZ);
+   maxPosition->offsetBy(maxX, maxY, maxZ);
 }

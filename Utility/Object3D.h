@@ -15,6 +15,8 @@
 class Object3D {
    public:
       double minX, minY, minZ, maxX, maxY, maxZ;
+      Point3D* minPosition;
+      Point3D* maxPosition;
       Point3D* position;
       Vector3D* velocity;
       Vector3D* acceleration;
@@ -24,6 +26,7 @@ class Object3D {
       bool lockUpVector;
       double yawSpeed, pitchSpeed, rollSpeed;
       double angle;
+      unsigned int minXRank, minYRank, minZRank, maxXRank, maxYRank, maxZRank;
 
       Object3D(double x, double y, double z, GLuint displayListIn);
       virtual ~Object3D();
@@ -42,6 +45,7 @@ class Object3D {
       void yaw(double angle);
       void roll(double angle);
       void pitch(double angle);
+      void updateBoundingBox();
 };
 
 #endif

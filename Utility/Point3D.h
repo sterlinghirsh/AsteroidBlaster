@@ -42,6 +42,12 @@ struct Point3D {
    void glTranslate() {
       glTranslatef(x, y, z);
    }
+
+   void offsetBy(double x2, double y2, double z2) {
+      x += x2;
+      y += y2;
+      z += z2;
+   }
 };
 
 #endif

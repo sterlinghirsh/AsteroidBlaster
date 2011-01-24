@@ -10,7 +10,6 @@
 #include <sstream>
 
 #include "Graphics/GlutUtility.h"
-#include "Graphics/Face3D.h"
 #include "Utility/Point3D.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
@@ -20,6 +19,7 @@
 #include "Graphics/Camera.h"
 #include "Items/BoundingSpace.h"
 #include "Utility/BitmapTextDisplay.h"
+#include "Utility/GameState.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -40,19 +40,11 @@ std::map<string, int> TextureImporter::texIDMap;
 /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
    update it in updateText(), and make it draw in drawAllText().
 */
-BitmapTextDisplay* FPStext, *objectsText, *objectsCollidedText, *scoreText, *timeText, *gameOverText;
 
-list<Asteroid3D*> asteroids;
-
-AsteroidShip *ship = NULL;
-
-Skybox* skybox = NULL;
-Camera* camera = NULL;
-BoundingSpace* cube = NULL;
+GameState* gameState = NULL;
 
 double displayTime = 0;
 // This double contains the FPS to be printed to the screen each frame.
-double curFPS = 0;
 
 void init_light() {
    glEnable(GL_LIGHT0);
@@ -60,49 +52,19 @@ void init_light() {
    glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
    glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
    glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
+   glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
   glShadeModel(GL_SMOOTH);
   glEnable(GL_NORMALIZE);
-}
-
-void drawAsteroids() {
-   materials(Rock);
-   list<Asteroid3D*>::iterator asteroid = asteroids.begin();
-   for (asteroid = asteroids.begin(); asteroid != asteroids.end(); asteroid++) {
-      (*asteroid)->draw(true);
-   }
 }
 
 void drawSprites() {
    list<Sprite*>::iterator sprite = Sprite::sprites.begin();
    for (; sprite != Sprite::sprites.end(); sprite++) {
-      if (!(*sprite)->draw(ship->position)) {
+      if (!(*sprite)->draw(gameState->ship->position)) {
          sprite = Sprite::sprites.erase(sprite);
          continue;
       }
    }
-}
-
-/* Draw all of the text in the allTexts list to the screen.
-   This function should be called once per display loop.
-   We do all of the looking at, lighting changes, etc. one time here to improve efficiency.
-*/
-void drawAllText() {
-   
-   glPushMatrix();
-      /* Set the camera using the location of your eye, the location where you're looking at, and the up vector.
-         The camera is set to be just 0.25 behind where you're looking at. */
-      gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
-      // Use orthonormal view so the text stays perpendicular to the camera at all times.
-      useOrtho();
-      // We need to disable the lighting temporarily in order to set the color properly.
-      glDisable(GL_LIGHTING);
-      
-      // Draw all of the BitmapTextDisplay objects.
-      FPStext->draw();
-      
-      glEnable(GL_LIGHTING);
-      usePerspective();
-   glPopMatrix();
 }
 
 /* Draw the bounding box grid on the world.
@@ -182,30 +144,15 @@ void drawCrosshair() {
    glPopMatrix();
 }
 
-/* Update the values contained in all of the texts.
-   Clear the list, then re-make it.
-*/
-void updateText() {
-   FPStext->updateBody(curFPS);
-}
-
 void display() {
   double startTime = doubleTime();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
-  // Update the values of all of the text objects.
-  updateText();
-  // Draw all of the text objects to the screen.
-  drawAllText();
-  
   glMatrixMode(GL_MODELVIEW);
   
   glPushMatrix();
-  skybox->draw(camera);
+  gameState->draw();
 
-  camera->setCamera(true);
-  ship->draw();
-  drawAsteroids();
   drawGrid();
   drawSprites();
   drawCrosshair();
@@ -217,39 +164,32 @@ void display() {
   ++curFrame;
 }
 
-void checkCollisions() {
-   ship->checkAsteroidCollisions(asteroids);
-}
-
 void keyboard(unsigned char key, int x, int y ) {
   switch( key ) {
-    case 'a': ship->startYaw(1); break;
-    case 'd': ship->startYaw(-1); break;
-    case 'w': ship->forwardAcceleration(10); break;
-    case 's': ship->forwardAcceleration(-10); break;
-    case 'q': ship->rightAcceleration(-10); break;
-    case 'e': ship->rightAcceleration(10); break;
-    case ' ': ship->upAcceleration(10); break;
-    case 'c': ship->upAcceleration(-10); break;
-    case 'b': ship->brake(2); break;
+    case 'a': gameState->ship->startYaw(1); break;
+    case 'd': gameState->ship->startYaw(-1); break;
+    case 'w': gameState->ship->forwardAcceleration(10); break;
+    case 's': gameState->ship->forwardAcceleration(-10); break;
+    case 'q': gameState->ship->rightAcceleration(-10); break;
+    case 'e': gameState->ship->rightAcceleration(10); break;
+    case ' ': gameState->ship->upAcceleration(10); break;
+    case 'c': gameState->ship->upAcceleration(-10); break;
+    case 'b': gameState->ship->brake(2); break;
   }
-
-  glutPostRedisplay();
 }
 
 void keyUp(unsigned char key, int x, int y) {
    switch (key) {
       case 'a':
-      case 'd': ship->startYaw(0); break;
+      case 'd': gameState->ship->startYaw(0); break;
       case 'w':
-      case 's': ship->forwardAcceleration(0); break;
+      case 's': gameState->ship->forwardAcceleration(0); break;
       case 'q': 
-      case 'e': ship->rightAcceleration(0); break;
+      case 'e': gameState->ship->rightAcceleration(0); break;
       case ' ': 
-      case 'c': ship->upAcceleration(0); break;
-      case 'b': ship->brake(0); break;
+      case 'c': gameState->ship->upAcceleration(0); break;
+      case 'b': gameState->ship->brake(0); break;
    }
-   glutPostRedisplay();
 }
 
 void passiveMouse(int x, int y) {
@@ -262,17 +202,13 @@ void passiveMouse(int x, int y) {
 
 void mouseMove(int x, int y) {
    passiveMouse(x, y);
-   ship->updateShotDirection(p2wx(x), p2wy(y));
+   gameState->ship->updateShotDirection(p2wx(x), p2wy(y));
 }
 
 void timerFunc() {
    static unsigned long lastSecond = 0;
    static unsigned int frames = 0;
    static double lastTime = 0;
-   static double firingTime = 0;
-   static double collisionDetectionTime = 0;
-   static double asteroidUpdateTime = 0;
-   static double updatePositionTime = 0;
    static double totalTime = 0;
    static Point3D lastShipPosition(0, 0, 0);
    double startTime;
@@ -282,60 +218,23 @@ void timerFunc() {
       return;
    }
    double timeDiff = curTime - lastTime;
-   // Print the timeDiff out to the curFPS string to be displayed on screen.
-   // TODO: See if I can optimize this
-   //std::ostringstream sstream;
-   //sstream << 1 / timeDiff;
-//   curFPS = sstream.str();
-   curFPS = 1/timeDiff;
-   
-   //printf("curTime: %f, lastTime: %f, timeDiff: %f\n", curTime, lastTime, timeDiff);
+   gameState->curFPS = 1/timeDiff;
    ++frames;
    totalTime += timeDiff;
 
-   startTime = doubleTime();
-   ship->updatePosition(timeDiff, rollAmount, pitchAmount);
-   updatePositionTime += doubleTime() - startTime;
-   startTime = doubleTime();
-   ship->keepFiring();
-   firingTime += doubleTime() - startTime;
+   gameState->ship->updatePosition(timeDiff, rollAmount, pitchAmount);
+   gameState->ship->keepFiring();
    
-   startTime = doubleTime();
-   list<Asteroid3D*>::iterator asteroid = asteroids.begin();
-   for (asteroid = asteroids.begin(); asteroid != asteroids.end(); ++asteroid)
-      (*asteroid)->updatePosition(timeDiff);
+   gameState->update(timeDiff);
 
-   cube->constrain(ship);
-   asteroidUpdateTime += doubleTime() - startTime;
-   
-   startTime = doubleTime();
-   checkCollisions();
-   collisionDetectionTime += doubleTime() - startTime;
+   gameState->checkCollisions();
 
    glutPostRedisplay();
    
    lastTime = curTime;
    // Stats
    if (floor(curTime) > lastSecond) {
-      /*printf("FPS: %u, updPos: %f, colDetect: %f, astUpd: %f, firing: %f, disp: %f, total: %f\n",
-       frames,
-       100 * updatePositionTime ,
-       100 * collisionDetectionTime ,
-       100 * asteroidUpdateTime ,
-       100 * firingTime ,
-       100 * displayTime,
-       100 * totalTime);
-       */
-
-      Vector3D actualShipSpeed(lastShipPosition, *ship->position);
-      /*printf("ActualShipSpeed: %f, NominalShipspeed: %f\n", actualShipSpeed.getLength(),
-       ship->velocity.getLength());
-       */
-      // Copy
-      lastShipPosition = *ship->position;
-
       frames = 0;
-      updatePositionTime = collisionDetectionTime = asteroidUpdateTime = firingTime = displayTime = totalTime = 0;
       lastSecond = floor(curTime);
    }
 }
@@ -343,23 +242,17 @@ void timerFunc() {
 void mouse(int button, int state, int x, int y) {
    if (button == GLUT_LEFT_BUTTON) {
       if (state == GLUT_DOWN)
-         ship->fireLasers(p2wx(x), p2wy(y), 0);
+         gameState->ship->fireLasers(p2wx(x), p2wy(y), 0);
       else
-         ship->stopLasers(0);
+         gameState->ship->stopLasers(0);
    }
    
    if (button == GLUT_RIGHT_BUTTON) {
       if (state == GLUT_DOWN)
-         ship->fireLasers(p2wx(x), p2wy(y), 1);
+         gameState->ship->fireLasers(p2wx(x), p2wy(y), 1);
       else
-         ship->stopLasers(1);
+         gameState->ship->stopLasers(1);
    }
-   glutPostRedisplay();
-}
-
-// Set up our text objects to be displayed on screen.
-void createHUDText() {
-   FPStext = new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20);
 }
 
 int main(int argc, char* argv[]) {
@@ -376,12 +269,7 @@ int main(int argc, char* argv[]) {
   glutCreateWindow("Asteroid Blaster");
   glClearColor(0.0, 0.0, 0.0, 1.0);
   startx = starty = 0;
-  for (int i = 0; i < 15; ++i) {
-    asteroids.push_back(new Asteroid3D(10 + (10 * randdouble()), WORLD_SIZE));
-  }
   
-  // Set up our text objects & HUD text elements.
-  createHUDText();
   
   //register glut callback functions
   glutDisplayFunc( display );
@@ -400,22 +288,18 @@ int main(int argc, char* argv[]) {
   
   init_light();
   init_tex();
-   skybox = new Skybox("Images/stars.bmp");
   glutSetCursor(GLUT_CURSOR_NONE);
 
   // Preload texture.
   new TextureImporter("Images/SkybusterExplosion.bmp");
   //glutFullScreen();
-  ship = new AsteroidShip(GL_LIGHT0, WORLD_SIZE);
-  camera = new Camera(ship);
-  cube = new BoundingSpace(WORLD_SIZE / 2, 0, 0, 0);
 
   materials(Rock);
   quadric = gluNewQuadric();
   gluQuadricNormals(quadric, GLU_SMOOTH);
   glutIdleFunc(timerFunc);
-  
 
+  gameState = new GameState(WORLD_SIZE);
   
   glutMainLoop();
 }

@@ -6,6 +6,9 @@
  * 1-19-11
  */
 
+#ifndef __BITMAPTEXTDISPLAY_H__
+#define __BITMAPTEXTDISPLAY_H__
+
 #include "Utility/Point3D.h"
 #include <string>
 #include <sstream>
@@ -52,3 +55,5 @@ class BitmapTextDisplay {
       // Takes in the x and y position of where to draw the text
       virtual void draw();
 };
+
+#endif
