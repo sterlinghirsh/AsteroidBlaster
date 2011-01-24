@@ -171,7 +171,6 @@ void AsteroidShip::stopLasers(int weapon) {
    }
 }
 
-
 void AsteroidShip::draw() {
    for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
       (*shotIter)->draw();
@@ -185,15 +184,18 @@ void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
       // Distance to ship.
       distance = position->distanceFrom(*(*asteroid)->position);
       if (distance < shipRadius + (*asteroid)->collisionRadius) {
-         // TEMP. We should damage the ship.
+         // TEMP. Asteroids should not be simply erased.
          asteroid = asteroids.erase(asteroid);
+         // Increase the player's score by an appropriate amount.
          score += (*asteroid)->collisionRadius * (rand()%3 + 1);
+         // Decrease the player's health by an appropriate amount.
          health -= (*asteroid)->collisionRadius/2;
          continue;
       }
       for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
          if ((*shotIter)->checkHit(*asteroid)) {
             if ((*asteroid)->handleHit(asteroids)) {
+               score += (*asteroid)->collisionRadius * (rand()%3 + 1);
                delete *asteroid;
                asteroid = asteroids.erase(asteroid);
             }

@@ -220,7 +220,6 @@ GLboolean CheckKeys()
 }
 
 
-
 void timerFunc() {
    static unsigned long lastSecond = 0;
    static unsigned int frames = 0;
@@ -287,8 +286,8 @@ void mouseButton(SDL_Event event){
 int main(int argc, char* argv[]) {
 
    srand(time(NULL));
-   GW = 1024;
-   GH = 768;
+   GW = 800;
+   GH = 600;
    //set up my window
    glutInit(&argc, argv);
    
