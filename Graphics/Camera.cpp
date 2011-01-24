@@ -27,10 +27,7 @@ Camera::Camera(Object3D* object) {
 }
 
 Camera::~Camera() {
-   delete position;
-   delete up;
-   delete right;
-   delete forward;
+   // Position, up, right, forward deleted by the Object3D's destructor
    delete offset;
 }
 

@@ -10,6 +10,7 @@
 #include "Graphics/GlutUtility.h"
 
 GameState::GameState(double worldSizeIn) {
+   gameIsRunning = true;
    worldSize = worldSizeIn;
    skybox = new Skybox("Images/stars.bmp");
    ship = new AsteroidShip(GL_LIGHT0, worldSize);
@@ -21,7 +22,8 @@ GameState::GameState(double worldSizeIn) {
    numAsteroidsText = new BitmapTextDisplay("Asteroids Remaining: ", (int)asteroids.size(), "", 10, 40);
    scoreText = new BitmapTextDisplay("Score: ", ship->getScore(), "", 10, 60);
    healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 80);
-   
+   gameOverText = new BitmapTextDisplay("GAME OVER", GW/2, GH/2);
+   winText = new BitmapTextDisplay("YOU WIN!", GW/2, GH/2);
    initAsteroids();
 }
 
@@ -33,6 +35,13 @@ GameState::~GameState() {
 }
 
 void GameState::update(double timeDiff) {
+   if(ship->getHealth() <= 0){
+      gameIsRunning = false;
+   }
+   else if (ship->score >= 500){
+      gameIsRunning = false;
+   }
+   
    cube->constrain(ship);
    for (asteroid = asteroids.begin(); asteroid != asteroids.end(); ++asteroid) {
       (*asteroid)->updatePosition(timeDiff);
@@ -85,11 +94,18 @@ void GameState::drawAllText() {
    glDisable(GL_LIGHTING);
    
    // Draw all of the BitmapTextDisplay objects.
+   if(!gameIsRunning && ship->getHealth() <= 0){
+      gameOverText->draw();
+   }
+   else if (!gameIsRunning && ship->getHealth() > 0) {
+      winText->draw();
+   }
+   
    FPSText->draw();
    numAsteroidsText->draw();
    scoreText->draw();
    healthText->draw();
-   
+      
    glEnable(GL_LIGHTING);
    usePerspective();
    glPopMatrix();

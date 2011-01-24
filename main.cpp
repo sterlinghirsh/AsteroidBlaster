@@ -160,13 +160,15 @@ void display() {
   ++curFrame;
 }
 
-GLboolean CheckKeys()
-{
-  bool moved = false;
-  if (_keys[SDLK_ESCAPE])
-  {
-    return true;
-  }
+GLboolean CheckKeys() {
+   if (_keys[SDLK_ESCAPE]) {
+      exit(0);
+   }
+   
+   if (_keys[SDLK_r]) {
+      return true;
+   }
+  
   
    if (_keys[SDLK_a]) {
       gameState->ship->startYaw(1);
@@ -333,9 +335,11 @@ int main(int argc, char* argv[]) {
    gameState = new GameState(WORLD_SIZE);
 
    while (running) {
-      timerFunc();
-      display();
-
+      if(gameState->gameIsRunning){
+         timerFunc();
+         display();
+      }
+      
       SDL_Event event;
       float mouseButtonDown = 0;
       while (SDL_PollEvent(&event)) {
@@ -351,8 +355,8 @@ int main(int argc, char* argv[]) {
       }
       _keys = SDL_GetKeyState(NULL);
       if (CheckKeys()) {
-         running = 0;
+         delete gameState;
+         gameState = new GameState(WORLD_SIZE);
       }
-
    }
 }

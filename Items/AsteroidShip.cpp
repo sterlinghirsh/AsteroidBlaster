@@ -185,7 +185,7 @@ void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
       distance = position->distanceFrom(*(*asteroid)->position);
       if (distance < shipRadius + (*asteroid)->collisionRadius) {
          // Increase the player's score by an appropriate amount.
-         score += (*asteroid)->collisionRadius * (rand()%3 + 1);
+         //score += (*asteroid)->collisionRadius * (rand()%3 + 1);
          // Decrease the player's health by an appropriate amount.
          health -= (*asteroid)->collisionRadius/2;
          // TEMP. Asteroids should not be simply erased.
