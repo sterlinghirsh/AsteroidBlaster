@@ -33,7 +33,8 @@ void AsteroidShot::draw() {
       axis.xMag, axis.yMag, axis.zMag);
   // glutSolidSphere(0.05, 30, 10);
    //drawCylinder(0.02, 1);
-   glutSolidCone(0.02, 0.2, 8, 8);
+   //glutSolidCone(0.02, 0.2, 8, 8);
+   gluCylinder(quadric,0.02f,0.0f,0.2f,8,8);
 
    glPopMatrix();
 }

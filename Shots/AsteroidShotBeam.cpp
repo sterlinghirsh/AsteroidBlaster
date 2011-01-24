@@ -70,7 +70,8 @@ void AsteroidShotBeam::draw() {
       glRotatef(fmod(curTime, 4) * 90 + (distance*angleDiff), direction.xMag, 
        direction.yMag, direction.zMag);
       normal.glTranslate((1 - timeLeft) + ballOffset);
-      glutSolidSphere(0.05 * (1 - timeLeft), 10, 10);
+      //glutSolidSphere(0.05 * (1 - timeLeft), 10, 10);
+      gluSphere(quadric, 0.05 * (1 - timeLeft), 10,10);
       glPopMatrix();
    }
    glPopMatrix();

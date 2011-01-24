@@ -20,12 +20,6 @@
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/GameState.h"
 
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
-
 #include "SDL.h"
 Uint8* _keys;
 
@@ -297,9 +291,8 @@ int main(int argc, char* argv[]) {
    GH = 768;
    //set up my window
    glutInit(&argc, argv);
-   //glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
    
-  //SDL INITIALIZATIONS
+   //SDL INITIALIZATIONS
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		cout << "Unable to initialize SDL: " << SDL_GetError() << endl;
@@ -322,22 +315,10 @@ int main(int argc, char* argv[]) {
    glClearColor(0.0, 0.0, 0.0, 1.0);
    startx = starty = 0;
 
-
-   //register glut callback functions
-   /*glutDisplayFunc( display );
-   glutReshapeFunc( reshape );
-   glutKeyboardFunc(keyboard);
-   glutKeyboardUpFunc(keyUp);
-   glutMouseFunc(mouse);
-   glutMotionFunc(mouseMove);
-   glutPassiveMotionFunc(passiveMouse);*/
    glEnable(GL_DEPTH_TEST);
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-
    glEnable(GL_LIGHTING);
    glEnable(GL_BLEND);
-
    init_light();
    init_tex();
    SDL_ShowCursor(SDL_DISABLE);
@@ -348,9 +329,7 @@ int main(int argc, char* argv[]) {
 
    materials(Rock);
    quadric = gluNewQuadric();
-   //gluQuadricNormals(quadric, GLU_SMOOTH);
-   //glutIdleFunc(timerFunc);
-
+   gluQuadricNormals(quadric, GLU_SMOOTH);
 
    gameState = new GameState(WORLD_SIZE);
 
@@ -370,9 +349,8 @@ int main(int argc, char* argv[]) {
          if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
             mouseButton(event);
          }
-
-         _keys = SDL_GetKeyState(NULL);
       }
+      _keys = SDL_GetKeyState(NULL);
       if (CheckKeys()) {
          running = 0;
       }
