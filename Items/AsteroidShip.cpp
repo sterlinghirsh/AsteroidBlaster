@@ -32,7 +32,7 @@ AsteroidShip::AsteroidShip(int headlightIn, double worldSizeIn) :
    yawFactor = 1;
    rollFactor = pitchFactor = 2;
    yawAmount = 0;
-   maxSpeed = 20;
+   maxSpeed = 5;
    shotSpeed = 40;
    timeOfLastShot = 0;
    timeOfLastBeam = 0;

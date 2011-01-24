@@ -70,7 +70,7 @@ void drawGrid() {
    const double alpha = 1;
    glDisable(GL_LIGHTING);
    glBegin(GL_LINES);
-   for (int i = -wall; i <= wall; i += WORLD_SIZE / 40) {
+   for (double i = -wall; i <= wall; i += WORLD_SIZE / 80) {
       glColor4f(0.0, 1.0, 0.0, alpha);
       // Floor
       glVertex3f(-wall, -wall, i);
