@@ -332,6 +332,23 @@ void draw_ship(){
 
 }
 
+void draw_vectors(){
+	materials(white);
+	glBegin(GL_LINES);
+	glVertex3f(0,0,0);
+	glVertex3f(0,.5,0);
+
+	glVertex3f(0,0,0);
+	glVertex3f(0,0,-1);
+
+	glVertex3f(.5,0,0);
+	glVertex3f(-.5,0,0);
+
+	glEnd();
+
+
+}
+
 //the display call back - all drawing should be done in this function
 void display() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -348,10 +365,14 @@ void display() {
 
   glMultMatrixf(trackballM);
   materials(GreenShiny);
-  glRotatef(180, 1, 0, 0);
+  glRotatef(-30, 1, 1, 0);
   glTranslatef(0, 0, -.4);
   glScalef(1.5, .5, .8);
   draw_ship();
+    glPushMatrix();
+    glTranslatef(0, 0, .5);
+    draw_vectors();
+    glPopMatrix();
   glPopMatrix();
 
   glutSwapBuffers();
