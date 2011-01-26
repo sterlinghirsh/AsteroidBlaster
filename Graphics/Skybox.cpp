@@ -26,11 +26,13 @@ void Skybox::draw(Camera* camera) {
    glPushMatrix();
    glLoadIdentity();
    glEnable(GL_TEXTURE_2D);
+   glDisable(GL_CULL_FACE);
    camera->setCamera(false);
    glScalef(3, 3, 3);
    drawcube();
 
    glDisable(GL_TEXTURE_2D);
+   glEnable(GL_CULL_FACE);
    glPopMatrix();
    glEnable(GL_LIGHTING);
    glEnable(GL_DEPTH_TEST);
