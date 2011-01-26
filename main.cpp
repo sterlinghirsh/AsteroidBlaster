@@ -272,14 +272,12 @@ void mouseButton(SDL_Event event){
          gameState->ship->fireLasers(p2wx(event.button.x), p2wy(event.button.y), 1);         
       }
    }
-   if (event.type == SDL_MOUSEBUTTONUP)
-   {
+   if (event.type == SDL_MOUSEBUTTONUP) {
       printf("Mouse button %d up at (%d,%d)\n",event.button.button, event.button.x, event.button.y);
       gameState->ship->stopLasers(event.button.button);
       if(event.button.button == 1){
          gameState->ship->stopLasers(0);      
-      }
-      else if(event.button.button == 3){
+      } else if (event.button.button == 3){
          gameState->ship->stopLasers(1);
       }
    }
@@ -316,6 +314,7 @@ int main(int argc, char* argv[]) {
    glClearColor(0.0, 0.0, 0.0, 1.0);
    startx = starty = 0;
 
+   glEnable(GL_CULL_FACE);
    glEnable(GL_DEPTH_TEST);
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
