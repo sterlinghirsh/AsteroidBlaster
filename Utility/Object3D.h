@@ -21,10 +21,8 @@ class Object3D {
       Vector3D* velocity;
       Vector3D* acceleration;
       Vector3D* axis;
-      GLuint displayList;
       Vector3D *up, *right, *forward;
       bool lockUpVector;
-      double yawSpeed, pitchSpeed, rollSpeed;
       double angle;
       unsigned int minXRank, minYRank, minZRank, maxXRank, maxYRank, maxZRank;
 
@@ -36,16 +34,19 @@ class Object3D {
       virtual void setPitchSpeed(double radiansPerSecond);
       virtual void setRollSpeed(double radiansPerSecond);
       virtual bool detectCollision(Object3D* other, bool checkOther = true);
-      virtual void handleCollision(Object3D* other);
       virtual void drawBoundingBox();
 
    private:
 
    protected:
+      double yawSpeed, pitchSpeed, rollSpeed;
+      GLuint displayList;
+
       void yaw(double angle);
       void roll(double angle);
       void pitch(double angle);
       void updateBoundingBox();
+      virtual void handleCollision(Object3D* other);
 };
 
 #endif

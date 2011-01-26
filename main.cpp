@@ -42,6 +42,11 @@ GameState* gameState = NULL;
 double displayTime = 0;
 // This double contains the FPS to be printed to the screen each frame.
 
+GLfloat headlight_pos[4] = {WORLD_SIZE / 2, WORLD_SIZE / 2, WORLD_SIZE / 2, 1};
+GLfloat headlight_amb[4] = {0.1, 0.1, 0.1, 1};
+GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
+GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
+
 void init_light() {
    glEnable(GL_LIGHT0);
    // headlight_amb is defined in Asteroidship.h
@@ -165,64 +170,61 @@ void display() {
 }
 
 GLboolean CheckKeys() {
+   static bool resetReleased = true;
    if (_keys[SDLK_ESCAPE]) {
       exit(0);
    }
    
    if (_keys[SDLK_r]) {
-      return true;
+      if (resetReleased) {
+         resetReleased = false;
+         return true;
+      }
+   } else {
+      resetReleased = true;
    }
   
   
    if (_keys[SDLK_a]) {
-      gameState->ship->startYaw(1);
-   }
-   else if(_keys[SDLK_d]){
-      gameState->ship->startYaw(-1);
-   }
-   else{
-      gameState->ship->startYaw(0);
+      gameState->ship->setYawSpeed(1);
+   } else if (_keys[SDLK_d]) {
+      gameState->ship->setYawSpeed(-1);
+   } else {
+      gameState->ship->setYawSpeed(0);
    }
    
    
    if (_keys[SDLK_w]) {
-      gameState->ship->forwardAcceleration(10);
-   }
-   else if(_keys[SDLK_s]){
-      gameState->ship->forwardAcceleration(-10);
-   }
-   else{
-      gameState->ship->forwardAcceleration(0);
+      gameState->ship->accelerateForward(1);
+   } else if (_keys[SDLK_s]) {
+      gameState->ship->accelerateForward(-1);
+   } else {
+      gameState->ship->accelerateForward(0);
    }
 
    if (_keys[SDLK_q]) {
-      gameState->ship->rightAcceleration(-10);
-   }
-   else if(_keys[SDLK_e]){
-      gameState->ship->rightAcceleration(10);
-   }
-   else{
-      gameState->ship->rightAcceleration(0);
+      gameState->ship->accelerateRight(-1);
+   } else if (_keys[SDLK_e]) {
+      gameState->ship->accelerateRight(1);
+   } else {
+      gameState->ship->accelerateRight(0);
    }
 
    if (_keys[SDLK_SPACE]) {
-      gameState->ship->upAcceleration(10);
-   }
-   else if(_keys[SDLK_c]) {
-      gameState->ship->upAcceleration(-10);
-   }
-   else{
-      gameState->ship->upAcceleration(0);
+      gameState->ship->accelerateUp(1);
+   } else if (_keys[SDLK_c]) {
+      gameState->ship->accelerateUp(-1);
+   } else {
+      gameState->ship->accelerateUp(0);
    }
 
    if (_keys[SDLK_b]) {
-      gameState->ship->brake(2);
-   }
-   else{
-      gameState->ship->brake(0);
+      gameState->ship->setBrake(true);
+   } else {
+      gameState->ship->setBrake(false);
    }
    
-  return false;
+   return false;
 }
 
 
@@ -268,20 +270,17 @@ void mouseUpdate(int x, int y){
 void mouseButton(SDL_Event event){
    if(event.type == SDL_MOUSEBUTTONDOWN) {
       printf("Mouse button %d pressed at (%d,%d)\n",event.button.button, event.button.x, event.button.y);
+      gameState->ship->updateShotDirection(p2wx(event.button.x), p2wy(event.button.y));
       if(event.button.button == 1){
-         gameState->ship->fireLasers(p2wx(event.button.x), p2wy(event.button.y), 0);         
+         gameState->ship->selectWeapon(0);         
       } else if (event.button.button == 3) {
-         gameState->ship->fireLasers(p2wx(event.button.x), p2wy(event.button.y), 1);         
+         gameState->ship->selectWeapon(1);
       }
+      gameState->ship->fire(true);
    }
    if (event.type == SDL_MOUSEBUTTONUP) {
       printf("Mouse button %d up at (%d,%d)\n",event.button.button, event.button.x, event.button.y);
-      gameState->ship->stopLasers(event.button.button);
-      if(event.button.button == 1) {
-         gameState->ship->stopLasers(0);      
-      } else if (event.button.button == 3) {
-         gameState->ship->stopLasers(1);
-      }
+      gameState->ship->fire(false);
    }
 }
 
@@ -325,7 +324,6 @@ int main(int argc, char* argv[]) {
 
    // Preload texture.
    new TextureImporter("Images/SkybusterExplosion.bmp");
-   //glutFullScreen();
 
    materials(Rock);
    quadric = gluNewQuadric();

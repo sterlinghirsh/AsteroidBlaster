@@ -14,41 +14,60 @@
 
 using namespace std;
 
-GLfloat headlight_pos[4] = {0, 0, 1, 1};
-GLfloat headlight_amb[4] = {0.1, 0.1, 0.1, 1};
-GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
-GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
-
-
-AsteroidShip::AsteroidShip(int headlightIn, double worldSizeIn) : 
- Object3D(0, 0, 0, 0),
- shotDirection(0, 0, 1), 
- headlight(headlightIn), 
- worldSize(worldSizeIn) {
+AsteroidShip::AsteroidShip() : 
+ Object3D(0, 0, 0, 0),     // Initialize superclass
+ shotDirection(0, 0, 1) {  // Initialize shot direction to forward
+   /* Initialize velocity and acceleration to 0. */
    velocity = new Vector3D(0, 0, 0);
    acceleration = new Vector3D(0, 0, 0);
-   brakeFactor = 0;
-   forwardAccel = rightAccel = upAccel = 0;
-   yawFactor = 1;
-   rollFactor = pitchFactor = 2;
-   yawAmount = 0;
-   maxSpeed = 5;
-   shotSpeed = 40;
+   /* Currently not braking or acceleration. */
+   isBraking = false;
+   brakeFactor = 2;
+   /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
+   curForwardAccel = curRightAccel = curUpAccel = 0;
+
+   yawSpeed = rollSpeed = pitchSpeed = 0;
+   maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
+   shotSpeed = 40; // Also probably will be changed with an upgrade.
+
+   // Timing stuff
    timeOfLastShot = 0;
    timeOfLastBeam = 0;
    lastGunFired = 0;
+
+   // Bounding box stuff.
    shipRadius = 1;
    maxX = maxY = maxZ = 1;
    minX = minY = minZ = -1;
+
+   // Orientation vectors.
    forward->updateMagnitude(0, 0, 1);
    up->updateMagnitude(0, 1, 0);
    right->updateMagnitude(-1, 0, 0);
-   fireShots = fireBeams = false;
+
+   // Is the ship firing? Not when it's instantiated.
+   isFiring = false;
    shotPhi = shotTheta = 0;
    // The ship's score. This number is displayed to the screen.
    score = 0;
    // The ship's health. This number is displayed to the screen.
    health = 100;
+   // The ship's currently selected weapon.
+   currentWeapon = 0;
+   // The ship's max motion parameters.
+   maxForwardAccel = 10;
+   maxRightAccel = 5;
+   maxUpAccel = 5;
+   maxYawSpeed = 2;
+   maxPitchSpeed = 2;
+   maxRollSpeed = 2;
+}
+
+/**
+ * Set the currently selected weapon to the weapon type specified.
+ */
+void AsteroidShip::selectWeapon(int weaponType) {
+   currentWeapon = weaponType;
 }
 
 /**
@@ -65,44 +84,57 @@ int AsteroidShip::getScore() {
    return score;
 }
 
-void AsteroidShip::startYaw(double yawAmountIn) {
-   yawAmount = yawAmountIn;
+void AsteroidShip::setYawSpeed(double yawAmountIn) {
+   yawSpeed = yawAmountIn;
+}
+
+void AsteroidShip::setPitchSpeed(double pitchAmountIn) {
+   pitchSpeed = pitchAmountIn;
+}
+
+void AsteroidShip::setRollSpeed(double rollAmountIn) {
+   rollSpeed = rollAmountIn;
 }
 
 void AsteroidShip::updateAcceleration() {
    acceleration->updateMagnitude(
-         forward->scalarMultiply(forwardAccel).add(
-         right->scalarMultiply(rightAccel).add(
-         up->scalarMultiply(upAccel))));
+         forward->scalarMultiply(curForwardAccel).add(
+         right->scalarMultiply(curRightAccel).add(
+         up->scalarMultiply(curUpAccel))));
 }
 
-void AsteroidShip::brake(double brakeFactorIn) {
-   brakeFactor = brakeFactorIn;
+void AsteroidShip::setBrake(bool doBrake) {
+   isBraking = doBrake;
 }
 
-void AsteroidShip::forwardAcceleration(double newAcc) {
-   forwardAccel = newAcc;
+/**
+ * Set the engine's acceleration.
+ */
+void AsteroidShip::accelerateForward(int dir) {
+   curForwardAccel = dir * maxForwardAccel;
    updateAcceleration();
 }
 
-void AsteroidShip::rightAcceleration(double newAcc) {
-   rightAccel = newAcc;
+void AsteroidShip::accelerateUp(int dir) {
+   curUpAccel = dir * maxUpAccel;
    updateAcceleration();
 }
 
-void AsteroidShip::upAcceleration(double newAcc) {
-   upAccel = newAcc;
+void AsteroidShip::accelerateRight(int dir) {
+   curRightAccel = dir * maxRightAccel;
    updateAcceleration();
 }
 
 
 void AsteroidShip::updatePosition(double timeDiff, 
- double rollAmount, double pitchAmount) {
+ double rollSpeedIn, double pitchSpeedIn) {
    updateAcceleration();
 
-   velocity->xMag -= velocity->xMag * timeDiff * brakeFactor;
-   velocity->yMag -= velocity->yMag * timeDiff * brakeFactor;
-   velocity->zMag -= velocity->zMag * timeDiff * brakeFactor;
+   if (isBraking) {
+      velocity->xMag -= velocity->xMag * timeDiff * brakeFactor;
+      velocity->yMag -= velocity->yMag * timeDiff * brakeFactor;
+      velocity->zMag -= velocity->zMag * timeDiff * brakeFactor;
+   }
    
    double speed = velocity->getLength();
    if (speed > maxSpeed)
@@ -110,9 +142,13 @@ void AsteroidShip::updatePosition(double timeDiff,
 
    Object3D::update(timeDiff);
    
-   roll(timeDiff * rollAmount * pitchFactor);
-   pitch(timeDiff * pitchAmount * pitchFactor);
-   yaw(timeDiff * yawAmount * yawFactor);
+   // Just in case.
+   setRollSpeed(rollSpeedIn);
+   setPitchSpeed(pitchSpeedIn);
+
+   roll(timeDiff * rollSpeed);
+   pitch(timeDiff * pitchSpeed);
+   yaw(timeDiff * yawSpeed);
 
    // iterate throught shots
    double curTime = doubleTime();
@@ -138,10 +174,17 @@ void AsteroidShip::updateShotDirection(double xOffset, double yOffset) {
    updateShotDirectionVector();
 }
 
+void AsteroidShip::fire(bool startFiring) {
+   isFiring = startFiring;
+}
+
 void AsteroidShip::keepFiring() {
-   if (!(fireShots || fireBeams)) return;
+   if (!isFiring) return;
    double curTime = doubleTime();
    Point3D start = *position;
+   /* This is goofy as hell, so let's do it the OOP way. */
+   bool fireShots = (currentWeapon == 0);
+   bool fireBeams = (currentWeapon == 1);
    shotDirection.movePoint(start);
    if (fireShots && (timeOfLastShot < curTime - (1 / AsteroidShot::frequency) ||
     timeOfLastShot == 0)) {
@@ -153,21 +196,6 @@ void AsteroidShip::keepFiring() {
     timeOfLastBeam == 0)) {
       shots.push_back(new AsteroidShotBeam(start, shotDirection));
       timeOfLastBeam = curTime;
-   }
-}
-
-void AsteroidShip::fireLasers(double xOffset, double yOffset, int weapon) {
-   switch (weapon) {
-      case 0: fireShots = true; break;
-      case 1: fireBeams = true; break;
-   }
-   updateShotDirection(xOffset, yOffset);
-}
-
-void AsteroidShip::stopLasers(int weapon) {
-   switch (weapon) {
-      case 0: fireShots = false; break;
-      case 1: fireBeams = false; break;
    }
 }
 

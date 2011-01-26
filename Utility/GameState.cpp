@@ -13,7 +13,7 @@ GameState::GameState(double worldSizeIn) {
    gameIsRunning = true;
    worldSize = worldSizeIn;
    skybox = new Skybox("Images/stars.bmp");
-   ship = new AsteroidShip(GL_LIGHT0, worldSize);
+   ship = new AsteroidShip();
    camera = new Camera(ship);
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
    // Set up our text objects to be displayed on screen.
@@ -35,10 +35,9 @@ GameState::~GameState() {
 }
 
 void GameState::update(double timeDiff) {
-   if(ship->getHealth() <= 0){
+   if(ship->getHealth() <= 0) {
       gameIsRunning = false;
-   }
-   else if (ship->score >= 4000){
+   } else if (ship->getScore() >= 2000) {
       gameIsRunning = false;
    }
    

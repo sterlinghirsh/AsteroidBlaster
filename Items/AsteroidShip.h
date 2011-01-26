@@ -24,16 +24,61 @@ extern GLfloat headlight_spec[4];
 
 class AsteroidShip : public Object3D {
    public:
-      Vector3D shotDirection;
-      int headlight; // GL_LIGHT0
-      double forwardAccel; // Units per second^2
-      double rightAccel;
-      double upAccel;
-      double yawAmount;
-      double maxSpeed; // Units per second
-      double rollFactor;
-      double pitchFactor;
-      double yawFactor;
+      AsteroidShip();
+      int getHealth();
+      int getScore();
+      void updateAcceleration();
+      void updatePosition(double timeDiff, double rollAmount, double pitchAmount);
+
+      // We'll have to update this later so the AI can use it.
+      void updateShotDirection(double xOffset, double yOffset);
+      void keepFiring();
+      virtual void draw();
+      // This will be gone soon.
+      void checkAsteroidCollisions(std::list<Asteroid3D*>& asteroids);
+
+      /**
+       * These are going to be the functions that either the local player
+       * or the AI player or the networked player will call.
+       * Essentially, this is the ship's API.
+       * 
+       * We give accelerateForward, Right, Up either -1, 0, or 1 to mean
+       * backward, none, or forward. You can either fully accelerate or not.
+       * Rotation is the opposite. You supply a value, this clamps it and sets it.
+       * setBrake accepts a bool. true brakes, false does not brake.
+       * fire works the same as setBrake.
+       * selectWeapon selects the weapon corresponding to the int weaponType.
+       * We will need to prevent weapons that the player does not own from getting selected.
+       */
+      void accelerateForward(int direction);
+      void accelerateRight(int direction);
+      void accelerateUp(int direction);
+      void setBrake(bool doBrake);
+      void setYawSpeed(double yawAmountIn);
+      void setRollSpeed(double rollAmount);
+      void setPitchSpeed(double pitchAmount);
+      void fire(bool startFiring);
+      void selectWeapon(int weaponType);
+
+      // Change this to something reasonable once we have a radar.
+      // void getRararData();
+      // void getAllVisibleAsteroids();
+
+   private:
+      Vector3D shotDirection; // If we shoot a shot, where will it go?
+      std::list<AsteroidShot*> shots; // A list of all of this ship's shots.
+      std::list<AsteroidShot*>::iterator shotIter;
+
+      double brakeFactor;
+      double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.
+
+      // These could get changed with upgrades.
+      double maxForwardAccel;
+      double maxUpAccel;
+      double maxRightAccel;
+      double maxYawSpeed;
+      double maxPitchSpeed;
+      double maxRollSpeed;
 
       double shotPhi; // Radians
       double shotTheta; // Radians
@@ -41,35 +86,26 @@ class AsteroidShip : public Object3D {
       double timeOfLastShot; // Seconds
       double timeOfLastBeam; // Seconds
 
-      std::list<AsteroidShot*> shots;
-      std::list<AsteroidShot*>::iterator shotIter;
-      int lastGunFired;
-      double worldSize;
-      bool fireShots;
-      bool fireBeams;
-      int score, health;
-
-      double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.
+      double curForwardAccel; // Units per second^2
+      double curRightAccel;
+      double curUpAccel;
       
-      AsteroidShip(int headlightIn, double worldSizeIn);
-      int getHealth();
-      int getScore();
-      void startYaw(double yawAmountIn);
-      void updateAcceleration();
+      double yawSpeed; // Rad/s
+      double pitchSpeed;
+      double rollSpeed;
+      double maxSpeed; // Units per second
+
+      bool isBraking;
+      bool isFiring;
+      int score, health;
+      int lastGunFired;
+      int currentWeapon;
+
+      void updateShotDirectionVector();
       void brake(double brakeFactorIn);
       void forwardAcceleration(double newAcc);
       void rightAcceleration(double newAcc);
       void upAcceleration(double newAcc);
-      void updatePosition(double timeDiff, double rollAmount, double pitchAmount);
-      void updateShotDirection(double xOffset, double yOffset);
-      void keepFiring();
-      void fireLasers(double xOffset, double yOffset, int weapon);
-      void stopLasers(int weapon);
-      virtual void draw();
-      void checkAsteroidCollisions(std::list<Asteroid3D*>& asteroids);
-   private:
-      double brakeFactor;
-      void updateShotDirectionVector();
 };
 
 #endif
