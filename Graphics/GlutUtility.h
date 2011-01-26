@@ -61,6 +61,7 @@ extern materialStruct GreenShiny;
 extern materialStruct BlueShiny;
 extern materialStruct RedFlat;
 extern materialStruct WhiteTransparent;
+extern materialStruct WhiteSolid;
 extern materialStruct Rock;
 
 typedef struct RGB {

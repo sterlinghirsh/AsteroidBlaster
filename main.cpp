@@ -131,10 +131,10 @@ void drawCrosshair() {
    double thicknessY = 0.01;
    glPushMatrix();
    glLoadIdentity();
-   materials(WhiteTransparent);
+   materials(WhiteSolid);
    glColor3f(1, 1, 1);
    useOrtho();
-   glDisable(GL_BLEND);
+   glDisable(GL_LIGHTING);
    glBegin(GL_QUADS);
    glVertex3f(xdouble + crosshairSizeX, ydouble + thicknessY, 0);
    glVertex3f(xdouble - crosshairSizeX, ydouble + thicknessY, 0);
@@ -146,7 +146,7 @@ void drawCrosshair() {
    glVertex3f(xdouble - thicknessX, ydouble + crosshairSizeY, 0);
    glVertex3f(xdouble - thicknessX, ydouble - crosshairSizeY, 0);
    glEnd();
-   glEnable(GL_BLEND);
+   glEnable(GL_LIGHTING);
    usePerspective();
    glPopMatrix();
 }

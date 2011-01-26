@@ -184,6 +184,14 @@ materialStruct WhiteTransparent = {
   {0.0}
 };
 
+materialStruct WhiteSolid = {
+  {1, 1, 1, 1},
+  {1.0, 1.0, 1.0, 1},
+  {1.0, 1.0, 1.0, 1},
+  {1.0}
+};
+
+
 materialStruct GreenShiny = {
   {0.0, 0.3, 0.0, 1.0},
   {0.0, 0.9, 0.0, 1.0},
