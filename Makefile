@@ -18,7 +18,7 @@ LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c -g
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -O3 -I. -iquote -Wall -c -g
 CC=g++
 
 PROGNAME=AsteroidBlaster
