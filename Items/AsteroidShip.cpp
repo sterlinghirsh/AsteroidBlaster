@@ -210,6 +210,7 @@ void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
          // Increase the player's score by an appropriate amount.
          //score += (*asteroid)->collisionRadius * (rand()%3 + 1);
          // Decrease the player's health by an appropriate amount.
+         velocity->addUpdate(*(*asteroid)->velocity);
          health -= (*asteroid)->collisionRadius * 2;
          // TEMP. Asteroids should not be simply erased.
          asteroid = asteroids.erase(asteroid);
