@@ -32,10 +32,12 @@ bool running = true;
 const double angleScale = 1;
 
 double xdouble = 0, ydouble = 0;
-double rollAmount = 0, pitchAmount = 0;
+// TODO: Come up with better names for these.
+double rollAmount = 0, pitchAmount = 0, yawAmount = 0;
 double startx, starty;
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
+bool mouseXYaw = false;
 
 GameState* gameState = NULL;
 
@@ -183,16 +185,9 @@ GLboolean CheckKeys() {
    } else {
       resetReleased = true;
    }
-  
-  
-   if (_keys[SDLK_a]) {
-      gameState->ship->setYawSpeed(1);
-   } else if (_keys[SDLK_d]) {
-      gameState->ship->setYawSpeed(-1);
-   } else {
-      gameState->ship->setYawSpeed(0);
-   }
-   
+
+   // If the shift key is down, yaw instead of rolling on the mouse x.
+   mouseXYaw = _keys[SDLK_LSHIFT] || _keys[SDLK_RSHIFT];
    
    if (_keys[SDLK_w]) {
       gameState->ship->accelerateForward(1);
@@ -202,9 +197,9 @@ GLboolean CheckKeys() {
       gameState->ship->accelerateForward(0);
    }
 
-   if (_keys[SDLK_q]) {
+   if (_keys[SDLK_a]) {
       gameState->ship->accelerateRight(-1);
-   } else if (_keys[SDLK_e]) {
+   } else if (_keys[SDLK_d]) {
       gameState->ship->accelerateRight(1);
    } else {
       gameState->ship->accelerateRight(0);
@@ -212,7 +207,7 @@ GLboolean CheckKeys() {
 
    if (_keys[SDLK_SPACE]) {
       gameState->ship->accelerateUp(1);
-   } else if (_keys[SDLK_c]) {
+   } else if (_keys[SDLK_LCTRL]) {
       gameState->ship->accelerateUp(-1);
    } else {
       gameState->ship->accelerateUp(0);
@@ -244,7 +239,11 @@ void timerFunc() {
    ++frames;
    totalTime += timeDiff;
 
-   gameState->ship->updatePosition(timeDiff, rollAmount, pitchAmount);
+   // Use mouse x (rollAmount) for yaw if mouseXYaw is true.
+   gameState->ship->setPitchSpeed(pitchAmount);
+   gameState->ship->setRollSpeed(mouseXYaw ? 0 : rollAmount);
+   gameState->ship->setYawSpeed(mouseXYaw ? -rollAmount : 0);
+   gameState->ship->updatePosition(timeDiff);
    gameState->ship->keepFiring();
    
    gameState->update(timeDiff);

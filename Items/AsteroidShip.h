@@ -28,7 +28,7 @@ class AsteroidShip : public Object3D {
       int getHealth();
       int getScore();
       void updateAcceleration();
-      void updatePosition(double timeDiff, double rollAmount, double pitchAmount);
+      void updatePosition(double timeDiff);
 
       // We'll have to update this later so the AI can use it.
       void updateShotDirection(double xOffset, double yOffset);

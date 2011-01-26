@@ -126,8 +126,7 @@ void AsteroidShip::accelerateRight(int dir) {
 }
 
 
-void AsteroidShip::updatePosition(double timeDiff, 
- double rollSpeedIn, double pitchSpeedIn) {
+void AsteroidShip::updatePosition(double timeDiff) {
    updateAcceleration();
 
    if (isBraking) {
@@ -142,10 +141,6 @@ void AsteroidShip::updatePosition(double timeDiff,
 
    Object3D::update(timeDiff);
    
-   // Just in case.
-   setRollSpeed(rollSpeedIn);
-   setPitchSpeed(pitchSpeedIn);
-
    roll(timeDiff * rollSpeed);
    pitch(timeDiff * pitchSpeed);
    yaw(timeDiff * yawSpeed);
