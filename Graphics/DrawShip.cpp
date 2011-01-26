@@ -300,6 +300,7 @@ void draw_ship(){
 	glVertex3f(.2, .2, 1.3);
 	glVertex3f(.15, 0, 1);
 	
+	materials(Cyan);
 	glVertex3f(0, 0, 0);
 	glVertex3f(.2, .2, 1.3);
 	glVertex3f(0, .15, 1);
