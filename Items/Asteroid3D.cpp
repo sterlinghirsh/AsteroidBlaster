@@ -73,22 +73,24 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 
    for (int v = 0; v < vbands; ++v) {
       mesh.addFace(topIndex, 
-            pointNums[0][v],
-       pointNums[0][(v + 1) % vbands]
+       pointNums[0][(v + 1) % vbands],
+            pointNums[0][v]
        );
       for (int h = 0; h < hbands - 1; ++h) {
          mesh.addFace(pointNums[h][v],
-          pointNums[h + 1][v],
-          pointNums[h][(v + 1) % vbands]);
+          pointNums[h][(v + 1) % vbands],
+          pointNums[h + 1][v]
+          );
 
          mesh.addFace(
           pointNums[h][(v + 1) % vbands],
-               pointNums[h + 1][v],
-          pointNums[h + 1][(v + 1) % vbands]);
+          pointNums[h + 1][(v + 1) % vbands],
+          pointNums[h + 1][v]);
       }
 
-      mesh.addFace(bottomIndex, pointNums[hbands - 1][v],
-       pointNums[hbands - 1][(v + 1) % vbands]);
+      mesh.addFace(bottomIndex, 
+       pointNums[hbands - 1][(v + 1) % vbands],
+            pointNums[hbands - 1][v]);
    }
 
    for (int h = 0; h < hbands; ++h) {

@@ -63,6 +63,7 @@ bool Sprite::draw(Point3D* eyePoint) {
    glColor3f(1, 1, 1);
    glBindTexture(GL_TEXTURE_2D, texture->texID);
    
+   glDisable(GL_CULL_FACE);
    glBegin(GL_QUADS);
    glTexCoord2f(topLeftX, topLeftY);
    glVertex3f(-width/2, height/2, 0);
@@ -77,6 +78,7 @@ bool Sprite::draw(Point3D* eyePoint) {
    glVertex3f(-width/2, -height/2, 0);
 
    glEnd();
+   glEnable(GL_CULL_FACE);
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);

@@ -44,7 +44,7 @@ double displayTime = 0;
 
 void init_light() {
    glEnable(GL_LIGHT0);
-   // headlight_amb is defined in Asteroidship->h
+   // headlight_amb is defined in Asteroidship.h
    glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
    glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
    glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
@@ -125,17 +125,21 @@ void drawCrosshair() {
    glPushMatrix();
    glLoadIdentity();
    materials(WhiteTransparent);
+   glColor3f(1, 1, 1);
    useOrtho();
+   glDisable(GL_BLEND);
    glBegin(GL_QUADS);
-   glVertex3f(xdouble - crosshairSizeX, ydouble + thicknessY, 0);
    glVertex3f(xdouble + crosshairSizeX, ydouble + thicknessY, 0);
-   glVertex3f(xdouble + crosshairSizeX, ydouble - thicknessY, 0);
+   glVertex3f(xdouble - crosshairSizeX, ydouble + thicknessY, 0);
    glVertex3f(xdouble - crosshairSizeX, ydouble - thicknessY, 0);
+   glVertex3f(xdouble + crosshairSizeX, ydouble - thicknessY, 0);
+   
    glVertex3f(xdouble + thicknessX, ydouble - crosshairSizeY, 0);
    glVertex3f(xdouble + thicknessX, ydouble + crosshairSizeY, 0);
    glVertex3f(xdouble - thicknessX, ydouble + crosshairSizeY, 0);
    glVertex3f(xdouble - thicknessX, ydouble - crosshairSizeY, 0);
    glEnd();
+   glEnable(GL_BLEND);
    usePerspective();
    glPopMatrix();
 }
@@ -262,22 +266,20 @@ void mouseUpdate(int x, int y){
 }
 
 void mouseButton(SDL_Event event){
-   if(event.type == SDL_MOUSEBUTTONDOWN)
-   {
+   if(event.type == SDL_MOUSEBUTTONDOWN) {
       printf("Mouse button %d pressed at (%d,%d)\n",event.button.button, event.button.x, event.button.y);
       if(event.button.button == 1){
          gameState->ship->fireLasers(p2wx(event.button.x), p2wy(event.button.y), 0);         
-      }
-      else if(event.button.button == 3){
+      } else if (event.button.button == 3) {
          gameState->ship->fireLasers(p2wx(event.button.x), p2wy(event.button.y), 1);         
       }
    }
    if (event.type == SDL_MOUSEBUTTONUP) {
       printf("Mouse button %d up at (%d,%d)\n",event.button.button, event.button.x, event.button.y);
       gameState->ship->stopLasers(event.button.button);
-      if(event.button.button == 1){
+      if(event.button.button == 1) {
          gameState->ship->stopLasers(0);      
-      } else if (event.button.button == 3){
+      } else if (event.button.button == 3) {
          gameState->ship->stopLasers(1);
       }
    }
@@ -292,14 +294,12 @@ int main(int argc, char* argv[]) {
    glutInit(&argc, argv);
    
    //SDL INITIALIZATIONS
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		cout << "Unable to initialize SDL: " << SDL_GetError() << endl;
 		exit(1);
 	}
 
-	if (SDL_SetVideoMode(GW, GH, 0, SDL_OPENGL) == NULL)
-	{
+	if (SDL_SetVideoMode(GW, GH, 0, SDL_OPENGL) == NULL) {
 		cout << "Unable to create OpenGL scene: " << SDL_GetError() << endl;
 		exit(2);
 	}

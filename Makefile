@@ -8,8 +8,9 @@ ifeq ($(UNAME), Linux)
    PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -lSDL -lpthread 
 #-lSDL_ttf -L/home/rkudo/library/SDL_ttf-2.0.10/.libs/
 else
-   PLATFORMSPECIFICCFLAGS=
-   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL
+   PLATFORMSPECIFICCFLAGS=-I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
+   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -L/usr/local/lib -lSDLmain -lSDL -Wl,-framework,Cocoa
+
 endif
 
 LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g
