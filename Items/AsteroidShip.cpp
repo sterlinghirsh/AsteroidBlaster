@@ -14,6 +14,63 @@
 
 using namespace std;
 
+materialStruct brown = {
+  {0.3, .1, 0.1, 1.0},
+  {0.64, 0.16, 0.16, 1.0},
+  {0.64, 0.16, 0.16, 1.0},
+  {30.0}
+};
+
+materialStruct black = {
+  {0.0, .0, 0.0, 1.0},
+  {0.0, 0.0, 0.0, 1.0},
+  {0.0, 0.0, 0.0, 1.0},
+  {0.0}
+};
+
+materialStruct something = {
+  {0.33, 0.22, 0.03, 1.0},
+  {0.78, 0.57, 0.11, 1.0},
+  {0.99, 0.91, 0.81, 1.0},
+  {0.0}
+};
+
+materialStruct Cyan = {
+  {0.0, 1, 1, 1.0},
+  {0.0, 1, 1, 1.0},
+  {0.2, 1.0, 1.0, 1.0},
+  {50.0}
+};
+
+materialStruct BrightYellow = {
+  {1, 1, 0.0, 1.0},
+  {1, 1, 0.0, 1.0},
+  {1.0, 1.0, 0.2, 1.0},
+  {50.0}
+};
+
+materialStruct Orange = {
+  {1, .27, 0.0, 1.0},
+  {1, .27, 0.0, 1.0},
+  {1.0, .27, 0.0, 1.0},
+  {50.0}
+};
+
+materialStruct blue = {
+  {0.3, .0, 0.0, 1.0},
+  {0.6, .0, 0.0, 1.0},
+  {0.8, .6, .6, 1.0},
+  {32.0}
+};
+
+materialStruct white = {
+  {.5, .5, .5, 1.0},
+  {1, 1, 1, 1.0},
+  {1, 1, 1, 1.0},
+  {100}
+};
+
+
 AsteroidShip::AsteroidShip() : 
  Object3D(0, 0, 0, 0),     // Initialize superclass
  shotDirection(0, 0, 1) {  // Initialize shot direction to forward
@@ -194,10 +251,194 @@ void AsteroidShip::keepFiring() {
    }
 }
 
+void draw_ship(){
+	//materials(black);
+	glColor3f(0, 1, 0);
+	glBegin(GL_TRIANGLES);
+
+	materials(black);
+	glNormal3f(.2, -.1805, .03); 
+	glVertex3f(0, 0, 0);
+	glVertex3f(.2, .2, 1.3);
+	glVertex3f(.15, 0, 1);
+		
+
+	glNormal3f(.1805, .2, .03); 
+	glVertex3f(0, 0, 0);
+	glVertex3f(.2, .2, 1.3);
+	glVertex3f(0, .15, 1);
+
+	materials(black);
+	glNormal3f(.1805, .2, .03); 
+	glVertex3f(0, 0, 0);
+	glVertex3f(-.2, .2, 1.3);
+	glVertex3f(0, .15, 1);
+
+	materials(Cyan);
+	glNormal3f(.2, -.1805, .03);
+	glVertex3f(0, 0, 0);
+	glVertex3f(-.2, .2, 1.3);
+	glVertex3f(-.15, 0, 1);
+
+	materials(GreenShiny);
+	glNormal3f(-.2, .1805, .03);
+	glVertex3f(0, 0, 0);
+	glVertex3f(-.2, -.2, 1.3);
+	glVertex3f(-.15, 0, 1);
+
+	materials(RedFlat);
+	glNormal3f(-.1805, .2, .03);
+	glVertex3f(0, 0, 0);
+	glVertex3f(-.2, -.2, 1.3);
+	glVertex3f(0, -.15, 1);
+
+	glNormal3f(-.1805, -.2, .03);
+	glVertex3f(0, 0, 0);
+	glVertex3f(.2, -.2, 1.3);
+	glVertex3f(0, -.15, 1);
+
+	glNormal3f(-.2, -.1805, .03);
+	glVertex3f(0, 0, 0);
+	glVertex3f(.2, -.2, 1.3);
+	glVertex3f(.15, 0, 1);
+	glPopMatrix();
+
+	/* Back of Ship */
+	materials(black);
+
+	glVertex3f(.15, 0, 1);
+	glVertex3f(.2, .2, 1.3);
+	glVertex3f(0, .15, 1);
+
+	glVertex3f(.15, 0, 1);
+	glVertex3f(.2, -.2, 1.3);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(-.15, 0, 1);
+	glVertex3f(-.2, -.2, 1.3);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(-.15, 0, 1);
+	glVertex3f(-.2, .2, 1.3);
+	glVertex3f(0, .15, 1);
+
+	
+	materials(black);
+
+	glVertex3f(.15, 0, 1);
+	glVertex3f(0, 0, 1.6);
+	glVertex3f(0, .15, 1);
+
+	glVertex3f(.15, 0, 1);
+	glVertex3f(0, 0, 1.6);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(-.15, 0, 1);
+	glVertex3f(0, 0, 1.6);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(-.15, 0, 1);
+	glVertex3f(-0, 0, 1.6);
+	glVertex3f(0, .15, 1);
+	glEnd();
+
+	/* Outline of Ship */
+	glLineWidth(5.0);
+	glBegin(GL_LINE_LOOP);
+	materials(Orange);
+	glVertex3f(.15, 0, 1);
+	glVertex3f(.2, .2, 1.3);
+	glVertex3f(0, .15, 1);
+
+	glVertex3f(.15, 0, 1);
+	glVertex3f(0, 0, 1.6);
+	glVertex3f(0, .15, 1);
+
+	glVertex3f(.15, 0, 1);
+	glVertex3f(.2, -.2, 1.3);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(.15, 0, 1);
+	glVertex3f(0, 0, 1.6);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(-.15, 0, 1);
+	glVertex3f(-.2, -.2, 1.3);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(-.15, 0, 1);
+	glVertex3f(0, 0, 1.6);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(-.15, 0, 1);
+	glVertex3f(-.2, .2, 1.3);
+	glVertex3f(0, .15, 1);
+
+	glVertex3f(-.15, 0, 1);
+	glVertex3f(-0, 0, 1.6);
+	glVertex3f(0, .15, 1);
+
+	glEnd();
+
+	glLineWidth(5.0);
+	glBegin(GL_LINE_LOOP);
+	materials(Orange);
+	glVertex3f(.15, 0, 1.01);
+	glVertex3f(0, -.15, 1.01);
+	glVertex3f(-.15, 0, 1.01);
+	glVertex3f(0, .15, 1.01);
+	glEnd();
+
+
+	glLineWidth(4.0);
+	glBegin(GL_LINE_LOOP);
+	glColor3f(0, 0, 0);
+	materials(Cyan);
+	glVertex3f(0, 0, 0);
+	glVertex3f(.2, .2, 1.3);
+	glVertex3f(.15, 0, 1);
+	
+	materials(Cyan);
+	glVertex3f(0, 0, 0);
+	glVertex3f(.2, .2, 1.3);
+	glVertex3f(0, .15, 1);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(-.2, .2, 1.3);
+	glVertex3f(0, .15, 1);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(-.2, .2, 1.3);
+	glVertex3f(-.15, 0, 1);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(-.2, -.2, 1.3);
+	glVertex3f(-.15, 0, 1);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(-.2, -.2, 1.3);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(.2, -.2, 1.3);
+	glVertex3f(0, -.15, 1);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(.2, -.2, 1.3);
+	glVertex3f(.15, 0, 1);
+
+	glEnd();
+
+}
+
 void AsteroidShip::draw() {
    for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
       (*shotIter)->draw();
    }
+   glPushMatrix();
+   glTranslatef(0, 0, 2);
+   draw_ship();
+   glPopMatrix();
 }
 
 void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
