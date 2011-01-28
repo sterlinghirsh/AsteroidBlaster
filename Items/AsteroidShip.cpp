@@ -221,6 +221,8 @@ void AsteroidShip::update(double timeDiff) {
  * a phi and a theta from the ship.
  */
 void AsteroidShip::updateShotDirection(double xOffset, double yOffset) {
+   xOff = xOffset;
+   yOff = yOffset;
    shotPhi = (M_PI/180) * yOffset * VERT_FOV / 2;
    shotTheta = (M_PI/180) * xOffset * VERT_FOV / (/*((double) GW/GH) / */ -2);
    updateShotDirectionVector();
@@ -489,4 +491,11 @@ void AsteroidShip::updateShotDirectionVector() {
    shotDirection.updateMagnitude(forward);
    shotDirection.rotate(shotPhi, *right);
    shotDirection.rotate(shotTheta, *up);
+}
+
+double AsteroidShip::getAimX() {
+   return xOff;
+}
+double AsteroidShip::getAimY() {
+   return yOff;
 }

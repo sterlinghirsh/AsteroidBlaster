@@ -134,3 +134,8 @@ std::set<Object3D*>* Custodian::findCollisions(Object3D* item, bool searchBackwa
 std::vector<Object3D*>* Custodian::getListOfObjects() {
    return &objectsByMinX;
 }
+
+void Custodian::clear() {
+   objectsByMinX.clear();
+   objectsByMaxX.clear();
+}

@@ -21,6 +21,7 @@ class Custodian {
       std::set<Object3D*>* findCollisions(Object3D* item, bool searchBackwards = false);
       void findAllCollisions();
       std::vector<Object3D*>* getListOfObjects();
+      void clear();
 
    private:
       std::vector<Object3D*> objectsByMinX;

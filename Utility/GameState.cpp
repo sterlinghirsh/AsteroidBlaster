@@ -8,6 +8,7 @@
 
 #include "Utility/GameState.h"
 #include "Graphics/GlutUtility.h"
+#include <math.h>
 
 GameState::GameState(double worldSizeIn) {
    gameIsRunning = true;
@@ -30,6 +31,8 @@ GameState::GameState(double worldSizeIn) {
    // Set up objects.
    custodian.add(ship);
    initAsteroids();
+   doYaw = 0;
+   mouseX = mouseY = 0;
 }
 
 GameState::~GameState() {
@@ -189,41 +192,76 @@ bool GameState::isGameRunning() {
 void GameState::reset() {
    delete ship;
    delete camera;
+   custodian.clear();
 
    ship = new AsteroidShip();
    camera = new Camera(ship);
-   curFPS = 0;
-
+   
    custodian.add(ship);
    initAsteroids();
 }
 
 void GameState::keyUp(int key) {
    switch(key) {
-      case SDLK_s:
-      case SDLK_w:
-         ship->accelerateForward(0);
-         break;
+   
+   case SDLK_r:
+      reset();
+      break;
+      
+   case SDLK_s:
+   case SDLK_w:
+      ship->accelerateForward(0);
+      break;
 
-      case SDLK_a:
-      case SDLK_d:
-         ship->setYawSpeed(0);
-         break;
-         
-      case SDLK_q:
-      case SDLK_e:
-         ship->accelerateRight(0);
-         break;
-         
-     case SDLK_SPACE:
-     case SDLK_LCTRL:
-         ship->accelerateUp(0);
-         break;
+   case SDLK_a:
+   case SDLK_d:
+      ship->accelerateRight(0);
+      break;
 
-      case SDLK_b:
-         ship->setBrake(false);
-         break;
+   case SDLK_LSHIFT:
+   case SDLK_RSHIFT:
+      doYaw = 0;
+      break;
+
+   case SDLK_SPACE:
+   case SDLK_LCTRL:
+      ship->accelerateUp(0);
+      break;
+
+   case SDLK_b:
+      ship->setBrake(false);
+      break;
    }
+}
+
+void GameState::mouseDown(int button) {
+   switch(button) {
+   case 1:
+      ship->selectWeapon(0);
+      break;
+
+   case 3:
+      ship->selectWeapon(1);
+      break;
+   }
+   ship->fire(true);
+}
+
+void GameState::mouseUp(int button) {
+   ship->fire(false);
+}
+
+void GameState::mouseMove(int dx, int dy, int x, int y) {
+   double worldX = p2wx(x);
+   double worldY = p2wy(y);
+
+   ship->updateShotDirection(worldX, worldY);
+   
+   worldX = clamp(worldX * fabs(worldY), -1, 1);
+   worldY = clamp(worldX * fabs(worldYY), -1, 1);
+   ship->setRollSpeed(doYaw ? 0 : worldX);
+   ship->setYawSpeed(doYaw ? -worldX : 0);
+   ship->setPitchSpeed(worldY);
 }
 
 void GameState::keyDown(int key) {
@@ -232,10 +270,6 @@ void GameState::keyDown(int key) {
       exit(0);
       break;
 
-   case SDLK_r:
-      reset();
-      break;
-      
    case SDLK_w:
       ship->accelerateForward(1);
       break;
@@ -245,18 +279,10 @@ void GameState::keyDown(int key) {
       break;
 
    case SDLK_a:
-      ship->setYawSpeed(1.0);
-      break;
-
-   case SDLK_d:
-      ship->setYawSpeed(-1.0);
-      break;
-
-   case SDLK_q:
       ship->accelerateRight(-1);
       break;
 
-   case SDLK_e:
+   case SDLK_d:
       ship->accelerateRight(1);
       break;
 
@@ -268,8 +294,16 @@ void GameState::keyDown(int key) {
       ship->accelerateUp(-1);
       break;
 
+   case SDLK_LSHIFT:
+   case SDLK_RSHIFT:
+      doYaw = 1;
+      break;
+
    case SDLK_b:
       ship->setBrake(true);
       break;
    }
 }
+
+double GameState::getMouseX() { return mouseX; }
+double GameState::getMouseY() { return mouseY; }

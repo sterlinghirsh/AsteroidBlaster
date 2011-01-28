@@ -19,7 +19,7 @@
 #include "Items/BoundingSpace.h"
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/GameState.h"
-#include "Utility/KeyboardManager.h"
+#include "Utility/InputManager.h"
 
 #include "SDL.h"
 
@@ -53,7 +53,7 @@ int *fontsArr[] = {
 int fontSpot = 0;
 
 GameState* gameState = NULL;
-KeyboardManager* keyboardManager = NULL;
+InputManager* inputManager = NULL;
 
 double displayTime = 0;
 // This double contains the FPS to be printed to the screen each frame.
@@ -96,15 +96,15 @@ void drawCrosshair() {
    useOrtho();
    glDisable(GL_LIGHTING);
    glBegin(GL_QUADS);
-   glVertex3f(xdouble + crosshairSizeX, ydouble + thicknessY, 0);
-   glVertex3f(xdouble - crosshairSizeX, ydouble + thicknessY, 0);
-   glVertex3f(xdouble - crosshairSizeX, ydouble - thicknessY, 0);
-   glVertex3f(xdouble + crosshairSizeX, ydouble - thicknessY, 0);
+   glVertex3f(gameState->getMouseX() + crosshairSizeX, gameState->getMouseY() + thicknessY, 0);
+   glVertex3f(gameState->getMouseX() - crosshairSizeX, gameState->getMouseY() + thicknessY, 0);
+   glVertex3f(gameState->getMouseX() - crosshairSizeX, gameState->getMouseY() - thicknessY, 0);
+   glVertex3f(gameState->getMouseX() + crosshairSizeX, gameState->getMouseY() - thicknessY, 0);
    
-   glVertex3f(xdouble + thicknessX, ydouble - crosshairSizeY, 0);
-   glVertex3f(xdouble + thicknessX, ydouble + crosshairSizeY, 0);
-   glVertex3f(xdouble - thicknessX, ydouble + crosshairSizeY, 0);
-   glVertex3f(xdouble - thicknessX, ydouble - crosshairSizeY, 0);
+   glVertex3f(gameState->getMouseX() + thicknessX, gameState->getMouseY() - crosshairSizeY, 0);
+   glVertex3f(gameState->getMouseX() + thicknessX, gameState->getMouseY() + crosshairSizeY, 0);
+   glVertex3f(gameState->getMouseX() - thicknessX, gameState->getMouseY() + crosshairSizeY, 0);
+   glVertex3f(gameState->getMouseX() - thicknessX, gameState->getMouseY() - crosshairSizeY, 0);
    glEnd();
    glEnable(GL_LIGHTING);
    usePerspective();
@@ -130,43 +130,52 @@ void display() {
   ++curFrame;
 }
 
-void initSDL() {
-   // init video system
-   const SDL_VideoInfo* vidinfo;
-   if( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
-     fprintf(stderr,"Failed to initialize SDL Video!\n");
-     exit(1);
+/*GLboolean CheckKeys() {
+   if (inputManager->isKeyDown(SDLK_ESCAPE)) {
+      exit(0);
+   }
+   
+   if (inputManager->keyDown(SDLK_r)) {
+         return true;
    }
 
-   // tell system which funciton to process when exit() call is made
-   atexit(SDL_Quit);
-
-   // get optimal video settings
-   vidinfo = SDL_GetVideoInfo();
-
-   if(!vidinfo) {
-     fprintf(stderr,"Coudn't get video information!\n%s\n", SDL_GetError());
-     exit(1);
+   // If the shift key is down, yaw instead of rolling on the mouse x.
+   mouseXYaw = inputManager->isKeyDown(SDLK_LSHIFT) || inputManager->isKeyDown(SDLK_RSHIFT);
+   
+   if (inputManager->isKeyDown(SDLK_w)) {
+      gameState->ship->accelerateForward(1);
+   } else if (inputManager->isKeyDown(SDLK_s)) {
+      gameState->ship->accelerateForward(-1);
+   } else {
+      gameState->ship->accelerateForward(0);
    }
 
-   // set opengl attributes
-   SDL_GL_SetAttribute(SDL_GL_RED_SIZE,        5);
-   SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,      5);
-   SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,       5);
-#ifdef __APPLE__
-   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,      32);
-#else
-   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,      16);
-#endif
-   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,    1);
+   if (inputManager->isKeyDown(SDLK_a)) {
+      gameState->ship->accelerateRight(-1);
+   } else if (inputManager->isKeyDown(SDLK_d)) {
+      gameState->ship->accelerateRight(1);
+   } else {
+      gameState->ship->accelerateRight(0);
+   }
 
-   // get a framebuffer
-   gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+   if (inputManager->isKeyDown(SDLK_SPACE)) {
+      gameState->ship->accelerateUp(1);
+   } else if (inputManager->isKeyDown(SDLK_LCTRL)) {
+      gameState->ship->accelerateUp(-1);
+   } else {
+      gameState->ship->accelerateUp(0);
+   }
 
-   if( !gDrawSurface )
-   {
-     fprintf(stderr,"Couldn't set video mode!\n%s\n", SDL_GetError());
-     exit(1);
+   if (inputManager->isKeyDown(SDLK_b)) {
+      gameState->ship->setBrake(true);
+   } else {
+      gameState->ship->setBrake(false);
+   }
+
+   if (inputManager->keyDown(SDLK_f)) {
+      gameState->FPSText->setFont(fontsArr[fontSpot++]);
+      if (fontSpot > 7)
+         fontSpot = 0;
    }
    
    //set the timer
@@ -215,10 +224,10 @@ void timerFunc() {
    gameState->setCurFPS(1 / timeDiff);
 
    // Use mouse x (rollAmount) for yaw if mouseXYaw is true.
-   gameState->ship->setPitchSpeed(pitchAmount);
+/*   gameState->ship->setPitchSpeed(pitchAmount);
    gameState->ship->setRollSpeed(mouseXYaw ? 0 : rollAmount);
    //gameState->ship->setYawSpeed(mouseXYaw ? -rollAmount : 0);
-   
+  */ 
    gameState->update(timeDiff);
 
    gameState->checkCollisions();
@@ -230,6 +239,7 @@ void timerFunc() {
    }
 }
 
+/*
 void mouseUpdate(int x, int y){
    xdouble = p2wx(x);
    ydouble = p2wy(y);
@@ -254,6 +264,7 @@ void mouseButton(SDL_Event event){
       gameState->ship->fire(false);
    }
 }
+*/
 
 int main(int argc, char* argv[]) {
    srand(time(NULL));
@@ -275,28 +286,24 @@ int main(int argc, char* argv[]) {
    gluQuadricNormals(quadric, GLU_SMOOTH);
 
    gameState = new GameState(WORLD_SIZE);
-   keyboardManager = new KeyboardManager(gameState);
+   inputManager = new InputManager();
+   inputManager->addReceiver(gameState);
 
    while (running) {
       if(gameState->isGameRunning()) {
          timerFunc();
          display();
       }
-      keyboardManager->update();
       SDL_Event event;
       float mouseButtonDown = 0;
       while (SDL_PollEvent(&event)) {
          if (event.type == SDL_QUIT) {
            running = 0;
          }
-         if (event.type == SDL_MOUSEMOTION) {
-            mouseUpdate(event.button.x,event.button.y);
-         }     
-         if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
-            mouseButton(event);
-         }
+         else
+            inputManager->update(event);
       }
       
    }
-   delete keyboardManager;
+   delete inputManager;
 }

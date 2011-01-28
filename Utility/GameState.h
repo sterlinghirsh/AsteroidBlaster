@@ -17,10 +17,10 @@
 #include "Graphics/Camera.h"
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/Custodian.h"
-#include "Utility/KeyboardManager.h"
+#include "Utility/InputManager.h"
 #include <list>
 
-class GameState : public KeyboardReceiver {
+class GameState : public InputReceiver {
    public:
       AsteroidShip* ship;
       /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
@@ -47,12 +47,21 @@ class GameState : public KeyboardReceiver {
       void initAsteroids();
       void setCurFPS(double fpsIn);
       bool isGameRunning();
+
+      double getMouseX();
+      double getMouseY();
+
       virtual void keyUp(int key);
       virtual void keyDown(int key);
+      virtual void mouseDown(int button);
+      virtual void mouseMove(int dx, int dy, int x, int y);
+      virtual void mouseUp(int button);
    private:
       void reset();
       double curFPS, worldSize;
       bool gameIsRunning;
+      int doYaw;
+      double mouseX, mouseY;
 
       Skybox* skybox;
       Camera* camera;

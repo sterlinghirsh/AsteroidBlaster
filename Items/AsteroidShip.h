@@ -27,6 +27,8 @@ class AsteroidShip : public Object3D {
       AsteroidShip();
       int getHealth();
       int getScore();
+      double getAimX();
+      double getAimY();
       void updateAcceleration();
       virtual void update(double timeDiff);
 
@@ -107,6 +109,8 @@ class AsteroidShip : public Object3D {
       void forwardAcceleration(double newAcc);
       void rightAcceleration(double newAcc);
       void upAcceleration(double newAcc);
+
+      double xOff, yOff;
 };
 
 #endif
