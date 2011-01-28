@@ -428,6 +428,7 @@ void draw_ship(){
 	glVertex3f(.15, 0, 1);
 
 	glEnd();
+	glLineWidth(1.0);
 
 }
 
@@ -437,7 +438,7 @@ void AsteroidShip::draw() {
    }
    glPushMatrix();
    glTranslatef(0, 0, 2);
-   draw_ship();
+   //draw_ship();
    glPopMatrix();
 }
 

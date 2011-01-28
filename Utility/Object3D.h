@@ -24,7 +24,7 @@ class Object3D {
       Vector3D *up, *right, *forward;
       bool lockUpVector;
       double angle;
-      unsigned int minXRank, minYRank, minZRank, maxXRank, maxYRank, maxZRank;
+      unsigned int minXRank, maxXRank;
 
       Object3D(double x, double y, double z, GLuint displayListIn);
       virtual ~Object3D();

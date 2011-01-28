@@ -47,6 +47,11 @@ void GameState::update(double timeDiff) {
       cube->constrain(*asteroid);
    }
    // Update the values of all of the text objects.
+   
+   custodian.update();
+
+   //custodian.findCollisions();
+
    updateText();
 }
 
@@ -129,4 +134,12 @@ void GameState::initAsteroids() {
    for (int i = 0; i < 5; ++i) {
       asteroids.push_back(new Asteroid3D(10 + (10 * randdouble()), worldSize));
    }
+}
+
+void GameState::setCurFPS(double fpsIn) {
+   curFPS = fpsIn;
+}
+
+bool GameState::isGameRunning() {
+   return gameIsRunning;
 }

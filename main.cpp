@@ -235,7 +235,7 @@ void timerFunc() {
       return;
    }
    double timeDiff = curTime - lastTime;
-   gameState->curFPS = 1/timeDiff;
+   gameState->setCurFPS(1 / timeDiff);
    ++frames;
    totalTime += timeDiff;
 
@@ -331,7 +331,7 @@ int main(int argc, char* argv[]) {
    gameState = new GameState(WORLD_SIZE);
 
    while (running) {
-      if(gameState->gameIsRunning){
+      if(gameState->isGameRunning()) {
          timerFunc();
          display();
       }

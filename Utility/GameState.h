@@ -16,18 +16,12 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/Camera.h"
 #include "Utility/BitmapTextDisplay.h"
+#include "Utility/Custodian.h"
 #include <list>
 
 class GameState {
    public:
-      double curFPS, worldSize;
       AsteroidShip* ship;
-      BoundingSpace* cube;
-      Camera* camera;
-      Skybox* skybox;
-      std::list<Object3D*> objects;
-      std::list<Asteroid3D*> asteroids;
-      bool gameIsRunning;
       /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
        * update it in updateText(), and make it draw in drawAllText().
        */
@@ -38,6 +32,7 @@ class GameState {
                         *gameOverText,
                         *winText;
       std::list<Asteroid3D*>::iterator asteroid;
+      Custodian custodian;
 
       GameState(double worldSize);
       virtual ~GameState();
@@ -48,7 +43,18 @@ class GameState {
       void checkCollisions();
       void update(double timeDiff);
       void initAsteroids();
+      void setCurFPS(double fpsIn);
+      bool isGameRunning();
+   private:
+      double curFPS, worldSize;
+      bool gameIsRunning;
 
+      Skybox* skybox;
+      Camera* camera;
+      BoundingSpace* cube;
+
+      std::list<Object3D*> objects;
+      std::list<Asteroid3D*> asteroids;
 };
 
 #endif
