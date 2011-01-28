@@ -13,7 +13,7 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
    maxX = maxY = maxZ =  0.5;
    minPosition = new Point3D(0, 0, 0);
    maxPosition = new Point3D(0, 0, 0);
-   minXRank = minYRank = minZRank = maxXRank = maxYRank = maxZRank = 0;
+   minXRank = maxXRank = 0;
    updateBoundingBox();
    displayList = displayListIn;
    velocity = NULL;
