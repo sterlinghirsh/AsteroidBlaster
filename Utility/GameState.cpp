@@ -207,11 +207,16 @@ void GameState::keyUp(int key) {
 
       case SDLK_a:
       case SDLK_d:
+         ship->setYawSpeed(0);
+         break;
+         
+      case SDLK_q:
+      case SDLK_e:
          ship->accelerateRight(0);
          break;
-
-      case SDLK_SPACE:
-      case SDLK_LCTRL:
+         
+     case SDLK_SPACE:
+     case SDLK_LCTRL:
          ship->accelerateUp(0);
          break;
 
@@ -240,10 +245,18 @@ void GameState::keyDown(int key) {
       break;
 
    case SDLK_a:
-      ship->accelerateRight(-1);
+      ship->setYawSpeed(1.0);
       break;
 
    case SDLK_d:
+      ship->setYawSpeed(-1.0);
+      break;
+
+   case SDLK_q:
+      ship->accelerateRight(-1);
+      break;
+
+   case SDLK_e:
       ship->accelerateRight(1);
       break;
 
