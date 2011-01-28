@@ -19,14 +19,9 @@
 #include "Items/BoundingSpace.h"
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/GameState.h"
+#include "Utility/KeyboardManager.h"
 
 #include "SDL.h"
-
-#define KEY_DOWN(a) ((_keys && _prevKeys) && _keys[(a)] && !_prevKeys[(a)])
-#define KEY_UP(a) ((_keys && _prevKeys) && !_keys[(a)] && _prevKeys[(a)])
-
-Uint8* _keys = NULL;
-Uint8* _prevKeys = NULL;
 
 using namespace std;
 
@@ -56,6 +51,7 @@ int *fontsArr[] = {
 int fontSpot = 0;
 
 GameState* gameState = NULL;
+KeyboardManager* keyboardManager = NULL;
 
 double displayTime = 0;
 // This double contains the FPS to be printed to the screen each frame.
@@ -133,50 +129,48 @@ void display() {
 }
 
 GLboolean CheckKeys() {
-   if (!_keys || !_prevKeys)
-      return false;
-   if (_keys[SDLK_ESCAPE]) {
+   if (keyboardManager->isKeyDown(SDLK_ESCAPE)) {
       exit(0);
    }
    
-   if (KEY_UP(SDLK_r)) {
+   if (keyboardManager->keyDown(SDLK_r)) {
          return true;
    }
 
    // If the shift key is down, yaw instead of rolling on the mouse x.
-   mouseXYaw = _keys[SDLK_LSHIFT] || _keys[SDLK_RSHIFT];
+   mouseXYaw = keyboardManager->isKeyDown(SDLK_LSHIFT) || keyboardManager->isKeyDown(SDLK_RSHIFT);
    
-   if (_keys[SDLK_w]) {
+   if (keyboardManager->isKeyDown(SDLK_w)) {
       gameState->ship->accelerateForward(1);
-   } else if (_keys[SDLK_s]) {
+   } else if (keyboardManager->isKeyDown(SDLK_s)) {
       gameState->ship->accelerateForward(-1);
    } else {
       gameState->ship->accelerateForward(0);
    }
 
-   if (_keys[SDLK_a]) {
+   if (keyboardManager->isKeyDown(SDLK_a)) {
       gameState->ship->accelerateRight(-1);
-   } else if (_keys[SDLK_d]) {
+   } else if (keyboardManager->isKeyDown(SDLK_d)) {
       gameState->ship->accelerateRight(1);
    } else {
       gameState->ship->accelerateRight(0);
    }
 
-   if (_keys[SDLK_SPACE]) {
+   if (keyboardManager->isKeyDown(SDLK_SPACE)) {
       gameState->ship->accelerateUp(1);
-   } else if (_keys[SDLK_LCTRL]) {
+   } else if (keyboardManager->isKeyDown(SDLK_LCTRL)) {
       gameState->ship->accelerateUp(-1);
    } else {
       gameState->ship->accelerateUp(0);
    }
 
-   if (_keys[SDLK_b]) {
+   if (keyboardManager->isKeyDown(SDLK_b)) {
       gameState->ship->setBrake(true);
    } else {
       gameState->ship->setBrake(false);
    }
 
-   if (KEY_DOWN(SDLK_f)) {
+   if (keyboardManager->keyDown(SDLK_f)) {
       gameState->FPSText->setFont(fontsArr[fontSpot++]);
       if (fontSpot > 7)
          fontSpot = 0;
@@ -287,15 +281,14 @@ int main(int argc, char* argv[]) {
    gluQuadricNormals(quadric, GLU_SMOOTH);
 
    gameState = new GameState(WORLD_SIZE);
-   _keys = SDL_GetKeyState(&numKeys);
-   _prevKeys = new Uint8[numKeys];
+   keyboardManager = new KeyboardManager();
 
    while (running) {
       if(gameState->isGameRunning()) {
          timerFunc();
          display();
       }
-      
+      keyboardManager->update();
       SDL_Event event;
       float mouseButtonDown = 0;
       while (SDL_PollEvent(&event)) {
@@ -310,12 +303,10 @@ int main(int argc, char* argv[]) {
          }
       }
       
-      _keys = SDL_GetKeyState(&numKeys);
       if (CheckKeys()) {
          delete gameState;
          gameState = new GameState(WORLD_SIZE);
       }
-      memcpy(_prevKeys, _keys, sizeof(Uint8) * numKeys);
    }
-   delete _prevKeys;
+   delete keyboardManager;
 }
