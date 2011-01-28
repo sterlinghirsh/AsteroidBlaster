@@ -36,6 +36,7 @@ class AsteroidShip : public Object3D {
       virtual void draw();
       // This will be gone soon.
       void checkAsteroidCollisions(std::list<Asteroid3D*>& asteroids);
+      virtual void handleCollision(Object3D* other);
 
       /**
        * These are going to be the functions that either the local player

@@ -20,6 +20,7 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
    acceleration = NULL;
    axis = NULL;
    angle = 0;
+   shouldRemove = false;
    // Remove up, right, forward yaw, pitch, roll maybe?
    up = new Vector3D(0, 1, 0);
    right = new Vector3D(1, 0, 0);

@@ -41,6 +41,9 @@ GameState::~GameState() {
 
 void GameState::update(double timeDiff) {
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
+   std::set<Object3D*>* collisions;
+   std::set<Object3D*>::iterator otherObject;
+
    if(ship->getHealth() <= 0) {
       gameIsRunning = false;
    } else if (ship->getScore() >= 2000) {
@@ -58,8 +61,15 @@ void GameState::update(double timeDiff) {
    // Update the values of all of the text objects.
    
    custodian.update();
-
-   //custodian.findCollisions();
+   
+   for (item = objects->begin(); item != objects->end(); ++item) {
+      collisions = custodian.findCollisions(*item, false);
+      for (otherObject = collisions->begin(); otherObject != collisions->end(); ++otherObject) {
+         (*item)->handleCollision(*otherObject);
+         (*otherObject)->handleCollision(*item);
+      }
+      delete collisions;
+   }
 
    updateText();
 }
@@ -70,8 +80,6 @@ void GameState::draw() {
    drawAllText();
    camera->setCamera(true);
    skybox->draw(camera);
-   //drawAsteroids();
-   //ship->draw();
    cube->draw();
    for (item = objects->begin(); item != objects->end(); ++item) {
       (*item)->draw();
@@ -86,6 +94,7 @@ void GameState::draw() {
  */
 void GameState::drawAllText() {
    glPushMatrix();
+   useOrtho();
 
    /* Set the camera using the location of your eye, 
     * the location where you're looking at, and the up vector.
@@ -96,7 +105,6 @@ void GameState::drawAllText() {
    /* Use orthonormal view so the text stays perpendicular 
     * to the camera at all times.
     */
-   useOrtho();
 
    /* We need to disable the lighting temporarily 
     * in order to set the color properly.
@@ -104,7 +112,7 @@ void GameState::drawAllText() {
    glDisable(GL_LIGHTING);
 
    /* Don't draw stuff in front of the text. */
-   glDisable(GL_DEPTH_TEST);
+   //glDisable(GL_DEPTH_TEST);
    
    // Draw all of the BitmapTextDisplay objects.
    if(!gameIsRunning && ship->getHealth() <= 0){
@@ -120,7 +128,7 @@ void GameState::drawAllText() {
    healthText->draw();
       
    glEnable(GL_LIGHTING);
-   glEnable(GL_DEPTH_TEST);
+   //glEnable(GL_DEPTH_TEST);
    usePerspective();
    glPopMatrix();
 }
@@ -163,6 +171,7 @@ void GameState::initAsteroids() {
          if (numCollisions > 0) {
             tempAsteroid->newRandomPosition();
          }
+         delete collisions;
       } while (numCollisions > 0);
    }
    custodian.remove(spaceHolder);

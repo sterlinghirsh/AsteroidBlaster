@@ -48,19 +48,21 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    MeshPoint* points  [maxhbands][maxvbands];
    int pointNums [maxhbands][maxvbands];
 
-   rotationAmount = 0;
+   angle = 0;
    radius = r;
    worldSize = worldSizeIn;
 
-   scalex = .75 + randdouble() * .5;
-   scaley = .6 + randdouble() * .8;
-   scalez = .3 + randdouble() * 1.4;
+   //scalex = .75 + randdouble() * .5;
+   //scaley = .6 + randdouble() * .8;
+   //scalez = .3 + randdouble() * 1.4;
+   scalex = scaley = scalez = 1;
 
    int topIndex = mesh.addPoint(0, randRadius(r), 0); // Top
    int bottomIndex = mesh.addPoint(0, -randRadius(r), 0); // Bottom
 
    rotationSpeed = randdouble() * 100; // Degrees per sec.
-   rotationVector.randomMagnitude();
+   axis = new Vector3D(0, 1, 0);
+   axis->randomMagnitude();
 
    velocity = new Vector3D(0, 0, 0);
    velocity->randomMagnitude();
@@ -113,39 +115,50 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    sizeY = max<double>(mesh.yMax, fabs(mesh.yMin)) * scaley;
    sizeZ = max<double>(mesh.zMax, fabs(mesh.zMin)) * scalez;
    collisionRadius = distance3D(sizeX, sizeY, sizeZ);
+   minX = mesh.xMin;
+   minY = mesh.yMin;
+   minZ = mesh.zMin;
+   maxX = mesh.xMax;
+   maxY = mesh.yMax;
+   maxZ = mesh.zMax;
+   updateBoundingBox();
 }
 
 void Asteroid3D::draw() {
+   glColor3f(1, 1, 1);
+   drawBoundingBox();
    materials(Rock);
+   Object3D::draw();
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
-   glRotatef(rotationAmount, rotationVector.xMag,
-         rotationVector.yMag, rotationVector.zMag);
+   glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
    mesh.draw(false);
    glPopMatrix();
 }
 
-void Asteroid3D::updatePosition(double timeDiff) {
-   position->x += velocity->xMag * timeDiff;
-   position->y += velocity->yMag * timeDiff;
-   position->z += velocity->zMag * timeDiff;
-   rotationAmount += rotationSpeed * timeDiff;
-   
-   // reflect
-   if (position->x + collisionRadius > worldSize / 2)  velocity->xMag = -fabs(velocity->xMag);
-   if (position->x - collisionRadius < -worldSize / 2) velocity->xMag =  fabs(velocity->xMag);
-   if (position->y + collisionRadius > worldSize / 2)  velocity->yMag = -fabs(velocity->yMag);
-   if (position->y - collisionRadius < -worldSize / 2) velocity->yMag =  fabs(velocity->yMag);
-   if (position->z + collisionRadius > worldSize / 2)  velocity->zMag = -fabs(velocity->zMag);
-   if (position->z - collisionRadius < -worldSize / 2) velocity->zMag =  fabs(velocity->zMag);
+void Asteroid3D::update(double timeDiff) {
+   Object3D::update(timeDiff);
+   angle += rotationSpeed * timeDiff;
+}
+
+void Asteroid3D::handleCollision(Object3D* other) {
+   printf("asteroid collision detected\n");
+   Asteroid3D* otherAsteroid;
+   if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+      double speed = velocity->getLength();
+      
+      velocity->updateMagnitude(*(otherAsteroid->position), *position);
+      velocity->setLength(speed);
+      printf("new speed: %f\n", speed);
+      const int explosionFactor = 3;
+      Sprite::sprites.push_back(
+         new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20, 
+          *position, radius * explosionFactor, radius * explosionFactor));
+   }
 }
 
 bool Asteroid3D::handleHit(list<Asteroid3D*>& asteroids) {
-   const int explosionFactor = 3;
-   Sprite::sprites.push_back(
-      new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20, 
-       *position, radius * explosionFactor, radius * explosionFactor));
 
    if (radius > 1) {
       for (int i = 0; i < 3; ++i) {

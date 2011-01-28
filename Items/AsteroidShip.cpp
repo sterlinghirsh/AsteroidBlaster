@@ -433,6 +433,7 @@ void draw_ship(){
 }
 
 void AsteroidShip::draw() {
+   drawBoundingBox();
    for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
       (*shotIter)->draw();
    }
@@ -443,21 +444,7 @@ void AsteroidShip::draw() {
 }
 
 void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
-   double distance;
-   list<Asteroid3D*>::iterator asteroid = asteroids.begin();
-   for (asteroid = asteroids.begin(); asteroid != asteroids.end(); ++asteroid) {
-      // Distance to ship.
-      distance = position->distanceFrom(*(*asteroid)->position);
-      if (distance < shipRadius + (*asteroid)->collisionRadius) {
-         // Increase the player's score by an appropriate amount.
-         //score += (*asteroid)->collisionRadius * (rand()%3 + 1);
-         // Decrease the player's health by an appropriate amount.
-         velocity->addUpdate(*(*asteroid)->velocity);
-         health -= (*asteroid)->collisionRadius * 2;
-         // TEMP. Asteroids should not be simply erased.
-         asteroid = asteroids.erase(asteroid);
-         continue;
-      }
+   /*
       for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
          if ((*shotIter)->checkHit(*asteroid)) {
             if ((*asteroid)->handleHit(asteroids)) {
@@ -472,6 +459,29 @@ void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
             break;
          }
       }
+   }
+   */
+}
+
+/**
+ * This handles our collisions. Duh.
+ * We use a series of dynamic_casts to figure out what we've hit.
+ */
+void AsteroidShip::handleCollision(Object3D* other) {
+   Asteroid3D* asteroid;
+   // Don't do anything else if this thing's on its way out.
+   if (other->shouldRemove)
+      return;
+
+   printf("ship collision detected\n");
+   if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+      // Decrease the player's health by an appropriate amount.
+      velocity->addUpdate(*(asteroid->velocity));
+      health -= asteroid->radius;
+      // TEMP. Asteroids should not be simply erased.
+      other->shouldRemove = true;
+      other->velocity->updateMagnitude(0, 0, 0);
+      asteroid->rotationSpeed = 0;
    }
 }
 

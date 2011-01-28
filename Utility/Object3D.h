@@ -23,6 +23,7 @@ class Object3D {
       Vector3D* axis;
       Vector3D *up, *right, *forward;
       bool lockUpVector;
+      bool shouldRemove;
       double angle;
       unsigned int minXRank, maxXRank;
 
@@ -35,6 +36,7 @@ class Object3D {
       virtual void setRollSpeed(double radiansPerSecond);
       virtual bool detectCollision(Object3D* other, bool checkOther = true);
       virtual void drawBoundingBox();
+      virtual void handleCollision(Object3D* other);
 
    private:
 
@@ -46,7 +48,6 @@ class Object3D {
       void roll(double angle);
       void pitch(double angle);
       void updateBoundingBox();
-      virtual void handleCollision(Object3D* other);
 };
 
 #endif

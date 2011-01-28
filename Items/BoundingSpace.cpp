@@ -55,7 +55,7 @@ void BoundingSpace::draw() {
    const double alpha = 1;
    glDisable(GL_LIGHTING);
    glBegin(GL_LINES);
-   for (double i = -wall; i <= wall; i += wall / 80) {
+   for (double i = -wall; i <= wall; i += wall / 40) {
       glColor4f(0.0, 1.0, 0.0, alpha);
       // Floor
       glVertex3f(-wall, -wall, i);
