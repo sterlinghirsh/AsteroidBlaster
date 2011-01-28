@@ -14,14 +14,24 @@ using namespace std;
 
 Asteroid3D::Asteroid3D(double r, double worldSizeIn) : 
  Object3D(0, 0, 0, 0) {
-   position->x = randdouble() * worldSizeIn - worldSizeIn / 2;  
-   position->y = randdouble() * worldSizeIn - worldSizeIn / 2;  
-   position->z = randdouble() * worldSizeIn - worldSizeIn / 2;  
+   worldSize = worldSizeIn;
+   newRandomPosition();
    InitAsteroid(r, worldSizeIn);
 }
 
 Asteroid3D::~Asteroid3D() {
    
+}
+
+/**
+ * This gives the asteroid a new random position. Useful when
+ * initializing them, and not much else.
+ */
+void Asteroid3D::newRandomPosition() {
+   position->x = randdouble() * worldSize - worldSize / 2;  
+   position->y = randdouble() * worldSize - worldSize / 2;  
+   position->z = randdouble() * worldSize - worldSize / 2;  
+   updateBoundingBox();
 }
 
 void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
@@ -105,13 +115,14 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    collisionRadius = distance3D(sizeX, sizeY, sizeZ);
 }
 
-void Asteroid3D::draw(bool drawSmooth = true) {
+void Asteroid3D::draw() {
+   materials(Rock);
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
    glRotatef(rotationAmount, rotationVector.xMag,
          rotationVector.yMag, rotationVector.zMag);
    glScalef(scalex, scaley, scalez);
-   mesh.draw(drawSmooth);
+   mesh.draw(false);
    glPopMatrix();
 }
 

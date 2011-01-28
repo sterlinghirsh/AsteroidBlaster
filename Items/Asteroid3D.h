@@ -20,19 +20,20 @@ class Asteroid3D : public Object3D {
       double rotationSpeed;
       double rotationAmount;
       double scalex, scaley, scalez;
-      double worldSize;
       double sizeX, sizeY, sizeZ, collisionRadius;
       
       Asteroid3D(double r, double worldSizeIn);
       virtual ~Asteroid3D();
       void InitAsteroid(double r, double worldSizeIn);
-      void draw(bool drawSmooth);
+      void draw();
       void updatePosition(double timeDiff);
       bool handleHit(std::list<Asteroid3D*>& asteroids);
       Asteroid3D* makeChild();
+      void newRandomPosition();
 
    private:
       double randRadius(double r);
+      double worldSize;
 };
 
 #endif

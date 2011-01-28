@@ -47,3 +47,57 @@ void BoundingSpace::constrain(Object3D* item) {
       item->velocity->positiveZ();
    }
 }
+
+/* Draw the bounding box grid on the world.
+*/
+void BoundingSpace::draw() {
+   const double wall = extent;
+   const double alpha = 1;
+   glDisable(GL_LIGHTING);
+   glBegin(GL_LINES);
+   for (double i = -wall; i <= wall; i += wall / 80) {
+      glColor4f(0.0, 1.0, 0.0, alpha);
+      // Floor
+      glVertex3f(-wall, -wall, i);
+      glVertex3f(wall, -wall, i);
+      glVertex3f(i, -wall, -wall);
+      glVertex3f(i, -wall, wall);
+
+      // Ceiling
+      glColor4f(0.0, 0.0, 1.0, alpha);
+      glVertex3f(-wall, wall, i);
+      glVertex3f(wall, wall, i);
+      glVertex3f(i, wall, -wall);
+      glVertex3f(i, wall, wall);
+
+      // Left Wall
+      glColor4f(1.0, 0.0, 1.0, alpha);
+      glVertex3f(-wall, -wall, i);
+      glVertex3f(-wall, wall, i);
+      glVertex3f(-wall, i, -wall);
+      glVertex3f(-wall, i, wall);
+
+      // Right Wall
+      glColor4f(0.0, 1.0, 1.0, alpha);
+      glVertex3f(wall, -wall, i);
+      glVertex3f(wall, wall, i);
+      glVertex3f(wall, i, -wall);
+      glVertex3f(wall, i, wall);
+
+      // Back Wall
+      glColor4f(1.0, 1.0, 0.0, alpha);
+      glVertex3f(-wall, i, -wall);
+      glVertex3f(wall, i, -wall);
+      glVertex3f(i, -wall, -wall);
+      glVertex3f(i, wall, -wall);
+
+      // Front Wall
+      glColor4f(1, 0, 0, alpha);
+      glVertex3f(-wall, i, wall);
+      glVertex3f(wall, i, wall);
+      glVertex3f(i, -wall, wall);
+      glVertex3f(i, wall, wall);
+   }
+   glEnd();
+   glEnable(GL_LIGHTING);
+}

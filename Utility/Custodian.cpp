@@ -19,7 +19,7 @@ static bool compareByMinX (Object3D* item1, Object3D* item2) {
    // If the second item is null, the first item comes first.
    if (item2 == NULL)
       return true;
-   return item1->minX < item2->minX;
+   return item1->minPosition->x < item2->minPosition->x;
 }
 
 /**
@@ -33,7 +33,7 @@ static bool compareByMaxX (Object3D* item1, Object3D* item2) {
    // If the second item is null, the first item comes first.
    if (item2 == NULL)
       return true;
-   return item1->maxX < item2->maxX;
+   return item1->maxPosition->x < item2->maxPosition->x;
 }
 
 /**
@@ -92,16 +92,18 @@ std::set<Object3D*>* Custodian::findCollisions(Object3D* item, bool searchBackwa
    int numElements = objectsByMinX.size();
    Object3D* other;
 
-   /* Start at the current maxX - 1. Check whether elements to 
-    * the left have a maxX that is above item's minX.
-    */
-   for (int i = item->maxXRank - 1; i > 0; --i) {
-      other = objectsByMaxX[i];
-      if (other == NULL)
-         continue;
-      if (other->maxX > item->minX)
-         sublist->insert(other);
-      else break;
+   if (searchBackwards) {
+      /* Start at the current maxX - 1. Check whether elements to 
+       * the left have a maxX that is above item's minX.
+       */
+      for (int i = item->maxXRank - 1; i > 0; --i) {
+         other = objectsByMaxX[i];
+         if (other == NULL)
+            continue;
+         if (other->maxPosition->x > item->minPosition->x)
+            sublist->insert(other);
+         else break;
+      }
    }
    
    /* Start at the current minX + 1. Check whether elements to
@@ -111,7 +113,7 @@ std::set<Object3D*>* Custodian::findCollisions(Object3D* item, bool searchBackwa
       other = objectsByMaxX[i];
       if (other == NULL)
          continue;
-      if (other->minX < item->maxX)
+      if (other->minPosition->x < item->maxPosition->x)
          sublist->insert(other);
       else break;
    }
@@ -121,10 +123,14 @@ std::set<Object3D*>* Custodian::findCollisions(Object3D* item, bool searchBackwa
     */
    for (iter = sublist->begin(); iter != sublist->end(); ++iter) {
       // If items definitely don't intersect.
-      if (other->maxY < item->minY || other->minY > item->maxY ||
-       other->maxZ < item->minZ || other->minZ > item->maxZ) {
+      if (other->maxPosition->y < item->minPosition->y || other->minPosition->y > item->maxPosition->y ||
+       other->maxPosition->z < item->minPosition->z || other->minPosition->z > item->maxPosition->z) {
          sublist->erase(iter);
       }
    }
    return sublist;
+}
+
+std::vector<Object3D*>* Custodian::getListOfObjects() {
+   return &objectsByMinX;
 }

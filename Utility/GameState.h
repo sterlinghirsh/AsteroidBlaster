@@ -31,13 +31,14 @@ class GameState {
                         *healthText,
                         *gameOverText,
                         *winText;
-      std::list<Asteroid3D*>::iterator asteroid;
+      // Used when looping over Object3Ds
+      std::vector<Object3D*>::iterator item;
       Custodian custodian;
 
       GameState(double worldSize);
       virtual ~GameState();
       void draw();
-      void drawAsteroids();
+      //void drawAsteroids();
       void drawAllText();
       void updateText();
       void checkCollisions();

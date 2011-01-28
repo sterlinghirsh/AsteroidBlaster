@@ -183,7 +183,7 @@ void AsteroidShip::accelerateRight(int dir) {
 }
 
 
-void AsteroidShip::updatePosition(double timeDiff) {
+void AsteroidShip::update(double timeDiff) {
    updateAcceleration();
 
    if (isBraking) {

@@ -18,8 +18,9 @@ class Custodian {
       void update();
       void add(Object3D* objectIn);
       void remove(Object3D* objectIn);
-      std::set<Object3D*>* findCollisions(Object3D* item, bool searchBackwards = true);
+      std::set<Object3D*>* findCollisions(Object3D* item, bool searchBackwards = false);
       void findAllCollisions();
+      std::vector<Object3D*>* getListOfObjects();
 
    private:
       std::vector<Object3D*> objectsByMinX;

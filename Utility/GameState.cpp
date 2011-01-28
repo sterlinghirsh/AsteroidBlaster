@@ -18,12 +18,17 @@ GameState::GameState(double worldSizeIn) {
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
    // Set up our text objects to be displayed on screen.
    curFPS = 0;
+
+   // Init Text Objects
    FPSText = new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20);
    numAsteroidsText = new BitmapTextDisplay("Asteroids Remaining: ", (int)asteroids.size(), "", 10, 40);
    scoreText = new BitmapTextDisplay("Score: ", ship->getScore(), "", 10, 60);
    healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 80);
    gameOverText = new BitmapTextDisplay("GAME OVER", GW/2, GH/2);
    winText = new BitmapTextDisplay("YOU WIN!", GW/2, GH/2);
+   
+   // Set up objects.
+   custodian.add(ship);
    initAsteroids();
 }
 
@@ -35,16 +40,20 @@ GameState::~GameState() {
 }
 
 void GameState::update(double timeDiff) {
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
    if(ship->getHealth() <= 0) {
       gameIsRunning = false;
    } else if (ship->getScore() >= 2000) {
       gameIsRunning = false;
    }
    
+
+   //ship->updatePosition(timeDiff);
+   ship->keepFiring();
    cube->constrain(ship);
-   for (asteroid = asteroids.begin(); asteroid != asteroids.end(); ++asteroid) {
-      (*asteroid)->updatePosition(timeDiff);
-      cube->constrain(*asteroid);
+   for (item = objects->begin(); item != objects->end(); ++item) {
+      (*item)->update(timeDiff);
+      cube->constrain(*item);
    }
    // Update the values of all of the text objects.
    
@@ -56,19 +65,16 @@ void GameState::update(double timeDiff) {
 }
 
 void GameState::draw() {
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
    // Draw all of the text objects to the screen.
    drawAllText();
    camera->setCamera(true);
    skybox->draw(camera);
-   drawAsteroids();
-   ship->draw();
-}
-
-void GameState::drawAsteroids() {
-   materials(Rock);
-   asteroid = asteroids.begin();
-   for (asteroid = asteroids.begin(); asteroid != asteroids.end(); asteroid++) {
-      (*asteroid)->draw(true);
+   //drawAsteroids();
+   //ship->draw();
+   cube->draw();
+   for (item = objects->begin(); item != objects->end(); ++item) {
+      (*item)->draw();
    }
 }
 
@@ -96,6 +102,9 @@ void GameState::drawAllText() {
     * in order to set the color properly.
     */
    glDisable(GL_LIGHTING);
+
+   /* Don't draw stuff in front of the text. */
+   glDisable(GL_DEPTH_TEST);
    
    // Draw all of the BitmapTextDisplay objects.
    if(!gameIsRunning && ship->getHealth() <= 0){
@@ -111,6 +120,7 @@ void GameState::drawAllText() {
    healthText->draw();
       
    glEnable(GL_LIGHTING);
+   glEnable(GL_DEPTH_TEST);
    usePerspective();
    glPopMatrix();
 }
@@ -131,9 +141,32 @@ void GameState::checkCollisions() {
 }  
 
 void GameState::initAsteroids() {
+   Asteroid3D* tempAsteroid;
+   std::set<Object3D*>* collisions;
+
+   /* We want this spaceHolder because we don't want to spawn asteroids
+    * too close to the ship.
+    */
+   Object3D* spaceHolder = new Object3D(0, 0, 0, 0);
+   spaceHolder->minX = spaceHolder->minY = spaceHolder->minZ = -10;
+   spaceHolder->maxX = spaceHolder->maxY = spaceHolder->maxZ = 10;
+   custodian.add(spaceHolder);
+
+   int numCollisions = 0;
    for (int i = 0; i < 5; ++i) {
-      asteroids.push_back(new Asteroid3D(10 + (10 * randdouble()), worldSize));
+      tempAsteroid = new Asteroid3D(5 + 5 * randdouble(), worldSize);
+      custodian.add(tempAsteroid);
+      do {
+         custodian.update();
+         collisions = custodian.findCollisions(tempAsteroid, true);
+         numCollisions = collisions->size();
+         if (numCollisions > 0) {
+            tempAsteroid->newRandomPosition();
+         }
+      } while (numCollisions > 0);
    }
+   custodian.remove(spaceHolder);
+   custodian.update();
 }
 
 void GameState::setCurFPS(double fpsIn) {

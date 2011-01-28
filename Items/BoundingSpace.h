@@ -19,6 +19,7 @@ class BoundingSpace {
       BoundingSpace(double extentIn, double x, double y, double z);
       ~BoundingSpace();
       virtual void constrain(Object3D* item);
+      void draw();
 };
 
 #endif

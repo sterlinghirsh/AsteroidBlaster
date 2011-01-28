@@ -86,60 +86,6 @@ void drawSprites() {
    }
 }
 
-/* Draw the bounding box grid on the world.
-*/
-void drawGrid() {
-   const double wall = WORLD_SIZE / 2;
-   const double alpha = 1;
-   glDisable(GL_LIGHTING);
-   glBegin(GL_LINES);
-   for (double i = -wall; i <= wall; i += WORLD_SIZE / 80) {
-      glColor4f(0.0, 1.0, 0.0, alpha);
-      // Floor
-      glVertex3f(-wall, -wall, i);
-      glVertex3f(wall, -wall, i);
-      glVertex3f(i, -wall, -wall);
-      glVertex3f(i, -wall, wall);
-
-      // Ceiling
-      glColor4f(0.0, 0.0, 1.0, alpha);
-      glVertex3f(-wall, wall, i);
-      glVertex3f(wall, wall, i);
-      glVertex3f(i, wall, -wall);
-      glVertex3f(i, wall, wall);
-
-      // Left Wall
-      glColor4f(1.0, 0.0, 1.0, alpha);
-      glVertex3f(-wall, -wall, i);
-      glVertex3f(-wall, wall, i);
-      glVertex3f(-wall, i, -wall);
-      glVertex3f(-wall, i, wall);
-
-      // Right Wall
-      glColor4f(0.0, 1.0, 1.0, alpha);
-      glVertex3f(wall, -wall, i);
-      glVertex3f(wall, wall, i);
-      glVertex3f(wall, i, -wall);
-      glVertex3f(wall, i, wall);
-
-      // Back Wall
-      glColor4f(1.0, 1.0, 0.0, alpha);
-      glVertex3f(-wall, i, -wall);
-      glVertex3f(wall, i, -wall);
-      glVertex3f(i, -wall, -wall);
-      glVertex3f(i, wall, -wall);
-
-      // Front Wall
-      glColor4f(1, 0, 0, alpha);
-      glVertex3f(-wall, i, wall);
-      glVertex3f(wall, i, wall);
-      glVertex3f(i, -wall, wall);
-      glVertex3f(i, wall, wall);
-   }
-   glEnd();
-   glEnable(GL_LIGHTING);
-}
-
 void drawCrosshair() {
    double crosshairSizeX = 0.05;
    double crosshairSizeY = 0.05;
@@ -176,7 +122,6 @@ void display() {
   glPushMatrix();
   gameState->draw();
 
-  drawGrid();
   drawSprites();
   drawCrosshair();
 
@@ -243,26 +188,22 @@ GLboolean CheckKeys() {
 
 void timerFunc() {
    static unsigned long lastSecond = 0;
-   static unsigned int frames = 0;
    static double lastTime = 0;
-   static double totalTime = 0;
-   static Point3D lastShipPosition(0, 0, 0);
+   
    double curTime = doubleTime();
+
    if (lastTime == 0) {
       lastTime = curTime;
       return;
    }
+
    double timeDiff = curTime - lastTime;
    gameState->setCurFPS(1 / timeDiff);
-   ++frames;
-   totalTime += timeDiff;
 
    // Use mouse x (rollAmount) for yaw if mouseXYaw is true.
    gameState->ship->setPitchSpeed(pitchAmount);
    gameState->ship->setRollSpeed(mouseXYaw ? 0 : rollAmount);
    gameState->ship->setYawSpeed(mouseXYaw ? -rollAmount : 0);
-   gameState->ship->updatePosition(timeDiff);
-   gameState->ship->keepFiring();
    
    gameState->update(timeDiff);
 
@@ -271,7 +212,6 @@ void timerFunc() {
    lastTime = curTime;
    // Stats
    if (floor(curTime) > lastSecond) {
-      frames = 0;
       lastSecond = floor(curTime);
    }
 }
