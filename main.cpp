@@ -161,9 +161,9 @@ void initSDL() {
    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,  1);
 
    // get a framebuffer
-   gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->fmt->BitsPerPixel, SDL_OPENGL);
+   gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
 
-   if (!gDrawSurce) {
+   if (!gDrawSurface) {
       fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
       exit(1);
    }
@@ -174,7 +174,7 @@ void initSDL() {
    //SDL_AddTimer(Uint32 (10), gameObjStep, param);
 
    //disable the cursor   
-   SDL_ShowCuror(SDL_DISABLE);
+   SDL_ShowCursor(SDL_DISABLE);
 
    //set the title
    SDL_WM_SetCaption("Asteroid Blaster", 0);

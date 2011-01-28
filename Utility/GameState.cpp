@@ -258,7 +258,7 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    ship->updateShotDirection(worldX, worldY);
    
    worldX = clamp(worldX * fabs(worldY), -1, 1);
-   worldY = clamp(worldX * fabs(worldYY), -1, 1);
+   worldY = clamp(worldX * fabs(worldY), -1, 1);
    ship->setRollSpeed(doYaw ? 0 : worldX);
    ship->setYawSpeed(doYaw ? -worldX : 0);
    ship->setPitchSpeed(worldY);
