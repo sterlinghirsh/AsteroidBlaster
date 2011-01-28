@@ -130,6 +130,73 @@ void display() {
   ++curFrame;
 }
 
+void initSDL() {
+   // init video system
+   const SDL_VideoInfo* vidinfo;
+   if( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+      fprintf(stderr, "Failed ti initialize SDL Video!\n");
+      exit(1);
+   }
+
+   // tell system which functions to process when exit() call is made
+   atexit(SDL_Quit);
+
+   // get optimal video settings
+   vidinfo = SDL_GetVideoInfo();
+
+   if (!vidinfo) {
+      fprintf(stderr, "Couldn't get video information!\n%s\n", SDL_GetError());
+      exit(1);
+   }
+
+   // set opengl attributes
+   SDL_GL_SetAttribute(SDL_GL_RED_SIZE,      5);
+   SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,    5);
+   SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,     5);
+#ifdef __APPLE__
+   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,    32);
+#else
+   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,    16);
+#endif
+   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,  1);
+
+   // get a framebuffer
+   gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->fmt->BitsPerPixel, SDL_OPENGL);
+
+   if (!gDrawSurce) {
+      fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
+      exit(1);
+   }
+
+   //set the timer
+   SDL_Init(SDL_INIT_TIMER);
+   //SDL_AddTimer(Uint32 (100), spawnGameObj, param);
+   //SDL_AddTimer(Uint32 (10), gameObjStep, param);
+
+   //disable the cursor   
+   SDL_ShowCuror(SDL_DISABLE);
+
+   //set the title
+   SDL_WM_SetCaption("Asteroid Blaster", 0);
+
+   // set opengl viewport and perspective view
+   //glViewport(0,0,width,height);
+   //glMatrixMode(GL_PROJECTION);
+   //glLoadIdentity();
+   //gluPerspective( 120, 4.0f / 3.0f, .00001, 100);
+   //glMatrixMode(GL_MODELVIEW);
+   
+
+   glClearColor(0.0, 0.0, 0.0, 1.0);
+   glEnable(GL_CULL_FACE);
+   glEnable(GL_DEPTH_TEST);
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   glEnable(GL_LIGHTING);
+   glEnable(GL_BLEND);
+   init_light();
+   init_tex();
+}
+
 /*GLboolean CheckKeys() {
    if (inputManager->isKeyDown(SDLK_ESCAPE)) {
       exit(0);
