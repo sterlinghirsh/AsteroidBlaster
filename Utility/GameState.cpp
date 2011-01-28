@@ -176,3 +176,78 @@ void GameState::setCurFPS(double fpsIn) {
 bool GameState::isGameRunning() {
    return gameIsRunning;
 }
+
+void GameState::reset() {
+   delete ship;
+   delete camera;
+
+   ship = new AsteroidShip();
+   camera = new Camera(ship);
+   curFPS = 0;
+
+   custodian.add(ship);
+   initAsteroids();
+}
+
+void GameState::keyUp(int key) {
+   switch(key) {
+      case SDLK_s:
+      case SDLK_w:
+         ship->accelerateForward(0);
+         break;
+
+      case SDLK_a:
+      case SDLK_d:
+         ship->accelerateRight(0);
+         break;
+
+      case SDLK_SPACE:
+      case SDLK_LCTRL:
+         ship->accelerateUp(0);
+         break;
+
+      case SDLK_b:
+         ship->setBrake(false);
+         break;
+   }
+}
+
+void GameState::keyDown(int key) {
+   switch(key) {
+   case SDLK_ESCAPE:
+      exit(0);
+      break;
+
+   case SDLK_r:
+      reset();
+      break;
+      
+   case SDLK_w:
+      ship->accelerateForward(1);
+      break;
+
+   case SDLK_s:
+      ship->accelerateForward(-1);
+      break;
+
+   case SDLK_a:
+      ship->accelerateRight(-1);
+      break;
+
+   case SDLK_d:
+      ship->accelerateRight(1);
+      break;
+
+   case SDLK_SPACE:
+      ship->accelerateUp(1);
+      break;
+
+   case SDLK_LCTRL:
+      ship->accelerateUp(-1);
+      break;
+
+   case SDLK_b:
+      ship->setBrake(true);
+      break;
+   }
+}

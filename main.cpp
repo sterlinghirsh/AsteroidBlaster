@@ -128,7 +128,7 @@ void display() {
   ++curFrame;
 }
 
-GLboolean CheckKeys() {
+/*GLboolean CheckKeys() {
    if (keyboardManager->isKeyDown(SDLK_ESCAPE)) {
       exit(0);
    }
@@ -177,7 +177,7 @@ GLboolean CheckKeys() {
    }
    
    return false;
-}
+}*/
 
 
 void timerFunc() {
@@ -281,7 +281,7 @@ int main(int argc, char* argv[]) {
    gluQuadricNormals(quadric, GLU_SMOOTH);
 
    gameState = new GameState(WORLD_SIZE);
-   keyboardManager = new KeyboardManager();
+   keyboardManager = new KeyboardManager(gameState);
 
    while (running) {
       if(gameState->isGameRunning()) {
@@ -303,10 +303,6 @@ int main(int argc, char* argv[]) {
          }
       }
       
-      if (CheckKeys()) {
-         delete gameState;
-         gameState = new GameState(WORLD_SIZE);
-      }
    }
    delete keyboardManager;
 }

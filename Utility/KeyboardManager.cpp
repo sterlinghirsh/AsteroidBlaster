@@ -11,10 +11,12 @@
 #include <stdlib.h>
 
 
-KeyboardManager::KeyboardManager() {
-  curKeys = SDL_GetKeyState(&numKeys);
+KeyboardManager::KeyboardManager(KeyboardReceiver* kbReceiver) {
+  Uint8* tempKeys;
+  tempKeys = SDL_GetKeyState(&numKeys);
   prevKeys = new Uint8[numKeys];
-  memcpy(prevKeys, curKeys, sizeof(Uint8) * numKeys);
+  memcpy(prevKeys, tempKeys, sizeof(Uint8) * numKeys);
+  receiver = kbReceiver;
 }
 
 KeyboardManager::~KeyboardManager() {
@@ -22,23 +24,29 @@ KeyboardManager::~KeyboardManager() {
 }
 
 void KeyboardManager::update() {
-   memcpy(prevKeys, curKeys, sizeof(Uint8) * numKeys);
+   Uint8* newKeys = SDL_GetKeyState(&numKeys);
 
-   curKeys = SDL_GetKeyState(&numKeys);
+   if (receiver) {
+      for (int i = 0; i < numKeys; i++) {
+         if (prevKeys[i] != newKeys[i]) {
+            if (!newKeys[i])
+               receiver->keyUp(i);
+            }
+
+         prevKeys[i] = newKeys[i];
+         if (prevKeys[i])
+            receiver->keyDown(i);
+      }
+   }
+   else {
+      memcpy(prevKeys, newKeys, numKeys * sizeof(Uint8));
+   }
 }
 
-int KeyboardManager::keyUp(int key) {
-   return !curKeys[key] && prevKeys[key];
+int KeyboardManager::poll(int key) {
+   return prevKeys[key];
 }
 
-int KeyboardManager::keyDown(int key) {
-   return curKeys[key] && !prevKeys[key];
-}
-
-int KeyboardManager::isKeyDown(int key) {
-   return curKeys[key];
-}
-
-int KeyboardManager::isKeyUp(int key) {
-   return !curKeys[key];
+void KeyboardManager::setReceiver(KeyboardReceiver *kbReceiver) {
+   receiver = kbReceiver;
 }

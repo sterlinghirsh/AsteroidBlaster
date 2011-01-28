@@ -16,22 +16,23 @@
 
 #include <SDL.h>
 
+struct KeyboardReceiver {
+   virtual void keyUp(int key)=0;
+   virtual void keyDown(int key)=0;
+};
+
 class KeyboardManager {
-   private:
-      Uint8 *curKeys, *prevKeys;
+      Uint8 *prevKeys;
       int numKeys;
+      KeyboardReceiver* receiver;
 
    public:
-      KeyboardManager();
+      KeyboardManager(KeyboardReceiver *kbReceiever);
       ~KeyboardManager();
 
       void update();
-
-      int keyUp(int key);
-      int keyDown(int key);
-      
-      int isKeyUp(int key);
-      int isKeyDown(int key);
+      int poll(int key);
+      void setReceiver(KeyboardReceiver *kbReceiver);
 };
 
 #endif
