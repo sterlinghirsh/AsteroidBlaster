@@ -207,7 +207,7 @@ void display() {
    init_tex();
 
 }
-
+*/
 
 void timerFunc() {
    static unsigned long lastSecond = 0;
