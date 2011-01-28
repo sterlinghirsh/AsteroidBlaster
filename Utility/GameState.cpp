@@ -53,7 +53,7 @@ void GameState::update(double timeDiff) {
       gameIsRunning = false;
    }
    
-
+   
    //ship->updatePosition(timeDiff);
    ship->keepFiring();
    cube->constrain(ship);
@@ -309,14 +309,19 @@ void GameState::mouseUp(int button) {
 void GameState::mouseMove(int dx, int dy, int x, int y) {
    double worldX = p2wx(x);
    double worldY = p2wy(y);
-
+   
+   mouseX = worldX;
+   mouseY = worldY;
+   
    ship->updateShotDirection(worldX, worldY);
    
-   worldX = clamp(worldX * fabs(worldY), -1, 1);
-   worldY = clamp(worldX * fabs(worldY), -1, 1);
-   ship->setRollSpeed(doYaw ? 0 : worldX);
-   ship->setYawSpeed(doYaw ? -worldX : 0);
-   ship->setPitchSpeed(worldY);
+   worldX = clamp(worldX * fabs(worldX), -1, 1);
+   worldY = clamp(worldY * fabs(worldY), -1, 1);
+   ship->setRollSpeed(worldX);
+   //ship->setYawSpeed(doYaw ? -worldX : 0);
+   //FIXME why is this negative value? shouldn't positive values pitch up?
+   ship->setPitchSpeed(-worldY);
+
 }
 
 
