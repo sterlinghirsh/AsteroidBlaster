@@ -117,8 +117,17 @@ void BitmapTextDisplay :: updateBody(double newDouble) {
  GLUT_BITMAP_HELVETICA_12
  GLUT_BITMAP_HELVETICA_18
 */
-void BitmapTextDisplay :: setFont(int newFont) {
-
+void BitmapTextDisplay :: setFont(void *newFont) {
+   /* Please excuse the giant verification block.
+    * It's necessary, and it at least looks better grouped as such. */
+   if (newFont == GLUT_BITMAP_8_BY_13 ||
+       newFont == GLUT_BITMAP_9_BY_15 ||
+       newFont == GLUT_BITMAP_TIMES_ROMAN_10 ||
+       newFont == GLUT_BITMAP_TIMES_ROMAN_24 ||
+       newFont == GLUT_BITMAP_HELVETICA_10 ||
+       newFont == GLUT_BITMAP_HELVETICA_12 ||
+       newFont == GLUT_BITMAP_HELVETICA_18)
+      font = newFont;
 }
 
 void BitmapTextDisplay :: setColor(float newR, float newG, float newB) {
@@ -150,7 +159,7 @@ void BitmapTextDisplay :: renderBitmapString(std::string str) {
 
    glRasterPos2f(p2wx(xCoord), p2wy(yCoord));
    for (unsigned i = 0; i < str.length(); i++) {
-     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[i]);
+     glutBitmapCharacter(font, str[i]);
    }
 }
 

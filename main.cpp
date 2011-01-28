@@ -21,7 +21,12 @@
 #include "Utility/GameState.h"
 
 #include "SDL.h"
-Uint8* _keys;
+
+#define KEY_DOWN(a) ((_keys && _prevKeys) && _keys[(a)] && !_prevKeys[(a)])
+#define KEY_UP(a) ((_keys && _prevKeys) && !_keys[(a)] && _prevKeys[(a)])
+
+Uint8* _keys = NULL;
+Uint8* _prevKeys = NULL;
 
 using namespace std;
 
@@ -38,6 +43,17 @@ double startx, starty;
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
 bool mouseXYaw = false;
+
+int *fontsArr[] = {
+   (int*)GLUT_BITMAP_8_BY_13,
+   (int*)GLUT_BITMAP_9_BY_15,
+   (int*)GLUT_BITMAP_TIMES_ROMAN_10,
+   (int*)GLUT_BITMAP_TIMES_ROMAN_24,
+   (int*)GLUT_BITMAP_HELVETICA_10,
+   (int*)GLUT_BITMAP_HELVETICA_12,
+   (int*)GLUT_BITMAP_HELVETICA_18,
+};
+int fontSpot = 0;
 
 GameState* gameState = NULL;
 
@@ -172,18 +188,14 @@ void display() {
 }
 
 GLboolean CheckKeys() {
-   static bool resetReleased = true;
+   if (!_keys || !_prevKeys)
+      return false;
    if (_keys[SDLK_ESCAPE]) {
       exit(0);
    }
    
-   if (_keys[SDLK_r]) {
-      if (resetReleased) {
-         resetReleased = false;
+   if (KEY_UP(SDLK_r)) {
          return true;
-      }
-   } else {
-      resetReleased = true;
    }
 
    // If the shift key is down, yaw instead of rolling on the mouse x.
@@ -217,6 +229,12 @@ GLboolean CheckKeys() {
       gameState->ship->setBrake(true);
    } else {
       gameState->ship->setBrake(false);
+   }
+
+   if (KEY_DOWN(SDLK_f)) {
+      gameState->FPSText->setFont(fontsArr[fontSpot++]);
+      if (fontSpot > 7)
+         fontSpot = 0;
    }
    
    return false;
@@ -284,7 +302,7 @@ void mouseButton(SDL_Event event){
 }
 
 int main(int argc, char* argv[]) {
-
+   int numKeys = 0;
    srand(time(NULL));
    GW = 800;
    GH = 600;
@@ -329,6 +347,8 @@ int main(int argc, char* argv[]) {
    gluQuadricNormals(quadric, GLU_SMOOTH);
 
    gameState = new GameState(WORLD_SIZE);
+   _keys = SDL_GetKeyState(&numKeys);
+   _prevKeys = new Uint8[numKeys];
 
    while (running) {
       if(gameState->isGameRunning()) {
@@ -349,10 +369,13 @@ int main(int argc, char* argv[]) {
             mouseButton(event);
          }
       }
-      _keys = SDL_GetKeyState(NULL);
+      
+      _keys = SDL_GetKeyState(&numKeys);
       if (CheckKeys()) {
          delete gameState;
          gameState = new GameState(WORLD_SIZE);
       }
+      memcpy(_prevKeys, _keys, sizeof(Uint8) * numKeys);
    }
+   delete _prevKeys;
 }

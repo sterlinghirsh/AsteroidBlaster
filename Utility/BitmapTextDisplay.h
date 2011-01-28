@@ -45,7 +45,7 @@ class BitmapTextDisplay {
       // Sets the new body text to be used
       virtual void updateBody(double newDouble);
       // Sets the font to be used
-      virtual void setFont(int newFont);
+      virtual void setFont(void *newFont);
       // Sets the color of the text
       virtual void setColor(float newR, float newG, float newB);
       // Sets the position where the text will be drawn
