@@ -25,21 +25,17 @@
 
 using namespace std;
 
-#define WORLD_SIZE 80.0
+//constant value
+const double WORLD_SIZE = 80.00;
+
+
 bool running = true;
 
 //SDL
 SDL_Surface* gDrawSurface = NULL;
 
-const double angleScale = 1;
-
-double xdouble = 0, ydouble = 0;
-// TODO: Come up with better names for these.
-double rollAmount = 0, pitchAmount = 0, yawAmount = 0;
-double startx, starty;
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
-bool mouseXYaw = false;
 
 int *fontsArr[] = {
    (int*)GLUT_BITMAP_8_BY_13,
@@ -170,22 +166,12 @@ void initSDL() {
 
    //set the timer
    SDL_Init(SDL_INIT_TIMER);
-   //SDL_AddTimer(Uint32 (100), spawnGameObj, param);
-   //SDL_AddTimer(Uint32 (10), gameObjStep, param);
 
    //disable the cursor   
    SDL_ShowCursor(SDL_DISABLE);
 
    //set the title
-   SDL_WM_SetCaption("Asteroid Blaster", 0);
-
-   // set opengl viewport and perspective view
-   //glViewport(0,0,width,height);
-   //glMatrixMode(GL_PROJECTION);
-   //glLoadIdentity();
-   //gluPerspective( 120, 4.0f / 3.0f, .00001, 100);
-   //glMatrixMode(GL_MODELVIEW);
-   
+   SDL_WM_SetCaption("Asteroid Blaster", 0);   
 
    glClearColor(0.0, 0.0, 0.0, 1.0);
    glEnable(GL_CULL_FACE);
@@ -196,85 +182,6 @@ void initSDL() {
    init_light();
    init_tex();
 }
-
-/*GLboolean CheckKeys() {
-   if (inputManager->isKeyDown(SDLK_ESCAPE)) {
-      exit(0);
-   }
-   
-   if (inputManager->keyDown(SDLK_r)) {
-         return true;
-   }
-
-   // If the shift key is down, yaw instead of rolling on the mouse x.
-   mouseXYaw = inputManager->isKeyDown(SDLK_LSHIFT) || inputManager->isKeyDown(SDLK_RSHIFT);
-   
-   if (inputManager->isKeyDown(SDLK_w)) {
-      gameState->ship->accelerateForward(1);
-   } else if (inputManager->isKeyDown(SDLK_s)) {
-      gameState->ship->accelerateForward(-1);
-   } else {
-      gameState->ship->accelerateForward(0);
-   }
-
-   if (inputManager->isKeyDown(SDLK_a)) {
-      gameState->ship->accelerateRight(-1);
-   } else if (inputManager->isKeyDown(SDLK_d)) {
-      gameState->ship->accelerateRight(1);
-   } else {
-      gameState->ship->accelerateRight(0);
-   }
-
-   if (inputManager->isKeyDown(SDLK_SPACE)) {
-      gameState->ship->accelerateUp(1);
-   } else if (inputManager->isKeyDown(SDLK_LCTRL)) {
-      gameState->ship->accelerateUp(-1);
-   } else {
-      gameState->ship->accelerateUp(0);
-   }
-
-   if (inputManager->isKeyDown(SDLK_b)) {
-      gameState->ship->setBrake(true);
-   } else {
-      gameState->ship->setBrake(false);
-   }
-
-   if (inputManager->keyDown(SDLK_f)) {
-      gameState->FPSText->setFont(fontsArr[fontSpot++]);
-      if (fontSpot > 7)
-         fontSpot = 0;
-   }
-   
-   //set the timer
-	SDL_Init(SDL_INIT_TIMER);
-   //SDL_AddTimer(Uint32 (100), spawnGameObj, param);
-   //SDL_AddTimer(Uint32 (10), gameObjStep, param);
-
-   //disable the cursor
-   SDL_ShowCursor(SDL_DISABLE);
-   
-   //set the title
-   SDL_WM_SetCaption("Asteroid Blaster", 0);
-
-   // set opengl viewport and perspective view
-   //glViewport(0,0,width,height);
-   //glMatrixMode(GL_PROJECTION);
-   //glLoadIdentity();
-   //gluPerspective( 120, 4.0f / 3.0f, .00001, 100);
-   //glMatrixMode(GL_MODELVIEW);
-   
-   
-   glClearColor(0.0, 0.0, 0.0, 1.0);
-   glEnable(GL_CULL_FACE);
-   glEnable(GL_DEPTH_TEST);
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   glEnable(GL_LIGHTING);
-   glEnable(GL_BLEND);
-   init_light();
-   init_tex();
-
-}
-*/
 
 void timerFunc() {
    static unsigned long lastSecond = 0;
@@ -290,55 +197,22 @@ void timerFunc() {
    double timeDiff = curTime - lastTime;
    gameState->setCurFPS(1 / timeDiff);
 
-   // Use mouse x (rollAmount) for yaw if mouseXYaw is true.
-/*   gameState->ship->setPitchSpeed(pitchAmount);
-   gameState->ship->setRollSpeed(mouseXYaw ? 0 : rollAmount);
-   //gameState->ship->setYawSpeed(mouseXYaw ? -rollAmount : 0);
-  */ 
    gameState->update(timeDiff);
 
    gameState->checkCollisions();
    
    lastTime = curTime;
+   
    // Stats
    if (floor(curTime) > lastSecond) {
       lastSecond = floor(curTime);
    }
 }
 
-/*
-void mouseUpdate(int x, int y){
-   xdouble = p2wx(x);
-   ydouble = p2wy(y);
-   gameState->ship->updateShotDirection(xdouble, ydouble);
-   rollAmount = clamp(xdouble * fabs(xdouble) * angleScale, -1, 1);
-   pitchAmount = clamp(-ydouble * fabs(ydouble) * angleScale, -1, 1);
-}
-
-void mouseButton(SDL_Event event){
-   if(event.type == SDL_MOUSEBUTTONDOWN) {
-      printf("Mouse button %d pressed at (%d,%d)\n",event.button.button, event.button.x, event.button.y);
-      gameState->ship->updateShotDirection(p2wx(event.button.x), p2wy(event.button.y));
-      if(event.button.button == 1){
-         gameState->ship->selectWeapon(0);         
-      } else if (event.button.button == 3) {
-         gameState->ship->selectWeapon(1);
-      }
-      gameState->ship->fire(true);
-   }
-   if (event.type == SDL_MOUSEBUTTONUP) {
-      printf("Mouse button %d up at (%d,%d)\n",event.button.button, event.button.x, event.button.y);
-      gameState->ship->fire(false);
-   }
-}
-*/
-
 int main(int argc, char* argv[]) {
    srand(time(NULL));
    GW = 800;
    GH = 600;
-   startx = starty = 0;
-   
    
    glutInit(&argc, argv);
    
@@ -364,11 +238,15 @@ int main(int argc, char* argv[]) {
       SDL_Event event;
       float mouseButtonDown = 0;
       while (SDL_PollEvent(&event)) {
-         if (event.type == SDL_QUIT) {
-           running = 0;
+         if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_F1) {
+            SDL_WM_ToggleFullScreen( gDrawSurface );
          }
-         else
+         if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_ESCAPE) {
+            exit(0);
+         }
+         else{
             inputManager->update(event);
+         }
       }
       
    }

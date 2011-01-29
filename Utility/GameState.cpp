@@ -204,50 +204,46 @@ void GameState::reset() {
 
 void GameState::keyDown(int key) {
    switch(key) {
-   case SDLK_ESCAPE:
-      exit(0);
-      break;
+      case SDLK_w:
+         ship->accelerateForward(1);
+         break;
 
-   case SDLK_w:
-      ship->accelerateForward(1);
-      break;
+      case SDLK_s:
+         ship->accelerateForward(-1);
+         break;
 
-   case SDLK_s:
-      ship->accelerateForward(-1);
-      break;
+      case SDLK_a:
+         ship->setYawSpeed(1.0);
+         break;
 
-   case SDLK_a:
-      ship->setYawSpeed(1.0);
-      break;
+      case SDLK_d:
+         ship->setYawSpeed(-1.0);
+         break;
+         
+      case SDLK_q:
+         ship->accelerateRight(-1);
+         break;
 
-   case SDLK_d:
-      ship->setYawSpeed(-1.0);
-      break;
-      
-   case SDLK_q:
-      ship->accelerateRight(-1);
-      break;
+      case SDLK_e:
+         ship->accelerateRight(1);
+         break;
 
-   case SDLK_e:
-      ship->accelerateRight(1);
-      break;
+      case SDLK_SPACE:
+         ship->accelerateUp(1);
+         break;
 
-   case SDLK_SPACE:
-      ship->accelerateUp(1);
-      break;
+      case SDLK_LCTRL:
+         ship->accelerateUp(-1);
+         break;
 
-   case SDLK_LCTRL:
-      ship->accelerateUp(-1);
-      break;
+      case SDLK_LSHIFT:
+      case SDLK_RSHIFT:
+         doYaw = 1;
+         break;
 
-   case SDLK_LSHIFT:
-   case SDLK_RSHIFT:
-      doYaw = 1;
-      break;
-
-   case SDLK_b:
-      ship->setBrake(true);
-      break;
+      case SDLK_b:
+         ship->setBrake(true);
+         break;
    }
 }
 
