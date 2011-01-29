@@ -93,15 +93,15 @@ void drawCrosshair() {
    useOrtho();
    glDisable(GL_LIGHTING);
    glBegin(GL_QUADS);
-   glVertex3f(gameState->getMouseX() + crosshairSizeX, gameState->getMouseY() + thicknessY, 0);
-   glVertex3f(gameState->getMouseX() - crosshairSizeX, gameState->getMouseY() + thicknessY, 0);
-   glVertex3f(gameState->getMouseX() - crosshairSizeX, gameState->getMouseY() - thicknessY, 0);
-   glVertex3f(gameState->getMouseX() + crosshairSizeX, gameState->getMouseY() - thicknessY, 0);
+   glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
+   glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
+   glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
+   glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
    
-   glVertex3f(gameState->getMouseX() + thicknessX, gameState->getMouseY() - crosshairSizeY, 0);
-   glVertex3f(gameState->getMouseX() + thicknessX, gameState->getMouseY() + crosshairSizeY, 0);
-   glVertex3f(gameState->getMouseX() - thicknessX, gameState->getMouseY() + crosshairSizeY, 0);
-   glVertex3f(gameState->getMouseX() - thicknessX, gameState->getMouseY() - crosshairSizeY, 0);
+   glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
+   glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
+   glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
+   glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
    glEnd();
    glEnable(GL_LIGHTING);
    usePerspective();
@@ -258,9 +258,6 @@ int main(int argc, char* argv[]) {
                gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
                fullScreen = !fullScreen;
             }
-         }
-         if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_ESCAPE) {
-            exit(0);
          }
          else{
             inputManager->update(event);

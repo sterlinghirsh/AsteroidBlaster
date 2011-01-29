@@ -147,7 +147,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
    Asteroid3D* otherAsteroid;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       double speed = velocity->getLength();
-      
+
       velocity->updateMagnitude(*(otherAsteroid->position), *position);
       velocity->setLength(speed);
       printf("new speed: %f\n", speed);

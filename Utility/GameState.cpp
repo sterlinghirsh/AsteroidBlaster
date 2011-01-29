@@ -32,7 +32,8 @@ GameState::GameState(double worldSizeIn) {
    custodian.add(ship);
    initAsteroids();
    doYaw = 0;
-   mouseX = mouseY = 0;
+   mouseX = 0;
+   mouseY = 0;
 }
 
 GameState::~GameState() {
@@ -244,6 +245,10 @@ void GameState::keyDown(int key) {
       case SDLK_b:
          ship->setBrake(true);
          break;
+
+      case SDLK_ESCAPE:
+         exit(0);
+         break;
    }
 }
 
@@ -312,11 +317,9 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    ship->updateShotDirection(worldX, worldY);
    
    worldX = clamp(worldX * fabs(worldX), -1, 1);
-   worldY = clamp(worldY * fabs(worldY), -1, 1);
+   worldY = clamp(-worldY * fabs(worldY), -1, 1);
    ship->setRollSpeed(worldX);
-   //ship->setYawSpeed(doYaw ? -worldX : 0);
-   //FIXME why is this negative value? shouldn't positive values pitch up?
-   ship->setPitchSpeed(-worldY);
+   ship->setPitchSpeed(worldY);
 
 }
 
