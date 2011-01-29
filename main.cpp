@@ -28,11 +28,12 @@ using namespace std;
 //constant value
 const double WORLD_SIZE = 80.00;
 
-
 bool running = true;
+bool fullScreen = false;
 
 //SDL
 SDL_Surface* gDrawSurface = NULL;
+const SDL_VideoInfo* vidinfo = NULL;
 
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
@@ -127,8 +128,7 @@ void display() {
 }
 
 void initSDL() {
-   // init video system
-   const SDL_VideoInfo* vidinfo;
+   //initialize the SDL video system
    if( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
       fprintf(stderr, "Failed ti initialize SDL Video!\n");
       exit(1);
@@ -213,6 +213,9 @@ int main(int argc, char* argv[]) {
    srand(time(NULL));
    GW = 800;
    GH = 600;
+   //used for toggle full screens
+   int oldGW = 800;
+   int oldGH = 600;
    
    glutInit(&argc, argv);
    
@@ -239,7 +242,22 @@ int main(int argc, char* argv[]) {
       float mouseButtonDown = 0;
       while (SDL_PollEvent(&event)) {
          if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_F1) {
-            SDL_WM_ToggleFullScreen( gDrawSurface );
+            if(!fullScreen){
+               oldGW = GW;
+               oldGH = GH;
+               GW = 1280;
+               GH = 1024;
+               gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+               SDL_WM_ToggleFullScreen( gDrawSurface );
+               fullScreen = !fullScreen;
+            }
+            else {
+               GW = oldGW;
+               GH = oldGH;
+               SDL_WM_ToggleFullScreen( gDrawSurface );
+               gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+               fullScreen = !fullScreen;
+            }
          }
          if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_ESCAPE) {
             exit(0);
