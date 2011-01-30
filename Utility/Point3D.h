@@ -48,6 +48,14 @@ struct Point3D {
       y += y2;
       z += z2;
    }
+
+   Point3D operator+(const Point3D& rhs);
+   Point3D operator-(const Point3D& rhs);
+   double operator*(const Point3D& rhs);
+   int operator==(const Point3D& rhs) const;
+   const Point3D &operator=(const Point3D &src);
+   
+   static const Point3D Zero;
 };
 
 #endif
