@@ -58,6 +58,8 @@ void GameState::update(double timeDiff) {
    ship->keepFiring();
    cube->constrain(ship);
    for (item = objects->begin(); item != objects->end(); ++item) {
+      if (*item == NULL)
+         continue;
       (*item)->update(timeDiff);
       cube->constrain(*item);
    }
@@ -72,10 +74,6 @@ void GameState::update(double timeDiff) {
       for (otherObject = collisions->begin(); otherObject != collisions->end(); ++otherObject) {
          (*item)->handleCollision(*otherObject);
          (*otherObject)->handleCollision(*item);
-         printf("Item: ");
-         (*item)->maxPosition->print();
-         printf("Other: ");
-         (*otherObject)->minPosition->print();
       }
       delete collisions;
    }
@@ -91,6 +89,8 @@ void GameState::draw() {
    skybox->draw(camera);
    cube->draw();
    for (item = objects->begin(); item != objects->end(); ++item) {
+      if (*item == NULL)
+         continue;
       (*item)->draw();
    }
 }

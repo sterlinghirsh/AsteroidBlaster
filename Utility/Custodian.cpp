@@ -43,6 +43,19 @@ static bool compareByMaxX (Object3D* item1, Object3D* item2) {
  * they are removed from the list.
  */
 void Custodian::update() {
+   Object3D* tempObject;
+   // Iterate over objects that need to be added.
+   while (objectsToAdd.size() > 0) {
+      // Get the first item in the list.
+      tempObject = objectsToAdd.front();
+      // Add the item to the sorted lists.
+      objectsByMinX.push_back(tempObject);
+      objectsByMaxX.push_back(tempObject);
+      // Remove the item.
+      objectsToAdd.pop_front();
+   }
+
+   // This lets us know where we can stop searching.
    int firstNull = objectsByMinX.size();
 
    // Remove items that should be removed.
@@ -77,10 +90,12 @@ void Custodian::update() {
 
 /**
  * Call this on an object if you want it to be custodian'd.
+ * This doesn't add the item right away, but waits until the next udpate 
+ * to do it. In effect, items are added to a queue of items to add.
  */
 void Custodian::add(Object3D* objectIn) {
-   objectsByMinX.push_back(objectIn);
-   objectsByMaxX.push_back(objectIn);
+   objectsToAdd.push_back(objectIn);
+   objectIn->setCustodian(this);
 }
 
 /**
@@ -98,6 +113,10 @@ void Custodian::remove(Object3D* objectIn) {
  */
 std::set<Object3D*>* Custodian::findCollisions(Object3D* item, bool searchBackwards) {
    std::set<Object3D*>* sublist = new std::set<Object3D*>();
+   // If we were passed a null pointer, don't worry about it, just return an empty list.
+   if (item == NULL)
+      return sublist;
+
    std::set<Object3D*>::iterator iter;
    int numElements = objectsByMinX.size();
    Object3D* other;

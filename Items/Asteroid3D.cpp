@@ -143,14 +143,12 @@ void Asteroid3D::update(double timeDiff) {
 }
 
 void Asteroid3D::handleCollision(Object3D* other) {
-   printf("asteroid collision detected\n");
    Asteroid3D* otherAsteroid;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       double speed = velocity->getLength();
 
       velocity->updateMagnitude(*(otherAsteroid->position), *position);
       velocity->setLength(speed);
-      printf("new speed: %f\n", speed);
       const int explosionFactor = 3;
       Sprite::sprites.push_back(
          new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20, 

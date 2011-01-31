@@ -12,6 +12,10 @@
 #include "Utility/Object3D.h"
 #include <vector>
 #include <set>
+#include <list>
+
+// Incomplete class declaration so we can use pointers.
+class Object3D;
 
 class Custodian {
    public:
@@ -26,6 +30,7 @@ class Custodian {
    private:
       std::vector<Object3D*> objectsByMinX;
       std::vector<Object3D*> objectsByMaxX;
+      std::list<Object3D*> objectsToAdd;
 };
 
 #endif

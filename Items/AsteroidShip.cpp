@@ -472,13 +472,6 @@ void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
  */
 void AsteroidShip::handleCollision(Object3D* other) {
    Asteroid3D* asteroid;
-   // Don't do anything else if this thing's on its way out.
-   /*
-   if (other->shouldRemove)
-      return;
-      */
-
-   printf("ship collision detected\n");
    if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       // Decrease the player's health by an appropriate amount.
       velocity->addUpdate(*(asteroid->velocity));
@@ -487,6 +480,10 @@ void AsteroidShip::handleCollision(Object3D* other) {
       asteroid->shouldRemove = true;
       asteroid->velocity->updateMagnitude(0, 0, 0);
       asteroid->rotationSpeed = 0;
+      if (asteroid->radius > 2) { 
+         custodian->add(asteroid->makeChild());
+         custodian->add(asteroid->makeChild());
+      }
    }
 }
 

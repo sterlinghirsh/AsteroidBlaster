@@ -189,3 +189,7 @@ void Object3D::updateBoundingBox() {
    minPosition->offsetBy(minX, minY, minZ);
    maxPosition->offsetBy(maxX, maxY, maxZ);
 }
+
+void Object3D::setCustodian(Custodian *cust) {
+   custodian = cust;
+}

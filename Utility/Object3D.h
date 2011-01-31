@@ -11,6 +11,10 @@
 #include "Utility/Point3D.h"
 #include "Utility/Vector3D.h"
 #include "Graphics/GlutUtility.h"
+#include "Utility/Custodian.h"
+
+// Incomplete class declaration so we can have the pointer to it.
+class Custodian;
 
 class Object3D {
    public:
@@ -38,11 +42,13 @@ class Object3D {
       virtual void drawBoundingBox();
       virtual void handleCollision(Object3D* other);
 
+      void setCustodian(Custodian* cust);
    private:
 
    protected:
       double yawSpeed, pitchSpeed, rollSpeed;
       GLuint displayList;
+      Custodian* custodian;
 
       void yaw(double angle);
       void roll(double angle);
