@@ -128,7 +128,6 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 
 void Asteroid3D::draw() {
    glColor3f(1, 1, 1);
-   drawBoundingBox();
    materials(Rock);
    Object3D::draw();
    glPushMatrix();

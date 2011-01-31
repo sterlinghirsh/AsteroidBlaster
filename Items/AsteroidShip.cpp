@@ -426,7 +426,6 @@ void draw_ship(){
 }
 
 void AsteroidShip::draw() {
-   drawBoundingBox();
    glPushMatrix();
    glTranslatef(0, 0, 2);
    //draw_ship();
