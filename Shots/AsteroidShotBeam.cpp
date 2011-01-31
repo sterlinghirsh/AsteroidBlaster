@@ -78,20 +78,16 @@ void AsteroidShotBeam::draw() {
    glPopMatrix();
 }
 
-void AsteroidShotBeam::updatePosition(double timeDiff) {
-   // Do nothing.
-}
-
-bool AsteroidShotBeam::checkHit(Asteroid3D* asteroid) {
+bool AsteroidShotBeam::checkHit(Object3D* other) {
    if (hitYet && curFrame != lastHitFrame)
       return false;
    Vector3D positionVector(*position);
-   Vector3D asteroidVector(*asteroid->position);
+   Vector3D otherVector(*other->position);
 
-   // asteroidVector now is how far from the ship it is.
-   asteroidVector.subtractUpdate(positionVector);
+   // otherVector now is how far from the ship it is.
+   otherVector.subtractUpdate(positionVector);
    
-   double distance = velocity->dot(asteroidVector);
+   double distance = velocity->dot(otherVector);
 
    // Is it behind me?
    if (distance < 0)
@@ -99,18 +95,18 @@ bool AsteroidShotBeam::checkHit(Asteroid3D* asteroid) {
 
    // Is it too far to one side?
    Vector3D normalToDirection(velocity->getNormalVector());
-   distance = normalToDirection.dot(asteroidVector);
-   if (distance > asteroid->radius || distance < -asteroid->radius)
+   distance = normalToDirection.dot(otherVector);
+   if (distance > other->radius || distance < -other->radius)
       return false;
 
    /* x1 is ship
       x2 is direction
-      x0 is asteroid 
+      x0 is other 
       */
 
-   distance = (velocity->cross(asteroidVector).getLength() /
+   distance = (velocity->cross(otherVector).getLength() /
          velocity->getLength());
-   if(distance < asteroid->radius) {
+   if(distance < other->radius) {
       hitYet = true;
       lifetime = 0.4;
       timeFired = doubleTime();

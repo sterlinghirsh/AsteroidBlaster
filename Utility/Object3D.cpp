@@ -6,6 +6,8 @@
  */
 
 #include "Utility/Object3D.h"
+#include <math.h>
+#include <algorithm>
 
 Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
  position(new Point3D(x, y, z)) {
@@ -27,6 +29,11 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
    forward = new Vector3D(0, 0, 1);
    lockUpVector = false;
    yawSpeed = pitchSpeed = rollSpeed = 0;
+   radius = std::max(fabs(maxX), fabs(minX));
+   radius = std::max(radius, fabs(maxY));
+   radius = std::max(radius, fabs(minY));
+   radius = std::max(radius, fabs(maxZ));
+   radius = std::max(radius, fabs(minZ));
 }
 
 Object3D::~Object3D() {

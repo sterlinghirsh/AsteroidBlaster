@@ -16,9 +16,8 @@ class AsteroidShotBeam : public AsteroidShot {
       unsigned long lastHitFrame;
 
       AsteroidShotBeam(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
-      void draw();
-      void updatePosition(double timeDiff);
-      bool checkHit(Asteroid3D* asteroid);
+      virtual void draw();
+      virtual bool checkHit(Object3D* other);
 };
 
 

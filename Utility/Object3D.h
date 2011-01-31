@@ -29,6 +29,7 @@ class Object3D {
       bool lockUpVector;
       bool shouldRemove;
       double angle;
+      double radius;
       unsigned int minXRank, maxXRank;
 
       Object3D(double x, double y, double z, GLuint displayListIn);
