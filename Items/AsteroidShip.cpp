@@ -94,8 +94,9 @@ AsteroidShip::AsteroidShip() :
 
    // Bounding box stuff.
    shipRadius = 1;
-   maxX = maxY = maxZ = 1;
-   minX = minY = minZ = -1;
+   maxX = maxY = maxZ = 2;
+   minX = minY = minZ = -2;
+   updateBoundingBox();
 
    // Orientation vectors.
    forward->updateMagnitude(0, 0, 1);
@@ -472,8 +473,10 @@ void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
 void AsteroidShip::handleCollision(Object3D* other) {
    Asteroid3D* asteroid;
    // Don't do anything else if this thing's on its way out.
+   /*
    if (other->shouldRemove)
       return;
+      */
 
    printf("ship collision detected\n");
    if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
@@ -481,8 +484,8 @@ void AsteroidShip::handleCollision(Object3D* other) {
       velocity->addUpdate(*(asteroid->velocity));
       health -= asteroid->radius;
       // TEMP. Asteroids should not be simply erased.
-      other->shouldRemove = true;
-      other->velocity->updateMagnitude(0, 0, 0);
+      asteroid->shouldRemove = true;
+      asteroid->velocity->updateMagnitude(0, 0, 0);
       asteroid->rotationSpeed = 0;
    }
 }

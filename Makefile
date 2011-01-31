@@ -13,12 +13,12 @@ else
 
 endif
 
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g `sdl-config --libs`
 
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c -g
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c `sdl-config --cflags` -g -O0
 CC=g++
 
 PROGNAME=AsteroidBlaster
@@ -55,7 +55,7 @@ turnin:
 	handin zwood csc471finalwebs2
 
 valgrind:
-	valgrind --leak-check=full ./${PROGNAME}
+	valgrind --track-origins=yes ./${PROGNAME}
 
 gdb:
 	gdb ./${PROGNAME}

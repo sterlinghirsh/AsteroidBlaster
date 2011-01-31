@@ -67,7 +67,7 @@ void init_light() {
    glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
    glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
    glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
-  glShadeModel(GL_SMOOTH);
+  //glShadeModel(GL_SMOOTH);
   glEnable(GL_NORMALIZE);
 }
 

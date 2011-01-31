@@ -44,6 +44,16 @@ static bool compareByMaxX (Object3D* item1, Object3D* item2) {
  */
 void Custodian::update() {
    int firstNull = objectsByMinX.size();
+
+   // Remove items that should be removed.
+   for (int i = 0; i < objectsByMinX.size(); ++i) {
+      if (objectsByMinX[i] == NULL)
+         continue;
+      if (objectsByMinX[i]->shouldRemove) {
+         remove(objectsByMinX[i]);
+      }
+   }
+
    // Sort. Duh.
    sort(objectsByMinX.begin(), objectsByMinX.end(), compareByMinX);
    sort(objectsByMaxX.begin(), objectsByMaxX.end(), compareByMaxX);
@@ -109,8 +119,8 @@ std::set<Object3D*>* Custodian::findCollisions(Object3D* item, bool searchBackwa
    /* Start at the current minX + 1. Check whether elements to
     * the right have a minX that is below item's maxX.
     */
-   for (int i = item->maxXRank + 1; i < numElements; ++i) {
-      other = objectsByMaxX[i];
+   for (int i = item->minXRank + 1; i < numElements; ++i) {
+      other = objectsByMinX[i];
       if (other == NULL)
          continue;
       if (other->minPosition->x < item->maxPosition->x)
@@ -121,11 +131,16 @@ std::set<Object3D*>* Custodian::findCollisions(Object3D* item, bool searchBackwa
    /* Now check the y direction. From now on, we only 
     * remove elements.
     */
-   for (iter = sublist->begin(); iter != sublist->end(); ++iter) {
-      // If items definitely don't intersect.
-      if (other->maxPosition->y < item->minPosition->y || other->minPosition->y > item->maxPosition->y ||
-       other->maxPosition->z < item->minPosition->z || other->minPosition->z > item->maxPosition->z) {
-         sublist->erase(iter);
+   iter = sublist->begin();
+   std::set<Object3D*>::iterator current;
+   while (iter != sublist->end()) {
+      current = iter++;
+      other = *current;
+      if (other->maxPosition->y < item->minPosition->y || 
+          other->minPosition->y > item->maxPosition->y ||
+          other->maxPosition->z < item->minPosition->z ||
+          other->minPosition->z > item->maxPosition->z) {
+         sublist->erase(current);
       }
    }
    return sublist;

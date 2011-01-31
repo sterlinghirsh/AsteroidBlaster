@@ -55,7 +55,6 @@ void GameState::update(double timeDiff) {
    }
    
    
-   //ship->updatePosition(timeDiff);
    ship->keepFiring();
    cube->constrain(ship);
    for (item = objects->begin(); item != objects->end(); ++item) {
@@ -65,12 +64,18 @@ void GameState::update(double timeDiff) {
    // Update the values of all of the text objects.
    
    custodian.update();
+   // Get updated list.
+   objects = custodian.getListOfObjects();
    
    for (item = objects->begin(); item != objects->end(); ++item) {
       collisions = custodian.findCollisions(*item, false);
       for (otherObject = collisions->begin(); otherObject != collisions->end(); ++otherObject) {
          (*item)->handleCollision(*otherObject);
          (*otherObject)->handleCollision(*item);
+         printf("Item: ");
+         (*item)->maxPosition->print();
+         printf("Other: ");
+         (*otherObject)->minPosition->print();
       }
       delete collisions;
    }
