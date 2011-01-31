@@ -15,8 +15,10 @@ materialStruct ShotMaterial = {
 
 double AsteroidShot::frequency = 10;
       
-AsteroidShot::AsteroidShot(Point3D posIn, Vector3D dirIn) :
- position(posIn), direction(dirIn) {
+AsteroidShot::AsteroidShot(Point3D& posIn, Vector3D dirIn,
+ AsteroidShip* const ownerIn ) : owner(ownerIn), Object3D(0, 0, 0, 0) {
+   *position = posIn;
+   velocity = new Vector3D(dirIn);
    timeFired = doubleTime();
    lifetime = 2;
    persist = false;
@@ -24,12 +26,12 @@ AsteroidShot::AsteroidShot(Point3D posIn, Vector3D dirIn) :
 
 void AsteroidShot::draw() {
    Vector3D zVector(0, 0, -1);
-   Vector3D axis = zVector.cross(direction);
+   Vector3D axis = zVector.cross(*velocity);
    glPushMatrix();
    glColor3f(1, 0, 0);
    materials(ShotMaterial);
-   glTranslatef(position.x, position.y, position.z);
-   glRotatef(zVector.getAngleInDegrees(direction), 
+   position->glTranslate();
+   glRotatef(zVector.getAngleInDegrees(*velocity), 
       axis.xMag, axis.yMag, axis.zMag);
   // glutSolidSphere(0.05, 30, 10);
    //drawCylinder(0.02, 1);
@@ -39,13 +41,15 @@ void AsteroidShot::draw() {
    glPopMatrix();
 }
 
-void AsteroidShot::updatePosition(double timeDiff) {
-   position.x += direction.xMag * timeDiff;
-   position.y += direction.yMag * timeDiff;
-   position.z += direction.zMag * timeDiff;
+void AsteroidShot::update(double timeDiff) {
+   Object3D::update(timeDiff);
+   if (doubleTime() - timeFired > lifetime) {
+      shouldRemove = true;
+   }
 }
 
-bool AsteroidShot::checkHit(Asteroid3D* asteroid) {
-   double distance = position.distanceFrom(*asteroid->position);
-   return distance < asteroid->collisionRadius;
+void AsteroidShot::handleCollision(Object3D* other) {
+   if (other == owner)
+      return;
+   shouldRemove = true;
 }

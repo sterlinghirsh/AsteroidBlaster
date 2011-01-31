@@ -10,7 +10,6 @@
 #include "Utility/Point3D.h"
 #include "Utility/Vector3D.h"
 #include "Shots/AsteroidShot.h"
-#include "Shots/AsteroidShotBeam.h"
 #include "Graphics/GlutUtility.h"
 #include "Utility/Object3D.h"
 #include <list>
@@ -21,6 +20,9 @@ extern GLfloat headlight_pos[4];
 extern GLfloat headlight_amb[4];
 extern GLfloat headlight_diff[4];
 extern GLfloat headlight_spec[4];
+
+// Incomplete declaration so we can use the pointer.
+class AsteroidShot;
 
 class AsteroidShip : public Object3D {
    public:
@@ -69,8 +71,6 @@ class AsteroidShip : public Object3D {
 
    private:
       Vector3D shotDirection; // If we shoot a shot, where will it go?
-      std::list<AsteroidShot*> shots; // A list of all of this ship's shots.
-      std::list<AsteroidShot*>::iterator shotIter;
 
       double brakeFactor;
       double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.

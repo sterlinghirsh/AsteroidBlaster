@@ -240,6 +240,7 @@ int main(int argc, char* argv[]) {
       }
       SDL_Event event;
       float mouseButtonDown = 0;
+      // This causes a valgrind error because event isn't initialized (I think).
       while (SDL_PollEvent(&event)) {
          if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_F1) {
             if(!fullScreen){

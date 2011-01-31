@@ -30,10 +30,11 @@ materialStruct ballMaterial = {
 
 double AsteroidShotBeam::frequency = .5;
 
-AsteroidShotBeam::AsteroidShotBeam(Point3D posIn, Vector3D dirIn) :
- AsteroidShot(posIn, dirIn) {
+AsteroidShotBeam::AsteroidShotBeam(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn) :
+ AsteroidShot(posIn, dirIn, ownerIn) {
    lifetime = 0.5;
-   direction.normalize();
+   // In this context, velocity means direction.
+   velocity->normalize();
    hitYet = false;
    persist = true;
    lastHitFrame = 0;
@@ -47,28 +48,28 @@ void AsteroidShotBeam::draw() {
    double curTime =  doubleTime();
    double timeLeft = lifetime - (curTime - timeFired);
    Vector3D zVector(0, 0, -1);
-   Vector3D axis = zVector.cross(direction);
+   Vector3D axis = zVector.cross(*velocity);
    glPushMatrix();
    glColor3f(1, 0, 0);
    materials(hitYet ? hitBeamMaterial : beamMaterial);
    //glTranslatef(position.x, position.y, position.z);
-   position.glTranslate();
+   position->glTranslate();
    glPushMatrix();
-      glRotatef(180 + zVector.getAngleInDegrees(direction), 
+      glRotatef(180 + zVector.getAngleInDegrees(*velocity), 
          axis.xMag, axis.yMag, axis.zMag);
       // It shrinks, probably should fade out.
       drawCylinder(timeLeft * 0.04 , length);
    glPopMatrix();
 
    // Dots
-   Vector3D normal(direction.getNormalVector());
+   Vector3D normal(velocity->getNormalVector());
    materials(ballMaterial);
    for (double distance = 0; distance < length; 
     distance += distanceDifference) {
       glPushMatrix();
-      direction.glTranslate(distance);
-      glRotatef(fmod(curTime, 4) * 90 + (distance*angleDiff), direction.xMag, 
-       direction.yMag, direction.zMag);
+      velocity->glTranslate(distance);
+      glRotatef(fmod(curTime, 4) * 90 + (distance*angleDiff), velocity->xMag, 
+       velocity->yMag, velocity->zMag);
       normal.glTranslate((1 - timeLeft) + ballOffset);
       //glutSolidSphere(0.05 * (1 - timeLeft), 10, 10);
       gluSphere(quadric, 0.05 * (1 - timeLeft), 10,10);
@@ -84,20 +85,20 @@ void AsteroidShotBeam::updatePosition(double timeDiff) {
 bool AsteroidShotBeam::checkHit(Asteroid3D* asteroid) {
    if (hitYet && curFrame != lastHitFrame)
       return false;
-   Vector3D positionVector(position);
+   Vector3D positionVector(*position);
    Vector3D asteroidVector(*asteroid->position);
 
    // asteroidVector now is how far from the ship it is.
    asteroidVector.subtractUpdate(positionVector);
    
-   double distance = direction.dot(asteroidVector);
+   double distance = velocity->dot(asteroidVector);
 
    // Is it behind me?
    if (distance < 0)
       return false;
 
    // Is it too far to one side?
-   Vector3D normalToDirection(direction.getNormalVector());
+   Vector3D normalToDirection(velocity->getNormalVector());
    distance = normalToDirection.dot(asteroidVector);
    if (distance > asteroid->radius || distance < -asteroid->radius)
       return false;
@@ -107,8 +108,8 @@ bool AsteroidShotBeam::checkHit(Asteroid3D* asteroid) {
       x0 is asteroid 
       */
 
-   distance = (direction.cross(asteroidVector).getLength() /
-         direction.getLength());
+   distance = (velocity->cross(asteroidVector).getLength() /
+         velocity->getLength());
    if(distance < asteroid->radius) {
       hitYet = true;
       lifetime = 0.4;

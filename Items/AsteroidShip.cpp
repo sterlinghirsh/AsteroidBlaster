@@ -5,6 +5,7 @@
  */
 
 #include "AsteroidShip.h"
+#include "Shots/AsteroidShotBeam.h"
 #include <math.h>
 #include <time.h>
 
@@ -203,17 +204,6 @@ void AsteroidShip::update(double timeDiff) {
    pitch(timeDiff * pitchSpeed);
    yaw(timeDiff * yawSpeed);
 
-   // iterate throught shots
-   double curTime = doubleTime();
-   for (shotIter = shots.begin(); shotIter != shots.end(); ++shotIter) {
-      if ((*shotIter)->timeFired < curTime - (*shotIter)->lifetime) {
-         delete *shotIter;
-         shotIter = shots.erase(shotIter);
-         continue;
-      }
-      (*shotIter)->updatePosition(timeDiff);
-   }
-   
    updateShotDirectionVector();
 }
 
@@ -243,13 +233,13 @@ void AsteroidShip::keepFiring() {
    shotDirection.movePoint(start);
    if (fireShots && (timeOfLastShot < curTime - (1 / AsteroidShot::frequency) ||
     timeOfLastShot == 0)) {
-      shots.push_back(new AsteroidShot(start,
-       shotDirection.scalarMultiply(shotSpeed)));
+      custodian->add(new AsteroidShot(start,
+       shotDirection.scalarMultiply(shotSpeed), this));
       timeOfLastShot = curTime;
    }
    if (fireBeams && (timeOfLastBeam < curTime - (1 / AsteroidShotBeam::frequency) ||
     timeOfLastBeam == 0)) {
-      shots.push_back(new AsteroidShotBeam(start, shotDirection));
+      custodian->add(new AsteroidShotBeam(start, shotDirection, this));
       timeOfLastBeam = curTime;
    }
 }
@@ -437,9 +427,6 @@ void draw_ship(){
 
 void AsteroidShip::draw() {
    drawBoundingBox();
-   for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
-      (*shotIter)->draw();
-   }
    glPushMatrix();
    glTranslatef(0, 0, 2);
    //draw_ship();
@@ -476,15 +463,7 @@ void AsteroidShip::handleCollision(Object3D* other) {
       // Decrease the player's health by an appropriate amount.
       velocity->addUpdate(*(asteroid->velocity));
       health -= asteroid->radius;
-      // TEMP. Asteroids should not be simply erased.
-      asteroid->shouldRemove = true;
-      asteroid->velocity->updateMagnitude(0, 0, 0);
-      asteroid->rotationSpeed = 0;
-      if (asteroid->radius > 2) { 
-         custodian->add(asteroid->makeChild());
-         custodian->add(asteroid->makeChild());
-      }
-   }
+   } 
 }
 
 void AsteroidShip::updateShotDirectionVector() {

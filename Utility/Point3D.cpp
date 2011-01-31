@@ -15,23 +15,19 @@
 
 const Point3D Point3D::Zero(0, 0, 0);
 
-inline Point3D Point3D::operator+(const Point3D &rhs)
-{
+inline Point3D Point3D::operator+(const Point3D &rhs) {
    return Point3D(x + rhs.x, y + rhs.y, z + rhs.z);
 }
 
-inline Point3D Point3D::operator-(const Point3D &rhs)
-{
+inline Point3D Point3D::operator-(const Point3D &rhs) {
    return Point3D(x - rhs.x, y - rhs.y, z - rhs.z);
 }
 
-inline double Point3D::operator*(const Point3D &rhs)
-{
+inline double Point3D::operator*(const Point3D &rhs) {
    return x * rhs.x + y * rhs.y + z * rhs.z;
 }
 
-int Point3D::operator==(const Point3D &rhs) const
-{
+int Point3D::operator==(const Point3D &rhs) const {
    if (fabs(x - rhs.x) < EPSILON)
       if (fabs(y - rhs.y) < EPSILON)
          if (fabs(z - rhs.z) < EPSILON)
@@ -39,7 +35,7 @@ int Point3D::operator==(const Point3D &rhs) const
    return 0;
 }
 
-const Point3D &Point3D::operator=(const Point3D &src) {
+const Point3D& Point3D::operator=(const Point3D &src) {
    x = src.x;
    y = src.y;
    z = src.z;

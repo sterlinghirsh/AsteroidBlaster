@@ -11,22 +11,26 @@
 #include "Utility/Vector3D.h"
 #include "Graphics/GlutUtility.h"
 #include "Items/Asteroid3D.h"
+#include "Utility/Object3D.h"
+#include "Items/AsteroidShip.h"
 
 extern materialStruct ShotMaterial;
 
-class AsteroidShot {
+// Incomplete declaration so we can use the pointer.
+class AsteroidShip;
+
+class AsteroidShot : public Object3D {
    public:
       double timeFired;
       double lifetime; // Seconds
       bool persist;
-      Point3D position;
-      Vector3D direction;
       static double frequency; // Shots per sec
+      AsteroidShip* owner; // Who fired the shot?
 
-      AsteroidShot(Point3D posIn, Vector3D dirIn);
+      AsteroidShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn );
       virtual void draw();
-      virtual void updatePosition(double timeDiff);
-      virtual bool checkHit(Asteroid3D* asteroid);
+      virtual void update(double timeDiff);
+      virtual void handleCollision(Object3D* other);
 };
 
 #endif

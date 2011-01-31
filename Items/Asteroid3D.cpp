@@ -7,6 +7,8 @@
 #include "Graphics/GlutUtility.h"
 #include "Graphics/Sprite.h"
 #include "Items/Asteroid3D.h"
+#include "Items/AsteroidShip.h"
+#include "Shots/AsteroidShot.h"
 #include <algorithm>
 #include <math.h>
 
@@ -144,15 +146,29 @@ void Asteroid3D::update(double timeDiff) {
 
 void Asteroid3D::handleCollision(Object3D* other) {
    Asteroid3D* otherAsteroid;
+   AsteroidShip* ship;
+   AsteroidShot* shot;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       double speed = velocity->getLength();
 
       velocity->updateMagnitude(*(otherAsteroid->position), *position);
       velocity->setLength(speed);
+   } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
+      shouldRemove = true;
+      if (radius > 2) {
+         custodian->add(makeChild());
+         custodian->add(makeChild());
+      }
+   } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
+      shouldRemove = true;
       const int explosionFactor = 3;
       Sprite::sprites.push_back(
          new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20, 
           *position, radius * explosionFactor, radius * explosionFactor));
+      if (radius > 2) {
+         custodian->add(makeChild());
+         custodian->add(makeChild());
+      }
    }
 }
 
