@@ -22,7 +22,8 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
    acceleration = NULL;
    axis = NULL;
    angle = 0;
-   shouldRemove = false;
+   shouldRemove = false; // True when custodian should remove this.
+   shouldConstrain = true; // True when the bounding space should constrain it.
    // Remove up, right, forward yaw, pitch, roll maybe?
    up = new Vector3D(0, 1, 0);
    right = new Vector3D(1, 0, 0);
@@ -131,36 +132,22 @@ void Object3D::pitch(double angle) {
  * checkOther is set to true by default in Object3D.h.
  * If this doesn't detect a collision, then checkOther specifies if we should use other's 
  * collision detection function.
+ * We use this as a last check so we can do other types of hit detection in the custodian.
+ * If this is called first and another unoverrided detectCollision is called with
+ * other->detectCollision(), this trusts the custodian's judgement.
  */
 bool Object3D::detectCollision(Object3D* other, bool checkOther) {
-   // Do checks here.
-
-   // Whether or not there's collisions in each of the dimensions
-   bool xIntersect = (minPosition->x >= other->minPosition->x &&
-                      minPosition->x <= other->maxPosition->x) ||
-                     (maxPosition->x >= other->maxPosition->x &&
-                      maxPosition->x <= other->maxPosition->x);
-   bool yIntersect = (minPosition->y >= other->minPosition->y &&
-                      minPosition->y <= other->maxPosition->y) ||
-                     (maxPosition->y >= other->maxPosition->y &&
-                      maxPosition->y <= other->maxPosition->y);
-   bool zIntersect = (minPosition->z >= other->minPosition->z &&
-                      minPosition->z <= other->maxPosition->z) ||
-                     (maxPosition->z >= other->maxPosition->z &&
-                      maxPosition->z <= other->maxPosition->z);
-
-   /* If there was any sort of collision, handle it. Else if we should be checking the other's
-      collision detection, do so and return that result. Otherwise, all collision detection failed.
-    */
-   if (xIntersect && yIntersect && zIntersect) {
-      handleCollision(other);
-      other->handleCollision(this);
-      return true;
-   } else if (checkOther) {
-      return other->detectCollision(this, false);
-   } else {
-      return false;
+   if (this == other) {
+      printf("detected collision with self!\n");
    }
+   if (checkOther) {
+      return other->detectCollision(this, false);
+   }
+   
+   return !(other->maxPosition->y < minPosition->y || 
+       other->minPosition->y > maxPosition->y ||
+       other->maxPosition->z < minPosition->z ||
+       other->minPosition->z > maxPosition->z);
 }
 
 void Object3D::handleCollision(Object3D* other) {
@@ -199,4 +186,11 @@ void Object3D::updateBoundingBox() {
 
 void Object3D::setCustodian(Custodian *cust) {
    custodian = cust;
+}
+
+void Object3D::debug() {
+   printf("Object3D::debug(): (min/max/velocity)\n");
+   minPosition->print();
+   maxPosition->print();
+   velocity->print();
 }

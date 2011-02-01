@@ -21,6 +21,9 @@ BoundingSpace::~BoundingSpace() {
 }
 
 void BoundingSpace::constrain(Object3D* item) {
+   if (!item->shouldConstrain)
+      return;
+
    if (item->maxPosition->x > xMax) {
       item->position->x = xMax - item->maxX;
       item->velocity->negativeX();

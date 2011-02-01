@@ -14,7 +14,6 @@
 
 class Asteroid3D : public Object3D {
    public:
-      double radius;
       Mesh3D mesh;
       Vector3D rotationVector;
       double rotationSpeed;
@@ -31,6 +30,7 @@ class Asteroid3D : public Object3D {
       virtual void handleCollision(Object3D* other);
       Asteroid3D* makeChild();
       void newRandomPosition();
+      virtual void debug();
 
    private:
       double randRadius(double r);

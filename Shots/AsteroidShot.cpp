@@ -22,6 +22,9 @@ AsteroidShot::AsteroidShot(Point3D& posIn, Vector3D dirIn,
    timeFired = doubleTime();
    lifetime = 2;
    persist = false;
+   minX = minY = minZ = -0.1;
+   maxX = maxY = maxZ = 0.1;
+   updateBoundingBox();
 }
 
 void AsteroidShot::draw() {

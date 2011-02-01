@@ -427,29 +427,9 @@ void draw_ship(){
 
 void AsteroidShip::draw() {
    glPushMatrix();
-   glTranslatef(0, 0, 2);
+   //glTranslatef(0, 0, 2);
    //draw_ship();
    glPopMatrix();
-}
-
-void AsteroidShip::checkAsteroidCollisions(list<Asteroid3D*>& asteroids) {
-   /*
-      for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
-         if ((*shotIter)->checkHit(*asteroid)) {
-            if ((*asteroid)->handleHit(asteroids)) {
-               score += (*asteroid)->collisionRadius * (rand()%3 + 1);
-               delete *asteroid;
-               asteroid = asteroids.erase(asteroid);
-            }
-            if ((*shotIter)->persist)
-               continue;
-            delete *shotIter;
-            shotIter = shots.erase(shotIter);
-            break;
-         }
-      }
-   }
-   */
 }
 
 /**
@@ -476,4 +456,12 @@ double AsteroidShip::getAimX() {
 }
 double AsteroidShip::getAimY() {
    return yOff;
+}
+
+void AsteroidShip::debug() {
+   printf("AsteroidShip::debug(): \n");
+   minPosition->print();
+   maxPosition->print();
+   velocity->print();
+   printf("--\n");
 }

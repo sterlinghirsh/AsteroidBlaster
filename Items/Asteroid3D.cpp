@@ -116,7 +116,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    sizeX = max<double>(mesh.xMax, fabs(mesh.xMin)) * scalex;
    sizeY = max<double>(mesh.yMax, fabs(mesh.yMin)) * scaley;
    sizeZ = max<double>(mesh.zMax, fabs(mesh.zMin)) * scalez;
-   collisionRadius = distance3D(sizeX, sizeY, sizeZ);
+   collisionRadius = radius;
    minX = mesh.xMin;
    minY = mesh.yMin;
    minZ = mesh.zMin;
@@ -194,4 +194,12 @@ Asteroid3D* Asteroid3D::makeChild() {
 
 double Asteroid3D::randRadius(double r) {
    return (3 * (r / 4)) + ((r / 4) * randdouble());
+}
+
+void Asteroid3D::debug() {
+   printf("Asteroid3D::debug(): \n");
+   minPosition->print();
+   maxPosition->print();
+   velocity->print();
+   printf("--\n");
 }

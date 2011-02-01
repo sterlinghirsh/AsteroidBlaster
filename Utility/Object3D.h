@@ -30,6 +30,7 @@ class Object3D {
       bool shouldRemove;
       double angle;
       double radius;
+      bool shouldConstrain;
       unsigned int minXRank, maxXRank;
 
       Object3D(double x, double y, double z, GLuint displayListIn);
@@ -42,6 +43,7 @@ class Object3D {
       virtual bool detectCollision(Object3D* other, bool checkOther = true);
       virtual void drawBoundingBox();
       virtual void handleCollision(Object3D* other);
+      virtual void debug();
 
       void setCustodian(Custodian* cust);
    private:

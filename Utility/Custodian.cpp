@@ -155,10 +155,11 @@ std::set<Object3D*>* Custodian::findCollisions(Object3D* item, bool searchBackwa
    while (iter != sublist->end()) {
       current = iter++;
       other = *current;
-      if (other->maxPosition->y < item->minPosition->y || 
-          other->minPosition->y > item->maxPosition->y ||
-          other->maxPosition->z < item->minPosition->z ||
-          other->minPosition->z > item->maxPosition->z) {
+
+      /* If the item does not collide, remove it from the sublist.
+       * Note: detectCollision may be overridden, as in AsteroidShotBeam.
+       */
+      if (!item->detectCollision(other, true)) {
          sublist->erase(current);
       }
    }

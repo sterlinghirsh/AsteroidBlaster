@@ -1,5 +1,4 @@
-/**
- * AsteroidShip.h
+/** * AsteroidShip.h
  * Sterling Hirsh
  * This is the ship that a player plays from or can see.
  */
@@ -38,9 +37,8 @@ class AsteroidShip : public Object3D {
       void updateShotDirection(double xOffset, double yOffset);
       void keepFiring();
       virtual void draw();
-      // This will be gone soon.
-      void checkAsteroidCollisions(std::list<Asteroid3D*>& asteroids);
       virtual void handleCollision(Object3D* other);
+      virtual void debug();
 
       /**
        * These are going to be the functions that either the local player

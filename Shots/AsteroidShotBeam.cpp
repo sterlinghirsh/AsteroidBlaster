@@ -6,6 +6,7 @@
 
 #include "AsteroidShotBeam.h"
 #include <math.h>
+#include <algorithm>
 
 materialStruct beamMaterial = {
    {1, 1, 0, .5},
@@ -34,25 +35,53 @@ AsteroidShotBeam::AsteroidShotBeam(Point3D& posIn, Vector3D dirIn, AsteroidShip*
  AsteroidShot(posIn, dirIn, ownerIn) {
    lifetime = 0.5;
    // In this context, velocity means direction.
-   velocity->normalize();
    hitYet = false;
    persist = true;
    lastHitFrame = 0;
+   Point3D endPoint1(*position);
+   Point3D endPoint2(*position);
+   // Set endPoint2 100 units away.
+   velocity->setLength(100);
+   velocity->movePoint(endPoint2);
+   velocity->normalize();
+   // Correct for position when calculating endpoint1 and 2.
+   Vector3D positionVector(*position);
+   positionVector = positionVector.scalarMultiply(-1);
+   positionVector.movePoint(endPoint1);
+   positionVector.movePoint(endPoint2);
+   // Now set min/max xyz
+   minX = std::min(endPoint1.x, endPoint2.x);
+   maxX = std::max(endPoint1.x, endPoint2.x);
+   minY = std::min(endPoint1.y, endPoint2.y);
+   maxY = std::max(endPoint1.y, endPoint2.y);
+   minZ = std::min(endPoint1.z, endPoint2.z);
+   maxZ = std::max(endPoint1.z, endPoint2.z);
+   timeFired = doubleTime();
+   shouldConstrain = false;
+   updateBoundingBox();
+}
+
+/**
+ * Expire after a certain amount of time.
+ */
+void AsteroidShotBeam::update(double timeDiff) {
+   if (doubleTime() - timeFired > lifetime) {
+      shouldRemove = true;
+   }
 }
 
 void AsteroidShotBeam::draw() {
-   const int length = 100;
+   const double length = 100;
    const double distanceDifference = 0.3; // :)
    const double angleDiff = 40; // Degrees per unit of ball helix.
    const double ballOffset = 0.2;
-   double curTime =  doubleTime();
+   double curTime = doubleTime();
    double timeLeft = lifetime - (curTime - timeFired);
    Vector3D zVector(0, 0, -1);
    Vector3D axis = zVector.cross(*velocity);
    glPushMatrix();
    glColor3f(1, 0, 0);
    materials(hitYet ? hitBeamMaterial : beamMaterial);
-   //glTranslatef(position.x, position.y, position.z);
    position->glTranslate();
    glPushMatrix();
       glRotatef(180 + zVector.getAngleInDegrees(*velocity), 
@@ -78,7 +107,11 @@ void AsteroidShotBeam::draw() {
    glPopMatrix();
 }
 
-bool AsteroidShotBeam::checkHit(Object3D* other) {
+/**
+ * This does the actual beam-weapon hit detection.
+ * This ignores checkOther, since the beam will be the final say on what gets hit.
+ */
+bool AsteroidShotBeam::detectCollision(Object3D* other, bool checkOther) {
    if (hitYet && curFrame != lastHitFrame)
       return false;
    Vector3D positionVector(*position);
@@ -96,7 +129,7 @@ bool AsteroidShotBeam::checkHit(Object3D* other) {
    // Is it too far to one side?
    Vector3D normalToDirection(velocity->getNormalVector());
    distance = normalToDirection.dot(otherVector);
-   if (distance > other->radius || distance < -other->radius)
+   if (fabs(distance) > other->radius)
       return false;
 
    /* x1 is ship
@@ -106,13 +139,22 @@ bool AsteroidShotBeam::checkHit(Object3D* other) {
 
    distance = (velocity->cross(otherVector).getLength() /
          velocity->getLength());
-   if(distance < other->radius) {
-      hitYet = true;
-      lifetime = 0.4;
-      timeFired = doubleTime();
-      lastHitFrame = curFrame;
-      return true;
-   }
-   // Never return true.
-   return false;
+   return fabs(distance) < other->radius;
+}
+
+void AsteroidShotBeam::handleCollision(Object3D* other) {
+   if (other == owner)
+      return;
+   hitYet = true;
+   lifetime = 0.4;
+   timeFired = doubleTime();
+   lastHitFrame = curFrame;
+}
+
+void AsteroidShotBeam::debug() {
+   printf("AsteroidShotBeam::debug(): (min/max/position/direction)\n");
+   minPosition->print();
+   maxPosition->print();
+   position->print();
+   velocity->print();
 }

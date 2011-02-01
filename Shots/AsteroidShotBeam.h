@@ -17,7 +17,10 @@ class AsteroidShotBeam : public AsteroidShot {
 
       AsteroidShotBeam(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
       virtual void draw();
-      virtual bool checkHit(Object3D* other);
+      virtual bool detectCollision(Object3D* other, bool checkOther);
+      virtual void update(double timeDiff);
+      virtual void handleCollision(Object3D* other);
+      virtual void debug();
 };
 
 

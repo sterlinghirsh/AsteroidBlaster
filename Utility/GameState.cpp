@@ -55,7 +55,6 @@ void GameState::update(double timeDiff) {
    }
    
    
-   ship->keepFiring();
    cube->constrain(ship);
    for (item = objects->begin(); item != objects->end(); ++item) {
       if (*item == NULL)
@@ -64,6 +63,7 @@ void GameState::update(double timeDiff) {
       cube->constrain(*item);
    }
    // Update the values of all of the text objects.
+   ship->keepFiring();
    
    custodian.update();
    // Get updated list.
@@ -154,7 +154,6 @@ void GameState::updateText() {
 }
 
 void GameState::checkCollisions() {
-   ship->checkAsteroidCollisions(asteroids);
 }  
 
 void GameState::initAsteroids() {
