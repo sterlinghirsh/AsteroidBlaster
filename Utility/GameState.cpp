@@ -243,7 +243,7 @@ void GameState::keyDown(int key) {
 
       case SDLK_LSHIFT:
       case SDLK_RSHIFT:
-         doYaw = 1;
+         doYaw = true;
          break;
 
       case SDLK_b:
@@ -278,14 +278,14 @@ void GameState::keyUp(int key) {
       ship->accelerateRight(0);
       break;
 
-   case SDLK_LSHIFT:
-   case SDLK_RSHIFT:
-      doYaw = 0;
-      break;
-
    case SDLK_SPACE:
    case SDLK_LCTRL:
       ship->accelerateUp(0);
+      break;
+
+   case SDLK_LSHIFT:
+   case SDLK_RSHIFT:
+      doYaw = true;
       break;
 
    case SDLK_b:
@@ -322,7 +322,14 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    
    worldX = clamp(worldX * fabs(worldX), -1, 1);
    worldY = clamp(-worldY * fabs(worldY), -1, 1);
-   ship->setRollSpeed(worldX);
+   
+   if (doYaw) {
+      ship->setYawSpeed(-worldX);
+   }
+   else {
+      ship->setRollSpeed(worldX);
+   }
+   
    ship->setPitchSpeed(worldY);
 
 }

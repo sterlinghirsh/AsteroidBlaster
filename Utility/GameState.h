@@ -60,7 +60,7 @@ class GameState : public InputReceiver {
       void reset();
       double curFPS, worldSize;
       bool gameIsRunning;
-      int doYaw;
+      bool doYaw;
       double mouseX, mouseY;
 
       Skybox* skybox;
