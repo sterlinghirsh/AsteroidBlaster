@@ -35,6 +35,7 @@ class ShootingAI : public AI {
    /* TODO Add your respective functions here. */
    int aimAt(const Object3D& obj);
    bool aimedAt(const Object3D& obj);
+   void chooseWeapon( int weapon );
 
    public:
    ShootingAI(AsteroidShip* owner);

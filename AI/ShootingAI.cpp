@@ -58,6 +58,13 @@ bool ShootingAI::aimedAt(const Point3D& point)
    return vec == aimingAt; 
 }
 
+// kinda useless right now.
+void ShootingAI::chooseWeapon( int weapon )
+{
+    ship->chooseWeapon( weapon );
+    //chosenWeapon = ship->getWeapon( weapon );
+}
+
 int ShootingAI::think(double dt)
 {
    // TODO this is where stuff goes! Should probably figure out the order of
@@ -76,6 +83,8 @@ int ShootingAI::think(double dt)
    /* This order is tentative. We will probably change it. */
    
    // choose weapon
+   chooseWeapon( 1 );
+
    // choose target
 
    // If we aren't aiming at it, better start
