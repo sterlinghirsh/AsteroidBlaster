@@ -23,7 +23,7 @@
 #include "Items/Weapon.h"
 
 // Incomplete class declaration so we can use pointers.
-class Object3d;
+class Object3D;
 
 class ShootingAI : public AI {
    /* There actually is no need to hold the entire ship.
