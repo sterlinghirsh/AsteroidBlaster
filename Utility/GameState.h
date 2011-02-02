@@ -62,6 +62,7 @@ class GameState : public InputReceiver {
       bool gameIsRunning;
       bool doYaw;
       double mouseX, mouseY;
+      int scoreToWin;
 
       Skybox* skybox;
       Camera* camera;

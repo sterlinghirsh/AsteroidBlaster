@@ -34,8 +34,13 @@ GameState::GameState(double worldSizeIn) {
    doYaw = 0;
    mouseX = 0;
    mouseY = 0;
+   
+   scoreToWin = 1200;
 }
 
+/**
+ * Deconstructor: clean up all of our objects.
+ */
 GameState::~GameState() {
    delete skybox;
    delete ship;
@@ -48,9 +53,10 @@ void GameState::update(double timeDiff) {
    std::set<Object3D*>* collisions;
    std::set<Object3D*>::iterator otherObject;
 
+   // Determine whether or not the game should continue running
    if(ship->getHealth() <= 0) {
       gameIsRunning = false;
-   } else if (ship->getScore() >= 1000) {
+   } else if (ship->getScore() >= scoreToWin) {
       gameIsRunning = false;
    }
    
@@ -77,7 +83,7 @@ void GameState::update(double timeDiff) {
       }
       delete collisions;
    }
-
+   // Update all of the text seen on screen.
    updateText();
 }
 
@@ -123,14 +129,17 @@ void GameState::drawAllText() {
    /* Don't draw stuff in front of the text. */
    //glDisable(GL_DEPTH_TEST);
    
-   // Draw all of the BitmapTextDisplay objects.
+   // If the player lost, draw the game over text
    if(!gameIsRunning && ship->getHealth() <= 0){
       gameOverText->draw();
    }
+   
+   // If the player won, draw the win text
    else if (!gameIsRunning && ship->getHealth() > 0) {
       winText->draw();
    }
    
+   // Draw all of the BitmapTextDisplay objects.
    FPSText->draw();
    numAsteroidsText->draw();
    scoreText->draw();
@@ -144,7 +153,6 @@ void GameState::drawAllText() {
 
 /**
  * Update the values contained in all of the texts.
- * Clear the list, then re-make it.
  */
 void GameState::updateText() {
    FPSText->updateBody(curFPS);
@@ -190,10 +198,16 @@ void GameState::setCurFPS(double fpsIn) {
    curFPS = fpsIn;
 }
 
+/**
+ * Tells whether or not the game is currently running (not game over or won)
+ */
 bool GameState::isGameRunning() {
    return gameIsRunning;
 }
 
+/**
+ * Reset everything in the game to play again
+ */
 void GameState::reset() {
    delete ship;
    delete camera;
@@ -207,7 +221,9 @@ void GameState::reset() {
    initAsteroids();
 }
 
-
+/**
+ * Handles the player pressing down a key
+ */
 void GameState::keyDown(int key) {
    switch(key) {
       case SDLK_w:
@@ -258,6 +274,9 @@ void GameState::keyDown(int key) {
    }
 }
 
+/**
+ * Handles the player letting go of a key
+ */
 void GameState::keyUp(int key) {
    switch(key) {
    
@@ -296,6 +315,9 @@ void GameState::keyUp(int key) {
    }
 }
 
+/**
+ * Handles the player clicking the mouse
+ */
 void GameState::mouseDown(int button) {
    switch(button) {
    case 1:
@@ -309,6 +331,9 @@ void GameState::mouseDown(int button) {
    ship->fire(true);
 }
 
+/**
+ * Handles the player letting go of a mouse click
+ */
 void GameState::mouseUp(int button) {
    ship->fire(false);
 }
