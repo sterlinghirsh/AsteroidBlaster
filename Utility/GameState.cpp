@@ -201,6 +201,7 @@ void GameState::reset() {
 
    ship = new AsteroidShip();
    camera = new Camera(ship);
+   gameIsRunning = true;
    
    custodian.add(ship);
    initAsteroids();
