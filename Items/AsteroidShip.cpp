@@ -100,6 +100,8 @@ AsteroidShip::AsteroidShip() :
    updateBoundingBox();
 
    // Orientation vectors.
+   upstart = new Vector3D(0, 1, 0);
+   upstart->updateMagnitude(0, 1, 0);
    forward->updateMagnitude(0, 0, 1);
    up->updateMagnitude(0, 1, 0);
    right->updateMagnitude(-1, 0, 0);
@@ -256,55 +258,41 @@ void AsteroidShip::keepFiring() {
 }
 
 void draw_ship(){
-	//materials(black);
-	glColor3f(0, 1, 0);
+
 	glBegin(GL_TRIANGLES);
 
 	materials(black);
-	glNormal3f(.2, -.1805, .03); 
 	glVertex3f(0, 0, 0);
 	glVertex3f(.2, .2, 1.3);
 	glVertex3f(.15, 0, 1);
-		
 
-	glNormal3f(.1805, .2, .03); 
 	glVertex3f(0, 0, 0);
-	glVertex3f(.2, .2, 1.3);
 	glVertex3f(0, .15, 1);
+	glVertex3f(.2, .2, 1.3);
 
-	materials(black);
-	glNormal3f(.1805, .2, .03); 
 	glVertex3f(0, 0, 0);
 	glVertex3f(-.2, .2, 1.3);
 	glVertex3f(0, .15, 1);
 
-	materials(Cyan);
-	glNormal3f(.2, -.1805, .03);
 	glVertex3f(0, 0, 0);
+	glVertex3f(-.15, 0, 1);
 	glVertex3f(-.2, .2, 1.3);
-	glVertex3f(-.15, 0, 1);
 
-	materials(GreenShiny);
-	glNormal3f(-.2, .1805, .03);
 	glVertex3f(0, 0, 0);
 	glVertex3f(-.2, -.2, 1.3);
 	glVertex3f(-.15, 0, 1);
 
-	materials(RedFlat);
-	glNormal3f(-.1805, .2, .03);
 	glVertex3f(0, 0, 0);
+	glVertex3f(0, -.15, 1);
 	glVertex3f(-.2, -.2, 1.3);
-	glVertex3f(0, -.15, 1);
 
-	glNormal3f(-.1805, -.2, .03);
 	glVertex3f(0, 0, 0);
 	glVertex3f(.2, -.2, 1.3);
 	glVertex3f(0, -.15, 1);
 
-	glNormal3f(-.2, -.1805, .03);
 	glVertex3f(0, 0, 0);
-	glVertex3f(.2, -.2, 1.3);
 	glVertex3f(.15, 0, 1);
+	glVertex3f(.2, -.2, 1.3);
 	glPopMatrix();
 
 	/* Back of Ship */
@@ -315,31 +303,31 @@ void draw_ship(){
 	glVertex3f(0, .15, 1);
 
 	glVertex3f(.15, 0, 1);
-	glVertex3f(.2, -.2, 1.3);
 	glVertex3f(0, -.15, 1);
+	glVertex3f(.2, -.2, 1.3);
 
 	glVertex3f(-.15, 0, 1);
 	glVertex3f(-.2, -.2, 1.3);
 	glVertex3f(0, -.15, 1);
 
 	glVertex3f(-.15, 0, 1);
-	glVertex3f(-.2, .2, 1.3);
 	glVertex3f(0, .15, 1);
+	glVertex3f(-.2, .2, 1.3);
 
-	
-	materials(black);
+
+
 
 	glVertex3f(.15, 0, 1);
-	glVertex3f(0, 0, 1.6);
 	glVertex3f(0, .15, 1);
+	glVertex3f(0, 0, 1.6);
 
 	glVertex3f(.15, 0, 1);
 	glVertex3f(0, 0, 1.6);
 	glVertex3f(0, -.15, 1);
 
 	glVertex3f(-.15, 0, 1);
-	glVertex3f(0, 0, 1.6);
 	glVertex3f(0, -.15, 1);
+	glVertex3f(0, 0, 1.6);
 
 	glVertex3f(-.15, 0, 1);
 	glVertex3f(-0, 0, 1.6);
@@ -434,13 +422,100 @@ void draw_ship(){
 	glEnd();
 	glLineWidth(1.0);
 
+
+}
+
+void draw_vectors(){
+	materials(white);
+	glBegin(GL_LINES);
+	glVertex3f(0,0,0);
+	glVertex3f(0,.5,0);
+
+	glVertex3f(0,0,0);
+	glVertex3f(0,0,-1);
+
+	glVertex3f(.5,0,0);
+	glVertex3f(-.5,0,0);
+
+	glEnd();
+
+	glLineWidth(1.0);
+
+
+}
+
+void AsteroidShip::getStuff(){
+	x = (upstart->yMag * up->zMag) - (upstart->zMag * up->yMag);
+	y = (upstart->zMag * up->xMag) - (upstart->xMag * up->zMag);
+	z = (upstart->xMag * up->yMag) - (upstart->yMag * up->xMag);
+
+	angle = acos(((upstart->xMag * up->xMag) + (upstart->yMag * up->yMag) + (upstart->zMag * up->zMag)) / (upstart->getLength() * up->getLength())) * 57.2958;
+}
+
+void AsteroidShip::rotate(){
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	//glRotatef(1 - up->zMag, 1, 0, 0);
+	//glMultMatrixf(trackballM);
+	//glGetFloatv(GL_MODELVIEW_MATRIX, trackballM);
+	glPopMatrix();
 }
 
 void AsteroidShip::draw() {
+   Vector3D axis;
+   Vector3D upStart(0, 1, 0);
+   Vector3D forwardStart(0, 0, 1);
+
+   double angle;
+   double forwardAngle;
+   axis = upStart.cross(*up);
+   angle = upStart.getAngleInDegrees(*up);
+   // rotate forward about up
+   forwardStart.rotateByDegrees(angle, axis);
+   forwardAngle = forwardStart.getAngleInDegrees(*forward);
+   //up->print();
+   forwardStart.print();
+   printf("%f\n", forwardAngle);
+   
+   for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
+      (*shotIter)->draw();
+   }
+   glMatrixMode(GL_MODELVIEW);
    glPushMatrix();
-   //glTranslatef(0, 0, 2);
+	getStuff();
+	//printf("upstart?: %f\n", upstart->xMag);
+	//printf("up?: %f\n", up->xMag);
+	//upstart = up;
+	//rotate();
+        glTranslatef(position->x + 3*forward->xMag, position->y + 3*forward->yMag, position->z + 3*forward->zMag);
+	//rotate();
+	//glRotatef(forward->xMag * 90, 0, 1, 0);
+	//glRotatef(up->zMag * 90, 1, 0, 0);
+	//glRotatef((1 - up->yMag) * 90 - (1 - forward->zMag) * 90, 0, 0, 1);
+   //glRotatef(-angle, x, y, z);
+   forwardStart.draw();
+   //glRotatef(forwardAngle, up->xMag, up->yMag, up->zMag);
+   /*if(forwardStart.xMag > 0){
+   glRotatef(forwardAngle, up->xMag, up->yMag, up->zMag);}
+   else{glRotatef(360 - forwardAngle, up->xMag, up->yMag, up->zMag);}*/
+   glRotatef(angle, axis.xMag, axis.yMag, axis.zMag);
+   //glRotatef(180, 0 , 1, 0);
+   glScalef(1.5, .5, .8);
+   
    //draw_ship();
+    glPushMatrix();
+    glTranslatef(0, 0, 1);
+    draw_vectors();
+    glPopMatrix();
    glPopMatrix();
+	//printf("upstart?: %f\n", upstart->yMag);
+	//printf("upstart?: %f\n", up->xMag);
+   //i/f(change % 2 > 0){
+   //upstart = up;
+   //printf("Angle?: %f\n", up->zMag);
+
+   //}
 }
 
 /**
