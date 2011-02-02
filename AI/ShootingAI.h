@@ -20,6 +20,7 @@
 #include "Items/AsteroidShip.h"
 #include "Utility/Point3D.h"
 #include "Utility/Object3D.h"
+#include "Items/Weapon.h"
 
 class ShootingAI : public AI {
    /* There actually is no need to hold the entire ship.
@@ -27,6 +28,7 @@ class ShootingAI : public AI {
     * etc and no need to give the AI the entire ship.  It's just necessary
     * right now*/
    AsteroidShip* ship;
+   Weapon* chosenWeapon;
    Point3D lastShotPos;
    Point3D aimingAt;
    

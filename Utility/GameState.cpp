@@ -285,7 +285,7 @@ void GameState::keyUp(int key) {
 
    case SDLK_LSHIFT:
    case SDLK_RSHIFT:
-      doYaw = true;
+      doYaw = false;
       break;
 
    case SDLK_b:
