@@ -1,7 +1,7 @@
 /**
  * AsteroidShot.cpp
  * Sterling Hirsh
- * A shot in 3d asteroids.
+ * A shot in 3D Asteroids.
  */
 
 #include "AsteroidShot.h"

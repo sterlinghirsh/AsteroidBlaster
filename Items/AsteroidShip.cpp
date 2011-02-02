@@ -120,6 +120,9 @@ AsteroidShip::AsteroidShip() :
    maxYawSpeed = 2;
    maxPitchSpeed = 2;
    maxRollSpeed = 2;
+   
+   // Create our Radar
+   //radar = new Radar();
 }
 
 /**
@@ -438,6 +441,8 @@ void AsteroidShip::draw() {
  */
 void AsteroidShip::handleCollision(Object3D* other) {
    Asteroid3D* asteroid;
+   
+   // Try converting other into an Asteroid3D
    if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       // Decrease the player's health by an appropriate amount.
       velocity->addUpdate(*(asteroid->velocity));

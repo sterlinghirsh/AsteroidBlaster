@@ -11,6 +11,7 @@
 #include "Shots/AsteroidShot.h"
 #include "Graphics/GlutUtility.h"
 #include "Utility/Object3D.h"
+#include "Utility/Radar.h"
 #include <list>
 
 // Later we'll put in a model for the ship.
@@ -48,7 +49,7 @@ class AsteroidShip : public Object3D {
        * We give accelerateForward, Right, Up either -1, 0, or 1 to mean
        * backward, none, or forward. You can either fully accelerate or not.
        * Rotation is the opposite. You supply a value, this clamps it and sets it.
-       * setBrake accepts a bool. true brakes, false does not brake.
+       * setBrake accepts a bool. True starts braking, false stops braking.
        * fire works the same as setBrake.
        * selectWeapon selects the weapon corresponding to the int weaponType.
        * We will need to prevent weapons that the player does not own from getting selected.
@@ -71,7 +72,8 @@ class AsteroidShip : public Object3D {
       
    private:
       Vector3D shotDirection; // If we shoot a shot, where will it go?
-
+      //Radar* radar; // This is the ship's radar that it should query for information about its surroundings 
+      
       double brakeFactor;
       double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.
 

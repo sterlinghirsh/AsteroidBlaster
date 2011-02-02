@@ -3,7 +3,7 @@
  * The AI interface.
  * <pre>
  * This header file contains the interface that every AI component must
- * implement. All AI must have a think function.
+ * implement. All AI's must have a think function.
  * </pre>
  * @author Mike Smith
  */
