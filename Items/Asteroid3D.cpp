@@ -108,13 +108,6 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
       maxZ = _rList[i].maxZ();
     }
   }
-  cout << "minX: " << minX << endl;
-  cout << "maxX: " << maxX << endl;
-  cout << "minY: " << minY << endl;
-  cout << "maxY: " << maxY << endl;
-  cout << "minZ: " << minZ << endl;
-  cout << "maxZ: " << maxZ << endl;
-    
 
    sizeX = maxX - minX;
    sizeY = maxY - minY;
