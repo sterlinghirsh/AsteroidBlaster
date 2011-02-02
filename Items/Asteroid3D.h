@@ -16,7 +16,6 @@
 
 class Asteroid3D : public Object3D {
    public:
-      double radius;
       Mesh3D mesh;
       Vector3D rotationVector;
       double rotationSpeed;

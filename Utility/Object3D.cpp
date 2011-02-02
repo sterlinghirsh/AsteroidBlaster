@@ -72,6 +72,7 @@ void Object3D::update(double timeDifference) {
 void Object3D::draw() {
    glPushMatrix();
    if (position != NULL)
+      position->glTranslate();
       glTranslatef(position->x, position->y, position->z);
    if (axis != NULL)
       glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);

@@ -118,9 +118,9 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 
 void Asteroid3D::draw() {
    glColor3f(1, 1, 1);
-   //drawBoundingBox();
    materials(Rock);
-   //Object3D::draw();
+   // Call the display list if it has one.
+   Object3D::draw();
    glDisable(GL_CULL_FACE);
    glEnable(GL_COLOR_MATERIAL);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
