@@ -27,6 +27,14 @@ inline double Point3D::operator*(const Point3D &rhs) {
    return x * rhs.x + y * rhs.y + z * rhs.z;
 }
 
+Point3D& Point3D::operator/=(double scalar) {
+   x /= scalar;
+   y /= scalar;
+   z /= scalar;
+
+   return *this;
+}
+   
 int Point3D::operator==(const Point3D &rhs) const {
    if (fabs(x - rhs.x) < EPSILON)
       if (fabs(y - rhs.y) < EPSILON)
@@ -36,6 +44,9 @@ int Point3D::operator==(const Point3D &rhs) const {
 }
 
 const Point3D& Point3D::operator=(const Point3D &src) {
+   if (&src == this)
+      return *this;
+
    x = src.x;
    y = src.y;
    z = src.z;

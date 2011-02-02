@@ -17,6 +17,12 @@
 
 #include "AI/ShootingAI.h"
 
+ShootingAI::ShootingAI(AsteroidShip* owner)
+{
+   ship = owner;
+   //TODO possibly more stuff here.
+}
+
 /** Aims at an object.
  *
  * This function should be called multiple frames consecutively in order
@@ -45,7 +51,11 @@ int ShootingAI::aimAt(const Object3D& obj)
  */
 bool ShootingAI::aimedAt(const Point3D& point)
 {
+   Point3D vec = point - *ship->position;
+   double len = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+   vec = vec / len;
 
+   return vec == aimingAt; 
 }
 
 int ShootingAI::think(double dt)
@@ -69,8 +79,7 @@ int ShootingAI::think(double dt)
    // choose target
 
    // If we aren't aiming at it, better start
-   if (!aimedAt(target))
-      aimAt(target);
+   aimAt(target);
 
    // Think has a return value just in case it needs to.
    return 0;

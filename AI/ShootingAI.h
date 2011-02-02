@@ -37,5 +37,7 @@ class ShootingAI : public AI {
    bool aimedAt(const Object3D& obj);
 
    public:
+   ShootingAI(AsteroidShip* owner);
    virtual int think(double dt);
+
 };

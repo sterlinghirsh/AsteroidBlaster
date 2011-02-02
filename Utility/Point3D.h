@@ -54,7 +54,7 @@ struct Point3D {
    double operator*(const Point3D& rhs);
    int operator==(const Point3D& rhs) const;
    const Point3D &operator=(const Point3D &src);
-   
+   Point3D& operator/=(double scalar);  
    static const Point3D Zero;
 };
 
