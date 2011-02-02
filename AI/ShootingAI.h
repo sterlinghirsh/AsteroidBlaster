@@ -22,6 +22,9 @@
 #include "Utility/Object3D.h"
 #include "Items/Weapon.h"
 
+// Incomplete class declaration so we can use pointers.
+class Object3d;
+
 class ShootingAI : public AI {
    /* There actually is no need to hold the entire ship.
     * It'd be entirely possible to only have pointers to the radar, weapons,
@@ -36,9 +39,12 @@ class ShootingAI : public AI {
    int aimAt(const Object3D& obj);
    bool aimedAt(const Object3D& obj);
    void chooseWeapon( int weapon );
+   Object3D* chooseTarget();
 
    public:
    ShootingAI(AsteroidShip* owner);
    virtual int think(double dt);
 
 };
+
+#endif

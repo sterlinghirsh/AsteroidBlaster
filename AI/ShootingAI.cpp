@@ -65,6 +65,25 @@ void ShootingAI::chooseWeapon( int weapon )
     //chosenWeapon = ship->getWeapon( weapon );
 }
 
+Object3D* ShootingAI::chooseTarget()
+{
+
+    // not real yet.
+    std::vector<Object3D*> targets = ship->getRadar()->getFullReading();
+
+    std::vector<Object3D*>::iterator targets_iterator;
+
+    targets_iterator = targets.begin();
+    Object3D* closest = *targets_iterator;
+    for( ; targets_iterator != targets.end();
+	 targets_iterator++ )
+    {
+	// get closest
+    }
+
+    return closest;
+}
+
 int ShootingAI::think(double dt)
 {
    // TODO this is where stuff goes! Should probably figure out the order of
@@ -85,6 +104,7 @@ int ShootingAI::think(double dt)
    // choose weapon
    chooseWeapon( 1 );
 
+   chooseTarget();
    // choose target
 
    // If we aren't aiming at it, better start
