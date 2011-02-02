@@ -65,8 +65,9 @@ class AsteroidShip : public Object3D {
       void selectWeapon(int weaponType);
 
       // Change this to something reasonable once we have a radar.
-      // void getRararData();
+      // void getRadar();
       // void getAllVisibleAsteroids();
+      // void setShootingAI(bool ai);
       
       int score;
       

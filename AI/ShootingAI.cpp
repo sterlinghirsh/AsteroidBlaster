@@ -61,7 +61,7 @@ bool ShootingAI::aimedAt(const Point3D& point)
 // kinda useless right now.
 void ShootingAI::chooseWeapon( int weapon )
 {
-    ship->chooseWeapon( weapon );
+    ship->selectWeapon( weapon );
     //chosenWeapon = ship->getWeapon( weapon );
 }
 

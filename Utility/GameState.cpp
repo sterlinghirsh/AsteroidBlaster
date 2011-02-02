@@ -271,6 +271,11 @@ void GameState::keyDown(int key) {
       case SDLK_ESCAPE:
          exit(0);
          break;
+      /* key to toggle shooting AI
+      case SDLK_O:
+         ship->setShootingAI(true);
+         break;
+      */
    }
 }
 
