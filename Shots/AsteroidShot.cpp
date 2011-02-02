@@ -5,6 +5,7 @@
  */
 
 #include "AsteroidShot.h"
+#include <iostream>
 
 materialStruct ShotMaterial = {
   {1, 0, 0, 1},
@@ -55,4 +56,8 @@ void AsteroidShot::handleCollision(Object3D* other) {
    if (other == owner)
       return;
    shouldRemove = true;
+   if (dynamic_cast<Asteroid3D*>(other) != NULL) {
+      owner->score += (int)other->radius * 10;
+   }
 }
+

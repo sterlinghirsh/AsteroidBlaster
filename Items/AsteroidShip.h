@@ -66,7 +66,9 @@ class AsteroidShip : public Object3D {
       // Change this to something reasonable once we have a radar.
       // void getRararData();
       // void getAllVisibleAsteroids();
-
+      
+      int score;
+      
    private:
       Vector3D shotDirection; // If we shoot a shot, where will it go?
 
@@ -98,7 +100,7 @@ class AsteroidShip : public Object3D {
 
       bool isBraking;
       bool isFiring;
-      int score, health;
+      int health;
       int lastGunFired;
       int currentWeapon;
 

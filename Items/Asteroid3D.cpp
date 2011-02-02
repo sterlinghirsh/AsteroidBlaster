@@ -181,16 +181,6 @@ void Asteroid3D::handleCollision(Object3D* other) {
    }
 }
 
-bool Asteroid3D::handleHit(list<Asteroid3D*>& asteroids) {
-
-   if (radius > 1) {
-      for (int i = 0; i < 3; ++i) {
-         asteroids.push_back(makeChild());
-      }
-   }
-   return true;
-}
-
 Asteroid3D* Asteroid3D::makeChild() {
    Asteroid3D* asteroid = new Asteroid3D(radius/2, worldSize);
    //asteroid->velocity = asteroid->velocity->scalarMultiply(2);

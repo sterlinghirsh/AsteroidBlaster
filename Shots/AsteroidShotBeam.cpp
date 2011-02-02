@@ -149,6 +149,9 @@ void AsteroidShotBeam::handleCollision(Object3D* other) {
    lifetime = 0.4;
    timeFired = doubleTime();
    lastHitFrame = curFrame;
+   if (dynamic_cast<Asteroid3D*>(other) != NULL) {
+      owner->score += (int)other->radius * 10;
+   }
 }
 
 void AsteroidShotBeam::debug() {

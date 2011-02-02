@@ -39,7 +39,7 @@ class GameState : public InputReceiver {
       GameState(double worldSize);
       virtual ~GameState();
       void draw();
-      //void drawAsteroids();
+      
       void drawAllText();
       void updateText();
       void checkCollisions();
@@ -68,7 +68,6 @@ class GameState : public InputReceiver {
       BoundingSpace* cube;
 
       std::list<Object3D*> objects;
-      std::list<Asteroid3D*> asteroids;
 };
 
 #endif

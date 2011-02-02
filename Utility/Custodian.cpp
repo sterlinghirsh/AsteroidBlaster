@@ -6,7 +6,12 @@
  */
 
 #include "Utility/Custodian.h"
+#include "Items/Asteroid3D.h"
 #include <algorithm>
+
+Custodian::Custodian() {
+   asteroidCount = 0;
+}
 
 /**
  * Compares by minX in Object3D.
@@ -96,6 +101,9 @@ void Custodian::update() {
 void Custodian::add(Object3D* objectIn) {
    objectsToAdd.push_back(objectIn);
    objectIn->setCustodian(this);
+   if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
+      asteroidCount++;
+   }
 }
 
 /**
@@ -104,6 +112,9 @@ void Custodian::add(Object3D* objectIn) {
 void Custodian::remove(Object3D* objectIn) {
    objectsByMinX[objectIn->minXRank] = NULL;
    objectsByMaxX[objectIn->maxXRank] = NULL;
+   if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
+      asteroidCount--;
+   }
    delete objectIn;
 }
 

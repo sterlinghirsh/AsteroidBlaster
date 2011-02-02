@@ -22,7 +22,7 @@ GameState::GameState(double worldSizeIn) {
 
    // Init Text Objects
    FPSText = new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20);
-   numAsteroidsText = new BitmapTextDisplay("Asteroids Remaining: ", (int)asteroids.size(), "", 10, 40);
+   numAsteroidsText = new BitmapTextDisplay("Asteroids Remaining: ", custodian.asteroidCount, "", 10, 40);
    scoreText = new BitmapTextDisplay("Score: ", ship->getScore(), "", 10, 60);
    healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 80);
    gameOverText = new BitmapTextDisplay("GAME OVER", GW/2, GH/2);
@@ -50,7 +50,7 @@ void GameState::update(double timeDiff) {
 
    if(ship->getHealth() <= 0) {
       gameIsRunning = false;
-   } else if (ship->getScore() >= 2000) {
+   } else if (ship->getScore() >= 1000) {
       gameIsRunning = false;
    }
    
@@ -148,7 +148,7 @@ void GameState::drawAllText() {
  */
 void GameState::updateText() {
    FPSText->updateBody(curFPS);
-   numAsteroidsText->updateBody((int)asteroids.size());
+   numAsteroidsText->updateBody(custodian.asteroidCount);
    scoreText->updateBody(ship->getScore());
    healthText->updateBody(ship->getHealth());
 }
@@ -245,6 +245,7 @@ void GameState::keyDown(int key) {
       case SDLK_LSHIFT:
       case SDLK_RSHIFT:
          doYaw = true;
+         ship->setRollSpeed(0);
          break;
 
       case SDLK_b:
@@ -325,7 +326,7 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    worldY = clamp(-worldY * fabs(worldY), -1, 1);
    
    if (doYaw) {
-      ship->setYawSpeed(-worldX);
+      ship->setYawSpeed(-worldX);	
    }
    else {
       ship->setRollSpeed(worldX);

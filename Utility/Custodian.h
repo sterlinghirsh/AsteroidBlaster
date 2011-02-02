@@ -26,6 +26,9 @@ class Custodian {
       void findAllCollisions();
       std::vector<Object3D*>* getListOfObjects();
       void clear();
+      int asteroidCount;
+      
+      Custodian();
 
    private:
       std::vector<Object3D*> objectsByMinX;
