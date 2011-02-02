@@ -25,13 +25,13 @@
 
 using namespace std;
 
-//constant value
+// Constant value
 const double WORLD_SIZE = 80.00;
 
 bool running = true;
 bool fullScreen = false;
 
-//SDL
+// SDL
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 
@@ -60,6 +60,11 @@ GLfloat headlight_amb[4] = {0.1, 0.1, 0.1, 1};
 GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
 GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
 
+// Give the gameState (used for Radar)
+GameState* getGameState() {
+   return gameState;
+}
+
 void init_light() {
    glEnable(GL_LIGHT0);
    // headlight_amb is defined in Asteroidship.h
@@ -87,24 +92,26 @@ void drawCrosshair() {
    double thicknessX = 0.01;
    double thicknessY = 0.01;
    glPushMatrix();
-   glLoadIdentity();
-   materials(WhiteSolid);
-   glColor3f(1, 1, 1);
-   useOrtho();
-   glDisable(GL_LIGHTING);
-   glBegin(GL_QUADS);
-   glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
-   glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
-   glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
-   glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
-   
-   glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
-   glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
-   glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
-   glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
-   glEnd();
-   glEnable(GL_LIGHTING);
-   usePerspective();
+      glLoadIdentity();
+      
+      // Make it white
+      materials(WhiteSolid);
+      glColor3f(1, 1, 1);
+      useOrtho();
+      glDisable(GL_LIGHTING);
+      glBegin(GL_QUADS);
+      glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
+      glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
+      glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
+      glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
+      
+      glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
+      glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
+      glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
+      glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
+      glEnd();
+      glEnable(GL_LIGHTING);
+      usePerspective();
    glPopMatrix();
 }
 
@@ -128,24 +135,24 @@ void display() {
 }
 
 void initSDL() {
-   //initialize the SDL video system
+   // Initialize the SDL video system
    if( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
-      fprintf(stderr, "Failed ti initialize SDL Video!\n");
+      fprintf(stderr, "Failed to initialize SDL Video!\n");
       exit(1);
    }
 
-   // tell system which functions to process when exit() call is made
+   // Tell system which functions to process when exit() call is made
    atexit(SDL_Quit);
 
-   // get optimal video settings
+   // Get optimal video settings
    vidinfo = SDL_GetVideoInfo();
 
    if (!vidinfo) {
-      fprintf(stderr, "Couldn't get video information!\n%s\n", SDL_GetError());
+      fprintf(stderr, "Couldn't get video settings information!\n%s\n", SDL_GetError());
       exit(1);
    }
 
-   // set opengl attributes
+   // Set opengl attributes
    SDL_GL_SetAttribute(SDL_GL_RED_SIZE,      5);
    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,    5);
    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,     5);
@@ -156,21 +163,24 @@ void initSDL() {
 #endif
    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,  1);
 
-   // get a framebuffer
+   // Get a framebuffer
    gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
 
    if (!gDrawSurface) {
       fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
       exit(1);
    }
+   
+   // Try to create a child window (for the minimap)
+   //SDL_Window SDL_OpenChildWindow(gDrawSurface, 10, 10, 50, 50)
 
-   //set the timer
+   // Set the timer
    SDL_Init(SDL_INIT_TIMER);
 
-   //disable the cursor   
+   // Disable the cursor   
    SDL_ShowCursor(SDL_DISABLE);
 
-   //set the title
+   // Set the title
    SDL_WM_SetCaption("Asteroid Blaster", 0);   
 
    glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -187,6 +197,7 @@ void timerFunc() {
    static unsigned long lastSecond = 0;
    static double lastTime = 0;
    
+   // Get the time
    double curTime = doubleTime();
 
    if (lastTime == 0) {
@@ -199,11 +210,12 @@ void timerFunc() {
 
    gameState->update(timeDiff);
 
+   // Check for all collisions
    gameState->checkCollisions();
    
    lastTime = curTime;
    
-   // Stats
+   // Timing statistics
    if (floor(curTime) > lastSecond) {
       lastSecond = floor(curTime);
    }
@@ -213,13 +225,13 @@ int main(int argc, char* argv[]) {
    srand(time(NULL));
    GW = 800;
    GH = 600;
-   //used for toggle full screens
+   // Used for toggle full screens
    int oldGW = 800;
    int oldGH = 600;
    
    glutInit(&argc, argv);
    
-   //initialize stuff related to GL/SDL
+   // Initialize stuff related to GL/SDL
    initSDL();
    
    // Preload texture.
@@ -243,7 +255,7 @@ int main(int argc, char* argv[]) {
       // This causes a valgrind error because event isn't initialized (I think).
       while (SDL_PollEvent(&event)) {
          if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_F1) {
-            if(!fullScreen){
+            if(!fullScreen) {
                oldGW = GW;
                oldGH = GH;
                GW = 1280;
@@ -260,7 +272,7 @@ int main(int argc, char* argv[]) {
                fullScreen = !fullScreen;
             }
          }
-         else{
+         else {
             inputManager->update(event);
          }
       }

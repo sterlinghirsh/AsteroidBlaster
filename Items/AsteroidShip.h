@@ -23,6 +23,7 @@ extern GLfloat headlight_spec[4];
 
 // Incomplete declaration so we can use the pointer.
 class AsteroidShot;
+class Radar;
 
 class AsteroidShip : public Object3D {
    public:
@@ -73,7 +74,7 @@ class AsteroidShip : public Object3D {
       
    private:
       Vector3D shotDirection; // If we shoot a shot, where will it go?
-      //Radar* radar; // This is the ship's radar that it should query for information about its surroundings 
+      Radar* radar; // This is the ship's radar that it should query for information about its surroundings 
       
       double brakeFactor;
       double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.

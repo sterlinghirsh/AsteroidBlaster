@@ -20,11 +20,11 @@ class Radar {
       // Deconstructor: tear everything apart.
       virtual ~Radar();
       
-      // Provides a full, unfiltered reading of the whole environment.
+      // Provides a complete, unfiltered reading of the whole environment.
       std::vector<Object3D*>* getFullReading();
       
       // Provides a filtered reading of the environment based on what's near the owner AsteroidShip.
-      //virtual std::vector<Object3D*> getNearbyReading();
+      virtual std::vector<Object3D*>* getNearbyReading();
       
    private:
       // The ship that owns this Radar
