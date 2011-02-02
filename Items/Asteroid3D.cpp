@@ -40,15 +40,6 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    double tempRad;
    double x, y, z;
    const double pi = 3.141592;
-   const int hbands = 10 + (rand() % 20);
-   const int vbands = 10 + (rand() % 20);
-   double theta, phi;
-   //FIXME so apperantly hbands and vbands cause serious error when
-   //      compiling in VS C++ 2008. Might need optimization.
-   const int maxhbands = 30;
-   const int maxvbands = 30;
-   MeshPoint* points  [maxhbands][maxvbands];
-   int pointNums [maxhbands][maxvbands];
 
    angle = 0;
    radius = r;
@@ -59,9 +50,6 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    //scalez = .3 + randdouble() * 1.4;
    scalex = scaley = scalez = 1;
 
-   int topIndex = mesh.addPoint(0, randRadius(r), 0); // Top
-   int bottomIndex = mesh.addPoint(0, -randRadius(r), 0); // Bottom
-
    rotationSpeed = randdouble() * 100; // Degrees per sec.
    axis = new Vector3D(0, 1, 0);
    axis->randomMagnitude();
@@ -70,71 +58,100 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    velocity->randomMagnitude();
    velocity->setLength(randdouble() * 3); // Units per sec.
 
-   for (int h = 0; h < hbands; ++h) {
-         phi = (pi / 2) - 
-            (pi * ((double)(1 + h) / (hbands)));
-      for (int v = 0; v < vbands; ++v) {
-         theta = 2 * pi * ((double)(1 + v) / (vbands));
-         tempRad = randRadius(r);
-         x = tempRad * cos(phi) * cos(theta);
-         y = tempRad * sin(phi);
-         z = tempRad * cos(phi) * cos((pi / 2) - theta);
-         points[h][v] = new MeshPoint(x, y, z);
-         pointNums[h][v] = mesh.addPoint(points[h][v]);
-          
-      }
-   }
+  Ring last;
+  double a = randdouble() * 0.5 + 0.75;
+  double b = randdouble() * 0.5 + 0.75;
+  
+  int npts = 12;
+  for (int j = npts / 2; j >= 0; j--) {
+    double angle = (M_PI * 2 / (double)npts * (double)j);
+    double tmpRad = r * sin(angle);
+    double tmpH = r * cos(angle);
+    int tmpPts = npts * (tmpRad / r);
+    if (tmpPts < 0) {
+      tmpPts *= -1;
+    } else if (tmpPts == 0) {
+      tmpPts = 1;
+    }
+    
+    Ring thisRing;
+    thisRing = Ring(tmpPts, a * tmpRad, b * tmpH);
+    _rList.push_back(thisRing);
 
-   for (int v = 0; v < vbands; ++v) {
-      mesh.addFace(topIndex, 
-       pointNums[0][(v + 1) % vbands],
-            pointNums[0][v]
-       );
-      for (int h = 0; h < hbands - 1; ++h) {
-         mesh.addFace(pointNums[h][v],
-          pointNums[h][(v + 1) % vbands],
-          pointNums[h + 1][v]
-          );
+    last = thisRing;
+  }
 
-         mesh.addFace(
-          pointNums[h][(v + 1) % vbands],
-          pointNums[h + 1][(v + 1) % vbands],
-          pointNums[h + 1][v]);
-      }
+  minX = _rList[0].minX();
+  maxX = _rList[0].maxX();
+  minY = _rList[0].minY();
+  maxY = _rList[0].maxY();
+  minZ = _rList[0].minZ();
+  maxZ = _rList[0].maxZ();
 
-      mesh.addFace(bottomIndex, 
-       pointNums[hbands - 1][(v + 1) % vbands],
-            pointNums[hbands - 1][v]);
-   }
+  for (unsigned i = 0; i < _rList.size(); i++) {
+    if (_rList[i].minX() < minX) {
+      minX = _rList[i].minX();
+    }
+    if (_rList[i].maxX() > maxX) {
+      maxX = _rList[i].maxX();
+    }
+    if (_rList[i].minY() < minY) {
+      minY = _rList[i].minY();
+    }
+    if (_rList[i].maxY() > maxY) {
+      maxY = _rList[i].maxY();
+    }
+    if (_rList[i].minZ() < minZ) {
+      minZ = _rList[i].minZ();
+    }
+    if (_rList[i].maxZ() > maxZ) {
+      maxZ = _rList[i].maxZ();
+    }
+  }
+  cout << "minX: " << minX << endl;
+  cout << "maxX: " << maxX << endl;
+  cout << "minY: " << minY << endl;
+  cout << "maxY: " << maxY << endl;
+  cout << "minZ: " << minZ << endl;
+  cout << "maxZ: " << maxZ << endl;
+    
 
-   for (int h = 0; h < hbands; ++h) {
-      for (int v = 0; v < vbands; ++v) {
-         delete points[h][v];
-      }
-   }
-
-   sizeX = max<double>(mesh.xMax, fabs(mesh.xMin)) * scalex;
-   sizeY = max<double>(mesh.yMax, fabs(mesh.yMin)) * scaley;
-   sizeZ = max<double>(mesh.zMax, fabs(mesh.zMin)) * scalez;
+   sizeX = maxX - minX;
+   sizeY = maxY - minY;
+   sizeZ = maxZ - minZ;
    collisionRadius = radius;
-   minX = mesh.xMin;
-   minY = mesh.yMin;
-   minZ = mesh.zMin;
-   maxX = mesh.xMax;
-   maxY = mesh.yMax;
-   maxZ = mesh.zMax;
    updateBoundingBox();
 }
 
 void Asteroid3D::draw() {
    glColor3f(1, 1, 1);
+   //drawBoundingBox();
    materials(Rock);
-   Object3D::draw();
+   //Object3D::draw();
+   glDisable(GL_CULL_FACE);
+   glEnable(GL_COLOR_MATERIAL);
+   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
-   mesh.draw(false);
+   if (_rList[0].size() > 1) {
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < _rList[0].size(); i++) {
+      _rList[0].draw(i);
+    }
+    glEnd();
+  }
+  for (unsigned i = 1; i <= _rList.size() / 2; i++) {
+    _rList[i].draw(_rList[i - 1]);
+  }
+  for (unsigned i = _rList.size() / 2; i < _rList.size() - 1; i++) {
+    _rList[i].draw(_rList[i + 1]);
+  }
+  glDisable(GL_COLOR_MATERIAL);
+   glDisable(GL_CULL_FACE);
+   //mesh.draw(false);
    glPopMatrix();
 }
 

@@ -10,15 +10,19 @@
 #include "Graphics/Mesh3D.h"
 #include "Utility/Point3D.h"
 #include "Utility/Object3D.h"
+#include "Items/Ring.h"
 #include <list>
+#include <vector>
 
 class Asteroid3D : public Object3D {
    public:
+      double radius;
       Mesh3D mesh;
       Vector3D rotationVector;
       double rotationSpeed;
       double rotationAmount;
       double scalex, scaley, scalez;
+      double worldSize;
       double sizeX, sizeY, sizeZ, collisionRadius;
       
       Asteroid3D(double r, double worldSizeIn);
@@ -26,15 +30,17 @@ class Asteroid3D : public Object3D {
       void InitAsteroid(double r, double worldSizeIn);
       void draw();
       void update(double timeDiff);
-      bool handleHit(std::list<Asteroid3D*>& asteroids);
       virtual void handleCollision(Object3D* other);
+      bool handleHit(std::list<Asteroid3D*>& asteroids);
       Asteroid3D* makeChild();
       void newRandomPosition();
-      virtual void debug();
+      void debug();
+      
 
    private:
       double randRadius(double r);
-      double worldSize;
+      std::vector<Ring> _rList;
+      int _nPoints;
 };
 
 #endif
