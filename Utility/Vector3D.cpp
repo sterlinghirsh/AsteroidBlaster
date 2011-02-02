@@ -236,6 +236,10 @@ void Vector3D::rotate(double angle, const Vector3D& axis) {
    normalize();
 }
 
+void Vector3D::rotateByDegrees(double angle, const Vector3D& axis) {
+   rotate(angle / (180 / 3.14159265), axis);
+}
+
 void Vector3D::glTranslate(double length = 1) {
    glTranslatef(length * xMag, length * yMag, length * zMag);
 }

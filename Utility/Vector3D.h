@@ -47,6 +47,7 @@ class Vector3D {
       void rotate(double deg, double x, double y, double z);
       void setCamera(double, double, double);
       void rotate(double angle, const Vector3D& axis);
+      void rotateByDegrees(double angle, const Vector3D& axis);
       void randomMagnitude();
       Vector3D scalarMultiply(double);
       void setLength(double);

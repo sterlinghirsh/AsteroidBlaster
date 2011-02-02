@@ -34,6 +34,8 @@ class AsteroidShip : public Object3D {
       double getAimY();
       void updateAcceleration();
       virtual void update(double timeDiff);
+      void rotate();
+      void getStuff();
 
       // We'll have to update this later so the AI can use it.
       void updateShotDirection(double xOffset, double yOffset);
@@ -107,6 +109,11 @@ class AsteroidShip : public Object3D {
       int health;
       int lastGunFired;
       int currentWeapon;
+      Vector3D *upstart;
+      double x;
+      double y;
+      double z;
+      double angle;
 
       void updateShotDirectionVector();
       void brake(double brakeFactorIn);
