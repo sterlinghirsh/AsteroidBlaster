@@ -12,9 +12,6 @@
 #include <algorithm>
 #include <math.h>
 
-#define TRI_TYPE 0
-#define LINE_TYPE 1
-
 using namespace std;
 
 Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
@@ -114,11 +111,11 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
   }
 
   for (unsigned i = 1; i <= _rList.size() / 2; i++) {
-    drawStrip(_rList[i - 1], _rList[i], TRI_TYPE);
+    makeStrip(_rList[i - 1], _rList[i]);
   }
 
   for (unsigned i = _rList.size() / 2; i < _rList.size() - 1; i++) {
-    drawStrip(_rList[i], _rList[i + 1], TRI_TYPE);
+    makeStrip(_rList[i], _rList[i + 1]);
   }
 
   sizeX = maxX - minX;
@@ -147,9 +144,8 @@ void Asteroid3D::draw() {
   mesh.draw(false);
   glDisable(GL_POLYGON_OFFSET_FILL);
 
-  //glColor3f(0.325, 0.71, 0.808);
-
-  glColor3f(0.996, 0.612, 0.0);
+  glColor3f(0.325, 0.71, 0.808);
+  //glColor3f(0.996, 0.612, 0.0);
   //glLineWidth(2);
   glEnable(GL_POLYGON_OFFSET_LINE);
   glPolygonOffset(-1.0f, -1.0f);
@@ -157,13 +153,13 @@ void Asteroid3D::draw() {
   mesh.drawLines(false);
   glDisable(GL_POLYGON_OFFSET_LINE);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  glLineWidth(1);
+  //glLineWidth(1);
   
   glDisable(GL_COLOR_MATERIAL);
   glPopMatrix();
 }
 
-void Asteroid3D::drawStrip(Ring r1, Ring r2, int type) {
+void Asteroid3D::makeStrip(Ring r1, Ring r2) {
   double count = 0.0;
   int last = 0;
   Ring t1, t2;

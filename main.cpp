@@ -99,6 +99,7 @@ void drawCrosshair() {
       glColor3f(1, 1, 1);
       useOrtho();
       glDisable(GL_LIGHTING);
+      
       glBegin(GL_QUADS);
       glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
       glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
@@ -110,6 +111,16 @@ void drawCrosshair() {
       glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
       glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
       glEnd();
+      /*
+      glTranslatef(gameState->ship->getAimX(), gameState->ship->getAimY(), 0.0);
+      static GLUquadricObj *outer;
+      static GLUquadricObj *inner;
+      outer = gluNewQuadric();
+      gluDisk(outer, crosshairSizeX / 2 - thicknessX / 1.5, crosshairSizeX / 2, 12, 1);
+      
+      inner = gluNewQuadric();
+      gluDisk(inner, 0.0, thicknessX / 1.5, 8, 1);
+      */
       glEnable(GL_LIGHTING);
       usePerspective();
    glPopMatrix();
