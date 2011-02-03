@@ -503,7 +503,7 @@ void AsteroidShip::draw() {
 	//printf("up?: %f\n", up->xMag);
 	//upstart = up;
 	//rotate();
-        glTranslatef(position->x + 3*forward->xMag, position->y + 3*forward->yMag - .5, position->z + 3*forward->zMag);
+        glTranslatef(position->x + 3*forward->xMag, position->y + 3*forward->yMag, position->z + 3*forward->zMag);
 	//rotate();
 	//glRotatef(forward->xMag * 90, 0, 1, 0);
 	//glRotatef(up->zMag * 90, 1, 0, 0);
