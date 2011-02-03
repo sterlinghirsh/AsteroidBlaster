@@ -144,8 +144,8 @@ void Asteroid3D::draw() {
   mesh.draw(false);
   glDisable(GL_POLYGON_OFFSET_FILL);
 
-  glColor3f(0.325, 0.71, 0.808);
-  //glColor3f(0.996, 0.612, 0.0);
+  //glColor3f(0.325, 0.71, 0.808);
+  glColor3f(0.996, 0.612, 0.0);
   //glLineWidth(2);
   glEnable(GL_POLYGON_OFFSET_LINE);
   glPolygonOffset(-1.0f, -1.0f);
