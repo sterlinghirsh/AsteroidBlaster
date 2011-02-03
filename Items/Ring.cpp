@@ -22,71 +22,42 @@
 
 using namespace std;
 
-Ring::Ring(int points, double radius, double h) :
-  _pts(points), _rad(radius), _h(h) {
+Ring::Ring(int points, double radius, double h, Mesh3D *mesh) :
+  _pts(points), _rad(radius), _h(h), _mesh(mesh) {
     //cout << "points (in ring) : " << points << endl;
     //srand(time(0));
     _offset = (double)rand() / (double)RAND_MAX * (OFFSET_MAX - OFFSET_MIN) + OFFSET_MIN;
     generate();
   }
 
-void Ring::draw(Ring prev) {
-  double step = (double)size() / (double)prev.size();
-  double count = 0.0;
-  while(count < size() && prev.size() != 1 && size() != 1) {
-    int prevPt = upCur(prev, (int)count - 1);
-    while (prevPt >= prev.size()) {
-      prevPt -= prev.size();
-    }
-    while (prevPt <= 0) {
-      prevPt += prev.size();
-    }
+void Ring::draw(int at) {
+  _pList[at].draw();
+}
 
-    AST_CLR;
-    glBegin(GL_TRIANGLES);
-    _pList[(int)(count) % size()].draw();
-    prev.draw(prevPt % prev.size());
-    int prevNdx = (int)(count - 1) % size();
-    while (prevNdx < 0) {
-      prevNdx += size();
-    }
-    draw(prevNdx);
-    glEnd();
-
-    glBegin(GL_TRIANGLES);
-    int nextNdx = (upCur(prev, (int)count) + size()) % size();
-    _pList[(int)(count) % size()].draw();
-    prev.draw(prevPt % prev.size());
-    prev.draw(nextNdx);
-    glEnd();
-
-    count+= step;
-  }
-  for (int i = 0; i < size(); i++) {
-    int nextNdx = (i + 1) % size();
-    int upPt = upCur(prev, i);
-
-    AST_CLR;
-    glBegin(GL_TRIANGLES);
-    _pList[i].draw();
-    _pList[nextNdx].draw();
-    prev.draw(upPt);
-    glEnd();
-
-    LINE_CLR;
-    glLineWidth(LINE_W);
-    glBegin(GL_LINE_LOOP);
-    _pList[i].draw();
-    _pList[nextNdx].draw();
-    prev.draw(upPt);
-    glEnd();
-    glLineWidth(1);
-
+void Ring::generate() {
+  _head = makePt(0.0);
+  _pList.push_back(_head);
+  _nList.push_back(_mesh->addPoint(&_head));
+  for (int i = 1; i < _pts; i++) {
+    MeshPoint tmpPt = makePt(M_PI * 2 / _pts * i + _offset);
+    _pList.push_back(tmpPt);
+    _nList.push_back(_mesh->addPoint(&tmpPt));
   }
 }
 
-void Ring::draw(int at) {
-  _pList[at].draw();
+MeshPoint Ring::makePt(double angle) {
+  double tweakX = (double)rand() / (double)RAND_MAX * TWEAK_MAX;
+  double tweakY = (double)rand() / (double)RAND_MAX * TWEAK_MAX;
+  double tweakZ = (double)rand() / (double)RAND_MAX * TWEAK_MAX;
+  double tmpx = _rad * cos(angle) + tweakX;
+  double tmpy = _h + tweakY;
+  double tmpz = _rad * sin(angle) + tweakZ;
+  MeshPoint tmpPt = MeshPoint(tmpx, tmpy, tmpz);
+  return tmpPt;
+}
+
+int Ring::size() {
+  return _pList.size();
 }
 
 int Ring::upCur(Ring prev, int ndx) {
@@ -162,28 +133,4 @@ double Ring::minZ() {
     }
   }
   return min;
-}
-
-void Ring::generate() {
-  _head = makePt(0.0);
-  _pList.push_back(_head);
-  for (int i = 1; i < _pts; i++) {
-    _pList.push_back(makePt(M_PI * 2 / _pts * i + _offset));
-  }
-  //printf("\ngenerated\n\tsize = %d\n\tpts = %d\n", size(), _pts);
-}
-
-Point3D Ring::makePt(double angle) {
-  double tweakX = (double)rand() / (double)RAND_MAX * TWEAK_MAX;
-  double tweakY = (double)rand() / (double)RAND_MAX * TWEAK_MAX;
-  double tweakZ = (double)rand() / (double)RAND_MAX * TWEAK_MAX;
-  double tmpx = _rad * cos(angle) + tweakX;
-  double tmpy = _h + tweakY;
-  double tmpz = _rad * sin(angle) + tweakZ;
-  Point3D tmpPt = Point3D(tmpx, tmpy, tmpz);
-  return tmpPt;
-}
-
-int Ring::size() {
-  return _pList.size();
 }

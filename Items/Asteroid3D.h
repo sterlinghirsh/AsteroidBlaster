@@ -28,6 +28,7 @@ class Asteroid3D : public Object3D {
       virtual ~Asteroid3D();
       void InitAsteroid(double r, double worldSizeIn);
       void draw();
+      void drawStrip(Ring r1, Ring r2, int type);
       void update(double timeDiff);
       virtual void handleCollision(Object3D* other);
       bool handleHit(std::list<Asteroid3D*>& asteroids);

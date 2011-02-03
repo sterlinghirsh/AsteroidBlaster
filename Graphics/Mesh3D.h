@@ -21,6 +21,7 @@ class Mesh3D {
       double xMax, xMin, yMax, yMin, zMax, zMin;
 
       Mesh3D();
+      void drawLines(bool drawSmooth);
       void draw(bool drawSmooth);
       int addPoint(double x, double y, double z);
       int addPoint(MeshPoint* p);
