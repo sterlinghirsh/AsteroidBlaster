@@ -22,8 +22,6 @@ Radar :: ~Radar() {
 
 // Provides a complete, unfiltered reading of the whole environment.
 std::vector<Object3D*>* Radar :: getFullReading() {
-   //std::vector<Object3D*>* tmp = new std::vector<Object3D*>;
-   
    // Tell c++ that gameState was declared elsewhere (in main.cpp)
    extern GameState* gameState;
    
@@ -36,6 +34,12 @@ std::vector<Object3D*>* Radar :: getFullReading() {
 
 // Provides a filtered reading of the environment based on what's near the owner AsteroidShip.
 std::vector<Object3D*>* Radar :: getNearbyReading() {
-   std::vector<Object3D*>* tmp = new std::vector<Object3D*>;
+   // Tell c++ that gameState was declared elsewhere (in main.cpp)
+   extern GameState* gameState;
+   
+   /* Get the custodian out of gameState, and get its vector of Objects.
+    * Use this vector to construct a new copied vector (to be safe), and return that one.
+    */
+   std::vector<Object3D*>* tmp (gameState->custodian.getListOfObjects());
    return tmp;
 }
