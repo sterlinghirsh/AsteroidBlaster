@@ -68,3 +68,14 @@ void Camera::viewFrom(Object3D* object) {
    forward = object->forward;
    right = object->right;
 }
+
+/**
+ * Set offset.
+ */
+void Camera::setOffset(double x, double y, double z) {
+   offset->updateMagnitude(x, y, z);
+}
+
+void Camera::setOffset(Vector3D& newOffset) {
+   offset->updateMagnitude(newOffset);
+}

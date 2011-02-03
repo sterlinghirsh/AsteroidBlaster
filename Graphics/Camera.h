@@ -30,6 +30,8 @@ class Camera {
       void setCamera(Point3D* newPosition, Vector3D* upIn, 
        Vector3D* rightIn, Vector3D* forwardIn);
       void viewFrom(Object3D* object);
+      void setOffset(double x, double y, double z);
+      void setOffset(Vector3D& newOffset);
 };
 
 #endif

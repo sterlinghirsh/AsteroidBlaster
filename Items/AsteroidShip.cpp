@@ -243,7 +243,7 @@ void AsteroidShip::keepFiring() {
    /* This is goofy as hell, so let's do it the OOP way. */
    bool fireShots = (currentWeapon == 0);
    bool fireBeams = (currentWeapon == 1);
-   shotDirection.movePoint(start);
+   //shotDirection.movePoint(start);
    if (fireShots && (timeOfLastShot < curTime - (1 / AsteroidShot::frequency) ||
     timeOfLastShot == 0)) {
       custodian->add(new AsteroidShot(start,
@@ -503,7 +503,7 @@ void AsteroidShip::draw() {
 	//printf("up?: %f\n", up->xMag);
 	//upstart = up;
 	//rotate();
-        glTranslatef(position->x + 3*forward->xMag, position->y + 3*forward->yMag, position->z + 3*forward->zMag);
+   position->glTranslate();
 	//rotate();
 	//glRotatef(forward->xMag * 90, 0, 1, 0);
 	//glRotatef(up->zMag * 90, 1, 0, 0);

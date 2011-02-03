@@ -35,7 +35,8 @@ GameState::GameState(double worldSizeIn) {
    mouseX = 0;
    mouseY = 0;
    
-   scoreToWin = 1200;
+   scoreToWin = 1000;
+   thirdPerson = false;
 }
 
 /**
@@ -91,13 +92,23 @@ void GameState::draw() {
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
    // Draw all of the text objects to the screen.
    drawAllText();
+   if (thirdPerson) {
+      Vector3D newOffset(ship->forward->scalarMultiply(-3));
+      newOffset.addUpdate(ship->up->scalarMultiply(0.5));
+      camera->setOffset(newOffset);
+   } else {
+      camera->setOffset(0, 0, 0);
+   }
    camera->setCamera(true);
    skybox->draw(camera);
    cube->draw();
    for (item = objects->begin(); item != objects->end(); ++item) {
       if (*item == NULL)
          continue;
-      (*item)->draw();
+      // Don't draw the ship in thirdPerson mode.
+      if (thirdPerson || (*item != ship)) {
+         (*item)->draw();
+      }
    }
 }
 
@@ -271,6 +282,10 @@ void GameState::keyDown(int key) {
       case SDLK_ESCAPE:
          exit(0);
          break;
+      
+      case SDLK_t:
+         thirdPerson = true;
+         break;
       /* key to toggle shooting AI
       case SDLK_O:
          ship->setShootingAI(true);
@@ -316,6 +331,10 @@ void GameState::keyUp(int key) {
 
    case SDLK_b:
       ship->setBrake(false);
+      break;
+
+   case SDLK_t:
+      thirdPerson = false;
       break;
    }
 }
