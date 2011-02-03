@@ -469,7 +469,9 @@ void AsteroidShip::draw() {
 
    double angle;
    double forwardAngle;
+   //if(up->zMag 
    axis = upStart.cross(*up);
+   axis.normalize();
    angle = upStart.getAngleInDegrees(*up);
 
    // rotate forward about up
@@ -479,15 +481,17 @@ void AsteroidShip::draw() {
 
    forwardStart.rotateByDegrees(angle, axis);
 
-   printf("Axis: ");
+   /*printf("Axis: ");
    axis.print();
    printf("Up: ");
    up->print();
-   
+   printf("ForwardStart: ");
+   forward->print();*/
+   //if(up->yMag != 1) exit(0);
    //exit(0);
    forwardAngle = forwardStart.getAngleInDegrees(*forward);
-
-   printf("%f\n", forwardAngle);
+   if(forward->xMag < 0) forwardAngle = 360 - forwardAngle;
+   printf("%f\n", angle);
    
    //for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
       //(*shotIter)->draw();
@@ -510,8 +514,8 @@ void AsteroidShip::draw() {
    //if(forwardStart.xMag > 0){
    
    //else{glRotatef(360 - forwardAngle, up->xMag, up->yMag, up->zMag);}
-   glRotatef(angle, axis.xMag, axis.yMag, axis.zMag);
    glRotatef(forwardAngle, up->xMag, up->yMag, up->zMag);
+   glRotatef(angle, axis.xMag, axis.yMag, axis.zMag);
    glRotatef(180, 0 , 1, 0);
    glScalef(1.5, .5, .8);
    
