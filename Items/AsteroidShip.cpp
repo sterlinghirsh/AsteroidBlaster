@@ -471,15 +471,26 @@ void AsteroidShip::draw() {
    double forwardAngle;
    axis = upStart.cross(*up);
    angle = upStart.getAngleInDegrees(*up);
+
    // rotate forward about up
+   if(axis.getLength() == 0){
+	axis.updateMagnitude(*up);
+   }
+
    forwardStart.rotateByDegrees(angle, axis);
+
+   printf("Axis: ");
+   axis.print();
+   printf("Up: ");
+   up->print();
+   
+   //exit(0);
    forwardAngle = forwardStart.getAngleInDegrees(*forward);
-   //up->print();
-   forwardStart.print();
+
    printf("%f\n", forwardAngle);
    
    //for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
-   //   (*shotIter)->draw();
+      //(*shotIter)->draw();
    //}
    glMatrixMode(GL_MODELVIEW);
    glPushMatrix();
@@ -496,14 +507,15 @@ void AsteroidShip::draw() {
    //glRotatef(-angle, x, y, z);
    forwardStart.draw();
    //glRotatef(forwardAngle, up->xMag, up->yMag, up->zMag);
-   /*if(forwardStart.xMag > 0){
-   glRotatef(forwardAngle, up->xMag, up->yMag, up->zMag);}
-   else{glRotatef(360 - forwardAngle, up->xMag, up->yMag, up->zMag);}*/
+   //if(forwardStart.xMag > 0){
+   
+   //else{glRotatef(360 - forwardAngle, up->xMag, up->yMag, up->zMag);}
    glRotatef(angle, axis.xMag, axis.yMag, axis.zMag);
-   //glRotatef(180, 0 , 1, 0);
+   glRotatef(forwardAngle, up->xMag, up->yMag, up->zMag);
+   glRotatef(180, 0 , 1, 0);
    glScalef(1.5, .5, .8);
    
-   //draw_ship();
+    draw_ship();
     glPushMatrix();
     glTranslatef(0, 0, 1);
     draw_vectors();
