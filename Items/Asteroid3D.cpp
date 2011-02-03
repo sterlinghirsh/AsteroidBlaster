@@ -156,6 +156,7 @@ void Asteroid3D::draw() {
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   mesh.drawLines(false);
   glDisable(GL_POLYGON_OFFSET_LINE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glLineWidth(1);
   
   glDisable(GL_COLOR_MATERIAL);

@@ -184,4 +184,5 @@ std::vector<Object3D*>* Custodian::getListOfObjects() {
 void Custodian::clear() {
    objectsByMinX.clear();
    objectsByMaxX.clear();
+   asteroidCount = 0;
 }
