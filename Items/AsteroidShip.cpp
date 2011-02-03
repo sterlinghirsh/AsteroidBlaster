@@ -478,9 +478,9 @@ void AsteroidShip::draw() {
    forwardStart.print();
    printf("%f\n", forwardAngle);
    
-   for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
-      (*shotIter)->draw();
-   }
+   //for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
+   //   (*shotIter)->draw();
+   //}
    glMatrixMode(GL_MODELVIEW);
    glPushMatrix();
 	getStuff();
