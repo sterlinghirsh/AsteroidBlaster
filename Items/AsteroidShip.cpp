@@ -444,6 +444,14 @@ void draw_vectors(){
 
 }
 
+void AsteroidShip::drawInMinimap() {
+   glPushMatrix();
+   position->glTranslate();
+   materials(GreenShiny);
+   gluSphere(quadric, 5, 8, 8);
+   glPopMatrix();
+}
+
 void AsteroidShip::getStuff(){
 	x = (upstart->yMag * up->zMag) - (upstart->zMag * up->yMag);
 	y = (upstart->zMag * up->xMag) - (upstart->xMag * up->zMag);

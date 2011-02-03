@@ -39,6 +39,7 @@ class GameState : public InputReceiver {
       GameState(double worldSize);
       virtual ~GameState();
       void draw();
+      void drawInMinimap();
       
       void drawAllText();
       void updateText();

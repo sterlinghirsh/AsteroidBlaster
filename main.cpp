@@ -191,7 +191,7 @@ void display() {
             glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, 0.0f);
             glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, 0.0f);*/
                         //glDisable(GL_DEPTH_TEST);
-            gluSphere(quadric,1.0f,16,16);	/* Draw A Sphere */
+            //gluSphere(quadric,0.1f,16,16);	/* Draw A Sphere */
                         //glEnable(GL_DEPTH_TEST);
             
             //glLoadIdentity ();								/* Reset The Modelview Matrix */
@@ -208,7 +208,9 @@ void display() {
                   gluDisk(gluNewQuadric(),2.4,2.5,35,35);
                glEnable(GL_LIGHTING);
             glPopMatrix();
-
+            
+            // Draw objects in the map.
+            gameState->drawInMinimap();
 
             //glEnd();						/* Done Drawing The Textured Quad */	
 			

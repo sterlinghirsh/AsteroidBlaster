@@ -41,6 +41,7 @@ class AsteroidShip : public Object3D {
       void updateShotDirection(double xOffset, double yOffset);
       void keepFiring();
       virtual void draw();
+      virtual void drawInMinimap();
       virtual void handleCollision(Object3D* other);
       virtual void debug();
 

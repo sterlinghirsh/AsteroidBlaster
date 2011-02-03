@@ -63,3 +63,10 @@ void AsteroidShot::handleCollision(Object3D* other) {
    }
 }
 
+/**
+ * Don't draw shots in the map.
+ * For now :)
+ */
+void AsteroidShot::drawInMinimap() {
+   return;
+}

@@ -37,6 +37,7 @@ class Object3D {
       virtual ~Object3D();
       virtual void update(double timeDifference);
       virtual void draw();
+      virtual void drawInMinimap();
       virtual void setYawSpeed(double radiansPerSecond);
       virtual void setPitchSpeed(double radiansPerSecond);
       virtual void setRollSpeed(double radiansPerSecond);

@@ -161,3 +161,10 @@ void AsteroidShotBeam::debug() {
    position->print();
    velocity->print();
 }
+
+/**
+ * Don't draw shots in minimap (for now)
+ */
+void AsteroidShotBeam::drawInMinimap() {
+   return;
+}

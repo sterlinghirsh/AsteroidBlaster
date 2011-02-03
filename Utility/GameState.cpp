@@ -88,6 +88,27 @@ void GameState::update(double timeDiff) {
    updateText();
 }
 
+/**
+ * Draw objects in the minimap.
+ */
+void GameState::drawInMinimap() {
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
+   glPushMatrix();
+   Vector3D oppositeOfPosition(*(ship->position));
+   // Translate everything so that the ship is at 0, 0 and everything is centered there.
+   oppositeOfPosition.updateMagnitude(oppositeOfPosition);
+   glScalef(0.05, 0.05, 0.05);
+   glRotatef(180, 0, 1, 0);
+   oppositeOfPosition.glTranslate(-1);
+   for (item = objects->begin(); item != objects->end(); ++item) {
+      if (*item == NULL)
+         continue;
+      (*item)->drawInMinimap();
+   }
+   glPopMatrix();
+   
+}
+
 void GameState::draw() {
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
    // Draw all of the text objects to the screen.

@@ -69,6 +69,10 @@ void Object3D::update(double timeDifference) {
    updateBoundingBox();
 }
 
+/**
+ * Subclasses can extend this, but this does some basic movement and will
+ * draw a displaylist if one exists.
+ */
 void Object3D::draw() {
    glPushMatrix();
    if (position != NULL)
@@ -79,6 +83,19 @@ void Object3D::draw() {
    glCallList(displayList);
    glPopMatrix();
 }
+
+/**
+ * Subclasses can extend this, but this draws a sphere on the minimap.
+ */
+void Object3D::drawInMinimap() {
+   glPushMatrix();
+      position->glTranslate();
+      materials(RedFlat);
+      gluSphere(quadric, 5, 8, 8);
+   glPopMatrix();
+}
+
+
 
 /**
  * These three are setters for pitch, roll, yaw.
