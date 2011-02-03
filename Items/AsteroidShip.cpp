@@ -491,7 +491,7 @@ void AsteroidShip::draw() {
    //exit(0);
    forwardAngle = forwardStart.getAngleInDegrees(*forward);
    if(forward->xMag < 0) forwardAngle = 360 - forwardAngle;
-   printf("%f\n", angle);
+   //printf("%f\n", angle);
    
    //for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
       //(*shotIter)->draw();
