@@ -32,6 +32,7 @@ void AsteroidShot::draw() {
    Vector3D zVector(0, 0, -1);
    Vector3D axis = zVector.cross(*velocity);
    glPushMatrix();
+   glDisable(GL_LIGHTING);
    glColor3f(1, 0, 0);
    materials(ShotMaterial);
    position->glTranslate();
@@ -41,6 +42,7 @@ void AsteroidShot::draw() {
    //drawCylinder(0.02, 1);
    //glutSolidCone(0.02, 0.2, 8, 8);
    gluCylinder(quadric,0.02f,0.0f,0.2f,8,8);
+   glEnable(GL_LIGHTING);
 
    glPopMatrix();
 }

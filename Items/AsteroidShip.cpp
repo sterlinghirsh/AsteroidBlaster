@@ -86,7 +86,7 @@ AsteroidShip::AsteroidShip() :
 
    yawSpeed = rollSpeed = pitchSpeed = 0;
    maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
-   shotSpeed = 40; // Also probably will be changed with an upgrade.
+   shotSpeed = 20; // Also probably will be changed with an upgrade.
 
    // Timing stuff
    timeOfLastShot = 0;
