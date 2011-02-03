@@ -73,12 +73,21 @@ Object3D* ShootingAI::chooseTarget()
 
     std::vector<Object3D*>::iterator targets_iterator;
 
+    Point3D* ship_position = ship->position;
+
     targets_iterator = targets.begin();
     Object3D* closest = *targets_iterator;
+    double shortest_distance = closest->position->distanceFrom( *ship_position );
     for( ; targets_iterator != targets.end();
 	 targets_iterator++ )
     {
-	// get closest
+	// get closest asteroid
+	double distance = (*targets_iterator)->position->distanceFrom( *ship_position );
+	if( distance < shortest_distance )
+	{
+	    shortest_distance = distance;
+            closest = *targets_iterator;
+        } 
     }
 
     return closest;
