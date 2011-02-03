@@ -145,7 +145,7 @@ void display() {
             /* Set the viewport to 3/4 of the way across the screen on the bottom.
              * It should take up the bottom right corner of the screen.
              */
-            glViewport (GW*0.75, 0, GW/4, GH/4);
+            glViewport (GW*0.66, 0, GW/3, GH/3);
             glMatrixMode (GL_PROJECTION);		/* Select The Projection Matrix */
             glLoadIdentity ();							/* Reset The Projection Matrix */
             /* Set Up Ortho Mode To Fit 1/4 The Screen (Size Of A Viewport) */
@@ -166,31 +166,37 @@ void display() {
             gluQuadricTexture(quadric, GL_TRUE);			/* Create Texture Coords */
 
       materials(WhiteSolid);
-            glTranslatef(0.0f,0.0f,-5.0f);	/* Move 14 Units Into The Screen */
+//             glTranslatef(0.0f,0.0f,-5.0f);	/* Move 14 Units Into The Screen */
 
-            glRotatef(0.0001*startTime,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
+            glRotatef(0.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
             glRotatef(0,0.0f,1.0f,0.0f);	/* Rotate By 0 On The Y-Axis */
             glRotatef(0,0.0f,0.0f,1.0f);	/* Rotate By 0 On The Z-Axis */
 
+            // eye, lookAt, and up vectors
+            gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
             //glBegin(GL_QUADS);	/* Begin Drawing A Single Quad */
             /*glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, 0.0f);
             glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, 0.0f);
             glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, 0.0f);
             glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, 0.0f);*/
                         //glDisable(GL_DEPTH_TEST);
-            gluSphere(quadric,1.5f,16,16);	/* Draw A Sphere */
+            gluSphere(quadric,1.0f,16,16);	/* Draw A Sphere */
                         //glEnable(GL_DEPTH_TEST);
             
             //glLoadIdentity ();								/* Reset The Modelview Matrix */
             //glTranslatef(0.0f,0.5f,0.0f);
+            
             glColor3f(0.1, 0.8, 0.1);
             // Draw a flat cylinder with radius 2 at top and bottom, 0.5 height, 2 slice, and 2 stack.
             //gluCylinder(gluNewQuadric(),2.5,3,0.4,8,8);
-            glDisable(GL_LIGHTING);
-               gluDisk(gluNewQuadric(),1.8,1.9,25,25);
-               gluDisk(gluNewQuadric(),2.1,2.2,25,25);
-               gluDisk(gluNewQuadric(),2.4,2.5,25,25);
-            glEnable(GL_LIGHTING);
+            glPushMatrix();
+               glRotatef(-90.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
+               glDisable(GL_LIGHTING);
+                  gluDisk(gluNewQuadric(),1.8,1.9,35,35);
+                  gluDisk(gluNewQuadric(),2.1,2.2,35,35);
+                  gluDisk(gluNewQuadric(),2.4,2.5,35,35);
+               glEnable(GL_LIGHTING);
+            glPopMatrix();
 
 
             //glEnd();						/* Done Drawing The Textured Quad */	
