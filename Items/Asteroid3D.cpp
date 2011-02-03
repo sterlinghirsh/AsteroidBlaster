@@ -140,9 +140,24 @@ void Asteroid3D::draw() {
   glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
   glScalef(scalex, scaley, scalez);
   glColor3f(0.0, 0.0, 0.0);
+  
+  glPolygonOffset(1.0f, 1.0f);
+  glEnable(GL_POLYGON_OFFSET_FILL);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   mesh.draw(false);
-  glColor3f(0.325, 0.71, 0.808);
+  glDisable(GL_POLYGON_OFFSET_FILL);
+
+  //glColor3f(0.325, 0.71, 0.808);
+
+  glColor3f(0.996, 0.612, 0.0);
+  //glLineWidth(2);
+  glEnable(GL_POLYGON_OFFSET_LINE);
+  glPolygonOffset(-1.0f, -1.0f);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   mesh.drawLines(false);
+  glDisable(GL_POLYGON_OFFSET_LINE);
+  glLineWidth(1);
+  
   glDisable(GL_COLOR_MATERIAL);
   glPopMatrix();
 }

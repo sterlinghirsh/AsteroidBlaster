@@ -15,7 +15,6 @@ Mesh3D::Mesh3D() : drawNormals(false) {
 }
 
 void Mesh3D::drawLines(bool drawSmooth) {
-  glLineWidth(3);
   glDisable(GL_LIGHTING);
   glBegin(GL_LINE_LOOP);
   for (unsigned int i = 0; i < faces.size(); ++i) {
@@ -27,7 +26,6 @@ void Mesh3D::drawLines(bool drawSmooth) {
   }
   glEnd();
   glEnable(GL_LIGHTING);
-  glLineWidth(1);
 }
 
 void Mesh3D::draw(bool drawSmooth) {
