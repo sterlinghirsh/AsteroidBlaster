@@ -32,7 +32,7 @@ class Asteroid3D : public Object3D {
       void update(double timeDiff);
       virtual void handleCollision(Object3D* other);
       bool handleHit(std::list<Asteroid3D*>& asteroids);
-      Asteroid3D* makeChild();
+      Asteroid3D* makeChild(int num);
       void newRandomPosition();
       void debug();
       

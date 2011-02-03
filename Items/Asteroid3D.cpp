@@ -213,8 +213,8 @@ void Asteroid3D::handleCollision(Object3D* other) {
   } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
     shouldRemove = true;
     if (radius > 2) {
-      custodian->add(makeChild());
-      custodian->add(makeChild());
+      custodian->add(makeChild(0));
+      custodian->add(makeChild(1));
     }
   } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
     shouldRemove = true;
@@ -223,19 +223,20 @@ void Asteroid3D::handleCollision(Object3D* other) {
         new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20,
           *position, radius * explosionFactor, radius * explosionFactor));
     if (radius > 2) {
-      custodian->add(makeChild());
-      custodian->add(makeChild());
+      custodian->add(makeChild(0));
+      custodian->add(makeChild(1));
     }
   }
 }
 
-Asteroid3D* Asteroid3D::makeChild() {
+Asteroid3D* Asteroid3D::makeChild(int num) {
   Asteroid3D* asteroid = new Asteroid3D(radius/2, worldSize);
   //asteroid->velocity = asteroid->velocity->scalarMultiply(2);
   // Make this scalarMultiplyUpdate(2);
   asteroid->velocity->addUpdate(*asteroid->velocity);
   asteroid->velocity->addUpdate(*velocity);
   asteroid->position->clone(position);
+  asteroid->position->x += num == 0 ? radius/2 : -radius/2;
 
   return asteroid;
 }
