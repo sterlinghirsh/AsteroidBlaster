@@ -14,7 +14,7 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include <SDL.h>
+#include "SDL.h"
 #include <vector>
 
 struct InputReceiver {
