@@ -291,3 +291,13 @@ void Vector3D::positiveZ() {
       zMag = 0 - zMag;
 }
 
+Vector3D &Vector3D::operator=(const Vector3D& rhs) {
+   xMag = rhs.xMag;
+   yMag = rhs.yMag;
+   zMag = rhs.zMag;
+   xPos = rhs.xPos;
+   yPos = rhs.yPos;
+   zPos = rhs.zPos;
+
+   return *this;
+}

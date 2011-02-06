@@ -19,6 +19,7 @@
  * or anything else that has not yet been created. */
 #include "Items/AsteroidShip.h"
 #include "Utility/Point3D.h"
+#include "AI/AI.h"
 #include "Utility/Object3D.h"
 #include "Items/Weapon.h"
 
@@ -36,8 +37,7 @@ class ShootingAI : public AI {
    Point3D aimingAt;
    
    /* TODO Add your respective functions here. */
-   int aimAt(const Object3D& obj);
-   bool aimedAt(const Object3D& obj);
+   int aimAt(double dt, Object3D* target);
    void chooseWeapon( int weapon );
    Object3D* chooseTarget();
 
@@ -45,6 +45,7 @@ class ShootingAI : public AI {
    ShootingAI(AsteroidShip* owner);
    virtual int think(double dt);
 
+   static const double gunRotSpeed;
 };
 
 #endif

@@ -53,8 +53,12 @@ struct Point3D {
    Point3D operator-(const Point3D& rhs);
    double operator*(const Point3D& rhs);
    int operator==(const Point3D& rhs) const;
-   const Point3D &operator=(const Point3D &src);
-   Point3D& operator/=(double scalar);  
+   Point3D &operator=(const Point3D &src);
+   Point3D& operator/=(double scalar); 
+   Point3D operator*(double scalar);
+
+   Point3D normalize() const;
+   double magnitude() const;
    static const Point3D Zero;
 };
 

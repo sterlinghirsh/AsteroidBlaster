@@ -21,7 +21,7 @@ Radar :: ~Radar() {
 }
 
 // Provides a complete, unfiltered reading of the whole environment.
-std::vector<Object3D*>* Radar :: getFullReading() {
+std::vector<Object3D*>* Radar :: getFullReading() const {
    // Tell c++ that gameState was declared elsewhere (in main.cpp)
    extern GameState* gameState;
    
@@ -33,7 +33,7 @@ std::vector<Object3D*>* Radar :: getFullReading() {
 }
 
 // Provides a filtered reading of the environment based on what's near the owner AsteroidShip.
-std::vector<Object3D*>* Radar :: getNearbyReading() {
+std::vector<Object3D*>* Radar :: getNearbyReading() const {
    // Tell c++ that gameState was declared elsewhere (in main.cpp)
    extern GameState* gameState;
    

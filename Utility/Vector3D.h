@@ -62,6 +62,8 @@ class Vector3D {
       void print() {
          printf("Vector: (%f, %f, %f)\n", xMag, yMag, zMag);
       }
+
+      Vector3D &operator=(const Vector3D& rhs);
 };
 
 #endif

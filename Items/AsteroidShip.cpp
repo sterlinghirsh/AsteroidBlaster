@@ -577,3 +577,11 @@ void AsteroidShip::debug() {
    velocity->print();
    printf("--\n");
 }
+
+void AsteroidShip::updateShotDirection(Vector3D dir) {
+   shotDirection = dir;
+}
+
+const Radar *AsteroidShip::getRadar() {
+   return radar;
+}

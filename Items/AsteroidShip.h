@@ -39,6 +39,7 @@ class AsteroidShip : public Object3D {
 
       // We'll have to update this later so the AI can use it.
       void updateShotDirection(double xOffset, double yOffset);
+      void updateShotDirection(Vector3D dir);
       void keepFiring();
       virtual void draw();
       virtual void drawInMinimap();
@@ -69,7 +70,7 @@ class AsteroidShip : public Object3D {
       void selectWeapon(int weaponType);
 
       // Change this to something reasonable once we have a radar.
-      // void getRadar();
+      const Radar *getRadar();
       // void getAllVisibleAsteroids();
       // void setShootingAI(bool ai);
       

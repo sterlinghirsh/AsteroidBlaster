@@ -17,9 +17,13 @@
 
 #include "AI/ShootingAI.h"
 
+const double ShootingAI::gunRotSpeed = 1.0;
+
 ShootingAI::ShootingAI(AsteroidShip* owner)
 {
    ship = owner;
+   aimingAt = Point3D::Zero;
+   lastShotPos = Point3D::Zero;
    //TODO possibly more stuff here.
 }
 
@@ -31,31 +35,39 @@ ShootingAI::ShootingAI(AsteroidShip* owner)
  * needs to be. This will take care of predicting where the target will
  * be based on its current velocity.
  *
- * @param obj the object to aim at
+ * @param dt time difference since last frame, for gun turning.
  * @return no idea, really. Just leaving this open in case I think of something
  */
-int ShootingAI::aimAt(const Object3D& obj)
+int ShootingAI::aimAt(double dt, Object3D* target)
 {
+   Point3D wouldHit;
+   double speed = chosenWeapon->getSpeed();
+   double time = 0;
+   double dist;
+   double len;
+   Vector3D dp;
+   
+   Point3D curTarget = *target->position;
+   wouldHit = lastShotPos - aimingAt;
+   if (wouldHit.magnitude() > target->radius) {
+      wouldHit = wouldHit.normalize();
+      wouldHit = wouldHit * (gunRotSpeed * dt);
+      aimingAt = (wouldHit - *ship->position).normalize();
+   }
 
-}
+   do {
+      time = ship->position->distanceFrom(curTarget);
+      dp = target->velocity->scalarMultiply(time);
+      curTarget = curTarget + Point3D(dp.xMag, dp.yMag, dp.zMag);
 
-/** Checks if the virtual barrel is currently aimed at an object.
- *
- * Simple check to see if the barrel is currently aimed at a point.
- * Pretty simple, just calculate the vector between our position and
- * the distant point, normalize, and compare to the current direction
- * vector of the barrel.
- *
- * @param point the point to see if the barrel is aimed at.
- * @return true if it is aimed at the point, false if not
- */
-bool ShootingAI::aimedAt(const Point3D& point)
-{
-   Point3D vec = point - *ship->position;
-   double len = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-   vec = vec / len;
+      wouldHit = curTarget - *ship->position;
+      wouldHit = wouldHit.normalize() * speed * time + *ship->position;
+      dist = wouldHit.distanceFrom(curTarget);
 
-   return vec == aimingAt; 
+   } while (dist > target->radius);
+   lastShotPos = curTarget.normalize();
+
+   return 0;
 }
 
 // kinda useless right now.
@@ -69,16 +81,16 @@ Object3D* ShootingAI::chooseTarget()
 {
 
     // not real yet.
-    std::vector<Object3D*> targets = ship->getRadar()->getFullReading();
+    std::vector<Object3D*> *targets = ship->getRadar()->getFullReading();
 
     std::vector<Object3D*>::iterator targets_iterator;
 
     Point3D* ship_position = ship->position;
 
-    targets_iterator = targets.begin();
+    targets_iterator = targets->begin();
     Object3D* closest = *targets_iterator;
     double shortest_distance = closest->position->distanceFrom( *ship_position );
-    for( ; targets_iterator != targets.end();
+    for( ; targets_iterator != targets->end();
 	 targets_iterator++ )
     {
 	// get closest asteroid
@@ -113,11 +125,10 @@ int ShootingAI::think(double dt)
    // choose weapon
    chooseWeapon( 1 );
 
-   chooseTarget();
+   Object3D* target = chooseTarget();
    // choose target
 
-   // If we aren't aiming at it, better start
-   aimAt(target);
+   aimAt(dt, target);
 
    // Think has a return value just in case it needs to.
    return 0;

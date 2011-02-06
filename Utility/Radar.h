@@ -21,10 +21,10 @@ class Radar {
       virtual ~Radar();
       
       // Provides a complete, unfiltered reading of the whole environment.
-      std::vector<Object3D*>* getFullReading();
+      std::vector<Object3D*>* getFullReading() const;
       
       // Provides a filtered reading of the environment based on what's near the owner AsteroidShip.
-      virtual std::vector<Object3D*>* getNearbyReading();
+      virtual std::vector<Object3D*>* getNearbyReading() const;
       
    private:
       // The ship that owns this Radar
