@@ -16,6 +16,7 @@
  */
 
 #include "AI/ShootingAI.h"
+#include "Items/Asteroid3D.h"
 
 const double ShootingAI::gunRotSpeed = 1.0;
 
@@ -47,8 +48,15 @@ int ShootingAI::aimAt(double dt, Object3D* target)
    double time = 0;
    double dist;
    double len;
+   // Change in position
    Vector3D dp;
-   
+   // Vector that points from the camera towards the target
+   // This only works on the rail gun for now.
+   Vector3D newShotDirection(*ship->position, *target->position);
+   newShotDirection.normalize();
+
+   ship->updateShotDirection(newShotDirection);
+   /*
    Point3D curTarget = *target->position;
    wouldHit = lastShotPos - aimingAt;
    if (wouldHit.magnitude() > target->radius) {
@@ -56,8 +64,11 @@ int ShootingAI::aimAt(double dt, Object3D* target)
       wouldHit = wouldHit * (gunRotSpeed * dt);
       aimingAt = (wouldHit - *ship->position).normalize();
    }
+   */
 
+/*
    do {
+      // time is the distance from the ship to the target
       time = ship->position->distanceFrom(curTarget);
       dp = target->velocity->scalarMultiply(time);
       curTarget = curTarget + Point3D(dp.xMag, dp.yMag, dp.zMag);
@@ -67,7 +78,8 @@ int ShootingAI::aimAt(double dt, Object3D* target)
       dist = wouldHit.distanceFrom(curTarget);
 
    } while (dist > target->radius);
-   lastShotPos = curTarget.normalize();
+   */
+   //lastShotPos = curTarget.normalize();
 
    return 0;
 }
@@ -94,9 +106,10 @@ Object3D* ShootingAI::chooseTarget()
    double shortest_distance = closest->position->distanceFrom( *ship_position );
    
    double distance;
+   Asteroid3D* asteroid;
    for ( ; targets_iterator != targets->end(); targets_iterator++ ) {
       // get closest asteroid
-      if (*targets_iterator == NULL)
+      if (*targets_iterator == NULL || *targets_iterator == ship || NULL == (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) || asteroid->isShard  )
          continue;
       
       distance = (*targets_iterator)->position->distanceFrom( *ship_position );
@@ -132,7 +145,7 @@ int ShootingAI::think(double dt)
    /* This order is tentative. We will probably change it. */
    
    // choose weapon railgun
-   chooseWeapon( 0 );
+   chooseWeapon(1);
 
    Object3D* target = chooseTarget();
    // choose target

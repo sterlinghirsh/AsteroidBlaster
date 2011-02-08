@@ -203,8 +203,12 @@ void AsteroidShip::accelerateRight(int dir) {
 
 void AsteroidShip::update(double timeDiff) {
   //TODO: Make the shooting and AIs think.
-  shooter->think(timeDiff);
-  
+
+  if (shooter->isEnabled()) {
+     shooter->think(timeDiff);
+  } else {
+     updateShotDirectionVector();
+  }
   updateAcceleration();
 
   if (isBraking) {
@@ -223,7 +227,7 @@ void AsteroidShip::update(double timeDiff) {
   pitch(timeDiff * pitchSpeed);
   yaw(timeDiff * yawSpeed);
 
-  updateShotDirectionVector();
+  
 }
 
 /**
