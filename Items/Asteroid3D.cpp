@@ -252,7 +252,8 @@ void Asteroid3D::handleCollision(Object3D* other) {
       custodian->add(makeChild(1));
     }
     if (isShard) {
-      printf("collected shard\n");
+      //printf("you just sharded\n");
+      ship->score += 69;
     }
   } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
     if (!isShard) {
@@ -283,6 +284,7 @@ Asteroid3D* Asteroid3D::makeChild(int num) {
     asteroid->velocity->update(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     asteroid->position->clone(position);
     asteroid->position->x += num == 0 ? radius/2 : -radius/2;
+    asteroid->rotationSpeed *= 10;
   } else {
     asteroid = new Asteroid3D(radius/2, worldSize);
     //asteroid->velocity = asteroid->velocity->scalarMultiply(2);
