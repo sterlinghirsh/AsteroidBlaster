@@ -14,6 +14,12 @@
 class AI {
    public:
       virtual int think(double dt)=0;
+      virtual void enable();
+      virtual void disable();
+      bool isEnabled();
+      
+   protected:
+      bool enabled;
 };
 
 #endif

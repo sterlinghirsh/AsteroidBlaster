@@ -312,6 +312,19 @@ void GameState::keyDown(int key) {
        ship->setShootingAI(true);
        break;
        */
+       
+  case SDLK_g:
+    //TODO: Based on how many shooting AIs this ship has, activate the correct one.
+    if(ship->shooter->isEnabled())
+       ship->shooter->disable();
+    else
+       ship->shooter->enable();
+    
+    break;
+  
+  case SDLK_f:
+    //TODO: ship->enableFlyingAI();
+    break;
   }
 }
 

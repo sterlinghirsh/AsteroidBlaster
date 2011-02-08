@@ -25,6 +25,7 @@
 
 // Incomplete class declaration so we can use pointers.
 class Object3D;
+class AsteroidShip;
 
 class ShootingAI : public AI {
    /* There actually is no need to hold the entire ship.
@@ -44,6 +45,10 @@ class ShootingAI : public AI {
    public:
    ShootingAI(AsteroidShip* owner);
    virtual int think(double dt);
+   // Enable this AI
+   virtual void enable();
+   // Disable this AI. It will stop shooting.
+   virtual void disable();
 
    static const double gunRotSpeed;
 };

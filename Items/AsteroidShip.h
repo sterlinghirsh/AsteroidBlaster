@@ -12,6 +12,7 @@
 #include "Graphics/GlutUtility.h"
 #include "Utility/Object3D.h"
 #include "Utility/Radar.h"
+#include "AI/ShootingAI.h"
 #include <list>
 
 // Later we'll put in a model for the ship.
@@ -24,6 +25,7 @@ extern GLfloat headlight_spec[4];
 // Incomplete declaration so we can use the pointer.
 class AsteroidShot;
 class Radar;
+class ShootingAI;
 
 class AsteroidShip : public Object3D {
    public:
@@ -73,6 +75,10 @@ class AsteroidShip : public Object3D {
       const Radar *getRadar();
       // void getAllVisibleAsteroids();
       // void setShootingAI(bool ai);
+      
+      // A ship has a single flying AI
+      // TODO: A ship has a list of shooting AIs rather than just one
+      ShootingAI* shooter;
       
       int score;
       

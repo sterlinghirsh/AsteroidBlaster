@@ -24,6 +24,8 @@ ShootingAI::ShootingAI(AsteroidShip* owner)
    ship = owner;
    aimingAt = Point3D::Zero;
    lastShotPos = Point3D::Zero;
+   // Start the AI as disabled
+   enabled = false;
    //TODO possibly more stuff here.
 }
 
@@ -41,7 +43,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner)
 int ShootingAI::aimAt(double dt, Object3D* target)
 {
    Point3D wouldHit;
-   double speed = chosenWeapon->getSpeed();
+   double speed = 1;//chosenWeapon->getSpeed();
    double time = 0;
    double dist;
    double len;
@@ -80,33 +82,40 @@ void ShootingAI::chooseWeapon( int weapon )
 Object3D* ShootingAI::chooseTarget()
 {
 
-    // not real yet.
-    std::vector<Object3D*> *targets = ship->getRadar()->getFullReading();
+   // not real yet.
+   std::vector<Object3D*> *targets = ship->getRadar()->getFullReading();
 
-    std::vector<Object3D*>::iterator targets_iterator;
+   std::vector<Object3D*>::iterator targets_iterator;
 
-    Point3D* ship_position = ship->position;
+   Point3D* ship_position = ship->position;
 
-    targets_iterator = targets->begin();
-    Object3D* closest = *targets_iterator;
-    double shortest_distance = closest->position->distanceFrom( *ship_position );
-    for( ; targets_iterator != targets->end();
-	 targets_iterator++ )
-    {
-	// get closest asteroid
-	double distance = (*targets_iterator)->position->distanceFrom( *ship_position );
-	if( distance < shortest_distance )
-	{
-	    shortest_distance = distance;
-            closest = *targets_iterator;
-        } 
-    }
+   targets_iterator = targets->begin();
+   Object3D* closest = *targets_iterator;
+   double shortest_distance = closest->position->distanceFrom( *ship_position );
+   
+   double distance;
+   for ( ; targets_iterator != targets->end(); targets_iterator++ ) {
+      // get closest asteroid
+      if (*targets_iterator == NULL)
+         continue;
+      
+      distance = (*targets_iterator)->position->distanceFrom( *ship_position );
+      if ( distance < shortest_distance )
+      {
+         shortest_distance = distance;
+         closest = *targets_iterator;
+      } 
+   }
 
     return closest;
 }
 
 int ShootingAI::think(double dt)
 {
+   if(!enabled) {
+      return 0;
+   }
+   
    // TODO this is where stuff goes! Should probably figure out the order of
    // the functions.
 
@@ -122,14 +131,24 @@ int ShootingAI::think(double dt)
 
    /* This order is tentative. We will probably change it. */
    
-   // choose weapon
-   chooseWeapon( 1 );
+   // choose weapon railgun
+   chooseWeapon( 0 );
 
    Object3D* target = chooseTarget();
    // choose target
 
    aimAt(dt, target);
+   ship->fire(true);
 
    // Think has a return value just in case it needs to.
    return 0;
+}
+
+void ShootingAI :: enable() {
+   AI :: enable();
+}
+
+void ShootingAI :: disable() {
+   AI :: disable();
+   ship->fire(false);
 }

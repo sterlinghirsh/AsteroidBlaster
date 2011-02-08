@@ -123,6 +123,9 @@ AsteroidShip::AsteroidShip() :
     maxPitchSpeed = 2;
     maxRollSpeed = 2;
 
+    // TODO: create all of the shooters that this ship will have.
+    shooter = new ShootingAI(this);
+    
     // Create our Radar
     //radar = new Radar();
   }
@@ -199,6 +202,9 @@ void AsteroidShip::accelerateRight(int dir) {
 
 
 void AsteroidShip::update(double timeDiff) {
+  //TODO: Make the shooting and AIs think.
+  shooter->think(timeDiff);
+  
   updateAcceleration();
 
   if (isBraking) {
