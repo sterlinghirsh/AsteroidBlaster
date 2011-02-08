@@ -23,6 +23,7 @@ class Asteroid3D : public Object3D {
       double scalex, scaley, scalez;
       double worldSize;
       double sizeX, sizeY, sizeZ, collisionRadius;
+      bool isShard;
       
       Asteroid3D(double r, double worldSizeIn);
       virtual ~Asteroid3D();

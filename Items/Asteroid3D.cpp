@@ -16,9 +16,15 @@ using namespace std;
 
 Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
   Object3D(0, 0, 0, 0) {
+    isShard = false;
     worldSize = worldSizeIn;
     newRandomPosition();
-    InitAsteroid(r, worldSizeIn);
+    if (r < 0) {
+      isShard = true;
+      InitAsteroid(-r, worldSizeIn);
+    } else {
+      InitAsteroid(r, worldSizeIn);
+    }
   }
 
 Asteroid3D::~Asteroid3D() {
@@ -62,8 +68,29 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
   double a = randdouble() * 0.5 + 0.75;
   double b = randdouble() * 0.5 + 0.75;
 
-  int npts = 12;
-  //printf("radius: %f\n", radius);
+  //int npts = 12;
+  /*
+     if (radius <= 1.0) {
+     npts = 6;
+     } else if (radius > 1.0 && radius <= 2.5) {
+     npts = 8;
+     } else if (radius > 2.5 && radius <= 4.0) {
+     npts = 10;
+     } else if (radius > 4.0 && radius <= 5.5) {
+     npts = 12;
+     } else if (radius > 5.5) {
+     npts = 14;
+     }
+     */
+  //printf("radius: %f\tnpts: %d\n", radius, (int)((radius + 3.0) / 1.5) * 2);
+  int npts = (int)((radius + 3.0) / 1.5) * 2;
+
+  if (isShard) {
+    npts = 4;
+  } else if (npts == 4) {
+    npts += 2;
+  }
+
   for (int j = npts / 2; j >= 0; j--) {
     double angle = (M_PI * 2 / (double)npts * (double)j);
     double tmpRad = r * sin(angle);
@@ -136,16 +163,24 @@ void Asteroid3D::draw() {
   glTranslatef(position->x, position->y, position->z);
   glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
   glScalef(scalex, scaley, scalez);
-  glColor3f(0.0, 0.0, 0.0);
-  
+
+  if (isShard) {
+    glColor3f(0.4, 0.5, 0.7);
+  } else {
+    glColor3f(0.0, 0.0, 0.0);
+  }
+
   glPolygonOffset(1.0f, 1.0f);
   glEnable(GL_POLYGON_OFFSET_FILL);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   mesh.draw(false);
   glDisable(GL_POLYGON_OFFSET_FILL);
 
-  //glColor3f(0.325, 0.71, 0.808);
-  glColor3f(0.996, 0.612, 0.0);
+  if (isShard) {
+    glColor3f(0.325, 0.71, 0.808);
+  } else {
+    glColor3f(0.996, 0.612, 0.0);
+  }
   //glLineWidth(2);
   glEnable(GL_POLYGON_OFFSET_LINE);
   glPolygonOffset(-1.0f, -1.0f);
@@ -154,7 +189,7 @@ void Asteroid3D::draw() {
   glDisable(GL_POLYGON_OFFSET_LINE);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   //glLineWidth(1);
-  
+
   glDisable(GL_COLOR_MATERIAL);
   glPopMatrix();
 }
@@ -216,27 +251,48 @@ void Asteroid3D::handleCollision(Object3D* other) {
       custodian->add(makeChild(0));
       custodian->add(makeChild(1));
     }
+    if (isShard) {
+      printf("collected shard\n");
+    }
   } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
-    shouldRemove = true;
-    const int explosionFactor = 3;
-    Sprite::sprites.push_back(
-        new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20,
-          *position, radius * explosionFactor, radius * explosionFactor));
-    if (radius > 2) {
-      custodian->add(makeChild(0));
-      custodian->add(makeChild(1));
+    if (!isShard) {
+      shouldRemove = true;
+      const int explosionFactor = 3;
+      Sprite::sprites.push_back(
+          new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20,
+            *position, radius * explosionFactor, radius * explosionFactor));
+      if (radius > 2) {
+        custodian->add(makeChild(0));
+        custodian->add(makeChild(1));
+      } else {
+        custodian->add(makeChild(-1));
+      }
     }
   }
 }
 
 Asteroid3D* Asteroid3D::makeChild(int num) {
-  Asteroid3D* asteroid = new Asteroid3D(radius/2, worldSize);
-  //asteroid->velocity = asteroid->velocity->scalarMultiply(2);
-  // Make this scalarMultiplyUpdate(2);
-  asteroid->velocity->addUpdate(*asteroid->velocity);
-  asteroid->velocity->addUpdate(*velocity);
-  asteroid->position->clone(position);
-  asteroid->position->x += num == 0 ? radius/2 : -radius/2;
+  Asteroid3D* asteroid;
+  if (num == -1) {
+    asteroid = new Asteroid3D(-0.5, worldSize);
+    //asteroid->isShard = true;
+    //asteroid->velocity = asteroid->velocity->scalarMultiply(2);
+    // Make this scalarMultiplyUpdate(2);
+    //asteroid->velocity->addUpdate(*asteroid->velocity);
+    //asteroid->velocity->addUpdate(*velocity);
+    asteroid->velocity->update(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    asteroid->position->clone(position);
+    asteroid->position->x += num == 0 ? radius/2 : -radius/2;
+  } else {
+    asteroid = new Asteroid3D(radius/2, worldSize);
+    //asteroid->velocity = asteroid->velocity->scalarMultiply(2);
+    // Make this scalarMultiplyUpdate(2);
+    asteroid->velocity->addUpdate(*asteroid->velocity);
+    asteroid->velocity->addUpdate(*velocity);
+    asteroid->position->clone(position);
+    asteroid->position->x += num == 0 ? radius/2 : -radius/2;
+  }
+
 
   return asteroid;
 }
