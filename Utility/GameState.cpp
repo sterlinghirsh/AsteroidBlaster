@@ -209,7 +209,7 @@ void GameState::initAsteroids() {
    custodian.add(spaceHolder);
 
    int numCollisions = 0;
-   for (int i = 0; i < 5; ++i) {
+   for (int i = 0; i < 15; ++i) {
       tempAsteroid = new Asteroid3D(5 + 5 * randdouble(), worldSize);
       custodian.add(tempAsteroid);
       do {
