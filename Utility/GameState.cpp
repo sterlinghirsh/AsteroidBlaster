@@ -307,11 +307,6 @@ void GameState::keyDown(int key) {
   case SDLK_t:
     thirdPerson = true;
     break;
-    /* key to toggle shooting AI
-       case SDLK_O:
-       ship->setShootingAI(true);
-       break;
-       */
        
   case SDLK_g:
     //TODO: Based on how many shooting AIs this ship has, activate the correct one.

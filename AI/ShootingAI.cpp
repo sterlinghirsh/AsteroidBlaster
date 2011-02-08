@@ -94,7 +94,6 @@ void ShootingAI::chooseWeapon( int weapon )
 Object3D* ShootingAI::chooseTarget()
 {
 
-   // not real yet.
    std::vector<Object3D*> *targets = ship->getRadar()->getFullReading();
 
    std::vector<Object3D*>::iterator targets_iterator;
