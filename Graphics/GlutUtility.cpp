@@ -202,8 +202,8 @@ materialStruct GreenShiny = {
 materialStruct BlueShiny = {
   {0.0, 0.0, 0.3, 1.0},
   {0.0, 0.0, 0.9, 1.0},
-  {0.2, 0.2, 1.0, 1.0},
-  {8.0}
+  {0.0, 0.0, 0.0, 1.0},
+  {0.0}
 };
 
 materialStruct RedFlat = {

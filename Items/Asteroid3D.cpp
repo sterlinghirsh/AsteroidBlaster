@@ -303,6 +303,25 @@ double Asteroid3D::randRadius(double r) {
   return (3 * (r / 4)) + ((r / 4) * randdouble());
 }
 
+/**
+ * Subclasses can extend this, but this draws a sphere on the minimap.
+ */
+void Asteroid3D::drawInMinimap() {
+   glPushMatrix();
+      position->glTranslate();
+      if (!isShard) {
+        materials(RedFlat);
+        gluSphere(quadric, 5, 8, 8);
+      } else {
+        //glDisable(GL_LIGHTING);
+        //glColor3f(0.4, 0.5, 0.7);
+        materials(WhiteSolid);
+        gluSphere(quadric, 3, 4, 2);
+        //glEnable(GL_LIGHTING);
+      }
+   glPopMatrix();
+}
+
 void Asteroid3D::debug() {
   printf("Asteroid3D::debug(): \n");
   minPosition->print();
