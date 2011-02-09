@@ -157,10 +157,6 @@ void Quaternion::getAxisAngle(Vector3D *axis, double *angle)
 
 GLfloat* Quaternion::getMatrix()
 {
-	printf("X: %f, ", x);
-	printf("Y: %f, ", y);
-	printf("Z: %f, ", z);
-	printf("W: %f\n", w);
 	float x2 = x * x;
 	float y2 = y * y;
 	float z2 = z * z;
