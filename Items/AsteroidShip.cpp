@@ -8,6 +8,7 @@
 #include "Shots/AsteroidShotBeam.h"
 #include <math.h>
 #include <time.h>
+#include "Utility/Quaternion.h"
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
@@ -484,6 +485,12 @@ void AsteroidShip::draw() {
   Vector3D axis;
   Vector3D upStart(0, 1, 0);
   Vector3D forwardStart(0, 0, 1);
+  
+   Quaternion quat1;
+   Quaternion quat2;
+   Quaternion quat;
+   Quaternion star(0, 0, 0, 1);
+
 
   double angle;
   double forwardAngle;
@@ -497,6 +504,9 @@ void AsteroidShip::draw() {
     axis.updateMagnitude(*up);
   }
 
+   quat1.FromAxis(axis, -angle);
+   quat1.normalize();
+
   forwardStart.rotateByDegrees(angle, axis);
 
   /*printf("Axis: ");
@@ -509,6 +519,13 @@ void AsteroidShip::draw() {
   //exit(0);
   forwardAngle = forwardStart.getAngleInDegrees(*forward);
   if(forward->xMag < 0) forwardAngle = 360 - forwardAngle;
+
+   quat2.FromAxis(*up, -forwardAngle);
+   quat2.normalize();
+   quat = star*quat1*quat2;
+
+   GLfloat *other = quat.getMatrix();
+   GLfloat poo[16] = {other[0], other[1], other[2], other[3], other[4], other[5], other[6], other[7], other[8], other[9], other[10], other[11], other[12], other[13], other[14], other[15]};
   //printf("%f\n", angle);
 
   //for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
@@ -516,7 +533,7 @@ void AsteroidShip::draw() {
   //}
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
-  getStuff();
+  //getStuff();
   //printf("upstart?: %f\n", upstart->xMag);
   //printf("up?: %f\n", up->xMag);
   //upstart = up;
@@ -532,8 +549,7 @@ void AsteroidShip::draw() {
   //if(forwardStart.xMag > 0){
 
   //else{glRotatef(360 - forwardAngle, up->xMag, up->yMag, up->zMag);}
-  glRotatef(forwardAngle, up->xMag, up->yMag, up->zMag);
-  glRotatef(angle, axis.xMag, axis.yMag, axis.zMag);
+  glMultMatrixf(poo);
   glRotatef(180, 0 , 1, 0);
   glScalef(1.5, .5, .8);
 
