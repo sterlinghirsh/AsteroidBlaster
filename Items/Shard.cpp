@@ -1,11 +1,12 @@
 /**
- * Sterling Hirsh
- * Asteroid3D.cpp
- * A randomly generated asteroid object.
+ * Chris Brenton
+ * Shard.cpp
+ * A randomly generated shard object.
  */
 
 #include "Graphics/GlutUtility.h"
 #include "Graphics/Sprite.h"
+#include "Items/Shard.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
 #include "Shots/AsteroidShot.h"
@@ -14,29 +15,17 @@
 
 using namespace std;
 
-Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
+Shard::Shard(double r, double worldSizeIn) :
    Object3D(0, 0, 0, 0) {
       worldSize = worldSizeIn;
-      newRandomPosition();
-      InitAsteroid(r, worldSizeIn);
+      InitShard(r, worldSizeIn);
    }
 
-Asteroid3D::~Asteroid3D() {
+Shard::~Shard() {
 
 }
 
-/**
- * This gives the asteroid a new random position. Useful when
- * initializing them, and not much else.
- */
-void Asteroid3D::newRandomPosition() {
-   position->x = randdouble() * worldSize - worldSize / 2;
-   position->y = randdouble() * worldSize - worldSize / 2;
-   position->z = randdouble() * worldSize - worldSize / 2;
-   updateBoundingBox();
-}
-
-void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
+void Shard::InitShard(double r, double worldSizeIn) {
    double tempRad;
    double x, y, z;
    const double pi = 3.141592;
@@ -47,23 +36,18 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 
    scalex = scaley = scalez = 1;
 
-   rotationSpeed = randdouble() * 100; // Degrees per sec.
+   //rotationSpeed = randdouble() * 100; // Degrees per sec.
+   rotationSpeed = 360 * SPINS_PER_SEC; // Degrees per sec.
    axis = new Vector3D(0, 1, 0);
    axis->randomMagnitude();
 
    velocity = new Vector3D(0, 0, 0);
-   velocity->randomMagnitude();
-   velocity->setLength(randdouble() * 3); // Units per sec.
 
    Ring last;
    double a = randdouble() * 0.5 + 0.75;
    double b = randdouble() * 0.5 + 0.75;
 
-   int npts = (int)((radius + 3.0) / 1.5) * 2;
-
-   if (npts == 4) {
-      npts += 2;
-   }
+   int npts = 4;
 
    for (int j = npts / 2; j >= 0; j--) {
       double angle = (M_PI * 2 / (double)npts * (double)j);
@@ -126,9 +110,9 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    updateBoundingBox();
 }
 
-void Asteroid3D::draw() {
+void Shard::draw() {
    glColor3f(1, 1, 1);
-   materials(Rock);
+   //materials(Rock);
    // Call the display list if it has one.
    Object3D::draw();
    glEnable(GL_COLOR_MATERIAL);
@@ -138,14 +122,14 @@ void Asteroid3D::draw() {
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
 
-   glColor3f(0.0, 0.0, 0.0);
+   glColor3f(0.4, 0.5, 0.7);
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    mesh.draw(false);
    glDisable(GL_POLYGON_OFFSET_FILL);
 
-   glColor3f(0.996, 0.612, 0.0);
+   glColor3f(0.325, 0.71, 0.808);
    //glLineWidth(2);
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
@@ -159,7 +143,7 @@ void Asteroid3D::draw() {
    glPopMatrix();
 }
 
-void Asteroid3D::makeStrip(Ring r1, Ring r2) {
+void Shard::makeStrip(Ring r1, Ring r2) {
    double count = 0.0;
    int last = 0;
    Ring t1, t2;
@@ -196,86 +180,43 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
    }
 }
 
-void Asteroid3D::update(double timeDiff) {
+void Shard::update(double timeDiff) {
    Object3D::update(timeDiff);
    angle += rotationSpeed * timeDiff;
 }
 
-void Asteroid3D::handleCollision(Object3D* other) {
-   Asteroid3D* otherAsteroid;
+void Shard::handleCollision(Object3D* other) {
+   Shard* otherAsteroid;
    AsteroidShip* ship;
    AsteroidShot* shot;
-   if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
-      double speed = velocity->getLength();
-
-      velocity->updateMagnitude(*(otherAsteroid->position), *position);
-      velocity->setLength(speed);
-   } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
+   if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
-      if (radius > 2) {
-         custodian->add(makeChild(0));
-         custodian->add(makeChild(1));
-      }
-   } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
-      shouldRemove = true;
-      const int explosionFactor = 3;
-      Sprite::sprites.push_back(
-            new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20,
-               *position, radius * explosionFactor, radius * explosionFactor));
-      if (radius > 2) {
-         custodian->add(makeChild(0));
-         custodian->add(makeChild(1));
-      } else {
-         custodian->add(makeShard(0));
-         //printf("YOU JUST SHARDED\n");
-      }
+      //printf("you just sharded\n");
+      //ship->score += 69;
+      //ship->numShards++;
    }
 }
 
-Shard* Asteroid3D::makeShard(int num) {
-   Shard* shard;
-   shard = new Shard(0.5, worldSize);
-   shard->velocity->update(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-   shard->position->clone(position);
-   shard->position->x += num == 0 ? radius/2 : -radius/2;
-   return shard;
-}
-
-/**
- * Make a smaller asteroid as the result of an explosion or something.
- * num is the number of asteroid that is produced.
- * This helps with making sure that two asteroids don't intersect.
- */
-Asteroid3D* Asteroid3D::makeChild(int num) {
-   Asteroid3D* asteroid;
-   asteroid = new Asteroid3D(radius/2, worldSize);
-   //asteroid->velocity = asteroid->velocity->scalarMultiply(2);
-   // Make this scalarMultiplyUpdate(2);
-   asteroid->velocity->addUpdate(*asteroid->velocity);
-   asteroid->velocity->addUpdate(*velocity);
-   asteroid->position->clone(position);
-   asteroid->position->x += num == 0 ? radius/2 : -radius/2;
-
-   return asteroid;
-}
-
-double Asteroid3D::randRadius(double r) {
+double Shard::randRadius(double r) {
    return (3 * (r / 4)) + ((r / 4) * randdouble());
 }
 
 /**
  * Subclasses can extend this, but this draws a sphere on the minimap.
  */
-void Asteroid3D::drawInMinimap() {
+void Shard::drawInMinimap() {
    glPushMatrix();
    position->glTranslate();
-   materials(RedFlat);
-   gluSphere(quadric, 5, 8, 8);
+   //glDisable(GL_LIGHTING);
+   //glColor3f(0.4, 0.5, 0.7);
+   materials(WhiteSolid);
+   gluSphere(quadric, 3, 4, 2);
+   //glEnable(GL_LIGHTING);
    glPopMatrix();
 }
 
-void Asteroid3D::debug() {
-   printf("Asteroid3D::debug(): \n");
+void Shard::debug() {
+   printf("Shard::debug(): \n");
    minPosition->print();
    maxPosition->print();
    velocity->print();

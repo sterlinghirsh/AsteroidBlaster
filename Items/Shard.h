@@ -1,21 +1,24 @@
 /**
- * Sterling Hirsh
- * Asteroid3D.h
- * A randomly generated asteroid object.
+ * Chris Brenton
+ * Shard.h
+ * A randomly generated shard object.
  */
 
-#ifndef __ASTEROID3D_H__
-#define __ASTEROID3D_H__
+#ifndef __SHARD_H__
+#define __SHARD_H__
+//#ifndef __ASTEROID3D_H__
+//#define __ASTEROID3D_H__
 
 #include "Graphics/Mesh3D.h"
 #include "Utility/Point3D.h"
 #include "Utility/Object3D.h"
-#include "Items/Shard.h"
-//#include "Items/Ring.h"
+#include "Items/Ring.h"
 #include <list>
 #include <vector>
 
-class Asteroid3D : public Object3D {
+#define SPINS_PER_SEC 2
+
+class Shard : public Object3D {
    public:
       Mesh3D mesh;
       Vector3D rotationVector;
@@ -24,21 +27,17 @@ class Asteroid3D : public Object3D {
       double scalex, scaley, scalez;
       double worldSize;
       double sizeX, sizeY, sizeZ, collisionRadius;
-      
-      Asteroid3D(double r, double worldSizeIn);
-      virtual ~Asteroid3D();
-      void InitAsteroid(double r, double worldSizeIn);
+
+      Shard(double r, double worldSizeIn);
+      virtual ~Shard();
+      void InitShard(double r, double worldSizeIn);
       void draw();
       void makeStrip(Ring r1, Ring r2);
       void update(double timeDiff);
       virtual void handleCollision(Object3D* other);
-      bool handleHit(std::list<Asteroid3D*>& asteroids);
-      Shard* makeShard(int num);
-      Asteroid3D* makeChild(int num);
-      void newRandomPosition();
+      bool handleHit(std::list<Shard*>& asteroids);
       void drawInMinimap();
       void debug();
-      
 
    private:
       double randRadius(double r);

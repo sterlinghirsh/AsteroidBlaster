@@ -147,7 +147,11 @@ Object3D* ShootingAI::chooseTarget()
    Asteroid3D* asteroid;
    for ( ; targets_iterator != targets->end(); targets_iterator++ ) {
       // get closest asteroid
-      if (*targets_iterator == NULL || *targets_iterator == ship || NULL == (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) || asteroid->isShard  )
+      //if (*targets_iterator == NULL || *targets_iterator == ship || NULL == (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) || asteroid->isShard  )
+      // Trying this with shard subclass
+      // IF THE AI BREAKS, REMOVE THIS
+      if (*targets_iterator == NULL || *targets_iterator == ship || NULL == (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) || dynamic_cast<Shard*>(*targets_iterator) != NULL)
+      // END OF NEW CODE
          continue;
       
       distance = (*targets_iterator)->position->distanceFrom( *ship_position );

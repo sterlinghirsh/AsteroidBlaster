@@ -33,6 +33,7 @@ class AsteroidShip : public Object3D {
       AsteroidShip();
       int getHealth();
       int getScore();
+      int getNumShards();
       double getAimX();
       double getAimY();
       void updateAcceleration();
@@ -54,7 +55,7 @@ class AsteroidShip : public Object3D {
        * These are going to be the functions that either the local player
        * or the AI player or the networked player will call.
        * Essentially, this is the ship's API.
-       * 
+       *
        * We give accelerateForward, Right, Up either -1, 0, or 1 to mean
        * backward, none, or forward. You can either fully accelerate or not.
        * Rotation is the opposite. You supply a value, this clamps it and sets it.
@@ -77,17 +78,18 @@ class AsteroidShip : public Object3D {
       const Radar *getRadar();
       // void getAllVisibleAsteroids();
       // void setShootingAI(bool ai);
-      
+
       // A ship has a single flying AI
       // TODO: A ship has a list of shooting AIs rather than just one
       ShootingAI* shooter;
       
       int score;
-      
+      int numShards;
+
    private:
       Vector3D shotDirection; // If we shoot a shot, where will it go?
-      Radar* radar; // This is the ship's radar that it should query for information about its surroundings 
-      
+      Radar* radar; // This is the ship's radar that it should query for information about its surroundings
+
       double brakeFactor;
       double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.
 
@@ -108,7 +110,7 @@ class AsteroidShip : public Object3D {
       double curForwardAccel; // Units per second^2
       double curRightAccel;
       double curUpAccel;
-      
+
       double yawSpeed; // Rad/s
       double pitchSpeed;
       double rollSpeed;

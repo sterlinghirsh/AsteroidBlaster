@@ -2,7 +2,7 @@
  * Sterling Hirsh
  * CPE 471
  * 10-19-10
- * 
+ *
  * Mesh3D: An object to store and display a 3D mesh.
  */
 
