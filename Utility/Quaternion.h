@@ -19,7 +19,7 @@ class Quaternion {
       Quaternion getConjugate();
       Quaternion operator*(const Quaternion &rq) const;
       Vector3D operator*(Vector3D &vec);
-      void FromAxis(Vector3D &v, double angle);
+      void FromAxis(const Vector3D &v, double angle);
       void FromEuler(double pitch, double yaw, double roll);
       void getAxisAngle(Vector3D *axis, double *angle);
       void Rotate(Vector3D rotVec, double angle);

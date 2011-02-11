@@ -53,9 +53,17 @@ void Custodian::update() {
    while (objectsToAdd.size() > 0) {
       // Get the first item in the list.
       tempObject = objectsToAdd.front();
+      if (tempObject == NULL) {
+         printf("Trying to insert null object.\n");
+         objectsToAdd.pop_front();
+         continue;
+      }
+      // Run the update function to make sure everything is right.
+      tempObject->update(0);
       // Add the item to the sorted lists.
       objectsByMinX.push_back(tempObject);
       objectsByMaxX.push_back(tempObject);
+      tempObject->debug();
       // Remove the item.
       objectsToAdd.pop_front();
    }
@@ -115,6 +123,8 @@ void Custodian::remove(Object3D* objectIn) {
    if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
       asteroidCount--;
    }
+   printf("Deleting:\n");
+   objectIn->debug();
    delete objectIn;
 }
 

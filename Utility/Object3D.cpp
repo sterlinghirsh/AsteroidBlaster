@@ -206,9 +206,12 @@ void Object3D::setCustodian(Custodian *cust) {
    custodian = cust;
 }
 
+/**
+ * This debug function can be overridden with more specific debug info.
+ * This one does not print velocity, since Object3D may have null velocity.
+ */
 void Object3D::debug() {
-   printf("Object3D::debug(): (min/max/velocity)\n");
+   printf("Object3D::debug(): (min/max)\n");
    minPosition->print();
    maxPosition->print();
-   velocity->print();
 }

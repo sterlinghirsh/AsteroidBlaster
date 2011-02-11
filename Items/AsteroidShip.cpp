@@ -482,6 +482,7 @@ void AsteroidShip::rotate(){
 }
 
 void AsteroidShip::draw() {
+   return;
   Vector3D axis;
   Vector3D upStart(0, 1, 0);
   Vector3D forwardStart(0, 0, 1);

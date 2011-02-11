@@ -70,3 +70,12 @@ void AsteroidShot::handleCollision(Object3D* other) {
 void AsteroidShot::drawInMinimap() {
    return;
 }
+
+void AsteroidShot::debug() {
+   printf("AsteroidShot: (min, max, position, velocity)\n");
+   minPosition->print();
+   maxPosition->print();
+   position->print();
+   velocity->print();
+   printf("--\n");
+}

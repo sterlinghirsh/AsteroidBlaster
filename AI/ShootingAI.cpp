@@ -40,9 +40,12 @@ ShootingAI::ShootingAI(AsteroidShip* owner)
  *
  * @param dt time difference since last frame, for gun turning.
  * @return no idea, really. Just leaving this open in case I think of something
+ * TODO: Make this work. I (Sterling) was getting huge values for wouldHit.
+ * This is almost certainly a bug.
  */
 int ShootingAI::aimAt(double dt, Object3D* target)
 {
+   return 0;
    Point3D wouldHit;
    double speed = 20;//chosenWeapon->getSpeed();
    double time = 0;
@@ -56,6 +59,8 @@ int ShootingAI::aimAt(double dt, Object3D* target)
    // Calculate the vector that points from our current direction to where
    // we want to be pointing.
    wouldHit = lastShotPos - aimingAt;
+   printf("In aimAt:\n");
+   wouldHit.print();
 
    // If the difference is more than the radius of the target,
    // we need to adjust where we are aiming.
@@ -96,6 +101,8 @@ int ShootingAI::aimAt(double dt, Object3D* target)
       // now points to where our bullet will be when the asteroid is at
       // its position
       wouldHit = wouldHit.normalize() * speed * time + *ship->position;
+      printf("wouldHit: ");
+      wouldHit.print();
 
       // Dist is the distance from where our bullet will be to where
       // the asteroid will be.
@@ -109,6 +116,8 @@ int ShootingAI::aimAt(double dt, Object3D* target)
    // at in order to hit our target.
    lastShotPos = (curTarget - *ship->position).normalize();
    aimingAt = lastShotPos;
+   printf("aimingAt: ");
+   aimingAt.print();
    ship->updateShotDirection(aimingAt);
 
    return 0;

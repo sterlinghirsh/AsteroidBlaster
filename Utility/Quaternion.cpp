@@ -72,7 +72,7 @@ Vector3D Quaternion::operator*(Vector3D &vec)
 	return (Vector3D(resQuat.x, resQuat.y, resQuat.z));
 }
 
-void Quaternion::FromAxis(Vector3D &v, double angle)
+void Quaternion::FromAxis(const Vector3D &v, double angle)
 {
 	double sinAngle;
 	double otherAngle = (angle / (180/3.14159265)) * .5;

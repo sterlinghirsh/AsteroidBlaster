@@ -32,6 +32,7 @@ class AsteroidShot : public Object3D {
       virtual void update(double timeDiff);
       virtual void handleCollision(Object3D* other);
       virtual void drawInMinimap();
+      virtual void debug();
 };
 
 #endif
