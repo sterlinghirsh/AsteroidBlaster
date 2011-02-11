@@ -43,6 +43,7 @@ class AsteroidShip : public Object3D {
       // We'll have to update this later so the AI can use it.
       void updateShotDirection(double xOffset, double yOffset);
       void updateShotDirection(Vector3D dir);
+      void updateShotDirection(Point3D dir);
       void keepFiring();
       virtual void draw();
       virtual void drawInMinimap();

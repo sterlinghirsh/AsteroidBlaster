@@ -35,7 +35,7 @@ GameState::GameState(double worldSizeIn) {
   mouseX = 0;
   mouseY = 0;
 
-  scoreToWin = 1000;
+  scoreToWin = 10000;
   thirdPerson = false;
 }
 

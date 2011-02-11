@@ -23,7 +23,7 @@ class Quaternion {
       void FromEuler(double pitch, double yaw, double roll);
       void getAxisAngle(Vector3D *axis, double *angle);
       void Rotate(Vector3D rotVec, double angle);
-      GLfloat* getMatrix();
+      void getMatrix(GLfloat*);
       void print();
 
 };

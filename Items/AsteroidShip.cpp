@@ -524,8 +524,8 @@ void AsteroidShip::draw() {
    quat2.normalize();
    quat = star*quat1*quat2;
 
-   GLfloat *other = quat.getMatrix();
-   GLfloat poo[16] = {other[0], other[1], other[2], other[3], other[4], other[5], other[6], other[7], other[8], other[9], other[10], other[11], other[12], other[13], other[14], other[15]};
+   GLfloat quatMatrix[16];
+   quat.getMatrix(quatMatrix);
   //printf("%f\n", angle);
 
   //for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
@@ -549,7 +549,7 @@ void AsteroidShip::draw() {
   //if(forwardStart.xMag > 0){
 
   //else{glRotatef(360 - forwardAngle, up->xMag, up->yMag, up->zMag);}
-  glMultMatrixf(poo);
+  glMultMatrixf(quatMatrix);
   glRotatef(180, 0 , 1, 0);
   glScalef(1.5, .5, .8);
 
@@ -617,4 +617,8 @@ void AsteroidShip::updateShotDirection(Vector3D dir) {
 
 const Radar *AsteroidShip::getRadar() {
   return radar;
+}
+
+void AsteroidShip::updateShotDirection(Point3D dir) {
+   shotDirection = Vector3D(dir.x, dir.y, dir.z);
 }

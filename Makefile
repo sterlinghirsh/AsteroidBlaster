@@ -55,7 +55,7 @@ turnin:
 	handin zwood csc471finalwebs2
 
 valgrind:
-	valgrind --track-origins=yes ./${PROGNAME}
+	valgrind -v --track-origins=yes ./${PROGNAME}
 
 gdb:
 	gdb ./${PROGNAME}

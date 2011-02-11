@@ -155,7 +155,7 @@ void Quaternion::getAxisAngle(Vector3D *axis, double *angle)
 
 }*/
 
-GLfloat* Quaternion::getMatrix()
+void Quaternion::getMatrix(GLfloat* matri)
 {
 	float x2 = x * x;
 	float y2 = y * y;
@@ -166,19 +166,22 @@ GLfloat* Quaternion::getMatrix()
 	float wx = w * x;
 	float wy = w * y;
 	float wz = w * z;
- 
-        GLfloat matri[16] = {
+    
+   GLfloat matrix[16] = {
   			1.0f - 2.0f * (y2 + z2), 2.0f * (xy - wz), 2.0f * (xz + wy), 0.0f,
 			2.0f * (xy + wz), 1.0f - 2.0f * (x2 + z2), 2.0f * (yz - wx), 0.0f,
 			2.0f * (xz - wy), 2.0f * (yz + wx), 1.0f - 2.0f * (x2 + y2), 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f
 			};
-
+   
+   for (int i = 0; i < 16; i++) {
+      matri[i] = matrix[i];
+   }
 	//GLfloat *other = (GLfloat*)matri;
 	// This calculation would be a lot more complicated for non-unit length quaternions
 	// Note: The constructor of Matrix4 expects the Matrix in column-major format like expected by
 	//   OpenGL
-	return matri;
+	//return matri;
 }
 
 void Quaternion::print(){
