@@ -272,6 +272,11 @@ void Asteroid3D::handleCollision(Object3D* other) {
   }
 }
 
+/**
+ * Make a smaller asteroid as the result of an explosion or something.
+ * num is the number of asteroid that is produced.
+ * This helps with making sure that two asteroids don't intersect.
+ */
 Asteroid3D* Asteroid3D::makeChild(int num) {
   Asteroid3D* asteroid;
   if (num == -1) {
