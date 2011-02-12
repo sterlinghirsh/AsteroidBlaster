@@ -137,7 +137,7 @@ void display() {
    // Draw the main screen
    glPushMatrix();
    gameState->draw();
-
+         
    drawSprites();
    drawCrosshair();
 

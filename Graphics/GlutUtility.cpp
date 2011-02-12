@@ -191,6 +191,13 @@ materialStruct WhiteSolid = {
   {1.0}
 };
 
+materialStruct BlackSolid = {
+  {0, 0, 0, 1},
+  {0.0, 0.0, 0.0, 1},
+  {0.0, 0.0, 0.0, 1},
+  {0.0}
+};
+
 
 materialStruct GreenShiny = {
   {0.0, 0.3, 0.0, 1.0},
@@ -209,6 +216,13 @@ materialStruct BlueShiny = {
 materialStruct RedFlat = {
   {0.3, 0.0, 0.0, 1.0},
   {0.9, 0.0, 0.0, 1.0},
+  {0.0, 0.0, 0.0, 1.0},
+  {0.0}
+};
+
+materialStruct YellowFlat = {
+  {0.3, 0.3, 0.0, 1.0},
+  {0.9, 0.9, 0.0, 1.0},
   {0.0, 0.0, 0.0, 1.0},
   {0.0}
 };

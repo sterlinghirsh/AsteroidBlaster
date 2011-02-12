@@ -10,6 +10,7 @@
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
 #include "Shots/AsteroidShot.h"
+#include "Shots/AsteroidShotBeam.h"
 #include <algorithm>
 #include <math.h>
 
@@ -19,12 +20,12 @@ using namespace std;
  * Basic constructor.
  */
 Shard::Shard(double r, double worldSizeIn) :
-   Object3D(0, 0, 0, 0) {
-      worldSize = worldSizeIn;
-      orbiters = glGenLists(1);
-      genOrbiters();
-      InitShard(r, worldSizeIn);
-   }
+ Object3D(0, 0, 0, 0) {
+   worldSize = worldSizeIn;
+   orbiters = glGenLists(1);
+   genOrbiters();
+   InitShard(r, worldSizeIn);
+}
 
 /*
  * Virtual destructor.
@@ -180,6 +181,47 @@ void Shard::InitShard(double r, double worldSizeIn) {
    updateBoundingBox();
 }
 
+void drawOtherOrbiters() {
+   double curTime = doubleTime();
+   const int numBalls = 1;
+
+   // Make it so balls will draw evenly spaced.
+   double increment = M_PI * (2.0 / numBalls);
+   double t; // parameter for parametric function.
+   double dx, dy, dz;
+   glPushMatrix();
+   int j;
+   //glScalef(3, 3, 3);
+   materials(WhiteSolid);
+   //materials(BlackSolid);
+   for (int i = 0; i < numBalls; ++i) {
+      t = 5 * curTime + increment * i;
+
+      for (j = 0; j < 3; ++j) {
+         dx = 0;
+         dy = 0;
+         dz = 0;
+         if (j % 3 == 0) {
+            dx = sin(t);
+            dy = cos(t);
+         }
+         if (j % 3 == 1) {
+            dy = sin(t + M_PI * 4/ 3);
+            dz = cos(t + M_PI * 4 / 3);
+         }
+         if (j % 3 == 2) {
+            dz = sin(t + M_PI * 2 / 3);
+            dx = cos(t + M_PI * 2 / 3);
+         }
+         glPushMatrix();
+         glTranslatef(dx, dy, dz);
+         gluSphere(quadric, 0.1f, 16, 16);
+         glPopMatrix();
+      }
+   }
+   glPopMatrix();
+}
+
 void Shard::draw() {
    glColor3f(1, 1, 1);
    // Call the display list if it has one.
@@ -214,6 +256,7 @@ void Shard::draw() {
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glPopMatrix();
 
+   drawOtherOrbiters();
    // For each ring of orbiters, rotate the proper amount.
    for (int i = 0; i < NUM_ORBIT_RINGS; i++) {
       ORBITER_CLR;
@@ -318,10 +361,15 @@ void Shard::handleCollision(Object3D* other) {
       velocity->updateMagnitude(*(asteroid->position), *position);
       velocity->setLength(speed);
    } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
-      // Set speed to between the speed of the shot and the current speed.
-      double speed = shot->velocity->getLength();
-      speed += velocity->getLength() * 2;
-      speed /= 3;
+      double speed;
+      if (dynamic_cast<AsteroidShotBeam*>(other) != NULL) {
+         speed = 40; // High speed from hard-hitting railgun.
+      } else {
+         // Set speed to between the speed of the shot and the current speed.
+         speed = shot->velocity->getLength();
+         speed += velocity->getLength() * 2;
+         speed /= 3;
+      }
       velocity->updateMagnitude(*(shot->position), *position);
       velocity->setLength(speed);
    }

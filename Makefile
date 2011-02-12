@@ -5,7 +5,8 @@ UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
    PLATFORMSPECIFICCFLAGS=-I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
 #-I/home/rkudo/library/SDL_ttf-2.0.10/
-   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -lSDL -lpthread 
+   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -lSDL -lpthread
+
 #-lSDL_ttf -L/home/rkudo/library/SDL_ttf-2.0.10/.libs/
 else
    PLATFORMSPECIFICCFLAGS=-I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
@@ -13,8 +14,7 @@ else
 
 endif
 
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g `sdl-config --libs`
-
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g  `sdl-config --libs`
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files

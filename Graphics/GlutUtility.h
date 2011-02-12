@@ -60,8 +60,10 @@ void init_tex();
 extern materialStruct GreenShiny;
 extern materialStruct BlueShiny;
 extern materialStruct RedFlat;
+extern materialStruct YellowFlat;
 extern materialStruct WhiteTransparent;
 extern materialStruct WhiteSolid;
+extern materialStruct BlackSolid;
 extern materialStruct Rock;
 
 typedef struct RGB {
