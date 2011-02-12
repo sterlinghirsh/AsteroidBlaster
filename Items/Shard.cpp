@@ -15,16 +15,82 @@
 
 using namespace std;
 
+/*
+ * Basic constructor.
+ */
 Shard::Shard(double r, double worldSizeIn) :
    Object3D(0, 0, 0, 0) {
       worldSize = worldSizeIn;
+      orbiters = glGenLists(1);
+      genOrbiters();
       InitShard(r, worldSizeIn);
    }
 
+/*
+ * Virtual destructor.
+ */
 Shard::~Shard() {
 
 }
 
+/*
+ * Create a display list for the shard's orbiters.
+ */
+void Shard::genOrbiters() {
+   glNewList(orbiters, GL_COMPILE);
+   glDisable(GL_LIGHTING);
+   if (CUBE_MODE) {
+      glBegin(GL_QUADS);
+
+      // Front face
+      glVertex3f(-1.0f, -1.0f,  1.0f);
+      glVertex3f( 1.0f, -1.0f,  1.0f);
+      glVertex3f( 1.0f,  1.0f,  1.0f);
+      glVertex3f(-1.0f,  1.0f,  1.0f);
+
+      // Back Face
+      glVertex3f(-1.0f, -1.0f, -1.0f);
+      glVertex3f(-1.0f,  1.0f, -1.0f);
+      glVertex3f( 1.0f,  1.0f, -1.0f);
+      glVertex3f( 1.0f, -1.0f, -1.0f);
+
+      // Top Face
+      glVertex3f(-1.0f,  1.0f, -1.0f);
+      glVertex3f(-1.0f,  1.0f,  1.0f);
+      glVertex3f( 1.0f,  1.0f,  1.0f);
+      glVertex3f( 1.0f,  1.0f, -1.0f);
+
+      // Bottom Face
+      glVertex3f(-1.0f, -1.0f, -1.0f);
+      glVertex3f( 1.0f, -1.0f, -1.0f);
+      glVertex3f( 1.0f, -1.0f,  1.0f);
+      glVertex3f(-1.0f, -1.0f,  1.0f);
+
+      // Right face
+      glVertex3f( 1.0f, -1.0f, -1.0f);
+      glVertex3f( 1.0f,  1.0f, -1.0f);
+      glVertex3f( 1.0f,  1.0f,  1.0f);
+      glVertex3f( 1.0f, -1.0f,  1.0f);
+
+      // Left Face
+      glVertex3f(-1.0f, -1.0f, -1.0f);
+      glVertex3f(-1.0f, -1.0f,  1.0f);
+      glVertex3f(-1.0f,  1.0f,  1.0f);
+      glVertex3f(-1.0f,  1.0f, -1.0f);
+
+      glEnd();
+   } else {
+      GLUquadricObj *q;
+      q = gluNewQuadric();
+      gluSphere(q, 1.0, 4, 4);
+   }
+   glEnable(GL_LIGHTING);
+   glEndList();
+}
+
+/*
+ * Initialize the shard.
+ */
 void Shard::InitShard(double r, double worldSizeIn) {
    double tempRad;
    double x, y, z;
@@ -36,7 +102,6 @@ void Shard::InitShard(double r, double worldSizeIn) {
 
    scalex = scaley = scalez = 1;
 
-   //rotationSpeed = randdouble() * 100; // Degrees per sec.
    rotationSpeed = 360 * SPINS_PER_SEC; // Degrees per sec.
    axis = new Vector3D(0, 1, 0);
    axis->randomMagnitude();
@@ -49,10 +114,12 @@ void Shard::InitShard(double r, double worldSizeIn) {
 
    int npts = 4;
 
+   // Make essentially an asteroid with three levels, containing one, four,
+   // and one points around the radius, respectively.
    for (int j = npts / 2; j >= 0; j--) {
-      double angle = (M_PI * 2 / (double)npts * (double)j);
-      double tmpRad = r * sin(angle);
-      double tmpH = r * cos(angle);
+      double tmpangle = (M_PI * 2 / (double)npts * (double)j);
+      double tmpRad = r * sin(tmpangle);
+      double tmpH = r * cos(tmpangle);
       int tmpPts = npts * (tmpRad / r);
       if (tmpPts < 0) {
          tmpPts *= -1;
@@ -74,6 +141,7 @@ void Shard::InitShard(double r, double worldSizeIn) {
    minZ = _rList[0].minZ();
    maxZ = _rList[0].maxZ();
 
+   // Determine the max and min x, y, and z of this shard.
    for (unsigned i = 0; i < _rList.size(); i++) {
       if (_rList[i].minX() < minX) {
          minX = _rList[i].minX();
@@ -95,10 +163,12 @@ void Shard::InitShard(double r, double worldSizeIn) {
       }
    }
 
+   // Connect the rings from the beginning of _rList to the halfway point.
    for (unsigned i = 1; i <= _rList.size() / 2; i++) {
       makeStrip(_rList[i - 1], _rList[i]);
    }
 
+   // Connect the rings from the halfway point of _rList to the end.
    for (unsigned i = _rList.size() / 2; i < _rList.size() - 1; i++) {
       makeStrip(_rList[i], _rList[i + 1]);
    }
@@ -106,43 +176,83 @@ void Shard::InitShard(double r, double worldSizeIn) {
    sizeX = maxX - minX;
    sizeY = maxY - minY;
    sizeZ = maxZ - minZ;
-   collisionRadius = radius;
+   collisionRadius = radius * 2.0;
    updateBoundingBox();
 }
 
 void Shard::draw() {
    glColor3f(1, 1, 1);
-   //materials(Rock);
    // Call the display list if it has one.
    Object3D::draw();
+   // Disable materials.
    glEnable(GL_COLOR_MATERIAL);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
+   // Push matrix and draw main shard.
+   glPushMatrix();
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
 
    glColor3f(0.4, 0.5, 0.7);
+   // Set polygon offset to be behind the lines.
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   // Draw all triangles in the mesh with smoothing turned off.
    mesh.draw(false);
    glDisable(GL_POLYGON_OFFSET_FILL);
 
    glColor3f(0.325, 0.71, 0.808);
-   //glLineWidth(2);
-   glEnable(GL_POLYGON_OFFSET_LINE);
+   // Set polygon offset to be in front of the faces.
    glPolygonOffset(-1.0f, -1.0f);
+   glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+   // Draw the lines that border the mesh's triangles.
    mesh.drawLines(false);
    glDisable(GL_POLYGON_OFFSET_LINE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   //glLineWidth(1);
+   glPopMatrix();
+
+   // For each ring of orbiters, rotate the proper amount.
+   for (int i = 0; i < NUM_ORBIT_RINGS; i++) {
+      ORBITER_CLR;
+      double tilt = 180.0 / (double)NUM_ORBIT_RINGS;
+      glRotatef(tilt, axis->xMag, axis->yMag, axis->zMag);
+      glPushMatrix();
+      // Calculate the current rotation for the current orbiter ring.
+      // Alternates between positive and negative.
+      double tmpRot = ORBIT_RATE * angle * 2.0 * (1.0 + 0.1 * i);
+      for (int j = 0; j < i; j++) {
+         tmpRot *= -1;
+      }
+      glRotatef(tmpRot, 0, 1, 0);
+      glScalef(scalex, scaley, scalez);
+      //double initAngle = (double)rand() / (double)RAND_MAX
+      double initAngle = 360.0 / NUM_ORBIT_RINGS * i;
+      for (int k = 0; k < NUM_ORBITERS; k++) {
+         //printf("ring %d, orbiter %d, tilt[%d] = %f\n", i, k, i, tilt * i);
+         glPushMatrix();
+         // Rotate each orbiter by the appropriate amount to form a ring.
+         glRotatef(360.0 / NUM_ORBITERS * k + initAngle, 0, 1, 0);
+         // Move the orbiter away from the origin to set the ring's radius.
+         glTranslatef(RING_RAD, 0.0, 0.0);
+         glScalef(ORBITER_RAD, ORBITER_RAD, ORBITER_RAD);
+         // Draw an orbiter from the list.
+         glCallList(orbiters);
+         glPopMatrix();
+      }
+      glPopMatrix();
+   }
 
    glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();
 }
 
+/*
+ * Connect two Ring objects by making triangles from the points and adding them to
+ * this shard's mesh.
+ */
 void Shard::makeStrip(Ring r1, Ring r2) {
    double count = 0.0;
    int last = 0;
@@ -180,23 +290,46 @@ void Shard::makeStrip(Ring r1, Ring r2) {
    }
 }
 
+/*
+ * Update the shard's rotation and position based on elapsed time.
+ */
 void Shard::update(double timeDiff) {
    Object3D::update(timeDiff);
    angle += rotationSpeed * timeDiff;
-}
-
-void Shard::handleCollision(Object3D* other) {
-   Shard* otherAsteroid;
-   AsteroidShip* ship;
-   AsteroidShot* shot;
-   if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
-      shouldRemove = true;
-      //printf("you just sharded\n");
-      //ship->score += 69;
-      //ship->numShards++;
+   double speed = velocity->getLength();
+   if (speed != 0.0) {
+      speed *= (1.0 - DECEL_RATE * timeDiff);
+      velocity->setLength(speed);
    }
 }
 
+/*
+ * Handle a collision with another Object3D.
+ */
+void Shard::handleCollision(Object3D* other) {
+   AsteroidShip* ship;
+   Asteroid3D* asteroid;
+   AsteroidShot* shot;
+   if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
+      shouldRemove = true;
+   } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+      // Set speed to the speed of the asteroid.
+      double speed = asteroid->velocity->getLength();
+      velocity->updateMagnitude(*(asteroid->position), *position);
+      velocity->setLength(speed);
+   } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
+      // Set speed to between the speed of the shot and the current speed.
+      double speed = shot->velocity->getLength();
+      speed += velocity->getLength() * 2;
+      speed /= 3;
+      velocity->updateMagnitude(*(shot->position), *position);
+      velocity->setLength(speed);
+   }
+}
+
+/*
+ * Generate a random radius.
+ */
 double Shard::randRadius(double r) {
    return (3 * (r / 4)) + ((r / 4) * randdouble());
 }

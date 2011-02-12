@@ -10,13 +10,22 @@
 //#define __ASTEROID3D_H__
 
 #include "Graphics/Mesh3D.h"
+#include "Graphics/GlutUtility.h"
 #include "Utility/Point3D.h"
 #include "Utility/Object3D.h"
 #include "Items/Ring.h"
 #include <list>
 #include <vector>
 
-#define SPINS_PER_SEC 2
+#define SPINS_PER_SEC 0.5
+#define NUM_ORBITERS 1
+#define NUM_ORBIT_RINGS 8
+#define ORBITER_RAD (radius / 3.0)
+#define RING_RAD (radius * 4.0)
+#define ORBIT_RATE -0.5
+#define CUBE_MODE 0
+#define DECEL_RATE 0.2
+#define ORBITER_CLR glColor3f(0.2, 0.5, 0.8)
 
 class Shard : public Object3D {
    public:
@@ -27,9 +36,11 @@ class Shard : public Object3D {
       double scalex, scaley, scalez;
       double worldSize;
       double sizeX, sizeY, sizeZ, collisionRadius;
+      GLuint orbiters;
 
       Shard(double r, double worldSizeIn);
       virtual ~Shard();
+      void genOrbiters();
       void InitShard(double r, double worldSizeIn);
       void draw();
       void makeStrip(Ring r1, Ring r2);
