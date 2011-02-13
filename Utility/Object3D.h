@@ -47,6 +47,7 @@ class Object3D {
       virtual void debug();
 
       void setCustodian(Custodian* cust);
+      void glRotate(bool doTranspose = true);
    private:
 
    protected:

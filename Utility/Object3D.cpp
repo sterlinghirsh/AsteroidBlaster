@@ -8,6 +8,7 @@
 #include "Utility/Object3D.h"
 #include <math.h>
 #include <algorithm>
+#include "Utility/Matrix4x4.h"
 
 Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
  position(new Point3D(x, y, z)) {
@@ -213,4 +214,27 @@ void Object3D::debug() {
    printf("Object3D::debug(): (min/max)\n");
    minPosition->print();
    maxPosition->print();
+}
+
+/**
+ * This will apply a rotation to move the current up/forward/right vectors
+ * so that the item can be drawn with the right orientation.
+ * doTranspose defaults to true.
+ */
+void Object3D::glRotate(bool doTranspose) {
+   static Matrix4x4 modelViewMatrix;
+   // Switch to ModelView mode.
+   glMatrixMode(GL_MODELVIEW);
+   glPushMatrix();
+      // Create a new matrix.
+      glLoadIdentity();
+      // Make the modelview matrix be the rotation vector from the ship's forward and up vectors to the new ones.
+      gluLookAt(0, 0, 0, forward->xMag, forward->yMag, forward->zMag,
+       up->xMag, up->yMag, up->zMag);
+      // Save a copy of the inverse model view matrix.
+      glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&modelViewMatrix);
+      if (doTranspose)
+         modelViewMatrix.doTranspose();
+   glPopMatrix();
+   glMultMatrixf((GLfloat*)&modelViewMatrix);
 }

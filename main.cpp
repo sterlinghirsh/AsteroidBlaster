@@ -165,10 +165,6 @@ void display() {
 
       materials(WhiteSolid);
 
-      glRotatef(0.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
-      glRotatef(0,0.0f,1.0f,0.0f);	   /* Rotate By 0 On The Y-Axis */
-      glRotatef(0,0.0f,0.0f,1.0f);	   /* Rotate By 0 On The Z-Axis */
-
       // eye, lookAt, and up vectors
       gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
       

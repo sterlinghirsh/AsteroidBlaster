@@ -30,7 +30,7 @@ GameState::GameState(double worldSizeIn) {
 
   // Set up objects.
   custodian.add(ship);
-  numAsteroidsToSpawn = 15;
+  numAsteroidsToSpawn = 3;
   initAsteroids();
   doYaw = 0;
   mouseX = 0;
@@ -100,12 +100,13 @@ void GameState::drawInMinimap() {
    std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading();
 
    glPushMatrix();
+      ship->glRotate(false);
       Vector3D oppositeOfPosition(*(ship->position));
       
       // Translate everything so that the ship is at 0, 0 and everything is centered there.
       oppositeOfPosition.updateMagnitude(oppositeOfPosition);
       glScalef(0.05, 0.05, 0.05);
-      glRotatef(180, 0, 1, 0);
+      //glRotatef(180, 0, 1, 0);
       oppositeOfPosition.glTranslate(-1);
       
       // For each item that needs to be drawn in the minimap

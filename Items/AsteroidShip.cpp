@@ -239,6 +239,7 @@ void AsteroidShip::keepFiring() {
 }
 
 void draw_ship(){
+   glScalef(1.5, .5, .8);
 
    glBegin(GL_TRIANGLES);
 
@@ -425,11 +426,16 @@ void draw_vectors(){
 
 }
 
+/**
+ * Draw an adorable little ship in the minimap.
+ */
 void AsteroidShip::drawInMinimap() {
    glPushMatrix();
    position->glTranslate();
-   materials(GreenShiny);
-   gluSphere(quadric, 5, 8, 8);
+   // Counteract the rotation done in GameState::drawInMinimap();
+   glRotate();
+   glScalef(15, 15, 15);
+   draw_ship();
    glPopMatrix();
 }
 
@@ -453,95 +459,12 @@ void AsteroidShip::rotate(){
 
 void AsteroidShip::draw() {
    glPushMatrix();
-   position->glTranslate();
-   materials(Cyan);
-   gluSphere(quadratic, 0.2, 20, 20);
+      // Translate to the position.
+      position->glTranslate();
+      // Rotate to the current up/right/forward vectors.
+      glRotate();
+      draw_ship();
    glPopMatrix();
-   return;
-   Vector3D axis;
-   Vector3D upStart(0, 1, 0);
-   Vector3D forwardStart(0, 0, 1);
-
-   Quaternion quat1;
-   Quaternion quat2;
-   Quaternion quat;
-   Quaternion star(0, 0, 0, 1);
-
-
-   double angle;
-   double forwardAngle;
-   //if(up->zMag
-   axis = upStart.cross(*up);
-   axis.normalize();
-   angle = upStart.getAngleInDegrees(*up);
-
-   // rotate forward about up
-   if(axis.getLength() == 0){
-      axis.updateMagnitude(*up);
-   }
-
-   quat1.FromAxis(axis, -angle);
-   quat1.normalize();
-
-   forwardStart.rotateByDegrees(angle, axis);
-
-   /*printf("Axis: ");
-     axis.print();
-     printf("Up: ");
-     up->print();
-     printf("ForwardStart: ");
-     forward->print();*/
-   //if(up->yMag != 1) exit(0);
-   //exit(0);
-   forwardAngle = forwardStart.getAngleInDegrees(*forward);
-   if(forward->xMag < 0) forwardAngle = 360 - forwardAngle;
-
-   quat2.FromAxis(*up, -forwardAngle);
-   quat2.normalize();
-   quat = star*quat1*quat2;
-
-   GLfloat quatMatrix[16];
-   quat.getMatrix(quatMatrix);
-   //printf("%f\n", angle);
-
-   //for (shotIter = shots.begin(); shotIter != shots.end(); shotIter++) {
-   //(*shotIter)->draw();
-   //}
-   glMatrixMode(GL_MODELVIEW);
-   glPushMatrix();
-   //getStuff();
-   //printf("upstart?: %f\n", upstart->xMag);
-   //printf("up?: %f\n", up->xMag);
-   //upstart = up;
-   //rotate();
-   //position->glTranslate();
-   //rotate();
-   //glRotatef(forward->xMag * 90, 0, 1, 0);
-   //glRotatef(up->zMag * 90, 1, 0, 0);
-   //glRotatef((1 - up->yMag) * 90 - (1 - forward->zMag) * 90, 0, 0, 1);
-   //glRotatef(-angle, x, y, z);
-   forwardStart.draw();
-   //glRotatef(forwardAngle, up->xMag, up->yMag, up->zMag);
-   //if(forwardStart.xMag > 0){
-
-   //else{glRotatef(360 - forwardAngle, up->xMag, up->yMag, up->zMag);}
-   glMultMatrixf(quatMatrix);
-   glRotatef(180, 0 , 1, 0);
-   glScalef(1.5, .5, .8);
-
-   draw_ship();
-   glPushMatrix();
-   glTranslatef(0, 0, 1);
-   draw_vectors();
-   glPopMatrix();
-   glPopMatrix();
-   //printf("upstart?: %f\n", upstart->yMag);
-   //printf("upstart?: %f\n", up->xMag);
-   //i/f(change % 2 > 0){
-   //upstart = up;
-   //printf("Angle?: %f\n", up->zMag);
-
-   //}
 }
 
 /**
