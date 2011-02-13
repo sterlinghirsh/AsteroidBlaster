@@ -298,6 +298,11 @@ void GameState::keyDown(int key) {
     doYaw = !doYaw;
     ship->setRollSpeed(0);
     break;
+    
+  case SDLK_p:
+    std::cout << "meh: (" << ship->position->x << "," << ship->position->y << "," << ship->position->z << ")" << std::endl;
+    Particle::Add(new Point3D(*ship->position), new Vector3D(1,0,0));
+    break;
 
   case SDLK_b:
     ship->setBrake(true);

@@ -50,6 +50,34 @@ typedef struct materialStruct {
   GLfloat shininess[1];
 } materialStruct;
 
+static materialStruct black = {
+  {0.0, .0, 0.0, 1.0},
+  {0.0, 0.0, 0.0, 1.0},
+  {0.0, 0.0, 0.0, 1.0},
+  {0.0}
+};
+
+static materialStruct Cyan = {
+  {0.0, 1, 1, 1.0},
+  {0.0, 1, 1, 1.0},
+  {0.2, 1.0, 1.0, 1.0},
+  {50.0}
+};
+
+static materialStruct Orange = {
+  {1, .27, 0.0, 1.0},
+  {1, .27, 0.0, 1.0},
+  {1.0, .27, 0.0, 1.0},
+  {50.0}
+};
+
+static materialStruct white = {
+  {.5, .5, .5, 1.0},
+  {1, 1, 1, 1.0},
+  {1, 1, 1, 1.0},
+  {100}
+};
+
 void materials(materialStruct materials);
 double doubleTime();
 void useOrtho();

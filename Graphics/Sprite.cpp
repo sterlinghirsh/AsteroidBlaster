@@ -35,7 +35,14 @@ Sprite::Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn,
    startTime = doubleTime();
    oneShot = true;
 }
-      
+
+void Sprite::Add(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
+ Point3D posIn, double drawWidth, double drawHeight) {
+ 
+   sprites.push_back(new Sprite(filename, framesXIn, framesYIn, fpsIn,
+               posIn, drawWidth, drawHeight));
+}
+ 
 bool Sprite::draw(Point3D* eyePoint) {
    // Do rotation and translation here.
    // Also update the current frame.

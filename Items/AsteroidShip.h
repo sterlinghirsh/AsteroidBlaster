@@ -134,6 +134,8 @@ class AsteroidShip : public Object3D {
       void upAcceleration(double newAcc);
 
       double xOff, yOff;
+      
+      GLUquadricObj *quadratic;
 };
 
 #endif

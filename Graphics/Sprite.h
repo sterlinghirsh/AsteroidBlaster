@@ -33,6 +33,8 @@ class Sprite {
 
       Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
        Point3D posIn, double drawWidth, double drawHeight);
+      static void Add(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
+       Point3D posIn, double drawWidth, double drawHeight);
       bool draw(Point3D* eyePoint);
 };
 

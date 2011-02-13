@@ -15,6 +15,7 @@
 #include "Graphics/TextureImporter.h"
 #include "Graphics/Skybox.h"
 #include "Graphics/Sprite.h"
+#include "Graphics/Particle.h"
 #include "Graphics/Camera.h"
 #include "Items/BoundingSpace.h"
 #include "Utility/BitmapTextDisplay.h"
@@ -135,6 +136,7 @@ void display() {
    gameState->draw();
          
    Sprite::drawSprites();
+   Particle::drawParticles();
    drawCrosshair();
 
    glPopMatrix();
@@ -253,6 +255,7 @@ void initSDL() {
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
    glEnable(GL_BLEND);
+   glEnable( GL_TEXTURE_2D );
    init_light();
    init_tex();
 }
@@ -300,6 +303,11 @@ int main(int argc, char* argv[]) {
    
    // Preload texture.
    new TextureImporter("Images/SkybusterExplosion.bmp");
+
+   //if(!Particle::LoadGLTextures()){
+   //   std::cout << "particle texture loading failed!" << std::endl;
+   //   exit(0);
+   //}
 
    materials(Rock);
    quadric = gluNewQuadric();
