@@ -8,6 +8,8 @@
 #ifndef __PLANE_H__
 #define __PLANE_H__
 
+#include <math.h>
+
 class Plane {
    public:
       float a;
@@ -25,7 +27,7 @@ class Plane {
       }
 
       bool onPositiveSide(Object3D* obj) {
-         return
+         return 
             distanceTo(obj->maxPosition->x, obj->maxPosition->y, obj->maxPosition->z) > 0 ||
             distanceTo(obj->maxPosition->x, obj->maxPosition->y, obj->minPosition->z) > 0 ||
             distanceTo(obj->maxPosition->x, obj->minPosition->y, obj->maxPosition->z) > 0 ||
@@ -35,6 +37,23 @@ class Plane {
             distanceTo(obj->minPosition->x, obj->minPosition->y, obj->maxPosition->z) > 0 ||
             distanceTo(obj->minPosition->x, obj->minPosition->y, obj->minPosition->z) > 0;
       }
+      
+      void print() {
+         printf("A, B, C, D: %f, %f, %f, %f\n", a, b, c, d);
+      }
+      
+      void printNormalized() {
+         float tmpA, tmpB, tmpC,tmpD;
+         float mag = sqrt((a*a) + (b*b) + (c*c));
+         tmpA = a/mag;
+         tmpB = b/mag;
+         tmpC = c/mag;
+         tmpD = d/mag;
+         
+         printf("Normalized A, B, C, D: %f, %f, %f, %f\n", tmpA, tmpB, tmpC, tmpD);
+         
+      }
+      
 
    private:
 

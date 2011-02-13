@@ -67,7 +67,7 @@ std::list<Object3D*>* Radar :: getNearbyReading() {
    {
       checkee = *vectorIter;
       
-      // If the object is within 
+      // If the object is within the required nearby distance to be drawn
       if(checkee != NULL && owner->position->distanceFrom(*(checkee->position)) <= REQUIRED_NEARBY_DIST)
       {
          nearList->push_back(checkee);
@@ -86,5 +86,11 @@ std::list<Object3D*>* Radar :: getViewFrustumReading() {
    // Turn the vector of all Objects into a list, & cull it
    std::list<Object3D*>* culledList = curFrustum->cullToViewFrustum(all);
    
+   //curFrustum->print();
+   
+   for (listIter = culledList->begin(); listIter != culledList->end(); ++listIter)
+   {
+     (*listIter)->debug();
+   }  
    return culledList;
 }

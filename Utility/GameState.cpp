@@ -30,7 +30,7 @@ GameState::GameState(double worldSizeIn) {
 
   // Set up objects.
   custodian.add(ship);
-  numAsteroidsToSpawn = 20;
+  numAsteroidsToSpawn = 15;
   initAsteroids();
   doYaw = 0;
   mouseX = 0;
@@ -118,7 +118,6 @@ void GameState::drawInMinimap() {
 }
 
 void GameState::draw() {
-   std::list<Object3D*>* objects = ship->getRadar()->getFullReading();//getViewFrustumReading();
    // Draw all of the text objects to the screen.
    drawAllText();
    
@@ -133,6 +132,10 @@ void GameState::draw() {
    camera->setCamera(true);
    skybox->draw(camera);
    cube->draw();
+   
+   // Get a list of all of the objects after culling them down to the view frustum.
+   std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
+   
    for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
       if (*listIter == NULL)
          continue;

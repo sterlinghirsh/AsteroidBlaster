@@ -47,15 +47,19 @@ std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* a
    // Set up an iterator to go over the list.
    std::vector<Object3D*> :: iterator iter;
 
-   // Update our model view matrix.
+   // Save a copy of the model view matrix.
    glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&modelViewMatrix);
    
+   // Switch to the Projection Matrix.
    glMatrixMode(GL_PROJECTION);
    glPushMatrix();
+      // Multiply the model view matrix onto the projection matrix
       glMultMatrixf((GLfloat*)&modelViewMatrix);
-      // Update our projection matrix.
+      // Save the new composite matrix, which holds the magic key to our view frustum's planes.
       glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat*)&projMatrix);
+   // Do all this inside push and pop so we don't mess up the real Projection Matrix.
    glPopMatrix();
+   // Switch back to the Modelview Matrix.
    glMatrixMode(GL_MODELVIEW);
 
    // Load values for the left clipping plane.
@@ -95,7 +99,7 @@ std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* a
    far->d = projMatrix._44 - projMatrix._34;
  
    // As opposed to the checker, the one doing the checking. 
-   Object3D* checkee; 
+   Object3D* checkee;
    // call checkOutside() on each of the Object3D's in all.
    // Build a new set of Object3D's out of each of the ones that got back false.
    for (iter = all->begin(); iter != all->end(); ++iter)
@@ -105,5 +109,48 @@ std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* a
          returnMe->push_back(checkee);
    }
    return returnMe;
+}
+
+/* Prints out details about all of the planes of the view frustum.
+ */
+void ViewFrustum :: print() {
+   printf("Top plane:\n");
+   top->print();
+   printf("----------\n");
+   printf("Bottom plane:\n");
+   bottom->print();
+   printf("----------\n");
+   printf("Left plane:\n");
+   left->print();
+   printf("----------\n");
+   printf("Right plane:\n");
+   right->print();
+   printf("----------\n");
+   printf("Near plane:\n");
+   near->print();
+   printf("----------\n");
+   printf("Far plane:\n");
+   far->print();
+   printf("----------\n");
+   
+   printf("NORMALIZED:\n");
+   printf("Top plane:\n");
+   top->printNormalized();
+   printf("----------\n");
+   printf("Bottom plane:\n");
+   bottom->printNormalized();
+   printf("----------\n");
+   printf("Left plane:\n");
+   left->printNormalized();
+   printf("----------\n");
+   printf("Right plane:\n");
+   right->printNormalized();
+   printf("----------\n");
+   printf("Near plane:\n");
+   near->printNormalized();
+   printf("----------\n");
+   printf("Far plane:\n");
+   far->printNormalized();
+   printf("----------\n");
 }
 

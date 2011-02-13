@@ -24,6 +24,10 @@ class ViewFrustum {
        * that are inside the view frustum.
        */
       virtual std::list<Object3D*>* cullToViewFrustum(std::vector<Object3D*>* all);
+      
+      /* Prints out details about all of the planes of the view frustum.
+       */
+      virtual void print();
 
    private:
       Matrix4x4 projMatrix;
