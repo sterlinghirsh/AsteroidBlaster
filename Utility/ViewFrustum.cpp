@@ -101,7 +101,7 @@ std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* a
    for (iter = all->begin(); iter != all->end(); ++iter)
    {
       checkee = *iter;
-      if(!checkOutside(checkee))
+      if(checkee != NULL && !checkOutside(checkee))
          returnMe->push_back(checkee);
    }
    return returnMe;

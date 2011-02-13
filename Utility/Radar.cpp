@@ -14,6 +14,7 @@ extern GameState* gameState;
 
 Radar :: Radar(AsteroidShip* const ship) {
    owner = ship;
+   curFrustum = new ViewFrustum();
 }
 
 /* Deconstructor shouldn't need to do anything
@@ -79,13 +80,11 @@ std::list<Object3D*>* Radar :: getNearbyReading() {
 /* Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
  */
 std::list<Object3D*>* Radar :: getViewFrustumReading() {
-   curFrustum = new ViewFrustum();
-   
    // Get the custodian out of gameState, and get its vector of Objects.
-   std::vector<Object3D*>* tmp (gameState->custodian.getListOfObjects());
+   std::vector<Object3D*>* all (gameState->custodian.getListOfObjects());
    
    // Turn the vector of all Objects into a list, & cull it
-   std::list<Object3D*>* culledList; //= curFrustum->cullToViewFrustum(&tmp);
+   std::list<Object3D*>* culledList = curFrustum->cullToViewFrustum(all);
    
    return culledList;
 }

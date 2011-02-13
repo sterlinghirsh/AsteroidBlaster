@@ -30,13 +30,15 @@ GameState::GameState(double worldSizeIn) {
 
   // Set up objects.
   custodian.add(ship);
+  numAsteroidsToSpawn = 20;
   initAsteroids();
   doYaw = 0;
   mouseX = 0;
   mouseY = 0;
 
-  scoreToWin = 10000;
+  scoreToWin = 15000;
   thirdPerson = false;
+
 }
 
 /**
@@ -55,7 +57,7 @@ void GameState::update(double timeDiff) {
    std::set<Object3D*>::iterator otherObject;
 
    // Determine whether or not the game should continue running
-   if(ship->getHealth() <= 0) {
+   if (ship->getHealth() <= 0) {
       gameIsRunning = false;
    } else if (ship->getScore() >= scoreToWin) {
       gameIsRunning = false;
@@ -94,29 +96,32 @@ void GameState::update(double timeDiff) {
  * Draw objects in the minimap.
  */
 void GameState::drawInMinimap() {
-  // Get a reading of all the nearby Object3Ds from the Radar
-  std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading();
-  
-  glPushMatrix();
-     Vector3D oppositeOfPosition(*(ship->position));
-     // Translate everything so that the ship is at 0, 0 and everything is centered there.
-     oppositeOfPosition.updateMagnitude(oppositeOfPosition);
-     glScalef(0.05, 0.05, 0.05);
-     glRotatef(180, 0, 1, 0);
-     oppositeOfPosition.glTranslate(-1);
-     for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
-       if (*listIter == NULL)
-         continue;
-       (*listIter)->drawInMinimap();
-     }
-  glPopMatrix();
+   // Get a reading of all the nearby Object3Ds from the Radar
+   std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading();
 
+   glPushMatrix();
+      Vector3D oppositeOfPosition(*(ship->position));
+      
+      // Translate everything so that the ship is at 0, 0 and everything is centered there.
+      oppositeOfPosition.updateMagnitude(oppositeOfPosition);
+      glScalef(0.05, 0.05, 0.05);
+      glRotatef(180, 0, 1, 0);
+      oppositeOfPosition.glTranslate(-1);
+      
+      // For each item that needs to be drawn in the minimap
+      for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
+         // Make sure it's not null, & then draw it in the minimap
+         if (*listIter != NULL)
+            (*listIter)->drawInMinimap();
+      }
+   glPopMatrix();
 }
 
 void GameState::draw() {
-   std::vector<Object3D*>* objects = custodian.getListOfObjects();
+   std::list<Object3D*>* objects = ship->getRadar()->getFullReading();//getViewFrustumReading();
    // Draw all of the text objects to the screen.
    drawAllText();
+   
    if (thirdPerson) {
       Vector3D newOffset(ship->forward->scalarMultiply(-3));
       newOffset.addUpdate(ship->up->scalarMultiply(0.5));
@@ -128,12 +133,12 @@ void GameState::draw() {
    camera->setCamera(true);
    skybox->draw(camera);
    cube->draw();
-   for (item = objects->begin(); item != objects->end(); ++item) {
-      if (*item == NULL)
+   for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
+      if (*listIter == NULL)
          continue;
       // Don't draw the ship in thirdPerson mode.
-      if (thirdPerson || (*item != ship)) {
-         (*item)->draw();
+      if (thirdPerson || (*listIter != ship)) {
+         (*listIter)->draw();
       }
    }
 }
@@ -146,45 +151,45 @@ void GameState::draw() {
  */
 void GameState::drawAllText() {
    glPushMatrix();
-   useOrtho();
+      useOrtho();
 
-   /* Set the camera using the location of your eye,
-   * the location where you're looking at, and the up vector.
-   * The camera is set to be just 0.25 behind where you're looking at.
-   */
-   gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
+      /* Set the camera using the location of your eye,
+      * the location where you're looking at, and the up vector.
+      * The camera is set to be just 0.25 behind where you're looking at.
+      */
+      gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
 
-   /* Use orthonormal view so the text stays perpendicular
-   * to the camera at all times.
-   */
+      /* Use orthonormal view so the text stays perpendicular
+      * to the camera at all times.
+      */
 
-   /* We need to disable the lighting temporarily
-   * in order to set the color properly.
-   */
-   glDisable(GL_LIGHTING);
+      /* We need to disable the lighting temporarily
+      * in order to set the color properly.
+      */
+      glDisable(GL_LIGHTING);
 
-   /* Don't draw stuff in front of the text. */
-   //glDisable(GL_DEPTH_TEST);
+      /* Don't draw stuff in front of the text. */
+      //glDisable(GL_DEPTH_TEST);
 
-   // If the player lost, draw the game over text
-   if(!gameIsRunning && ship->getHealth() <= 0){
-    gameOverText->draw();
-   }
+      // If the player lost, draw the game over text
+      if (!gameIsRunning && ship->getHealth() <= 0) {
+         gameOverText->draw();
+      }
 
-   // If the player won, draw the win text
-   else if (!gameIsRunning && ship->getHealth() > 0) {
-    winText->draw();
-   }
+      // If the player won, draw the win text
+      else if (!gameIsRunning && ship->getHealth() > 0) {
+         winText->draw();
+      }
 
-   // Draw all of the BitmapTextDisplay objects.
-   FPSText->draw();
-   numAsteroidsText->draw();
-   scoreText->draw();
-   healthText->draw();
+      // Draw all of the BitmapTextDisplay objects.
+      FPSText->draw();
+      numAsteroidsText->draw();
+      scoreText->draw();
+      healthText->draw();
 
-   glEnable(GL_LIGHTING);
-   //glEnable(GL_DEPTH_TEST);
-   usePerspective();
+      glEnable(GL_LIGHTING);
+      //glEnable(GL_DEPTH_TEST);
+      usePerspective();
    glPopMatrix();
 }
 
@@ -192,43 +197,45 @@ void GameState::drawAllText() {
  * Update the values contained in all of the texts.
  */
 void GameState::updateText() {
-  FPSText->updateBody(curFPS);
-  numAsteroidsText->updateBody(custodian.asteroidCount);
-  scoreText->updateBody(ship->getScore());
-  healthText->updateBody(ship->getHealth());
+   FPSText->updateBody(curFPS);
+   numAsteroidsText->updateBody(custodian.asteroidCount);
+   scoreText->updateBody(ship->getScore());
+   healthText->updateBody(ship->getHealth());
 }
 
 void GameState::checkCollisions() {
 }
 
 void GameState::initAsteroids() {
-  Asteroid3D* tempAsteroid;
-  std::set<Object3D*>* collisions;
+   Asteroid3D* tempAsteroid;
+   std::set<Object3D*>* collisions;
 
-  /* We want this spaceHolder because we don't want to spawn asteroids
+   /* We want this spaceHolder because we don't want to spawn asteroids
    * too close to the ship.
    */
-  Object3D* spaceHolder = new Object3D(0, 0, 0, 0);
-  spaceHolder->minX = spaceHolder->minY = spaceHolder->minZ = -10;
-  spaceHolder->maxX = spaceHolder->maxY = spaceHolder->maxZ = 10;
-  custodian.add(spaceHolder);
+   Object3D* spaceHolder = new Object3D(0, 0, 0, 0);
+   spaceHolder->minX = spaceHolder->minY = spaceHolder->minZ = -10;
+   spaceHolder->maxX = spaceHolder->maxY = spaceHolder->maxZ = 10;
+   custodian.add(spaceHolder);
 
-  int numCollisions = 0;
-  for (int i = 0; i < 15; ++i) {
-    tempAsteroid = new Asteroid3D(5 + 5 * randdouble(), worldSize);
-    custodian.add(tempAsteroid);
-    do {
-      custodian.update();
-      collisions = custodian.findCollisions(tempAsteroid, true);
-      numCollisions = collisions->size();
-      if (numCollisions > 0) {
-        tempAsteroid->newRandomPosition();
-      }
-      delete collisions;
-    } while (numCollisions > 0);
-  }
-  custodian.remove(spaceHolder);
-  custodian.update();
+   int numCollisions = 0;
+   // Spawn the initial asteroids for the game.
+   for (int i = 0; i < numAsteroidsToSpawn; ++i) {
+      tempAsteroid = new Asteroid3D(5 + 5 * randdouble(), worldSize);
+      // Add each asteroid to the custodian so we know of its existence.
+      custodian.add(tempAsteroid);
+      do {
+         custodian.update();
+         collisions = custodian.findCollisions(tempAsteroid, true);
+         numCollisions = collisions->size();
+         if (numCollisions > 0) {
+            tempAsteroid->newRandomPosition();
+         }
+         delete collisions;
+      } while (numCollisions > 0);
+   }
+   custodian.remove(spaceHolder);
+   custodian.update();
 }
 
 void GameState::setCurFPS(double fpsIn) {

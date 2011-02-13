@@ -300,7 +300,7 @@ void Asteroid3D::drawInMinimap() {
    glPushMatrix();
    position->glTranslate();
    materials(RedFlat);
-   gluSphere(quadric, 5, 8, 8);
+   gluSphere(quadric, 4, 10, 10);
    glPopMatrix();
 }
 

@@ -133,62 +133,62 @@ void display() {
 
    // Draw the main screen
    glPushMatrix();
-   gameState->draw();
-         
-   Sprite::drawSprites();
-   Particle::drawParticles();
-   drawCrosshair();
+      gameState->draw();
+            
+      Sprite::drawSprites();
+      Particle::drawParticles();
+      drawCrosshair();
 
    glPopMatrix();
    
    // Draw the minimap
    glPushMatrix();
-   /* Set the viewport to 3/4 of the way across the screen on the bottom.
-    * It should take up the bottom right corner of the screen.
-    */
-   glViewport (GW*0.66, 0, GW/3, GH/3);
-   glMatrixMode (GL_PROJECTION);		/* Select The Projection Matrix */
-   glLoadIdentity ();							/* Reset The Projection Matrix */
+      /* Set the viewport to 3/4 of the way across the screen on the bottom.
+       * It should take up the bottom right corner of the screen.
+       */
+      glViewport (GW*0.66, 0, GW/3, GH/3);
+      glMatrixMode (GL_PROJECTION);		/* Select The Projection Matrix */
+      glLoadIdentity ();							/* Reset The Projection Matrix */
 
-   // Keep our aspect ratio relative to the global width and height
-   gluPerspective(VERT_FOV, (double)GW/GH, 1, 200);
+      // Keep our aspect ratio relative to the global width and height
+      gluPerspective(VERT_FOV, (double)GW/GH, 1, 200);
 
-   glMatrixMode (GL_MODELVIEW);		/* Select The Projection Matrix */
-   glLoadIdentity ();								/* Reset The Modelview Matrix */
+      glMatrixMode (GL_MODELVIEW);		/* Select The Projection Matrix */
+      glLoadIdentity ();								/* Reset The Modelview Matrix */
 
-   glClear (GL_DEPTH_BUFFER_BIT);		/* Clear Depth Buffer */
+      glClear (GL_DEPTH_BUFFER_BIT);		/* Clear Depth Buffer */
 
-   GLUquadricObj *quadric;			/* The Quadric Object */
-   quadric=gluNewQuadric();									/* Create A Pointer To The Quadric Object */
-   gluQuadricNormals(quadric, GLU_SMOOTH);		/* Create Smooth Normals */
-   gluQuadricTexture(quadric, GL_TRUE);			/* Create Texture Coords */
+      GLUquadricObj *quadric;			/* The Quadric Object */
+      quadric=gluNewQuadric();									/* Create A Pointer To The Quadric Object */
+      gluQuadricNormals(quadric, GLU_SMOOTH);		/* Create Smooth Normals */
+      gluQuadricTexture(quadric, GL_TRUE);			/* Create Texture Coords */
 
-   materials(WhiteSolid);
+      materials(WhiteSolid);
 
-   glRotatef(0.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
-   glRotatef(0,0.0f,1.0f,0.0f);	/* Rotate By 0 On The Y-Axis */
-   glRotatef(0,0.0f,0.0f,1.0f);	/* Rotate By 0 On The Z-Axis */
+      glRotatef(0.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
+      glRotatef(0,0.0f,1.0f,0.0f);	   /* Rotate By 0 On The Y-Axis */
+      glRotatef(0,0.0f,0.0f,1.0f);	   /* Rotate By 0 On The Z-Axis */
 
-   // eye, lookAt, and up vectors
-   gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
-   
-   //glLoadIdentity ();								/* Reset The Modelview Matrix */
-   
-   glColor3f(0.1, 0.8, 0.1);
-   // Draw a flat cylinder with radius 2 at top and bottom, 0.5 height, 2 slice, and 2 stack.
-   glPushMatrix();
-      glRotatef(-90.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
-      glDisable(GL_LIGHTING);
-         gluDisk(gluNewQuadric(),1.8,1.9,35,35);
-         gluDisk(gluNewQuadric(),2.1,2.2,35,35);
-         gluDisk(gluNewQuadric(),2.4,2.5,35,35);
-      glEnable(GL_LIGHTING);
-   glPopMatrix();
-   
-   // Draw objects in the map.
-   gameState->drawInMinimap();
+      // eye, lookAt, and up vectors
+      gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
+      
+      //glLoadIdentity ();								/* Reset The Modelview Matrix */
+      
+      glColor3f(0.1, 0.8, 0.1);
+      // Draw a flat cylinder with radius 2 at top and bottom, 0.5 height, 2 slice, and 2 stack.
+      glPushMatrix();
+         glRotatef(-90.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
+         glDisable(GL_LIGHTING);
+            gluDisk(gluNewQuadric(),1.8,1.9,35,35);
+            gluDisk(gluNewQuadric(),2.1,2.2,35,35);
+            gluDisk(gluNewQuadric(),2.4,2.5,35,35);
+         glEnable(GL_LIGHTING);
+      glPopMatrix();
+      
+      // Draw objects in the map.
+      gameState->drawInMinimap();
 
-   //glEnd();						/* Done Drawing The Textured Quad */	
+      //glEnd();						/* Done Drawing The Textured Quad */	
       
    glPopMatrix();
 

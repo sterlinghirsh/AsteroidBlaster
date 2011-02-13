@@ -70,6 +70,7 @@ class GameState : public InputReceiver {
       double mouseX, mouseY;
       int scoreToWin;
       bool thirdPerson;
+      int numAsteroidsToSpawn;
 
       Skybox* skybox;
       Camera* camera;
