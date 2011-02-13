@@ -292,7 +292,7 @@ void GameState::keyDown(int key) {
 
   case SDLK_LSHIFT:
   case SDLK_RSHIFT:
-    doYaw = true;
+    doYaw = !doYaw;
     ship->setRollSpeed(0);
     break;
 
@@ -305,7 +305,7 @@ void GameState::keyDown(int key) {
     break;
 
   case SDLK_t:
-    thirdPerson = true;
+    thirdPerson = !thirdPerson;
     break;
        
   case SDLK_g:
@@ -353,17 +353,8 @@ void GameState::keyUp(int key) {
     ship->accelerateUp(0);
     break;
 
-  case SDLK_LSHIFT:
-  case SDLK_RSHIFT:
-    doYaw = false;
-    break;
-
   case SDLK_b:
     ship->setBrake(false);
-    break;
-
-  case SDLK_t:
-    thirdPerson = false;
     break;
   }
 }
