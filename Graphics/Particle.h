@@ -17,12 +17,13 @@ class Particle {
       static void drawParticles();
       static void update(double timeDifference);
       bool draw(Point3D* eyePoint);
+      bool step(double timeDifference);
       
       static void Add(Point3D* pos, Vector3D* vec);
        
       Particle(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
       Point3D posIn, double drawWidth, double drawHeight);
-      static GLuint texture; 
+      static GLuint texture;
       
    private:
       Point3D* position;

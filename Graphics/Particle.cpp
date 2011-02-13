@@ -76,7 +76,6 @@ void Particle::update(double timeDifference)
          continue;
       }
    }
-   
 }
 
 bool Particle::step(double timeDifference)
@@ -157,11 +156,11 @@ void Particle::drawParticles()
    list<Particle*>::iterator particle = Particle::particles.begin();
    for (; particle != Particle::particles.end(); particle++) 
    {
-      (*particle)->draw(gameState->ship->position));
+      (*particle)->draw(gameState->ship->position);
    }
    
    glPopMatrix();
-   glEnable(GL_COLOR_MATERIAL);
+   //glEnable(GL_COLOR_MATERIAL);
    /* Draw it to the screen */
    //SDL_GL_SwapBuffers( );
    

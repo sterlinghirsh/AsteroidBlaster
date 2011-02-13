@@ -75,6 +75,8 @@ void GameState::update(double timeDiff) {
    custodian.update();
    // Get updated list.
    objects = custodian.getListOfObjects();
+   
+   Particle::update(timeDiff);
 
    for (item = objects->begin(); item != objects->end(); ++item) {
       collisions = custodian.findCollisions(*item, false);
