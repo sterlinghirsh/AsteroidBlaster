@@ -9,9 +9,15 @@
 #define __RADAR_H__
 
 #include "Items/AsteroidShip.h"
+#include "Utility/ViewFrustum.h"
+#include "Utility/GameState.h"
+#include <list>
 
 // Incomplete declaration so we can use the pointer.
 class AsteroidShip;
+
+// The distance which objects must be within to be returned by getNearbyReading()
+const double REQUIRED_NEARBY_DIST = 50.0;
 
 class Radar {
    public:
@@ -21,16 +27,22 @@ class Radar {
       virtual ~Radar();
       
       // Provides a complete, unfiltered reading of the whole environment.
-      std::vector<Object3D*>* getFullReading() const;
+      std::list<Object3D*>* getFullReading();
       
       // Provides a filtered reading of the environment based on what's near the owner AsteroidShip.
-      virtual std::vector<Object3D*>* getNearbyReading() const;
+      virtual std::list<Object3D*>* getNearbyReading();
+      
+      // Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
+      virtual std::list<Object3D*>* getViewFrustumReading();
       
    private:
       // The ship that owns this Radar
       AsteroidShip* owner;
-      
-   protected:
+      ViewFrustum* curFrustum;
+      // Set up a list iterator to go over a list.
+      std::list<Object3D*> :: iterator listIter;
+      // Set up a vector iterator to go over a vector.
+      std::vector<Object3D*> :: iterator vectorIter;
 
 };
 

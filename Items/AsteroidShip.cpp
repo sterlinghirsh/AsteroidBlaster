@@ -128,7 +128,7 @@ AsteroidShip::AsteroidShip() :
       shooter = new ShootingAI(this);
 
       // Create our Radar
-      //radar = new Radar();
+      radar = new Radar(this);
    }
 
 /**
@@ -618,7 +618,7 @@ void AsteroidShip::updateShotDirection(Vector3D dir) {
    shotDirection = dir;
 }
 
-const Radar *AsteroidShip::getRadar() {
+Radar *AsteroidShip::getRadar() {
    return radar;
 }
 

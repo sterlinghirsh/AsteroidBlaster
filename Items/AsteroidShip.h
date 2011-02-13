@@ -75,7 +75,7 @@ class AsteroidShip : public Object3D {
       void selectWeapon(int weaponType);
 
       // Change this to something reasonable once we have a radar.
-      const Radar *getRadar();
+      Radar *getRadar();
       // void getAllVisibleAsteroids();
       // void setShootingAI(bool ai);
 

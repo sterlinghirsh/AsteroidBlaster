@@ -50,87 +50,90 @@ GameState::~GameState() {
 }
 
 void GameState::update(double timeDiff) {
-  std::vector<Object3D*>* objects = custodian.getListOfObjects();
-  std::set<Object3D*>* collisions;
-  std::set<Object3D*>::iterator otherObject;
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
+   std::set<Object3D*>* collisions;
+   std::set<Object3D*>::iterator otherObject;
 
-  // Determine whether or not the game should continue running
-  if(ship->getHealth() <= 0) {
-    gameIsRunning = false;
-  } else if (ship->getScore() >= scoreToWin) {
-    gameIsRunning = false;
-  }
+   // Determine whether or not the game should continue running
+   if(ship->getHealth() <= 0) {
+      gameIsRunning = false;
+   } else if (ship->getScore() >= scoreToWin) {
+      gameIsRunning = false;
+   }
 
 
-  cube->constrain(ship);
-  for (item = objects->begin(); item != objects->end(); ++item) {
-    if (*item == NULL)
-      continue;
-    (*item)->update(timeDiff);
-    cube->constrain(*item);
-  }
-  // Update the values of all of the text objects.
-  ship->keepFiring();
+   cube->constrain(ship);
+   for (item = objects->begin(); item != objects->end(); ++item) {
+      if (*item == NULL)
+         continue;
+      (*item)->update(timeDiff);
+      cube->constrain(*item);
+   }
+   // Update the values of all of the text objects.
+   ship->keepFiring();
 
-  custodian.update();
-  // Get updated list.
-  objects = custodian.getListOfObjects();
+   custodian.update();
+   // Get updated list.
+   objects = custodian.getListOfObjects();
 
-  for (item = objects->begin(); item != objects->end(); ++item) {
-    collisions = custodian.findCollisions(*item, false);
-    for (otherObject = collisions->begin(); otherObject != collisions->end(); ++otherObject) {
-      (*item)->handleCollision(*otherObject);
-      (*otherObject)->handleCollision(*item);
-    }
-    delete collisions;
-  }
-  // Update all of the text seen on screen.
-  updateText();
+   for (item = objects->begin(); item != objects->end(); ++item) {
+      collisions = custodian.findCollisions(*item, false);
+      for (otherObject = collisions->begin(); otherObject != collisions->end(); ++otherObject) {
+         (*item)->handleCollision(*otherObject);
+         (*otherObject)->handleCollision(*item);
+      }
+      delete collisions;
+   }
+   // Update all of the text seen on screen.
+   updateText();
 }
 
 /**
  * Draw objects in the minimap.
  */
 void GameState::drawInMinimap() {
-  std::vector<Object3D*>* objects = custodian.getListOfObjects();
+  // Get a reading of all the nearby Object3Ds from the Radar
+  std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading();
+  
   glPushMatrix();
-  Vector3D oppositeOfPosition(*(ship->position));
-  // Translate everything so that the ship is at 0, 0 and everything is centered there.
-  oppositeOfPosition.updateMagnitude(oppositeOfPosition);
-  glScalef(0.05, 0.05, 0.05);
-  glRotatef(180, 0, 1, 0);
-  oppositeOfPosition.glTranslate(-1);
-  for (item = objects->begin(); item != objects->end(); ++item) {
-    if (*item == NULL)
-      continue;
-    (*item)->drawInMinimap();
-  }
+     Vector3D oppositeOfPosition(*(ship->position));
+     // Translate everything so that the ship is at 0, 0 and everything is centered there.
+     oppositeOfPosition.updateMagnitude(oppositeOfPosition);
+     glScalef(0.05, 0.05, 0.05);
+     glRotatef(180, 0, 1, 0);
+     oppositeOfPosition.glTranslate(-1);
+     for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
+       if (*listIter == NULL)
+         continue;
+       (*listIter)->drawInMinimap();
+     }
   glPopMatrix();
 
 }
 
 void GameState::draw() {
-  std::vector<Object3D*>* objects = custodian.getListOfObjects();
-  // Draw all of the text objects to the screen.
-  drawAllText();
-  if (thirdPerson) {
-    Vector3D newOffset(ship->forward->scalarMultiply(-3));
-    newOffset.addUpdate(ship->up->scalarMultiply(0.5));
-    camera->setOffset(newOffset);
-  } else {
-    camera->setOffset(0, 0, 0);
-  }
-  camera->setCamera(true);
-  skybox->draw(camera);
-  cube->draw();
-  for (item = objects->begin(); item != objects->end(); ++item) {
-    if (*item == NULL)
-      continue;
-    // Don't draw the ship in thirdPerson mode.
-    if (thirdPerson || (*item != ship)) {
-      (*item)->draw();
-    }
-  }
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
+   // Draw all of the text objects to the screen.
+   drawAllText();
+   if (thirdPerson) {
+      Vector3D newOffset(ship->forward->scalarMultiply(-3));
+      newOffset.addUpdate(ship->up->scalarMultiply(0.5));
+      camera->setOffset(newOffset);
+   } else {
+      camera->setOffset(0, 0, 0);
+   }
+   
+   camera->setCamera(true);
+   skybox->draw(camera);
+   cube->draw();
+   for (item = objects->begin(); item != objects->end(); ++item) {
+      if (*item == NULL)
+         continue;
+      // Don't draw the ship in thirdPerson mode.
+      if (thirdPerson || (*item != ship)) {
+         (*item)->draw();
+      }
+   }
 }
 
 /**
@@ -140,47 +143,47 @@ void GameState::draw() {
  * one time here to improve efficiency.
  */
 void GameState::drawAllText() {
-  glPushMatrix();
-  useOrtho();
+   glPushMatrix();
+   useOrtho();
 
-  /* Set the camera using the location of your eye,
+   /* Set the camera using the location of your eye,
    * the location where you're looking at, and the up vector.
    * The camera is set to be just 0.25 behind where you're looking at.
    */
-  gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
+   gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
 
-  /* Use orthonormal view so the text stays perpendicular
+   /* Use orthonormal view so the text stays perpendicular
    * to the camera at all times.
    */
 
-  /* We need to disable the lighting temporarily
+   /* We need to disable the lighting temporarily
    * in order to set the color properly.
    */
-  glDisable(GL_LIGHTING);
+   glDisable(GL_LIGHTING);
 
-  /* Don't draw stuff in front of the text. */
-  //glDisable(GL_DEPTH_TEST);
+   /* Don't draw stuff in front of the text. */
+   //glDisable(GL_DEPTH_TEST);
 
-  // If the player lost, draw the game over text
-  if(!gameIsRunning && ship->getHealth() <= 0){
+   // If the player lost, draw the game over text
+   if(!gameIsRunning && ship->getHealth() <= 0){
     gameOverText->draw();
-  }
+   }
 
-  // If the player won, draw the win text
-  else if (!gameIsRunning && ship->getHealth() > 0) {
+   // If the player won, draw the win text
+   else if (!gameIsRunning && ship->getHealth() > 0) {
     winText->draw();
-  }
+   }
 
-  // Draw all of the BitmapTextDisplay objects.
-  FPSText->draw();
-  numAsteroidsText->draw();
-  scoreText->draw();
-  healthText->draw();
+   // Draw all of the BitmapTextDisplay objects.
+   FPSText->draw();
+   numAsteroidsText->draw();
+   scoreText->draw();
+   healthText->draw();
 
-  glEnable(GL_LIGHTING);
-  //glEnable(GL_DEPTH_TEST);
-  usePerspective();
-  glPopMatrix();
+   glEnable(GL_LIGHTING);
+   //glEnable(GL_DEPTH_TEST);
+   usePerspective();
+   glPopMatrix();
 }
 
 /**

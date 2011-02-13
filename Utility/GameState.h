@@ -20,6 +20,8 @@
 #include "Utility/InputManager.h"
 #include <list>
 
+class AsteroidShip;
+
 class GameState : public InputReceiver {
    public:
       AsteroidShip* ship;
@@ -34,6 +36,8 @@ class GameState : public InputReceiver {
                         *winText;
       // Used when looping over Object3Ds
       std::vector<Object3D*>::iterator item;
+      // Used when looping over Object3Ds in drawInMinimap
+      std::list<Object3D*>::iterator listIter;
       Custodian custodian;
 
       GameState(double worldSize);

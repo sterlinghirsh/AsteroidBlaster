@@ -133,9 +133,9 @@ void ShootingAI::chooseWeapon( int weapon )
 Object3D* ShootingAI::chooseTarget()
 {
 
-   std::vector<Object3D*> *targets = ship->getRadar()->getFullReading();
+   std::list<Object3D*>* targets = ship->getRadar()->getNearbyReading();
 
-   std::vector<Object3D*>::iterator targets_iterator;
+   std::list<Object3D*>::iterator targets_iterator;
 
    Point3D* ship_position = ship->position;
 
