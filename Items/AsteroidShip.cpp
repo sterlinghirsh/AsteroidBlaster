@@ -174,6 +174,30 @@ void AsteroidShip::update(double timeDiff) {
    pitch(timeDiff * pitchSpeed);
    yaw(timeDiff * yawSpeed);
 
+   //add particles in the opposite direction of the acceration
+   
+   float increment = 0.01f;
+   Point3D randomPoint;
+   Vector3D randomVec;
+   
+   
+   
+   
+   for (float tempLen = 0; tempLen <= acceleration->getLength(); tempLen += increment ){
+      Point3D randomPoint;
+      randomPoint.x = (( float ) ( rand( ) % 100 ) - 50.f) / 2000.0f;
+      randomPoint.y = (( float ) ( rand( ) % 100 ) - 50.f) / 2000.0f;
+      randomPoint.z = (( float ) ( rand( ) % 100 ) - 50.f) / 2000.0f;
+   
+      Vector3D particleAcc = acceleration->scalarMultiply(-0.5f);
+      Vector3D randomAcc;
+      randomAcc.randomMagnitude();
+      randomAcc = randomAcc.scalarMultiply(0.9f);
+      
+      Point3D curPoint = position->add(randomPoint);
+      
+      Particle::Add(new Point3D(curPoint), new Vector3D(particleAcc.add(randomAcc)));
+   }
 
 }
 

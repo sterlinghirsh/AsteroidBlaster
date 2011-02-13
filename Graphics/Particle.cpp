@@ -4,6 +4,8 @@
 #include <iostream>
 
 #define MAX_PARTICLES 1000
+#define PARTICLE_SIZE 0.01f
+#define PARTICLE_LIFE 0.001f
 
 using namespace std;
 
@@ -15,7 +17,7 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
    position = _position;
    velocity = _velocity;
    slowdown = 2.0f;
-   active = true;
+   shouldRemove = false;
    life = _life;
    fade = _fade;
    r = _r;
@@ -70,10 +72,8 @@ void Particle::update(double timeDifference)
    list<Particle*>::iterator particle = Particle::particles.begin();
    for (; particle != Particle::particles.end(); particle++) 
    {
-      if (!(*particle)->step(timeDifference)) {
+      if ((*particle)->step(timeDifference)) {
          particle = Particle::particles.erase(particle);
-         std::cout << "particle died!" << std::endl;
-         continue;
       }
    }
 }
@@ -81,88 +81,94 @@ void Particle::update(double timeDifference)
 bool Particle::step(double timeDifference)
 {
    // Move On The X Axis By X Speed 
-   position->x += velocity->xPos / ( slowdown * 1000 );
+   position->x += velocity->xMag * timeDifference;
    // Move On The Y Axis By Y Speed 
-   position->y += velocity->yPos / ( slowdown * 1000 );
+   position->y += velocity->yMag * timeDifference;
    // Move On The Z Axis By Z Speed 
-   position->z += velocity->zPos / ( slowdown * 1000 );
+   position->z += velocity->zMag * timeDifference;
    
-   std::cout << "changed: (" << position->x << "," << position->y << "," << position->z << ")" << std::endl;
+   //std::cout << "timeDifference= " << timeDifference << ": (" << position->x << "," << position->y << "," << position->z << ")" << std::endl;
 
    // Reduce Particles Life By 'Fade'
-   life -= fade;
-   std::cout << "life = " << life << std::endl;
-   std::cout << "fade = " << fade << std::endl;
-   return life > 0;
+   life -= fade * timeDifference;
+   //std::cout << "timeDifference = " << timeDifference << std::endl;
+   //std::cout << "life = " << life << std::endl;
+   //std::cout << "fade = " << fade << std::endl;
+   return life < 0;
 }
 
 void Particle::Add(Point3D* pos, Vector3D* vec)
 {
-   float _fade = ( float )( rand( ) %100 ) / 1000.0f + 0.03f;
-   float _r = 0.5f;
-   float _g = 0.5f;
-   float _b = 0.5f;
+   float _fade = ( float )( rand( ) %100 ) / 1000.0f + 0.003f;
+   float _r = (( float )( rand( ) %50 ) + 50.0f) / 100.0f ;
+   float _g = (( float )( rand( ) %50 ) + 50.0f) / 100.0f ;
+   float _b = (( float )( rand( ) %50 ) + 50.0f) / 100.0f ;
    
-   particles.push_back(new Particle(pos, vec, 10.0f, _fade, _r, _g, _b));
+   particles.push_back(new Particle(pos, vec, PARTICLE_LIFE, _fade, _r, _g, _b));
 }
 
 bool Particle::draw(Point3D* eyePoint)
 {
-
+   glPushMatrix();
    /* Draw The Particle Using Our RGB Values,
    * Fade The Particle Based On It's Life
    */
+   
+   Vector3D forward(0, 0, 1);
+   Vector3D toCamera(*position, *eyePoint);
+   Vector3D cross = forward.cross(toCamera);
 
-   glColor4f( r,g,b,life );
+   double angle = forward.getAngleInDegrees(toCamera);
+   
+   position->glTranslate();
+   glRotatef(angle, cross.xMag, cross.yMag, cross.zMag);
 
-   glTranslatef(position->x, position->y, position->z);
+   
    //materials(Orange);
-   gluSphere(quadric, 0.05, 20, 20);
-   /*
-   // Build Quad From A Triangle Strip
-   glBegin( GL_TRIANGLE_STRIP );
-   // Top Right
-   glTexCoord2d( 1, 1 );
-   glVertex3f( position->x + 0.5f, position->y + 0.5f, position->z );
+   //gluSphere(quadric, 0.05, 20, 20);
+   
+   glBindTexture( GL_TEXTURE_2D, Particle::texture );
+   glColor4f( r,g,b, life );
+   
+   glDisable(GL_LIGHTING);
+   glEnable(GL_TEXTURE_2D);
+   glDisable(GL_CULL_FACE);
+   glBegin(GL_QUADS);
+   
    // Top Left
    glTexCoord2d( 0, 1 );
-   glVertex3f( position->x - 0.5f, position->y + 0.5f, position->z );
+   glVertex3f( -PARTICLE_SIZE, PARTICLE_SIZE, 0.0f );
+   // Top Right
+   glTexCoord2d( 1, 1 );
+   glVertex3f(PARTICLE_SIZE, PARTICLE_SIZE, 0.0f);
    // Bottom Right
    glTexCoord2d( 1, 0 );
-   glVertex3f( position->x + 0.5f, position->y - 0.5f, position->z );
+   glVertex3f( PARTICLE_SIZE, -PARTICLE_SIZE, 0.0f );
    // Bottom Left
    glTexCoord2d( 0, 0 );
-   glVertex3f( position->x - 0.5f, position->y - 0.5f, position->z );
+   glVertex3f( -PARTICLE_SIZE, -PARTICLE_SIZE, 0.0f );
    glEnd( );
-   */
-
+   
+   glDisable(GL_TEXTURE_2D);
+   glEnable(GL_CULL_FACE);
+   glEnable(GL_LIGHTING);
    //std::cout << "drew: (" << position->x << "," << position->y << "," << position->z << ")" << std::endl;
-
+   glPopMatrix();
 }
 
 void Particle::drawParticles()
 {
    glDisable(GL_COLOR_MATERIAL);
    //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-   glPushMatrix();
+   
    extern GameState* gameState;
    
-   /* Clear The Screen And The Depth Buffer */
-   //
-
-   //glLoadIdentity( );
-
+   Point3D eyePoint = (gameState->getCamera()->getEyePoint());
    /* Modify each of the particles */
    list<Particle*>::iterator particle = Particle::particles.begin();
    for (; particle != Particle::particles.end(); particle++) 
    {
-      (*particle)->draw(gameState->ship->position);
+      (*particle)->draw(&eyePoint);
    }
-   
-   glPopMatrix();
-   //glEnable(GL_COLOR_MATERIAL);
-   /* Draw it to the screen */
-   //SDL_GL_SwapBuffers( );
-   
 }
 

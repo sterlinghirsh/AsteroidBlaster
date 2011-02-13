@@ -32,6 +32,7 @@ class Camera {
       void viewFrom(Object3D* object);
       void setOffset(double x, double y, double z);
       void setOffset(Vector3D& newOffset);
+      Point3D getEyePoint();
 };
 
 #endif

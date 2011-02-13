@@ -24,11 +24,12 @@ class Particle {
       Particle(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
       Point3D posIn, double drawWidth, double drawHeight);
       static GLuint texture;
+      bool shouldRemove;
       
    private:
       Point3D* position;
       Vector3D* velocity;
-      bool active;
+      
       float life;
       float fade;
       float r,g,b;

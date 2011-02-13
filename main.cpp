@@ -303,11 +303,8 @@ int main(int argc, char* argv[]) {
    
    // Preload texture.
    new TextureImporter("Images/SkybusterExplosion.bmp");
-
-   //if(!Particle::LoadGLTextures()){
-   //   std::cout << "particle texture loading failed!" << std::endl;
-   //   exit(0);
-   //}
+   
+   Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
 
    materials(Rock);
    quadric = gluNewQuadric();

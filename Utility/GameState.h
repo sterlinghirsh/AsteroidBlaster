@@ -56,6 +56,7 @@ class GameState : public InputReceiver {
 
       double getMouseX();
       double getMouseY();
+      Camera* getCamera();
 
       virtual void keyUp(int key);
       virtual void keyDown(int key);

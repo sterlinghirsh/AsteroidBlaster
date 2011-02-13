@@ -49,6 +49,14 @@ struct Point3D {
       z += z2;
    }
 
+   Point3D add(Point3D other) {
+      Point3D answer;
+      answer.x = x + other.x;
+      answer.y = y + other.y;
+      answer.z = z + other.z;
+      return answer;
+   }
+
    Point3D operator+(const Point3D& rhs);
    Point3D operator-(const Point3D& rhs);
    double operator*(const Point3D& rhs);

@@ -79,3 +79,11 @@ void Camera::setOffset(double x, double y, double z) {
 void Camera::setOffset(Vector3D& newOffset) {
    offset->updateMagnitude(newOffset);
 }
+
+Point3D Camera::getEyePoint(){
+   Point3D eyePoint(*position);
+   offset->movePoint(eyePoint);
+   return eyePoint;
+}
+
+
