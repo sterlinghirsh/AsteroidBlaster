@@ -177,7 +177,7 @@ void Shard::InitShard(double r, double worldSizeIn) {
    sizeX = maxX - minX;
    sizeY = maxY - minY;
    sizeZ = maxZ - minZ;
-   collisionRadius = radius * 2.0;
+   collisionRadius = radius;
    updateBoundingBox();
 }
 
@@ -227,8 +227,8 @@ void Shard::draw() {
    // Call the display list if it has one.
    Object3D::draw();
    // Disable materials.
-   glEnable(GL_COLOR_MATERIAL);
-   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   //glEnable(GL_COLOR_MATERIAL);
+   //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
    // Push matrix and draw main shard.
@@ -236,6 +236,7 @@ void Shard::draw() {
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
 
+   materials(Rock);
    glColor3f(0.4, 0.5, 0.7);
    // Set polygon offset to be behind the lines.
    glPolygonOffset(1.0f, 1.0f);
@@ -288,7 +289,7 @@ void Shard::draw() {
       glPopMatrix();
    }
 
-   glDisable(GL_COLOR_MATERIAL);
+   //glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();
 }
 

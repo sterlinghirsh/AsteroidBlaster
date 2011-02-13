@@ -6,8 +6,6 @@
 
 #ifndef __SHARD_H__
 #define __SHARD_H__
-//#ifndef __ASTEROID3D_H__
-//#define __ASTEROID3D_H__
 
 #include "Graphics/Mesh3D.h"
 #include "Graphics/GlutUtility.h"
