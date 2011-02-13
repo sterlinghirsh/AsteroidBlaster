@@ -20,7 +20,7 @@ AsteroidShot::AsteroidShot(Point3D& posIn, Vector3D dirIn,
  AsteroidShip* const ownerIn ) : owner(ownerIn), Object3D(0, 0, 0, 0) {
    *position = posIn;
    velocity = new Vector3D(dirIn);
-   //velocity->setLength(40.0);
+   velocity->setLength(40.0);
    timeFired = doubleTime();
    lifetime = 2;
    persist = false;
@@ -42,8 +42,8 @@ void AsteroidShot::draw() {
   // glutSolidSphere(0.05, 30, 10);
    //drawCylinder(0.02, 1);
    //glutSolidCone(0.02, 0.2, 8, 8);
-   //gluCylinder(quadric,0.04f,0.0f,0.2f,8,8);
-   gluCylinder(quadric,0.02f,0.0f,0.2f,8,8);
+   gluCylinder(quadric,0.04f,0.0f,0.2f,8,8);
+   //gluCylinder(quadric,0.02f,0.0f,0.2f,8,8);
    glEnable(GL_LIGHTING);
 
    glPopMatrix();

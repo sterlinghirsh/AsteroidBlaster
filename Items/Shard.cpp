@@ -20,12 +20,12 @@ using namespace std;
  * Basic constructor.
  */
 Shard::Shard(double r, double worldSizeIn) :
- Object3D(0, 0, 0, 0) {
-   worldSize = worldSizeIn;
-   orbiters = glGenLists(1);
-   genOrbiters();
-   InitShard(r, worldSizeIn);
-}
+   Object3D(0, 0, 0, 0) {
+      worldSize = worldSizeIn;
+      orbiters = glGenLists(1);
+      genOrbiters();
+      InitShard(r, worldSizeIn);
+   }
 
 /*
  * Virtual destructor.
@@ -40,51 +40,9 @@ Shard::~Shard() {
 void Shard::genOrbiters() {
    glNewList(orbiters, GL_COMPILE);
    glDisable(GL_LIGHTING);
-   if (CUBE_MODE) {
-      glBegin(GL_QUADS);
-
-      // Front face
-      glVertex3f(-1.0f, -1.0f,  1.0f);
-      glVertex3f( 1.0f, -1.0f,  1.0f);
-      glVertex3f( 1.0f,  1.0f,  1.0f);
-      glVertex3f(-1.0f,  1.0f,  1.0f);
-
-      // Back Face
-      glVertex3f(-1.0f, -1.0f, -1.0f);
-      glVertex3f(-1.0f,  1.0f, -1.0f);
-      glVertex3f( 1.0f,  1.0f, -1.0f);
-      glVertex3f( 1.0f, -1.0f, -1.0f);
-
-      // Top Face
-      glVertex3f(-1.0f,  1.0f, -1.0f);
-      glVertex3f(-1.0f,  1.0f,  1.0f);
-      glVertex3f( 1.0f,  1.0f,  1.0f);
-      glVertex3f( 1.0f,  1.0f, -1.0f);
-
-      // Bottom Face
-      glVertex3f(-1.0f, -1.0f, -1.0f);
-      glVertex3f( 1.0f, -1.0f, -1.0f);
-      glVertex3f( 1.0f, -1.0f,  1.0f);
-      glVertex3f(-1.0f, -1.0f,  1.0f);
-
-      // Right face
-      glVertex3f( 1.0f, -1.0f, -1.0f);
-      glVertex3f( 1.0f,  1.0f, -1.0f);
-      glVertex3f( 1.0f,  1.0f,  1.0f);
-      glVertex3f( 1.0f, -1.0f,  1.0f);
-
-      // Left Face
-      glVertex3f(-1.0f, -1.0f, -1.0f);
-      glVertex3f(-1.0f, -1.0f,  1.0f);
-      glVertex3f(-1.0f,  1.0f,  1.0f);
-      glVertex3f(-1.0f,  1.0f, -1.0f);
-
-      glEnd();
-   } else {
-      GLUquadricObj *q;
-      q = gluNewQuadric();
-      gluSphere(q, 1.0, 4, 4);
-   }
+   GLUquadricObj *q;
+   q = gluNewQuadric();
+   gluSphere(q, 1.0, 4, 4);
    glEnable(GL_LIGHTING);
    glEndList();
 }
@@ -283,7 +241,7 @@ void Shard::draw() {
          glTranslatef(RING_RAD, 0.0, 0.0);
          glScalef(ORBITER_RAD, ORBITER_RAD, ORBITER_RAD);
          // Draw an orbiter from the list.
-         glCallList(orbiters);
+         //glCallList(orbiters);
          glPopMatrix();
       }
       glPopMatrix();
