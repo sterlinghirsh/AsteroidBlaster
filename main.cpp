@@ -28,16 +28,18 @@ using namespace std;
 // Constant value
 const double WORLD_SIZE = 80.00;
 
+// True while the game is in play.
 bool running = true;
 bool fullScreen = false;
 
-// SDL
+// SDL globals
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
 
+// Fonts
 int *fontsArr[] = {
    (int*)GLUT_BITMAP_8_BY_13,
    (int*)GLUT_BITMAP_9_BY_15,
@@ -47,23 +49,21 @@ int *fontsArr[] = {
    (int*)GLUT_BITMAP_HELVETICA_12,
    (int*)GLUT_BITMAP_HELVETICA_18,
 };
-int fontSpot = 0;
+int fontSpot = 0; // TODO: What is this?
 
+// Pointer to the global gamestate object.
 GameState* gameState = NULL;
+// This handles all the input.
 InputManager* inputManager = NULL;
 
 double displayTime = 0;
 // This double contains the FPS to be printed to the screen each frame.
 
+// TODO: Move this out of here.
 GLfloat headlight_pos[4] = {WORLD_SIZE / 2, WORLD_SIZE / 2, WORLD_SIZE / 2, 1};
 GLfloat headlight_amb[4] = {0.1, 0.1, 0.1, 1};
 GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
 GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
-
-// Give the gameState (used for Radar)
-GameState* getGameState() {
-   return gameState;
-}
 
 void init_light() {
    glEnable(GL_LIGHT0);
@@ -76,15 +76,11 @@ void init_light() {
   glEnable(GL_NORMALIZE);
 }
 
-void drawSprites() {
-   list<Sprite*>::iterator sprite = Sprite::sprites.begin();
-   for (; sprite != Sprite::sprites.end(); sprite++) {
-      if (!(*sprite)->draw(gameState->ship->position)) {
-         sprite = Sprite::sprites.erase(sprite);
-         continue;
-      }
-   }
+// Give the gameState (used for Radar)
+GameState* getGameState() {
+   return gameState;
 }
+
 
 void drawCrosshair() {
    double crosshairSizeX = 0.05;
@@ -138,7 +134,7 @@ void display() {
    glPushMatrix();
    gameState->draw();
          
-   drawSprites();
+   Sprite::drawSprites();
    drawCrosshair();
 
    glPopMatrix();

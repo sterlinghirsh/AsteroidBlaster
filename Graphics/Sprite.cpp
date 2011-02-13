@@ -8,6 +8,7 @@
 #include "Graphics/Sprite.h"
 #include "Utility/Vector3D.h"
 #include <math.h>
+#include "Utility/GameState.h"
 
 using namespace std;
 
@@ -84,3 +85,18 @@ bool Sprite::draw(Point3D* eyePoint) {
    glEnable(GL_LIGHTING);
    return true;
 }
+
+/**
+ * Static method that draws all the sprites in Sprite::sprites.
+ */
+void Sprite::drawSprites() {
+   extern GameState* gameState;
+   list<Sprite*>::iterator sprite = Sprite::sprites.begin();
+   for (; sprite != Sprite::sprites.end(); sprite++) {
+      if (!(*sprite)->draw(gameState->ship->position)) {
+         sprite = Sprite::sprites.erase(sprite);
+         continue;
+      }
+   }
+}
+

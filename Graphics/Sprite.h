@@ -28,6 +28,7 @@ class Sprite {
       materialStruct curMaterial;
       Point3D position;
       static std::list<Sprite*> sprites;
+      static void drawSprites();
       bool oneShot;
 
       Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
