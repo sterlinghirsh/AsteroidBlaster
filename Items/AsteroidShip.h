@@ -91,7 +91,8 @@ class AsteroidShip : public Object3D {
       Radar* radar; // This is the ship's radar that it should query for information about its surroundings
 
       double brakeFactor;
-      double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.
+      //NOT USED
+      //double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.
 
       // These could get changed with upgrades.
       double maxForwardAccel;

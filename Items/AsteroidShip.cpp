@@ -39,9 +39,9 @@ AsteroidShip::AsteroidShip() :
       lastGunFired = 0;
 
       // Bounding box stuff.
-      shipRadius = 1;
-      maxX = maxY = maxZ = 2;
-      minX = minY = minZ = -2;
+      //shipRadius = 1; NOT USED
+      maxX = maxY = maxZ = 0.3;
+      minX = minY = minZ = -0.3;
       updateBoundingBox();
 
       // Orientation vectors.
@@ -192,7 +192,7 @@ void AsteroidShip::update(double timeDiff) {
       Vector3D particleAcc = acceleration->scalarMultiply(-0.5f);
       Vector3D randomAcc;
       randomAcc.randomMagnitude();
-      randomAcc = randomAcc.scalarMultiply(0.9f);
+      //randomAcc = randomAcc.scalarMultiply(0.9f);
       
       Point3D curPoint = position->add(randomPoint);
       

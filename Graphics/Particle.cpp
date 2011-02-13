@@ -100,9 +100,47 @@ bool Particle::step(double timeDifference)
 void Particle::Add(Point3D* pos, Vector3D* vec)
 {
    float _fade = ( float )( rand( ) %100 ) / 1000.0f + 0.003f;
-   float _r = (( float )( rand( ) %50 ) + 50.0f) / 100.0f ;
-   float _g = (( float )( rand( ) %50 ) + 50.0f) / 100.0f ;
-   float _b = (( float )( rand( ) %50 ) + 50.0f) / 100.0f ;
+   float _r = 1.0f; // (( float )( rand( ) %100 ) ) / 100.0f ;
+   float _g = 1.0f; // (( float )( rand( ) %100 ) ) / 100.0f ;
+   float _b = 1.0f; // (( float )( rand( ) %100 ) ) / 100.0f ;
+   
+   float randHigh = (( float )( rand( ) %10 ) + 90.0f) / 100.0f ;
+   float randMid = (( float )( rand( ) %10 ) + 50.0f) / 100.0f ;
+   float randLow = (( float )( rand( ) %10 ) + 0.0f) / 100.0f ;
+   
+   int chooser = (rand() %6);
+   switch ( chooser ) {
+      case 0: 
+         _r = randHigh;
+         _g = randMid;
+         _b = randLow;
+         break;
+      case 1: 
+         _r = randHigh;
+         _g = randLow;
+         _b = randMid;
+         break;
+      case 2: 
+         _r = randMid;
+         _g = randHigh;
+         _b = randLow;
+         break;
+      case 3: 
+         _r = randMid;
+         _g = randLow;
+         _b = randHigh;
+         break;
+      case 4: 
+         _r = randLow;
+         _g = randMid;
+         _b = randHigh;
+         break;
+      case 5: 
+         _r = randLow;
+         _g = randHigh;
+         _b = randMid;
+         break;
+   }
    
    particles.push_back(new Particle(pos, vec, PARTICLE_LIFE, _fade, _r, _g, _b));
 }
@@ -126,7 +164,7 @@ bool Particle::draw(Point3D* eyePoint)
    
    //materials(Orange);
    //gluSphere(quadric, 0.05, 20, 20);
-   
+
    glBindTexture( GL_TEXTURE_2D, Particle::texture );
    glColor4f( r,g,b, life );
    
