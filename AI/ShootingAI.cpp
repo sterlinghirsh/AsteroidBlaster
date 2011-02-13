@@ -45,22 +45,20 @@ ShootingAI::ShootingAI(AsteroidShip* owner)
  */
 int ShootingAI::aimAt(double dt, Object3D* target)
 {
-   return 0;
    Point3D wouldHit;
    double speed = 20;//chosenWeapon->getSpeed();
    double time = 0;
    double dist;
    double len;
+   int iterations = 0;
    // Change in position
    Vector3D dp;
    
-   Point3D curTarget = *target->position;
+   Point3D targetPos = *target->position;
+   Point3D curTarget;
    // This section of code does angle interpolation.
    // Calculate the vector that points from our current direction to where
    // we want to be pointing.
-   wouldHit = lastShotPos - aimingAt;
-   printf("In aimAt:\n");
-   wouldHit.print();
 
    // If the difference is more than the radius of the target,
    // we need to adjust where we are aiming.
@@ -85,13 +83,15 @@ int ShootingAI::aimAt(double dt, Object3D* target)
       // time is the distance from the ship to the target according to the
       // speed of the bullet.
       time = ship->position->distanceFrom(curTarget) / speed;
-
+      printf("dist: %lf\n", ship->position->distanceFrom(curTarget));
+      
       // dp is the distance the asteroid traveled in the time it took for our
-      // bullet to get to the point where the asteroid was.
+      // bullet to get to the point we are considering (curTarget).
       dp = target->velocity->scalarMultiply(time);
 
       // Move our target to the point where the asteroid would be
-      dp.movePoint(curTarget);
+      curTarget = Point3D(targetPos.x + dp.xMag, targetPos.y + dp.yMag,
+       targetPos.z + dp.zMag);
 
       // Get the vector that points to that point.
       wouldHit = curTarget - *ship->position;
@@ -100,25 +100,29 @@ int ShootingAI::aimAt(double dt, Object3D* target)
       // passed (for the bullet to get to the previous point) This vector
       // now points to where our bullet will be when the asteroid is at
       // its position
+
       wouldHit = wouldHit.normalize() * speed * time + *ship->position;
+      printf("time: %lf, shipPos: ", time);
+      ship->position->print();
       printf("wouldHit: ");
       wouldHit.print();
+      printf("iteration: %d\n", iterations);
 
       // Dist is the distance from where our bullet will be to where
       // the asteroid will be.
       dist = wouldHit.distanceFrom(curTarget);
-
+      iterations++;
       // If this distance is greater than the radius (ie, we missed),
       // recalculate!
-   } while (dist > target->radius);
+   } while (dist > target->radius && iterations < 30);
 
    // By the end of the loop, curTarget is the point that we need to aim
    // at in order to hit our target.
    lastShotPos = (curTarget - *ship->position).normalize();
-   aimingAt = lastShotPos;
+   //aimingAt = lastShotPos;
    printf("aimingAt: ");
    aimingAt.print();
-   ship->updateShotDirection(aimingAt);
+   ship->updateShotDirection(lastShotPos);
 
    return 0;
 }

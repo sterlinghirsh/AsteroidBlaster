@@ -62,6 +62,10 @@ Point3D Point3D::operator*(double scalar)
 Point3D Point3D::normalize() const
 {
    double len = magnitude();
+
+   if (len < EPSILON)
+      return Point3D::Zero;
+
    if (*this == Point3D::Zero)
       return Point3D::Zero;
 
