@@ -9,7 +9,7 @@
 //#include "Utility/Quaternion.h"
 #include "Utility/Point3D.h"
 #include "Utility/Vector3D.h"
-#include "Shots/AsteroidShot.h"
+#include "Shots/Shot.h"
 #include "Graphics/GlutUtility.h"
 #include "Utility/Object3D.h"
 #include "Utility/Radar.h"
@@ -24,7 +24,7 @@ extern GLfloat headlight_diff[4];
 extern GLfloat headlight_spec[4];
 
 // Incomplete declaration so we can use the pointer.
-class AsteroidShot;
+class Shot;
 class Radar;
 class ShootingAI;
 

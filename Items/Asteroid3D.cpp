@@ -8,8 +8,9 @@
 #include "Graphics/Sprite.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
-#include "Shots/AsteroidShot.h"
-#include "Shots/AsteroidShotBeam.h"
+#include "Shots/Shot.h"
+#include "Shots/ProjectileShot.h"
+#include "Shots/BeamShot.h"
 #include <algorithm>
 #include <math.h>
 
@@ -222,7 +223,7 @@ void Asteroid3D::update(double timeDiff) {
 void Asteroid3D::handleCollision(Object3D* other) {
    Asteroid3D* otherAsteroid;
    AsteroidShip* ship;
-   AsteroidShot* shot;
+   Shot* shot;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       double speed = velocity->getLength();
 
@@ -234,9 +235,9 @@ void Asteroid3D::handleCollision(Object3D* other) {
          custodian->add(makeChild(0));
          custodian->add(makeChild(1));
       }
-   } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
+   } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
       if (health > 0) {
-         if (dynamic_cast<AsteroidShotBeam*>(other) != NULL) {
+         if (dynamic_cast<BeamShot*>(other) != NULL) {
             health = 0;
          } else {
             health--;
@@ -250,6 +251,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
                   *position, radius * explosionFactor,
                   radius * explosionFactor));
          if (radius > 2) {
+            shot->owner->score += (int) radius * 10;
             custodian->add(makeChild(0));
             custodian->add(makeChild(1));
          } else {

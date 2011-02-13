@@ -9,8 +9,8 @@
 #include "Items/Shard.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
-#include "Shots/AsteroidShot.h"
-#include "Shots/AsteroidShotBeam.h"
+#include "Shots/Shot.h"
+#include "Shots/BeamShot.h"
 #include <algorithm>
 #include <math.h>
 
@@ -311,7 +311,7 @@ void Shard::update(double timeDiff) {
 void Shard::handleCollision(Object3D* other) {
    AsteroidShip* ship;
    Asteroid3D* asteroid;
-   AsteroidShot* shot;
+   Shot* shot;
    if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
    } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
@@ -319,9 +319,9 @@ void Shard::handleCollision(Object3D* other) {
       double speed = asteroid->velocity->getLength();
       velocity->updateMagnitude(*(asteroid->position), *position);
       velocity->setLength(speed);
-   } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
+   } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
       double speed;
-      if (dynamic_cast<AsteroidShotBeam*>(other) != NULL) {
+      if (dynamic_cast<BeamShot*>(other) != NULL) {
          speed = 40; // High speed from hard-hitting railgun.
       } else {
          // Set speed to between the speed of the shot and the current speed.

@@ -5,7 +5,8 @@
  */
 
 #include "AsteroidShip.h"
-#include "Shots/AsteroidShotBeam.h"
+#include "Shots/BeamShot.h"
+#include "Shots/ProjectileShot.h"
 #include <math.h>
 #include <time.h>
 #include "Utility/Quaternion.h"
@@ -200,15 +201,15 @@ void AsteroidShip::keepFiring() {
    bool fireShots = (currentWeapon == 0);
    bool fireBeams = (currentWeapon == 1);
    //shotDirection.movePoint(start);
-   if (fireShots && (timeOfLastShot < curTime - (1 / AsteroidShot::frequency) ||
+   if (fireShots && (timeOfLastShot < curTime - (1 / ProjectileShot::frequency) ||
             timeOfLastShot == 0)) {
-      custodian->add(new AsteroidShot(start,
+      custodian->add(new ProjectileShot(start,
                shotDirection.scalarMultiply(shotSpeed), this));
       timeOfLastShot = curTime;
    }
-   if (fireBeams && (timeOfLastBeam < curTime - (1 / AsteroidShotBeam::frequency) ||
+   if (fireBeams && (timeOfLastBeam < curTime - (1 / BeamShot::frequency) ||
             timeOfLastBeam == 0)) {
-      custodian->add(new AsteroidShotBeam(start, shotDirection, this));
+      custodian->add(new BeamShot(start, shotDirection, this));
       timeOfLastBeam = curTime;
    }
 }

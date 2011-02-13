@@ -1,21 +1,21 @@
 /**
- * AsteroidShotBeam.h
+ * BeamShot.h
  * Sterling Hirsh
  * Shot type 2
  */
 
-#ifndef __ASTEROIDSHOTBEAM_H__
-#define __ASTEROIDSHOTBEAM_H__
+#ifndef __BEAMSHOT_H__
+#define __BEAMSHOT_H__
 
-#include "AsteroidShot.h"
+#include "Shot.h"
 
-class AsteroidShotBeam : public AsteroidShot {
+class BeamShot : public Shot {
    public:
       static double frequency; // Shots per sec
       bool hitYet;
       unsigned long lastHitFrame;
 
-      AsteroidShotBeam(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
+      BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
       virtual void draw();
       virtual void drawInMinimap();
       virtual bool detectCollision(Object3D* other, bool checkOther);

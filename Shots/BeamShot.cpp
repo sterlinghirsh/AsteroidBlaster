@@ -1,10 +1,10 @@
 /**
- * AsteroidShotBeam.cpp
+ * BeamShot.cpp
  * Sterling Hirsh
  * Shot type 2
  */
 
-#include "AsteroidShotBeam.h"
+#include "BeamShot.h"
 #include <math.h>
 #include <algorithm>
 
@@ -29,10 +29,10 @@ materialStruct ballMaterial = {
    {8}
 };
 
-double AsteroidShotBeam::frequency = .5;
+double BeamShot::frequency = .5;
 
-AsteroidShotBeam::AsteroidShotBeam(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn) :
- AsteroidShot(posIn, dirIn, ownerIn) {
+BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn) :
+ Shot(posIn, dirIn, ownerIn) {
    lifetime = 0.5;
    // In this context, velocity means direction.
    hitYet = false;
@@ -64,13 +64,13 @@ AsteroidShotBeam::AsteroidShotBeam(Point3D& posIn, Vector3D dirIn, AsteroidShip*
 /**
  * Expire after a certain amount of time.
  */
-void AsteroidShotBeam::update(double timeDiff) {
+void BeamShot::update(double timeDiff) {
    if (doubleTime() - timeFired > lifetime) {
       shouldRemove = true;
    }
 }
 
-void AsteroidShotBeam::draw() {
+void BeamShot::draw() {
    const double length = 100;
    const double distanceDifference = 0.3; // :)
    const double angleDiff = 40; // Degrees per unit of ball helix.
@@ -111,7 +111,7 @@ void AsteroidShotBeam::draw() {
  * This does the actual beam-weapon hit detection.
  * This ignores checkOther, since the beam will be the final say on what gets hit.
  */
-bool AsteroidShotBeam::detectCollision(Object3D* other, bool checkOther) {
+bool BeamShot::detectCollision(Object3D* other, bool checkOther) {
    if (hitYet && curFrame != lastHitFrame)
       return false;
    Vector3D positionVector(*position);
@@ -142,7 +142,7 @@ bool AsteroidShotBeam::detectCollision(Object3D* other, bool checkOther) {
    return fabs(distance) < other->radius;
 }
 
-void AsteroidShotBeam::handleCollision(Object3D* other) {
+void BeamShot::handleCollision(Object3D* other) {
    if (other == owner)
       return;
    hitYet = true;
@@ -154,8 +154,8 @@ void AsteroidShotBeam::handleCollision(Object3D* other) {
    }
 }
 
-void AsteroidShotBeam::debug() {
-   printf("AsteroidShotBeam::debug(): (min/max/position/direction)\n");
+void BeamShot::debug() {
+   printf("BeamShot::debug(): (min/max/position/direction)\n");
    minPosition->print();
    maxPosition->print();
    position->print();
@@ -165,6 +165,6 @@ void AsteroidShotBeam::debug() {
 /**
  * Don't draw shots in minimap (for now)
  */
-void AsteroidShotBeam::drawInMinimap() {
+void BeamShot::drawInMinimap() {
    return;
 }
