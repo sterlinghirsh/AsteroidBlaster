@@ -23,6 +23,8 @@ class Asteroid3D : public Object3D {
       double rotationAmount;
       double scalex, scaley, scalez;
       double worldSize;
+      double initH;
+      int health;
       double sizeX, sizeY, sizeZ, collisionRadius;
       
       Asteroid3D(double r, double worldSizeIn);

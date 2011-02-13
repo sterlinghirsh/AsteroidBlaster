@@ -9,6 +9,7 @@
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
 #include "Shots/AsteroidShot.h"
+#include "Shots/AsteroidShotBeam.h"
 #include <algorithm>
 #include <math.h>
 
@@ -17,6 +18,13 @@ using namespace std;
 Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
    Object3D(0, 0, 0, 0) {
       worldSize = worldSizeIn;
+      //health = initH;
+      initH = (int)(r * r * 1.0 / 5.0);
+      if (initH < 1.0) {
+         initH = 1.0;
+      }
+      health = initH;
+      printf("radius %f, health %d\n", r, health);
       newRandomPosition();
       InitAsteroid(r, worldSizeIn);
    }
@@ -145,7 +153,17 @@ void Asteroid3D::draw() {
    mesh.draw(false);
    glDisable(GL_POLYGON_OFFSET_FILL);
 
-   glColor3f(0.996, 0.612, 0.0);
+   if (health == 1) {
+      glColor3f(0.996, 0.312, 0.1);
+   } else if (health > 1) {
+      double step = (initH - health + 1);
+      double stepR = .004 / initH * step;
+      double stepG = .388 / initH * step;
+      double stepB = 1.0 / initH * step;
+      glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
+   }
+   //glColor3f(0.996, 0.612, 0.0);
+
    //glLineWidth(2);
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
@@ -217,17 +235,27 @@ void Asteroid3D::handleCollision(Object3D* other) {
          custodian->add(makeChild(1));
       }
    } else if ((shot = dynamic_cast<AsteroidShot*>(other)) != NULL) {
-      shouldRemove = true;
-      const int explosionFactor = 3;
-      Sprite::sprites.push_back(
-            new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20,
-               *position, radius * explosionFactor, radius * explosionFactor));
-      if (radius > 2) {
-         custodian->add(makeChild(0));
-         custodian->add(makeChild(1));
-      } else {
-         custodian->add(makeShard(0));
-         //printf("YOU JUST SHARDED\n");
+      if (health > 0) {
+         if (dynamic_cast<AsteroidShotBeam*>(other) != NULL) {
+            health = 0;
+         } else {
+            health--;
+         }
+      }
+      if (health == 0) {
+         shouldRemove = true;
+         const int explosionFactor = 3;
+         Sprite::sprites.push_back(
+               new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20,
+                  *position, radius * explosionFactor,
+                  radius * explosionFactor));
+         if (radius > 2) {
+            custodian->add(makeChild(0));
+            custodian->add(makeChild(1));
+         } else {
+            custodian->add(makeShard(0));
+            //printf("YOU JUST SHARDED\n");
+         }
       }
    }
 }
