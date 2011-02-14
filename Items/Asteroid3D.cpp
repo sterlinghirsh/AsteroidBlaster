@@ -25,7 +25,6 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
          initH = 1.0;
       }
       health = initH;
-      printf("radius %f, health %d\n", r, health);
       newRandomPosition();
       InitAsteroid(r, worldSizeIn);
    }

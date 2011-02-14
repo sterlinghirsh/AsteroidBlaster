@@ -63,7 +63,6 @@ void Custodian::update() {
       // Add the item to the sorted lists.
       objectsByMinX.push_back(tempObject);
       objectsByMaxX.push_back(tempObject);
-      tempObject->debug();
       // Remove the item.
       objectsToAdd.pop_front();
    }
@@ -123,8 +122,6 @@ void Custodian::remove(Object3D* objectIn) {
    if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
       asteroidCount--;
    }
-   printf("Deleting:\n");
-   objectIn->debug();
    delete objectIn;
 }
 

@@ -26,10 +26,10 @@ Vector3D::Vector3D(Point3D p1, Point3D p2) {
    updatePosition(p1);
 }
 
-void Vector3D::movePoint(Point3D& point) {
-   point.x += xMag;
-   point.y += yMag;
-   point.z += zMag;
+void Vector3D::movePoint(Point3D& point, double scale) {
+   point.x += xMag * scale;
+   point.y += yMag * scale;
+   point.z += zMag * scale;
 }
 
 void Vector3D::updateMagnitude(Point3D point) {
@@ -130,6 +130,12 @@ Vector3D Vector3D::cross(Vector3D& rhs) {
     (zMag * rhs.xMag) - (xMag * rhs.zMag),
     (xMag * rhs.yMag) - (yMag * rhs.xMag));
    return product;
+}
+
+void Vector3D::scalarMultiplyUpdate(double scalar) {
+   xMag *= scalar;
+   yMag *= scalar;
+   zMag *= scalar;
 }
 
 Vector3D Vector3D::scalarMultiply(double scalar) {

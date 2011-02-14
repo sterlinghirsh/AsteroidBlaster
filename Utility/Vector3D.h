@@ -25,7 +25,7 @@ class Vector3D {
       Vector3D add(Vector3D);
       Vector3D subtract(Vector3D&);
       void subtractUpdate(const Vector3D);
-      void movePoint(Point3D&);
+      void movePoint(Point3D&, double scale = 1);
       void addUpdate(Vector3D);
       void addToPosition(Vector3D&);
       void addNormal();
@@ -50,6 +50,7 @@ class Vector3D {
       void rotateByDegrees(double angle, const Vector3D& axis);
       void randomMagnitude();
       Vector3D scalarMultiply(double);
+      void scalarMultiplyUpdate(double);
       void setLength(double);
       void glTranslate(double length);
       Vector3D getNormalVector();

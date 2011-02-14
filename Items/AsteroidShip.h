@@ -137,6 +137,9 @@ class AsteroidShip : public Object3D {
       double xOff, yOff;
       
       GLUquadricObj *quadratic;
+      void createEngineParticles(double timeDiff);
+      void addNewParticle(Point3D& emitter, Vector3D& initialOffset, Vector3D& offsetDirectionX,
+       Vector3D& offsetDirectionY);
 };
 
 #endif

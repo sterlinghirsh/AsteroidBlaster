@@ -31,7 +31,7 @@ AsteroidShip::AsteroidShip() :
 
       yawSpeed = rollSpeed = pitchSpeed = 0;
       maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
-      shotSpeed = 20; // Also probably will be changed with an upgrade.
+      shotSpeed = 40; // Also probably will be changed with an upgrade.
 
       // Timing stuff
       timeOfLastShot = 0;
@@ -147,6 +147,85 @@ void AsteroidShip::accelerateRight(int dir) {
    updateAcceleration();
 }
 
+void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
+ Vector3D& offsetDirectionX, Vector3D& offsetDirectionY) {
+   static Vector3D particleVariation;
+   static Point3D curPoint;
+   static Vector3D initialOffset;
+   static Vector3D randomOffset;
+
+   curPoint = emitter;
+
+   // Translate the point in 2D
+   randomOffset.add(offsetDirectionX.scalarMultiply(randdouble() - 0.5));
+   randomOffset.add(offsetDirectionY.scalarMultiply(randdouble() - 0.5));
+   randomOffset.add(baseDirection.scalarMultiply(randdouble() -0.5));
+   randomOffset.scalarMultiplyUpdate(0.01);
+
+   particleVariation.updateMagnitude(baseDirection.scalarMultiply(randdouble() * 2));
+   particleVariation.addUpdate(offsetDirectionX.scalarMultiply(randdouble() * 8 - 4));
+   particleVariation.addUpdate(offsetDirectionY.scalarMultiply(randdouble() * 8 - 4));
+   particleVariation.scalarMultiplyUpdate(0.05);
+   //curPoint = position->add(randomPoint);
+   initialOffset.movePoint(curPoint);
+   randomOffset.movePoint(curPoint);
+   Particle::Add(new Point3D(curPoint), 
+    new Vector3D(baseDirection.add(particleVariation)));
+}
+
+void AsteroidShip::createEngineParticles(double timeDiff) {
+   //add particles in the opposite direction of the acceration
+   
+   const float increment = 0.01f;
+   
+   //const float length = acceleration->getLength;
+   const int newParticlesPerSecond = 10000;
+   static Vector3D baseParticleAcceleration;
+   static Point3D emitter;
+
+   // First do up upAcceleration.
+   if (curUpAccel != 0) {
+      baseParticleAcceleration = velocity->add(up->scalarMultiply(-curUpAccel * 0.2));
+      emitter = *position;
+      forward->movePoint(emitter, -0.5);
+      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
+         addNewParticle(emitter, baseParticleAcceleration, *forward, *right);
+      }
+   }
+
+   // Next do right upAcceleration.
+   if (curRightAccel != 0) {
+      baseParticleAcceleration = velocity->add(right->scalarMultiply(-curRightAccel * 0.2));
+      emitter = *position;
+      forward->movePoint(emitter, -0.5);
+      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
+         addNewParticle(emitter, baseParticleAcceleration, *forward, *up);
+      }
+   }
+   
+   // Next do forward upAcceleration.
+   if (curForwardAccel != 0) {
+      // We want to do two streams.
+      baseParticleAcceleration = velocity->add(forward->scalarMultiply(-curForwardAccel * 0.2));
+      Point3D initialPoint(*position);
+      forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
+
+      // First do the right side.
+      right->movePoint(initialPoint, 0.1);
+      baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
+      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
+         addNewParticle(initialPoint, baseParticleAcceleration, *forward, *up);
+      }
+
+      // Next do the left side.
+      right->movePoint(initialPoint, -0.2);
+      baseParticleAcceleration.addUpdate(right->scalarMultiply(-1));
+      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
+         addNewParticle(initialPoint, baseParticleAcceleration, *forward, *up);
+      }
+   }
+
+}
 
 void AsteroidShip::update(double timeDiff) {
    //TODO: Make the shooting and AIs think.
@@ -174,31 +253,7 @@ void AsteroidShip::update(double timeDiff) {
    pitch(timeDiff * pitchSpeed);
    yaw(timeDiff * yawSpeed);
 
-   //add particles in the opposite direction of the acceration
-   
-   float increment = 0.01f;
-   Point3D randomPoint;
-   Vector3D randomVec;
-   
-   
-   
-   
-   for (float tempLen = 0; tempLen <= acceleration->getLength(); tempLen += increment ){
-      Point3D randomPoint;
-      randomPoint.x = (( float ) ( rand( ) % 100 ) - 50.f) / 2000.0f;
-      randomPoint.y = (( float ) ( rand( ) % 100 ) - 50.f) / 2000.0f;
-      randomPoint.z = (( float ) ( rand( ) % 100 ) - 50.f) / 2000.0f;
-   
-      Vector3D particleAcc = acceleration->scalarMultiply(-0.5f);
-      Vector3D randomAcc;
-      randomAcc.randomMagnitude();
-      //randomAcc = randomAcc.scalarMultiply(0.9f);
-      
-      Point3D curPoint = position->add(randomPoint);
-      
-      Particle::Add(new Point3D(curPoint), new Vector3D(particleAcc.add(randomAcc)));
-   }
-
+   createEngineParticles(timeDiff);
 }
 
 /**
@@ -239,6 +294,8 @@ void AsteroidShip::keepFiring() {
 }
 
 void draw_ship(){
+   glEnable(GL_LIGHTING);
+   glColor4f(1, 1, 1, 1);
    glScalef(1.5, .5, .8);
 
    glBegin(GL_TRIANGLES);
@@ -295,9 +352,6 @@ void draw_ship(){
    glVertex3f(-.15, 0, 1);
    glVertex3f(0, .15, 1);
    glVertex3f(-.2, .2, 1.3);
-
-
-
 
    glVertex3f(.15, 0, 1);
    glVertex3f(0, .15, 1);
@@ -403,8 +457,6 @@ void draw_ship(){
 
    glEnd();
    glLineWidth(1.0);
-
-
 }
 
 void draw_vectors(){
