@@ -34,7 +34,8 @@ class GameState : public InputReceiver {
                         *scoreText, 
                         *healthText,
                         *gameOverText,
-                        *winText;
+                        *winText,
+                        *weaponText;
       // Used when looping over Object3Ds
       std::vector<Object3D*>::iterator item;
       // Used when looping over Object3Ds in drawInMinimap

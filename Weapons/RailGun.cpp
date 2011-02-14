@@ -12,6 +12,7 @@
 RailGun::RailGun(AsteroidShip* owner)
  : Weapon(owner) {
     coolDown = 2; // Seconds
+    name = "Rail Gun";
 }
 
 RailGun::~RailGun() {

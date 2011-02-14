@@ -14,6 +14,7 @@ Blaster::Blaster(AsteroidShip* owner)
    shotSpeed = 40; // Units per second
    coolDown = 0.08; // Seconds
    randomVariationAmount = 2; // Units
+   name = "Blaster";
 }
 
 Blaster::~Blaster() {

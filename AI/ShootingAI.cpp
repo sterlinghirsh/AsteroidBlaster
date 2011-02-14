@@ -23,8 +23,7 @@
 // Radians/sec
 const double ShootingAI::gunRotSpeed = 12 * 3.14159265;
 
-ShootingAI::ShootingAI(AsteroidShip* owner)
-{
+ShootingAI::ShootingAI(AsteroidShip* owner) {
    ship = owner;
    aimingAt = Point3D(0,1,0);
    lastShotPos = Point3D(0,0.9,0);
@@ -47,8 +46,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner)
  * TODO: Make this work. I (Sterling) was getting huge values for wouldHit.
  * This is almost certainly a bug.
  */
-int ShootingAI::aimAt(double dt, Object3D* target)
-{
+int ShootingAI::aimAt(double dt, Object3D* target) {
    Point3D wouldHit;
    double speed = 20;//chosenWeapon->getSpeed();
    double time = 0, dist = 0, ang = 0;
@@ -120,19 +118,14 @@ int ShootingAI::aimAt(double dt, Object3D* target)
 }
 
 // kinda useless right now.
-void ShootingAI::chooseWeapon( int weapon )
-{
+void ShootingAI::chooseWeapon( int weapon ) {
     ship->selectWeapon( weapon );
     //chosenWeapon = ship->getWeapon( weapon );
 }
 
-Object3D* ShootingAI::chooseTarget()
-{
-
+Object3D* ShootingAI::chooseTarget() {
    std::list<Object3D*>* targets = ship->getRadar()->getNearbyReading();
-
    std::list<Object3D*>::iterator targets_iterator;
-
    Point3D* ship_position = ship->position;
 
    targets_iterator = targets->begin();
@@ -151,18 +144,16 @@ Object3D* ShootingAI::chooseTarget()
          continue;
       
       distance = (*targets_iterator)->position->distanceFrom( *ship_position );
-      if ( distance < shortest_distance )
-      {
+      if ( distance < shortest_distance ) {
          shortest_distance = distance;
          closest = *targets_iterator;
       } 
    }
 
-    return closest;
+   return closest;
 }
 
-int ShootingAI::think(double dt)
-{
+int ShootingAI::think(double dt) {
    if(!enabled) {
       return 0;
    }

@@ -28,3 +28,9 @@ bool Weapon::isCooledDown() {
    return doubleTime() > timeLastFired + coolDown;
 }
 
+/**
+ * Return the name of the weapon.
+ */
+std::string Weapon::getName() {
+   return name;
+}

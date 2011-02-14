@@ -92,6 +92,7 @@ class AsteroidShip : public Object3D {
       int score;
       int numShards;
       Vector3D shotDirection; // If we shoot a shot, where will it go?
+      Weapon* getCurrentWeapon();
 
    protected:
       std::vector<Weapon*> weapons;

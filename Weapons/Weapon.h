@@ -9,6 +9,8 @@
 #ifndef __WEAPON_H__
 #define __WEAPON_H__
 
+#include <string>
+
 /* Incomplete declaration for pointers. */
 class Object3D;
 class AsteroidShip;
@@ -42,11 +44,14 @@ class Weapon {
        * Called every frame.
        */
       virtual void update(double timeDiff)=0;
-         AsteroidShip* ship;
+      AsteroidShip* ship;
+      virtual std::string getName();
+      
       protected:
          WeaponType type; // Do we need this?
          double timeLastFired;
          double coolDown;
+         std::string name;
 };
 
 #endif

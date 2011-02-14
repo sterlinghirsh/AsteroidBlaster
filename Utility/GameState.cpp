@@ -27,6 +27,8 @@ GameState::GameState(double worldSizeIn) {
   healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 80);
   gameOverText = new BitmapTextDisplay("GAME OVER", GW/2, GH/2);
   winText = new BitmapTextDisplay("YOU WIN!", GW/2, GH/2);
+  weaponText = new BitmapTextDisplay("Current Weapon: ", ship->getCurrentWeapon()->getName(), 
+   "", 10, 100);
 
   // Set up objects.
   custodian.add(ship);
@@ -199,6 +201,7 @@ void GameState::drawAllText() {
       numAsteroidsText->draw();
       scoreText->draw();
       healthText->draw();
+      weaponText->draw();
 
       glEnable(GL_LIGHTING);
       //glEnable(GL_DEPTH_TEST);
@@ -214,6 +217,7 @@ void GameState::updateText() {
    numAsteroidsText->updateBody(custodian.asteroidCount);
    scoreText->updateBody(ship->getScore());
    healthText->updateBody(ship->getHealth());
+   weaponText->updateBody(ship->getCurrentWeapon()->getName());
 }
 
 void GameState::checkCollisions() {

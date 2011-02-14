@@ -679,3 +679,10 @@ void AsteroidShip::drawShotDirectionIndicators() {
    glEnable(GL_CULL_FACE);
    glPopMatrix();
 }
+
+/**
+ * Returns a pointer to the currently selected weapon.
+ */
+Weapon* AsteroidShip::getCurrentWeapon() {
+   return weapons[currentWeapon];
+}
