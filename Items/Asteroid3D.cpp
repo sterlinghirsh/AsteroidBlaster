@@ -12,6 +12,7 @@
 #include "Shots/ProjectileShot.h"
 #include "Shots/BeamShot.h"
 #include <algorithm>
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 using namespace std;
@@ -45,10 +46,6 @@ void Asteroid3D::newRandomPosition() {
 }
 
 void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
-   double tempRad;
-   double x, y, z;
-   const double pi = 3.141592;
-
    angle = 0;
    radius = r;
    worldSize = worldSizeIn;
@@ -189,7 +186,7 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
       t2 = r1;
    }
    double step = (double)t1.size() / (double)t2.size();
-   for (unsigned i = 0; i < t2.size(); i++) {
+   for (int i = 0; i < t2.size(); i++) {
       int p1, p2, p3, p4;
       p1 = t2._nList[i];
       p2 = t1._nList[(int)count % t1.size()];
