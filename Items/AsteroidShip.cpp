@@ -489,13 +489,6 @@ void AsteroidShip::drawInMinimap() {
    glPopMatrix();
 }
 
-void AsteroidShip::getStuff(){
-   x = (upstart->yMag * up->zMag) - (upstart->zMag * up->yMag);
-   y = (upstart->zMag * up->xMag) - (upstart->xMag * up->zMag);
-   z = (upstart->xMag * up->yMag) - (upstart->yMag * up->xMag);
-
-   angle = acos(((upstart->xMag * up->xMag) + (upstart->yMag * up->yMag) + (upstart->zMag * up->zMag)) / (upstart->getLength() * up->getLength())) * 57.2958;
-}
 
 void AsteroidShip::rotate(){
    glMatrixMode(GL_MODELVIEW);

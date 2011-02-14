@@ -108,6 +108,29 @@ void display() {
 
    glPopMatrix();
    
+   
+   /*glPushMatrix();
+	   glLoadIdentity();
+	   gluLookAt(	0.0f, 0.0f,  10.0f, 
+				   0.0f, 0.0f, -1.0f,
+				   0.0f, 1.0f,  0.0f);
+		//glTranslatef(gameState->ship->position->x,gameState->ship->position->y,gameState->ship->position->z);
+      //glRotatef(gameState->ship->angle, gameState->ship->axis->xMag, gameState->ship->axis->yMag, gameState->ship->axis->zMag);
+      //glScalef(scalex, scaley, scalez);
+      
+      float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
+	   glLightfv(GL_LIGHT0, GL_POSITION, lpos);
+
+	   glUseProgram(program);
+
+	   //glRotatef(90+90,0,1,0); // rotate the teapot
+	   //glRotatef(90,0,0,1);
+
+		
+	   glutWireTeapot(3.0);	
+	glPopMatrix();
+	glUseProgram(0); 	*/
+   
    // Draw the minimap
    glPushMatrix();
       /* Set the viewport to 3/4 of the way across the screen on the bottom.
@@ -154,6 +177,8 @@ void display() {
       //glEnd();						/* Done Drawing The Textured Quad */	
       
    glPopMatrix();
+
+
 
    // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
 	// glFlush ();

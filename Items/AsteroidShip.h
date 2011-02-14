@@ -43,7 +43,6 @@ class AsteroidShip : public Object3D {
       void updateAcceleration();
       virtual void update(double timeDiff);
       void rotate();
-      void getStuff();
       void nextWeapon();
       void prevWeapon();
 
@@ -134,10 +133,6 @@ class AsteroidShip : public Object3D {
       int lastGunFired;
       int currentWeapon;
       Vector3D *upstart;
-      double x;
-      double y;
-      double z;
-      double angle;
 
       void updateShotDirectionVector();
       void brake(double brakeFactorIn);
