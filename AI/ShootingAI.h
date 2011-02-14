@@ -36,6 +36,7 @@ class ShootingAI : public AI {
    Weapon* chosenWeapon;
    Point3D lastShotPos;
    Point3D aimingAt;
+   bool enabled;
    
    /* TODO Add your respective functions here. */
    int aimAt(double dt, Object3D* target);
@@ -49,6 +50,7 @@ class ShootingAI : public AI {
    virtual void enable();
    // Disable this AI. It will stop shooting.
    virtual void disable();
+   virtual bool isEnabled();
 
    static const double gunRotSpeed;
 };

@@ -14,12 +14,9 @@
 class AI {
    public:
       virtual int think(double dt)=0;
-      virtual void enable();
-      virtual void disable();
-      bool isEnabled();
-      
-   protected:
-      bool enabled;
+      virtual void enable()=0;
+      virtual void disable()=0;
+      virtual bool isEnabled()=0;
 };
 
 #endif

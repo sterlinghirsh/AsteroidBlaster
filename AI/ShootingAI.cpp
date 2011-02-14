@@ -192,10 +192,14 @@ int ShootingAI::think(double dt)
 }
 
 void ShootingAI :: enable() {
-   AI :: enable();
+   enabled = true;
 }
 
 void ShootingAI :: disable() {
-   AI :: disable();
+   enabled = false;
    ship->fire(false);
+}
+
+bool ShootingAI::isEnabled() {
+   return enabled;
 }
