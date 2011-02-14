@@ -9,7 +9,7 @@
 #ifndef __WEAPON_H__
 #define __WEAPON_H__
 
-#include "Shots/AsteroidShot.h"
+//#include "Shots/AsteroidShot.h"
 
 enum WeaponType {
    PROJECTILE,
