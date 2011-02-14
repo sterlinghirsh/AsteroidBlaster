@@ -51,6 +51,12 @@ $(PROGNAME): $(OBJECTS)
 run:
 	./${PROGNAME}
 
+lib:
+	./lib.sh make
+
+libClean:
+	./lib.sh clean
+
 turnin:
 	handin zwood csc471finals2 *.cpp *.h *.bmp README
 	handin zwood csc471finalwebs2 asteroidssite/*
