@@ -234,8 +234,9 @@ void Asteroid3D::handleCollision(Object3D* other) {
    } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
       if (radius > 2) {
-         custodian->add(makeChild(0));
-         custodian->add(makeChild(1));
+         int dimension = rand() % 3;
+         custodian->add(makeChild(0, dimension));
+         custodian->add(makeChild(1, dimension));
       }
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
       if (health > 0) {
@@ -254,8 +255,9 @@ void Asteroid3D::handleCollision(Object3D* other) {
                   radius * explosionFactor));
          if (radius > 2) {
             shot->owner->score += (int) radius * 10;
-            custodian->add(makeChild(0));
-            custodian->add(makeChild(1));
+            int dimension = rand() % 3;
+            custodian->add(makeChild(0, dimension));
+            custodian->add(makeChild(1, dimension));
          } else {
             custodian->add(makeShard(0));
             //printf("YOU JUST SHARDED\n");
@@ -278,7 +280,7 @@ Shard* Asteroid3D::makeShard(int num) {
  * num is the number of asteroid that is produced.
  * This helps with making sure that two asteroids don't intersect.
  */
-Asteroid3D* Asteroid3D::makeChild(int num) {
+Asteroid3D* Asteroid3D::makeChild(int num, int dimension) {
    Asteroid3D* asteroid;
    asteroid = new Asteroid3D(radius/2, worldSize);
    //asteroid->velocity = asteroid->velocity->scalarMultiply(2);
@@ -286,7 +288,12 @@ Asteroid3D* Asteroid3D::makeChild(int num) {
    asteroid->velocity->addUpdate(*asteroid->velocity);
    asteroid->velocity->addUpdate(*velocity);
    asteroid->position->clone(position);
-   asteroid->position->x += num == 0 ? radius/2 : -radius/2;
+   if (dimension % 3 == 0)
+      asteroid->position->x += num == 0 ? radius/2 : -radius/2;
+   else if (dimension % 3 == 1)
+      asteroid->position->y += num == 0 ? radius/2 : -radius/2;
+   else
+      asteroid->position->z += num == 0 ? radius/2 : -radius/2;
 
    return asteroid;
 }

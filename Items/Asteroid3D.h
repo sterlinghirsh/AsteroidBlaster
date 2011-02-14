@@ -36,7 +36,7 @@ class Asteroid3D : public Object3D {
       virtual void handleCollision(Object3D* other);
       bool handleHit(std::list<Asteroid3D*>& asteroids);
       Shard* makeShard(int num);
-      Asteroid3D* makeChild(int num);
+      Asteroid3D* makeChild(int num, int dimension);
       void newRandomPosition();
       void drawInMinimap();
       void debug();
