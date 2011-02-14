@@ -5,22 +5,25 @@ SDL_LIBS=$(shell "sdl-config" "--libs")
 SDL_CFLAGS=$(shell "sdl-config" "--cflags")
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
-   PLATFORMSPECIFICCFLAGS=-I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -I./Libraries/glew-1.5.8/include
+   PLATFORMSPECIFICCFLAGS=
 #-I/home/rkudo/library/SDL_ttf-2.0.10/
-   PLATFORMSPECIFICLDFLAGS=-L./Libraries/glew-1.5.8/lib -lGL -lGLU -lglut -lSDL -lpthread -lGLEW
+   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -lSDL -lpthread
 
 #-lSDL_ttf -L/home/rkudo/library/SDL_ttf-2.0.10/.libs/
 else
-   PLATFORMSPECIFICCFLAGS=-I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
+   PLATFORMSPECIFICCFLAGS=
    PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -L/usr/local/lib -lSDLmain -lSDL -Wl,-framework,Cocoa
 
 endif
 
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g  $(SDL_LIBS)
+#GLEWLIBS=-L./Libraries/glew-1.5.8/lib -lGLEW
+GLEWLIBS=./Libraries/glew-1.5.8/lib/libGLEW.a
+
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g  $(SDL_LIBS) $(GLEWLIBS)
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c $(SDL_CFLAGS) -g -O0
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c $(SDL_CFLAGS) -g -O0 -I./Libraries/glew-1.5.8/include
 CC=g++
 
 PROGNAME=AsteroidBlaster
