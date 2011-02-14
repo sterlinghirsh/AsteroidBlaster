@@ -23,6 +23,8 @@
 #include "Utility/InputManager.h"
 
 #include "SDL.h"
+#pragma comment(lib,"SDL.lib")
+#pragma comment(lib,"SDLmain.lib") 
 
 using namespace std;
 
