@@ -5,9 +5,9 @@ SDL_LIBS=$(shell "sdl-config" "--libs")
 SDL_CFLAGS=$(shell "sdl-config" "--cflags")
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
-   PLATFORMSPECIFICCFLAGS=-I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
+   PLATFORMSPECIFICCFLAGS=-I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -I./Libraries/glew-1.5.8/include
 #-I/home/rkudo/library/SDL_ttf-2.0.10/
-   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -lSDL -lpthread
+   PLATFORMSPECIFICLDFLAGS=-L./Libraries/glew-1.5.8/lib -lGL -lGLU -lglut -lSDL -lpthread -lGLEW
 
 #-lSDL_ttf -L/home/rkudo/library/SDL_ttf-2.0.10/.libs/
 else

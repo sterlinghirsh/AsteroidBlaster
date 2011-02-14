@@ -7,9 +7,13 @@
 #ifndef __GLUTUTILITY_H__
 #define __GLUTUTILITY_H__
 
+#include <GL/glew.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #include <list>
+
+
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -42,6 +46,11 @@ void keyboard(unsigned char key, int x, int y);
 
 double clamp(double, double, double);
 double randdouble();
+
+GLuint setShaders(char * vert, char * frag, char * geom);
+char *textFileRead(char *fn);
+void printShaderLog(GLuint obj);
+void printProgramLog(GLuint obj);
 
 typedef struct materialStruct {
   GLfloat ambient[4];
@@ -93,6 +102,7 @@ extern materialStruct WhiteTransparent;
 extern materialStruct WhiteSolid;
 extern materialStruct BlackSolid;
 extern materialStruct Rock;
+
 
 typedef struct RGB {
   GLubyte r;

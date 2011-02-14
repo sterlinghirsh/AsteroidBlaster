@@ -8,6 +8,7 @@
 #include <list>
 #include <sstream>
 
+#include "GL/glew.h"
 #include "Graphics/GlutUtility.h"
 #include "Utility/Point3D.h"
 #include "Items/Asteroid3D.h"
@@ -21,6 +22,7 @@
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/GameState.h"
 #include "Utility/InputManager.h"
+
 
 #include "SDL.h"
 #pragma comment(lib,"SDL.lib")
@@ -38,6 +40,9 @@ bool fullScreen = false;
 // SDL globals
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
+
+//GLSL stuff
+GLuint program;
 
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
@@ -254,6 +259,7 @@ int main(int argc, char* argv[]) {
    int oldGW = 800;
    int oldGH = 600;
    
+   //initialize glut
    glutInit(&argc, argv);
    
    // Initialize stuff related to GL/SDL
@@ -261,15 +267,32 @@ int main(int argc, char* argv[]) {
    
    // Preload texture.
    new TextureImporter("Images/SkybusterExplosion.bmp");
-   
+   // get particle texture
    Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
 
-   materials(Rock);
+   //setup glew and GLSL
+   glewInit();
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && 
+      GL_EXT_geometry_shader4)
+      printf("Ready for GLSL\n");
+   else {
+      printf("Not enough GLSL support\n");
+      exit(1);
+   }
+   
+   //load the shader files
+   program = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
+
+   //set the quadradic up
    quadric = gluNewQuadric();
    gluQuadricNormals(quadric, GLU_SMOOTH);
 
+
+   //Initialize gameState
    gameState = new GameState(WORLD_SIZE);
+   //Initialize the input manager
    inputManager = new InputManager();
+   //Connect the input manager to the gameState
    inputManager->addReceiver(gameState);
 
    while (running) {
