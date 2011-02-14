@@ -71,7 +71,7 @@ void Custodian::update() {
    int firstNull = objectsByMinX.size();
 
    // Remove items that should be removed.
-   for (int i = 0; i < objectsByMinX.size(); ++i) {
+   for (unsigned i = 0; i < objectsByMinX.size(); ++i) {
       if (objectsByMinX[i] == NULL)
          continue;
       if (objectsByMinX[i]->shouldRemove) {
@@ -84,7 +84,7 @@ void Custodian::update() {
    sort(objectsByMaxX.begin(), objectsByMaxX.end(), compareByMaxX);
 
    // Set up ranks in objects.
-   for (int i = 0; i < objectsByMinX.size(); ++i) {
+   for (unsigned i = 0; i < objectsByMinX.size(); ++i) {
       if (objectsByMinX[i] == NULL) {
          firstNull = i;
          break;
@@ -94,7 +94,7 @@ void Custodian::update() {
    }
 
    // Remove null pointers from the ends.
-   for (int i = firstNull; i < objectsByMinX.size(); ++i) {
+   for (unsigned i = firstNull; i < objectsByMinX.size(); ++i) {
       objectsByMinX.pop_back();
       objectsByMaxX.pop_back();
    }
