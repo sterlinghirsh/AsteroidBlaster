@@ -3,6 +3,7 @@
  * Ring.cpp
  * A semi-randomly generated ring of points for an asteroid object.
  */
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include "Items/Asteroid3D.h"
 

@@ -4,6 +4,7 @@
  * A randomly generated shard object.
  */
 
+#define _USE_MATH_DEFINES
 #include "Graphics/GlutUtility.h"
 #include "Graphics/Sprite.h"
 #include "Items/Shard.h"
@@ -51,8 +52,6 @@ void Shard::genOrbiters() {
  * Initialize the shard.
  */
 void Shard::InitShard(double r, double worldSizeIn) {
-   double tempRad;
-   double x, y, z;
    const double pi = 3.141592;
 
    angle = 0;
@@ -267,7 +266,7 @@ void Shard::makeStrip(Ring r1, Ring r2) {
       t2 = r1;
    }
    double step = (double)t1.size() / (double)t2.size();
-   for (unsigned i = 0; i < t2.size(); i++) {
+   for (int i = 0; i < t2.size(); i++) {
       int p1, p2, p3, p4;
       p1 = t2._nList[i];
       p2 = t1._nList[(int)count % t1.size()];
