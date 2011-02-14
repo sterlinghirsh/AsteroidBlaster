@@ -20,4 +20,4 @@ class RailGun : public Weapon {
       virtual void fire();
 };
 
-#endif;
+#endif

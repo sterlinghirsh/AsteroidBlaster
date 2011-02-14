@@ -74,9 +74,9 @@ Point3D Matrix4::getRow(int row) const {
    if (row < 0 || row >= 4)
       return t;
 
-   t.x = m[row][0];
-   t.y = m[row][1];
-   t.z = m[row][2];
+   t.x = m[0][row];
+   t.y = m[1][row];
+   t.z = m[2][row];
 
    return t;
 }
@@ -86,9 +86,9 @@ Point3D Matrix4::getCol(int col) const {
    if (col < 0 || col >=4)
     return t;
 
-   t.x = m[0][col];
-   t.y = m[1][col];
-   t.z = m[2][col];
+   t.x = m[col][0];
+   t.y = m[col][1];
+   t.z = m[col][2];
 
    return t;
 }
@@ -143,7 +143,7 @@ const Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
 
    for (int i = 0; i < 4; i++)
       for (int j = 0; j < 4; j++) {
-         t.m[i][j] = getRow(i) * rhs.getCol(j) + m[i][3] * rhs.m[3][j];
+         t.m[i][j] = getRow(i) * rhs.getCol(j) + m[3][i] * rhs.m[j][3];
       }
 
    return t;
