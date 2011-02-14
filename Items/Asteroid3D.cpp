@@ -154,15 +154,15 @@ void Asteroid3D::draw() {
    mesh.draw(false);
    glDisable(GL_POLYGON_OFFSET_FILL);
 
-   if (health == 1) {
-      glColor3f(0.996, 0.312, 0.1);
-   } else if (health > 1) {
+   //if (health == 1) {
+      //glColor3f(0.996, 0.312, 0.1);
+   //} else if (health > 1) {
       double step = (initH - health + 1);
       double stepR = .004 / initH * step;
       double stepG = .388 / initH * step;
       double stepB = 1.0 / initH * step;
       glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
-   }
+   //}
    //glColor3f(0.996, 0.612, 0.0);
 
    //glLineWidth(2);
