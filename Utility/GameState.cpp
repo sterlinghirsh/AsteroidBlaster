@@ -30,7 +30,7 @@ GameState::GameState(double worldSizeIn) {
 
   // Set up objects.
   custodian.add(ship);
-  numAsteroidsToSpawn = 3;
+  numAsteroidsToSpawn = 10;
   initAsteroids();
   doYaw = 0;
   mouseX = 0;

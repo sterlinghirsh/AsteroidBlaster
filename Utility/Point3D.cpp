@@ -15,15 +15,15 @@
 
 const Point3D Point3D::Zero(0, 0, 0);
 
-Point3D Point3D::operator+(const Point3D &rhs) {
+const Point3D Point3D::operator+(const Point3D &rhs) const {
    return Point3D(x + rhs.x, y + rhs.y, z + rhs.z);
 }
 
-Point3D Point3D::operator-(const Point3D &rhs) {
+const Point3D Point3D::operator-(const Point3D &rhs) const {
    return Point3D(x - rhs.x, y - rhs.y, z - rhs.z);
 }
 
-double Point3D::operator*(const Point3D &rhs) {
+const double Point3D::operator*(const Point3D &rhs) const {
    return x * rhs.x + y * rhs.y + z * rhs.z;
 }
 
@@ -35,7 +35,7 @@ Point3D& Point3D::operator/=(double scalar) {
    return *this;
 }
    
-int Point3D::operator==(const Point3D &rhs) const {
+const int Point3D::operator==(const Point3D &rhs) const {
    if (fabs(x - rhs.x) < EPSILON)
       if (fabs(y - rhs.y) < EPSILON)
          if (fabs(z - rhs.z) < EPSILON)
@@ -54,13 +54,11 @@ Point3D& Point3D::operator=(const Point3D &src) {
    return *this;
 }
 
-Point3D Point3D::operator*(double scalar)
-{
+const Point3D Point3D::operator*(double scalar) const {
    return Point3D(x * scalar, y * scalar, z * scalar);
 }
 
-Point3D Point3D::normalize() const
-{
+const Point3D Point3D::normalize() const {
    double len = magnitude();
 
    if (len < EPSILON)
@@ -72,7 +70,15 @@ Point3D Point3D::normalize() const
    return Point3D(x / len, y / len, z / len);
 }
 
-double Point3D::magnitude() const
+const double Point3D::magnitude() const
 {
    return sqrt(x * x + y * y + z * z);
 }
+
+const Point3D Point3D::operator^(const Point3D &rhs) const {
+  return Point3D(
+   (y * rhs.z) - (z * rhs.y),
+   (z * rhs.x) - (x * rhs.z),
+   (x * rhs.y) - (y * rhs.x));
+}
+

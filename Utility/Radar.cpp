@@ -88,9 +88,9 @@ std::list<Object3D*>* Radar :: getViewFrustumReading() {
    
    //curFrustum->print();
    
-   for (listIter = culledList->begin(); listIter != culledList->end(); ++listIter)
+   /*for (listIter = culledList->begin(); listIter != culledList->end(); ++listIter)
    {
      //(*listIter)->debug();
-   }  
+   }*/  
    return culledList;
 }

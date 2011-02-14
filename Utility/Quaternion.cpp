@@ -72,15 +72,32 @@ Vector3D Quaternion::operator*(Vector3D &vec)
 	return (Vector3D(resQuat.x, resQuat.y, resQuat.z));
 }
 
+Point3D Quaternion::operator*(Point3D &vec)
+{
+	Point3D vn = vec;
+	vn.normalize();
+ 
+	Quaternion vecQuat, resQuat;
+	vecQuat.x = vn.x;
+	vecQuat.y = vn.y;
+	vecQuat.z = vn.z;
+	vecQuat.w = 0.0f;
+ 
+	resQuat = vecQuat * getConjugate();
+	resQuat = *this * resQuat;
+ 
+	return (Point3D(resQuat.x, resQuat.y, resQuat.z));
+}
+
 void Quaternion::FromAxis(const Vector3D &v, double angle)
 {
 	double sinAngle;
 	double otherAngle = (angle / (180/3.14159265)) * .5;
 	double cosAngle;
 	//angle *= 0.5f;
-        printf("Vec XMag: %f\n", v.xMag);
+        //printf("Vec XMag: %f\n", v.xMag);
 	Vector3D vn = v;
-	//vn.normalize();
+	vn.normalize();
  
 	sinAngle = sin(otherAngle);
  	cosAngle = cos(otherAngle);
@@ -90,15 +107,30 @@ void Quaternion::FromAxis(const Vector3D &v, double angle)
 	w = cosAngle;
 }
 
+void Quaternion::FromAxis(const Point3D &v, double angle)
+{
+	double sinAngle;
+	double otherAngle = (angle / (180/3.14159265)) * .5;
+	double cosAngle;
+   Point3D vn = v.normalize(); 
+
+	sinAngle = sin(otherAngle);
+ 	cosAngle = cos(otherAngle);
+	x = (vn.x * sinAngle);
+	y = (vn.y * sinAngle);
+	z = (vn.z * sinAngle);
+	w = cosAngle;
+}
+
 void Quaternion::FromEuler(double pitch, double yaw, double roll)
 {
 	// Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll
 	// and multiply those together.
 	// the calculation below does the same, just shorter
  
-	double p = pitch * 3.14159265/360;
-	double y = yaw * 3.14159265/360;
-	double r = roll * 3.14159265/360;
+	double p = pitch * 3.14159265/180;
+	double y = yaw * 3.14159265/180;
+	double r = roll * 3.14159265/180;
  
 	double sinp = sin(p);
 	double siny = sin(y);
@@ -121,6 +153,15 @@ void Quaternion::getAxisAngle(Vector3D *axis, double *angle)
 	axis->xMag = x / scale;
 	axis->yMag = y / scale;
 	axis->zMag = z / scale;
+	*angle = acos(w) * 2.0f;
+}
+
+void Quaternion::getAxisAngle(Point3D *axis, double *angle)
+{
+	double scale = sqrt(x * x + y * y + z * z);
+	axis->x = x / scale;
+	axis->y = y / scale;
+	axis->z = z / scale;
 	*angle = acos(w) * 2.0f;
 }
 
@@ -182,6 +223,28 @@ void Quaternion::getMatrix(GLfloat* matri)
 	// Note: The constructor of Matrix4 expects the Matrix in column-major format like expected by
 	//   OpenGL
 	//return matri;
+}
+
+Matrix4 Quaternion::getMatrix()
+{
+	double x2 = x * x;
+	double y2 = y * y;
+	double z2 = z * z;
+	double xy = x * y;
+	double xz = x * z;
+	double yz = y * z;
+	double wx = w * x;
+	double wy = w * y;
+	double wz = w * z;
+    
+   Matrix4 matrix(
+  			1.0f - 2.0f * (y2 + z2), 2.0f * (xy - wz), 2.0f * (xz + wy), 0.0f,
+			2.0f * (xy + wz), 1.0f - 2.0f * (x2 + z2), 2.0f * (yz - wx), 0.0f,
+			2.0f * (xz - wy), 2.0f * (yz + wx), 1.0f - 2.0f * (x2 + y2), 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+    );
+   
+	return matrix;
 }
 
 void Quaternion::print(){

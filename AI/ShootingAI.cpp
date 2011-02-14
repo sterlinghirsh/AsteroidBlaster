@@ -17,8 +17,10 @@
 
 #include "AI/ShootingAI.h"
 #include "Items/Asteroid3D.h"
+#include "Utility/Quaternion.h"
 
-const double ShootingAI::gunRotSpeed = 1.0;
+// Radians/sec
+const double ShootingAI::gunRotSpeed = 6 * 3.14159265;
 
 ShootingAI::ShootingAI(AsteroidShip* owner)
 {
@@ -47,43 +49,37 @@ int ShootingAI::aimAt(double dt, Object3D* target)
 {
    Point3D wouldHit;
    double speed = 20;//chosenWeapon->getSpeed();
-   double time = 0;
-   double dist;
-   double len;
+   double time = 0, dist = 0, ang = 0;
    int iterations = 0;
    // Change in position
    Vector3D dp;
    
    Point3D targetPos = *target->position;
-   Point3D curTarget;
+   Point3D curTarget = targetPos;
    // This section of code does angle interpolation.
-   // Calculate the vector that points from our current direction to where
-   // we want to be pointing.
+   // Find the angle between our vector and where we want to be.
+   ang = acos(aimingAt * lastShotPos);
+
+   // Get our axis of rotation.
+   wouldHit = (aimingAt ^ lastShotPos).normalize();
 
    // If the difference is more than the radius of the target,
    // we need to adjust where we are aiming.
-   /*
-   if (wouldHit.magnitude() > gunRotSpeed*dt) {
+   if (fabs(fabs(ang) - gunRotSpeed*dt) > 0.01) {
+      Quaternion q;
+      q.FromAxis(Vector3D(wouldHit.x, wouldHit.y, wouldHit.z), gunRotSpeed*dt);
+
+      aimingAt = q * aimingAt;
       // Normalize the vector.
-      wouldHit = wouldHit.normalize();
-
-      // Scale with the max gun rotation speed
-      // multiplied with the amount of time that passed since the last frame
-      wouldHit = wouldHit * (gunRotSpeed * dt);
-
-      // calculate the vector that points from our position
-      // to the spot that we want to be aiming. Normalize it as it is a 
-      // direction.
-      aimingAt = (wouldHit - *ship->position).normalize();
+      aimingAt = aimingAt.normalize();
    }
-   */
-
+      ship->fire(true);
+   
    // This loop will choose the spot that we want to be shooting at.
    do {
       // time is the distance from the ship to the target according to the
       // speed of the bullet.
       time = ship->position->distanceFrom(curTarget) / speed;
-      printf("dist: %lf\n", ship->position->distanceFrom(curTarget));
       
       // dp is the distance the asteroid traveled in the time it took for our
       // bullet to get to the point we are considering (curTarget).
@@ -102,11 +98,6 @@ int ShootingAI::aimAt(double dt, Object3D* target)
       // its position
 
       wouldHit = wouldHit.normalize() * speed * time + *ship->position;
-      printf("time: %lf, shipPos: ", time);
-      ship->position->print();
-      printf("wouldHit: ");
-      wouldHit.print();
-      printf("iteration: %d\n", iterations);
 
       // Dist is the distance from where our bullet will be to where
       // the asteroid will be.
@@ -119,10 +110,7 @@ int ShootingAI::aimAt(double dt, Object3D* target)
    // By the end of the loop, curTarget is the point that we need to aim
    // at in order to hit our target.
    lastShotPos = (curTarget - *ship->position).normalize();
-   //aimingAt = lastShotPos;
-   printf("aimingAt: ");
-   aimingAt.print();
-   ship->updateShotDirection(lastShotPos);
+   ship->updateShotDirection(aimingAt);
 
    return 0;
 }
@@ -196,8 +184,8 @@ int ShootingAI::think(double dt)
    Object3D* target = chooseTarget();
    // choose target
 
-   aimAt(dt, target);
-   ship->fire(true);
+   if (target != NULL)
+      aimAt(dt, target);
 
    // Think has a return value just in case it needs to.
    return 0;
