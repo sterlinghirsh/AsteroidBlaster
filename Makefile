@@ -28,10 +28,10 @@ PROGNAME=AsteroidBlaster
 UTILITYFILES=Utility/Vector3D.cpp Utility/Object3D.cpp Utility/BitmapTextDisplay.cpp Utility/GameState.cpp Utility/Custodian.cpp Utility/InputManager.cpp Utility/Point3D.cpp Utility/Radar.cpp Utility/Quaternion.cpp Utility/ViewFrustum.cpp Utility/Matrix4.cpp
 GRAPHICSFILES=Graphics/GlutUtility.cpp Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Sprite.cpp Graphics/Particle.cpp Graphics/TextureImporter.cpp Graphics/MeshImporter.cpp Graphics/Camera.cpp
 ITEMSFILES=Items/Asteroid3D.cpp Items/AsteroidShip.cpp Items/BoundingSpace.cpp Items/Player.cpp Items/Enemy.cpp Items/Ring.cpp Items/Shard.cpp
-SHOTSFILES=Shots/Shot.cpp Shots/BeamShot.cpp Shots/ProjectileShot.cpp
+SHOTSFILES=Shots/Shot.cpp Shots/BeamShot.cpp Shots/ProjectileShot.cpp Shots/TractorBeamShot.cpp
 AIFILES=AI/ShootingAI.cpp
 NETWORKFILES=
-WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp
+WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/TractorBeam.cpp
 FILES=main.cpp $(UTILITYFILES) $(GRAPHICSFILES) $(ITEMSFILES) $(SHOTSFILES) $(AIFILES) $(NETWORKFILES) $(WEAPONSFILES)
 
 OBJECTS=$(FILES:.cpp=.o)

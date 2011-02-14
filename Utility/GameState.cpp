@@ -349,6 +349,13 @@ void GameState::keyDown(int key) {
   case SDLK_f:
     //TODO: ship->enableFlyingAI();
     break;
+  
+  case SDLK_v:
+    ship->nextWeapon();
+    break;
+  case SDLK_z:
+    ship->prevWeapon();
+    break;
   }
 }
 
@@ -394,11 +401,11 @@ void GameState::keyUp(int key) {
 void GameState::mouseDown(int button) {
   switch(button) {
   case 1:
-    ship->selectWeapon(0);
+    //ship->selectWeapon(0);
     break;
 
   case 3:
-    ship->selectWeapon(1);
+    //ship->selectWeapon(1);
     break;
   }
   ship->fire(true);

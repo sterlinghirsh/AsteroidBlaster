@@ -11,7 +11,6 @@
 
 class BeamShot : public Shot {
    public:
-      static double frequency; // Shots per sec
       bool hitYet;
       unsigned long lastHitFrame;
 

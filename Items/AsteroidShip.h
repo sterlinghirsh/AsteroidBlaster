@@ -17,6 +17,7 @@
 #include "Weapons/Weapon.h"
 #include "Weapons/Blaster.h"
 #include "Weapons/RailGun.h"
+#include "Weapons/TractorBeam.h"
 #include <list>
 
 // Later we'll put in a model for the ship.
@@ -43,6 +44,8 @@ class AsteroidShip : public Object3D {
       virtual void update(double timeDiff);
       void rotate();
       void getStuff();
+      void nextWeapon();
+      void prevWeapon();
 
       // We'll have to update this later so the AI can use it.
       void updateShotDirection(double xOffset, double yOffset);

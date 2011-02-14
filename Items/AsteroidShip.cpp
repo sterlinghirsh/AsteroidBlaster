@@ -5,8 +5,6 @@
  */
 
 #include "AsteroidShip.h"
-#include "Shots/BeamShot.h"
-#include "Shots/ProjectileShot.h"
 #include <math.h>
 #include <time.h>
 #include "Utility/Quaternion.h"
@@ -76,12 +74,14 @@ AsteroidShip::AsteroidShip() :
       // Add weapons to the list!
       weapons.push_back(new Blaster(this));
       weapons.push_back(new RailGun(this));
+      weapons.push_back(new TractorBeam(this));
       // The ship's currently selected weapon.
       currentWeapon = 0;
    }
 
 /**
  * Set the currently selected weapon to the weapon type specified.
+ * The currentWeapon can also be set from nextWeapon() and prevWeapon().
  */
 void AsteroidShip::selectWeapon(int weaponType) {
    currentWeapon = weaponType;
@@ -685,4 +685,19 @@ void AsteroidShip::drawShotDirectionIndicators() {
  */
 Weapon* AsteroidShip::getCurrentWeapon() {
    return weapons[currentWeapon];
+}
+
+/**
+ * Increment the current weapon and mod by the number of weapons.
+ */
+void AsteroidShip::nextWeapon() {
+   currentWeapon = (currentWeapon + 1) % weapons.size();
+}
+
+/**
+ * Decrement the current weapon and mod by the number of weapons.
+ */
+void AsteroidShip::prevWeapon() {
+   // We add weaons.size() in the middle so that we don't do -1 % something.
+   currentWeapon = (currentWeapon + weapons.size() - 1) % weapons.size();
 }

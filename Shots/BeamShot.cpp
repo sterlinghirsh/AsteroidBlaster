@@ -29,8 +29,6 @@ materialStruct ballMaterial = {
    {8}
 };
 
-double BeamShot::frequency = .5;
-
 BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn) :
  Shot(posIn, dirIn, ownerIn) {
    lifetime = 0.5;
