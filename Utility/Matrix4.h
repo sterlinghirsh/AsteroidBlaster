@@ -12,27 +12,31 @@
  * @author Mike Smith
  */
 
+#pragma once
 #ifndef MATRIX4_H
+#define MATRIX4_H
+
 #include "Utility/Point3D.h"
 
 struct Matrix4 {
    union {
       struct {
-         double _11, _12, _13, _14,
-                _21, _22, _23, _24,
-                _31, _32, _33, _34,
-                _41, _42, _43, _44;
+         float _11, _21, _31, _41,
+                _12, _22, _32, _42,
+                _13, _23, _33, _43,
+                _14, _24, _34, _44;
       };
-      double m[4][4];
+      float m[4][4];
    };
    
-   Matrix4(double m11, double m12, double m13, double m14,
-           double m21, double m22, double m23, double m24,
-           double m31, double m32, double m33, double m34,
-           double m41, double m42, double m43, double m44);
+   Matrix4(float m11, float m12, float m13, float m14,
+           float m21, float m22, float m23, float m24,
+           float m31, float m32, float m33, float m34,
+           float m41, float m42, float m43, float m44);
 
-   Matrix4(double _m[4][4]);
+   Matrix4(float _m[4][4]);
    Matrix4(const Matrix4& copy);
+   Matrix4();
 
    ~Matrix4();
 
@@ -44,20 +48,25 @@ struct Matrix4 {
    Matrix4 &operator=(const Matrix4& rhs);
    Matrix4 &operator+=(const Matrix4& rhs);
    Matrix4 &operator-=(const Matrix4& rhs);
-   Matrix4 &operator*=(double scale);
+   Matrix4 &operator*=(float scale);
    const Point3D operator*(const Point3D& rhs) const;
    const Matrix4 operator*(const Matrix4& rhs) const;
    const Matrix4 operator-(const Matrix4& rhs) const;
-   const Matrix4 operator*(double scale) const;
+   const Matrix4 operator*(float scale) const;
    const Matrix4 operator+(const Matrix4& rhs) const;
 
-   double det() const;
+   float det() const;
    Matrix4& toIdent();
    Matrix4 inverse() const;
    Matrix4& toInverse();
+   Matrix4 transpose() const;
+   Matrix4& toTranspose();
 
    static const Matrix4 Identity;
+   
+   private:
 
+   void copy(const Matrix4 &rhs);
 };
 
 #endif

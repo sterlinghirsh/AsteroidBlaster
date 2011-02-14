@@ -142,8 +142,13 @@ void Asteroid3D::draw() {
    glTranslatef(position->x, position->y, position->z);
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
+   
+   if (isTargeted()) { 
+      glColor3f(1.0f, 0.0f, 0.0f);
+   }
+   else
+      glColor3f(0.0, 0.0, 0.0);
 
-   glColor3f(0.0, 0.0, 0.0);
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -172,6 +177,7 @@ void Asteroid3D::draw() {
 
    glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();
+   setTargeted(false);
 }
 
 void Asteroid3D::makeStrip(Ring r1, Ring r2) {

@@ -13,13 +13,17 @@ const Matrix4 Matrix4::Identity = Matrix4(1, 0, 0, 0,
                                           0, 0, 1, 0,
                                           0, 0, 0, 1);
 
+Matrix4::Matrix4() {
+   toIdent();
+}
+
 /** Yes, this is a very ugly constructor. But it's convenient, so there is no
  * reason for it to be changed.
  */
-Matrix4::Matrix4(double m11=0, double m12=0, double m13=0, double m14=0,
-                 double m21=0, double m22=0, double m23=0, double m24=0,
-                 double m31=0, double m32=0, double m33=0, double m34=0,
-                 double m41=0, double m42=0, double m43=0, double m44=0) {
+Matrix4::Matrix4(float m11, float m12, float m13, float m14,
+                 float m21, float m22, float m23, float m24,
+                 float m31, float m32, float m33, float m34,
+                 float m41, float m42, float m43, float m44) {
    _11 = m11;
    _12 = m12;
    _13 = m13;
@@ -38,19 +42,24 @@ Matrix4::Matrix4(double m11=0, double m12=0, double m13=0, double m14=0,
    _44 = m44;
 }
 
-Matrix4::Matrix4(double _m[4][4]) {
+Matrix4::Matrix4(float _m[4][4]) {
    for (int i = 0; i < 4; i++)
       for (int j = 0; j < 4; j++)
          m[i][j] = _m[i][j];
 }
 
 Matrix4::Matrix4(const Matrix4& copy) {
-   for (int i = 0; i < 4; i++)
-      for (int j = 0; j < 4; j++)
-         m[i][j] = copy.m[i][j];
+   this->copy(copy);
 }
 
 Matrix4::~Matrix4() {}
+
+void Matrix4::copy(const Matrix4 &rhs) {
+   for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4; j++)
+         m[i][j] = rhs.m[i][j];
+   }
+}
 
 Matrix4 Matrix4::fromPoint3D(const Point3D& point) {
    Matrix4 temp(point.x, 0, 0, 0,
@@ -88,9 +97,7 @@ Matrix4 &Matrix4::operator=(const Matrix4& rhs) {
    if (&rhs == this)
       return *this;
 
-   for (int i = 0; i < 4; i++)
-      for (int j = 0; j < 4; j++)
-         m[i][j] = rhs.m[i][j];
+   copy(rhs);
 
    return *this;
 }
@@ -119,7 +126,7 @@ const Matrix4 Matrix4::operator-(const Matrix4 &rhs) const {
    return Matrix4(*this) -= rhs;
 }
 
-Matrix4 &Matrix4::operator*=(double scale) {
+Matrix4 &Matrix4::operator*=(float scale) {
    for (int i = 0; i < 4; i++)
       for (int j = 0; j < 4; j++)
          m[i][j] *= scale;
@@ -127,7 +134,7 @@ Matrix4 &Matrix4::operator*=(double scale) {
    return *this;
 }
 
-const Matrix4 Matrix4::operator*(double scale) const {
+const Matrix4 Matrix4::operator*(float scale) const {
    return Matrix4(*this) *= scale;
 }
 
@@ -142,8 +149,8 @@ const Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
    return t;
 }
 
-double Matrix4::det() const {
-   double det = _11 * _22 * _33 * _44 + _11 * _23 * _34 * _42 +
+float Matrix4::det() const {
+   float det = _11 * _22 * _33 * _44 + _11 * _23 * _34 * _42 +
                 _11 * _24 * _32 * _43 + _12 * _21 * _34 * _43 +
                 _12 * _23 * _31 * _44 + _12 * _24 * _33 * _41 +
                 _13 * _21 * _32 * _44 + _13 * _22 * _34 * _41 +
@@ -165,7 +172,7 @@ Matrix4& Matrix4::toIdent() {
 
 Matrix4 Matrix4::inverse() const {
    Matrix4 temp;
-   double d = det();
+   float d = det();
    if (d == 0)
       return temp;
 
@@ -226,4 +233,21 @@ Matrix4& Matrix4::toInverse() {
    *this = inverse();
 
    return *this;
+}
+
+Matrix4& Matrix4::toTranspose() {
+   Matrix4 tmp(*this);
+
+   for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4; j++) {
+         m[i][j] = tmp.m[j][i];
+      }
+   }
+
+   return *this;
+}
+
+Matrix4 Matrix4::transpose() const {
+   Matrix4 tmp(*this);
+   return tmp.toTranspose();
 }

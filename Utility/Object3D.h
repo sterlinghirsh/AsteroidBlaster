@@ -45,6 +45,8 @@ class Object3D {
       virtual void drawBoundingBox();
       virtual void handleCollision(Object3D* other);
       virtual void debug();
+      virtual void setTargeted(bool a);
+      virtual bool isTargeted();
 
       void setCustodian(Custodian* cust);
       void glRotate(bool doTranspose = true);
@@ -54,6 +56,7 @@ class Object3D {
       double yawSpeed, pitchSpeed, rollSpeed;
       GLuint displayList;
       Custodian* custodian;
+      bool targeted;
 
       void yaw(double angle);
       void roll(double angle);

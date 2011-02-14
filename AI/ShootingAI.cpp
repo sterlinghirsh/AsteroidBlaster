@@ -20,7 +20,7 @@
 #include "Utility/Quaternion.h"
 
 // Radians/sec
-const double ShootingAI::gunRotSpeed = 6 * 3.14159265;
+const double ShootingAI::gunRotSpeed = 12 * 3.14159265;
 
 ShootingAI::ShootingAI(AsteroidShip* owner)
 {
@@ -30,6 +30,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner)
    // Start the AI as disabled
    enabled = false;
    //TODO possibly more stuff here.
+   lastTarget == NULL;
 }
 
 /** Aims at an object.
@@ -72,7 +73,9 @@ int ShootingAI::aimAt(double dt, Object3D* target)
       aimingAt = q * aimingAt;
       // Normalize the vector.
       aimingAt = aimingAt.normalize();
+      //ship->fire(false);
    }
+   //else
       ship->fire(true);
    
    // This loop will choose the spot that we want to be shooting at.
@@ -182,10 +185,21 @@ int ShootingAI::think(double dt)
    chooseWeapon(0);
 
    Object3D* target = chooseTarget();
+   if (target != lastTarget) {
+      printf("Switching targets..\n");
+      if (!lastTarget) {
+         printf("No previous target.\n");
+      }
+      printf("New target at: ");
+      target->position->print();
+      lastTarget = target;
+   }
    // choose target
 
-   if (target != NULL)
+   if (target != NULL) {
+      target->setTargeted(true);
       aimAt(dt, target);
+   }
 
    // Think has a return value just in case it needs to.
    return 0;

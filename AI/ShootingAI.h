@@ -35,6 +35,7 @@ class ShootingAI : public AI {
    AsteroidShip* ship;
    Weapon* chosenWeapon;
    Point3D lastShotPos;
+   Object3D* lastTarget;
    Point3D aimingAt;
    bool enabled;
    

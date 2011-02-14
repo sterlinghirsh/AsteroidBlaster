@@ -227,15 +227,15 @@ void Quaternion::getMatrix(GLfloat* matri)
 
 Matrix4 Quaternion::getMatrix()
 {
-	double x2 = x * x;
-	double y2 = y * y;
-	double z2 = z * z;
-	double xy = x * y;
-	double xz = x * z;
-	double yz = y * z;
-	double wx = w * x;
-	double wy = w * y;
-	double wz = w * z;
+	float x2 = x * x;
+	float y2 = y * y;
+	float z2 = z * z;
+	float xy = x * y;
+	float xz = x * z;
+	float yz = y * z;
+	float wx = w * x;
+	float wy = w * y;
+	float wz = w * z;
     
    Matrix4 matrix(
   			1.0f - 2.0f * (y2 + z2), 2.0f * (xy - wz), 2.0f * (xz + wy), 0.0f,

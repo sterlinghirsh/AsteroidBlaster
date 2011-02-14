@@ -36,6 +36,7 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
    radius = std::max(radius, fabs(minY));
    radius = std::max(radius, fabs(maxZ));
    radius = std::max(radius, fabs(minZ));
+   targeted = false;
 }
 
 Object3D::~Object3D() {
@@ -237,4 +238,12 @@ void Object3D::glRotate(bool doTranspose) {
          modelViewMatrix.doTranspose();
    glPopMatrix();
    glMultMatrixf((GLfloat*)&modelViewMatrix);
+}
+
+void Object3D::setTargeted(bool a) {
+   targeted = a;
+}
+
+bool Object3D::isTargeted() {
+   return targeted;
 }
