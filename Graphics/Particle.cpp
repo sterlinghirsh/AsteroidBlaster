@@ -1,3 +1,6 @@
+
+
+
 #include "Graphics/Particle.h"
 #include "Utility/GameState.h"
 #include <math.h>
@@ -6,6 +9,13 @@
 #define MAX_PARTICLES 1000
 #define PARTICLE_SIZE 0.01f
 #define PARTICLE_LIFE 0.001f
+#ifndef GL_BGR
+#define GL_BGR GL_BGR_EXT
+#endif
+#ifndef GL_BGRA
+#define GL_BGRA GL_BGRA_EXT
+#endif 
+
 
 using namespace std;
 
@@ -145,7 +155,7 @@ void Particle::Add(Point3D* pos, Vector3D* vec)
    particles.push_back(new Particle(pos, vec, PARTICLE_LIFE, _fade, _r, _g, _b));
 }
 
-bool Particle::draw(Point3D* eyePoint)
+void Particle::draw(Point3D* eyePoint)
 {
    glPushMatrix();
    /* Draw The Particle Using Our RGB Values,

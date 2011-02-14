@@ -8,6 +8,7 @@
 #include <map>
 #include <string.h>
 #include <GL/glut.h>
+#include "Graphics/GlutUtility.h"
 
 using namespace std;
 
@@ -40,13 +41,6 @@ GLfloat objectM[4][4] = {
 };
 
 GLfloat *trackballM = (GLfloat *)objectM;
-
-void materials(materialStruct materials) {
-  glMaterialfv(GL_FRONT, GL_AMBIENT, materials.ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, materials.diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, materials.specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, materials.shininess);
-}
 
 void init_lighting() {
   //turn on light0
@@ -296,22 +290,6 @@ void display() {
   glutSwapBuffers();
 }
 
-float p2wx(int Xp)
-{
-   float x = 0;
-   x = ((float)2*(float)GW / (float)((float)GW*(float)GH - (float)GH)) *(float)Xp - (float)GW/(float)GH;
-   printf("World X: %lf\n", x);
-   return x;
-}
-
-float p2wy(int Yp)
-{
-   float Y, y;
-   Y = (float)GH - 1 - (float)Yp;
-   y = (float)((float)2/(float)(GH - 1)) * (float)Y - 1;
-   printf("World Y: %lf\n", y);
-   return y;
-}
 
 dvector get3d(float x, float y){
 	dvector vector;
