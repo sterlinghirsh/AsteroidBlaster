@@ -575,3 +575,109 @@ Radar *AsteroidShip::getRadar() {
 void AsteroidShip::updateShotDirection(Point3D dir) {
    shotDirection = Vector3D(dir.x, dir.y, dir.z);
 }
+
+/**
+ * This is the crosshair for first person.
+ */
+void AsteroidShip::drawCrosshair() {
+   double crosshairSizeX = 0.05;
+   double crosshairSizeY = 0.05;
+   double thicknessX = 0.01;
+   double thicknessY = 0.01;
+   glPushMatrix();
+      glLoadIdentity();
+      
+      // Make it white
+      materials(WhiteSolid);
+      glColor3f(1, 1, 1);
+      useOrtho();
+      glDisable(GL_LIGHTING);
+      /*
+      glBegin(GL_QUADS);
+      glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
+      glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
+      glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
+      glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
+      
+      glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
+      glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
+      glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
+      glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
+      glEnd();
+      */
+      glTranslatef(getAimX(), getAimY(), 0.0);
+      static GLUquadricObj *outer;
+      static GLUquadricObj *inner;
+      outer = gluNewQuadric();
+      gluDisk(outer, crosshairSizeX / 2 - thicknessX / 1.5, crosshairSizeX / 2, 12, 1);
+      
+      inner = gluNewQuadric();
+      gluDisk(inner, 0.0, thicknessX / 1.5, 8, 1);
+      
+      glEnable(GL_LIGHTING);
+      usePerspective();
+   glPopMatrix();
+}
+
+
+/**
+ * Draw the double crosshair, starfox style.
+ */
+void AsteroidShip::drawShotDirectionIndicators() {
+   // The coords of the boxes.
+   Point3D drawPoint = *position;
+   const double boxSize = 0.5;
+
+   glPushMatrix();
+   shotDirection.movePoint(drawPoint, 5);
+   // Start at top right.
+   up->movePoint(drawPoint, boxSize / 2);
+   right->movePoint(drawPoint, boxSize / 2);
+   glDisable(GL_LIGHTING);
+   glDisable(GL_CULL_FACE);
+   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+   
+   glLineWidth(3.0);
+   glBegin(GL_QUADS);
+      // top right
+      glColor3f(0.2, 1, 0.0);
+      drawPoint.draw();
+      up->movePoint(drawPoint, -boxSize);
+      drawPoint.draw();
+      right->movePoint(drawPoint, -boxSize);
+      drawPoint.draw();
+      up->movePoint(drawPoint, boxSize);
+      drawPoint.draw();
+      
+      // Move again
+      shotDirection.movePoint(drawPoint, 5);
+      // top right
+      glColor3f(1, 0.2, 0.0);
+      right->movePoint(drawPoint, boxSize);
+      drawPoint.draw();
+      up->movePoint(drawPoint, -boxSize);
+      drawPoint.draw();
+      right->movePoint(drawPoint, -boxSize);
+      drawPoint.draw();
+      up->movePoint(drawPoint, boxSize);
+      drawPoint.draw();
+      
+      // Move again
+      shotDirection.movePoint(drawPoint, 5);
+      // top right
+      glColor3f(0, 0.2, 1);
+      right->movePoint(drawPoint, boxSize);
+      drawPoint.draw();
+      up->movePoint(drawPoint, -boxSize);
+      drawPoint.draw();
+      right->movePoint(drawPoint, -boxSize);
+      drawPoint.draw();
+      up->movePoint(drawPoint, boxSize);
+      drawPoint.draw();
+   glEnd();
+   glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+   glLineWidth(1.0);
+   glEnable(GL_LIGHTING);
+   glEnable(GL_CULL_FACE);
+   glPopMatrix();
+}

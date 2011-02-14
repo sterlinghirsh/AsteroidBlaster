@@ -118,6 +118,9 @@ void GameState::drawInMinimap() {
    glPopMatrix();
 }
 
+/**
+ * Draw the main view.
+ */
 void GameState::draw() {
    // Draw all of the text objects to the screen.
    drawAllText();
@@ -144,6 +147,12 @@ void GameState::draw() {
       if (thirdPerson || (*listIter != ship)) {
          (*listIter)->draw();
       }
+   }
+
+   if (thirdPerson) {
+      ship->drawShotDirectionIndicators();
+   } else {
+      ship->drawCrosshair();
    }
 }
 

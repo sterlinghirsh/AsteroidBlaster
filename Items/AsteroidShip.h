@@ -51,6 +51,9 @@ class AsteroidShip : public Object3D {
       virtual void handleCollision(Object3D* other);
       virtual void debug();
 
+      void drawShotDirectionIndicators();
+      void drawCrosshair();
+
       /**
        * These are going to be the functions that either the local player
        * or the AI player or the networked player will call.
