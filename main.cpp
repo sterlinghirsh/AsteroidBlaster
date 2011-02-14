@@ -304,4 +304,5 @@ int main(int argc, char* argv[]) {
       
    }
    delete inputManager;
+   return 0;
 }
