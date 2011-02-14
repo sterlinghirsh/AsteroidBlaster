@@ -7,18 +7,18 @@ UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
    PLATFORMSPECIFICCFLAGS=
 #-I/home/rkudo/library/SDL_ttf-2.0.10/
-   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -lSDL -lpthread
+   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -lSDL -lpthread -L./Libraries/glew-1.5.8/lib -lGLEW
 
 #-lSDL_ttf -L/home/rkudo/library/SDL_ttf-2.0.10/.libs/
 else
    PLATFORMSPECIFICCFLAGS=
-   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -L/usr/local/lib -lSDLmain -lSDL -Wl,-framework,Cocoa
+   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -L/usr/local/lib -lSDLmain -lSDL -Wl,-framework,Cocoa ./Libraries/glew-1.5.8/lib/libGLEW.a
+
 
 endif
 
-#GLEWLIBS=-L./Libraries/glew-1.5.8/lib -lGLEW
-GLEWLIBS=./Libraries/glew-1.5.8/lib/libGLEW.a
-
+#GLEWLIBS=
+GLEWLIBS=
 LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g  $(SDL_LIBS) $(GLEWLIBS)
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
