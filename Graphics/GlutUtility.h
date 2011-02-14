@@ -29,6 +29,8 @@ extern int flopY(int);
 extern unsigned long curFrame;
 extern bool drawPerspective;
 extern GLUquadricObj *quadric;
+extern GLuint shader1;
+
 double p2wx(int);
 double p2wy(int);
 double p2ix(int);

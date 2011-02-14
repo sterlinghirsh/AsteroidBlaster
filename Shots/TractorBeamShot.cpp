@@ -10,6 +10,8 @@
 #include "Shots/TractorBeamShot.h"
 #include <math.h>
 
+static float spin = 0;
+
 TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, 
  AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
    persist = true;
@@ -51,15 +53,27 @@ void TractorBeamShot::update(double timeDiff) {
  * We want to remove this after drawing it once.
  */
 void TractorBeamShot::draw() {
+   
+   glUseProgram(shader1);
    shouldRemove = true;
    glPushMatrix();
+      
+      float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
+      glLightfv(GL_LIGHT0, GL_POSITION, lpos);
       Point3D start(*position);
       velocity->movePoint(start);
       start.glTranslate();
-
-
+      
       glRotate();
-      materials(RedFlat);
-      gluCylinder(quadric, farRadius, 0, length, 8, 8);
+      glRotatef(spin++,0,0,1);
+      if (spin >= 360 ) {
+         spin = 0;
+      }
+      //materials(RedFlat);
+      //glutWireTeapot(1.0);
+      //gluSphere(quadric,1.0, 10 , 10);
+      //gluCylinder(quadric, farRadius, 0, length, 8, 8);
+      glutWireCone(farRadius, length,20,20);
    glPopMatrix();
+   glUseProgram(0);
 }

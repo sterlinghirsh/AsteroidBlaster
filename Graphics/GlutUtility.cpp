@@ -25,6 +25,7 @@ bool drawPerspective = true;
 GLUquadricObj *quadric;
 RGB myimage[64][64];
 RGB* pixel;
+GLuint shader1;
 
 using namespace std;
 
