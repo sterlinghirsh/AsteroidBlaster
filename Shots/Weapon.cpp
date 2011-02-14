@@ -16,6 +16,6 @@ Weapon::~Weapon() {
 /**
  * Do your thing, weapon!
  */
-Weapon::fire() {
+void Weapon::fire() {
    // Do nothing... yet! >:)
 }
