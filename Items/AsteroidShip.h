@@ -14,6 +14,9 @@
 #include "Utility/Object3D.h"
 #include "Utility/Radar.h"
 #include "AI/ShootingAI.h"
+#include "Weapons/Weapon.h"
+#include "Weapons/Blaster.h"
+#include "Weapons/RailGun.h"
 #include <list>
 
 // Later we'll put in a model for the ship.
@@ -88,9 +91,10 @@ class AsteroidShip : public Object3D {
       
       int score;
       int numShards;
-
-   private:
       Vector3D shotDirection; // If we shoot a shot, where will it go?
+
+   protected:
+      std::vector<Weapon*> weapons;
       Radar* radar; // This is the ship's radar that it should query for information about its surroundings
 
       double brakeFactor;
@@ -139,7 +143,6 @@ class AsteroidShip : public Object3D {
 
       double xOff, yOff;
       
-      GLUquadricObj *quadratic;
       void createEngineParticles(double timeDiff);
       void addNewParticle(Point3D& emitter, Vector3D& initialOffset, Vector3D& offsetDirectionX,
        Vector3D& offsetDirectionY);

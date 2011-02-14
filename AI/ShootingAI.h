@@ -21,11 +21,11 @@
 #include "Utility/Point3D.h"
 #include "AI/AI.h"
 #include "Utility/Object3D.h"
-#include "Items/Weapon.h"
 
 // Incomplete class declaration so we can use pointers.
 class Object3D;
 class AsteroidShip;
+class Weapon;
 
 class ShootingAI : public AI {
    /* There actually is no need to hold the entire ship.

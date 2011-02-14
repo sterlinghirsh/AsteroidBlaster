@@ -16,6 +16,7 @@
 #endif
 
 using namespace std;
+extern Custodian* custodian;
 
 AsteroidShip::AsteroidShip() :
    Object3D(0, 0, 0, 0),     // Initialize superclass
@@ -58,8 +59,6 @@ AsteroidShip::AsteroidShip() :
       score = 0;
       // The ship's health. This number is displayed to the screen.
       health = 100;
-      // The ship's currently selected weapon.
-      currentWeapon = 0;
       // The ship's max motion parameters.
       maxForwardAccel = 10;
       maxRightAccel = 5;
@@ -74,7 +73,11 @@ AsteroidShip::AsteroidShip() :
       // Create our Radar
       radar = new Radar(this);
       
-      quadratic = gluNewQuadric();
+      // Add weapons to the list!
+      weapons.push_back(new Blaster(this));
+      weapons.push_back(new RailGun(this));
+      // The ship's currently selected weapon.
+      currentWeapon = 0;
    }
 
 /**
@@ -274,23 +277,18 @@ void AsteroidShip::fire(bool startFiring) {
 
 void AsteroidShip::keepFiring() {
    if (!isFiring) return;
+   weapons[currentWeapon]->fire();
    double curTime = doubleTime();
-   Point3D start = *position;
    /* This is goofy as hell, so let's do it the OOP way. */
+   /*
    bool fireShots = (currentWeapon == 0);
    bool fireBeams = (currentWeapon == 1);
-   //shotDirection.movePoint(start);
-   if (fireShots && (timeOfLastShot < curTime - (1 / ProjectileShot::frequency) ||
-            timeOfLastShot == 0)) {
-      custodian->add(new ProjectileShot(start,
-               shotDirection.scalarMultiply(shotSpeed), this));
-      timeOfLastShot = curTime;
-   }
    if (fireBeams && (timeOfLastBeam < curTime - (1 / BeamShot::frequency) ||
             timeOfLastBeam == 0)) {
       custodian->add(new BeamShot(start, shotDirection, this));
       timeOfLastBeam = curTime;
    }
+   */
 }
 
 void draw_ship(){

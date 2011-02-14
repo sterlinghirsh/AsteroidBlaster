@@ -1,6 +1,8 @@
 # AsteroidBlaster Makefile by Sterling Hirsh
 # Uses uname to decide whether it's on Linux or OSX so it can tell which libs to include.
 
+SDL_LIBS=$(shell "sdl-config" "--libs")
+SDL_CFLAGS=$(shell "sdl-config" "--cflags")
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
    PLATFORMSPECIFICCFLAGS=-I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
@@ -14,11 +16,11 @@ else
 
 endif
 
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g  `sdl-config --libs`
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g  $(SDL_LIBS)
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c `sdl-config --cflags` -g -O0
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c $(SDL_CFLAGS) -g -O0
 CC=g++
 
 PROGNAME=AsteroidBlaster
@@ -29,7 +31,8 @@ ITEMSFILES=Items/Asteroid3D.cpp Items/AsteroidShip.cpp Items/BoundingSpace.cpp I
 SHOTSFILES=Shots/Shot.cpp Shots/BeamShot.cpp Shots/ProjectileShot.cpp
 AIFILES=AI/ShootingAI.cpp
 NETWORKFILES=
-FILES=main.cpp $(UTILITYFILES) $(GRAPHICSFILES) $(ITEMSFILES) $(SHOTSFILES) $(AIFILES) $(NETWORKFILES)
+WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp
+FILES=main.cpp $(UTILITYFILES) $(GRAPHICSFILES) $(ITEMSFILES) $(SHOTSFILES) $(AIFILES) $(NETWORKFILES) $(WEAPONSFILES)
 
 OBJECTS=$(FILES:.cpp=.o)
 

@@ -18,6 +18,7 @@
 #include "AI/ShootingAI.h"
 #include "Items/Asteroid3D.h"
 #include "Utility/Quaternion.h"
+#include "Weapons/Weapon.h"
 
 // Radians/sec
 const double ShootingAI::gunRotSpeed = 12 * 3.14159265;
