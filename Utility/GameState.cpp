@@ -491,10 +491,10 @@ void GameState::menuFunc() {
       glPopMatrix();
 
       //draw the mouse icon
-      glPushMatrix();
-      glTranslatef(x,0,y);
-      gluSphere( quadric , .1 , 36 , 18 );      
-      glPopMatrix();
+      //glPushMatrix();
+      //glTranslatef(x,0,y);
+      //gluSphere( quadric , .1 , 36 , 18 );      
+      //glPopMatrix();
       
       while (SDL_PollEvent(&event)) {
          if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -518,10 +518,20 @@ void GameState::menuFunc() {
                   x <= 450 && 
                   y >= 230 && 
                   y <= 240) {
-               newGame->setColor(1.0,0.0,1.0);
-            } else {
                newGame->setColor(1.0,0.0,0.0);
+            } else {
+               newGame->setColor(1.0,1.0,1.0);
             }
+            
+            if (x >= 350 && 
+                  x <= 450 && 
+                  y >= 345 && 
+                  y <= 365) {
+               quit->setColor(1.0,0.0,0.0);
+            } else {
+               quit->setColor(1.0,1.0,1.0);
+            }
+            
          }
          
          if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE ) {
