@@ -41,6 +41,8 @@ class GameState : public InputReceiver {
       // Used when looping over Object3Ds in drawInMinimap
       std::list<Object3D*>::iterator listIter;
       Custodian custodian;
+      
+      bool menuMode;
 
       GameState(double worldSize);
       virtual ~GameState();
@@ -54,18 +56,22 @@ class GameState : public InputReceiver {
       void initAsteroids();
       void setCurFPS(double fpsIn);
       bool isGameRunning();
-
+      bool getMenuMode();
+   
       double getMouseX();
       double getMouseY();
       Camera* getCamera();
-
+      
+      void menuFunc();
+      void reset();
+      
       virtual void keyUp(int key);
       virtual void keyDown(int key);
       virtual void mouseDown(int button);
       virtual void mouseMove(int dx, int dy, int x, int y);
       virtual void mouseUp(int button);
    private:
-      void reset();
+      //void reset();
       double curFPS, worldSize;
       bool gameIsRunning;
       bool doYaw;

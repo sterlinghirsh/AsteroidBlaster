@@ -12,6 +12,7 @@
 
 GameState::GameState(double worldSizeIn) {
   gameIsRunning = true;
+  menuMode = true;
   worldSize = worldSizeIn;
   skybox = new Skybox("Images/stars.bmp");
   ship = new AsteroidShip();
@@ -263,7 +264,11 @@ void GameState::setCurFPS(double fpsIn) {
  * Tells whether or not the game is currently running (not game over or won)
  */
 bool GameState::isGameRunning() {
-  return gameIsRunning;
+   return gameIsRunning;
+}
+
+bool GameState::getMenuMode() {
+   return menuMode;
 }
 
 /**
@@ -309,6 +314,10 @@ void GameState::keyDown(int key) {
 
   case SDLK_e:
     ship->accelerateRight(1);
+    break;
+    
+  case SDLK_m:
+    menuMode = true;
     break;
 
   case SDLK_SPACE:
@@ -445,4 +454,79 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 double GameState::getMouseX() { return mouseX; }
 double GameState::getMouseY() { return mouseY; }
 Camera* GameState::getCamera() { return camera; }
+
+void GameState::menuFunc() {
+   glDisable(GL_TEXTURE_2D);
+   glClearColor(0.0, 0.0, 0.0, 1.0);
+   // Enable the cursor   
+   SDL_ShowCursor(SDL_ENABLE);
+   BitmapTextDisplay* newGame = new BitmapTextDisplay("New Game", GW/2 - 50, GH/2 - 60);
+   BitmapTextDisplay* saveLoadGame = new BitmapTextDisplay("Save/Load Game", GW/2 - 50, GH/2 - 20);
+   BitmapTextDisplay* settings = new BitmapTextDisplay("Settings", GW/2 - 50, GH/2 + 20);
+   BitmapTextDisplay* quit = new BitmapTextDisplay("Quit", GW/2 - 50, GH/2 + 60);
+
+   int x = 0;
+   int y = 0;
+   
+   SDL_Event event;
+   while (getMenuMode()) {
+      //draw the text
+      glPushMatrix();
+         useOrtho();
+         glDisable(GL_LIGHTING);
+         newGame->draw();
+         saveLoadGame->draw();
+         settings->draw();
+         quit->draw();
+         glEnable(GL_LIGHTING);
+         usePerspective();
+      glPopMatrix();
+
+      //draw the mouse icon
+      glPushMatrix();
+      glTranslatef(x,0,y);
+      gluSphere( quadric , .1 , 36 , 18 );      
+      glPopMatrix();
+      
+      while (SDL_PollEvent(&event)) {
+         if (event.type == SDL_MOUSEBUTTONDOWN) {
+            if (event.motion.x >= 350 && 
+                  event.motion.x <= 450 && 
+                  event.motion.y >= 230 && 
+                  event.motion.y <= 240) {
+               gameState->menuMode = false;
+               gameState->reset();
+            } else if (event.motion.x >= 350 && 
+                  event.motion.x <= 450 && 
+                  event.motion.y >= 350 && 
+                  event.motion.y <= 360) {
+               exit(0);
+            }
+         }
+         if (event.type == SDL_MOUSEMOTION) {
+            x = event.motion.x;
+            y = event.motion.y;
+            if (x >= 350 && 
+                  x <= 450 && 
+                  y >= 230 && 
+                  y <= 240) {
+               newGame->setColor(1.0,0.0,1.0);
+            } else {
+               newGame->setColor(1.0,0.0,0.0);
+            }
+         }
+         
+         if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE ) {
+            exit(0);
+         }
+      }
+      
+      SDL_GL_SwapBuffers();
+      glEnable(GL_TEXTURE_2D);
+   }
+   
+   // Disable the cursor   
+   SDL_ShowCursor(SDL_DISABLE);
+}
+
 

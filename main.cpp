@@ -81,11 +81,6 @@ void init_light() {
   glEnable(GL_NORMALIZE);
 }
 
-// Give the gameState (used for Radar)
-GameState* getGameState() {
-   return gameState;
-}
-
 
 void display() {
    double startTime = doubleTime();
@@ -98,7 +93,6 @@ void display() {
    // Draw the main screen
    glPushMatrix();
       gameState->draw();
-            
       Sprite::drawSprites();
       Particle::drawParticles();
       //drawCrosshair();
@@ -293,13 +287,16 @@ int main(int argc, char* argv[]) {
    inputManager = new InputManager();
    //Connect the input manager to the gameState
    inputManager->addReceiver(gameState);
-
+   SDL_Event event;
+   
    while (running) {
-      if(gameState->isGameRunning()) {
+      if (gameState->getMenuMode()) {
+         gameState->menuFunc();
+      } else if (gameState->isGameRunning()) {
          timerFunc();
          display();
       }
-      SDL_Event event;
+      
       float mouseButtonDown = 0;
       // This causes a valgrind error because event isn't initialized (I think).
       while (SDL_PollEvent(&event)) {
