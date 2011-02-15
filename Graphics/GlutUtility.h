@@ -7,7 +7,6 @@
 #ifndef __GLUTUTILITY_H__
 #define __GLUTUTILITY_H__
 
-#include <GL/glew.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -17,7 +16,9 @@
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
+#include <OpenGL/glext.h>
 #else
+#include <GL/glew.h>
 #define GLUT_DISABLE_ATEXIT_HACK 
 #include <GL/glut.h>
 #endif

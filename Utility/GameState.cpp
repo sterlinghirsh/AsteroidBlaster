@@ -476,6 +476,8 @@ void GameState::menuFunc() {
    
    SDL_Event event;
    while (getMenuMode()) {
+      // Clear the screen
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       //draw the text
       glPushMatrix();
          useOrtho();
@@ -528,8 +530,8 @@ void GameState::menuFunc() {
       }
       
       SDL_GL_SwapBuffers();
-      glEnable(GL_TEXTURE_2D);
    }
+   glEnable(GL_TEXTURE_2D);
    
    // Disable the cursor   
    SDL_ShowCursor(SDL_DISABLE);

@@ -12,18 +12,16 @@ ifeq ($(UNAME), Linux)
 #-lSDL_ttf -L/home/rkudo/library/SDL_ttf-2.0.10/.libs/
 else
    PLATFORMSPECIFICCFLAGS=
-   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -L/usr/local/lib -lSDLmain -lSDL -Wl,-framework,Cocoa ./Libraries/glew-1.5.8/lib/libGLEW.a
+   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -L/usr/local/lib -lSDLmain -lSDL -Wl,-framework,Cocoa
 
 
 endif
 
-#GLEWLIBS=
-GLEWLIBS=
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g  $(SDL_LIBS) $(GLEWLIBS)
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g  $(SDL_LIBS)
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c $(SDL_CFLAGS) -g -O0 -I./Libraries/glew-1.5.8/include -I./Libraries/SDL_ttf-2.0.10
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c $(SDL_CFLAGS) -g -O0 -I./Libraries/SDL_ttf-2.0.10
 CC=g++
 
 PROGNAME=AsteroidBlaster
