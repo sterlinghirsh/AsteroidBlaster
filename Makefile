@@ -7,7 +7,7 @@ UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
    PLATFORMSPECIFICCFLAGS=
 #-I/home/rkudo/library/SDL_ttf-2.0.10/
-   PLATFORMSPECIFICLDFLAGS=-lGL -lGLU -lglut -lSDL -lpthread -L./Libraries/glew-1.5.8/lib -lGLEW
+   PLATFORMSPECIFICLDFLAGS= -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/glew-1.5.8/lib -L./Libraries/SDL_ttf-2.0.10/.libs -lGL -lGLU -lSDL -lSDL_ttf -lGLEW -lglut -lpthread
 
 #-lSDL_ttf -L/home/rkudo/library/SDL_ttf-2.0.10/.libs/
 else
@@ -23,7 +23,7 @@ LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g  $(SDL_LIBS) $(GLEWLIBS)
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c $(SDL_CFLAGS) -g -O0 -I./Libraries/glew-1.5.8/include
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c $(SDL_CFLAGS) -g -O0 -I./Libraries/glew-1.5.8/include -I./Libraries/SDL_ttf-2.0.10
 CC=g++
 
 PROGNAME=AsteroidBlaster
