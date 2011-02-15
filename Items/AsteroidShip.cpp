@@ -297,72 +297,88 @@ void draw_ship(){
    glScalef(1.5, .5, .8);
 
    glBegin(GL_TRIANGLES);
-
+   glEnable(GL_NORMALIZE);
    materials(black);
+   glNormal3f(.2, -.005, -.03);
    glVertex3f(0, 0, 0);
    glVertex3f(.2, .2, 1.3);
    glVertex3f(.15, 0, 1);
 
+   glNormal3f(-.005, .2, -.03);
    glVertex3f(0, 0, 0);
    glVertex3f(0, .15, 1);
    glVertex3f(.2, .2, 1.3);
 
+   glNormal3f(.005, .2, -.03);
    glVertex3f(0, 0, 0);
    glVertex3f(-.2, .2, 1.3);
    glVertex3f(0, .15, 1);
 
+   glNormal3f(-.2, -.005, -.03);
    glVertex3f(0, 0, 0);
    glVertex3f(-.15, 0, 1);
    glVertex3f(-.2, .2, 1.3);
 
+   glNormal3f(-.2, .005, -.03);
    glVertex3f(0, 0, 0);
    glVertex3f(-.2, -.2, 1.3);
    glVertex3f(-.15, 0, 1);
 
+   glNormal3f(0.005,-0.2,-0.03);
    glVertex3f(0, 0, 0);
    glVertex3f(0, -.15, 1);
    glVertex3f(-.2, -.2, 1.3);
 
+   glNormal3f(-.005,-0.2,-0.03);
    glVertex3f(0, 0, 0);
    glVertex3f(.2, -.2, 1.3);
    glVertex3f(0, -.15, 1);
 
+   glNormal3f(0.2,0.005,-0.03) ;
    glVertex3f(0, 0, 0);
    glVertex3f(.15, 0, 1);
    glVertex3f(.2, -.2, 1.3);
-   glPopMatrix();
+   //glPopMatrix();
 
    /* Back of Ship */
    materials(black);
 
+   glNormal3f(-0.045,-0.045,0.0375);
    glVertex3f(.15, 0, 1);
    glVertex3f(.2, .2, 1.3);
    glVertex3f(0, .15, 1);
 
+   glNormal3f(-0.045,0.045,0.0375);
    glVertex3f(.15, 0, 1);
    glVertex3f(0, -.15, 1);
    glVertex3f(.2, -.2, 1.3);
 
+   glNormal3f(0.045,0.045,0.0375);
    glVertex3f(-.15, 0, 1);
    glVertex3f(-.2, -.2, 1.3);
    glVertex3f(0, -.15, 1);
 
+   glNormal3f(0.045,-0.045,0.0375);
    glVertex3f(-.15, 0, 1);
    glVertex3f(0, .15, 1);
    glVertex3f(-.2, .2, 1.3);
 
+   glNormal3f(0.09,0.09,0.0225);
    glVertex3f(.15, 0, 1);
    glVertex3f(0, .15, 1);
    glVertex3f(0, 0, 1.6);
 
+   glNormal3f(0.09,-0.09,0.0225);
    glVertex3f(.15, 0, 1);
    glVertex3f(0, 0, 1.6);
    glVertex3f(0, -.15, 1);
 
+   glNormal3f(-0.09,-0.09,0.0225);
    glVertex3f(-.15, 0, 1);
    glVertex3f(0, -.15, 1);
    glVertex3f(0, 0, 1.6);
 
+   glNormal3f(-0.09,0.09,0.0225);
    glVertex3f(-.15, 0, 1);
    glVertex3f(-0, 0, 1.6);
    glVertex3f(0, .15, 1);
@@ -370,7 +386,9 @@ void draw_ship(){
 
    /* Outline of Ship */
    glLineWidth(5.0);
+   glDisable(GL_LIGHTING);
    glBegin(GL_LINE_LOOP);
+   glColor3f(1, .4, 0);
    materials(Orange);
    glVertex3f(.15, 0, 1);
    glVertex3f(.2, .2, 1.3);
@@ -408,6 +426,7 @@ void draw_ship(){
 
    glLineWidth(5.0);
    glBegin(GL_LINE_LOOP);
+   //glColor3f(1, .3, 0);
    materials(Orange);
    glVertex3f(.15, 0, 1.01);
    glVertex3f(0, -.15, 1.01);
@@ -418,7 +437,7 @@ void draw_ship(){
 
    glLineWidth(4.0);
    glBegin(GL_LINE_LOOP);
-   glColor3f(0, 0, 0);
+   glColor3f(0, 1, 1);
    materials(Cyan);
    glVertex3f(0, 0, 0);
    glVertex3f(.2, .2, 1.3);
@@ -455,6 +474,7 @@ void draw_ship(){
 
    glEnd();
    glLineWidth(1.0);
+   glEnable(GL_LIGHTING);
 }
 
 void draw_vectors(){
