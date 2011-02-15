@@ -263,12 +263,8 @@ int main(int argc, char* argv[]) {
    Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
 
    //setup glew and GLSL
-   /*
-    * I took these out because I stopped including glew on osx. If we need it again, 
-    * we just have to make sure that they're not included (or that there's some equivalent)
-    * on osx. -Sterling
-    */
-   /*
+#ifdef __APPLE__
+#else
    glewInit();
    if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && 
       GL_EXT_geometry_shader4)
@@ -277,7 +273,9 @@ int main(int argc, char* argv[]) {
       printf("Not enough GLSL support\n");
       exit(1);
    }
-   */
+
+#endif
+
    
    //load the shader files
    shader1 = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");

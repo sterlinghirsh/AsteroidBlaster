@@ -59,7 +59,7 @@ void TractorBeamShot::draw() {
    glPushMatrix();
       
       float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
-      glLightfv(GL_LIGHT0, GL_POSITION, lpos);
+      //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
       Point3D start(*position);
       velocity->movePoint(start);
       start.glTranslate();
