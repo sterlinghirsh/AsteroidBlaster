@@ -464,6 +464,12 @@ void GameState::menuFunc() {
    BitmapTextDisplay* saveLoadGame = new BitmapTextDisplay("Save/Load Game", GW/2 - 50, GH/2 - 20);
    BitmapTextDisplay* settings = new BitmapTextDisplay("Settings", GW/2 - 50, GH/2 + 20);
    BitmapTextDisplay* quit = new BitmapTextDisplay("Quit", GW/2 - 50, GH/2 + 60);
+   
+   newGame->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
+   saveLoadGame->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
+   settings->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
+   quit->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
+
 
    int x = 0;
    int y = 0;
@@ -491,15 +497,15 @@ void GameState::menuFunc() {
       while (SDL_PollEvent(&event)) {
          if (event.type == SDL_MOUSEBUTTONDOWN) {
             if (event.motion.x >= 350 && 
-                  event.motion.x <= 450 && 
-                  event.motion.y >= 230 && 
-                  event.motion.y <= 240) {
+                  event.motion.x <= 460 && 
+                  event.motion.y >= 225 && 
+                  event.motion.y <= 245) {
                gameState->menuMode = false;
                gameState->reset();
             } else if (event.motion.x >= 350 && 
                   event.motion.x <= 450 && 
-                  event.motion.y >= 350 && 
-                  event.motion.y <= 360) {
+                  event.motion.y >= 345 && 
+                  event.motion.y <= 365) {
                exit(0);
             }
          }
