@@ -49,7 +49,7 @@ void Asteroid3D::newRandomPosition() {
 
 void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    angle = 0;
-   radius = r;
+   //radius = r;
    worldSize = worldSizeIn;
 
    scalex = scaley = scalez = 1;
@@ -66,7 +66,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    double a = randdouble() * 0.5 + 0.75;
    double b = randdouble() * 0.5 + 0.75;
 
-   int npts = (int)((radius + 3.0) / 1.5) * 2;
+   int npts = (int)((r + 3.0) / 1.5) * 2;
 
    if (npts == 4) {
       npts += 2;
@@ -129,6 +129,24 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    sizeX = maxX - minX;
    sizeY = maxY - minY;
    sizeZ = maxZ - minZ;
+   
+   radius = minX;
+   if (maxX > radius) {
+      radius = maxX;
+   }
+   if (minY > radius) {
+      radius = minY;
+   }
+   if (maxY > radius) {
+      radius = maxY;
+   }
+   if (minZ > radius) {
+      radius = minZ;
+   }
+   if (maxZ > radius) {
+      radius = maxZ;
+   }
+
    collisionRadius = radius;
    updateBoundingBox();
 }
