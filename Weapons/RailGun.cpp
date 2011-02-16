@@ -46,6 +46,10 @@ void RailGun::debug() {
    printf("RailGun!\n");
 }
 
-bool RailGun::aimAt(Object3D* target) {
+bool RailGun::aimAt(double dt, Object3D* target) {
    return false;
+}
+
+double RailGun::getTurnSpeed() {
+   return 0;
 }

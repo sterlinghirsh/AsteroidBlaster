@@ -14,10 +14,11 @@ class RailGun : public Weapon {
    public:
       RailGun(AsteroidShip* owner);
       virtual ~RailGun();
-      virtual bool aimAt(Object3D*);
+      virtual bool aimAt(double dt, Object3D*);
       virtual void update(double timeDiff);
       virtual void debug();
       virtual void fire();
+      virtual double getTurnSpeed();
 };
 
 #endif
