@@ -43,6 +43,7 @@ const SDL_VideoInfo* vidinfo = NULL;
 
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
+double minimapSizeFactor = 0.5;
 
 // Fonts
 int *fontsArr[] = {
@@ -104,20 +105,20 @@ void display() {
       /* Set the viewport to 3/4 of the way across the screen on the bottom.
        * It should take up the bottom right corner of the screen.
        */
-      glViewport (GW*0.66, 0, GW/3, GH/3);
+      
+      glViewport (GW * (1 - minimapSizeFactor), 0, GW * minimapSizeFactor,
+       GH * minimapSizeFactor);
       glMatrixMode (GL_PROJECTION);		/* Select The Projection Matrix */
       glLoadIdentity ();							/* Reset The Projection Matrix */
 
       // Keep our aspect ratio relative to the global width and height
-      gluPerspective(VERT_FOV, (double)GW/GH, 1, 200);
+      gluPerspective(VERT_FOV, (double)GW/GH, 0.5, 20);
 
       glMatrixMode (GL_MODELVIEW);		/* Select The Projection Matrix */
       glLoadIdentity ();								/* Reset The Modelview Matrix */
 
       glClear (GL_DEPTH_BUFFER_BIT);		/* Clear Depth Buffer */
 
-      GLUquadricObj *quadric;			/* The Quadric Object */
-      quadric=gluNewQuadric();									/* Create A Pointer To The Quadric Object */
       gluQuadricNormals(quadric, GLU_SMOOTH);		/* Create Smooth Normals */
       gluQuadricTexture(quadric, GL_TRUE);			/* Create Texture Coords */
 

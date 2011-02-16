@@ -207,6 +207,14 @@ materialStruct GreenShiny = {
   {8.0}
 };
 
+materialStruct GreenTransparent = {
+  {0.0, 0.3, 0.0, 0.3},
+  {0.0, 0.9, 0.0, 0.3},
+  {0.2, 1.0, 0.2, 0.3},
+  {8.0}
+};
+
+
 materialStruct BlueShiny = {
   {0.0, 0.0, 0.3, 1.0},
   {0.0, 0.0, 0.9, 1.0},
@@ -221,10 +229,25 @@ materialStruct RedFlat = {
   {0.0}
 };
 
+materialStruct RedTransparent = {
+  {0.3, 0.0, 0.0, 0.6},
+  {0.9, 0.0, 0.0, 0.6},
+  {0.0, 0.0, 0.0, 0.6},
+  {0.0}
+};
+
+
 materialStruct YellowFlat = {
   {0.3, 0.3, 0.0, 1.0},
   {0.9, 0.9, 0.0, 1.0},
   {0.0, 0.0, 0.0, 1.0},
+  {0.0}
+};
+
+materialStruct YellowTransparent = {
+  {0.3, 0.3, 0.0, 0.4},
+  {0.9, 0.9, 0.0, 0.4},
+  {0.0, 0.0, 0.0, 0.4},
   {0.0}
 };
 

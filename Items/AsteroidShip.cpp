@@ -309,7 +309,7 @@ void AsteroidShip::keepFiring() {
 
 void draw_ship(){
    glEnable(GL_LIGHTING);
-   glColor4f(1, 1, 1, 1);
+   glColor4f(1, 1, 1, 0.5);
    glScalef(1.5, .5, .8);
 
    glBegin(GL_TRIANGLES);
@@ -491,6 +491,7 @@ void draw_ship(){
    glEnd();
    //glLineWidth(1.0);
    glEnable(GL_LIGHTING);
+   glDisable(GL_COLOR_MATERIAL);
 }
 
 void draw_vectors(){
@@ -521,6 +522,7 @@ void AsteroidShip::drawInMinimap() {
    // Counteract the rotation done in GameState::drawInMinimap();
    glRotate();
    glScalef(15, 15, 15);
+   glTranslatef(0, 0, -1);
    draw_ship();
    glPopMatrix();
 }

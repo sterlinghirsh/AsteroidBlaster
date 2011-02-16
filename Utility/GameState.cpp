@@ -11,6 +11,8 @@
 #include <math.h>
 #include "Utility/Matrix4.h"
 
+extern double minimapSizeFactor;
+
 GameState::GameState(double worldSizeIn) {
   gameIsRunning = true;
   menuMode = true;
@@ -107,7 +109,8 @@ void GameState::drawInMinimap() {
    static Point3D objectPosition;
    static Vector3D positionVector;
    const float scaleFactor = 0.05;
-   double radius;
+   double radius2D; // Radius when an object is projected onto the forward-right plane of the ship.
+   double radius3D; // Radius from the ship in 3D space.
 
    positionVector.updateMagnitude(*ship->position);
 
@@ -120,6 +123,7 @@ void GameState::drawInMinimap() {
       glScalef(scaleFactor, scaleFactor, scaleFactor);
       //glRotatef(180, 0, 1, 0);
       oppositeOfPosition.glTranslate(-1);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       
       // For each item that needs to be drawn in the minimap
       for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
@@ -137,32 +141,36 @@ void GameState::drawInMinimap() {
    glPopMatrix();
    glPushMatrix();
    glScalef(scaleFactor, scaleFactor, scaleFactor);
+   materials(WhiteSolid);
    for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
       // Make sure it's not null, & then draw it in the minimap
       if (*listIter != NULL && (*listIter)->shouldDrawInMinimap && *listIter != ship) {
          objectPosition = *(*listIter)->position; // Get the position.
          positionVector.movePoint(objectPosition, -1); // Center on the ship
          objectPosition = modelViewMatrix * (objectPosition); // Rotate about the ship
-         radius = distance2D(objectPosition.x, objectPosition.z);
-         if (radius < 20) {
-            materials(RedFlat);
-            glColor3f(1, 0, 0);
-         } else if (radius < 40) {
-            materials(YellowFlat);
-            glColor3f(1, 1, 0);
-         } else {
-            materials(GreenShiny);
-            glColor3f(0, 1, 0);
-         }
+         radius2D = distance2D(objectPosition.x, objectPosition.z);
+         radius3D = distance3D(objectPosition.x, objectPosition.y, objectPosition.z);
          glDisable(GL_COLOR_MATERIAL);
+         if (radius3D < 20) {
+            glColor3f(1, 0, 0);
+            materials(RedTransparent);
+         } else if (radius3D < 40) {
+            glColor3f(1, 1, 0);
+            materials(YellowTransparent);
+         } else {
+            glColor3f(0, 1, 0);
+            materials(GreenTransparent);
+         }
+
          // Draw a disc.
+         // This is the way that one game did it with the circles on a plane.
          glPushMatrix();
             glEnable(GL_LIGHTING);
-            glRotatef(-90.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
-            gluDisk(quadric, radius - 1, radius + 1 ,35,35);
+            glRotatef(-90.0,1.0f,0.0f,0.0f);	// Rotate By 0 On The X-Axis
+            gluDisk(quadric, radius2D - 1, radius2D + 1 ,16,2);
             glDisable(GL_LIGHTING);
          glPopMatrix();
-         glDisable(GL_LIGHTING);
+         //glDisable(GL_LIGHTING);
          glBegin(GL_LINES);
          // Draw a point at the object's position.
          glVertex3f(objectPosition.x, objectPosition.y, objectPosition.z);
@@ -189,12 +197,14 @@ void GameState::draw() {
       camera->setOffset(0, 0, 0);
    }
    
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    camera->setCamera(true);
    skybox->draw(camera);
    cube->draw();
    
    // Get a list of all of the objects after culling them down to the view frustum.
    std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    
    for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
       if (*listIter == NULL)
@@ -430,6 +440,18 @@ void GameState::keyDown(int key) {
     break;
   case SDLK_z:
     ship->prevWeapon();
+    break;
+  case SDLK_1:
+    minimapSizeFactor = 1;
+    break;
+  case SDLK_2:
+    minimapSizeFactor = 0.5;
+    break;
+  case SDLK_3:
+    minimapSizeFactor = 0.333;
+    break;
+  case SDLK_4:
+    minimapSizeFactor = 0.25;
     break;
   }
 }

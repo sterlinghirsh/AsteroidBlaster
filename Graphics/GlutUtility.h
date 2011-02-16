@@ -98,9 +98,12 @@ void drawCylinder(double radius, double length);
 void init_tex();
 
 extern materialStruct GreenShiny;
+extern materialStruct GreenTransparent;
 extern materialStruct BlueShiny;
 extern materialStruct RedFlat;
+extern materialStruct RedTransparent;
 extern materialStruct YellowFlat;
+extern materialStruct YellowTransparent;
 extern materialStruct WhiteTransparent;
 extern materialStruct WhiteSolid;
 extern materialStruct BlackSolid;
