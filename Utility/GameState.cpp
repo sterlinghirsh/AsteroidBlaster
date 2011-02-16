@@ -47,7 +47,6 @@ GameState::GameState(double worldSizeIn) {
    thirdPerson = false;
 
    isW = isA = isS = isD = false;
-
 }
 
 /**

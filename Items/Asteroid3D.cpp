@@ -129,23 +129,26 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    sizeX = maxX - minX;
    sizeY = maxY - minY;
    sizeZ = maxZ - minZ;
-   
-   radius = minX;
+
+   radius = -minX;
    if (maxX > radius) {
       radius = maxX;
    }
-   if (minY > radius) {
-      radius = minY;
+   if (-minY > radius) {
+      radius = -minY;
    }
    if (maxY > radius) {
       radius = maxY;
    }
-   if (minZ > radius) {
-      radius = minZ;
+   if (-minZ > radius) {
+      radius = -minZ;
    }
    if (maxZ > radius) {
       radius = maxZ;
    }
+
+   // Tweak the radius to (hopefully) encompass all points.
+   cullRadius = radius + r * 0.10;
 
    collisionRadius = radius;
    updateBoundingBox();
@@ -162,8 +165,8 @@ void Asteroid3D::draw() {
    glTranslatef(position->x, position->y, position->z);
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
-   
-   if (isTargeted()) { 
+
+   if (isTargeted()) {
       glColor3f(1.0f, 0.0f, 0.0f);
    }
    else
@@ -176,13 +179,13 @@ void Asteroid3D::draw() {
    glDisable(GL_POLYGON_OFFSET_FILL);
 
    //if (health == 1) {
-      //glColor3f(0.996, 0.312, 0.1);
+   //glColor3f(0.996, 0.312, 0.1);
    //} else if (health > 1) {
-      double step = (initH - health + 1);
-      double stepR = .004 / initH * step;
-      double stepG = .388 / initH * step;
-      double stepB = 1.0 / initH * step;
-      glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
+   double step = (initH - health + 1);
+   double stepR = .004 / initH * step;
+   double stepG = .388 / initH * step;
+   double stepB = 1.0 / initH * step;
+   glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
    //}
    //glColor3f(0.996, 0.612, 0.0);
 
@@ -263,7 +266,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
          if (dynamic_cast<BeamShot*>(other) != NULL) {
             health = 0;
          } else if (dynamic_cast<TractorBeamShot*>(other) != NULL) {
-            // Do nothing. 
+            // Do nothing.
          } else {
             health--;
             double speed = velocity->getLength();

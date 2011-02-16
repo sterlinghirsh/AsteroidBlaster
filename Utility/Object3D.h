@@ -30,6 +30,7 @@ class Object3D {
       bool shouldRemove;
       double angle;
       double radius;
+      double cullRadius;
       bool shouldConstrain;
       unsigned int minXRank, maxXRank;
       bool shouldDrawInMinimap;
@@ -44,10 +45,12 @@ class Object3D {
       virtual void setRollSpeed(double radiansPerSecond);
       virtual bool detectCollision(Object3D* other, bool checkOther = true);
       virtual void drawBoundingBox();
+      virtual void drawBoundingSphere();
       virtual void handleCollision(Object3D* other);
       virtual void debug();
       virtual void setTargeted(bool a);
       virtual bool isTargeted();
+      double getCullRadius();
 
       void setCustodian(Custodian* cust);
       void glRotate(bool doTranspose = true);

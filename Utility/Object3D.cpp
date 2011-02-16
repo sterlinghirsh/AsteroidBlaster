@@ -38,6 +38,7 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
    radius = std::max(radius, fabs(minZ));
    targeted = false;
    shouldDrawInMinimap = false;
+   cullRadius = -1.0;
 }
 
 Object3D::~Object3D() {
@@ -197,6 +198,16 @@ void Object3D::drawBoundingBox() {
    glEnable(GL_LIGHTING);
 }
 
+void Object3D::drawBoundingSphere() {
+   glDisable(GL_LIGHTING);
+   glPushMatrix();
+   GLUquadricObj *q;
+   q = gluNewQuadric();
+   gluSphere(q, radius, 12, 12);
+   glPopMatrix();
+   glEnable(GL_LIGHTING);
+}
+
 void Object3D::updateBoundingBox() {
    minPosition->clone(position);
    maxPosition->clone(position);
@@ -248,3 +259,13 @@ void Object3D::setTargeted(bool a) {
 bool Object3D::isTargeted() {
    return targeted;
 }
+
+
+double Object3D::getCullRadius() {
+   if (cullRadius == -1.0) {
+      return radius;
+   } else {
+      return cullRadius;
+   }
+}
+
