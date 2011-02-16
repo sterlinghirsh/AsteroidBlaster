@@ -325,7 +325,7 @@ void Shard::handleCollision(Object3D* other) {
       double speed;
       if (dynamic_cast<BeamShot*>(other) != NULL) {
          speed = 40; // High speed from hard-hitting railgun.
-      } if((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {
+      } else if((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {
          // Pull the shot in.
          speed = position->distanceFrom(*TBshot->position) - TBshot->length;
       } else {
