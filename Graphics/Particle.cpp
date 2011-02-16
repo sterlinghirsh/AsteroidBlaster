@@ -213,6 +213,7 @@ void Particle::drawParticles()
 {
    glDisable(GL_COLOR_MATERIAL);
    //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    
    extern GameState* gameState;
    
