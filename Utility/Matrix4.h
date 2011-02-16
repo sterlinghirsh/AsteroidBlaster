@@ -16,7 +16,7 @@
 #ifndef MATRIX4_H
 #define MATRIX4_H
 
-#include "Utility/Point3D.h"
+struct Point3D;
 
 struct Matrix4 {
    union {

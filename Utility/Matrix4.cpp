@@ -7,6 +7,7 @@
 
 #include "Utility/Matrix4.h"
 #include "math.h"
+#include "Utility/Point3D.h"
 
 const Matrix4 Matrix4::Identity = Matrix4(1, 0, 0, 0,
                                           0, 1, 0, 0,
@@ -15,6 +16,10 @@ const Matrix4 Matrix4::Identity = Matrix4(1, 0, 0, 0,
 
 Matrix4::Matrix4() {
    toIdent();
+}
+
+inline const Point3D operator*(const Point3D& lhs, const Matrix4& rhs) {
+   return rhs * lhs;
 }
 
 /** Yes, this is a very ugly constructor. But it's convenient, so there is no
@@ -83,7 +88,7 @@ Point3D Matrix4::getRow(int row) const {
 
 Point3D Matrix4::getCol(int col) const {
    Point3D t;
-   if (col < 0 || col >=4)
+   if (col < 0 || col >= 4)
     return t;
 
    t.x = m[col][0];
@@ -147,6 +152,15 @@ const Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
       }
 
    return t;
+}
+
+const Point3D Matrix4::operator*(const Point3D& rhs) const {
+   Point3D ret;
+   ret.x = rhs * getRow(0);
+   ret.y = rhs * getRow(1);
+   ret.z = rhs * getRow(2);
+
+   return ret;
 }
 
 float Matrix4::det() const {

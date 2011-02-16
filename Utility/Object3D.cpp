@@ -8,7 +8,7 @@
 #include "Utility/Object3D.h"
 #include <math.h>
 #include <algorithm>
-#include "Utility/Matrix4x4.h"
+#include "Utility/Matrix4.h"
 
 Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
  position(new Point3D(x, y, z)) {
@@ -223,7 +223,7 @@ void Object3D::debug() {
  * doTranspose defaults to true.
  */
 void Object3D::glRotate(bool doTranspose) {
-   static Matrix4x4 modelViewMatrix;
+   static Matrix4 modelViewMatrix;
    // Switch to ModelView mode.
    glMatrixMode(GL_MODELVIEW);
    glPushMatrix();
@@ -235,7 +235,7 @@ void Object3D::glRotate(bool doTranspose) {
       // Save a copy of the inverse model view matrix.
       glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&modelViewMatrix);
       if (doTranspose)
-         modelViewMatrix.doTranspose();
+         modelViewMatrix.toTranspose();
    glPopMatrix();
    glMultMatrixf((GLfloat*)&modelViewMatrix);
 }

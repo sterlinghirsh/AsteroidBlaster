@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include "Graphics/GlutUtility.h"
 
+struct Matrix4;
+
 struct Point3D {
    double x, y, z;
    Point3D(double xIn = 0, double yIn = 0, double zIn = 0) :

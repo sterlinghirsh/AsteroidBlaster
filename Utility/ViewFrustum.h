@@ -10,7 +10,7 @@
 
 #include "Utility/Object3D.h"
 #include "Utility/Plane.h"
-#include "Utility/Matrix4x4.h"
+#include "Utility/Matrix4.h"
 #include <vector>
 #include <set>
 
@@ -30,8 +30,8 @@ class ViewFrustum {
       virtual void print();
 
    private:
-      Matrix4x4 projMatrix;
-      Matrix4x4 modelViewMatrix;
+      Matrix4 projMatrix;
+      Matrix4 modelViewMatrix;
       Plane* top;
       Plane* bottom;
       Plane* left;

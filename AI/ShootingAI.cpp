@@ -21,7 +21,7 @@
 #include "Weapons/Weapon.h"
 
 // Radians/sec
-const double ShootingAI::gunRotSpeed = 12 * 3.14159265;
+const double ShootingAI::gunRotSpeed = 24 * 3.14159265;
 
 ShootingAI::ShootingAI(AsteroidShip* owner) {
    ship = owner;
@@ -31,6 +31,10 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    enabled = false;
    //TODO possibly more stuff here.
    lastTarget == NULL;
+}
+
+double min(double a, double b) {
+   return a < b ? a : b;
 }
 
 /** Aims at an object.
@@ -48,7 +52,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
  */
 int ShootingAI::aimAt(double dt, Object3D* target) {
    Point3D wouldHit;
-   double speed = 20;//chosenWeapon->getSpeed();
+   double speed = 40;//chosenWeapon->getSpeed();
    double time = 0, dist = 0, ang = 0;
    int iterations = 0;
    // Change in position
@@ -65,17 +69,22 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
 
    // If the difference is more than the radius of the target,
    // we need to adjust where we are aiming.
-   if (fabs(fabs(ang) - gunRotSpeed*dt) > 0.01) {
+   if (ang != 0) {
       Quaternion q;
-      q.FromAxis(Vector3D(wouldHit.x, wouldHit.y, wouldHit.z), gunRotSpeed*dt);
+      q.FromAxis(Vector3D(wouldHit.x, wouldHit.y, wouldHit.z), 
+       min(ang, gunRotSpeed*dt));
 
       aimingAt = q * aimingAt;
       // Normalize the vector.
       aimingAt = aimingAt.normalize();
-      //ship->fire(false);
+      if (min(ang, gunRotSpeed*dt) == ang)
+         ship->fire(true);
+      else
+         ship->fire(false);
    }
-   //else
+   else {
       ship->fire(true);
+   }
    
    // This loop will choose the spot that we want to be shooting at.
    do {
@@ -131,6 +140,7 @@ Object3D* ShootingAI::chooseTarget() {
    
    targets_iterator = targets->begin();
    Object3D* closest = NULL;
+   
    for ( ; targets_iterator != targets->end(); targets_iterator++) {
       // get closest asteroid
       //if (*targets_iterator == NULL || *targets_iterator == ship || NULL == (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) || asteroid->isShard  )

@@ -21,6 +21,7 @@
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/GameState.h"
 #include "Utility/InputManager.h"
+#include "Utility/Matrix4.h"
 
 
 #include "SDL.h"
@@ -302,6 +303,8 @@ int main(int argc, char* argv[]) {
       }
       
       float mouseButtonDown = 0;
+      Matrix4 testMat;
+      testMat._11 = 30;
       // This causes a valgrind error because event isn't initialized (I think).
       while (SDL_PollEvent(&event)) {
          if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_F1) {

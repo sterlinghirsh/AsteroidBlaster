@@ -34,7 +34,7 @@ Point3D& Point3D::operator/=(double scalar) {
 
    return *this;
 }
-   
+
 const int Point3D::operator==(const Point3D &rhs) const {
    if (fabs(x - rhs.x) < EPSILON)
       if (fabs(y - rhs.y) < EPSILON)
