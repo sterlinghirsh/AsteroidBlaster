@@ -64,7 +64,7 @@ void ShootingAI::chooseWeapon( int weapon ) {
 }
 
 Object3D* ShootingAI::chooseTarget() {
-   std::list<Object3D*>* targets = ship->getRadar()->getViewFrustumReading();
+   std::list<Object3D*>* targets = ship->getRadar()->getFullReading();
    std::list<Object3D*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
    double curDist, shortestDist = -1;
