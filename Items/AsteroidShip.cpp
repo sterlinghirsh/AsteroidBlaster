@@ -57,6 +57,8 @@ AsteroidShip::AsteroidShip() :
       score = 0;
       // The ship's health. This number is displayed to the screen.
       health = 100;
+      // The number of shard collected. This number is displayed to the screen.
+      nShards = 0;
       // The ship's max motion parameters.
       maxForwardAccel = 10;
       maxRightAccel = 5;
@@ -107,6 +109,13 @@ int AsteroidShip::getHealth() {
  */
 int AsteroidShip::getScore() {
    return score;
+}
+
+/**
+ * Retrieve the number of shards collected.
+ */
+int AsteroidShip::getShards() {
+   return nShards;
 }
 
 void AsteroidShip::setYawSpeed(double yawAmountIn) {
@@ -391,7 +400,7 @@ void draw_ship(){
    glEnd();
 
    /* Outline of Ship */
-   glLineWidth(5.0);
+   //glLineWidth(5.0);
    glDisable(GL_LIGHTING);
    glBegin(GL_LINE_LOOP);
    glColor3f(1, .4, 0);
@@ -430,7 +439,7 @@ void draw_ship(){
 
    glEnd();
 
-   glLineWidth(5.0);
+   //glLineWidth(5.0);
    glBegin(GL_LINE_LOOP);
    //glColor3f(1, .3, 0);
    materials(Orange);
@@ -441,7 +450,7 @@ void draw_ship(){
    glEnd();
 
 
-   glLineWidth(4.0);
+   //glLineWidth(4.0);
    glBegin(GL_LINE_LOOP);
    glColor3f(0, 1, 1);
    materials(Cyan);
@@ -479,7 +488,7 @@ void draw_ship(){
    glVertex3f(.15, 0, 1);
 
    glEnd();
-   glLineWidth(1.0);
+   //glLineWidth(1.0);
    glEnable(GL_LIGHTING);
 }
 
@@ -550,7 +559,7 @@ void AsteroidShip::handleCollision(Object3D* other) {
       if (health > 100) {
          health = 100;
       }
-      numShards++;
+      nShards++;
       score += 69;
       // Try converting other into an Asteroid3D
    } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {

@@ -25,11 +25,12 @@ GameState::GameState(double worldSizeIn) {
   FPSText = new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20);
   numAsteroidsText = new BitmapTextDisplay("Asteroids Remaining: ", custodian.asteroidCount, "", 10, 40);
   scoreText = new BitmapTextDisplay("Score: ", ship->getScore(), "", 10, 60);
-  healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 80);
+  shardText = new BitmapTextDisplay("Shards: ", ship->getScore(), "", 10, 80);
+  healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 100);
   gameOverText = new BitmapTextDisplay("GAME OVER", GW/2, GH/2);
   winText = new BitmapTextDisplay("YOU WIN!", GW/2, GH/2);
   weaponText = new BitmapTextDisplay("Current Weapon: ", ship->getCurrentWeapon()->getName(), 
-   "", 10, 100);
+   "", 10, 120);
 
   // Set up objects.
   custodian.add(ship);
@@ -201,6 +202,7 @@ void GameState::drawAllText() {
       FPSText->draw();
       numAsteroidsText->draw();
       scoreText->draw();
+      shardText->draw();
       healthText->draw();
       weaponText->draw();
 
@@ -217,6 +219,7 @@ void GameState::updateText() {
    FPSText->updateBody(curFPS);
    numAsteroidsText->updateBody(custodian.asteroidCount);
    scoreText->updateBody(ship->getScore());
+   shardText->updateBody(ship->getShards());
    healthText->updateBody(ship->getHealth());
    weaponText->updateBody(ship->getCurrentWeapon()->getName());
 }

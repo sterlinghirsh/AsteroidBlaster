@@ -217,7 +217,7 @@ void Shard::draw() {
 
    drawOtherOrbiters();
    // For each ring of orbiters, rotate the proper amount.
-   for (int i = 0; i < NUM_ORBIT_RINGS; i++) {
+   /*for (int i = 0; i < NUM_ORBIT_RINGS; i++) {
       ORBITER_CLR;
       double tilt = 180.0 / (double)NUM_ORBIT_RINGS;
       glRotatef(tilt, axis->xMag, axis->yMag, axis->zMag);
@@ -246,6 +246,7 @@ void Shard::draw() {
       }
       glPopMatrix();
    }
+   */
 
    //glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();

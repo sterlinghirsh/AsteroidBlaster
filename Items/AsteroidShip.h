@@ -37,7 +37,7 @@ class AsteroidShip : public Object3D {
       AsteroidShip();
       int getHealth();
       int getScore();
-      int getNumShards();
+      int getShards();
       double getAimX();
       double getAimY();
       void updateAcceleration();
@@ -92,7 +92,7 @@ class AsteroidShip : public Object3D {
       ShootingAI* shooter;
       
       int score;
-      int numShards;
+      int nShards;
       Vector3D shotDirection; // If we shoot a shot, where will it go?
       Weapon* getCurrentWeapon();
 

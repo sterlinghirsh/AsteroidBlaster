@@ -247,6 +247,10 @@ void Asteroid3D::handleCollision(Object3D* other) {
             // Do nothing. 
          } else {
             health--;
+            double speed = velocity->getLength();
+            speed += 5.0 / radius;
+            velocity->addUpdate(*shot->velocity);
+            velocity->setLength(speed);
          }
       }
       if (health == 0) {
