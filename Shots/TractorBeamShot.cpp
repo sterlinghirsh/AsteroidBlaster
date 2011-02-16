@@ -7,6 +7,7 @@
  * <3
  */
 
+#include "Items/Shard.h"
 #include "Shots/TractorBeamShot.h"
 #include <math.h>
 
@@ -15,8 +16,8 @@ static float spin = 0;
 TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, 
  AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
    persist = true;
-   angle = M_PI / 10; // Radians from the center
-   length = 20;
+   angle = M_PI / 20; // Radians from the center
+   length = 40;
    farRadius = length * tan(angle);
    framesAlive = 0;
    forward = new Vector3D(*velocity); // Goofy.
@@ -38,6 +39,15 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn,
    maxY = std::max(endPoint1.y, endPoint2.y);
    minZ = std::min(endPoint1.z, endPoint2.z);
    maxZ = std::max(endPoint1.z, endPoint2.z);
+   
+   // Expand the bounding box to make sure it contains the whole cone.
+   minX -= farRadius;
+   minY -= farRadius;
+   minZ -= farRadius;
+   maxX += farRadius;
+   maxY += farRadius;
+   maxZ += farRadius;
+
    timeFired = doubleTime();
    shouldConstrain = false;
    updateBoundingBox();
@@ -76,4 +86,39 @@ void TractorBeamShot::draw() {
       glutWireCone(farRadius, length,20,20);
    glPopMatrix();
    glUseProgram(0);
+}
+
+/**
+ * Is the object in the cone?
+ */
+bool TractorBeamShot::detectCollision(Object3D* other, bool checkOther) {
+   if (other == owner)
+      return false;
+   
+   // This is how far it is for position to other->position.
+   Vector3D shotToTarget(*position, *other->position);
+   
+   Vector3D tempDirection(*velocity);
+   tempDirection.normalize();
+
+   double forwardDistance = tempDirection.dot(shotToTarget);
+   // Is it behind me?
+   if (forwardDistance < 0) {
+      return false;
+   }
+
+   if (forwardDistance > length) {
+      return false;
+   }
+
+   double requiredDistance = forwardDistance * tan(angle);
+   Point3D closestPoint(*position);
+   tempDirection.movePoint(closestPoint, forwardDistance);
+   return (other->position->distanceFrom(closestPoint) <=
+    (other->radius + requiredDistance));
+}
+
+void TractorBeamShot::handleCollision(Object3D* other) {
+   if (other == owner)
+      return;
 }

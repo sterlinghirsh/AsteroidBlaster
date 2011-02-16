@@ -12,6 +12,7 @@
 #include "Items/AsteroidShip.h"
 #include "Shots/Shot.h"
 #include "Shots/BeamShot.h"
+#include "Shots/TractorBeamShot.h"
 #include <algorithm>
 #include <math.h>
 
@@ -311,6 +312,7 @@ void Shard::handleCollision(Object3D* other) {
    AsteroidShip* ship;
    Asteroid3D* asteroid;
    Shot* shot;
+   TractorBeamShot* TBshot; // Not tuberculosis
    if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
    } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
@@ -322,6 +324,9 @@ void Shard::handleCollision(Object3D* other) {
       double speed;
       if (dynamic_cast<BeamShot*>(other) != NULL) {
          speed = 40; // High speed from hard-hitting railgun.
+      } if((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {
+         // Pull the shot in.
+         speed = position->distanceFrom(*TBshot->position) - TBshot->length;
       } else {
          // Set speed to between the speed of the shot and the current speed.
          speed = shot->velocity->getLength();

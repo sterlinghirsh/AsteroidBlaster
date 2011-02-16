@@ -11,6 +11,7 @@
 #include "Shots/Shot.h"
 #include "Shots/ProjectileShot.h"
 #include "Shots/BeamShot.h"
+#include "Shots/TractorBeamShot.h"
 #include <algorithm>
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -242,6 +243,8 @@ void Asteroid3D::handleCollision(Object3D* other) {
       if (health > 0) {
          if (dynamic_cast<BeamShot*>(other) != NULL) {
             health = 0;
+         } else if (dynamic_cast<TractorBeamShot*>(other) != NULL) {
+            // Do nothing. 
          } else {
             health--;
          }
