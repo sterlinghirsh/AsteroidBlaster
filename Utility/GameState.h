@@ -80,6 +80,7 @@ class GameState : public InputReceiver {
       int scoreToWin;
       bool thirdPerson;
       int numAsteroidsToSpawn;
+      bool isW, isA, isS, isD;
 
       Skybox* skybox;
       Camera* camera;

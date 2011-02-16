@@ -46,6 +46,8 @@ GameState::GameState(double worldSizeIn) {
    scoreToWin = 15000;
    thirdPerson = false;
 
+   isW = isA = isS = isD = false;
+
 }
 
 /**
@@ -357,24 +359,53 @@ void GameState::reset() {
  */
 void GameState::keyDown(int key) {
    switch(key) {
+
    case SDLK_w:
-      if(!ship->flyingAI->isEnabled())
-         ship->accelerateForward(1);
+      isW = true;
+      if(!ship->flyingAI->isEnabled()) {
+         if (isS) {
+            ship->accelerateForward(0);
+         } else {
+            ship->accelerateForward(1);
+         }
+      }
       break;
 
    case SDLK_s:
-      if(!ship->flyingAI->isEnabled())
-         ship->accelerateForward(-1);
+      isS = true;
+      if(!ship->flyingAI->isEnabled()) {
+         if (isW) {
+            ship->accelerateForward(0);
+         } else {
+            ship->accelerateForward(-1);
+         }
+      }
       break;
 
    case SDLK_a:
-      if(!ship->flyingAI->isEnabled())
-         ship->setYawSpeed(1.0);
+      isA = true;
+      if(!ship->flyingAI->isEnabled()) {
+         if (isD) {
+            //printf("should be not turning left\n");
+            ship->setYawSpeed(0.0);
+         } else {
+            //printf("should be turning left\n");
+            ship->setYawSpeed(1.0);
+         }
+      }
       break;
 
    case SDLK_d:
-      if(!ship->flyingAI->isEnabled())
-         ship->setYawSpeed(-1.0);
+      isD = true;
+      if(!ship->flyingAI->isEnabled()) {
+         if (isA) {
+            //printf("should be not turning right\n");
+            ship->setYawSpeed(0.0);
+         } else {
+            //printf("should be turning right\n");
+            ship->setYawSpeed(-1.0);
+         }
+      }
       break;
 
    case SDLK_q:
@@ -467,15 +498,49 @@ void GameState::keyUp(int key) {
       break;
 
    case SDLK_s:
+      isS = false;
+      if(!ship->flyingAI->isEnabled()) {
+         if (isW) {
+            ship->accelerateForward(1);
+         } else {
+            ship->accelerateForward(0);
+         }
+      }
+      break;
+
    case SDLK_w:
-      if(!ship->flyingAI->isEnabled())
-         ship->accelerateForward(0);
+      isW = false;
+      if(!ship->flyingAI->isEnabled()) {
+         if (isS) {
+            ship->accelerateForward(-1);
+         } else {
+            ship->accelerateForward(0);
+         }
+      }
       break;
 
    case SDLK_a:
+      isA = false;
+      if(!ship->flyingAI->isEnabled()) {
+         if (isD) {
+            ship->setYawSpeed(-1.0);
+         } else {
+            ship->setYawSpeed(0.0);
+         }
+      }
+      break;
+
    case SDLK_d:
-      if(!ship->flyingAI->isEnabled())
-         ship->setYawSpeed(0);
+      isD = false;
+      if(!ship->flyingAI->isEnabled()) {
+         if (isA) {
+            ship->setYawSpeed(1.0);
+         } else {
+            ship->setYawSpeed(0.0);
+         }
+      }
+      //if(!ship->flyingAI->isEnabled())
+      //ship->setYawSpeed(0);
       break;
 
    case SDLK_q:
