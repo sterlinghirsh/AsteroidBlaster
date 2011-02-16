@@ -47,81 +47,12 @@ double min(double a, double b) {
  *
  * @param dt time difference since last frame, for gun turning.
  * @return no idea, really. Just leaving this open in case I think of something
- * TODO: Make this work. I (Sterling) was getting huge values for wouldHit.
- * This is almost certainly a bug.
  */
 int ShootingAI::aimAt(double dt, Object3D* target) {
-   Point3D wouldHit;
-   double speed = 40;//chosenWeapon->getSpeed();
-   double time = 0, dist = 0, ang = 0;
-   int iterations = 0;
-   // Change in position
-   Vector3D dp;
-   
-   Point3D targetPos = *target->position;
-   Point3D curTarget = targetPos;
-   // This section of code does angle interpolation.
-   // Find the angle between our vector and where we want to be.
-   ang = acos(aimingAt * lastShotPos);
-
-   // Get our axis of rotation.
-   wouldHit = (aimingAt ^ lastShotPos).normalize();
-
-   // If the difference is more than the radius of the target,
-   // we need to adjust where we are aiming.
-   if (ang != 0) {
-      Quaternion q;
-      q.FromAxis(Vector3D(wouldHit.x, wouldHit.y, wouldHit.z), 
-       min(ang, gunRotSpeed*dt));
-
-      aimingAt = q * aimingAt;
-      // Normalize the vector.
-      aimingAt = aimingAt.normalize();
-      if (min(ang, gunRotSpeed*dt) == ang)
-         ship->fire(true);
-      else
-         ship->fire(false);
-   }
-   else {
+   if (chosenWeapon->aimAt(dt, target))
       ship->fire(true);
-   }
-   
-   // This loop will choose the spot that we want to be shooting at.
-   do {
-      // time is the distance from the ship to the target according to the
-      // speed of the bullet.
-      time = ship->position->distanceFrom(curTarget) / speed;
-      
-      // dp is the distance the asteroid traveled in the time it took for our
-      // bullet to get to the point we are considering (curTarget).
-      dp = target->velocity->scalarMultiply(time);
-
-      // Move our target to the point where the asteroid would be
-      curTarget = Point3D(targetPos.x + dp.xMag, targetPos.y + dp.yMag,
-       targetPos.z + dp.zMag);
-
-      // Get the vector that points to that point.
-      wouldHit = curTarget - *ship->position;
-
-      // Normalize, scale by speed of the bullet multiplied by the time that
-      // passed (for the bullet to get to the previous point) This vector
-      // now points to where our bullet will be when the asteroid is at
-      // its position
-
-      wouldHit = wouldHit.normalize() * speed * time + *ship->position;
-
-      // Dist is the distance from where our bullet will be to where
-      // the asteroid will be.
-      dist = wouldHit.distanceFrom(curTarget);
-      iterations++;
-      // If this distance is greater than the radius (ie, we missed),
-      // recalculate!
-   } while (dist > target->radius && iterations < 30);
-
-   // By the end of the loop, curTarget is the point that we need to aim
-   // at in order to hit our target.
-   lastShotPos = (curTarget - *ship->position).normalize();
-   ship->updateShotDirection(aimingAt);
+   else
+      ship->fire(false);
 
    return 0;
 }
@@ -129,7 +60,7 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
 // kinda useless right now.
 void ShootingAI::chooseWeapon( int weapon ) {
     ship->selectWeapon( weapon );
-    //chosenWeapon = ship->getWeapon( weapon );
+    chosenWeapon = ship->getCurrentWeapon();
 }
 
 Object3D* ShootingAI::chooseTarget() {

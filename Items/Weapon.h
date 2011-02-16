@@ -12,12 +12,15 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
+struct Point3D;
+
 class Weapon {
 public:
    virtual double getDamage()=0;
    virtual double getSpeed()=0;
    virtual double getCooldown()=0;
    virtual double getRange()=0;
+   virtual Point3D project(Object3D* o)=0;
 };
 
 #endif

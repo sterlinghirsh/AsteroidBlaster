@@ -13,11 +13,15 @@
 #include "Graphics/GlutUtility.h"
 
 struct Matrix4;
+struct Vector3D;
 
 struct Point3D {
    double x, y, z;
    Point3D(double xIn = 0, double yIn = 0, double zIn = 0) :
     x(xIn), y(yIn), z(zIn) {}
+   
+   Point3D(const Point3D& copy);
+   Point3D(const Vector3D& copy);
 
    void clone(Point3D* other) {
       x = other->x;

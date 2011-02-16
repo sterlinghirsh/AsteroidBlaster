@@ -6,7 +6,9 @@
  */
 
 #include "Utility/Matrix4.h"
-#include "math.h"
+#include "Utility/Point3D.h"
+#include "Graphics/GlutUtility.h"
+#include <math.h>
 
 const Matrix4 Matrix4::Identity = Matrix4(1, 0, 0, 0,
                                           0, 1, 0, 0,
