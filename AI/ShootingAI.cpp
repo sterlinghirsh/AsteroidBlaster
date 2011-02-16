@@ -128,24 +128,22 @@ Object3D* ShootingAI::chooseTarget() {
    std::list<Object3D*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
    double curDist, shortestDist = -1;
-
+   
    targets_iterator = targets->begin();
    Object3D* closest = NULL;
-   
-   for ( ; targets_iterator != targets->end(); targets_iterator++ ) {
+   for ( ; targets_iterator != targets->end(); targets_iterator++) {
       // get closest asteroid
       //if (*targets_iterator == NULL || *targets_iterator == ship || NULL == (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) || asteroid->isShard  )
       // Trying this with shard subclass
       // IF THE AI BREAKS, REMOVE THIS
       if (*targets_iterator == NULL ||
-       dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL)
+       dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL) {
       // END OF NEW CODE
          continue;
+      }
       
       curDist = (*targets_iterator)->position->distanceFrom( *ship_position );
-      if (shortestDist < 0)
-         shortestDist = curDist;
-      if (curDist < shortestDist) {
+      if (shortestDist < 0 || curDist < shortestDist) {
          shortestDist = curDist;
          closest = *targets_iterator;
       } 
