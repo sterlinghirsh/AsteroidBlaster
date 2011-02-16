@@ -127,25 +127,26 @@ Object3D* ShootingAI::chooseTarget() {
    std::list<Object3D*>* targets = ship->getRadar()->getNearbyReading();
    std::list<Object3D*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
+   double curDist, shortestDist = -1;
 
    targets_iterator = targets->begin();
-   Object3D* closest = *targets_iterator;
-   double shortest_distance = closest->position->distanceFrom( *ship_position );
+   Object3D* closest = NULL;
    
-   double distance;
-   Asteroid3D* asteroid;
    for ( ; targets_iterator != targets->end(); targets_iterator++ ) {
       // get closest asteroid
       //if (*targets_iterator == NULL || *targets_iterator == ship || NULL == (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) || asteroid->isShard  )
       // Trying this with shard subclass
       // IF THE AI BREAKS, REMOVE THIS
-      if (*targets_iterator == NULL || *targets_iterator == ship || NULL == (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) || dynamic_cast<Shard*>(*targets_iterator) != NULL)
+      if (*targets_iterator == NULL ||
+       dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL)
       // END OF NEW CODE
          continue;
       
-      distance = (*targets_iterator)->position->distanceFrom( *ship_position );
-      if ( distance < shortest_distance ) {
-         shortest_distance = distance;
+      curDist = (*targets_iterator)->position->distanceFrom( *ship_position );
+      if (shortestDist < 0)
+         shortestDist = curDist;
+      if (curDist < shortestDist) {
+         shortestDist = curDist;
          closest = *targets_iterator;
       } 
    }
@@ -177,7 +178,11 @@ int ShootingAI::think(double dt) {
    chooseWeapon(0);
 
    Object3D* target = chooseTarget();
-   if (target != lastTarget) {
+   if (target == NULL && target != lastTarget) {
+      printf("Could not find a target!\n");
+      lastTarget = target;
+   }
+   else if (target != lastTarget) {
       printf("Switching targets..\n");
       if (!lastTarget) {
          printf("No previous target.\n");
@@ -191,6 +196,9 @@ int ShootingAI::think(double dt) {
    if (target != NULL) {
       target->setTargeted(true);
       aimAt(dt, target);
+   }
+   else {
+      ship->fire(false);
    }
 
    // Think has a return value just in case it needs to.
