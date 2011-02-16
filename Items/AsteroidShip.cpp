@@ -156,9 +156,6 @@ void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
    static Point3D curPoint;
    static Vector3D initialOffset;
    static Vector3D randomOffset;
-   static double count = 0;
-   count++;
-   printf("count=%f\r",count);
    curPoint = emitter;
 
    // Translate the point in 2D
