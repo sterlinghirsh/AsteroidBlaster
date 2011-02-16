@@ -40,7 +40,6 @@ class Asteroid3D : public Object3D {
       void newRandomPosition();
       void drawInMinimap();
       void debug();
-      
 
    private:
       double randRadius(double r);

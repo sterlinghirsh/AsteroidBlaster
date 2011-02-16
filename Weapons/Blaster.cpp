@@ -128,7 +128,7 @@ bool Blaster::aimAt(double dt, Object3D* target) {
 
    ship->updateShotDirection(aim);
 
-   return fabs((aim - (*lastShotPos)).magnitude()) < 0.05;
+   return fabs((aim - (*lastShotPos)).magnitude()) < 1;//0.05;
 
 }
 

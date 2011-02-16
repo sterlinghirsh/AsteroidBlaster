@@ -64,7 +64,7 @@ void ShootingAI::chooseWeapon( int weapon ) {
 }
 
 Object3D* ShootingAI::chooseTarget() {
-   std::list<Object3D*>* targets = ship->getRadar()->getNearbyReading();
+   std::list<Object3D*>* targets = ship->getRadar()->getViewFrustumReading();
    std::list<Object3D*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
    double curDist, shortestDist = -1;
@@ -122,7 +122,8 @@ int ShootingAI::think(double dt) {
       lastTarget = target;
    }
    else if (target != lastTarget) {
-      printf("Switching targets..\n");
+      printf("Switching targets to:\n");
+      target->debug();
       if (!lastTarget) {
          printf("No previous target.\n");
       }

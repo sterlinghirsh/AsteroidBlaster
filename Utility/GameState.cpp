@@ -203,7 +203,7 @@ void GameState::draw() {
    cube->draw();
    
    // Get a list of all of the objects after culling them down to the view frustum.
-   std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
+   std::list<Object3D*>* objects = ship->getRadar()->getFullReading();
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    
    for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
