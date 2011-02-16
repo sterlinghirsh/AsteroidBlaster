@@ -37,6 +37,7 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
    radius = std::max(radius, fabs(maxZ));
    radius = std::max(radius, fabs(minZ));
    targeted = false;
+   shouldDrawInMinimap = false;
 }
 
 Object3D::~Object3D() {
@@ -233,11 +234,11 @@ void Object3D::glRotate(bool doTranspose) {
       gluLookAt(0, 0, 0, forward->xMag, forward->yMag, forward->zMag,
        up->xMag, up->yMag, up->zMag);
       // Save a copy of the inverse model view matrix.
-      glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&modelViewMatrix);
+      modelViewMatrix.loadModelviewMatrix();
       if (doTranspose)
-         modelViewMatrix.toTranspose();
+         modelViewMatrix = modelViewMatrix.toTranspose();
    glPopMatrix();
-   glMultMatrixf((GLfloat*)&modelViewMatrix);
+   modelViewMatrix.glMultMatrix();
 }
 
 void Object3D::setTargeted(bool a) {

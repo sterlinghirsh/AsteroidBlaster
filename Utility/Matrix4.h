@@ -63,6 +63,8 @@ struct Matrix4 {
    Matrix4& toTranspose();
 
    static const Matrix4 Identity;
+   void glMultMatrix();
+   void loadModelviewMatrix();
    
    private:
 

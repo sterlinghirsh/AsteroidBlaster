@@ -7,7 +7,6 @@
 
 #include "Utility/Matrix4.h"
 #include "math.h"
-#include "Utility/Point3D.h"
 
 const Matrix4 Matrix4::Identity = Matrix4(1, 0, 0, 0,
                                           0, 1, 0, 0,
@@ -16,10 +15,6 @@ const Matrix4 Matrix4::Identity = Matrix4(1, 0, 0, 0,
 
 Matrix4::Matrix4() {
    toIdent();
-}
-
-inline const Point3D operator*(const Point3D& lhs, const Matrix4& rhs) {
-   return rhs * lhs;
 }
 
 /** Yes, this is a very ugly constructor. But it's convenient, so there is no
@@ -59,6 +54,15 @@ Matrix4::Matrix4(const Matrix4& copy) {
 
 Matrix4::~Matrix4() {}
 
+void Matrix4::loadModelviewMatrix() {
+   glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&_11);
+}
+
+void Matrix4::glMultMatrix() {
+   glMatrixMode(GL_MODELVIEW);
+   glMultMatrixf((GLfloat*)&_11);
+}
+
 void Matrix4::copy(const Matrix4 &rhs) {
    for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 4; j++)
@@ -88,7 +92,7 @@ Point3D Matrix4::getRow(int row) const {
 
 Point3D Matrix4::getCol(int col) const {
    Point3D t;
-   if (col < 0 || col >= 4)
+   if (col < 0 || col >=4)
     return t;
 
    t.x = m[col][0];
@@ -155,12 +159,12 @@ const Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
 }
 
 const Point3D Matrix4::operator*(const Point3D& rhs) const {
-   Point3D ret;
-   ret.x = rhs * getRow(0);
-   ret.y = rhs * getRow(1);
-   ret.z = rhs * getRow(2);
+   Point3D newPoint;
+   newPoint.x = _11 * rhs.x + _21 * rhs.y + _31 * rhs.z + _41;
+   newPoint.y = _12 * rhs.x + _22 * rhs.y + _32 * rhs.z + _42;
+   newPoint.z = _13 * rhs.x + _23 * rhs.y + _33 * rhs.z + _43;
 
-   return ret;
+   return newPoint;
 }
 
 float Matrix4::det() const {

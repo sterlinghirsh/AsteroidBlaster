@@ -20,6 +20,7 @@ using namespace std;
 
 Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
    Object3D(0, 0, 0, 0) {
+      shouldDrawInMinimap = true;
       worldSize = worldSizeIn;
       //health = initH;
       initH = (int)(r * r * 1.0 / 5.0);

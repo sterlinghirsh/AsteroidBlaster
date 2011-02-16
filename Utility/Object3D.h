@@ -32,6 +32,7 @@ class Object3D {
       double radius;
       bool shouldConstrain;
       unsigned int minXRank, maxXRank;
+      bool shouldDrawInMinimap;
 
       Object3D(double x, double y, double z, GLuint displayListIn);
       virtual ~Object3D();

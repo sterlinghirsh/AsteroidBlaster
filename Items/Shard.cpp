@@ -23,6 +23,7 @@ using namespace std;
  */
 Shard::Shard(double r, double worldSizeIn) :
    Object3D(0, 0, 0, 0) {
+      shouldDrawInMinimap = true;
       worldSize = worldSizeIn;
       orbiters = glGenLists(1);
       genOrbiters();

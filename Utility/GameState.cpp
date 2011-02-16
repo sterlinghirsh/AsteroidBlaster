@@ -9,6 +9,7 @@
 #include "Utility/GameState.h"
 #include "Graphics/GlutUtility.h"
 #include <math.h>
+#include "Utility/Matrix4.h"
 
 GameState::GameState(double worldSizeIn) {
   gameIsRunning = true;
@@ -102,6 +103,13 @@ void GameState::update(double timeDiff) {
 void GameState::drawInMinimap() {
    // Get a reading of all the nearby Object3Ds from the Radar
    std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading();
+   static Matrix4 modelViewMatrix;
+   static Point3D objectPosition;
+   static Vector3D positionVector;
+   const float scaleFactor = 0.05;
+   double radius;
+
+   positionVector.updateMagnitude(*ship->position);
 
    glPushMatrix();
       ship->glRotate(false);
@@ -109,7 +117,7 @@ void GameState::drawInMinimap() {
       
       // Translate everything so that the ship is at 0, 0 and everything is centered there.
       oppositeOfPosition.updateMagnitude(oppositeOfPosition);
-      glScalef(0.05, 0.05, 0.05);
+      glScalef(scaleFactor, scaleFactor, scaleFactor);
       //glRotatef(180, 0, 1, 0);
       oppositeOfPosition.glTranslate(-1);
       
@@ -119,6 +127,50 @@ void GameState::drawInMinimap() {
          if (*listIter != NULL)
             (*listIter)->drawInMinimap();
       }
+   glPopMatrix();
+   // Now draw the lines.
+   // Load just the rotation matrix.
+   glPushMatrix();
+      glLoadIdentity(); // We don't want the camera transform.
+      ship->glRotate(true);
+      modelViewMatrix.loadModelviewMatrix();
+   glPopMatrix();
+   glPushMatrix();
+   glScalef(scaleFactor, scaleFactor, scaleFactor);
+   for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
+      // Make sure it's not null, & then draw it in the minimap
+      if (*listIter != NULL && (*listIter)->shouldDrawInMinimap && *listIter != ship) {
+         objectPosition = *(*listIter)->position; // Get the position.
+         positionVector.movePoint(objectPosition, -1); // Center on the ship
+         objectPosition = modelViewMatrix * (objectPosition); // Rotate about the ship
+         radius = distance2D(objectPosition.x, objectPosition.z);
+         if (radius < 20) {
+            materials(RedFlat);
+            glColor3f(1, 0, 0);
+         } else if (radius < 40) {
+            materials(YellowFlat);
+            glColor3f(1, 1, 0);
+         } else {
+            materials(GreenShiny);
+            glColor3f(0, 1, 0);
+         }
+         glDisable(GL_COLOR_MATERIAL);
+         // Draw a disc.
+         glPushMatrix();
+            glEnable(GL_LIGHTING);
+            glRotatef(-90.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
+            gluDisk(quadric, radius - 1, radius + 1 ,35,35);
+            glDisable(GL_LIGHTING);
+         glPopMatrix();
+         glDisable(GL_LIGHTING);
+         glBegin(GL_LINES);
+         // Draw a point at the object's position.
+         glVertex3f(objectPosition.x, objectPosition.y, objectPosition.z);
+         // Draw the other point at the object's position without the Y component.
+         glVertex3f(objectPosition.x, 0, objectPosition.z);
+         glEnd();
+      }
+   }
    glPopMatrix();
 }
 

@@ -130,14 +130,16 @@ void display() {
       
       glColor3f(0.1, 0.8, 0.1);
       // Draw a flat cylinder with radius 2 at top and bottom, 0.5 height, 2 slice, and 2 stack.
+      /*
       glPushMatrix();
-         glRotatef(-90.0,1.0f,0.0f,0.0f);	/* Rotate By 0 On The X-Axis */
+         glRotatef(-90.0,1.0f,0.0f,0.0f);	// Rotate By 0 On The X-Axis
          glDisable(GL_LIGHTING);
             gluDisk(gluNewQuadric(),1.8,1.9,35,35);
             gluDisk(gluNewQuadric(),2.1,2.2,35,35);
             gluDisk(gluNewQuadric(),2.4,2.5,35,35);
          glEnable(GL_LIGHTING);
       glPopMatrix();
+      */
       
       // Draw objects in the map.
       gameState->drawInMinimap();
