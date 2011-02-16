@@ -156,7 +156,9 @@ void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
    static Point3D curPoint;
    static Vector3D initialOffset;
    static Vector3D randomOffset;
-
+   static double count = 0;
+   count++;
+   printf("count=%f\r",count);
    curPoint = emitter;
 
    // Translate the point in 2D
@@ -182,7 +184,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    const float increment = 0.01f;
    
    //const float length = acceleration->getLength;
-   const int newParticlesPerSecond = 10000;
+   const int newParticlesPerSecond = 500;
    static Vector3D baseParticleAcceleration;
    static Point3D emitter;
 
@@ -200,7 +202,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    if (curRightAccel != 0) {
       baseParticleAcceleration = velocity->add(right->scalarMultiply(-curRightAccel * 0.2));
       emitter = *position;
-      forward->movePoint(emitter, -0.5);
+      forward->movePoint(emitter, -0.7);
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
          addNewParticle(emitter, baseParticleAcceleration, *forward, *up);
       }
@@ -214,17 +216,24 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
       forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
 
       // First do the right side.
-      right->movePoint(initialPoint, 0.1);
+      //right->movePoint(initialPoint, 0.1);
       baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
-         addNewParticle(initialPoint, baseParticleAcceleration, *forward, *up);
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up);
       }
 
       // Next do the left side.
-      right->movePoint(initialPoint, -0.2);
+      //right->movePoint(initialPoint, -0.2);
       baseParticleAcceleration.addUpdate(right->scalarMultiply(-1));
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
-         addNewParticle(initialPoint, baseParticleAcceleration, *forward, *up);
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up);
+      }
+      
+      // Next do the middle side.
+      //right->movePoint(initialPoint, 0.1);
+      baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
+      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up);
       }
    }
 

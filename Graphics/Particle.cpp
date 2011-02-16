@@ -6,9 +6,9 @@
 #include <math.h>
 #include <iostream>
 
-#define MAX_PARTICLES 1000
+#define MAX_PARTICLES 7000
 #define PARTICLE_SIZE 0.01f
-#define PARTICLE_LIFE 0.001f
+#define PARTICLE_LIFE 0.002f
 #ifndef GL_BGR
 #define GL_BGR GL_BGR_EXT
 #endif
@@ -109,10 +109,15 @@ bool Particle::step(double timeDifference)
 
 void Particle::Add(Point3D* pos, Vector3D* vec)
 {
-   float _fade = ( float )( rand( ) %100 ) / 1000.0f + 0.003f;
-   float _r = 1.0f; // (( float )( rand( ) %100 ) ) / 100.0f ;
-   float _g = 1.0f; // (( float )( rand( ) %100 ) ) / 100.0f ;
-   float _b = 1.0f; // (( float )( rand( ) %100 ) ) / 100.0f ;
+   if (particles.size() >= MAX_PARTICLES) {
+      std::cout << "max particles reached!" << std::endl;
+      return;
+   }
+   float _fade = ( float )( rand( ) %10 ) / 10000.0f + 0.001f;
+   float _r = (( float )( rand( ) %100 ) ) / 100.0f ;
+   float _g = (( float )( rand( ) %100 ) ) / 100.0f ;
+   float _b = (( float )( rand( ) %100 ) ) / 100.0f ;
+   
    
    float randHigh = (( float )( rand( ) %10 ) + 90.0f) / 100.0f ;
    float randMid = (( float )( rand( ) %10 ) + 50.0f) / 100.0f ;
