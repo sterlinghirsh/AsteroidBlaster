@@ -24,8 +24,8 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
       worldSize = worldSizeIn;
       //health = initH;
       initH = (int)(r * r * 1.0 / 5.0);
-      if (initH < 1.0) {
-         initH = 1.0;
+      if (initH < 2.0) {
+         initH = 2.0;
       }
       health = initH;
       newRandomPosition();
