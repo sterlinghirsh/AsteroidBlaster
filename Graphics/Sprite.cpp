@@ -97,6 +97,7 @@ bool Sprite::draw(Point3D* eyePoint) {
  * Static method that draws all the sprites in Sprite::sprites.
  */
 void Sprite::drawSprites() {
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    extern GameState* gameState;
    list<Sprite*>::iterator sprite = Sprite::sprites.begin();
    for (; sprite != Sprite::sprites.end(); sprite++) {
