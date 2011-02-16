@@ -16,18 +16,24 @@ class Plane {
       float b;
       float c;
       float d;
+      float mag;
       // Putting the constructor here since it's short.
       Plane() {
          a = b = c = d = 0;
       }
-       
+      
+      void calcMag() {
+         mag = sqrt((a*a) + (b*b) + (c*c));
+      }
+      
       float distanceTo(float x, float y, float z) {
          float dist =  (a * x) + (b * y) + (c * z) + d;
          return dist;
       }
 
       bool onPositiveSide(Object3D* obj) {
-         return 
+         return distanceTo(obj->position->x, obj->position->y, obj->position->z) > -1*obj->getCullRadius();
+         /*
             distanceTo(obj->maxPosition->x, obj->maxPosition->y, obj->maxPosition->z) > 0 ||
             distanceTo(obj->maxPosition->x, obj->maxPosition->y, obj->minPosition->z) > 0 ||
             distanceTo(obj->maxPosition->x, obj->minPosition->y, obj->maxPosition->z) > 0 ||
@@ -36,6 +42,7 @@ class Plane {
             distanceTo(obj->minPosition->x, obj->maxPosition->y, obj->minPosition->z) > 0 ||
             distanceTo(obj->minPosition->x, obj->minPosition->y, obj->maxPosition->z) > 0 ||
             distanceTo(obj->minPosition->x, obj->minPosition->y, obj->minPosition->z) > 0;
+         */
       }
       
       void print() {

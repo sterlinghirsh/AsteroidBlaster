@@ -17,7 +17,7 @@
 class AsteroidShip;
 
 // The distance which objects must be within to be returned by getNearbyReading()
-const double REQUIRED_NEARBY_DIST = 50.0;
+const double REQUIRED_NEARBY_DIST = 40.0;
 
 class Radar {
    public:

@@ -97,6 +97,13 @@ std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* a
    far->b = projMatrix._42 - projMatrix._32;
    far->c = projMatrix._43 - projMatrix._33;
    far->d = projMatrix._44 - projMatrix._34;
+   
+   left->calcMag();
+   right->calcMag();
+   top->calcMag();
+   bottom->calcMag();
+   near->calcMag();
+   far->calcMag();
  
    // As opposed to the checker, the one doing the checking. 
    Object3D* checkee;
