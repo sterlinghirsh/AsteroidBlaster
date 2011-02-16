@@ -14,6 +14,7 @@
 #include "Utility/Object3D.h"
 #include "Utility/Radar.h"
 #include "AI/ShootingAI.h"
+#include "AI/FlyingAI.h"
 #include "Weapons/Weapon.h"
 #include "Weapons/Blaster.h"
 #include "Weapons/RailGun.h"
@@ -31,6 +32,7 @@ extern GLfloat headlight_spec[4];
 class Shot;
 class Radar;
 class ShootingAI;
+class FlyingAI;
 
 class AsteroidShip : public Object3D {
    public:
@@ -90,6 +92,7 @@ class AsteroidShip : public Object3D {
       // A ship has a single flying AI
       // TODO: A ship has a list of shooting AIs rather than just one
       ShootingAI* shooter;
+      FlyingAI* flyingAI;
       
       int score;
       int nShards;

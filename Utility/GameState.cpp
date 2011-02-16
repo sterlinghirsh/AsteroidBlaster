@@ -296,27 +296,33 @@ void GameState::reset() {
 void GameState::keyDown(int key) {
   switch(key) {
   case SDLK_w:
-    ship->accelerateForward(1);
+    if(!ship->flyingAI->isEnabled())
+      ship->accelerateForward(1);
     break;
 
   case SDLK_s:
-    ship->accelerateForward(-1);
+    if(!ship->flyingAI->isEnabled())
+      ship->accelerateForward(-1);
     break;
 
   case SDLK_a:
-    ship->setYawSpeed(1.0);
+    if(!ship->flyingAI->isEnabled())
+      ship->setYawSpeed(1.0);
     break;
 
   case SDLK_d:
-    ship->setYawSpeed(-1.0);
+    if(!ship->flyingAI->isEnabled())
+      ship->setYawSpeed(-1.0);
     break;
 
   case SDLK_q:
-    ship->accelerateRight(-1);
+    if(!ship->flyingAI->isEnabled())
+      ship->accelerateRight(-1);
     break;
 
   case SDLK_e:
-    ship->accelerateRight(1);
+    if(!ship->flyingAI->isEnabled())
+      ship->accelerateRight(1);
     break;
     
   case SDLK_m:
@@ -324,11 +330,13 @@ void GameState::keyDown(int key) {
     break;
 
   case SDLK_SPACE:
-    ship->accelerateUp(1);
+    if(!ship->flyingAI->isEnabled())
+      ship->accelerateUp(1);
     break;
 
   case SDLK_LCTRL:
-    ship->accelerateUp(-1);
+    if(!ship->flyingAI->isEnabled())
+      ship->accelerateUp(-1);
     break;
 
   case SDLK_LSHIFT:
@@ -359,7 +367,10 @@ void GameState::keyDown(int key) {
     break;
   
   case SDLK_f:
-    //TODO: ship->enableFlyingAI();
+    if(ship->flyingAI->isEnabled())
+      ship->flyingAI->disable();
+    else
+      ship->flyingAI->enable();
     break;
   
   case SDLK_v:
@@ -383,22 +394,26 @@ void GameState::keyUp(int key) {
 
   case SDLK_s:
   case SDLK_w:
-    ship->accelerateForward(0);
+    if(!ship->flyingAI->isEnabled()) 
+      ship->accelerateForward(0);
     break;
 
   case SDLK_a:
   case SDLK_d:
-    ship->setYawSpeed(0);
+    if(!ship->flyingAI->isEnabled()) 
+      ship->setYawSpeed(0);
     break;
 
   case SDLK_q:
   case SDLK_e:
-    ship->accelerateRight(0);
+    if(!ship->flyingAI->isEnabled()) 
+      ship->accelerateRight(0);
     break;
 
   case SDLK_SPACE:
   case SDLK_LCTRL:
-    ship->accelerateUp(0);
+    if(!ship->flyingAI->isEnabled()) 
+      ship->accelerateUp(0);
     break;
 
   case SDLK_b:
@@ -442,14 +457,16 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
   worldX = clamp(worldX * fabs(worldX), -1, 1);
   worldY = clamp(-worldY * fabs(worldY), -1, 1);
 
-  if (doYaw) {
-    ship->setYawSpeed(-worldX);
-  }
-  else {
-    ship->setRollSpeed(worldX);
-  }
+  if(!ship->flyingAI->isEnabled()) {
+     if (doYaw) {
+       ship->setYawSpeed(-worldX);
+     }
+     else {
+       ship->setRollSpeed(worldX);
+     }
 
-  ship->setPitchSpeed(worldY);
+     ship->setPitchSpeed(worldY);
+  }
 
 }
 

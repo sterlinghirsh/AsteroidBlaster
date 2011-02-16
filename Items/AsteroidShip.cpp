@@ -69,6 +69,7 @@ AsteroidShip::AsteroidShip() :
 
       // TODO: create all of the shooters that this ship will have.
       shooter = new ShootingAI(this);
+      flyingAI = new FlyingAI(this);
 
       // Create our Radar
       radar = new Radar(this);
