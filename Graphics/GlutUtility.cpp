@@ -186,19 +186,32 @@ materialStruct WhiteTransparent = {
 };
 
 materialStruct WhiteSolid = {
-  {1, 1, 1, 1},
-  {1.0, 1.0, 1.0, 1},
-  {1.0, 1.0, 1.0, 1},
+  {1.0, 1.0, 1.0, 1.0},
+  {1.0, 1.0, 1.0, 1.0},
+  {1.0, 1.0, 1.0, 1.0},
   {1.0}
 };
 
 materialStruct BlackSolid = {
-  {0, 0, 0, 1},
-  {0.0, 0.0, 0.0, 1},
-  {0.0, 0.0, 0.0, 1},
+  {0.0, 0.0, 0.0, 1.0},
+  {0.0, 0.0, 0.0, 1.0},
+  {0.0, 0.0, 0.0, 1.0},
   {0.0}
 };
 
+materialStruct CyanSolid = {
+  {0.0, 1.0, 1.0, 1.0},
+  {0.0, 1.0, 1.0, 1.0},
+  {0.2, 1.0, 1.0, 1.0},
+  {0.0}
+};
+
+materialStruct OrangeSolid = {
+  {1.0, .27, 0.0, 1.0},
+  {1.0, .27, 0.0, 1.0},
+  {1.0, .27, 0.0, 1.0},
+  {0.0}
+};
 
 materialStruct GreenShiny = {
   {0.0, 0.3, 0.0, 1.0},
@@ -257,6 +270,9 @@ materialStruct Rock = {
    {.2, 0.2, 0.2, 1.0},
    {2}
 };
+
+
+
 
 char *textFileRead(char *fn) {
 	FILE *fp;
