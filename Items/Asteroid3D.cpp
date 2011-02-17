@@ -265,6 +265,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
       if (health > 0) {
          if (dynamic_cast<BeamShot*>(other) != NULL) {
             health = 0;
+            velocity->addUpdate(shot->velocity->scalarMultiply(10));
          } else if (dynamic_cast<TractorBeamShot*>(other) != NULL) {
             // Do nothing.
          } else {
@@ -312,9 +313,7 @@ Shard* Asteroid3D::makeShard(int num) {
 Asteroid3D* Asteroid3D::makeChild(int num, int dimension) {
    Asteroid3D* asteroid;
    asteroid = new Asteroid3D(radius/2, worldSize);
-   //asteroid->velocity = asteroid->velocity->scalarMultiply(2);
-   // Make this scalarMultiplyUpdate(2);
-   asteroid->velocity->addUpdate(*asteroid->velocity);
+   asteroid->velocity->scalarMultiplyUpdate(4);
    asteroid->velocity->addUpdate(*velocity);
    asteroid->position->clone(position);
    if (dimension % 3 == 0)

@@ -9,23 +9,23 @@
 #include <algorithm>
 
 materialStruct beamMaterial = {
-   {1, 1, 0, .5},
-   {1, 1, 0, .5},
-   {1, 1, 0, .5},
+   {1, 1, 0, .8},
+   {1, 1, 0, .8},
+   {1, 1, 0, .8},
    {0}
 };
 
 materialStruct hitBeamMaterial = {
-   {1, .5, 1, .5},
-   {1, .5, 1, .5},
-   {1, .5, 1, .5},
+   {1, .5, 1, .8},
+   {1, .5, 1, .8},
+   {1, .5, 1, .8},
    {0}
 };
 
 materialStruct ballMaterial = {
-   {0.3, 0.3, 0.3, 0.5},
-   {0.8, 0.8, 0.8, 0.5},
-   {0, 0,   0.8, 0.5},
+   {0.3, 0.3, 0.3, 0.8},
+   {0.8, 0.8, 0.8, 0.8},
+   {0, 0,   0.8, 0.8},
    {8}
 };
 
@@ -102,7 +102,7 @@ void BeamShot::draw() {
        velocity->yMag, velocity->zMag);
       normal.glTranslate((1 - timeLeft) + ballOffset);
       //glutSolidSphere(0.05 * (1 - timeLeft), 10, 10);
-      gluSphere(quadric, 0.05 * (1 - timeLeft), 10,10);
+      gluSphere(quadric, 0.05 * (1 - timeLeft), 5,5);
       glPopMatrix();
    }
    glPopMatrix();
