@@ -144,7 +144,7 @@ bool BeamShot::detectCollision(Object3D* other, bool checkOther) {
 }
 
 void BeamShot::handleCollision(Object3D* other) {
-   if (other == owner)
+   if (other == owner || hitYet || curFrame != lastHitFrame)
       return;
    hitYet = true;
    lifetime = 0.4;
