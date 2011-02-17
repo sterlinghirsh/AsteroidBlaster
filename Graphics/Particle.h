@@ -8,6 +8,9 @@
 #include <string>
 #include <list>
 
+#define MAX_PARTICLES 7000
+#define PARTICLE_LIFE 0.002f
+
 class Particle {
    public:
       Particle(Point3D* p, Vector3D* v, float life, float fade, float r, float g, float b);
@@ -26,7 +29,7 @@ class Particle {
       static GLuint texture;
       bool shouldRemove;
       
-   private:
+   protected:
       Point3D* position;
       Vector3D* velocity;
       
@@ -35,6 +38,7 @@ class Particle {
       float r,g,b;
       float slowdown;
       double startTime;
+      double size;
 };
 
 #endif

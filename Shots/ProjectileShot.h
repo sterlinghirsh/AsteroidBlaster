@@ -13,6 +13,7 @@ class ProjectileShot : public Shot {
       ProjectileShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn );
       static double frequency; // Shots per sec
       virtual void draw();
+      virtual void update(double timeDiff);
 
 };
 

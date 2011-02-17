@@ -5,6 +5,7 @@
  */
 
 #include "Shots/ProjectileShot.h"
+#include "Graphics/BlasterShotParticle.h"
 
 double ProjectileShot::frequency = 10;
 
@@ -34,4 +35,19 @@ void ProjectileShot::draw() {
    glEnable(GL_LIGHTING);
 
    glPopMatrix();
+}
+
+// Spray particles.
+void ProjectileShot::update(double timeDiff) {
+   Shot::update(timeDiff);
+   const int particlesPerSecond = 10;
+   
+   static Vector3D particleVariation;
+   particleVariation.randomMagnitude();
+   particleVariation.setLength(0.1);
+   
+   for (int i = 0; i <= timeDiff * particlesPerSecond; ++i) {
+      BlasterShotParticle::Add(new Point3D(*position), 
+       new Vector3D(particleVariation));
+   }
 }

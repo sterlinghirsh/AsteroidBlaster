@@ -6,9 +6,6 @@
 #include <math.h>
 #include <iostream>
 
-#define MAX_PARTICLES 7000
-#define PARTICLE_SIZE 0.01f
-#define PARTICLE_LIFE 0.002f
 #ifndef GL_BGR
 #define GL_BGR GL_BGR_EXT
 #endif
@@ -34,6 +31,7 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
    g = _g;
    b = _b;
    startTime = doubleTime();
+   size = 0.01;
 }
 
 /* function to load in bitmap as a GL texture */
@@ -80,7 +78,7 @@ bool Particle::LoadGLTextures()
 void Particle::update(double timeDifference)
 {
    list<Particle*>::iterator particle = Particle::particles.begin();
-   for (; particle != Particle::particles.end(); particle++) 
+   for (; particle != Particle::particles.end(); ++particle) 
    {
       if ((*particle)->step(timeDifference)) {
          particle = Particle::particles.erase(particle);
@@ -114,9 +112,9 @@ void Particle::Add(Point3D* pos, Vector3D* vec)
       return;
    }
    float _fade = ( float )( rand( ) %10 ) / 10000.0f + 0.001f;
-   float _r = (( float )( rand( ) %100 ) ) / 100.0f ;
-   float _g = (( float )( rand( ) %100 ) ) / 100.0f ;
-   float _b = (( float )( rand( ) %100 ) ) / 100.0f ;
+   float _r;// = (( float )( rand( ) %100 ) ) / 100.0f ;
+   float _g;// = (( float )( rand( ) %100 ) ) / 100.0f ;
+   float _b;// = (( float )( rand( ) %100 ) ) / 100.0f ;
    
    
    float randHigh = (( float )( rand( ) %10 ) + 90.0f) / 100.0f ;
@@ -190,16 +188,16 @@ void Particle::draw(Point3D* eyePoint)
    
    // Top Left
    glTexCoord2d( 0, 1 );
-   glVertex3f( -PARTICLE_SIZE, PARTICLE_SIZE, 0.0f );
+   glVertex3f( -size, size, 0.0f );
    // Top Right
    glTexCoord2d( 1, 1 );
-   glVertex3f(PARTICLE_SIZE, PARTICLE_SIZE, 0.0f);
+   glVertex3f(size, size, 0.0f);
    // Bottom Right
    glTexCoord2d( 1, 0 );
-   glVertex3f( PARTICLE_SIZE, -PARTICLE_SIZE, 0.0f );
+   glVertex3f( size, -size, 0.0f );
    // Bottom Left
    glTexCoord2d( 0, 0 );
-   glVertex3f( -PARTICLE_SIZE, -PARTICLE_SIZE, 0.0f );
+   glVertex3f( -size, -size, 0.0f );
    glEnd( );
    
    glDisable(GL_TEXTURE_2D);
@@ -220,7 +218,7 @@ void Particle::drawParticles()
    Point3D eyePoint = (gameState->getCamera()->getEyePoint());
    /* Modify each of the particles */
    list<Particle*>::iterator particle = Particle::particles.begin();
-   for (; particle != Particle::particles.end(); particle++) 
+   for (; particle != Particle::particles.end(); ++particle) 
    {
       (*particle)->draw(&eyePoint);
    }
