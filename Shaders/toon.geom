@@ -5,6 +5,8 @@
 	{
 		//increment variable
 		int i;
+		float j = 0;
+		float k = 0;
 		vec4 newpt;
 
 		/////////////////////////////////////////////////////////////
@@ -41,27 +43,219 @@
 
 		for(i=0; i< gl_VerticesIn; i++){
 
-
+			//float rot;
+			//float srot;
 // lets make each vertex into a square
 			gl_Position = gl_PositionIn[i]; // xyzw
+			float x = gl_Position.x - .025;
+			float y = gl_Position.y;
+			gl_Position.x = gl_Position.x;
+			gl_Position.y = gl_Position.y;
+			EmitVertex();
+			//gl_Position.x = gl_Position.x+2*n;
+			//EmitVertex();
+			gl_Position.x = gl_Position.x-n;
+			gl_Position.y = gl_Position.y+1.5*n;
+			//gl_Position.z = gl_Position.z+4*n;
+			//gl_Position.y = gl_Position.y+2*n;
+			EmitVertex();
+			gl_Position.x = gl_Position.x+n;
+			gl_Position.y = gl_Position.y+1.5*n;
+			EmitVertex();
+			gl_Position.x = gl_Position.x-.5*n;
+			gl_Position.y = gl_Position.y-1.5*n;
+			EmitVertex();
+			gl_Position.y =  gl_Position.y-1.5*n;
+			gl_Position.x = gl_Position.x+.5*n;
+			EmitVertex();
+
+			//gl_Position.y =  gl_Position.y-2*n;
+			//EmitVertex();			
+
+			//gl_Position.x = gl_Position.x-2*n;
+			//EmitVertex();	
+		
+				
+			EndPrimitive();
+
+			gl_Position = gl_PositionIn[i]; // xyzw
+			//float x = gl_Position.x + .025;
+			//float y = gl_Position.y;
+			gl_Position.x = gl_Position.x;
+			gl_Position.y = gl_Position.y;
+			EmitVertex();
+			//gl_Position.x = gl_Position.x+2*n;
+			//EmitVertex();
+			gl_Position.x = gl_Position.x+n;
+			gl_Position.y = gl_Position.y+1.5*n;
+			//gl_Position.z = gl_Position.z+4*n;
+			//gl_Position.y = gl_Position.y+2*n;
+			EmitVertex();
+			gl_Position.x = gl_Position.x-n;
+			gl_Position.y = gl_Position.y+1.5*n;
+			EmitVertex();
+			gl_Position.x = gl_Position.x+.5*n;
+			gl_Position.y = gl_Position.y-1.5*n;
+			EmitVertex();
+			gl_Position.y =  gl_Position.y-1.5*n;
+			gl_Position.x = gl_Position.x-.5*n;
+			EmitVertex();
+
+			EndPrimitive();
+
+
+		/*if(x < 0 && y > 0){
+			gl_Position.x = gl_Position.x;
+			gl_Position.y = gl_Position.y;
+			EmitVertex();
+			//gl_Position.x = gl_Position.x+2*n;
+			//EmitVertex();
+			gl_Position.x = gl_Position.x-2*n;
+			gl_Position.y = gl_Position.y+n;
+			//gl_Position.z = gl_Position.z+4*n;
+			//gl_Position.y = gl_Position.y+2*n;
+			EmitVertex();
+			gl_Position.x = gl_Position.x+2*n;
+			gl_Position.y = gl_Position.y+n;
+			EmitVertex();
 			gl_Position.x = gl_Position.x-n;
 			gl_Position.y = gl_Position.y-n;
 			EmitVertex();
-			
-			gl_Position.x = gl_Position.x+2*n;
+			gl_Position.y =  gl_Position.y-n;
+			gl_Position.x = gl_Position.x+n;
 			EmitVertex();
 
-			gl_Position.y = gl_Position.y+2*n;
-			EmitVertex();			
+			//gl_Position.y =  gl_Position.y-2*n;
+			//EmitVertex();			
 
-			gl_Position.x = gl_Position.x-2*n;
-			EmitVertex();	
-
-			gl_Position.y = gl_Position.y-2*n;
-			EmitVertex();
+			//gl_Position.x = gl_Position.x-2*n;
+			//EmitVertex();	
 							
 				
-			EndPrimitive();	
+			EndPrimitive();
+		}
+		else if(x > 0 && y < 0){
+			gl_Position.x = gl_Position.x;
+			gl_Position.y = gl_Position.y;
+			EmitVertex();
+			//gl_Position.x = gl_Position.x+2*n;
+			//EmitVertex();
+			gl_Position.x = gl_Position.x+2*n;
+			gl_Position.y = gl_Position.y+n;
+			//gl_Position.z = gl_Position.z+4*n;
+			//gl_Position.y = gl_Position.y+2*n;
+			EmitVertex();
+			gl_Position.x = gl_Position.x-2*n;
+			gl_Position.y = gl_Position.y+n;
+			EmitVertex();
+			gl_Position.x = gl_Position.x+n;
+			gl_Position.y = gl_Position.y-n;
+			EmitVertex();
+			gl_Position.y =  gl_Position.y-n;
+			gl_Position.x = gl_Position.x-n;
+			EmitVertex();
+
+			//gl_Position.y =  gl_Position.y-2*n;
+			//EmitVertex();			
+
+			//gl_Position.x = gl_Position.x-2*n;
+			//EmitVertex();	
+							
+				
+			EndPrimitive();
+		}
+		else if(x > 0 && y > 0){
+			gl_Position.x = gl_Position.x;
+			gl_Position.y = gl_Position.y;
+			EmitVertex();
+			//gl_Position.x = gl_Position.x+2*n;
+			//EmitVertex();
+			gl_Position.y = gl_Position.y+2*n;
+			gl_Position.x = gl_Position.x+n;
+			//gl_Position.z = gl_Position.z+4*n;
+			//gl_Position.y = gl_Position.y+2*n;
+			EmitVertex();
+			gl_Position.y = gl_Position.y-2*n;
+			gl_Position.x = gl_Position.x+n;
+			EmitVertex();
+			gl_Position.y = gl_Position.y+n;
+			gl_Position.x = gl_Position.x-n;
+			EmitVertex();
+			gl_Position.x =  gl_Position.x-n;
+			gl_Position.y = gl_Position.y-n;
+			EmitVertex();
+
+			//gl_Position.y =  gl_Position.y-2*n;
+			//EmitVertex();			
+
+			//gl_Position.x = gl_Position.x-2*n;
+			//EmitVertex();	
+							
+				
+			EndPrimitive();
+		}
+		else if(x < 0 && y < 0){
+			gl_Position.x = gl_Position.x;
+			gl_Position.y = gl_Position.y;
+			EmitVertex();
+
+			//gl_Position.x = gl_Position.x+2*n;
+			//EmitVertex();
+			gl_Position.y = gl_Position.y-2*n;
+			gl_Position.x = gl_Position.x-n;
+			//gl_Position.z = gl_Position.z+4*n;
+			//gl_Position.y = gl_Position.y+2*n;
+			EmitVertex();
+			gl_Position.y = gl_Position.y+2*n;
+			gl_Position.x = gl_Position.x-n;
+			EmitVertex();
+			gl_Position.y = gl_Position.y-n;
+			gl_Position.x = gl_Position.x+n;
+			EmitVertex();
+			gl_Position.x =  gl_Position.x+n;
+			gl_Position.y = gl_Position.y+n;
+			EmitVertex();
+
+			//gl_Position.y =  gl_Position.y-2*n;
+			//EmitVertex();			
+
+			//gl_Position.x = gl_Position.x-2*n;
+			//EmitVertex();	
+							
+				
+			EndPrimitive();
+		}
+		else {
+			gl_Position.x = gl_Position.x-n;
+			gl_Position.y = gl_Position.y-n;
+			EmitVertex();
+
+			//gl_Position.x = gl_Position.x+2*n;
+			//EmitVertex();
+			gl_Position.y = gl_Position.y+2*n;
+			//gl_Position.x = gl_Position.x-n;
+			//gl_Position.z = gl_Position.z+4*n;
+			//gl_Position.y = gl_Position.y+2*n;
+			EmitVertex();
+			gl_Position.x = gl_Position.x+2*n;
+			//gl_Position.x = gl_Position.x-n;
+			EmitVertex();
+			//gl_Position.y = gl_Position.y-n;
+			gl_Position.y = gl_Position.y-2*n;
+			EmitVertex();
+			gl_Position.x =  gl_Position.x-2*n;
+			//gl_Position.y = gl_Position.y+n;
+			EmitVertex();
+
+			//gl_Position.y =  gl_Position.y-2*n;
+			//EmitVertex();			
+
+			//gl_Position.x = gl_Position.x-2*n;
+			//EmitVertex();	
+							
+				
+			EndPrimitive();
+		}*/
 		}	
 		
 	}
