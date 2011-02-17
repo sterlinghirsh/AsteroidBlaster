@@ -1,7 +1,8 @@
 /**
  * Sterling Hirsh
- * GlutUtility.c
- * Functions that aid with glut.
+ * GlobalUtility.cpp
+ * Includes global variables and 
+ * helper functions globally accessable.
  */
 
 #include <math.h>
@@ -13,7 +14,7 @@
 #include <cmath>
 #endif
 
-#include "GlutUtility.h"
+#include "GlobalUtility.h"
 
 #ifndef WIN32
 #include <sys/time.h>

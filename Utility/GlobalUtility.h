@@ -1,17 +1,16 @@
 /**
  * Sterling Hirsh
- * GlutUtility.h
+ * GlobalUtility.h
  * A collection of functions that make working with glut possible.
  * Note that global variables GW, GH, mouseX, and mouseY are defined here.
  */
-#ifndef __GLUTUTILITY_H__
-#define __GLUTUTILITY_H__
+#ifndef __GLOBALUTILITY_H__
+#define __GLOBALUTILITY_H__
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <list>
-
 
 
 #ifdef __APPLE__
