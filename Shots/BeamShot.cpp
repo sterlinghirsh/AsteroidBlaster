@@ -82,7 +82,7 @@ void BeamShot::draw() {
    Vector3D axis = zVector.cross(*velocity);
    glPushMatrix();
    glColor3f(1, 0, 0);
-   materials(hitYet ? hitBeamMaterial : beamMaterial);
+   setMaterial(hitYet ? hitBeamMaterial : beamMaterial);
    position->glTranslate();
    glPushMatrix();
       glRotatef(180 + zVector.getAngleInDegrees(*velocity), 
@@ -93,7 +93,7 @@ void BeamShot::draw() {
 
    // Dots
    Vector3D normal(velocity->getNormalVector());
-   materials(ballMaterial);
+   setMaterial(ballMaterial);
    for (double distance = 0; distance < length; 
     distance += distanceDifference) {
       glPushMatrix();

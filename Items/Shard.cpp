@@ -151,8 +151,8 @@ void drawOtherOrbiters() {
    glPushMatrix();
    int j;
    //glScalef(3, 3, 3);
-   materials(WhiteSolid);
-   //materials(BlackSolid);
+   setMaterial(WhiteSolid);
+   //setMaterial(BlackSolid);
    for (int i = 0; i < numBalls; ++i) {
       t = 5 * curTime + increment * i;
 
@@ -195,7 +195,7 @@ void Shard::draw() {
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
 
-   materials(Rock);
+   setMaterial(Rock);
    glColor3f(0.4, 0.5, 0.7);
    // Set polygon offset to be behind the lines.
    glPolygonOffset(1.0f, 1.0f);
@@ -355,7 +355,7 @@ void Shard::drawInMinimap() {
    position->glTranslate();
    //glDisable(GL_LIGHTING);
    //glColor3f(0.4, 0.5, 0.7);
-   materials(WhiteSolid);
+   setMaterial(WhiteSolid);
    gluSphere(quadric, 3, 4, 2);
    //glEnable(GL_LIGHTING);
    glPopMatrix();

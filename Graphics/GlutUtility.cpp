@@ -19,15 +19,15 @@
 #include <sys/time.h>
 #endif
 
-int GW, GH, mouseX, mouseY;
+//global variables
+int GW, GH;
 unsigned long curFrame;
 bool drawPerspective = true;
 GLUquadricObj *quadric;
-RGB myimage[64][64];
-RGB* pixel;
 GLuint shader1;
 
 using namespace std;
+
 
 int flopY(int yIn) {
    return (GH - 1) - yIn;
@@ -153,23 +153,12 @@ void drawCylinder(double radius, double length) {
 }
 
 //sets up a specific material
-void materials(materialStruct materials) {
-  glMaterialfv(GL_FRONT, GL_AMBIENT, materials.ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, materials.diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, materials.specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, materials.shininess);
+void setMaterial(materialStruct material) {
+  glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, material.shininess);
 }
-
-//initialization for texture mapping
-void init_tex() {
-  //glBindTexture(GL_TEXTURE_2D, 0);
-  //glTexImage2D(GL_TEXTURE_2D, 0, 3, 64, 64, 0, GL_RGB, GL_UNSIGNED_BYTE, pixel);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-}
-
 
 GLdouble objectM[4][4] = {
   {1.0, 0.0, 0.0, 0.0},

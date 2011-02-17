@@ -71,18 +71,6 @@ GLfloat headlight_amb[4] = {0.1, 0.1, 0.1, 1};
 GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
 GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
 
-void init_light() {
-   glEnable(GL_LIGHT0);
-   // headlight_amb is defined in Asteroidship.h
-   glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
-   glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
-  //glShadeModel(GL_SMOOTH);
-  glEnable(GL_NORMALIZE);
-}
-
-
 void display() {
    double startTime = doubleTime();
    
@@ -122,7 +110,7 @@ void display() {
       gluQuadricNormals(quadric, GLU_SMOOTH);		/* Create Smooth Normals */
       gluQuadricTexture(quadric, GL_TRUE);			/* Create Texture Coords */
 
-      materials(WhiteSolid);
+      setMaterial(WhiteSolid);
 
       // eye, lookAt, and up vectors
       gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
@@ -159,7 +147,7 @@ void display() {
    ++curFrame;
 }
 
-void initSDL() {
+void init() {
    // Initialize the SDL video system
    if( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
       fprintf(stderr, "Failed to initialize SDL Video!\n");
@@ -208,15 +196,48 @@ void initSDL() {
    // Set the title
    SDL_WM_SetCaption("Asteroid Blaster", 0);   
 
+
+   //setup glew and GLSL
+#ifdef __APPLE__
+#else
+   glewInit();
+   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && 
+      GL_EXT_geometry_shader4)
+      printf("Ready for GLSL\n");
+   else {
+      printf("Not enough GLSL support\n");
+      exit(1);
+   }
+
+#endif
+
+   //set the background to be black
    glClearColor(0.0, 0.0, 0.0, 1.0);
+   
+   //initialize some GL stuff
    glEnable(GL_CULL_FACE);
    glEnable(GL_DEPTH_TEST);
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
    glEnable(GL_BLEND);
    glEnable( GL_TEXTURE_2D );
-   init_light();
-   init_tex();
+
+   //initialize light
+   glEnable(GL_LIGHT0);
+   // headlight_amb is defined in Asteroidship.h
+   glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
+   glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
+   //glShadeModel(GL_SMOOTH);
+   glEnable(GL_NORMALIZE);
+
+   //initialize textures
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
 }
 
 void timerFunc() {
@@ -258,34 +279,20 @@ int main(int argc, char* argv[]) {
    //initialize glut
    glutInit(&argc, argv);
    
-   // Initialize stuff related to GL/SDL
-   initSDL();
-   
-   // Preload texture.
+   // Initialize GL/SDL/glew/GLSL related things
+   init();
+
+
+   // Load textures and shaders
    new TextureImporter("Images/SkybusterExplosion.bmp");
    // get particle texture
    Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
-
-   //setup glew and GLSL
-#ifdef __APPLE__
-#else
-   glewInit();
-   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && 
-      GL_EXT_geometry_shader4)
-      printf("Ready for GLSL\n");
-   else {
-      printf("Not enough GLSL support\n");
-      exit(1);
-   }
-
-#endif
-
-   
    //load the shader files
    shader1 = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
 
-   //set the quadradic up
+   //get the quadradic up
    quadric = gluNewQuadric();
+   //set the quadradic up
    gluQuadricNormals(quadric, GLU_SMOOTH);
 
 
@@ -295,6 +302,8 @@ int main(int argc, char* argv[]) {
    inputManager = new InputManager();
    //Connect the input manager to the gameState
    inputManager->addReceiver(gameState);
+   
+   //declare the event that will be reused
    SDL_Event event;
    
    while (running) {
@@ -308,7 +317,6 @@ int main(int argc, char* argv[]) {
       float mouseButtonDown = 0;
       Matrix4 testMat;
       testMat._11 = 30;
-      // This causes a valgrind error because event isn't initialized (I think).
       while (SDL_PollEvent(&event)) {
          if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_F1) {
             if(!fullScreen) {

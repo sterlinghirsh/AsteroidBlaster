@@ -94,7 +94,7 @@ void Object3D::draw() {
 void Object3D::drawInMinimap() {
    glPushMatrix();
       position->glTranslate();
-      materials(RedFlat);
+      setMaterial(RedFlat);
       gluSphere(quadric, 5, 8, 8);
    glPopMatrix();
 }

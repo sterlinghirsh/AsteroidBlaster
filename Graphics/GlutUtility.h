@@ -25,6 +25,7 @@
 
 #define VERT_FOV 50.0
 
+//Global Variables declared
 extern int GW, GH;
 extern int flopY(int);
 extern unsigned long curFrame;
@@ -40,34 +41,24 @@ void reshape(GLsizei w, GLsizei h);
 double distance3D(double x1, double y1, double z1, double x2 = 0,
  double y2 = 0, double z2 = 0);
 double distance2D(double x1, double y1, double x2 = 0, double y2 = 0);
-
-// The following aren't defined in GlutUtility.cpp, but should be in the app.
-void display(void);
-void mouse(int button, int state, int x, int y);
-void mouseMove(int x, int y);
-void keyboard(unsigned char key, int x, int y);
-
 double clamp(double, double, double);
 double randdouble();
-
 GLuint setShaders(char * vert, char * frag, char * geom);
 char *textFileRead(char *fn);
 void printShaderLog(GLuint obj);
 void printProgramLog(GLuint obj);
+double doubleTime();
+void useOrtho();
+void usePerspective();
+void drawCylinder(double radius, double length);
 
+// Used for defining a material
 typedef struct materialStruct {
   GLfloat ambient[4];
   GLfloat diffuse[4];
   GLfloat specular[4];
   GLfloat shininess[1];
 } materialStruct;
-
-void materials(materialStruct materials);
-double doubleTime();
-void useOrtho();
-void usePerspective();
-void drawCylinder(double radius, double length);
-void init_tex();
 
 extern materialStruct GreenShiny;
 extern materialStruct GreenTransparent;
@@ -83,11 +74,7 @@ extern materialStruct OrangeSolid;
 extern materialStruct CyanSolid;
 extern materialStruct Rock;
 
+void setMaterial(materialStruct material);
 
-typedef struct RGB {
-  GLubyte r;
-  GLubyte g; 
-  GLubyte b;
-} RGB;
 
 #endif

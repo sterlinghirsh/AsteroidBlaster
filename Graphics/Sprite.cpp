@@ -24,12 +24,6 @@ Sprite::Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn,
    frameWidth = 1.0 / framesX;
    frameHeight = 1.0 / framesY;
    texture = new TextureImporter(filename);
-   materialStruct WhiteSolid = {
-     {1, 1, 1, 1},
-     {0.0, 0.0, 0.0, 0.0},
-     {0.0, 0.0, 0.0, 0.0},
-     {0.0}
-   };
    curMaterial = WhiteSolid;
    totalFrames = framesX * framesY;
    startTime = doubleTime();
@@ -67,7 +61,7 @@ bool Sprite::draw(Point3D* eyePoint) {
    double topLeftX = (curFrame % framesX) * frameWidth;
    double topLeftY = 1 - ((curFrame / framesX) * frameHeight);
    
-   materials(curMaterial);
+   setMaterial(curMaterial);
    glColor3f(1, 1, 1);
    glBindTexture(GL_TEXTURE_2D, texture->texID);
    

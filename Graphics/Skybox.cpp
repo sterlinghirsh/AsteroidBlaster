@@ -9,12 +9,6 @@
 #include "Graphics/GlutUtility.h"
 
 Skybox::Skybox(std::string filename) {
-   materialStruct WhiteSolid = {
-     {1, 1, 1, 1},
-     {0.0, 0.0, 0.0, 0.0},
-     {0.0, 0.0, 0.0, 0.0},
-     {0.0}
-   };
    curMaterial = WhiteSolid;
 
    tex = new TextureImporter(filename);
@@ -40,7 +34,7 @@ void Skybox::draw(Camera* camera) {
 
 void Skybox::drawcube() {
   glColor3f(1.0, 1.0, 1.0); //white
-  materials(curMaterial);
+  setMaterial(curMaterial);
   glBindTexture(GL_TEXTURE_2D, tex->texID);
   glBegin(GL_QUADS);
   

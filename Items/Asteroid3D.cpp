@@ -156,7 +156,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 
 void Asteroid3D::draw() {
    glColor3f(1, 1, 1);
-   materials(Rock);
+   setMaterial(Rock);
    // Call the display list if it has one.
    Object3D::draw();
    glEnable(GL_COLOR_MATERIAL);
@@ -337,7 +337,7 @@ double Asteroid3D::randRadius(double r) {
 void Asteroid3D::drawInMinimap() {
    glPushMatrix();
    position->glTranslate();
-   materials(RedFlat);
+   setMaterial(RedFlat);
    gluSphere(quadric, 4, 10, 10);
    glPopMatrix();
 }

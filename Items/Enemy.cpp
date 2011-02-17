@@ -24,9 +24,9 @@ Enemy::Enemy(double x, double z, double velocityX,
 
 void Enemy::draw() {
    if (wasHit)
-      materials(RedFlat);
+      setMaterial(RedFlat);
    else
-      materials(BlueShiny);
+      setMaterial(BlueShiny);
    Object3D::draw();
 }
 

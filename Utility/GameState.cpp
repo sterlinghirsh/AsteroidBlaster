@@ -147,7 +147,7 @@ void GameState::drawInMinimap() {
    glPopMatrix();
    glPushMatrix();
    glScalef(scaleFactor, scaleFactor, scaleFactor);
-   materials(WhiteSolid);
+   setMaterial(WhiteSolid);
    for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
       // Make sure it's not null, & then draw it in the minimap
       if (*listIter != NULL && (*listIter)->shouldDrawInMinimap && *listIter != ship) {
@@ -159,13 +159,13 @@ void GameState::drawInMinimap() {
          glDisable(GL_COLOR_MATERIAL);
          if (radius3D < 20) {
             glColor3f(1, 0, 0);
-            materials(RedTransparent);
+            setMaterial(RedTransparent);
          } else if (radius3D < 40) {
             glColor3f(1, 1, 0);
-            materials(YellowTransparent);
+            setMaterial(YellowTransparent);
          } else {
             glColor3f(0, 1, 0);
-            materials(GreenTransparent);
+            setMaterial(GreenTransparent);
          }
 
          // Draw a disc.
