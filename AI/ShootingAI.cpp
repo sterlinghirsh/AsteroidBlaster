@@ -19,6 +19,7 @@
 #include "Items/Asteroid3D.h"
 #include "Utility/Quaternion.h"
 #include "Weapons/Weapon.h"
+#include <math.h>
 
 // Tell c++ that gameState was declared elsewhere (in main.cpp)
 extern GameState* gameState;
@@ -86,7 +87,8 @@ Object3D* ShootingAI::chooseTarget() {
          continue;
       }
       
-      curDist = (*targets_iterator)->position->distanceFrom( *ship_position );
+      curDist = (*targets_iterator)->position->distanceFrom( *ship_position ) * 
+		log((dynamic_cast<Asteroid3D*>(*targets_iterator)->health ));
       if (shortestDist < 0 || curDist < shortestDist) {
          shortestDist = curDist;
          closest = *targets_iterator;
