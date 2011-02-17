@@ -106,6 +106,13 @@ int AsteroidShip::getHealth() {
 }
 
 /**
+ * Retrieve a pointer to the ship's shot direction vector
+ */
+Vector3D* AsteroidShip::getShotDirection() {
+   return &shotDirection;
+}
+
+/**
  * Retrieve the ship's score.
  */
 int AsteroidShip::getScore() {

@@ -34,6 +34,8 @@ class Object3D {
       bool shouldConstrain;
       unsigned int minXRank, maxXRank;
       bool shouldDrawInMinimap;
+      // Specifies whether or not this Object should be culled by VFC.
+      bool shouldBeCulled;
 
       Object3D(double x, double y, double z, GLuint displayListIn);
       virtual ~Object3D();

@@ -39,6 +39,7 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
    targeted = false;
    shouldDrawInMinimap = false;
    cullRadius = -1.0;
+   shouldBeCulled = true;
 }
 
 Object3D::~Object3D() {

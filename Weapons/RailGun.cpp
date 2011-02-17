@@ -35,6 +35,7 @@ void RailGun::fire() {
       return;
    timeLastFired = doubleTime();
    Point3D start = *ship->position;
+   // Move start point by the shotDirection vector, multiplied by a scalar
    gameState->custodian.add(new BeamShot(start,
     ship->shotDirection, ship));
 }

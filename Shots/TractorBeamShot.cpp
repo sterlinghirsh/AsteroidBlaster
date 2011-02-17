@@ -50,6 +50,9 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn,
 
    timeFired = doubleTime();
    shouldConstrain = false;
+   /* Make sure tractor beam shots aren't culled from the view frustum (necessary to make them appear)
+    */
+   shouldBeCulled = false;
    updateBoundingBox();
 }
 

@@ -56,6 +56,9 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn) 
    maxZ = std::max(endPoint1.z, endPoint2.z);
    timeFired = doubleTime();
    shouldConstrain = false;
+   /* Make sure beam shots aren't culled from the view frustum (necessary to make them appear)
+    */
+   shouldBeCulled = false;
    updateBoundingBox();
 }
 

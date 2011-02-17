@@ -112,7 +112,16 @@ std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* a
    for (iter = all->begin(); iter != all->end(); ++iter)
    {
       checkee = *iter;
-      if(checkee != NULL && !checkOutside(checkee))
+
+      // Skip this one if it's NULL
+      if(checkee == NULL)
+         continue;
+
+      /* If it's inside the view frustum, or if it just shouldn't be 
+         culled (ex: Beam Shots)
+       */
+      if(!checkOutside(checkee) || !checkee->shouldBeCulled)
+         // Then add it to the list of things to be returned in the culled list.
          returnMe->push_back(checkee);
    }
    return returnMe;

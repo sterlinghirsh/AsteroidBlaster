@@ -125,8 +125,7 @@ int ShootingAI::think(double dt) {
       lastTarget = target;
    }
    else if (target != lastTarget) {
-      printf("Switching targets to:\n");
-      target->debug();
+      printf("Switching targets..\n");
       if (!lastTarget) {
          printf("No previous target.\n");
       }
