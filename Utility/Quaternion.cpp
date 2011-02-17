@@ -95,7 +95,6 @@ void Quaternion::FromAxis(const Vector3D &v, double angle)
 	double otherAngle = (angle / (180/3.14159265)) * .5;
 	double cosAngle;
 	//angle *= 0.5f;
-        //printf("Vec XMag: %f\n", v.xMag);
 	Vector3D vn = v;
 	vn.normalize();
  
@@ -224,28 +223,40 @@ void Quaternion::getMatrix(GLfloat* matri)
 	//   OpenGL
 	//return matri;
 }
+/*
+Quaternion Quaternion::slerp(const Quat &q1, const Quat &q2, float t) {
+  Quaternion result, _q2 = q2;
 
-Matrix4 Quaternion::getMatrix()
-{
-	float x2 = x * x;
-	float y2 = y * y;
-	float z2 = z * z;
-	float xy = x * y;
-	float xz = x * z;
-	float yz = y * z;
-	float wx = w * x;
-	float wy = w * y;
-	float wz = w * z;
-    
-   Matrix4 matrix(
-  			1.0f - 2.0f * (y2 + z2), 2.0f * (xy - wz), 2.0f * (xz + wy), 0.0f,
-			2.0f * (xy + wz), 1.0f - 2.0f * (x2 + z2), 2.0f * (yz - wx), 0.0f,
-			2.0f * (xz - wy), 2.0f * (yz + wx), 1.0f - 2.0f * (x2 + y2), 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f
-    );
-   
-	return matrix;
-}
+  float cosOmega = q1.w*q2.w + q1.x*q2.x + q1.y*q2.y + q1.z*q2.z;
+
+  if ( cosOmega < 0.0f ) {
+    _q2.x = -_q2.x;
+    _q2.y = -_q2.y;
+    _q2.z = -_q2.z;
+    _q2.w = -_q2.w;
+    cosOmega = -cosOmega;
+  }
+
+  float k0, k1;
+  if ( cosOmega > 0.99999f ) {
+    k0 = 1.0f - t;
+    k1 = t;
+  }
+  else {
+    float sinOmega = (float)sqrt( double(1.0f - cosOmega*cosOmega) );
+    float omega = (float)atan2( double(sinOmega), double(cosOmega) );
+
+    float invSinOmega = 1.0f/sinOmega;
+
+    k0 = float( sin(double((1.0f - t)*omega)) )*invSinOmega;
+    k1 = float( sin(double(t*omega)) )*invSinOmega;
+  }
+
+  for ( int i=0; i < 4; i++ )
+    result[i] = q1[i]*k0 + _q2[i]*k1;
+
+  return result;
+}*/
 
 void Quaternion::print(){
 	printf("X: %f, ", x);

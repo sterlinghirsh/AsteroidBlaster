@@ -31,6 +31,7 @@ class Quaternion {
       void Rotate(Point3D rotVec, double angle);
       void getMatrix(GLfloat*);
       Matrix4 getMatrix();
+      //Quaternion slerp(const Quat &q1, const Quat &q2, float t);
       void print();
 
 };
