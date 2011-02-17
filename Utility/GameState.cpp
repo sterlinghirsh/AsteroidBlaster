@@ -7,15 +7,14 @@
  */
 
 #include <math.h>
-#include "Utility/GameState.h"
 #include <stdio.h>
+#include "Utility/GameState.h"
 #include "Utility/Matrix4.h"
 
 extern double minimapSizeFactor;
 
 GameState::GameState(double worldSizeIn) {
    gameIsRunning = true;
-   menuMode = true;
    worldSize = worldSizeIn;
    skybox = new Skybox("Images/stars.bmp");
    ship = new AsteroidShip();
@@ -339,10 +338,6 @@ bool GameState::isGameRunning() {
    return gameIsRunning;
 }
 
-bool GameState::getMenuMode() {
-   return menuMode;
-}
-
 /**
  * Reset everything in the game to play again
  */
@@ -421,10 +416,6 @@ void GameState::keyDown(int key) {
    case SDLK_e:
       if(!ship->flyingAI->isEnabled())
          ship->accelerateRight(1);
-      break;
-
-   case SDLK_m:
-      menuMode = true;
       break;
 
    case SDLK_SPACE:
@@ -637,102 +628,5 @@ double GameState::getMouseX() { return mouseX; }
 double GameState::getMouseY() { return mouseY; }
 Camera* GameState::getCamera() { return camera; }
 
-void GameState::menuFunc() {
-   glDisable(GL_TEXTURE_2D);
-   glClearColor(0.0, 0.0, 0.0, 1.0);
-   // Enable the cursor
-   SDL_ShowCursor(SDL_ENABLE);
-   BitmapTextDisplay* newGame = new BitmapTextDisplay("New Game", GW/2 - 50, GH/2 - 60);
-   BitmapTextDisplay* saveLoadGame = new BitmapTextDisplay("Save/Load Game", GW/2 - 50, GH/2 - 20);
-   BitmapTextDisplay* settings = new BitmapTextDisplay("Settings", GW/2 - 50, GH/2 + 20);
-   BitmapTextDisplay* quit = new BitmapTextDisplay("Quit", GW/2 - 50, GH/2 + 60);
-
-   newGame->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
-   saveLoadGame->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
-   settings->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
-   quit->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
-
-
-   int x = 0;
-   int y = 0;
-
-   SDL_Event event;
-   while (getMenuMode()) {
-      // Clear the screen
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      //draw the text
-      glPushMatrix();
-      useOrtho();
-      glDisable(GL_LIGHTING);
-      newGame->draw();
-      saveLoadGame->draw();
-      settings->draw();
-      quit->draw();
-      glEnable(GL_LIGHTING);
-      usePerspective();
-      glPopMatrix();
-
-      //draw the mouse icon
-      //glPushMatrix();
-      //glTranslatef(x,0,y);
-      //gluSphere( quadric , .1 , 36 , 18 );
-      //glPopMatrix();
-
-      while (SDL_PollEvent(&event)) {
-         if (event.type == SDL_MOUSEBUTTONDOWN) {
-            if (event.motion.x >= 350 &&
-                  event.motion.x <= 460 &&
-                  event.motion.y >= 225 &&
-                  event.motion.y <= 245) {
-               gameState->menuMode = false;
-               gameState->reset();
-            } else if (event.motion.x >= 350 &&
-                  event.motion.x <= 450 &&
-                  event.motion.y >= 345 &&
-                  event.motion.y <= 365) {
-               exit(0);
-            }
-         }
-         if (event.type == SDL_MOUSEMOTION) {
-            x = event.motion.x;
-            y = event.motion.y;
-            if (x >= 350 &&
-                  x <= 450 &&
-                  y >= 230 &&
-                  y <= 240) {
-               newGame->setColor(1.0,0.0,0.0);
-            } else {
-               newGame->setColor(1.0,1.0,1.0);
-            }
-
-            if (x >= 350 &&
-                  x <= 450 &&
-                  y >= 345 &&
-                  y <= 365) {
-               quit->setColor(1.0,0.0,0.0);
-            } else {
-               quit->setColor(1.0,1.0,1.0);
-            }
-
-         }
-
-         if ( event.type == SDL_KEYDOWN) {
-            switch(event.key.keysym.sym) {
-             case SDLK_ESCAPE: exit(0);
-             case SDLK_n:
-               gameState->menuMode = false;
-               gameState->reset();
-               break;
-            }
-         }
-      }
-
-      SDL_GL_SwapBuffers();
-   }
-   glEnable(GL_TEXTURE_2D);
-
-   // Disable the cursor
-   SDL_ShowCursor(SDL_DISABLE);
-}
 
 

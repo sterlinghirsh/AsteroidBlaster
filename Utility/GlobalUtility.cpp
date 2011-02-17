@@ -26,6 +26,7 @@ unsigned long curFrame;
 bool drawPerspective = true;
 GLUquadricObj *quadric;
 GLuint shader1;
+SDL_Surface* gDrawSurface = NULL;
 
 using namespace std;
 

@@ -12,7 +12,6 @@
 #include <time.h>
 #include <list>
 
-
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #include <OpenGL/glext.h>
@@ -22,6 +21,7 @@
 #include <GL/glut.h>
 #endif
 
+#include "SDL.h"
 #define VERT_FOV 50.0
 
 //Global Variables declared
@@ -31,6 +31,7 @@ extern unsigned long curFrame;
 extern bool drawPerspective;
 extern GLUquadricObj *quadric;
 extern GLuint shader1;
+extern SDL_Surface* gDrawSurface;
 
 double p2wx(int);
 double p2wy(int);

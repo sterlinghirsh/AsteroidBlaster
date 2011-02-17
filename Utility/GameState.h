@@ -45,8 +45,6 @@ class GameState : public InputReceiver {
 
       std::list<Object3D*>* viewFrustumObjects;
       
-      bool menuMode;
-
       GameState(double worldSize);
       virtual ~GameState();
       void draw();

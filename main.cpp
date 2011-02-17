@@ -20,8 +20,10 @@
 #include "Items/BoundingSpace.h"
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/GameState.h"
+#include "Utility/Menu.h"
 #include "Utility/InputManager.h"
 #include "Utility/Matrix4.h"
+
 
 
 #include "SDL.h"
@@ -38,7 +40,6 @@ bool running = true;
 bool fullScreen = false;
 
 // SDL globals
-SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 
 int TextureImporter::curTexID;
@@ -59,6 +60,8 @@ int fontSpot = 0; // TODO: What is this?
 
 // Pointer to the global gamestate object.
 GameState* gameState = NULL;
+// Pointer to the global menu object.
+Menu* menu = NULL;
 // This handles all the input.
 InputManager* inputManager = NULL;
 
@@ -298,25 +301,25 @@ int main(int argc, char* argv[]) {
 
    //Initialize gameState
    gameState = new GameState(WORLD_SIZE);
-   //Initialize the input manager
+   //initialize menu
+   menu = new Menu();
+   
+   //Initialize the input manager   
    inputManager = new InputManager();
    //Connect the input manager to the gameState
    inputManager->addReceiver(gameState);
+   inputManager->addReceiver(menu);
    
    //declare the event that will be reused
    SDL_Event event;
    
    while (running) {
-      if (gameState->getMenuMode()) {
-         gameState->menuFunc();
+      if (menu->isActive()) {
+         menu->draw();
       } else if (gameState->isGameRunning()) {
          timerFunc();
          display();
       }
-      
-      float mouseButtonDown = 0;
-      Matrix4 testMat;
-      testMat._11 = 30;
       while (SDL_PollEvent(&event)) {
          if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_F1) {
             if(!fullScreen) {
