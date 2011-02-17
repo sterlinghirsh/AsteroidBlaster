@@ -47,6 +47,10 @@ GameState::GameState(double worldSizeIn) {
    thirdPerson = false;
 
    isW = isA = isS = isD = false;
+   /* A view frustum culled list of objects to be used for drawing and by
+      the shooting AI.
+   */
+   std::list<Object3D*>* viewFrustumObjects;
 }
 
 /**
@@ -204,10 +208,11 @@ void GameState::draw() {
    cube->draw();
 
    // Get a list of all of the objects after culling them down to the view frustum.
-   std::list<Object3D*>* objects = ship->getRadar()->getFullReading();
+   //std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
+   viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-   for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
+   for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
       if (*listIter == NULL)
          continue;
       // Don't draw the ship in thirdPerson mode.

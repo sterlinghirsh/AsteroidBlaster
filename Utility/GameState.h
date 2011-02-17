@@ -42,6 +42,8 @@ class GameState : public InputReceiver {
       // Used when looping over Object3Ds in drawInMinimap
       std::list<Object3D*>::iterator listIter;
       Custodian custodian;
+
+      std::list<Object3D*>* viewFrustumObjects;
       
       bool menuMode;
 

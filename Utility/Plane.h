@@ -32,7 +32,7 @@ class Plane {
       }
 
       bool onPositiveSide(Object3D* obj) {
-         return distanceTo(obj->position->x, obj->position->y, obj->position->z) > -1*obj->getCullRadius();
+         return distanceTo(obj->position->x, obj->position->y, obj->position->z) > -1*obj->getCullRadius(); // do getCullRadius() * 2 to stop the popping.
          /*
             distanceTo(obj->maxPosition->x, obj->maxPosition->y, obj->maxPosition->z) > 0 ||
             distanceTo(obj->maxPosition->x, obj->maxPosition->y, obj->minPosition->z) > 0 ||

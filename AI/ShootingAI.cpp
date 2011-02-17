@@ -20,6 +20,9 @@
 #include "Utility/Quaternion.h"
 #include "Weapons/Weapon.h"
 
+// Tell c++ that gameState was declared elsewhere (in main.cpp)
+extern GameState* gameState;
+
 // Radians/sec
 const double ShootingAI::gunRotSpeed = 24 * 3.14159265;
 
@@ -64,7 +67,7 @@ void ShootingAI::chooseWeapon( int weapon ) {
 }
 
 Object3D* ShootingAI::chooseTarget() {
-   std::list<Object3D*>* targets = ship->getRadar()->getFullReading();
+   std::list<Object3D*>* targets = gameState->viewFrustumObjects;
    std::list<Object3D*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
    double curDist, shortestDist = -1;
