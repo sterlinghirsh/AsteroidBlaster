@@ -71,9 +71,27 @@ void TractorBeamShot::draw() {
    
    glUseProgram(shader1);
    glPushMatrix();
+   
+      //floats used in loop iteration
       float j;
+      float k;
+      
+      //rotation for the Y value of the vertex using cosine
       float rot;
+      
+      //rotation for the X value of the vertex using sine
       float srot;
+      
+      //Number of lines you want generated in the rotating tractor beam
+      float numCurves = 8;
+      
+      //used as a multiplier to create the correct gap in between the lines
+      float gap = length / numCurves;
+      
+      //must be 2 for the cone to be complete, less than 2 for an incomplete cone, more 
+      //than 2 for spacing to be irregular between the lines
+      float sharpness = 2;
+      
       float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
       //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
       Point3D start(*position);
@@ -85,84 +103,22 @@ void TractorBeamShot::draw() {
       if (spin >= 360 ) {
          spin = 0;
       }
-
+      materials(GreenShiny);
       glLineWidth(2.0);
       glBegin(GL_LINES);
       //Creates the twisted lines whose vertices are sent to the shader to modify
-      for(j = 0; j < length ; j = j+1){
-            //Creates first curved line
-	      rot = cos(j/(length/2.0) *M_PI);
-            srot = sin(j/(length/2.0) *M_PI);
-            glVertex3f(srot * (j * .1), rot * (j * .1), length + -j);
-
-            rot = cos((j+1)/(length/2.0) *M_PI);
-            srot = sin((j+1)/(length/2.0) *M_PI);
-            glVertex3f(srot * (((j + 1) * .1)), rot * (((j + 1) * .1)), length + (-j - 1));
-            
-            //Creates the second one next to it
-            rot = cos((j+5)/(length/2.0) *M_PI);
-		srot = sin((j+5)/(length/2.0) *M_PI);
-		glVertex3f(srot * (j * .1), rot * (j * .1), length + -j);
-
-		rot = cos((j+6)/(length/2.0) *M_PI);
-		srot = sin((j+6)/(length/2.0) *M_PI);
-		glVertex3f(srot * (((j + 1) * .1)), rot * (((j + 1) * .1)), length + (-j - 1));
-		
-            //Creates the third one next to it
-		rot = cos((j+10)/(length/2.0) *M_PI);
-		srot = sin((j+10)/(length/2.0) *M_PI);
-		glVertex3f(srot * (j * .1), rot * (j * .1), length + -j);
-
-		rot = cos((j+11)/(length/2.0) *M_PI);
-		srot = sin((j+11)/(length/2.0) *M_PI);
-		glVertex3f(srot * (((j + 1) * .1)), rot * (((j + 1) * .1)), length + (-j - 1));
-		
-		//Creates the fourth one next to it
-		rot = cos((j+15)/(length/2.0) *M_PI);
-		srot = sin((j+15)/(length/2.0) *M_PI);
-		glVertex3f(srot * (j * .1), rot * (j * .1), length + -j);
-
-		rot = cos((j+16)/(length/2.0) *M_PI);
-		srot = sin((j+16)/(length/2.0) *M_PI);
-		glVertex3f(srot * (((j + 1) * .1)), rot * (((j + 1) * .1)), length + (-j - 1));
-		
-		//Creates the curved line opposite of the first one
-		rot = cos((j-20)/(length/2.0) *M_PI);
-		srot = sin((j-20)/(length/2.0) *M_PI);
-		glVertex3f(srot * (j * .1), rot * (j * .1), length + -j);
-
-		rot = cos((j-19)/(length/2.0) *M_PI);
-		srot = sin((j-19)/(length/2.0) *M_PI);
-		glVertex3f(srot * (((j + 1) * .1)), rot * (((j + 1) * .1)), length + (-j - 1));
-		
-		//Creates the second negative one next to it
-		rot = cos((j-15)/(length/2.0) *M_PI);
-		srot = sin((j-15)/(length/2.0) *M_PI);
-		glVertex3f(srot * (j * .1), rot * (j * .1), length + -j);
-
-		rot = cos((j-14)/(length/2.0) *M_PI);
-		srot = sin((j-14)/(length/2.0) *M_PI);
-		glVertex3f(srot * (((j + 1) * .1)), rot * (((j + 1) * .1)), length + (-j - 1));
-		
-		//Creates the third negative one next to it
-		rot = cos((j-10)/(length/2.0) *M_PI);
-		srot = sin((j-10)/(length/2.0) *M_PI);
-		glVertex3f(srot * (j * .1), rot * (j * .1), length + -j);
-
-		rot = cos((j-9)/(length/2.0) *M_PI);
-		srot = sin((j-9)/(length/2.0) *M_PI);
-		glVertex3f(srot * (((j + 1) * .1)), rot * (((j + 1) * .1)), length + (-j - 1));
-		
-		//Creates the fourth negative one next to it
-		rot = cos((j-5)/(length/2.0) *M_PI);
-		srot = sin((j-5)/(length/2.0) *M_PI);
-		glVertex3f(srot * (j * .1), rot * (j * .1), length + -j);
-
-		rot = cos((j-4)/(length/2.0) *M_PI);
-		srot = sin((j-4)/(length/2.0) *M_PI);
-		glVertex3f(srot * (((j + 1) * .1)), rot * (((j + 1) * .1)), length + (-j - 1));
+      for(k = -numCurves/2; k < numCurves/2; k = k+1){
+            for(j = 0; j < length ; j = j+1){
+                  rot = cos((k * gap + j) / (length / sharpness) * M_PI);
+                  srot = sin((k * gap + j) / (length / sharpness) * M_PI);
+                  glVertex3f(srot * j * (farRadius / length), rot * j * (farRadius / length), length - j);
+                  
+                  rot = cos((k * gap + j + 1) / (length / sharpness) * M_PI);
+                  srot = sin((k * gap + j + 1) / (length / sharpness) * M_PI);
+                  glVertex3f(srot * (j + 1) * (farRadius / length), rot * (j + 1) * (farRadius / length), length - j - 1);
+                  
+            }
       }
-
       glEnd();
 
    glLineWidth(1.0);
