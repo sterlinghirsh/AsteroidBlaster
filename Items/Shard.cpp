@@ -356,7 +356,7 @@ void Shard::drawInMinimap() {
    //glDisable(GL_LIGHTING);
    //glColor3f(0.4, 0.5, 0.7);
    setMaterial(WhiteSolid);
-   gluSphere(quadric, 3, 4, 2);
+   gluSphere(quadric, 1, 4, 2);
    //glEnable(GL_LIGHTING);
    glPopMatrix();
 }

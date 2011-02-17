@@ -129,12 +129,26 @@ void GameState::drawInMinimap() {
    //glRotatef(180, 0, 1, 0);
    oppositeOfPosition.glTranslate(-1);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glDisable(GL_COLOR_MATERIAL);
 
    // For each item that needs to be drawn in the minimap
    for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
       // Make sure it's not null, & then draw it in the minimap
-      if (*listIter != NULL)
+      // TODO: Make this not copy code from below.
+      if (*listIter != NULL && ((*listIter)->shouldDrawInMinimap || *listIter == ship)) {
+         radius3D = ship->position->distanceFrom(*(*listIter)->position);
+         if (radius3D < 20) {
+            glColor3f(1, 0, 0);
+            setMaterial(RedFlat);
+         } else if (radius3D < 30) {
+            glColor3f(1, 1, 0);
+            setMaterial(YellowFlat);
+         } else {
+            glColor3f(0, 1, 0);
+            setMaterial(GreenTransparent);
+         }
          (*listIter)->drawInMinimap();
+      }
    }
    glPopMatrix();
    // Now draw the lines.
@@ -155,11 +169,10 @@ void GameState::drawInMinimap() {
          objectPosition = modelViewMatrix * (objectPosition); // Rotate about the ship
          radius2D = distance2D(objectPosition.x, objectPosition.z);
          radius3D = distance3D(objectPosition.x, objectPosition.y, objectPosition.z);
-         glDisable(GL_COLOR_MATERIAL);
          if (radius3D < 20) {
             glColor3f(1, 0, 0);
             setMaterial(RedTransparent);
-         } else if (radius3D < 40) {
+         } else if (radius3D < 30) {
             glColor3f(1, 1, 0);
             setMaterial(YellowTransparent);
          } else {
@@ -211,20 +224,21 @@ void GameState::draw() {
    //std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-   for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
-      if (*listIter == NULL)
-         continue;
-      // Don't draw the ship in thirdPerson mode.
-      if (thirdPerson || (*listIter != ship)) {
-         (*listIter)->draw();
-      }
-   }
-
    if (thirdPerson) {
       ship->drawShotDirectionIndicators();
    } else {
       ship->drawCrosshair();
+   }
+
+   for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
+      if (*listIter == NULL || *listIter == ship)
+         continue;
+      (*listIter)->draw();
+   }
+   
+   // Don't draw the ship in first Person mode.
+   if (thirdPerson) {
+      ship->draw();
    }
 }
 

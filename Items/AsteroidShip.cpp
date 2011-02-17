@@ -315,8 +315,9 @@ void AsteroidShip::keepFiring() {
 }
 
 void draw_ship(){
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
-   glColor4f(1, 1, 1, 0.5);
+   glEnable(GL_COLOR_MATERIAL);
    glScalef(1.5, .5, .8);
 
    glBegin(GL_TRIANGLES);
@@ -530,6 +531,7 @@ void AsteroidShip::drawInMinimap() {
    glRotate();
    glScalef(15, 15, 15);
    glTranslatef(0, 0, -1);
+   glColor4f(0, 0, 0, 0.2);
    draw_ship();
    glPopMatrix();
 }
@@ -551,6 +553,7 @@ void AsteroidShip::draw() {
       position->glTranslate();
       // Rotate to the current up/right/forward vectors.
       glRotate();
+      glColor4f(0, 0, 0, 0.4);
       draw_ship();
    glPopMatrix();
 }
@@ -660,6 +663,11 @@ void AsteroidShip::drawCrosshair() {
  * Draw the double crosshair, starfox style.
  */
 void AsteroidShip::drawShotDirectionIndicators() {
+   // Don't draw this while firing the tractorbeam.
+   // TODO: Make 2 not a magic number.
+   if (currentWeapon == 2 && isFiring) {
+      return;
+   }
    // The coords of the boxes.
    Point3D drawPoint = *position;
    const double boxSize = 0.5;
@@ -672,6 +680,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
    glDisable(GL_LIGHTING);
    glDisable(GL_CULL_FACE);
    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+   setMaterial(WhiteTransparent);
    
    glLineWidth(3.0);
    glBegin(GL_QUADS);
