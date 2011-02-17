@@ -114,6 +114,7 @@ void GameState::drawInMinimap() {
    static Point3D objectPosition;
    static Vector3D positionVector;
    const float scaleFactor = 0.05;
+   const float ringWidth = 1;
    double radius2D; // Radius when an object is projected onto the forward-right plane of the ship.
    double radius3D; // Radius from the ship in 3D space.
 
@@ -172,7 +173,7 @@ void GameState::drawInMinimap() {
          glPushMatrix();
          glEnable(GL_LIGHTING);
          glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
-         gluDisk(quadric, radius2D - 1, radius2D + 1 ,16,2);
+         gluDisk(quadric, radius2D - (ringWidth / 2), radius2D + (ringWidth / 2) ,16,2);
          glDisable(GL_LIGHTING);
          glPopMatrix();
          //glDisable(GL_LIGHTING);
@@ -715,8 +716,14 @@ void GameState::menuFunc() {
 
          }
 
-         if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE ) {
-            exit(0);
+         if ( event.type == SDL_KEYDOWN) {
+            switch(event.key.keysym.sym) {
+             case SDLK_ESCAPE: exit(0);
+             case SDLK_n:
+               gameState->menuMode = false;
+               gameState->reset();
+               break;
+            }
          }
       }
 
