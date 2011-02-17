@@ -103,7 +103,7 @@ void TractorBeamShot::draw() {
       if (spin >= 360 ) {
          spin = 0;
       }
-      materials(GreenShiny);
+      setMaterial(GreenShiny);
       glLineWidth(2.0);
       glBegin(GL_LINES);
       //Creates the twisted lines whose vertices are sent to the shader to modify

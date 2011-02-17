@@ -40,7 +40,7 @@ void ProjectileShot::draw() {
 // Spray particles.
 void ProjectileShot::update(double timeDiff) {
    Shot::update(timeDiff);
-   const int particlesPerSecond = 10;
+   const int particlesPerSecond = 4;
    
    static Vector3D particleVariation;
    
