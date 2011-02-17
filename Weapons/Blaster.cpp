@@ -14,14 +14,14 @@
 Blaster::Blaster(AsteroidShip* owner) 
  : Weapon(owner) {
    shotSpeed = 40; // Units per second
-   coolDown = 0.08; // Seconds
+   coolDown = 0.15; // Seconds
    randomVariationAmount = 2; // Units
    name = "Blaster";
    lastShotPos = new Point3D(0, 1, 0);
 }
 
 Blaster::~Blaster() {
-   free(lastShotPos);
+   delete lastShotPos;
 }
 
 /**

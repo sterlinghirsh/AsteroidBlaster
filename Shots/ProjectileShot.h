@@ -14,6 +14,7 @@ class ProjectileShot : public Shot {
       static double frequency; // Shots per sec
       virtual void draw();
       virtual void update(double timeDiff);
+      virtual void handleCollision(Object3D* other);
 
 };
 

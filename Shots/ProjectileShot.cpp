@@ -43,11 +43,35 @@ void ProjectileShot::update(double timeDiff) {
    const int particlesPerSecond = 10;
    
    static Vector3D particleVariation;
-   particleVariation.randomMagnitude();
-   particleVariation.setLength(0.1);
    
    for (int i = 0; i <= timeDiff * particlesPerSecond; ++i) {
+      particleVariation.randomMagnitude();
+      particleVariation.setLength(0.1);
       BlasterShotParticle::Add(new Point3D(*position), 
        new Vector3D(particleVariation));
    }
+}
+
+void ProjectileShot::handleCollision(Object3D* other) {
+   const int particlesToEmit = 20;
+   
+   static Vector3D particleVariation;
+   static Vector3D positionDifference;
+   const double particleSpeed = 5;
+
+   Asteroid3D* asteroid;
+   // If we hit an asteroid.
+   if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+      // Make some particles!
+      positionDifference.updateMagnitude(*asteroid->position, *position);
+      positionDifference.setLength(particleSpeed);
+      for (int i = 0; i <= particlesToEmit; ++i) {
+         particleVariation.randomMagnitude();
+         particleVariation.setLength(particleSpeed);
+         particleVariation.addUpdate(positionDifference);
+         BlasterShotParticle::Add(new Point3D(*position), 
+          new Vector3D(particleVariation));
+      }
+   }
+   Shot::handleCollision(other);
 }
