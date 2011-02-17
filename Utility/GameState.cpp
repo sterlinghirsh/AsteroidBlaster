@@ -6,9 +6,9 @@
  * CPE 476
  */
 
-#include "Utility/GameState.h"
-#include "Graphics/GlutUtility.h"
 #include <math.h>
+#include "Utility/GameState.h"
+#include <stdio.h>
 #include "Utility/Matrix4.h"
 
 extern double minimapSizeFactor;

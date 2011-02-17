@@ -7,10 +7,11 @@
  * 1-19-11
  */
 
-#include <cstring>
-#include "Graphics/GlutUtility.h"
-#include "Utility/BitmapTextDisplay.h"
 #include <stdio.h>
+#include <cstring>
+#include "Utility/GlobalUtility.h"
+#include "Utility/BitmapTextDisplay.h"
+
 
 std::ostringstream BitmapTextDisplay :: sstream;
 

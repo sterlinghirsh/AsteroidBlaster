@@ -6,7 +6,7 @@
  */
 
 #include "Weapons/RailGun.h"
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Shots/BeamShot.h"
 
 RailGun::RailGun(AsteroidShip* owner)

@@ -1,13 +1,14 @@
-#include "Vector3D.h"
+
 #include <math.h>
 #include <algorithm>
+#include "Vector3D.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
 #endif
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 
 using namespace std;
 

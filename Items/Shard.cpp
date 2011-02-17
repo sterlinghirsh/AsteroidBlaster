@@ -5,7 +5,7 @@
  */
 
 #define _USE_MATH_DEFINES
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Graphics/Sprite.h"
 #include "Items/Shard.h"
 #include "Items/Asteroid3D.h"

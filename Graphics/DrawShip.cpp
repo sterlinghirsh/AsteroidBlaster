@@ -8,7 +8,7 @@
 #include <map>
 #include <string.h>
 #include <GL/glut.h>
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 
 using namespace std;
 

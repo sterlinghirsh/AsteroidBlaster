@@ -1,6 +1,8 @@
-#include "Vector3D.h"
+
+
 #include <math.h>
 #include <algorithm>
+#include "Vector3D.h"
 #include "Quaternion.h"
 
 #ifdef __APPLE__
@@ -8,7 +10,7 @@
 #else
 #include <GL/glut.h>
 #endif
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 
 
 using namespace std;

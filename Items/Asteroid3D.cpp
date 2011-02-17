@@ -4,7 +4,7 @@
  * A randomly generated asteroid object.
  */
 
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Graphics/Sprite.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"

@@ -9,7 +9,7 @@
 
 #include "Utility/Point3D.h"
 #include "Utility/Vector3D.h"
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Items/Asteroid3D.h"
 #include "Utility/Object3D.h"
 #include "Items/AsteroidShip.h"

@@ -6,7 +6,7 @@
  */
 
 #include "Weapons/Blaster.h"
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Shots/ProjectileShot.h"
 #include "Utility/Point3D.h"
 #include "Utility/Quaternion.h"

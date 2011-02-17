@@ -6,7 +6,7 @@
  */
 
 #include "Graphics/Skybox.h"
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 
 Skybox::Skybox(std::string filename) {
    curMaterial = WhiteSolid;

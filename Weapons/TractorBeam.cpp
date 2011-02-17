@@ -6,7 +6,7 @@
  */
 
 #include "Weapons/TractorBeam.h"
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Shots/TractorBeamShot.h"
 
 TractorBeam::TractorBeam(AsteroidShip* owner) : Weapon(owner) {

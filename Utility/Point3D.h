@@ -10,7 +10,7 @@
 #define __POINT3D_H__
 
 #include <stdio.h>
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 
 struct Matrix4;
 struct Vector3D;

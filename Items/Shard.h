@@ -8,7 +8,7 @@
 #define __SHARD_H__
 
 #include "Graphics/Mesh3D.h"
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Utility/Point3D.h"
 #include "Utility/Object3D.h"
 #include "Items/Ring.h"

@@ -8,7 +8,7 @@
 #include <list>
 #include <sstream>
 
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Utility/Point3D.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"

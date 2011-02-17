@@ -6,7 +6,7 @@
  */
 
 #include "Graphics/TextureImporter.h"
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 
 
 TextureImporter::TextureImporter(std::string filename) {

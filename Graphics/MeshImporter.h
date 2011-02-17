@@ -9,7 +9,7 @@
 #define __MESHIMPORTER_H__
 
 #include <istream>
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Graphics/Face3D.h"
 #include "Graphics/MeshPoint.h"
 #include "Graphics/Mesh3D.h"

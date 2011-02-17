@@ -7,7 +7,7 @@
 
 #include "Items/Enemy.h"
 #include "Items/Player.h"
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 
 Enemy::Enemy(double x, double z, double velocityX,
  double velocityZ, int displayListIn) :

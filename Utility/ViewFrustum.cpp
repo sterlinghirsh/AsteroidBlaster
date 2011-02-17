@@ -5,7 +5,7 @@
  * CPE 476
  */
 
-#include "Graphics/GlutUtility.h"
+#include "Utility/GlobalUtility.h"
 #include "Utility/ViewFrustum.h"
 
 ViewFrustum :: ViewFrustum() {
