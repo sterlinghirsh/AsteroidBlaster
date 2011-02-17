@@ -57,6 +57,8 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn,
  * Kill this after a certain number of frames.
  */
 void TractorBeamShot::update(double timeDiff) {
+   if (++framesAlive >= 2)
+      shouldRemove = true;
 }
 
 /**
@@ -65,7 +67,6 @@ void TractorBeamShot::update(double timeDiff) {
 void TractorBeamShot::draw() {
    
    glUseProgram(shader1);
-   shouldRemove = true;
    glPushMatrix();
       
       float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
