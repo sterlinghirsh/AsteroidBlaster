@@ -21,7 +21,6 @@ Shot::Shot(Point3D& posIn, Vector3D dirIn,
    velocity = new Vector3D(dirIn);
    //velocity->setLength(40.0);
    timeFired = doubleTime();
-   lifetime = 2;
    
 }
 

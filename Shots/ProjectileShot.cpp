@@ -6,15 +6,19 @@
 
 #include "Shots/ProjectileShot.h"
 #include "Graphics/BlasterShotParticle.h"
-
-double ProjectileShot::frequency = 10;
+   
+const int particleCycle = 100;
 
 ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn,
  AsteroidShip* const ownerIn ) : Shot(posIn, dirIn, ownerIn) {
    persist = false;
    minX = minY = minZ = -0.1;
    maxX = maxY = maxZ = 0.1;
+   lifetime = 10;
    updateBoundingBox();
+   static int currentStartingParticleCycle = 0;
+   particleNum = currentStartingParticleCycle;
+   currentStartingParticleCycle = (currentStartingParticleCycle + 7) % particleCycle;
 }
 
 void ProjectileShot::draw() {
@@ -27,11 +31,7 @@ void ProjectileShot::draw() {
    position->glTranslate();
    glRotatef(zVector.getAngleInDegrees(*velocity), 
       axis.xMag, axis.yMag, axis.zMag);
-   //glutSolidSphere(0.05, 30, 10);
-   //drawCylinder(0.02, 1);
-   //glutSolidCone(0.02, 0.2, 8, 8);
-   //gluCylinder(quadric,0.04f,0.0f,0.2f,8,8);
-   gluCylinder(quadric,0.08f,0.0f,0.8f,8,8);
+   gluCylinder(quadric,0.08f,0.0f,0.8f,6,6);
    glEnable(GL_LIGHTING);
 
    glPopMatrix();
@@ -45,10 +45,11 @@ void ProjectileShot::update(double timeDiff) {
    static Vector3D particleVariation;
    
    for (int i = 0; i <= timeDiff * particlesPerSecond; ++i) {
+      particleNum = (particleNum + 1) % particleCycle;
       particleVariation.randomMagnitude();
       particleVariation.setLength(0.1);
-      BlasterShotParticle::Add(new Point3D(*position), 
-       new Vector3D(particleVariation));
+      BlasterShotParticle::AddRainbow(new Point3D(*position), 
+       new Vector3D(particleVariation), particleNum, particleCycle);
    }
 }
 
