@@ -12,9 +12,25 @@ then
    gunzip SDL_ttf-2.0.10.tar.gz
    echo "Extracting.."
    tar -xf SDL_ttf-2.0.10.tar
-   #zipping the .tar file back up
-   gzip SDL_ttf-2.0.10.tar
+   #deleting gunziped file
+   rm SDL_ttf-2.0.10.tar
    cd SDL_ttf-2.0.10
+   echo "Configuring.."
+   ./configure
+   echo "Making.."
+   make
+   echo "Done!"
+   cd ..
+   
+   #SDL_mixer--------------------
+   echo "SDL_mixer"
+   echo "Unzipping.."
+   gunzip SDL_mixer-1.2.11.tar.gz
+   echo "Extracting.."
+   tar -xf SDL_mixer-1.2.11.tar
+   #deleting gunziped file
+   rm SDL_mixer-1.2.11.tar
+   cd SDL_mixer-1.2.11
    echo "Configuring.."
    ./configure
    echo "Making.."
@@ -28,8 +44,8 @@ then
    gunzip glew-1.5.8.tar.gz
    echo "Extracting.."
    tar -xf glew-1.5.8.tar
-   #zipping the .tar file back up
-   gzip glew-1.5.8.tar
+   #deleting gunziped file
+   rm glew-1.5.8.tar
    cd glew-1.5.8
    echo "Making.."
    make
@@ -38,6 +54,7 @@ then
    
    #go back to parent directory
    cd ..
+   svn rever -R Libraries
    
 elif [ "$1" == "clean" ] 
 then
@@ -47,6 +64,11 @@ then
    echo "SDL_ttf"
    echo "Cleaning..."
    rm -rf SDL_ttf-2.0.10
+   
+   #SDL_mixer--------------------
+   echo "SDL_ttf"
+   echo "Cleaning..."
+   rm -rf SDL_mixer-1.2.11
    
    #glew--------------------
    echo "GLEW"
