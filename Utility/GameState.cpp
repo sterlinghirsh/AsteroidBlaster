@@ -119,6 +119,7 @@ void GameState::drawInMinimap() {
 
    positionVector.updateMagnitude(*ship->position);
 
+
    glPushMatrix();
    ship->glRotate(false);
    Vector3D oppositeOfPosition(*(ship->position));
@@ -128,7 +129,6 @@ void GameState::drawInMinimap() {
    glScalef(scaleFactor, scaleFactor, scaleFactor);
    //glRotatef(180, 0, 1, 0);
    oppositeOfPosition.glTranslate(-1);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glDisable(GL_COLOR_MATERIAL);
 
    // For each item that needs to be drawn in the minimap
@@ -198,6 +198,12 @@ void GameState::drawInMinimap() {
       }
    }
    glPopMatrix();
+   
+   // Draw the sphere around it.
+   glEnable(GL_LIGHTING);
+   setMaterial(GrayTransparent);
+   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   gluSphere(quadric, 2, 20, 20);
 }
 
 /**

@@ -110,41 +110,16 @@ void display() {
 
       glClear (GL_DEPTH_BUFFER_BIT);		/* Clear Depth Buffer */
 
-      gluQuadricNormals(quadric, GLU_SMOOTH);		/* Create Smooth Normals */
-      gluQuadricTexture(quadric, GL_TRUE);			/* Create Texture Coords */
-
       setMaterial(WhiteSolid);
 
       // eye, lookAt, and up vectors
       gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
       
-      //glLoadIdentity ();								/* Reset The Modelview Matrix */
-      
-      glColor3f(0.1, 0.8, 0.1);
-      // Draw a flat cylinder with radius 2 at top and bottom, 0.5 height, 2 slice, and 2 stack.
-      /*
-      glPushMatrix();
-         glRotatef(-90.0,1.0f,0.0f,0.0f);	// Rotate By 0 On The X-Axis
-         glDisable(GL_LIGHTING);
-            gluDisk(gluNewQuadric(),1.8,1.9,35,35);
-            gluDisk(gluNewQuadric(),2.1,2.2,35,35);
-            gluDisk(gluNewQuadric(),2.4,2.5,35,35);
-         glEnable(GL_LIGHTING);
-      glPopMatrix();
-      */
-      
       // Draw objects in the map.
       gameState->drawInMinimap();
 
-      //glEnd();						/* Done Drawing The Textured Quad */	
-      
    glPopMatrix();
-
-
-
    // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
-	// glFlush ();
-	
    SDL_GL_SwapBuffers();
    displayTime += doubleTime() - startTime;
    ++curFrame;
@@ -225,9 +200,9 @@ void init() {
    glEnable(GL_BLEND);
    glEnable( GL_TEXTURE_2D );
 
+
    //initialize light
    glEnable(GL_LIGHT0);
-   // headlight_amb is defined in Asteroidship.h
    glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
    glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
    glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
@@ -297,6 +272,7 @@ int main(int argc, char* argv[]) {
    quadric = gluNewQuadric();
    //set the quadradic up
    gluQuadricNormals(quadric, GLU_SMOOTH);
+   gluQuadricTexture(quadric, GL_TRUE);			/* Create Texture Coords */
 
 
    //Initialize gameState

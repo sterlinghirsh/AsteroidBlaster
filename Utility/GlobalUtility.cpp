@@ -176,6 +176,13 @@ materialStruct WhiteTransparent = {
   {0.0}
 };
 
+materialStruct GrayTransparent = {
+  {0.5, 0.5, 0.5, 0.5},
+  {0.2, 0.2, 0.2, 0.2},
+  {0.2, 0.2, 0.2, 0.2},
+  {4.0}
+};
+
 materialStruct WhiteSolid = {
   {1.0, 1.0, 1.0, 1.0},
   {1.0, 1.0, 1.0, 1.0},

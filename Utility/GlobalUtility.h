@@ -68,6 +68,7 @@ extern materialStruct RedTransparent;
 extern materialStruct YellowFlat;
 extern materialStruct YellowTransparent;
 extern materialStruct WhiteTransparent;
+extern materialStruct GrayTransparent;
 extern materialStruct WhiteSolid;
 extern materialStruct BlackSolid;
 extern materialStruct OrangeSolid;
