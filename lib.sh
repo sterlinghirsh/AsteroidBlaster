@@ -2,7 +2,7 @@
 
 if [ "$1" == "make" ] 
 then
-   lib.sh clean
+   ./lib.sh clean
    #get into Libraries directory
    cd Libraries
 
@@ -54,7 +54,7 @@ then
    
    #go back to parent directory
    cd ..
-   svn rever -R Libraries
+   svn revert -R Libraries
    
 elif [ "$1" == "clean" ] 
 then
