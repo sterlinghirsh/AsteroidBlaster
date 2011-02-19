@@ -280,7 +280,7 @@ int main(int argc, char* argv[]) {
    //load sound effects
    //SoundEffect::Add("Sounds/blaster1.wav");
    SoundEffect::Add("Sounds/blaster2.wav");
-   SoundEffect::Add("Sounds/BlasterShot.wav");
+   SoundEffect::Add("Sounds/BlasterShot2.wav");
    //SoundEffect::Add("Sounds/railgun1.wav");
    SoundEffect::Add("Sounds/Rail2.wav");
    SoundEffect::Add("Sounds/Explosion1.wav");
