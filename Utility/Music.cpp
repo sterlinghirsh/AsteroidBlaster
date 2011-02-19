@@ -7,6 +7,7 @@
 
 std::list<Mix_Music*> Music::musics;
 int Music::currPlay = -1;
+int Music::volume = SDL_MIX_MAXVOLUME;
 
 Music::Music() {
 
@@ -47,7 +48,7 @@ void Music::playMusic(int idx) {
    }
    
    currPlay = idx;
-	Mix_VolumeMusic(SDL_MIX_MAXVOLUME);
+	Mix_VolumeMusic(volume);
 }
 
 void Music::pauseMusic() {

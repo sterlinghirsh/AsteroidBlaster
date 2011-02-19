@@ -301,17 +301,6 @@ void AsteroidShip::fire(bool startFiring) {
 void AsteroidShip::keepFiring() {
    if (!isFiring) return;
    weapons[currentWeapon]->fire();
-   double curTime = doubleTime();
-   /* This is goofy as hell, so let's do it the OOP way. */
-   /*
-   bool fireShots = (currentWeapon == 0);
-   bool fireBeams = (currentWeapon == 1);
-   if (fireBeams && (timeOfLastBeam < curTime - (1 / BeamShot::frequency) ||
-            timeOfLastBeam == 0)) {
-      custodian->add(new BeamShot(start, shotDirection, this));
-      timeOfLastBeam = curTime;
-   }
-   */
 }
 
 void draw_ship(){

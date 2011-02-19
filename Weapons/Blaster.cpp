@@ -9,7 +9,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Shots/ProjectileShot.h"
 #include "Utility/Point3D.h"
-#include "Utility/Quaternion.h"
+#include "Utility/SoundEffect.h" 
 
 Blaster::Blaster(AsteroidShip* owner) 
  : Weapon(owner) {
@@ -52,6 +52,7 @@ void Blaster::fire() {
    ship->shotDirection.movePoint(start);
    gameState->custodian.add(new ProjectileShot(start,
     shotDirection, ship));
+   SoundEffect::playSoundEffect(1);
 }
 
 /**

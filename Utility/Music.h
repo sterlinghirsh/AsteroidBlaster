@@ -10,7 +10,7 @@ class Music {
    public:
       Music();
       ~Music();
-      static std::list<Mix_Music*> musics;
+      
       
       static void Add(const char *file);
       static void playMusic(int idx);
@@ -19,7 +19,9 @@ class Music {
       static void stopMusic();
       static int currentlyPlaying();
    private:
+      static std::list<Mix_Music*> musics;
       static int currPlay;
+      static int volume;
 };
 
 #endif

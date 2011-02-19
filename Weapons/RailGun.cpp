@@ -9,6 +9,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Shots/BeamShot.h"
 #include "Utility/Quaternion.h"
+#include "Utility/SoundEffect.h" 
 
 RailGun::RailGun(AsteroidShip* owner)
  : Weapon(owner) {
@@ -39,6 +40,7 @@ void RailGun::fire() {
    // Move start point by the shotDirection vector, multiplied by a scalar
    gameState->custodian.add(new BeamShot(start,
     ship->shotDirection, ship));
+   SoundEffect::playSoundEffect(2);
 }
 
 /**

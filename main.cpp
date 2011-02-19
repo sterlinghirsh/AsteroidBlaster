@@ -24,6 +24,7 @@
 #include "Utility/InputManager.h"
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
+#include "Utility/SoundEffect.h"
 
 
 
@@ -143,9 +144,8 @@ void init() {
       exit(1);
    }
 
-   
-   // we play no samples, so deallocate the default 8 channels... 
-   Mix_AllocateChannels(0);
+   //allocate channels for sound effects
+   SoundEffect::numChannels = Mix_AllocateChannels(32);
    
    if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,1024)<0) {
       std::cerr << "Mix_OpenAudio Failed!" << std::endl;
@@ -277,9 +277,14 @@ int main(int argc, char* argv[]) {
    //load the shader files
    shader1 = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
 
-   
+   //load and start BGM
    Music::Add("Sounds/Mists_of_Time-4T.ogg");
    Music::playMusic(0);
+   
+   //load sound effects
+   SoundEffect::Add("Sounds/blaster1.wav");
+   SoundEffect::Add("Sounds/blaster2.wav");
+   SoundEffect::Add("Sounds/railgun1.wav");
    
    //get the quadradic up
    quadric = gluNewQuadric();
