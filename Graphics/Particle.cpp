@@ -44,35 +44,34 @@ bool Particle::LoadGLTextures()
     SDL_Surface *TextureImage[1]; 
 
     /* Load The Bitmap, Check For Errors, If Bitmap's Not Found Quit */
-    if ( ( TextureImage[0] = SDL_LoadBMP( "Images/particle.bmp" ) ) )
-        {
+    if ( ( TextureImage[0] = SDL_LoadBMP( "Images/particle.bmp" ) ) ) {
+      /* Set the status to true */
+      Status = true;
 
-       /* Set the status to true */
-       Status = true;
+      glBindTexture( GL_TEXTURE_2D, Particle::texture );
 
-       glBindTexture( GL_TEXTURE_2D, Particle::texture );
-       
-       /* Create The Texture */
-       glGenTextures( 1, &texture );
+      /* Create The Texture */
+      glGenTextures( 1, &texture );
 
-       /* Typical Texture Generation Using Data From The Bitmap */
-       glBindTexture( GL_TEXTURE_2D, texture );
+      /* Typical Texture Generation Using Data From The Bitmap */
+      glBindTexture( GL_TEXTURE_2D, texture );
 
-       /* Generate The Texture */
-       glTexImage2D( GL_TEXTURE_2D, 0, 3, TextureImage[0]->w,
-           TextureImage[0]->h, 0, GL_BGR,
-           GL_UNSIGNED_BYTE, TextureImage[0]->pixels );
+      /* Generate The Texture */
+      glTexImage2D( GL_TEXTURE_2D, 0, 3, TextureImage[0]->w,
+         TextureImage[0]->h, 0, GL_BGR,
+         GL_UNSIGNED_BYTE, TextureImage[0]->pixels );
 
-       /* Linear Filtering */
-       glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-       glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-        }
+      /* Linear Filtering */
+      glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+      glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+   }
 
-    /* Free up any memory we may have used */
-    if ( TextureImage[0] )
-       SDL_FreeSurface( TextureImage[0] );
-       
-    return Status;
+   /* Free up any memory we may have used */
+   if ( TextureImage[0] ) {
+      SDL_FreeSurface( TextureImage[0] );
+   }
+    
+   return Status;
 }
 
 void Particle::update(double timeDifference)

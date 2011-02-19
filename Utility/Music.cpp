@@ -2,20 +2,11 @@
 
 
 #include "Utility/Music.h"
-#include <math.h>
 #include <iostream>
 #include "Utility/GameState.h"
 
-
-#ifndef GL_BGR
-#define GL_BGR GL_BGR_EXT
-#endif
-#ifndef GL_BGRA
-#define GL_BGRA GL_BGRA_EXT
-#endif 
-
-
 std::list<Mix_Music*> Music::musics;
+int Music::currPlay = -1;
 
 Music::Music() {
 
@@ -36,12 +27,17 @@ void Music::Add(const char *file) {
 		exit(0);
    }
    
-
 	musics.push_back(temp);
 }
 
 
 void Music::playMusic(int idx) {
+   if (currPlay != -1) {
+      Mix_HaltMusic();
+   } else if (currPlay == idx) {
+      std::cout << "that music is already playing!" << std::endl;
+   }
+   
    std::list<Mix_Music*>::iterator it = musics.begin();
    std::advance(it, idx);
    
@@ -50,11 +46,28 @@ void Music::playMusic(int idx) {
 		exit(0);
    }
    
+   currPlay = idx;
 	Mix_VolumeMusic(SDL_MIX_MAXVOLUME);
 }
 
-void Music::stopMusic(int i) {
-   Mix_HaltMusic();
+void Music::pauseMusic() {
+   Mix_PauseMusic();
 }
+
+void Music::resumeMusic() {
+   Mix_ResumeMusic();
+}
+
+void Music::stopMusic() {
+   Mix_HaltMusic();
+   currPlay != -1;
+}
+
+int Music::currentlyPlaying() {
+   return currPlay;
+}
+
+
+
 
 

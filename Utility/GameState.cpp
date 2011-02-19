@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include "Utility/GameState.h"
 #include "Utility/Matrix4.h"
+#include "Utility/Music.h"
 
 extern double minimapSizeFactor;
 
@@ -476,10 +477,16 @@ void GameState::keyDown(int key) {
       break;
 
    case SDLK_f:
-      if(ship->flyingAI->isEnabled())
-         ship->flyingAI->disable();
-      else
+      if(ship->flyingAI->isEnabled()) {
+         ship->flyingAI->disable();         
+      } else {
+         ship->accelerateRight(0);
+         ship->accelerateUp(0);
+         ship->setYawSpeed(0.0);
+         ship->setPitchSpeed(0.0);
+         ship->setRollSpeed(0.0);
          ship->flyingAI->enable();
+      }
       break;
 
    case SDLK_v:
@@ -499,6 +506,13 @@ void GameState::keyDown(int key) {
       break;
    case SDLK_4:
       minimapSizeFactor = 0.25;
+      break;
+   case SDLK_KP_ENTER:
+      if (Mix_PausedMusic()) {
+         Music::resumeMusic();
+      } else {
+         Music::pauseMusic();
+      }
       break;
    }
 }
