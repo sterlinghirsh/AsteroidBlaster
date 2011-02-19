@@ -40,9 +40,6 @@ const double WORLD_SIZE = 80.00;
 bool running = true;
 bool fullScreen = false;
 
-// SDL globals
-const SDL_VideoInfo* vidinfo = NULL;
-
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
 double minimapSizeFactor = 0.5;
@@ -259,9 +256,6 @@ int main(int argc, char* argv[]) {
    srand(time(NULL));
    GW = 800;
    GH = 600;
-   // Used for toggle full screens
-   int oldGW = 800;
-   int oldGH = 600;
    
    //initialize glut
    glutInit(&argc, argv);
@@ -314,28 +308,9 @@ int main(int argc, char* argv[]) {
          timerFunc();
          display();
       }
+      
       while (SDL_PollEvent(&event)) {
-         if (event.type == SDL_KEYDOWN &&  event.key.keysym.sym == SDLK_F1) {
-            if(!fullScreen) {
-               oldGW = GW;
-               oldGH = GH;
-               GW = 1280;
-               GH = 1024;
-               gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
-               SDL_WM_ToggleFullScreen( gDrawSurface );
-               fullScreen = !fullScreen;
-            }
-            else {
-               GW = oldGW;
-               GH = oldGH;
-               SDL_WM_ToggleFullScreen( gDrawSurface );
-               gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
-               fullScreen = !fullScreen;
-            }
-         }
-         else {
-            inputManager->update(event);
-         }
+         inputManager->update(event);
       }
       
    }

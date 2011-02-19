@@ -43,7 +43,7 @@ void SoundEffect::playSoundEffect(int idx) {
    
 	if(Mix_PlayChannel(-1, *it, 0)==-1) {
 	   std::cerr << "could not play SoundEffect # " << idx << ", exiting!" << std::endl;
-		exit(0);
+		//exit(0);
    }
 }
 

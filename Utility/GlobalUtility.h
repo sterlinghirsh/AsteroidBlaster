@@ -32,6 +32,7 @@ extern bool drawPerspective;
 extern GLUquadricObj *quadric;
 extern GLuint shader1;
 extern SDL_Surface* gDrawSurface;
+extern const SDL_VideoInfo* vidinfo;
 
 double p2wx(int);
 double p2wy(int);

@@ -35,6 +35,11 @@ class InputManager {
    void update(const SDL_Event& e);
    void addReceiver(InputReceiver *kbReceiver);
    void removeReceiver(InputReceiver* inReceiver);
+   
+   private:
+   bool fullScreen;
+   int oldGW;
+   int oldGH;
 };
 
 #endif

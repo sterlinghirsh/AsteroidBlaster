@@ -27,6 +27,7 @@ bool drawPerspective = true;
 GLUquadricObj *quadric;
 GLuint shader1;
 SDL_Surface* gDrawSurface = NULL;
+const SDL_VideoInfo* vidinfo = NULL;
 
 using namespace std;
 

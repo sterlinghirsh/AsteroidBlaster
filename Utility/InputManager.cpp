@@ -10,11 +10,15 @@
  * @author Mike Smith
  */
 #include "InputManager.h"
+#include "Utility/GlobalUtility.h"
 #include <stdlib.h>
 
 using namespace std;
 
 InputManager::InputManager() {
+   fullScreen = false;
+   oldGW = GW;
+   oldGH = GH;
 }
 
 InputManager::~InputManager() {
@@ -51,6 +55,24 @@ void InputManager::update(const SDL_Event& e) {
       for (it = receivers.begin(); it != receivers.end(); it++)
          (*it)->keyUp(e.key.keysym.sym);
       break;
+   }
+   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F1) {
+      if(!fullScreen) {
+         oldGW = GW;
+         oldGH = GH;
+         GW = 1280;
+         GH = 1024;
+         gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+         SDL_WM_ToggleFullScreen( gDrawSurface );
+         fullScreen = !fullScreen;
+      }
+      else {
+         GW = oldGW;
+         GH = oldGH;
+         SDL_WM_ToggleFullScreen( gDrawSurface );
+         gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+         fullScreen = !fullScreen;
+      }
    }
 }
 
