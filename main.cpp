@@ -131,7 +131,8 @@ void init() {
    }
 
    // Tell system which functions to process when exit() call is made
-   atexit(SDL_Quit);
+   // THIS IS COMMENTED OUT BECAUSE THE EXIT TIME INCREASES BY 3-4 SECONDS
+   //atexit(SDL_Quit);
 
    // Get optimal video settings
    vidinfo = SDL_GetVideoInfo();
