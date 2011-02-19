@@ -37,6 +37,22 @@ then
    make
    echo "Done!"
    cd ..
+   
+   #SDL_image--------------------
+   echo "SDL_image"
+   echo "Unzipping.."
+   gunzip SDL_image-1.2.10.tar.gz
+   echo "Extracting.."
+   tar -xf SDL_image-1.2.10.tar
+   #deleting gunziped file
+   rm SDL_image-1.2.10.tar
+   cd SDL_image-1.2.10
+   echo "Configuring.."
+   ./configure
+   echo "Making.."
+   make
+   echo "Done!"
+   cd ..
 
    #glew--------------------
    echo "GLEW"

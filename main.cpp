@@ -266,7 +266,7 @@ int main(int argc, char* argv[]) {
    // get particle texture
    Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
    //load the shader files
-   shader1 = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
+   //shader1 = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
 
    //get the quadradic up
    quadric = gluNewQuadric();
