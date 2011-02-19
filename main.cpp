@@ -273,13 +273,17 @@ int main(int argc, char* argv[]) {
    tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
 
    //load and start BGM
-   Music::Add("Sounds/Mists_of_Time-4T.ogg");
+   //Music::Add("Sounds/Mists_of_Time-4T.ogg");
+   Music::Add("Sounds/8-bit3.ogg");
    Music::playMusic(0);
    
    //load sound effects
-   SoundEffect::Add("Sounds/blaster1.wav");
+   //SoundEffect::Add("Sounds/blaster1.wav");
    SoundEffect::Add("Sounds/blaster2.wav");
-   SoundEffect::Add("Sounds/railgun1.wav");
+   SoundEffect::Add("Sounds/BlasterShot.wav");
+   //SoundEffect::Add("Sounds/railgun1.wav");
+   SoundEffect::Add("Sounds/Rail2.wav");
+   SoundEffect::Add("Sounds/Explosion1.wav");
    
    //get the quadradic up
    quadric = gluNewQuadric();

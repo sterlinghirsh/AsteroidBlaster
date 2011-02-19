@@ -12,6 +12,7 @@
 #include "Shots/ProjectileShot.h"
 #include "Shots/BeamShot.h"
 #include "Shots/TractorBeamShot.h"
+#include "Utility/SoundEffect.h" 
 #include <algorithm>
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -276,7 +277,8 @@ void Asteroid3D::handleCollision(Object3D* other) {
             velocity->setLength(speed);
          }
       }
-      if (health == 0) {
+      if (health <= 0) {
+         SoundEffect::playSoundEffect(3);
          shouldRemove = true;
          const int explosionFactor = 3;
          Sprite::sprites.push_back(
