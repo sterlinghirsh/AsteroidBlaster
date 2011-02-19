@@ -61,35 +61,21 @@ void Blaster::debug() {
    printf("Blaster!\n");
 }
 
-bool Blaster::aimAt(double dt, Object3D* target) {
+/**
+ * The job of the weapon is to project the position of
+ * the targeted object, and return the point that the
+ * AI should aim at in order to hit the target with this
+ * weapon.
+ */
+Point3D Blaster::project(Object3D* target) {
    Point3D wouldHit;
    double speed = 40;
-   double time = 0, dist = 0, ang = 0;
+   double time = 0, dist = 0;
    int iterations = 0;
   
-   Point3D aim = ship->shotDirection; 
    Point3D targetPos = *target->position;
    Point3D curTarget = targetPos;
    Point3D dp;
-   
-   // This section of code does angle interpolation.
-   // Find the angle between our vector and where we want to be.
-   ang = acos(aim * *lastShotPos);
-
-   // Get our axis of rotation.
-   wouldHit = (aim ^ *lastShotPos).normalize();
-
-   // If the difference is more than the radius of the target,
-   // we need to adjust where we are aiming.
-   if (ang != 0) {
-      Quaternion q;
-      q.FromAxis(Vector3D(wouldHit.x, wouldHit.y, wouldHit.z), 
-       ang < getTurnSpeed() * dt ? ang : getTurnSpeed() * dt);
-
-      aim = q * aim;
-      // Normalize the vector.
-      aim = aim.normalize();
-   }
    
    // This loop will choose the spot that we want to be shooting at.
    do {
@@ -122,16 +108,6 @@ bool Blaster::aimAt(double dt, Object3D* target) {
       // recalculate!
    } while (dist > target->radius && iterations < 30);
 
-   // By the end of the loop, curTarget is the point that we need to aim
-   // at in order to hit our target.
-   *lastShotPos = (curTarget - *ship->position).normalize();
+   return curTarget;
 
-   ship->updateShotDirection(aim);
-
-   return fabs((aim - (*lastShotPos)).magnitude()) < 1;//0.05;
-
-}
-
-double Blaster::getTurnSpeed() {
-   return 24 * M_PI;
 }

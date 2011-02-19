@@ -41,7 +41,7 @@ class ShootingAI : public AI {
    
    /* TODO Add your respective functions here. */
    int aimAt(double dt, Object3D* target);
-   void chooseWeapon( int weapon );
+   void chooseWeapon(Object3D* target);
    Object3D* chooseTarget();
 
    public:

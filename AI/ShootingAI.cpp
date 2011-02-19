@@ -25,7 +25,7 @@
 extern GameState* gameState;
 
 // Radians/sec
-const double ShootingAI::gunRotSpeed = 24 * 3.14159265;
+const double ShootingAI::gunRotSpeed = 24 * M_PI;
 
 ShootingAI::ShootingAI(AsteroidShip* owner) {
    ship = owner;
@@ -53,7 +53,33 @@ double min(double a, double b) {
  * @return no idea, really. Just leaving this open in case I think of something
  */
 int ShootingAI::aimAt(double dt, Object3D* target) {
-   if (chosenWeapon->aimAt(dt, target))
+   Point3D wouldHit;
+   double ang = 0;
+  
+   Point3D aim = ship->shotDirection; 
+   Point3D targetPos = chosenWeapon->project(target);
+   
+   // This section of code does angle interpolation.
+   // Find the angle between our vector and where we want to be.
+   ang = acos(aim * targetPos);
+
+   // Get our axis of rotation.
+   wouldHit = (aim ^ targetPos).normalize();
+
+   // If the difference is more than the radius of the target,
+   // we need to adjust where we are aiming.
+   if (ang != 0) {
+      Quaternion q;
+      q.FromAxis(wouldHit, 
+       ang < gunRotSpeed * dt ? ang : gunRotSpeed * dt);
+
+      aim = q * aim;
+      // Normalize the vector.
+      aim = aim.normalize();
+   }
+   ship->updateShotDirection(aim);
+
+   if (fabs(fabs(ang) - gunRotSpeed * dt) < 0.05)
       ship->fire(true);
    else
       ship->fire(false);
@@ -62,8 +88,12 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
 }
 
 // kinda useless right now.
-void ShootingAI::chooseWeapon( int weapon ) {
-    ship->selectWeapon( weapon );
+void ShootingAI::chooseWeapon(Object3D* target) {
+   if (target->radius < 2) {
+    ship->selectWeapon(1);
+   }
+   else
+      ship->selectWeapon(0);
     chosenWeapon = ship->getCurrentWeapon();
 }
 
@@ -119,7 +149,6 @@ int ShootingAI::think(double dt) {
    /* This order is tentative. We will probably change it. */
    
    // choose weapon railgun
-   chooseWeapon(0);
 
    Object3D* target = chooseTarget();
    if (target == NULL && target != lastTarget) {
@@ -136,6 +165,7 @@ int ShootingAI::think(double dt) {
       lastTarget = target;
    }
    // choose target
+   chooseWeapon(target);
 
    if (target != NULL) {
       target->setTargeted(true);

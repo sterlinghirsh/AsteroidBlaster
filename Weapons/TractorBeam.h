@@ -17,11 +17,10 @@ class TractorBeam : public Weapon {
    public:
       TractorBeam(AsteroidShip* owner);
       virtual ~TractorBeam();
-      virtual bool aimAt(double dt, Object3D*);
+      virtual Point3D project(Object3D*);
       virtual void update(double timeDiff);
       virtual void debug();
       virtual void fire();
-      virtual double getTurnSpeed();
 };
 
 #endif

@@ -33,10 +33,7 @@ void TractorBeam::debug() {
    printf("TractorBeam!\n");
 }
 
-bool TractorBeam::aimAt(double dt, Object3D* object) {
-   return false;
+Point3D TractorBeam::project(Object3D* object) {
+   return Point3D::Zero;
 }
 
-double TractorBeam::getTurnSpeed() {
-   return 0;
-}

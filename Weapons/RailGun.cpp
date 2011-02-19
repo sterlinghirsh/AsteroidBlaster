@@ -8,6 +8,7 @@
 #include "Weapons/RailGun.h"
 #include "Utility/GlobalUtility.h"
 #include "Shots/BeamShot.h"
+#include "Utility/Quaternion.h"
 
 RailGun::RailGun(AsteroidShip* owner)
  : Weapon(owner) {
@@ -47,10 +48,6 @@ void RailGun::debug() {
    printf("RailGun!\n");
 }
 
-bool RailGun::aimAt(double dt, Object3D* target) {
-   return false;
-}
-
-double RailGun::getTurnSpeed() {
-   return 0;
+Point3D RailGun::project(Object3D* target) {
+   return *target->position;
 }

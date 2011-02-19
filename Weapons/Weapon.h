@@ -16,6 +16,7 @@ class Object3D;
 class AsteroidShip;
 class Custodian;
 class GameState;
+struct Point3D;
 extern GameState* gameState;
 
 enum WeaponType {
@@ -38,7 +39,7 @@ class Weapon {
        * Subclasses will override this. For example, Blaster will lead the target and Railgun won't.
        * Returns true when ready to fire.
        */
-      virtual bool aimAt(double, Object3D*)=0;
+      virtual Point3D project(Object3D*)=0;
       
       /**
        * Called every frame.
@@ -46,7 +47,6 @@ class Weapon {
       virtual void update(double timeDiff)=0;
       AsteroidShip* ship;
       virtual std::string getName();
-      virtual double getTurnSpeed()=0;
       
       protected:
          WeaponType type; // Do we need this?
