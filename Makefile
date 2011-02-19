@@ -5,9 +5,9 @@ SDL_LIBS=$(shell "sdl-config" "--libs")
 SDL_CFLAGS=$(shell "sdl-config" "--cflags")
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
-   PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/glew-1.5.8/include
+   PLATFORMSPECIFICCFLAGS=-I./Libraries/glew-1.5.8/include -I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_mixer-1.2.11 -I./Libraries/SDL_image-1.2.10
 #-I/home/rkudo/library/SDL_ttf-2.0.10/
-   PLATFORMSPECIFICLDFLAGS= -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/glew-1.5.8/lib -L./Libraries/SDL_ttf-2.0.10/.libs -lGL -lGLU -lSDL -lSDL_ttf -lGLEW -lglut -lpthread
+   PLATFORMSPECIFICLDFLAGS= -L./Libraries/glew-1.5.8/lib -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_mixer-1.2.11/build/.libs/ -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_mixer-1.2.11/build/.libs/ -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs  -lGL -lGLU -lSDL -lSDL_ttf -lSDL_mixer -lSDL_image -lGLEW -lglut -lpthread
 
 #-lSDL_ttf -L/home/rkudo/library/SDL_ttf-2.0.10/.libs/
 else

@@ -86,6 +86,11 @@ then
    echo "Cleaning..."
    rm -rf SDL_mixer-1.2.11
    
+   #SDL_image--------------------
+   echo "SDL_ttf"
+   echo "Cleaning..."
+   rm -rf SDL_image-1.2.10
+   
    #glew--------------------
    echo "GLEW"
    echo "Cleaning..."
