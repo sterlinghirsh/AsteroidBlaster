@@ -15,6 +15,7 @@
 #include "Shots/TractorBeamShot.h"
 #include <algorithm>
 #include <math.h>
+#include "Utility/SoundEffect.h"
 
 using namespace std;
 
@@ -317,6 +318,7 @@ void Shard::handleCollision(Object3D* other) {
    TractorBeamShot* TBshot; // Not tuberculosis
    if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
+      SoundEffect::playSoundEffect(4);
    } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       // Set speed to the speed of the asteroid.
       double speed = asteroid->velocity->getLength();
