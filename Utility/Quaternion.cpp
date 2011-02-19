@@ -94,7 +94,7 @@ Point3D Quaternion::operator*(Point3D &vec)
 void Quaternion::FromAxis(const Vector3D &v, double angle)
 {
 	double sinAngle;
-	double otherAngle = (angle / (180/3.14159265)) * .5;
+	double otherAngle = angle * .5;
 	double cosAngle;
 	//angle *= 0.5f;
 	Vector3D vn = v;
@@ -111,7 +111,7 @@ void Quaternion::FromAxis(const Vector3D &v, double angle)
 void Quaternion::FromAxis(const Point3D &v, double angle)
 {
 	double sinAngle;
-	double otherAngle = (angle / (180/3.14159265)) * .5;
+	double otherAngle = angle * .5;
 	double cosAngle;
    Point3D vn = v.normalize(); 
 

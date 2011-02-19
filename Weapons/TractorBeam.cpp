@@ -34,6 +34,9 @@ void TractorBeam::debug() {
 }
 
 Point3D TractorBeam::project(Object3D* object) {
-   return Point3D::Zero;
+   return *object->position;
 }
 
+bool TractorBeam::shouldFire(Point3D* target, Point3D* aim) {
+   return true;
+}

@@ -106,8 +106,12 @@ Point3D Blaster::project(Object3D* target) {
       iterations++;
       // If this distance is greater than the radius (ie, we missed),
       // recalculate!
-   } while (dist > target->radius && iterations < 30);
+   } while (dist > target->radius && iterations < 5);
 
    return curTarget;
 
+}
+
+bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
+   return ((*target - *ship->position).normalize() - *aim).magnitude() < 0.5;
 }

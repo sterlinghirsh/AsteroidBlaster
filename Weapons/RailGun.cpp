@@ -51,3 +51,7 @@ void RailGun::debug() {
 Point3D RailGun::project(Object3D* target) {
    return *target->position;
 }
+
+bool RailGun::shouldFire(Point3D* target, Point3D* aim) {
+   return (*target - *ship->position).normalize() == *aim;
+}

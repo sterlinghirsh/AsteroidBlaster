@@ -40,6 +40,7 @@ class Weapon {
        * Returns true when ready to fire.
        */
       virtual Point3D project(Object3D*)=0;
+      virtual bool shouldFire(Point3D*, Point3D*)=0;
       
       /**
        * Called every frame.

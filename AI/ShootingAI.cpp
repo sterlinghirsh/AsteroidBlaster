@@ -25,7 +25,7 @@
 extern GameState* gameState;
 
 // Radians/sec
-const double ShootingAI::gunRotSpeed = 24 * M_PI;
+const double ShootingAI::gunRotSpeed = M_PI / 2.0;
 
 ShootingAI::ShootingAI(AsteroidShip* owner) {
    ship = owner;
@@ -56,45 +56,48 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
    Point3D wouldHit;
    double ang = 0;
   
-   Point3D aim = ship->shotDirection; 
+   Point3D aim = lastShotPos;
    Point3D targetPos = chosenWeapon->project(target);
+   Point3D targetDir = (targetPos - *ship->position).normalize(); 
    
    // This section of code does angle interpolation.
    // Find the angle between our vector and where we want to be.
-   ang = acos(aim * targetPos);
+   ang = acos(aim * targetDir);
 
    // Get our axis of rotation.
-   wouldHit = (aim ^ targetPos).normalize();
+   wouldHit = (aim ^ targetDir).normalize();
 
-   // If the difference is more than the radius of the target,
-   // we need to adjust where we are aiming.
-   if (ang != 0) {
+   if (ang > (gunRotSpeed * dt)) {
       Quaternion q;
-      q.FromAxis(wouldHit, 
-       ang < gunRotSpeed * dt ? ang : gunRotSpeed * dt);
+      q.FromAxis(wouldHit, gunRotSpeed * dt);
 
       aim = q * aim;
       // Normalize the vector.
       aim = aim.normalize();
    }
+   else {
+      aim = targetDir;
+   }
+   
    ship->updateShotDirection(aim);
-
-   if (fabs(fabs(ang) - gunRotSpeed * dt) < 0.05)
-      ship->fire(true);
-   else
-      ship->fire(false);
+   lastShotPos = aim;
+   ship->fire(chosenWeapon->shouldFire(&targetPos, &aim));
 
    return 0;
 }
 
 // kinda useless right now.
 void ShootingAI::chooseWeapon(Object3D* target) {
-   if (target->radius < 2) {
-    ship->selectWeapon(1);
+   if (target != NULL) {
+      if ((dynamic_cast<Shard*>(target)) != NULL)
+         ship->selectWeapon(2);
+      else if (target->radius < 2) {
+         ship->selectWeapon(1);
+      }
+      else
+         ship->selectWeapon(0);
    }
-   else
-      ship->selectWeapon(0);
-    chosenWeapon = ship->getCurrentWeapon();
+   chosenWeapon = ship->getCurrentWeapon();
 }
 
 Object3D* ShootingAI::chooseTarget() {
@@ -112,14 +115,16 @@ Object3D* ShootingAI::chooseTarget() {
       // Trying this with shard subclass
       // IF THE AI BREAKS, REMOVE THIS
       if (*targets_iterator == NULL ||
-       dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL) {
+       (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL &&
+        dynamic_cast<Shard*>(*targets_iterator) == NULL)) {
       // END OF NEW CODE
          continue;
       }
       
-      curDist = (*targets_iterator)->position->distanceFrom( *ship_position ) * 
-		log((dynamic_cast<Asteroid3D*>(*targets_iterator)->health ));
-      if (shortestDist < 0 || curDist < shortestDist) {
+      curDist = 1 / (((*targets_iterator)->radius) *
+       pow((*targets_iterator)->position->distanceFrom( *ship_position ),2));
+      
+      if (shortestDist < 0 || curDist > shortestDist) {
          shortestDist = curDist;
          closest = *targets_iterator;
       } 
@@ -164,7 +169,8 @@ int ShootingAI::think(double dt) {
       target->position->print();
       lastTarget = target;
    }
-   // choose target
+   chooseWeapon(target);
+
    chooseWeapon(target);
 
    if (target != NULL) {

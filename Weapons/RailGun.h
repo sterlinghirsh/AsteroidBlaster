@@ -15,6 +15,7 @@ class RailGun : public Weapon {
       RailGun(AsteroidShip* owner);
       virtual ~RailGun();
       virtual Point3D project(Object3D*);
+      virtual bool shouldFire(Point3D*, Point3D*);
       virtual void update(double timeDiff);
       virtual void debug();
       virtual void fire();
