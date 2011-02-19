@@ -42,7 +42,7 @@ void Music::playMusic(int idx) {
    std::list<Mix_Music*>::iterator it = musics.begin();
    std::advance(it, idx);
    
-	if(Mix_PlayMusic(*it, idx)==-1) {
+	if(Mix_PlayMusic(*it, -1)==-1) {
 	   std::cerr << "could not play music # " << idx << ", exiting!" << std::endl;
 		exit(0);
    }
