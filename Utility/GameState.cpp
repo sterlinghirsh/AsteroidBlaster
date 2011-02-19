@@ -28,7 +28,7 @@ GameState::GameState(double worldSizeIn) {
    FPSText = new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20);
    numAsteroidsText = new BitmapTextDisplay("Asteroids Remaining: ", custodian.asteroidCount, "", 10, 40);
    scoreText = new BitmapTextDisplay("Score: ", ship->getScore(), "", 10, 60);
-   shardText = new BitmapTextDisplay("Shards: ", ship->getScore(), "", 10, 80);
+   shardText = new BitmapTextDisplay("Shards: ", ship->getShards(), "", 10, 80);
    healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 100);
    gameOverText = new BitmapTextDisplay("GAME OVER", GW/2, GH/2);
    winText = new BitmapTextDisplay("YOU WIN!", GW/2, GH/2);
@@ -363,11 +363,11 @@ bool GameState::isGameRunning() {
  * Reset everything in the game to play again
  */
 void GameState::reset() {
-   delete ship;
+   //delete ship;
    delete camera;
    custodian.clear();
 
-   ship = new AsteroidShip();
+   //ship = new AsteroidShip();
    camera = new Camera(ship);
    gameIsRunning = true;
 

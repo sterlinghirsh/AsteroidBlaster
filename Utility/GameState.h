@@ -21,8 +21,6 @@
 #include "Utility/InputManager.h"
 #include <list>
 
-class AsteroidShip;
-
 class GameState : public InputReceiver {
    public:
       AsteroidShip* ship;
