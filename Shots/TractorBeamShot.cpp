@@ -69,7 +69,7 @@ void TractorBeamShot::update(double timeDiff) {
  */
 void TractorBeamShot::draw() {
    
-   glUseProgram(shader1);
+   glUseProgram(tractorBeamShader);
    glPushMatrix();
    
       //floats used in loop iteration

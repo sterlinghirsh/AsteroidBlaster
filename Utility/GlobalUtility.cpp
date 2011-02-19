@@ -25,7 +25,7 @@ int GW, GH;
 unsigned long curFrame;
 bool drawPerspective = true;
 GLUquadricObj *quadric;
-GLuint shader1;
+GLuint tractorBeamShader;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 

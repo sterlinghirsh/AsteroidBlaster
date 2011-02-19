@@ -270,7 +270,7 @@ int main(int argc, char* argv[]) {
    // get particle texture
    Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
    //load the shader files
-   shader1 = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
+   tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
 
    //load and start BGM
    Music::Add("Sounds/Mists_of_Time-4T.ogg");
@@ -313,7 +313,6 @@ int main(int argc, char* argv[]) {
       while (SDL_PollEvent(&event)) {
          inputManager->update(event);
       }
-      
    }
    delete inputManager;
    return 0;

@@ -30,7 +30,7 @@ extern int flopY(int);
 extern unsigned long curFrame;
 extern bool drawPerspective;
 extern GLUquadricObj *quadric;
-extern GLuint shader1;
+extern GLuint tractorBeamShader;
 extern SDL_Surface* gDrawSurface;
 extern const SDL_VideoInfo* vidinfo;
 
