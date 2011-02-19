@@ -23,12 +23,12 @@
 #include "Utility/Menu.h"
 #include "Utility/InputManager.h"
 #include "Utility/Matrix4.h"
+#include "Utility/Music.h"
 
 
 
 #include "SDL.h"
-#pragma comment(lib,"SDL.lib")
-#pragma comment(lib,"SDLmain.lib") 
+#include "SDL_mixer.h"
 
 using namespace std;
 
@@ -99,16 +99,16 @@ void display() {
       
       glViewport (GW * (1 - minimapSizeFactor), 0, GW * minimapSizeFactor,
        GH * minimapSizeFactor);
-      glMatrixMode (GL_PROJECTION);		/* Select The Projection Matrix */
-      glLoadIdentity ();							/* Reset The Projection Matrix */
+      glMatrixMode (GL_PROJECTION);      /* Select The Projection Matrix */
+      glLoadIdentity ();                     /* Reset The Projection Matrix */
 
       // Keep our aspect ratio relative to the global width and height
       gluPerspective(VERT_FOV, (double)GW/GH, 0.5, 20);
 
-      glMatrixMode (GL_MODELVIEW);		/* Select The Projection Matrix */
-      glLoadIdentity ();								/* Reset The Modelview Matrix */
+      glMatrixMode (GL_MODELVIEW);      /* Select The Projection Matrix */
+      glLoadIdentity ();                        /* Reset The Modelview Matrix */
 
-      glClear (GL_DEPTH_BUFFER_BIT);		/* Clear Depth Buffer */
+      glClear (GL_DEPTH_BUFFER_BIT);      /* Clear Depth Buffer */
 
       setMaterial(WhiteSolid);
 
@@ -126,9 +126,9 @@ void display() {
 }
 
 void init() {
-   // Initialize the SDL video system
-   if( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
-      fprintf(stderr, "Failed to initialize SDL Video!\n");
+   // Initialize the SDL video/audio system
+   if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)<0) {
+      std::cerr << "Failed to initialize SDL Video/Audio!" << std::endl;
       exit(1);
    }
 
@@ -139,10 +139,19 @@ void init() {
    vidinfo = SDL_GetVideoInfo();
 
    if (!vidinfo) {
-      fprintf(stderr, "Couldn't get video settings information!\n%s\n", SDL_GetError());
+      std::cerr << "Couldn't get video settings information! " << SDL_GetError() << std::endl;
       exit(1);
    }
 
+   
+   // we play no samples, so deallocate the default 8 channels... 
+   Mix_AllocateChannels(0);
+   
+   if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,1024)<0) {
+      std::cerr << "Mix_OpenAudio Failed!" << std::endl;
+      exit(1);
+   }
+   
    // Set opengl attributes
    SDL_GL_SetAttribute(SDL_GL_RED_SIZE,      5);
    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,    5);
@@ -268,11 +277,16 @@ int main(int argc, char* argv[]) {
    //load the shader files
    //shader1 = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
 
+   
+   Music::Add("Sounds/Mists_of_Time-4T.ogg");
+   Music::playMusic(0);
+   
+   
    //get the quadradic up
    quadric = gluNewQuadric();
    //set the quadradic up
    gluQuadricNormals(quadric, GLU_SMOOTH);
-   gluQuadricTexture(quadric, GL_TRUE);			/* Create Texture Coords */
+   gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
 
 
    //Initialize gameState
