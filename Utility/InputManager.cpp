@@ -17,7 +17,7 @@ using namespace std;
 
 InputManager::InputManager() {
    fullScreen = false;
-   bloom = true;
+   bloom = false;
    reg = true;
    oldGW = GW;
    oldGH = GH;
