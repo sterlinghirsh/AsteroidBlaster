@@ -51,6 +51,7 @@ class GameState : public InputReceiver {
       void drawInMinimap();
       
       void drawAllText();
+      void drawHud();
       void updateText();
       void checkCollisions();
       void update(double timeDiff);

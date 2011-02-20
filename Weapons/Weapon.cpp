@@ -34,3 +34,13 @@ bool Weapon::isCooledDown() {
 std::string Weapon::getName() {
    return name;
 }
+
+/**
+ * Return a double representing how cool the weapon is, from 0 to 1.
+ * 0 means just fired, 1 means max cool!
+ */
+double Weapon::getCoolDownAmount() {
+   if (coolDown == 0)
+      return 1;
+   return clamp((doubleTime() - timeLastFired) / coolDown, 0, 1);
+}

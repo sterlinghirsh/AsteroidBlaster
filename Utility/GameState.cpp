@@ -11,6 +11,7 @@
 #include "Utility/GameState.h"
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
+#include "Utility/SoundEffect.h"
 
 extern double minimapSizeFactor;
 
@@ -102,6 +103,10 @@ void GameState::update(double timeDiff) {
    }
    // Update all of the text seen on screen.
    updateText();
+   // If the player lost, draw the game over text
+   if (!gameIsRunning && ship->getHealth() <= 0) {
+      SoundEffect::playSoundEffect(7);
+   }
 }
 
 /**
@@ -204,15 +209,15 @@ void GameState::drawInMinimap() {
    glEnable(GL_LIGHTING);
    setMaterial(GrayTransparent);
    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   glDisable(GL_CULL_FACE);
    gluSphere(quadric, 2, 20, 20);
+   glEnable(GL_CULL_FACE);
 }
 
 /**
  * Draw the main view.
  */
 void GameState::draw() {
-   // Draw all of the text objects to the screen.
-   drawAllText();
 
    if (thirdPerson) {
       Vector3D newOffset(ship->forward->scalarMultiply(-3));
@@ -249,14 +254,7 @@ void GameState::draw() {
    }
 }
 
-/**
- * Draw all of the text in the allTexts list to the screen.
- * This function should be called once per display loop.
- * We do all of the looking at, lighting changes, etc.
- * one time here to improve efficiency.
- */
-void GameState::drawAllText() {
-   glPushMatrix();
+void GameState::drawHud() {
    useOrtho();
 
    /* Set the camera using the location of your eye,
@@ -273,17 +271,33 @@ void GameState::drawAllText() {
     * in order to set the color properly.
     */
    glDisable(GL_LIGHTING);
+   glDisable(GL_CULL_FACE);
 
+   drawAllText();
+   ship->drawWeaponReadyBar();
+   glEnable(GL_LIGHTING);
+   //glEnable(GL_DEPTH_TEST);
+   usePerspective();
+   glPopMatrix();
+   glEnable(GL_CULL_FACE);
+}
+
+/**
+ * Draw all of the text in the allTexts list to the screen.
+ * This function should be called once per display loop.
+ * We do all of the looking at, lighting changes, etc.
+ * one time here to improve efficiency.
+ */
+void GameState::drawAllText() {
+   glPushMatrix();
    /* Don't draw stuff in front of the text. */
    //glDisable(GL_DEPTH_TEST);
 
    // If the player lost, draw the game over text
    if (!gameIsRunning && ship->getHealth() <= 0) {
       gameOverText->draw();
-   }
-
+   } else if (!gameIsRunning && ship->getHealth() > 0) {
    // If the player won, draw the win text
-   else if (!gameIsRunning && ship->getHealth() > 0) {
       winText->draw();
    }
 
@@ -295,10 +309,6 @@ void GameState::drawAllText() {
    healthText->draw();
    weaponText->draw();
 
-   glEnable(GL_LIGHTING);
-   //glEnable(GL_DEPTH_TEST);
-   usePerspective();
-   glPopMatrix();
 }
 
 /**

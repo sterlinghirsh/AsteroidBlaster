@@ -99,6 +99,7 @@ class AsteroidShip : public Object3D {
       Vector3D shotDirection; // If we shoot a shot, where will it go?
       Weapon* getCurrentWeapon();
       Vector3D* getShotDirection();
+      void drawWeaponReadyBar();
 
    protected:
       int soundHandle;

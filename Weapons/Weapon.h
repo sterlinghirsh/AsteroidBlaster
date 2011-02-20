@@ -32,6 +32,7 @@ class Weapon {
       virtual void fire()=0;
       virtual void debug()=0;
       virtual bool isCooledDown();
+      virtual double getCoolDownAmount();
 
       /**
        * AIs will use this.

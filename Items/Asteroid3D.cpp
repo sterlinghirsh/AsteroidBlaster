@@ -169,9 +169,9 @@ void Asteroid3D::draw() {
 
    if (isTargeted()) {
       glColor3f(1.0f, 0.0f, 0.0f);
-   }
-   else
+   } else {
       glColor3f(0.0, 0.0, 0.0);
+   }
 
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);

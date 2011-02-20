@@ -77,6 +77,7 @@ void display() {
    
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   usePerspective();
 
    glMatrixMode(GL_MODELVIEW);
 
@@ -88,6 +89,13 @@ void display() {
       //drawCrosshair();
 
    glPopMatrix();
+
+   glPushMatrix();
+      // Draw the hud
+      glClear(GL_DEPTH_BUFFER_BIT);
+      gameState->drawHud();
+   glPopMatrix();
+
    
    // Draw the minimap
    glPushMatrix();
@@ -287,6 +295,7 @@ int main(int argc, char* argv[]) {
    SoundEffect::Add("Sounds/CrystalCollect.wav"); // 4
    SoundEffect::Add("Sounds/TractorBeam.wav"); // 5
    SoundEffect::Add("Sounds/ShipEngine.wav"); // 6
+   SoundEffect::Add("Sounds/GameOver.wav"); // 7
    
    //get the quadradic up
    quadric = gluNewQuadric();

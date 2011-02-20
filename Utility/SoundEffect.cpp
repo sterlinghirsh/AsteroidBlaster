@@ -7,7 +7,7 @@
 
 std::list<Mix_Chunk*> SoundEffect::soundEffects;
 int SoundEffect::volume = MIX_MAX_VOLUME/7;
-int SoundEffect::numChannels = 8;
+int SoundEffect::numChannels = 16;
 int SoundEffect::currChannel = 0;
 
 

@@ -323,6 +323,7 @@ void AsteroidShip::keepFiring() {
 }
 
 void draw_ship(){
+   glDisable(GL_CULL_FACE);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
    glEnable(GL_COLOR_MATERIAL);
@@ -508,6 +509,7 @@ void draw_ship(){
    //glLineWidth(1.0);
    glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);
+   glEnable(GL_CULL_FACE);
 }
 
 void draw_vectors(){
@@ -576,7 +578,7 @@ void AsteroidShip::handleCollision(Object3D* other) {
 
    // Try converting other into a Shard
    if ((shard = dynamic_cast<Shard*>(other)) != NULL) {
-      health += 10;
+      health += 3;
       if (health > 100) {
          health = 100;
       }
@@ -586,7 +588,7 @@ void AsteroidShip::handleCollision(Object3D* other) {
    } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       // Decrease the player's health by an appropriate amount.
       velocity->addUpdate(*(asteroid->velocity));
-      health -= asteroid->radius;
+      health -= 4 * ceil(asteroid->radius);
    }
 }
 
@@ -755,4 +757,27 @@ void AsteroidShip::nextWeapon() {
 void AsteroidShip::prevWeapon() {
    // We add weaons.size() in the middle so that we don't do -1 % something.
    currentWeapon = (currentWeapon + weapons.size() - 1) % weapons.size();
+}
+
+/**
+ * Draws the progress bar showing how close the current weapon is to being able
+ * to fire.
+ */
+void AsteroidShip::drawWeaponReadyBar() {
+   // We expect to be in ortho right now.
+   double coolDownAmount = weapons[currentWeapon]->getCoolDownAmount();
+   double boxHeight = 1;
+   double boxWidth = 0.05; 
+   double innerBoxWidth = 0.05;
+   double innerBoxHeight = coolDownAmount * boxHeight - 0.01;
+   glPushMatrix();
+      glTranslatef(p2wx(10), p2wy(500), 0);
+      glColor3f(1 - coolDownAmount, coolDownAmount, 0);
+      glBegin(GL_QUADS);
+         glVertex3f(0, innerBoxHeight, 0); // Top left
+         glVertex3f(innerBoxWidth, innerBoxHeight, 0); // top Right
+         glVertex3f(innerBoxWidth, 0, 0); // bottom Right
+         glVertex3f(0, 0, 0); // Bottom left
+      glEnd();
+   glPopMatrix();
 }
