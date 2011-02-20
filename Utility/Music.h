@@ -4,6 +4,8 @@
 #define __MUSIC_H__
 
 #include <list>
+#include <iostream>
+#include <map>
 #include "SDL_mixer.h"
 
 class Music {
@@ -12,15 +14,15 @@ class Music {
       ~Music();
       
       
-      static void Add(const char *file);
-      static void playMusic(int idx);
+      static void Add(std::string file, std::string keyName);
+      static void playMusic(std::string file);
       static void pauseMusic();
       static void resumeMusic();
       static void stopMusic();
-      static int currentlyPlaying();
+      static std::string currentlyPlaying();
    private:
-      static std::list<Mix_Music*> musics;
-      static int currPlay;
+      static std::map<std::string, Mix_Music*> musics;
+      static std::string currPlay;
       static int volume;
 };
 

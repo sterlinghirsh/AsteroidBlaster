@@ -274,8 +274,8 @@ int main(int argc, char* argv[]) {
 
    //load and start BGM
    //Music::Add("Sounds/Mists_of_Time-4T.ogg");
-   Music::Add("Sounds/8-bit3.ogg");
-   Music::playMusic(0);
+   Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
+   Music::playMusic("8-bit3.ogg");
    
    //load sound effects
    //SoundEffect::Add("Sounds/blaster1.wav");
