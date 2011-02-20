@@ -45,7 +45,7 @@ GameState::GameState(double worldSizeIn) {
   mouseY = 0;
 
   scoreToWin = 15000;
-  thirdPerson = false;
+  thirdPerson = true;
 
   isW = isA = isS = isD = false;
   /* A view frustum culled list of objects to be used for drawing and by
@@ -602,10 +602,15 @@ void GameState::keyDown(int key) {
       ship->accelerateUp(-1);
     break;
 
-  case SDLK_LSHIFT:
+  //case SDLK_LSHIFT:
   case SDLK_RSHIFT:
     doYaw = !doYaw;
     ship->setRollSpeed(0);
+    break;
+
+  case SDLK_LSHIFT:
+    if(!ship->flyingAI->isEnabled())
+      ship->setBoost(true);
     break;
 
   case SDLK_b:
@@ -738,6 +743,11 @@ void GameState::keyUp(int key) {
       ship->accelerateUp(0);
     break;
 
+  case SDLK_LSHIFT:
+    if(!ship->flyingAI->isEnabled())
+      ship->setBoost(false);
+    break;
+
   case SDLK_b:
     ship->setBrake(false);
     break;
@@ -757,7 +767,7 @@ void GameState::mouseDown(int button) {
   case 3:
     doYaw = !doYaw;
     ship->setRollSpeed(0);
-    printf("right mouse down\n");
+    //printf("right mouse down\n");
     break;
 
   case 4:

@@ -180,7 +180,8 @@ void init() {
   }
 
   //allocate channels for sound effects
-  SoundEffect::numChannels = Mix_AllocateChannels(32);
+  //SoundEffect::numChannels = Mix_AllocateChannels(32);
+  SoundEffect::numChannels = Mix_AllocateChannels(16);
 
   if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,1024)<0) {
     std::cerr << "Mix_OpenAudio Failed!" << std::endl;

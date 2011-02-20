@@ -78,6 +78,7 @@ class AsteroidShip : public Object3D {
       void accelerateRight(int direction);
       void accelerateUp(int direction);
       void setBrake(bool doBrake);
+      void setBoost(bool doBoost);
       void setYawSpeed(double yawAmountIn);
       void setRollSpeed(double rollAmount);
       void setPitchSpeed(double pitchAmount);
@@ -132,8 +133,10 @@ class AsteroidShip : public Object3D {
       double pitchSpeed;
       double rollSpeed;
       double maxSpeed; // Units per second
+      double maxBoostSpeed; // Units per second
 
       bool isBraking;
+      bool isBoosting;
       bool isFiring;
       int health;
       int lastGunFired;

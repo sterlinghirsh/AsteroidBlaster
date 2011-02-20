@@ -183,6 +183,7 @@ void Particle::draw(Point3D* eyePoint)
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
    glDisable(GL_CULL_FACE);
+   glDisable(GL_DEPTH_TEST);
    glBegin(GL_QUADS);
    
    // Top Left
@@ -202,6 +203,7 @@ void Particle::draw(Point3D* eyePoint)
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_CULL_FACE);
    glEnable(GL_LIGHTING);
+   glEnable(GL_DEPTH_TEST);
    //std::cout << "drew: (" << position->x << "," << position->y << "," << position->z << ")" << std::endl;
    glPopMatrix();
 }

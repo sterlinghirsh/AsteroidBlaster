@@ -25,12 +25,14 @@ AsteroidShip::AsteroidShip() :
       acceleration = new Vector3D(0, 0, 0);
       /* Currently not braking or acceleration. */
       isBraking = false;
+      isBoosting = false;
       brakeFactor = 2;
       /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
       curForwardAccel = curRightAccel = curUpAccel = 0;
 
       yawSpeed = rollSpeed = pitchSpeed = 0;
       maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
+      maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
       shotSpeed = 40; // Also probably will be changed with an upgrade.
 
       // Timing stuff
@@ -149,6 +151,10 @@ void AsteroidShip::updateAcceleration() {
 
 void AsteroidShip::setBrake(bool doBrake) {
    isBraking = doBrake;
+}
+
+void AsteroidShip::setBoost(bool doBoost) {
+   isBoosting = doBoost;
 }
 
 /**
@@ -270,10 +276,18 @@ void AsteroidShip::update(double timeDiff) {
       velocity->yMag -= velocity->yMag * timeDiff * brakeFactor;
       velocity->zMag -= velocity->zMag * timeDiff * brakeFactor;
    }
+   if (isBoosting) {
+      velocity->xMag += velocity->xMag * timeDiff * brakeFactor;
+      velocity->yMag += velocity->yMag * timeDiff * brakeFactor;
+      velocity->zMag += velocity->zMag * timeDiff * brakeFactor;
+   }
 
    double speed = velocity->getLength();
-   if (speed > maxSpeed)
+   if (!isBoosting && speed > maxSpeed) {
       velocity->setLength(maxSpeed);
+   } else if (isBoosting && speed > maxBoostSpeed) {
+      velocity->setLength(maxBoostSpeed);
+   }
 
    Object3D::update(timeDiff);
 
@@ -418,7 +432,7 @@ void draw_ship(){
    glEnd();
 
    /* Outline of Ship */
-   //glLineWidth(5.0);
+   glLineWidth(1.5);
    glDisable(GL_LIGHTING);
    glBegin(GL_LINE_LOOP);
    glColor3f(1, .4, 0);

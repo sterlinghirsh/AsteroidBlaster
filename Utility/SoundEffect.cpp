@@ -48,6 +48,7 @@ int SoundEffect::playSoundEffect(int idx, bool loop) {
    
 	if (handle == -1) {
 	   std::cerr << "could not play SoundEffect # " << idx << ", exciting!" << std::endl;
+           //fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
    }
    return handle;
 }
