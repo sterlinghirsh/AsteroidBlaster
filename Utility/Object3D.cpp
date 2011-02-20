@@ -75,6 +75,16 @@ void Object3D::update(double timeDifference) {
 }
 
 /**
+ * Subclasses can extend this, but this by default does nothing.
+ * This should draw anything that needs to glow in the color it should
+ * glow, and everything else in black.
+ */
+void Object3D::drawGlow() {
+  glPushMatrix();
+  glPopMatrix();
+}
+
+/**
  * Subclasses can extend this, but this does some basic movement and will
  * draw a displaylist if one exists.
  */

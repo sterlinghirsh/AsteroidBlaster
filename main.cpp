@@ -46,13 +46,13 @@ double minimapSizeFactor = 0.5;
 
 // Fonts
 int *fontsArr[] = {
-   (int*)GLUT_BITMAP_8_BY_13,
-   (int*)GLUT_BITMAP_9_BY_15,
-   (int*)GLUT_BITMAP_TIMES_ROMAN_10,
-   (int*)GLUT_BITMAP_TIMES_ROMAN_24,
-   (int*)GLUT_BITMAP_HELVETICA_10,
-   (int*)GLUT_BITMAP_HELVETICA_12,
-   (int*)GLUT_BITMAP_HELVETICA_18,
+  (int*)GLUT_BITMAP_8_BY_13,
+  (int*)GLUT_BITMAP_9_BY_15,
+  (int*)GLUT_BITMAP_TIMES_ROMAN_10,
+  (int*)GLUT_BITMAP_TIMES_ROMAN_24,
+  (int*)GLUT_BITMAP_HELVETICA_10,
+  (int*)GLUT_BITMAP_HELVETICA_12,
+  (int*)GLUT_BITMAP_HELVETICA_18,
 };
 int fontSpot = 0; // TODO: What is this?
 
@@ -78,270 +78,295 @@ GLfloat minimaplight_diff[4] = {1, 1, 1, 0.5};
 GLfloat minimaplight_spec[4] = {1, 1, 1, 0.5};
 
 void display() {
-   double startTime = doubleTime();
-   
-   // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   usePerspective();
+  double startTime = doubleTime();
 
-   glMatrixMode(GL_MODELVIEW);
+  // Clear the screen
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  usePerspective();
 
-   // Draw the main screen
-   glPushMatrix();
-      gameState->draw();
-      Sprite::drawSprites();
-      Particle::drawParticles();
-      //drawCrosshair();
+  glMatrixMode(GL_MODELVIEW);
 
-   glPopMatrix();
 
-   glPushMatrix();
-      // Draw the hud
-      glClear(GL_DEPTH_BUFFER_BIT);
-      gameState->drawHud();
-   glPopMatrix();
+  // Draw glowing objects to a texture for the bloom effect.
+  gameState->aspect = (float)GW/(float)GH;
+  //gameState->aspect = 1.0;
+  if (inputManager->bloom) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glPushMatrix();
+    gameState->drawGlow();
+    //Particle::drawParticles();
+    glBindTexture(GL_TEXTURE_2D, gameState->texture);
 
-   
-   // Draw the minimap
-   glPushMatrix();
-      /* Set the viewport to 3/4 of the way across the screen on the bottom.
-       * It should take up the bottom right corner of the screen.
-       */
-      
-      glViewport (GW * (1 - minimapSizeFactor), 0, GW * minimapSizeFactor,
-       GH * minimapSizeFactor);
-      glMatrixMode (GL_PROJECTION);      /* Select The Projection Matrix */
-      glLoadIdentity ();                     /* Reset The Projection Matrix */
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+        0,0, GW, GH, 0);
+    glPopMatrix();
+  }
 
-      // Keep our aspect ratio relative to the global width and height
-      gluPerspective(VERT_FOV, (double)GW/GH, 0.5, 20);
 
-      glMatrixMode (GL_MODELVIEW);      /* Select The Projection Matrix */
-      glLoadIdentity ();                        /* Reset The Modelview Matrix */
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      glClear (GL_DEPTH_BUFFER_BIT);      /* Clear Depth Buffer */
+  // Draw the main screen
+  glPushMatrix();
+  if (inputManager->reg) {
+    gameState->draw();
+  }
+  Sprite::drawSprites();
+  Particle::drawParticles();
+  //drawCrosshair();
+  glPopMatrix();
 
-      setMaterial(WhiteSolid);
+  glPushMatrix();
+  // Draw the hud
+  glClear(GL_DEPTH_BUFFER_BIT);
+  gameState->drawHud();
+  if (inputManager->bloom) {
+    //printf("SPECUBLOOM\n");
+    gameState->drawBloom();
+  }
+  glPopMatrix();
 
-      // eye, lookAt, and up vectors
-      gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
-      
-      // Draw objects in the map.
-      gameState->drawInMinimap();
 
-   glPopMatrix();
-   // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
-   SDL_GL_SwapBuffers();
-   displayTime += doubleTime() - startTime;
-   ++curFrame;
+  // Draw the minimap
+  glPushMatrix();
+  /* Set the viewport to 3/4 of the way across the screen on the bottom.
+   * It should take up the bottom right corner of the screen.
+   */
+
+  glViewport (GW * (1 - minimapSizeFactor), 0, GW * minimapSizeFactor,
+      GH * minimapSizeFactor);
+  glMatrixMode (GL_PROJECTION);      /* Select The Projection Matrix */
+  glLoadIdentity ();                     /* Reset The Projection Matrix */
+
+  // Keep our aspect ratio relative to the global width and height
+  gluPerspective(VERT_FOV, (double)GW/GH, 0.5, 20);
+
+  glMatrixMode (GL_MODELVIEW);      /* Select The Projection Matrix */
+  glLoadIdentity ();                        /* Reset The Modelview Matrix */
+
+  glClear (GL_DEPTH_BUFFER_BIT);      /* Clear Depth Buffer */
+
+  setMaterial(WhiteSolid);
+
+  // eye, lookAt, and up vectors
+  gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
+
+  // Draw objects in the map.
+  gameState->drawInMinimap();
+
+  glPopMatrix();
+  // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
+  SDL_GL_SwapBuffers();
+  displayTime += doubleTime() - startTime;
+  ++curFrame;
 }
 
 void init() {
-   // Initialize the SDL video/audio system
-   if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)<0) {
-      std::cerr << "Failed to initialize SDL Video/Audio!" << std::endl;
-      exit(1);
-   }
+  // Initialize the SDL video/audio system
+  if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)<0) {
+    std::cerr << "Failed to initialize SDL Video/Audio!" << std::endl;
+    exit(1);
+  }
 
-   // Tell system which functions to process when exit() call is made
-   // THIS IS COMMENTED OUT BECAUSE THE EXIT TIME INCREASES BY 3-4 SECONDS
-   //atexit(SDL_Quit);
+  // Tell system which functions to process when exit() call is made
+  // THIS IS COMMENTED OUT BECAUSE THE EXIT TIME INCREASES BY 3-4 SECONDS
+  //atexit(SDL_Quit);
 
-   // Get optimal video settings
-   vidinfo = SDL_GetVideoInfo();
+  // Get optimal video settings
+  vidinfo = SDL_GetVideoInfo();
 
-   if (!vidinfo) {
-      std::cerr << "Couldn't get video settings information! " << SDL_GetError() << std::endl;
-      exit(1);
-   }
+  if (!vidinfo) {
+    std::cerr << "Couldn't get video settings information! " << SDL_GetError() << std::endl;
+    exit(1);
+  }
 
-   //allocate channels for sound effects
-   SoundEffect::numChannels = Mix_AllocateChannels(32);
-   
-   if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,1024)<0) {
-      std::cerr << "Mix_OpenAudio Failed!" << std::endl;
-      exit(1);
-   }
-   
-   // Set opengl attributes
-   SDL_GL_SetAttribute(SDL_GL_RED_SIZE,      5);
-   SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,    5);
-   SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,     5);
+  //allocate channels for sound effects
+  SoundEffect::numChannels = Mix_AllocateChannels(32);
+
+  if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,1024)<0) {
+    std::cerr << "Mix_OpenAudio Failed!" << std::endl;
+    exit(1);
+  }
+
+  // Set opengl attributes
+  SDL_GL_SetAttribute(SDL_GL_RED_SIZE,      5);
+  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,    5);
+  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,     5);
 #ifdef __APPLE__
-   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,    32);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,    32);
 #else
-   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,    16);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,    16);
 #endif
-   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,  1);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,  1);
 
-   // Get a framebuffer
-   gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+  // Get a framebuffer
+  gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
 
-   if (!gDrawSurface) {
-      fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
-      exit(1);
-   }
-   
-   // Try to create a child window (for the minimap)
-   //SDL_Window SDL_OpenChildWindow(gDrawSurface, 10, 10, 50, 50)
+  if (!gDrawSurface) {
+    fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
+    exit(1);
+  }
 
-   // Set the timer
-   SDL_Init(SDL_INIT_TIMER);
+  // Try to create a child window (for the minimap)
+  //SDL_Window SDL_OpenChildWindow(gDrawSurface, 10, 10, 50, 50)
 
-   // Disable the cursor   
-   SDL_ShowCursor(SDL_DISABLE);
+  // Set the timer
+  SDL_Init(SDL_INIT_TIMER);
 
-   // Set the title
-   SDL_WM_SetCaption("Asteroid Blaster", 0);   
+  // Disable the cursor
+  SDL_ShowCursor(SDL_DISABLE);
+
+  // Set the title
+  SDL_WM_SetCaption("Asteroid Blaster", 0);
 
 
-   //setup glew and GLSL
+  //setup glew and GLSL
 #ifdef __APPLE__
 #else
-   glewInit();
-   if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader && 
+  glewInit();
+  if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader &&
       GL_EXT_geometry_shader4)
-      printf("Ready for GLSL\n");
-   else {
-      printf("Not enough GLSL support\n");
-      exit(1);
-   }
+    printf("Ready for GLSL\n");
+  else {
+    printf("Not enough GLSL support\n");
+    exit(1);
+  }
 
 #endif
 
-   //set the background to be black
-   glClearColor(0.0, 0.0, 0.0, 1.0);
-   
-   //initialize some GL stuff
-   glEnable(GL_CULL_FACE);
-   glEnable(GL_DEPTH_TEST);
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   glEnable(GL_LIGHTING);
-   glEnable(GL_BLEND);
-   glEnable( GL_TEXTURE_2D );
+  //set the background to be black
+  glClearColor(0.0, 0.0, 0.0, 1.0);
+
+  //initialize some GL stuff
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_DEPTH_TEST);
+  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_BLEND);
+  glEnable( GL_TEXTURE_2D );
 
 
-   //initialize light
-   glEnable(GL_LIGHT0);
-   glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
-   glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
-   
+  //initialize light
+  glEnable(GL_LIGHT0);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
+  glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
 
-   glEnable(GL_LIGHT1);
-   glLightfv(GL_LIGHT1, GL_AMBIENT, minimaplight_amb);
-   glLightfv(GL_LIGHT1, GL_DIFFUSE, minimaplight_diff);
-   glLightfv(GL_LIGHT1, GL_SPECULAR, minimaplight_spec);
-   glLightfv(GL_LIGHT1, GL_POSITION, minimaplight_pos);
-   //glShadeModel(GL_SMOOTH);
-   glEnable(GL_NORMALIZE);
 
-   //initialize textures
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glEnable(GL_LIGHT1);
+  glLightfv(GL_LIGHT1, GL_AMBIENT, minimaplight_amb);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE, minimaplight_diff);
+  glLightfv(GL_LIGHT1, GL_SPECULAR, minimaplight_spec);
+  glLightfv(GL_LIGHT1, GL_POSITION, minimaplight_pos);
+  //glShadeModel(GL_SMOOTH);
+  glEnable(GL_NORMALIZE);
+
+  //initialize textures
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 }
 
 void timerFunc() {
-   static unsigned long lastSecond = 0;
-   static double lastTime = 0;
-   
-   // Get the time
-   double curTime = doubleTime();
+  static unsigned long lastSecond = 0;
+  static double lastTime = 0;
 
-   if (lastTime == 0) {
-      lastTime = curTime;
-      return;
-   }
+  // Get the time
+  double curTime = doubleTime();
 
-   double timeDiff = curTime - lastTime;
-   gameState->setCurFPS(1 / timeDiff);
+  if (lastTime == 0) {
+    lastTime = curTime;
+    return;
+  }
 
-   gameState->update(timeDiff);
+  double timeDiff = curTime - lastTime;
+  gameState->setCurFPS(1 / timeDiff);
 
-   // Check for all collisions
-   gameState->checkCollisions();
-   
-   lastTime = curTime;
-   
-   // Timing statistics
-   if (floor(curTime) > lastSecond) {
-      lastSecond = floor(curTime);
-   }
+  gameState->update(timeDiff);
+
+  // Check for all collisions
+  gameState->checkCollisions();
+
+  lastTime = curTime;
+
+  // Timing statistics
+  if (floor(curTime) > lastSecond) {
+    lastSecond = floor(curTime);
+  }
 }
 
 int main(int argc, char* argv[]) {
-   srand(time(NULL));
-   GW = 800;
-   GH = 600;
-   
-   //initialize glut
-   glutInit(&argc, argv);
-   
-   // Initialize GL/SDL/glew/GLSL related things
-   init();
+  srand(time(NULL));
+  GW = 800;
+  GH = 600;
+
+  //initialize glut
+  glutInit(&argc, argv);
+
+  // Initialize GL/SDL/glew/GLSL related things
+  init();
+
+  // Load textures and shaders
+  new TextureImporter("Images/SkybusterExplosion.bmp");
+  // get particle texture
+  Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
+  //load the shader files
+  tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
+  hBlurShader = setShaders( (char *) "./Shaders/hblur.vert", (char *) "./Shaders/hblur.frag");
+  vBlurShader = setShaders( (char *) "./Shaders/vblur.vert", (char *) "./Shaders/vblur.frag");
+
+  //load and start BGM
+  //Music::Add("Sounds/Mists_of_Time-4T.ogg");
+  Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
+  Music::playMusic("8-bit3.ogg");
+
+  //load sound effects
+  //SoundEffect::Add("Sounds/blaster1.wav");
+  SoundEffect::Add("Sounds/blaster2.wav"); // 0
+  SoundEffect::Add("Sounds/BlasterShot2.wav"); // 1
+  //SoundEffect::Add("Sounds/railgun1.wav");
+  SoundEffect::Add("Sounds/Rail2.wav"); // 2
+  SoundEffect::Add("Sounds/Explosion1.wav"); // 3
+  SoundEffect::Add("Sounds/CrystalCollect.wav"); // 4
+  SoundEffect::Add("Sounds/TractorBeam.wav"); // 5
+  SoundEffect::Add("Sounds/ShipEngine.wav"); // 6
+  SoundEffect::Add("Sounds/GameOver.wav"); // 7
+
+  //get the quadradic up
+  quadric = gluNewQuadric();
+  //set the quadradic up
+  gluQuadricNormals(quadric, GLU_SMOOTH);
+  gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
 
 
-   // Load textures and shaders
-   new TextureImporter("Images/SkybusterExplosion.bmp");
-   // get particle texture
-   Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
-   //load the shader files
-   tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
+  //Initialize gameState
+  gameState = new GameState(WORLD_SIZE);
+  //initialize menu
+  menu = new Menu();
 
-   //load and start BGM
-   //Music::Add("Sounds/Mists_of_Time-4T.ogg");
-   Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
-   Music::playMusic("8-bit3.ogg");
-   
-   //load sound effects
-   //SoundEffect::Add("Sounds/blaster1.wav");
-   SoundEffect::Add("Sounds/blaster2.wav"); // 0
-   SoundEffect::Add("Sounds/BlasterShot2.wav"); // 1
-   //SoundEffect::Add("Sounds/railgun1.wav");
-   SoundEffect::Add("Sounds/Rail2.wav"); // 2
-   SoundEffect::Add("Sounds/Explosion1.wav"); // 3
-   SoundEffect::Add("Sounds/CrystalCollect.wav"); // 4
-   SoundEffect::Add("Sounds/TractorBeam.wav"); // 5
-   SoundEffect::Add("Sounds/ShipEngine.wav"); // 6
-   SoundEffect::Add("Sounds/GameOver.wav"); // 7
-   
-   //get the quadradic up
-   quadric = gluNewQuadric();
-   //set the quadradic up
-   gluQuadricNormals(quadric, GLU_SMOOTH);
-   gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
+  //Initialize the input manager
+  inputManager = new InputManager();
+  //Connect the input manager to the gameState
+  inputManager->addReceiver(gameState);
+  inputManager->addReceiver(menu);
 
+  //declare the event that will be reused
+  SDL_Event event;
 
-   //Initialize gameState
-   gameState = new GameState(WORLD_SIZE);
-   //initialize menu
-   menu = new Menu();
-   
-   //Initialize the input manager   
-   inputManager = new InputManager();
-   //Connect the input manager to the gameState
-   inputManager->addReceiver(gameState);
-   inputManager->addReceiver(menu);
-   
-   //declare the event that will be reused
-   SDL_Event event;
-   
-   while (running) {
-      if (menu->isActive()) {
-         menu->draw();
-      } else if (gameState->isGameRunning()) {
-         timerFunc();
-         display();
-      }
-      
-      while (SDL_PollEvent(&event)) {
-         inputManager->update(event);
-      }
-   }
-   delete inputManager;
-   return 0;
+  while (running) {
+    if (menu->isActive()) {
+      menu->draw();
+    } else if (gameState->isGameRunning()) {
+      timerFunc();
+      display();
+    }
+
+    while (SDL_PollEvent(&event)) {
+      inputManager->update(event);
+    }
+  }
+  delete inputManager;
+  return 0;
 }

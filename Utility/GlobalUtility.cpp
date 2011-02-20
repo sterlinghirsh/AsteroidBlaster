@@ -26,6 +26,8 @@ unsigned long curFrame;
 bool drawPerspective = true;
 GLUquadricObj *quadric;
 GLuint tractorBeamShader;
+GLuint hBlurShader;
+GLuint vBlurShader;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 
@@ -310,25 +312,25 @@ GLuint setShaders(char * vert, char * frag, char * geom) {
 
 	v = glCreateShader(GL_VERTEX_SHADER);
 	f = glCreateShader(GL_FRAGMENT_SHADER);
-	g = glCreateShader(GL_GEOMETRY_SHADER_EXT);
+	//g = glCreateShader(GL_GEOMETRY_SHADER_EXT);
 
 	vs = textFileRead(vert);
 	fs = textFileRead(frag);
-	gs = textFileRead(geom);
+	//gs = textFileRead(geom);
 
 	const char * vv = vs;
 	const char * ff = fs;
-	const char * gg = gs;
+	//const char * gg = gs;
 
 	glShaderSource(v, 1, &vv, NULL);
 	glShaderSource(f, 1, &ff, NULL);
-	glShaderSource(g, 1, &gg, NULL);
+	//glShaderSource(g, 1, &gg, NULL);
 
-	free(vs); free(fs); free(gs);
+	free(vs); free(fs); //free(gs);
 
 	glCompileShader(v);
 	glCompileShader(f);
-	glCompileShader(g);
+	//glCompileShader(g);
 
 	//fprintf(stderr, "vertex\n");
 	printShaderLog(v);
@@ -337,17 +339,60 @@ GLuint setShaders(char * vert, char * frag, char * geom) {
 	printShaderLog(f);
 
 	//fprintf(stderr, "geometry\n");
-	printShaderLog(g);
+	//printShaderLog(g);
 
 	pro = glCreateProgram();
 	glAttachShader(pro,v);
 	glAttachShader(pro,f);
-	glAttachShader(pro,g);
+	//glAttachShader(pro,g);
 
 	// geometry shader details
 	// input: GL_POINTS, GL_LINES, GL_LINES_ADJACENCY_EXT, GL_TRIANGLES, GL_TRIANGLES_ADJACENCY_EXT
 	// output: GL_POINTS, GL_LINE_STRIP, GL_TRIANGLE_STRIP 
 	
+	glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
+	glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
+	int temp;
+	glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT,&temp);
+	glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
+	
+	glLinkProgram(pro);
+	printProgramLog(pro);
+
+	return(pro);
+}
+
+GLuint setShaders(char * vert, char * frag) {
+	GLuint v,f, pro;
+	char *vs, *fs;
+
+	v = glCreateShader(GL_VERTEX_SHADER);
+	f = glCreateShader(GL_FRAGMENT_SHADER);
+
+	vs = textFileRead(vert);
+	fs = textFileRead(frag);
+
+	const char * vv = vs;
+	const char * ff = fs;
+
+	glShaderSource(v, 1, &vv, NULL);
+	glShaderSource(f, 1, &ff, NULL);
+
+	free(vs); free(fs);
+
+	glCompileShader(v);
+	glCompileShader(f);
+
+	//fprintf(stderr, "vertex\n");
+	printShaderLog(v);
+
+	//fprintf(stderr, "fragment\n");
+	printShaderLog(f);
+
+	pro = glCreateProgram();
+	glAttachShader(pro,v);
+	glAttachShader(pro,f);
+
 	glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
 	glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
 	int temp;

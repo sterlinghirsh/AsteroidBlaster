@@ -155,6 +155,45 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    updateBoundingBox();
 }
 
+void Asteroid3D::drawGlow() {
+   glColor3f(1, 1, 1);
+   glDisable(GL_LIGHTING);
+   // Call the display list if it has one.
+   Object3D::draw();
+   glEnable(GL_COLOR_MATERIAL);
+   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   glPushMatrix();
+   glTranslatef(position->x, position->y, position->z);
+   glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
+   glScalef(scalex, scaley, scalez);
+
+   glColor3f(0.0, 0.0, 0.0);
+   glPolygonOffset(1.0f, 1.0f);
+   glEnable(GL_POLYGON_OFFSET_FILL);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   mesh.draw(false);
+   glDisable(GL_POLYGON_OFFSET_FILL);
+
+   double step = (initH - health + 1);
+   double stepR = .004 / initH * step;
+   double stepG = .388 / initH * step;
+   double stepB = 1.0 / initH * step;
+   glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
+   
+   glLineWidth(LINE_W);
+   glEnable(GL_POLYGON_OFFSET_LINE);
+   glPolygonOffset(-1.0f, -1.0f);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+   mesh.drawLines(false);
+   glDisable(GL_POLYGON_OFFSET_LINE);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glLineWidth(1);
+
+   glDisable(GL_COLOR_MATERIAL);
+   glEnable(GL_LIGHTING);
+   glPopMatrix();
+}
+
 void Asteroid3D::draw() {
    glColor3f(1, 1, 1);
    setMaterial(Rock);
@@ -190,14 +229,14 @@ void Asteroid3D::draw() {
    //}
    //glColor3f(0.996, 0.612, 0.0);
 
-   //glLineWidth(2);
+   glLineWidth(LINE_W);
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
    mesh.drawLines(false);
    glDisable(GL_POLYGON_OFFSET_LINE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   //glLineWidth(1);
+   glLineWidth(1);
 
    glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();

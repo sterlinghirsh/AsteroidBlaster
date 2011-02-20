@@ -31,6 +31,8 @@ extern unsigned long curFrame;
 extern bool drawPerspective;
 extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
+extern GLuint hBlurShader;
+extern GLuint vBlurShader;
 extern SDL_Surface* gDrawSurface;
 extern const SDL_VideoInfo* vidinfo;
 
@@ -45,6 +47,7 @@ double distance2D(double x1, double y1, double x2 = 0, double y2 = 0);
 double clamp(double, double, double);
 double randdouble();
 GLuint setShaders(char * vert, char * frag, char * geom);
+GLuint setShaders(char * vert, char * frag);
 char *textFileRead(char *fn);
 void printShaderLog(GLuint obj);
 void printProgramLog(GLuint obj);

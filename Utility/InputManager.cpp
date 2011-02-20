@@ -17,6 +17,8 @@ using namespace std;
 
 InputManager::InputManager() {
    fullScreen = false;
+   bloom = true;
+   reg = true;
    oldGW = GW;
    oldGH = GH;
 }
@@ -73,6 +75,12 @@ void InputManager::update(const SDL_Event& e) {
          gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
          fullScreen = !fullScreen;
       }
+   }
+   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F2) {
+     bloom = !bloom;
+   }
+   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F3) {
+     reg = !reg;
    }
 }
 

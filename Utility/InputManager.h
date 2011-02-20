@@ -36,6 +36,8 @@ class InputManager {
    void addReceiver(InputReceiver *kbReceiver);
    void removeReceiver(InputReceiver* inReceiver);
    
+   bool bloom;
+   bool reg;
    private:
    bool fullScreen;
    int oldGW;

@@ -11,9 +11,10 @@
 #include "Utility/Point3D.h"
 #include "Utility/Object3D.h"
 #include "Items/Shard.h"
-//#include "Items/Ring.h"
 #include <list>
 #include <vector>
+
+#define LINE_W 1.5
 
 class Asteroid3D : public Object3D {
    public:
@@ -31,6 +32,7 @@ class Asteroid3D : public Object3D {
       virtual ~Asteroid3D();
       void InitAsteroid(double r, double worldSizeIn);
       void draw();
+      void drawGlow();
       void makeStrip(Ring r1, Ring r2);
       void update(double timeDiff);
       virtual void handleCollision(Object3D* other);
