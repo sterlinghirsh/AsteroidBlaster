@@ -180,7 +180,7 @@ void Asteroid3D::drawGlow() {
    double stepB = 1.0 / initH * step;
    glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
    
-   glLineWidth(LINE_W);
+   glLineWidth(ASTEROID3D_LINE_W);
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -229,7 +229,7 @@ void Asteroid3D::draw() {
    //}
    //glColor3f(0.996, 0.612, 0.0);
 
-   glLineWidth(LINE_W);
+   glLineWidth(ASTEROID3D_LINE_W);
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

@@ -312,25 +312,25 @@ GLuint setShaders(char * vert, char * frag, char * geom) {
 
 	v = glCreateShader(GL_VERTEX_SHADER);
 	f = glCreateShader(GL_FRAGMENT_SHADER);
-	//g = glCreateShader(GL_GEOMETRY_SHADER_EXT);
+	g = glCreateShader(GL_GEOMETRY_SHADER_EXT);
 
 	vs = textFileRead(vert);
 	fs = textFileRead(frag);
-	//gs = textFileRead(geom);
+	gs = textFileRead(geom);
 
 	const char * vv = vs;
 	const char * ff = fs;
-	//const char * gg = gs;
+	const char * gg = gs;
 
 	glShaderSource(v, 1, &vv, NULL);
 	glShaderSource(f, 1, &ff, NULL);
-	//glShaderSource(g, 1, &gg, NULL);
+	glShaderSource(g, 1, &gg, NULL);
 
 	free(vs); free(fs); //free(gs);
 
 	glCompileShader(v);
 	glCompileShader(f);
-	//glCompileShader(g);
+	glCompileShader(g);
 
 	//fprintf(stderr, "vertex\n");
 	printShaderLog(v);
@@ -339,12 +339,12 @@ GLuint setShaders(char * vert, char * frag, char * geom) {
 	printShaderLog(f);
 
 	//fprintf(stderr, "geometry\n");
-	//printShaderLog(g);
+	printShaderLog(g);
 
 	pro = glCreateProgram();
 	glAttachShader(pro,v);
 	glAttachShader(pro,f);
-	//glAttachShader(pro,g);
+	glAttachShader(pro,g);
 
 	// geometry shader details
 	// input: GL_POINTS, GL_LINES, GL_LINES_ADJACENCY_EXT, GL_TRIANGLES, GL_TRIANGLES_ADJACENCY_EXT
