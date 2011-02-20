@@ -41,6 +41,7 @@ class Shard : public Object3D {
       void genOrbiters();
       void InitShard(double r, double worldSizeIn);
       void draw();
+      void drawGlow();
       void makeStrip(Ring r1, Ring r2);
       void update(double timeDiff);
       virtual void handleCollision(Object3D* other);
