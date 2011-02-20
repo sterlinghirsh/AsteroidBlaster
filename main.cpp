@@ -72,6 +72,11 @@ GLfloat headlight_amb[4] = {0.1, 0.1, 0.1, 1};
 GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
 GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
 
+GLfloat minimaplight_pos[4] = {0, 0, 0, 1};
+GLfloat minimaplight_amb[4] = {1, 1, 1, 0.5};
+GLfloat minimaplight_diff[4] = {1, 1, 1, 0.5};
+GLfloat minimaplight_spec[4] = {1, 1, 1, 0.5};
+
 void display() {
    double startTime = doubleTime();
    
@@ -222,6 +227,13 @@ void init() {
    glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
    glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
    glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
+   
+
+   glEnable(GL_LIGHT1);
+   glLightfv(GL_LIGHT1, GL_AMBIENT, minimaplight_amb);
+   glLightfv(GL_LIGHT1, GL_DIFFUSE, minimaplight_diff);
+   glLightfv(GL_LIGHT1, GL_SPECULAR, minimaplight_spec);
+   glLightfv(GL_LIGHT1, GL_POSITION, minimaplight_pos);
    //glShadeModel(GL_SMOOTH);
    glEnable(GL_NORMALIZE);
 

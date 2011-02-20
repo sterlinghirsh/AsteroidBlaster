@@ -766,14 +766,22 @@ void AsteroidShip::prevWeapon() {
 void AsteroidShip::drawWeaponReadyBar() {
    // We expect to be in ortho right now.
    double coolDownAmount = weapons[currentWeapon]->getCoolDownAmount();
-   double boxHeight = 1;
-   double boxWidth = 0.05; 
+   double fullHeight = 1;
    double innerBoxWidth = 0.05;
-   double innerBoxHeight = coolDownAmount * boxHeight - 0.01;
+   double innerBoxHeight = coolDownAmount * fullHeight;
+   const double outerBoxThickness = 0.01;
    glPushMatrix();
       glTranslatef(p2wx(10), p2wy(500), 0);
-      glColor3f(1 - coolDownAmount, coolDownAmount, 0);
+      setMaterial(BlackSolid);
       glBegin(GL_QUADS);
+         // First draw black box.
+         glColor3f(0, 0, 0);
+         glVertex3f(-outerBoxThickness, fullHeight + outerBoxThickness, -0.01);
+         glVertex3f(innerBoxWidth + outerBoxThickness, fullHeight + outerBoxThickness, -0.01);
+         glVertex3f(innerBoxWidth + outerBoxThickness, -outerBoxThickness, -0.01);
+         glVertex3f(-outerBoxThickness, -outerBoxThickness, -0.01);
+
+         glColor3f(1 - coolDownAmount, coolDownAmount, -0.01);
          glVertex3f(0, innerBoxHeight, 0); // Top left
          glVertex3f(innerBoxWidth, innerBoxHeight, 0); // top Right
          glVertex3f(innerBoxWidth, 0, 0); // bottom Right

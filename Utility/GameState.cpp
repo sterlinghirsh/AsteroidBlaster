@@ -125,6 +125,8 @@ void GameState::drawInMinimap() {
 
    positionVector.updateMagnitude(*ship->position);
 
+   glDisable(GL_LIGHT0); // turn off the normal light, put a light at the center.
+   glEnable(GL_LIGHT1);
 
    glPushMatrix();
    ship->glRotate(false);
@@ -207,6 +209,8 @@ void GameState::drawInMinimap() {
    
    // Draw the sphere around it.
    glEnable(GL_LIGHTING);
+   glDisable(GL_LIGHT1); // Reenable the normal light.
+   glEnable(GL_LIGHT0);
    setMaterial(GrayTransparent);
    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    glDisable(GL_CULL_FACE);
