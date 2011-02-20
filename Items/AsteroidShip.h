@@ -101,6 +101,7 @@ class AsteroidShip : public Object3D {
       Vector3D* getShotDirection();
 
    protected:
+      int soundHandle;
       std::vector<Weapon*> weapons;
       Radar* radar; // This is the ship's radar that it should query for information about its surroundings
 

@@ -279,13 +279,14 @@ int main(int argc, char* argv[]) {
    
    //load sound effects
    //SoundEffect::Add("Sounds/blaster1.wav");
-   SoundEffect::Add("Sounds/blaster2.wav");
-   SoundEffect::Add("Sounds/BlasterShot2.wav");
+   SoundEffect::Add("Sounds/blaster2.wav"); // 0
+   SoundEffect::Add("Sounds/BlasterShot2.wav"); // 1
    //SoundEffect::Add("Sounds/railgun1.wav");
-   SoundEffect::Add("Sounds/Rail2.wav");
-   SoundEffect::Add("Sounds/Explosion1.wav");
-   SoundEffect::Add("Sounds/CrystalCollect.wav");
-   SoundEffect::Add("Sounds/TractorBeam.wav");
+   SoundEffect::Add("Sounds/Rail2.wav"); // 2
+   SoundEffect::Add("Sounds/Explosion1.wav"); // 3
+   SoundEffect::Add("Sounds/CrystalCollect.wav"); // 4
+   SoundEffect::Add("Sounds/TractorBeam.wav"); // 5
+   SoundEffect::Add("Sounds/ShipEngine.wav"); // 6
    
    //get the quadradic up
    quadric = gluNewQuadric();

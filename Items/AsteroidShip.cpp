@@ -8,6 +8,7 @@
 #include <math.h>
 #include <time.h>
 #include "Utility/Quaternion.h"
+#include "Utility/SoundEffect.h"
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
@@ -80,6 +81,7 @@ AsteroidShip::AsteroidShip() :
       weapons.push_back(new TractorBeam(this));
       // The ship's currently selected weapon.
       currentWeapon = 0;
+      soundHandle = -1;
    }
 
 /**
@@ -285,7 +287,16 @@ void AsteroidShip::update(double timeDiff) {
       (*iter)->update(timeDiff);
    }
 
+   if (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0) {
+      if (soundHandle == -1)
+         soundHandle = SoundEffect::playSoundEffect(6, true);
+   } else {
+      if (soundHandle != -1) {
+         SoundEffect::stopSoundEffect(soundHandle);
+         soundHandle = -1;
+      }
 
+   }
 
    createEngineParticles(timeDiff);
 }
