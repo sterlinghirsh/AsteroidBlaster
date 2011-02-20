@@ -37,14 +37,19 @@ void SoundEffect::Add(const char *file) {
 }
 
 
-void SoundEffect::playSoundEffect(int idx) {
+/**
+ * loop defaults to false.
+ */
+int SoundEffect::playSoundEffect(int idx, bool loop) {
    std::list<Mix_Chunk*>::iterator it = soundEffects.begin();
    std::advance(it, idx);
+
+   int handle = Mix_PlayChannel(-1, *it, loop ? -1 : 0);
    
-	if(Mix_PlayChannel(-1, *it, 0)==-1) {
+	if (handle == -1) {
 	   std::cerr << "could not play SoundEffect # " << idx << ", exiting!" << std::endl;
-		//exit(0);
    }
+   return handle;
 }
 
 void SoundEffect::pauseSoundEffect(int idx) {

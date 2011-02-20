@@ -13,10 +13,10 @@ class SoundEffect {
       static int numChannels;
       
       static void Add(const char *file);
-      static void playSoundEffect(int idx);
-      void pauseSoundEffect(int idx);
+      static int playSoundEffect(int idx, bool loop = false);
+      static void pauseSoundEffect(int idx);
       void resumeSoundEffect(int idx);
-      void stopSoundEffect(int idx);
+      static void stopSoundEffect(int idx);
       int currentlyPlaying(int idx);
 
    private:
@@ -26,5 +26,3 @@ class SoundEffect {
 };
 
 #endif
-
-

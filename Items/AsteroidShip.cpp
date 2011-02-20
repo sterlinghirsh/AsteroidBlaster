@@ -279,6 +279,14 @@ void AsteroidShip::update(double timeDiff) {
    pitch(timeDiff * pitchSpeed);
    yaw(timeDiff * yawSpeed);
 
+   // Update weapons.
+   for (std::vector<Weapon*>::iterator iter = weapons.begin();
+    iter != weapons.end(); ++iter) {
+      (*iter)->update(timeDiff);
+   }
+
+
+
    createEngineParticles(timeDiff);
 }
 

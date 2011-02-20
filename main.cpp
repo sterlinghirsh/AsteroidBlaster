@@ -285,6 +285,7 @@ int main(int argc, char* argv[]) {
    SoundEffect::Add("Sounds/Rail2.wav");
    SoundEffect::Add("Sounds/Explosion1.wav");
    SoundEffect::Add("Sounds/CrystalCollect.wav");
+   SoundEffect::Add("Sounds/TractorBeam.wav");
    
    //get the quadradic up
    quadric = gluNewQuadric();

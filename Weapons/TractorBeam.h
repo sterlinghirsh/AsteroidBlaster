@@ -22,6 +22,11 @@ class TractorBeam : public Weapon {
       virtual void update(double timeDiff);
       virtual void debug();
       virtual void fire();
+   private:
+      int currentFrame;
+      int lastFiredFrame;
+      bool soundPlaying;
+      int soundHandle;
 };
 
 #endif

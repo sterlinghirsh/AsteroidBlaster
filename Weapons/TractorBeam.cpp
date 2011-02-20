@@ -8,10 +8,14 @@
 #include "Weapons/TractorBeam.h"
 #include "Utility/GlobalUtility.h"
 #include "Shots/TractorBeamShot.h"
+#include "Utility/SoundEffect.h"
 
 TractorBeam::TractorBeam(AsteroidShip* owner) : Weapon(owner) {
    coolDown = 0;
    name = "Tractor Beam";
+   currentFrame = 1; // Start this 1 ahead of lastFiredFame.
+   lastFiredFrame = 0; // We use these three to handle the audio.
+   soundPlaying = false;
 }
 
 TractorBeam::~TractorBeam() {
@@ -19,14 +23,23 @@ TractorBeam::~TractorBeam() {
 }
 
 void TractorBeam::update(double timeDiff) {
-   // Do nothing.
+   // Stop sound if we're no longer firing.
+   if (currentFrame == lastFiredFrame && !soundPlaying) {
+      // We should play sound.
+      soundPlaying = true;
+      soundHandle = SoundEffect::playSoundEffect(5, true);
+   } else if (currentFrame != lastFiredFrame && soundPlaying) {
+      SoundEffect::stopSoundEffect(soundHandle);
+      soundPlaying = false;
+   }
+   ++currentFrame;
 }
 
 void TractorBeam::fire() {
    Point3D start = *ship->position;
    gameState->custodian.add(new TractorBeamShot(start, ship->shotDirection, ship));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new TractorBeamShot(start, ship->shotDirection, ship));
-   
+   lastFiredFrame = currentFrame;
 }
 
 void TractorBeam::debug() {
