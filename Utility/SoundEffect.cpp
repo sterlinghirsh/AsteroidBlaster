@@ -47,7 +47,7 @@ int SoundEffect::playSoundEffect(int idx, bool loop) {
    int handle = Mix_PlayChannel(-1, *it, loop ? -1 : 0);
    
 	if (handle == -1) {
-	   std::cerr << "could not play SoundEffect # " << idx << ", exiting!" << std::endl;
+	   std::cerr << "could not play SoundEffect # " << idx << ", exciting!" << std::endl;
    }
    return handle;
 }
