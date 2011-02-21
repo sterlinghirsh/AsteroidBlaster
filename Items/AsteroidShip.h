@@ -115,6 +115,9 @@ class AsteroidShip : public Object3D {
       double maxForwardAccel;
       double maxUpAccel;
       double maxRightAccel;
+      double maxBoostForwardAccel;
+      double maxBoostUpAccel;
+      double maxBoostRightAccel;
       double maxYawSpeed;
       double maxPitchSpeed;
       double maxRollSpeed;

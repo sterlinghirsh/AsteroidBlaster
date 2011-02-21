@@ -54,6 +54,7 @@ class Weapon {
          WeaponType type; // Do we need this?
          double timeLastFired;
          double coolDown;
+         double damage;
          std::string name;
 };
 

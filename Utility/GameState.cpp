@@ -46,6 +46,7 @@ GameState::GameState(double worldSizeIn) {
 
   scoreToWin = 15000;
   thirdPerson = true;
+  godMode = false;
 
   isW = isA = isS = isD = false;
   /* A view frustum culled list of objects to be used for drawing and by

@@ -9,10 +9,10 @@
 #include "Utility/GlobalUtility.h"
 #include "Shots/ProjectileShot.h"
 #include "Utility/Point3D.h"
-#include "Utility/SoundEffect.h" 
+#include "Utility/SoundEffect.h"
 
-Blaster::Blaster(AsteroidShip* owner) 
- : Weapon(owner) {
+Blaster::Blaster(AsteroidShip* owner)
+: Weapon(owner) {
    shotSpeed = 40; // Units per second
    coolDown = 0.15; // Seconds
    randomVariationAmount = 2; // Units
@@ -37,7 +37,7 @@ void Blaster::update(double timeDiff) {
  */
 void Blaster::fire() {
    static Vector3D randomVariation;
-   if (!isCooledDown())
+   if (!isCooledDown() && !gameState->godMode)
       return;
    // Update timeLastFired with new current time.
    timeLastFired = doubleTime();
@@ -51,8 +51,10 @@ void Blaster::fire() {
    shotDirection.addUpdate(randomVariation);
    ship->shotDirection.movePoint(start);
    gameState->custodian.add(new ProjectileShot(start,
-    shotDirection, ship));
-   SoundEffect::playSoundEffect(1);
+            shotDirection, ship));
+   if (!gameState->godMode) {
+      SoundEffect::playSoundEffect(1);
+   }
 }
 
 /**
@@ -73,17 +75,17 @@ Point3D Blaster::project(Object3D* target) {
    double speed = 40;
    double time = 0, dist = 0;
    int iterations = 0;
-  
+
    Point3D targetPos = *target->position;
    Point3D curTarget = targetPos;
    Point3D dp;
-   
+
    // This loop will choose the spot that we want to be shooting at.
    do {
       // time is the distance from the ship to the target according to the
       // speed of the bullet.
       time = ship->position->distanceFrom(curTarget) / speed;
-      
+
       // dp is the distance the asteroid traveled in the time it took for our
       // bullet to get to the point we are considering (curTarget).
       dp = target->velocity->scalarMultiply(time);

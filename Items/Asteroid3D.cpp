@@ -12,7 +12,7 @@
 #include "Shots/ProjectileShot.h"
 #include "Shots/BeamShot.h"
 #include "Shots/TractorBeamShot.h"
-#include "Utility/SoundEffect.h" 
+#include "Utility/SoundEffect.h"
 #include <algorithm>
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -179,7 +179,7 @@ void Asteroid3D::drawGlow() {
    double stepG = .388 / initH * step;
    double stepB = 1.0 / initH * step;
    glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
-   
+
    glLineWidth(ASTEROID3D_LINE_W);
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
@@ -290,6 +290,19 @@ void Asteroid3D::handleCollision(Object3D* other) {
    AsteroidShip* ship;
    Shot* shot;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+      double d = (*(otherAsteroid->position)).distanceFrom(*position);
+      double combinedRad = otherAsteroid->radius + radius;
+      double maxR = max(radius, otherAsteroid->radius);
+      //printf("distance between stroids: %f (%f)\n", d, combinedRad);
+      if (d <=  maxR) {
+         printf("stroid is stuck\n");
+         shouldRemove = true;
+         if (radius > 2) {
+            int dimension = rand() % 3;
+            custodian->add(makeChild(0, dimension));
+            custodian->add(makeChild(1, dimension));
+         }
+      }
       double speed = velocity->getLength();
 
       velocity->updateMagnitude(*(otherAsteroid->position), *position);
@@ -309,7 +322,11 @@ void Asteroid3D::handleCollision(Object3D* other) {
          } else if (dynamic_cast<TractorBeamShot*>(other) != NULL) {
             // Do nothing.
          } else {
-            health--;
+            if (gameState->godMode) {
+               health = 0;
+            } else {
+               health--;
+            }
             double speed = velocity->getLength();
             speed += 5.0 / radius;
             velocity->addUpdate(*shot->velocity);

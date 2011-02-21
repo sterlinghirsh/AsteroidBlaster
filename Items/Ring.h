@@ -10,6 +10,7 @@ class Ring {
     void generate();
     MeshPoint makePt(double angle);
     int upCur(Ring prev, int ndx);
+    double maxFromCenter();
     double maxX();
     double minX();
     double maxY();

@@ -38,6 +38,7 @@ class InputManager {
    
    bool bloom;
    bool reg;
+   bool godMode;
    private:
    bool fullScreen;
    int oldGW;

@@ -364,6 +364,11 @@ int main(int argc, char* argv[]) {
       display();
     }
 
+    if (inputManager->godMode != 0 && inputManager->godMode != 1) {
+       printf("error in inputManager: %d\n", inputManager->godMode);
+    }
+    gameState->godMode = inputManager->godMode;
+
     while (SDL_PollEvent(&event)) {
       inputManager->update(event);
     }

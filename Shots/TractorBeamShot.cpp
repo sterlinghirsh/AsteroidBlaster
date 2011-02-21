@@ -133,6 +133,10 @@ bool TractorBeamShot::detectCollision(Object3D* other, bool checkOther) {
    if (other == owner)
       return false;
    
+   if (gameState->godMode) {
+      return true;
+   }
+
    // This is how far it is for position to other->position.
    Vector3D shotToTarget(*position, *other->position);
    

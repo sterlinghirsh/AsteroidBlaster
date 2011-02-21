@@ -9,12 +9,12 @@
 #include "Utility/GlobalUtility.h"
 #include "Shots/BeamShot.h"
 #include "Utility/Quaternion.h"
-#include "Utility/SoundEffect.h" 
+#include "Utility/SoundEffect.h"
 
 RailGun::RailGun(AsteroidShip* owner)
- : Weapon(owner) {
-    coolDown = 2; // Seconds
-    name = "Rail Gun";
+: Weapon(owner) {
+   coolDown = 2; // Seconds
+   name = "Rail Gun";
 }
 
 RailGun::~RailGun() {
@@ -33,14 +33,16 @@ void RailGun::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void RailGun::fire() {
-   if (!isCooledDown())
+   if (!isCooledDown() && !gameState->godMode)
       return;
    timeLastFired = doubleTime();
    Point3D start = *ship->position;
    // Move start point by the shotDirection vector, multiplied by a scalar
    gameState->custodian.add(new BeamShot(start,
-    ship->shotDirection, ship));
-   SoundEffect::playSoundEffect(2);
+            ship->shotDirection, ship));
+   if (!gameState->godMode) {
+      SoundEffect::playSoundEffect(2);
+   }
 }
 
 /**

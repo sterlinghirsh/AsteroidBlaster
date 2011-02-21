@@ -14,6 +14,8 @@
 #define M_PI           3.14159265358979323846
 #endif
 
+#define BOOST_SCALE 2.0
+
 using namespace std;
 extern Custodian* custodian;
 
@@ -70,13 +72,14 @@ AsteroidShip::AsteroidShip() :
       maxPitchSpeed = 2;
       maxRollSpeed = 2;
 
+
       // TODO: create all of the shooters that this ship will have.
       shooter = new ShootingAI(this);
       flyingAI = new FlyingAI(this);
 
       // Create our Radar
       radar = new Radar(this);
-      
+
       // Add weapons to the list!
       weapons.push_back(new Blaster(this));
       weapons.push_back(new RailGun(this));
@@ -176,7 +179,7 @@ void AsteroidShip::accelerateRight(int dir) {
 }
 
 void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
- Vector3D& offsetDirectionX, Vector3D& offsetDirectionY) {
+      Vector3D& offsetDirectionX, Vector3D& offsetDirectionY) {
    static Vector3D particleVariation;
    static Point3D curPoint;
    static Vector3D initialOffset;
@@ -196,15 +199,15 @@ void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
    //curPoint = position->add(randomPoint);
    initialOffset.movePoint(curPoint);
    randomOffset.movePoint(curPoint);
-   Particle::Add(new Point3D(curPoint), 
-    new Vector3D(baseDirection.add(particleVariation)));
+   Particle::Add(new Point3D(curPoint),
+         new Vector3D(baseDirection.add(particleVariation)));
 }
 
 void AsteroidShip::createEngineParticles(double timeDiff) {
    //add particles in the opposite direction of the acceration
-   
+
    const float increment = 0.01f;
-   
+
    //const float length = acceleration->getLength;
    const int newParticlesPerSecond = 500;
    static Vector3D baseParticleAcceleration;
@@ -229,7 +232,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
          addNewParticle(emitter, baseParticleAcceleration, *forward, *up);
       }
    }
-   
+
    // Next do forward upAcceleration.
    if (curForwardAccel != 0) {
       // We want to do two streams.
@@ -250,7 +253,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
          addNewParticle(initialPoint, baseParticleAcceleration, *right, *up);
       }
-      
+
       // Next do the middle side.
       //right->movePoint(initialPoint, 0.1);
       baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
@@ -297,7 +300,7 @@ void AsteroidShip::update(double timeDiff) {
 
    // Update weapons.
    for (std::vector<Weapon*>::iterator iter = weapons.begin();
-    iter != weapons.end(); ++iter) {
+         iter != weapons.end(); ++iter) {
       (*iter)->update(timeDiff);
    }
 
@@ -573,12 +576,13 @@ void AsteroidShip::rotate(){
 
 void AsteroidShip::draw() {
    glPushMatrix();
-      // Translate to the position.
-      position->glTranslate();
-      // Rotate to the current up/right/forward vectors.
-      glRotate();
-      glColor4f(0, 0, 0, 0.4);
-      draw_ship();
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   // Translate to the position.
+   position->glTranslate();
+   // Rotate to the current up/right/forward vectors.
+   glRotate();
+   glColor4f(0, 0, 0, 0.4);
+   draw_ship();
    glPopMatrix();
 }
 
@@ -602,7 +606,9 @@ void AsteroidShip::handleCollision(Object3D* other) {
    } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       // Decrease the player's health by an appropriate amount.
       velocity->addUpdate(*(asteroid->velocity));
-      health -= 4 * ceil(asteroid->radius);
+      if (!gameState->godMode) {
+         health -= 4 * ceil(asteroid->radius);
+      }
    }
 }
 
@@ -648,37 +654,37 @@ void AsteroidShip::drawCrosshair() {
    double thicknessX = 0.01;
    double thicknessY = 0.01;
    glPushMatrix();
-      glLoadIdentity();
-      
-      // Make it white
-      setMaterial(WhiteSolid);
-      glColor3f(1, 1, 1);
-      useOrtho();
-      glDisable(GL_LIGHTING);
-      /*
+   glLoadIdentity();
+
+   // Make it white
+   setMaterial(WhiteSolid);
+   glColor3f(1, 1, 1);
+   useOrtho();
+   glDisable(GL_LIGHTING);
+   /*
       glBegin(GL_QUADS);
       glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
       glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
       glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
       glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
-      
+
       glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
       glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
       glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
       glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
       glEnd();
       */
-      glTranslatef(getAimX(), getAimY(), 0.0);
-      static GLUquadricObj *outer;
-      static GLUquadricObj *inner;
-      outer = gluNewQuadric();
-      gluDisk(outer, crosshairSizeX / 2 - thicknessX / 1.5, crosshairSizeX / 2, 12, 1);
-      
-      inner = gluNewQuadric();
-      gluDisk(inner, 0.0, thicknessX / 1.5, 8, 1);
-      
-      glEnable(GL_LIGHTING);
-      usePerspective();
+   glTranslatef(getAimX(), getAimY(), 0.0);
+   static GLUquadricObj *outer;
+   static GLUquadricObj *inner;
+   outer = gluNewQuadric();
+   gluDisk(outer, crosshairSizeX / 2 - thicknessX / 1.5, crosshairSizeX / 2, 12, 1);
+
+   inner = gluNewQuadric();
+   gluDisk(inner, 0.0, thicknessX / 1.5, 8, 1);
+
+   glEnable(GL_LIGHTING);
+   usePerspective();
    glPopMatrix();
 }
 
@@ -705,44 +711,44 @@ void AsteroidShip::drawShotDirectionIndicators() {
    glDisable(GL_CULL_FACE);
    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
    setMaterial(WhiteTransparent);
-   
+
    glLineWidth(3.0);
    glBegin(GL_QUADS);
-      // top right
-      glColor3f(0.2, 1, 0.0);
-      drawPoint.draw();
-      up->movePoint(drawPoint, -boxSize);
-      drawPoint.draw();
-      right->movePoint(drawPoint, -boxSize);
-      drawPoint.draw();
-      up->movePoint(drawPoint, boxSize);
-      drawPoint.draw();
-      
-      // Move again
-      shotDirection.movePoint(drawPoint, 5);
-      // top right
-      glColor3f(1, 0.2, 0.0);
-      right->movePoint(drawPoint, boxSize);
-      drawPoint.draw();
-      up->movePoint(drawPoint, -boxSize);
-      drawPoint.draw();
-      right->movePoint(drawPoint, -boxSize);
-      drawPoint.draw();
-      up->movePoint(drawPoint, boxSize);
-      drawPoint.draw();
-      
-      // Move again
-      shotDirection.movePoint(drawPoint, 5);
-      // top right
-      glColor3f(0, 0.2, 1);
-      right->movePoint(drawPoint, boxSize);
-      drawPoint.draw();
-      up->movePoint(drawPoint, -boxSize);
-      drawPoint.draw();
-      right->movePoint(drawPoint, -boxSize);
-      drawPoint.draw();
-      up->movePoint(drawPoint, boxSize);
-      drawPoint.draw();
+   // top right
+   glColor3f(0.2, 1, 0.0);
+   drawPoint.draw();
+   up->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   right->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+
+   // Move again
+   shotDirection.movePoint(drawPoint, 5);
+   // top right
+   glColor3f(1, 0.2, 0.0);
+   right->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   right->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+
+   // Move again
+   shotDirection.movePoint(drawPoint, 5);
+   // top right
+   glColor3f(0, 0.2, 1);
+   right->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   right->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
    glEnd();
    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
    glLineWidth(1.0);
@@ -785,21 +791,21 @@ void AsteroidShip::drawWeaponReadyBar() {
    double innerBoxHeight = coolDownAmount * fullHeight;
    const double outerBoxThickness = 0.01;
    glPushMatrix();
-      glTranslatef(p2wx(10), p2wy(500), 0);
-      setMaterial(BlackSolid);
-      glBegin(GL_QUADS);
-         // First draw black box.
-         glColor3f(0, 0, 0);
-         glVertex3f(-outerBoxThickness, fullHeight + outerBoxThickness, -0.01);
-         glVertex3f(innerBoxWidth + outerBoxThickness, fullHeight + outerBoxThickness, -0.01);
-         glVertex3f(innerBoxWidth + outerBoxThickness, -outerBoxThickness, -0.01);
-         glVertex3f(-outerBoxThickness, -outerBoxThickness, -0.01);
+   glTranslatef(p2wx(10), p2wy(500), 0);
+   setMaterial(BlackSolid);
+   glBegin(GL_QUADS);
+   // First draw black box.
+   glColor3f(0, 0, 0);
+   glVertex3f(-outerBoxThickness, fullHeight + outerBoxThickness, -0.01);
+   glVertex3f(innerBoxWidth + outerBoxThickness, fullHeight + outerBoxThickness, -0.01);
+   glVertex3f(innerBoxWidth + outerBoxThickness, -outerBoxThickness, -0.01);
+   glVertex3f(-outerBoxThickness, -outerBoxThickness, -0.01);
 
-         glColor3f(1 - coolDownAmount, coolDownAmount, -0.01);
-         glVertex3f(0, innerBoxHeight, 0); // Top left
-         glVertex3f(innerBoxWidth, innerBoxHeight, 0); // top Right
-         glVertex3f(innerBoxWidth, 0, 0); // bottom Right
-         glVertex3f(0, 0, 0); // Bottom left
-      glEnd();
+   glColor3f(1 - coolDownAmount, coolDownAmount, -0.01);
+   glVertex3f(0, innerBoxHeight, 0); // Top left
+   glVertex3f(innerBoxWidth, innerBoxHeight, 0); // top Right
+   glVertex3f(innerBoxWidth, 0, 0); // bottom Right
+   glVertex3f(0, 0, 0); // Bottom left
+   glEnd();
    glPopMatrix();
 }

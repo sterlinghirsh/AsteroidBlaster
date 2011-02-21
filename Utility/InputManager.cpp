@@ -19,6 +19,7 @@ InputManager::InputManager() {
    fullScreen = false;
    bloom = false;
    reg = true;
+   godMode = false;
    oldGW = GW;
    oldGH = GH;
 }
@@ -77,10 +78,24 @@ void InputManager::update(const SDL_Event& e) {
       }
    }
    if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F2) {
-     bloom = !bloom;
+      bloom = !bloom;
    }
    if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F3) {
-     reg = !reg;
+      reg = !reg;
+   }
+   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F12) {
+      godMode = !godMode;
+      /*
+      if (godMode == 1) {
+            printf("Zoe mode enabled.\n");
+         } else {
+            printf("Zoe mode disabled.\n");
+         }
+      } else {
+         printf("god mode error.\n");
+      }
+      */
+      printf("Zoe mode: %d\n", godMode);
    }
 }
 

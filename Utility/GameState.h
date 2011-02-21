@@ -24,81 +24,82 @@
 class AsteroidShip;
 
 class GameState : public InputReceiver {
-  public:
-    AsteroidShip* ship;
-    /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
-     * update it in updateText(), and make it draw in drawAllText().
-     */
-    BitmapTextDisplay *FPSText,
-                      *numAsteroidsText,
-                      *scoreText,
-                      *shardText,
-                      *healthText,
-                      *gameOverText,
-                      *winText,
-                      *weaponText;
-    // Used when looping over Object3Ds
-    std::vector<Object3D*>::iterator item;
-    // Used when looping over Object3Ds in drawInMinimap
-    std::list<Object3D*>::iterator listIter;
-    Custodian custodian;
+   public:
+      AsteroidShip* ship;
+      /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
+       * update it in updateText(), and make it draw in drawAllText().
+       */
+      BitmapTextDisplay *FPSText,
+                        *numAsteroidsText,
+                        *scoreText,
+                        *shardText,
+                        *healthText,
+                        *gameOverText,
+                        *winText,
+                        *weaponText;
+      // Used when looping over Object3Ds
+      std::vector<Object3D*>::iterator item;
+      // Used when looping over Object3Ds in drawInMinimap
+      std::list<Object3D*>::iterator listIter;
+      Custodian custodian;
 
-    std::list<Object3D*>* viewFrustumObjects;
+      std::list<Object3D*>* viewFrustumObjects;
 
-    GameState(double worldSize);
-    virtual ~GameState();
-    void draw();
-    void hBlur();
-    void vBlur();
-    void drawBloom();
-    void drawGlow();
-    void drawInMinimap();
+      GameState(double worldSize);
+      virtual ~GameState();
+      void draw();
+      void hBlur();
+      void vBlur();
+      void drawBloom();
+      void drawGlow();
+      void drawInMinimap();
 
-    void drawAllText();
-    void drawHud();
-    void updateText();
-    void checkCollisions();
-    void update(double timeDiff);
-    void initAsteroids();
-    void setCurFPS(double fpsIn);
-    bool isGameRunning();
-    bool getMenuMode();
+      void drawAllText();
+      void drawHud();
+      void updateText();
+      void checkCollisions();
+      void update(double timeDiff);
+      void initAsteroids();
+      void setCurFPS(double fpsIn);
+      bool isGameRunning();
+      bool getMenuMode();
 
-    double getMouseX();
-    double getMouseY();
-    Camera* getCamera();
+      double getMouseX();
+      double getMouseY();
+      Camera* getCamera();
 
-    void menuFunc();
-    void reset();
+      void menuFunc();
+      void reset();
 
-    virtual void keyUp(int key);
-    virtual void keyDown(int key);
-    virtual void mouseDown(int button);
-    virtual void mouseMove(int dx, int dy, int x, int y);
-    virtual void mouseUp(int button);
+      virtual void keyUp(int key);
+      virtual void keyDown(int key);
+      virtual void mouseDown(int button);
+      virtual void mouseMove(int dx, int dy, int x, int y);
+      virtual void mouseUp(int button);
 
-    // Bloom
-    int xSize, ySize;
-    GLuint texture;
-    char* colorBits;
-    float aspect;
+      // Bloom
+      int xSize, ySize;
+      GLuint texture;
+      char* colorBits;
+      float aspect;
 
-  private:
-    //void reset();
-    double curFPS, worldSize;
-    bool gameIsRunning;
-    bool doYaw;
-    double mouseX, mouseY;
-    int scoreToWin;
-    bool thirdPerson;
-    int numAsteroidsToSpawn;
-    bool isW, isA, isS, isD;
+      bool godMode;
+   private:
+      //void reset();
+      double curFPS, worldSize;
+      bool gameIsRunning;
+      bool doYaw;
+      double mouseX, mouseY;
+      int scoreToWin;
+      bool thirdPerson;
+      int numAsteroidsToSpawn;
+      bool isW, isA, isS, isD;
 
-    Skybox* skybox;
-    Camera* camera;
-    BoundingSpace* cube;
+      Skybox* skybox;
+      Camera* camera;
+      BoundingSpace* cube;
 
-    std::list<Object3D*> objects;
+      std::list<Object3D*> objects;
 };
 
 #endif
