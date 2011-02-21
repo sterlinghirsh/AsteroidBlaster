@@ -270,32 +270,36 @@ void init() {
 
 }
 
-void timerFunc() {
-  static unsigned long lastSecond = 0;
-  static double lastTime = 0;
+void timerFunc(bool paused) {
+   static unsigned long lastSecond = 0;
+   static double lastTime = 0;
+   if (paused) {
+      lastTime = 0;
+      return;
+   }
 
-  // Get the time
-  double curTime = doubleTime();
+   // Get the time
+   double curTime = doubleTime();
 
-  if (lastTime == 0) {
-    lastTime = curTime;
-    return;
-  }
+   if (lastTime == 0) {
+      lastTime = curTime;
+      return;
+   }
 
-  double timeDiff = curTime - lastTime;
-  gameState->setCurFPS(1 / timeDiff);
+   double timeDiff = curTime - lastTime;
+   gameState->setCurFPS(1 / timeDiff);
 
-  gameState->update(timeDiff);
+   gameState->update(timeDiff);
 
-  // Check for all collisions
-  gameState->checkCollisions();
+   // Check for all collisions
+   gameState->checkCollisions();
 
-  lastTime = curTime;
+   lastTime = curTime;
 
-  // Timing statistics
-  if (floor(curTime) > lastSecond) {
-    lastSecond = floor(curTime);
-  }
+   // Timing statistics
+   if (floor(curTime) > lastSecond) {
+      lastSecond = floor(curTime);
+   }
 }
 
 int main(int argc, char* argv[]) {
@@ -314,9 +318,9 @@ int main(int argc, char* argv[]) {
   // get particle texture
   Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
   //load the shader files
-  tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
-  hBlurShader = setShaders( (char *) "./Shaders/hblur.vert", (char *) "./Shaders/hblur.frag");
-  vBlurShader = setShaders( (char *) "./Shaders/vblur.vert", (char *) "./Shaders/vblur.frag");
+  //tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
+  //hBlurShader = setShaders( (char *) "./Shaders/hblur.vert", (char *) "./Shaders/hblur.frag");
+  //vBlurShader = setShaders( (char *) "./Shaders/vblur.vert", (char *) "./Shaders/vblur.frag");
 
   //load and start BGM
   //Music::Add("Sounds/Mists_of_Time-4T.ogg");
@@ -359,8 +363,9 @@ int main(int argc, char* argv[]) {
   while (running) {
     if (menu->isActive()) {
       menu->draw();
+      timerFunc(menu->isActive());
     } else if (gameState->isGameRunning()) {
-      timerFunc();
+      timerFunc(false);
       display();
     }
 

@@ -295,7 +295,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
       double maxR = max(radius, otherAsteroid->radius);
       //printf("distance between stroids: %f (%f)\n", d, combinedRad);
       if (d <=  maxR) {
-         printf("stroid is stuck\n");
+         //printf("stroid is stuck\n");
          shouldRemove = true;
          if (radius > 2) {
             int dimension = rand() % 3;
