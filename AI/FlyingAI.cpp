@@ -17,10 +17,6 @@
 #include "Utility/Quaternion.h"
 #include "math.h"
 
-
-#warning FlyingAI.cpp remove debug prints
-#include <iostream>
-
 using namespace std;
 using std::vector;
 
@@ -72,8 +68,6 @@ Vector3D* FlyingAI :: getFlyDirection() {
    std::list<Asteroid3D*>::iterator i;
    Vector3D *sum = new Vector3D();
    
-   cout << asteroids->size() << " Asteroids found.  Vector Sum:";
-   
    for( i = asteroids->begin(); i != asteroids->end(); ++i) {
       //                   || LOL POINTERS
       //                   \/ 
@@ -95,7 +89,6 @@ Vector3D* FlyingAI :: getFlyDirection() {
    
    sum->normalize();
    sum->scalarMultiplyUpdate(-1.0);
-   cout << sum->xMag << "," << sum->yMag << "," << sum->zMag << "," << endl;
    
    // clean up
    if(asteroids != NULL)
@@ -138,7 +131,6 @@ int FlyingAI :: think(double dt) {
    if(diff_front > 0.3) {
       if(diff_right < 0.5 * PI) diff_front *= -1;
       ship->setYawSpeed(diff_front / PI);
-      //cout << diff_right << ", " << diff_front << endl;
    } else {
       ship->setYawSpeed(0);
    }
@@ -152,7 +144,6 @@ int FlyingAI :: think(double dt) {
    if(diff_front > 0.3) {
       if(diff_up < 0.5 * PI) diff_front *= -1;
       ship->setPitchSpeed(diff_front / PI);
-      //cout << diff_right << ", " << diff_front << endl;
    } else {
       ship->setPitchSpeed(0);
    }
