@@ -94,7 +94,7 @@ Vector3D* FlyingAI :: getFlyDirection() {
    }
    
    sum->normalize();
-   
+   sum->scalarMultiplyUpdate(-1.0);
    cout << sum->xMag << "," << sum->yMag << "," << sum->zMag << "," << endl;
    
    // clean up
