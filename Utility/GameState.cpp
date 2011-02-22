@@ -48,6 +48,7 @@ GameState::GameState(double worldSizeIn) {
    thirdPerson = true;
    godMode = false;
 
+   // TODO: comment this or rename it.
    isW = isA = isS = isD = false;
    /* A view frustum culled list of objects to be used for drawing and by
       the shooting AI.
