@@ -15,19 +15,26 @@
 
 /* Here we should have the includes for the interface of weapons, radar data,
  * or anything else that has not yet been created. */
-#include "Items/AsteroidShip.h"
-#include "Utility/Point3D.h"
 #include "AI/AI.h"
+#include "Items/AsteroidShip.h"
+#include "Items/Asteroid3D.h"
+#include "Utility/Point3D.h"
 #include "Utility/Object3D.h"
-
+#include "Utility/Radar.h"
+#include "Utility/Vector3D.h"
 
 
 // Incomplete class declaration so we can use pointers.
 class Object3D;
 class AsteroidShip;
+class Radar;
+class Vector;
 
 class FlyingAI : public AI {
+   static const double PI = 3.141592;
+   
    AsteroidShip* ship;
+   Radar* radar;
    bool enabled;
    
 public:  
@@ -36,6 +43,12 @@ public:
    virtual void enable();
    virtual void disable();
    virtual bool isEnabled();
+   
+   
+   // Helper Functions
+   Vector3D* getFlyDirection();
+   std::list<Asteroid3D*>* getAsteroidList();
+   Vector3D calcProjection( Vector3D *w, Vector3D *u1, Vector3D *u2);
 
 };
 

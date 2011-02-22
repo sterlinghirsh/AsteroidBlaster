@@ -272,8 +272,14 @@ void AsteroidShip::update(double timeDiff) {
    } else {
       updateShotDirectionVector();
    }
-   updateAcceleration();
-
+   
+   if(flyingAI->isEnabled())
+   {
+      flyingAI->think(timeDiff);
+   } else {
+      updateAcceleration();
+   }
+   
    if (isBraking) {
       velocity->xMag -= velocity->xMag * timeDiff * brakeFactor;
       velocity->yMag -= velocity->yMag * timeDiff * brakeFactor;
