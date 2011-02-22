@@ -318,9 +318,9 @@ int main(int argc, char* argv[]) {
   // get particle texture
   Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
   //load the shader files
-  //tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
-  //hBlurShader = setShaders( (char *) "./Shaders/hblur.vert", (char *) "./Shaders/hblur.frag");
-  //vBlurShader = setShaders( (char *) "./Shaders/vblur.vert", (char *) "./Shaders/vblur.frag");
+  tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
+  hBlurShader = setShaders( (char *) "./Shaders/hblur.vert", (char *) "./Shaders/hblur.frag");
+  vBlurShader = setShaders( (char *) "./Shaders/vblur.vert", (char *) "./Shaders/vblur.frag");
 
   //load and start BGM
   //Music::Add("Sounds/Mists_of_Time-4T.ogg");
