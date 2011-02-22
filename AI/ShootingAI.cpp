@@ -120,7 +120,10 @@ Object3D* ShootingAI::chooseTarget() {
       // END OF NEW CODE
          continue;
       }
-      
+      if (dynamic_cast<Shard*>(*targets_iterator) != NULL &&
+       (*targets_iterator)->position->distanceFrom(*ship_position) > 30)
+         continue;
+
       curDist = 1 / (((*targets_iterator)->radius) *
        pow((*targets_iterator)->position->distanceFrom( *ship_position ),2));
       
