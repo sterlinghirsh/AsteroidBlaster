@@ -36,6 +36,10 @@ GameState::GameState(double worldSizeIn) {
    weaponText = new BitmapTextDisplay("Current Weapon: ", ship->getCurrentWeapon()->getName(),
          "", 10, 120);
 
+   // Improve the positioning code.
+   weaponReadyBar = new ProgressBar(0.5, 0.1, -1.2, -0.3);
+   healthBar = new ProgressBar(0.75, 0.05, -1, -0.3);
+
    // Set up objects.
    custodian.add(ship);
    numAsteroidsToSpawn = 10;
@@ -85,8 +89,12 @@ GameState::~GameState() {
    delete ship;
    delete camera;
    delete cube;
+   delete weaponReadyBar;
 }
 
+/**
+ * This is the step function.
+ */
 void GameState::update(double timeDiff) {
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
    std::set<Object3D*>* collisions;
@@ -130,6 +138,8 @@ void GameState::update(double timeDiff) {
    if (!gameIsRunning && ship->getHealth() <= 0) {
       SoundEffect::playSoundEffect(7);
    }
+   weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
+   healthBar->setAmount(ship->getHealth() / 100.0);
 }
 
 /**
@@ -421,7 +431,8 @@ void GameState::drawHud() {
    glDisable(GL_LIGHTING);
    glDisable(GL_CULL_FACE);
    drawAllText();
-   ship->drawWeaponReadyBar();
+   weaponReadyBar->draw();
+   healthBar->draw();
    glEnable(GL_LIGHTING);
    //glEnable(GL_DEPTH_TEST);
    usePerspective();

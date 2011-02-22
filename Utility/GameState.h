@@ -19,6 +19,7 @@
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/Custodian.h"
 #include "Utility/InputManager.h"
+#include "HUD/ProgressBar.h"
 #include <list>
 
 class AsteroidShip;
@@ -84,6 +85,8 @@ class GameState : public InputReceiver {
       float aspect;
 
       bool godMode;
+      ProgressBar* weaponReadyBar;
+      ProgressBar* healthBar;
    private:
       //void reset();
       double curFPS, worldSize;

@@ -38,6 +38,8 @@ extern const SDL_VideoInfo* vidinfo;
 
 double p2wx(int);
 double p2wy(int);
+double p2wHeight(int);
+double p2wWidth(int);
 double p2ix(int);
 double p2iy(int);
 void reshape(GLsizei w, GLsizei h);

@@ -258,7 +258,7 @@ void Shard::draw() {
    // Call the display list if it has one.
    Object3D::draw();
    // Disable materials.
-   //glEnable(GL_COLOR_MATERIAL);
+   glEnable(GL_COLOR_MATERIAL);
    //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
@@ -268,7 +268,7 @@ void Shard::draw() {
    glScalef(scalex, scaley, scalez);
 
    setMaterial(Rock);
-   glColor3f(0.4, 0.5, 0.7);
+   glColor4f(0.4, 0.5, 0.7, 0.7);
    // Set polygon offset to be behind the lines.
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
@@ -321,7 +321,7 @@ void Shard::draw() {
    }
    */
 
-   //glDisable(GL_COLOR_MATERIAL);
+   glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();
 }
 

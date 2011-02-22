@@ -786,32 +786,9 @@ void AsteroidShip::prevWeapon() {
 }
 
 /**
- * Draws the progress bar showing how close the current weapon is to being able
- * to fire.
+ * Gets the cooldownamount of the currently selected weapon.
  */
-void AsteroidShip::drawWeaponReadyBar() {
-   // We expect to be in ortho right now.
-   double coolDownAmount = weapons[currentWeapon]->getCoolDownAmount();
-   double fullHeight = p2wy(0) - p2wy(400);
-   double innerBoxWidth = p2wx(10) - p2wx(0);
-   double innerBoxHeight = coolDownAmount * fullHeight;
-   const double outerBoxThickness = 0.01;
-   glPushMatrix();
-   glTranslatef(p2wx(10), p2wy(550), 0);
-   setMaterial(BlackSolid);
-   glBegin(GL_QUADS);
-   // First draw black box.
-   glColor3f(0, 0, 0);
-   glVertex3f(-outerBoxThickness, fullHeight + outerBoxThickness, -0.01);
-   glVertex3f(innerBoxWidth + outerBoxThickness, fullHeight + outerBoxThickness, -0.01);
-   glVertex3f(innerBoxWidth + outerBoxThickness, -outerBoxThickness, -0.01);
-   glVertex3f(-outerBoxThickness, -outerBoxThickness, -0.01);
-
-   glColor3f(1 - coolDownAmount, coolDownAmount, -0.01);
-   glVertex3f(0, innerBoxHeight, 0); // Top left
-   glVertex3f(innerBoxWidth, innerBoxHeight, 0); // top Right
-   glVertex3f(innerBoxWidth, 0, 0); // bottom Right
-   glVertex3f(0, 0, 0); // Bottom left
-   glEnd();
-   glPopMatrix();
+float AsteroidShip::getCurrentWeaponCoolDown() {
+   return weapons[currentWeapon]->getCoolDownAmount();
 }
+

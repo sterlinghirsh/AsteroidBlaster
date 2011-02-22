@@ -50,6 +50,14 @@ double p2wy(int yp) {
    return (flopY(yp) - f) / e;
 }
 
+double p2wHeight(int heightPixels) {
+   return p2wy(0) - p2wy(heightPixels);
+}
+
+double p2wWidth(int widthPixels) {
+   return p2wx(widthPixels) - p2wx(0);
+}
+
 double p2ix(int xp) {
    return p2wx(xp) * GH / (double) GW;
 }
