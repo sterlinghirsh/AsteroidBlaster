@@ -20,9 +20,11 @@
 #include "Utility/Custodian.h"
 #include "Utility/InputManager.h"
 #include "HUD/ProgressBar.h"
+#include "HUD/Minimap.h"
 #include <list>
 
 class AsteroidShip;
+class Minimap;
 
 class GameState : public InputReceiver {
    public:
@@ -40,7 +42,7 @@ class GameState : public InputReceiver {
                         *weaponText;
       // Used when looping over Object3Ds
       std::vector<Object3D*>::iterator item;
-      // Used when looping over Object3Ds in drawInMinimap
+      // Used when looping over Object3Ds in drawMinimap
       std::list<Object3D*>::iterator listIter;
       Custodian custodian;
 
@@ -53,7 +55,7 @@ class GameState : public InputReceiver {
       void vBlur();
       void drawBloom();
       void drawGlow();
-      void drawInMinimap();
+      void drawMinimap();
 
       void drawAllText();
       void drawHud();
@@ -101,6 +103,7 @@ class GameState : public InputReceiver {
       Skybox* skybox;
       Camera* camera;
       BoundingSpace* cube;
+      Minimap* minimap;
 
       std::list<Object3D*> objects;
 };

@@ -26,8 +26,6 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 
-
-
 #include "SDL.h"
 #include "SDL_mixer.h"
 
@@ -124,37 +122,8 @@ void display() {
     gameState->drawBloom();
   }
   glPopMatrix();
-
-
-  // Draw the minimap
-  glPushMatrix();
-  /* Set the viewport to 3/4 of the way across the screen on the bottom.
-   * It should take up the bottom right corner of the screen.
-   */
-
-  glViewport (GW * (1 - minimapSizeFactor), 0, GW * minimapSizeFactor,
-      GH * minimapSizeFactor);
-  glMatrixMode (GL_PROJECTION);      /* Select The Projection Matrix */
-  glLoadIdentity ();                     /* Reset The Projection Matrix */
-
-  // Keep our aspect ratio relative to the global width and height
-  gluPerspective(VERT_FOV, (double)GW/GH, 0.5, 20);
-
-  glMatrixMode (GL_MODELVIEW);      /* Select The Projection Matrix */
-  glLoadIdentity ();                        /* Reset The Modelview Matrix */
-
-  glClear (GL_DEPTH_BUFFER_BIT);      /* Clear Depth Buffer */
-
-  setMaterial(WhiteSolid);
-
-  // eye, lookAt, and up vectors
-  gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
-
-  // Draw objects in the map.
-  gameState->drawInMinimap();
-
-  glPopMatrix();
   // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
+  gameState->drawMinimap();
   SDL_GL_SwapBuffers();
   displayTime += doubleTime() - startTime;
   ++curFrame;

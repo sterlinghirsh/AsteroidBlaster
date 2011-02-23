@@ -20,6 +20,7 @@ GameState::GameState(double worldSizeIn) {
    worldSize = worldSizeIn;
    skybox = new Skybox("Images/stars.bmp");
    ship = new AsteroidShip();
+   minimap = new Minimap(ship);
    camera = new Camera(ship);
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
    // Set up our text objects to be displayed on screen.
@@ -145,110 +146,8 @@ void GameState::update(double timeDiff) {
 /**
  * Draw objects in the minimap.
  */
-void GameState::drawInMinimap() {
-   // Get a reading of all the nearby Object3Ds from the Radar
-   std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading();
-   static Matrix4 modelViewMatrix;
-   static Point3D objectPosition;
-   static Vector3D positionVector;
-   const float scaleFactor = 0.05;
-   const float ringWidth = 1;
-   double radius2D; // Radius when an object is projected onto the forward-right plane of the ship.
-   double radius3D; // Radius from the ship in 3D space.
-
-   positionVector.updateMagnitude(*ship->position);
-
-   glDisable(GL_LIGHT0); // turn off the normal light, put a light at the center.
-   glEnable(GL_LIGHT1);
-
-   glPushMatrix();
-   ship->glRotate(false);
-   Vector3D oppositeOfPosition(*(ship->position));
-
-   // Translate everything so that the ship is at 0, 0 and everything is centered there.
-   oppositeOfPosition.updateMagnitude(oppositeOfPosition);
-   glScalef(scaleFactor, scaleFactor, scaleFactor);
-   //glRotatef(180, 0, 1, 0);
-   oppositeOfPosition.glTranslate(-1);
-   glDisable(GL_COLOR_MATERIAL);
-
-   // For each item that needs to be drawn in the minimap
-   for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
-      // Make sure it's not null, & then draw it in the minimap
-      // TODO: Make this not copy code from below.
-      if (*listIter != NULL && ((*listIter)->shouldDrawInMinimap || *listIter == ship)) {
-         radius3D = ship->position->distanceFrom(*(*listIter)->position);
-         if (radius3D < 20) {
-            glColor3f(1, 0, 0);
-            setMaterial(RedFlat);
-         } else if (radius3D < 30) {
-            glColor3f(1, 1, 0);
-            setMaterial(YellowFlat);
-         } else {
-            glColor3f(0, 1, 0);
-            setMaterial(GreenTransparent);
-         }
-         (*listIter)->drawInMinimap();
-      }
-   }
-   glPopMatrix();
-   // Now draw the lines.
-   // Load just the rotation matrix.
-   glPushMatrix();
-   glLoadIdentity(); // We don't want the camera transform.
-   ship->glRotate(true);
-   modelViewMatrix.loadModelviewMatrix();
-   glPopMatrix();
-   glPushMatrix();
-   glScalef(scaleFactor, scaleFactor, scaleFactor);
-   setMaterial(WhiteSolid);
-   for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
-      // Make sure it's not null, & then draw it in the minimap
-      if (*listIter != NULL && (*listIter)->shouldDrawInMinimap && *listIter != ship) {
-         objectPosition = *(*listIter)->position; // Get the position.
-         positionVector.movePoint(objectPosition, -1); // Center on the ship
-         objectPosition = modelViewMatrix * (objectPosition); // Rotate about the ship
-         radius2D = distance2D(objectPosition.x, objectPosition.z);
-         radius3D = distance3D(objectPosition.x, objectPosition.y, objectPosition.z);
-         if (radius3D < 20) {
-            glColor3f(1, 0, 0);
-            setMaterial(RedTransparent);
-         } else if (radius3D < 30) {
-            glColor3f(1, 1, 0);
-            setMaterial(YellowTransparent);
-         } else {
-            glColor3f(0, 1, 0);
-            setMaterial(GreenTransparent);
-         }
-
-         // Draw a disc.
-         // This is the way that one game did it with the circles on a plane.
-         glPushMatrix();
-         glEnable(GL_LIGHTING);
-         glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
-         gluDisk(quadric, radius2D - (ringWidth / 2), radius2D + (ringWidth / 2) ,16,2);
-         glDisable(GL_LIGHTING);
-         glPopMatrix();
-         //glDisable(GL_LIGHTING);
-         glBegin(GL_LINES);
-         // Draw a point at the object's position.
-         glVertex3f(objectPosition.x, objectPosition.y, objectPosition.z);
-         // Draw the other point at the object's position without the Y component.
-         glVertex3f(objectPosition.x, 0, objectPosition.z);
-         glEnd();
-      }
-   }
-   glPopMatrix();
-
-   // Draw the sphere around it.
-   glEnable(GL_LIGHTING);
-   glDisable(GL_LIGHT1); // Reenable the normal light.
-   glEnable(GL_LIGHT0);
-   setMaterial(GrayTransparent);
-   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   glDisable(GL_CULL_FACE);
-   gluSphere(quadric, 2, 20, 20);
-   glEnable(GL_CULL_FACE);
+void GameState::drawMinimap() {
+   minimap->draw();
 }
 
 /**
