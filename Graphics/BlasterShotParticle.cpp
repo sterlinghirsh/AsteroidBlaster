@@ -15,8 +15,10 @@ BlasterShotParticle::BlasterShotParticle(Point3D* _position,
    }
 
 bool BlasterShotParticle::step(double timeDifference) {
-   const float velocityScalePerSecond = 0.1;
-   velocity->scalarMultiplyUpdate(velocityScalePerSecond * timeDifference);
+   const float velocityScalePerSecond = 3;
+   velocity->xMag -= velocity->xMag * velocityScalePerSecond * timeDifference;
+   velocity->yMag -= velocity->yMag * velocityScalePerSecond * timeDifference;
+   velocity->zMag -= velocity->zMag * velocityScalePerSecond * timeDifference;
    Particle::step(timeDifference);
 }
 

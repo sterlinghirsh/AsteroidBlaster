@@ -19,10 +19,10 @@ class Particle {
       static std::list<Particle*> particles;
       static void drawParticles();
       static void update(double timeDifference);
-      void draw(Point3D* eyePoint);
-      bool step(double timeDifference);
-      
       static void Add(Point3D* pos, Vector3D* vec);
+      
+      virtual void draw(Point3D* eyePoint);
+      virtual bool step(double timeDifference);
        
       Particle(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
       Point3D posIn, double drawWidth, double drawHeight);
