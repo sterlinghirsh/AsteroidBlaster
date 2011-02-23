@@ -7,7 +7,7 @@
 #ifndef __BLASTERSHOTPARTICLE_H__
 #define __BLASTERSHOTPARTICLE_H__
 
-#include "Graphics/Particle.h"
+#include "Particles/Particle.h"
 
 class BlasterShotParticle : public Particle  {
    public :

@@ -1,7 +1,7 @@
 
 
 
-#include "Graphics/Particle.h"
+#include "Particles/Particle.h"
 #include "Utility/GameState.h"
 #include <math.h>
 #include <iostream>

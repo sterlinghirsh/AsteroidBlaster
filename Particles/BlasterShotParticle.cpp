@@ -4,7 +4,7 @@
  * @date 2/17/11
  */
 
-#include "Graphics/BlasterShotParticle.h"
+#include "Particles/BlasterShotParticle.h"
 #include "math.h"
 
 BlasterShotParticle::BlasterShotParticle(Point3D* _position,

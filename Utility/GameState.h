@@ -14,7 +14,7 @@
 #include "Items/Asteroid3D.h"
 #include "Graphics/Skybox.h"
 #include "Graphics/Sprite.h"
-#include "Graphics/Particle.h"
+#include "Particles/Particle.h"
 #include "Graphics/Camera.h"
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/Custodian.h"
