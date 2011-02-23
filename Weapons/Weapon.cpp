@@ -5,7 +5,7 @@
  */
 
 #include "Weapons/Weapon.h"
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 #include "Items/AsteroidShip.h"
 #include "Utility/Custodian.h"
 

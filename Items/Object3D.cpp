@@ -5,7 +5,7 @@
  * CPE 476
  */
 
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 #include <math.h>
 #include <algorithm>
 #include "Utility/Matrix4.h"

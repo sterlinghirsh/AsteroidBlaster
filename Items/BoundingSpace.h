@@ -9,7 +9,7 @@
 #define __BOUNDINGSPACE_H__
 
 #include "Utility/Point3D.h"
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 
 class BoundingSpace {
    public:

@@ -20,7 +20,7 @@
 #include "Items/AsteroidShip.h"
 #include "Utility/Point3D.h"
 #include "AI/AI.h"
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 
 // Incomplete class declaration so we can use pointers.
 class Object3D;

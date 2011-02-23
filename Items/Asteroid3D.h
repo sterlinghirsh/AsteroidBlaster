@@ -9,7 +9,7 @@
 
 #include "Graphics/Mesh3D.h"
 #include "Utility/Point3D.h"
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 #include "Items/Shard.h"
 #include <list>
 #include <vector>

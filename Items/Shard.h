@@ -10,7 +10,7 @@
 #include "Graphics/Mesh3D.h"
 #include "Utility/GlobalUtility.h"
 #include "Utility/Point3D.h"
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 #include "Items/Ring.h"
 #include <list>
 #include <vector>

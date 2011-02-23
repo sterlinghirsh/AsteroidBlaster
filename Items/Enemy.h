@@ -8,7 +8,7 @@
 #ifndef __ENEMY_H__
 #define __ENEMY_H__
 
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 
 class Enemy : public Object3D {
    public:

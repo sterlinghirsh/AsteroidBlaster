@@ -7,7 +7,7 @@
 
 #include "HUD/Minimap.h"
 #include "Utility/GlobalUtility.h"
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 
 #define DEFAULT_DISPLAYSIZE 0.5
 #define DEFAULT_ZOOMLEVEL 20

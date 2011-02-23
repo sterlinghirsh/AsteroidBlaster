@@ -6,8 +6,6 @@
  */
 
 #include "Radar.h"
-//#include "Utility/Object3D.h"
-//#include "Utility/Vector3D.h"
 
 // Tell c++ that gameState was declared elsewhere (in main.cpp)
 extern GameState* gameState;

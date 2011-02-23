@@ -11,7 +11,7 @@
 #include "Utility/Vector3D.h"
 #include "Shots/Shot.h"
 #include "Utility/GlobalUtility.h"
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 #include "Utility/Radar.h"
 #include "AI/ShootingAI.h"
 #include "AI/FlyingAI.h"

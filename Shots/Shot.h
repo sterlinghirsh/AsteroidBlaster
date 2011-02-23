@@ -11,7 +11,7 @@
 #include "Utility/Vector3D.h"
 #include "Utility/GlobalUtility.h"
 #include "Items/Asteroid3D.h"
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 #include "Items/AsteroidShip.h"
 
 extern materialStruct ShotMaterial;

@@ -5,7 +5,7 @@
  */
 
 #include "Shots/ProjectileShot.h"
-#include "Graphics/BlasterShotParticle.h"
+#include "Particles/BlasterShotParticle.h"
    
 const int particleCycle = 100;
 

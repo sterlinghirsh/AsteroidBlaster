@@ -8,7 +8,7 @@
 #ifndef __VIEW_FRUSTUM_H__
 #define __VIEW_FRUSTUM_H__
 
-#include "Utility/Object3D.h"
+#include "Items/Object3D.h"
 #include "Utility/Plane.h"
 #include "Utility/Matrix4.h"
 #include <vector>
