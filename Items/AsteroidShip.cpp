@@ -793,3 +793,6 @@ float AsteroidShip::getCurrentWeaponCoolDown() {
    return weapons[currentWeapon]->getCoolDownAmount();
 }
 
+Weapon* AsteroidShip::getWeapon(int wep) {
+   return weapons[wep];
+}

@@ -101,6 +101,7 @@ class AsteroidShip : public Object3D {
       Weapon* getCurrentWeapon();
       float getCurrentWeaponCoolDown();
       Vector3D* getShotDirection();
+      Weapon* getWeapon(int wep);
 
    protected:
       int soundHandle;

@@ -91,7 +91,7 @@ void ShootingAI::chooseWeapon(Object3D* target) {
    if (target != NULL) {
       if ((dynamic_cast<Shard*>(target)) != NULL)
          ship->selectWeapon(2);
-      else if (target->radius < 2) {
+      else if (target->radius < 2 && ship->getWeapon(1)->isCooledDown()) {
          ship->selectWeapon(1);
       }
       else
