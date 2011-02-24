@@ -163,7 +163,7 @@ void GameState::draw() {
       camera->setOffset(0, 0, 0);
    }
 
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    camera->setCamera(true);
    skybox->draw(camera);
    cube->draw();
@@ -203,7 +203,7 @@ void GameState::drawGlow() {
       camera->setOffset(0, 0, 0);
    }
 
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    camera->setCamera(true);
    //skybox->draw(camera);
    cube->draw();
@@ -434,7 +434,8 @@ void GameState::reset() {
    delete camera;
    custodian.clear();
 
-   //ship = new AsteroidShip();
+   ship = new AsteroidShip();
+   minimap = new Minimap(ship);
    camera = new Camera(ship);
    gameIsRunning = true;
 
