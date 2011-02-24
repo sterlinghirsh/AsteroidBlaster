@@ -18,6 +18,7 @@
 
 using namespace std;
 extern Custodian* custodian;
+const float rotationFactor = 2;
 
 AsteroidShip::AsteroidShip() :
    Object3D(0, 0, 0, 0),     // Initialize superclass
@@ -134,15 +135,15 @@ int AsteroidShip::getShards() {
 }
 
 void AsteroidShip::setYawSpeed(double yawAmountIn) {
-   yawSpeed = yawAmountIn;
+   yawSpeed = rotationFactor * yawAmountIn;
 }
 
 void AsteroidShip::setPitchSpeed(double pitchAmountIn) {
-   pitchSpeed = pitchAmountIn;
+   pitchSpeed = rotationFactor * pitchAmountIn;
 }
 
 void AsteroidShip::setRollSpeed(double rollAmountIn) {
-   rollSpeed = rollAmountIn;
+   rollSpeed = rotationFactor * rollAmountIn;
 }
 
 void AsteroidShip::updateAcceleration() {
