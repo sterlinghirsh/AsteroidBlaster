@@ -124,7 +124,11 @@ int TextureImporter::ImageLoad(std::string filename) {
     temp = data[i * bytesPerPixel];
     data[i * bytesPerPixel] = data[(i * bytesPerPixel) + 2];
     data[(i * bytesPerPixel) + 2] = temp;
-    data[(i * bytesPerPixel) + 3] = 0x00;
+    data[(i * bytesPerPixel) + 3] = 127;
+    if (data[i * bytesPerPixel] == 0 &&
+        data[i * bytesPerPixel + 1] == 0 &&
+        data[i * bytesPerPixel + 2] == 0)
+       data[i * bytesPerPixel + 3] = 0;
   }
   
   /*
