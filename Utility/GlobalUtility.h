@@ -31,6 +31,7 @@ extern unsigned long curFrame;
 extern bool drawPerspective;
 extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
+extern GLuint fadeShader;
 extern GLuint hBlurShader;
 extern GLuint vBlurShader;
 extern SDL_Surface* gDrawSurface;

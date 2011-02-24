@@ -274,6 +274,7 @@ int main(int argc, char* argv[]) {
 
   //initialize glut
   glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 
   // Initialize GL/SDL/glew/GLSL related things
   init();
@@ -283,7 +284,9 @@ int main(int argc, char* argv[]) {
   // get particle texture
   Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
   //load the shader files
+  
   tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
+  fadeShader = setShaders( (char *) "./Shaders/fade.vert", (char *) "./Shaders/fade.frag");
   hBlurShader = setShaders( (char *) "./Shaders/hblur.vert", (char *) "./Shaders/hblur.frag");
   vBlurShader = setShaders( (char *) "./Shaders/vblur.vert", (char *) "./Shaders/vblur.frag");
 

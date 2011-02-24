@@ -26,6 +26,7 @@ unsigned long curFrame;
 bool drawPerspective = true;
 GLUquadricObj *quadric;
 GLuint tractorBeamShader;
+GLuint fadeShader;
 GLuint hBlurShader;
 GLuint vBlurShader;
 SDL_Surface* gDrawSurface = NULL;

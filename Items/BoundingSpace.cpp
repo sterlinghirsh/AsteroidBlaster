@@ -54,53 +54,90 @@ void BoundingSpace::constrain(Object3D* item) {
 /* Draw the bounding box grid on the world.
 */
 void BoundingSpace::draw() {
+   glUseProgram(fadeShader);
    const double wall = extent;
-   const double alpha = 1;
-   glDisable(GL_LIGHTING);
+   const double alpha = 0;
+   //glClearColor(0.0,0.0,0.0,0.0);
+   //glDisable(GL_LIGHTING);
    glBegin(GL_LINES);
+   //glEnable(GL_BLEND);
+   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glLineWidth(2.5);
    for (double i = -wall; i <= wall; i += wall / 40) {
       glColor4f(0.0, 1.0, 0.0, alpha);
       // Floor
       glVertex3f(-wall, -wall, i);
+      glVertex3f(0, -wall, i);
+      glVertex3f(0, -wall, i);
       glVertex3f(wall, -wall, i);
+      
       glVertex3f(i, -wall, -wall);
+      glVertex3f(i, -wall, 0);
+      glVertex3f(i, -wall, 0);
       glVertex3f(i, -wall, wall);
 
       // Ceiling
       glColor4f(0.0, 0.0, 1.0, alpha);
       glVertex3f(-wall, wall, i);
+      glVertex3f(0, wall, i);
+      glVertex3f(0, wall, i);
       glVertex3f(wall, wall, i);
+      
       glVertex3f(i, wall, -wall);
+      glVertex3f(i, wall, 0);
+      glVertex3f(i, wall, 0);
       glVertex3f(i, wall, wall);
 
       // Left Wall
-      glColor4f(1.0, 0.0, 1.0, alpha);
+      glColor4f(1, 0.0, 1.0, alpha);
       glVertex3f(-wall, -wall, i);
+      glVertex3f(-wall, 0, i);
+      glVertex3f(-wall, 0, i);
       glVertex3f(-wall, wall, i);
+      
       glVertex3f(-wall, i, -wall);
+      glVertex3f(-wall, i, 0);
+      glVertex3f(-wall, i, 0);
       glVertex3f(-wall, i, wall);
 
       // Right Wall
       glColor4f(0.0, 1.0, 1.0, alpha);
       glVertex3f(wall, -wall, i);
+      glVertex3f(wall, 0, i);
+      glVertex3f(wall, 0, i);
       glVertex3f(wall, wall, i);
+      
       glVertex3f(wall, i, -wall);
+      glVertex3f(wall, i, 0);
+      glVertex3f(wall, i, 0);
       glVertex3f(wall, i, wall);
 
       // Back Wall
       glColor4f(1.0, 1.0, 0.0, alpha);
       glVertex3f(-wall, i, -wall);
+      glVertex3f(0, i, -wall);
+      glVertex3f(0, i, -wall);
       glVertex3f(wall, i, -wall);
+      
       glVertex3f(i, -wall, -wall);
+      glVertex3f(i, 0, -wall);
+      glVertex3f(i, 0, -wall);
       glVertex3f(i, wall, -wall);
 
       // Front Wall
       glColor4f(1, 0, 0, alpha);
       glVertex3f(-wall, i, wall);
+      glVertex3f(0, i, wall);
+      glVertex3f(0, i, wall);
       glVertex3f(wall, i, wall);
+      
       glVertex3f(i, -wall, wall);
+      glVertex3f(i, 0, wall);
+      glVertex3f(i, 0, wall);
       glVertex3f(i, wall, wall);
    }
    glEnd();
    glEnable(GL_LIGHTING);
+   glLineWidth(1.0);
+   glUseProgram(0);
 }
