@@ -588,16 +588,16 @@ void GameState::keyDown(int key) {
       minimap->setZoomLevel(80);
       break;
    case SDLK_6:
-      minimap->setZoomLevel(40);
+      minimap->setZoomLevel(60);
       break;
    case SDLK_7:
-      minimap->setZoomLevel(20);
+      minimap->setZoomLevel(40);
       break;
    case SDLK_8:
-      minimap->setZoomLevel(10);
+      minimap->setZoomLevel(20);
       break;
    case SDLK_9:
-      minimap->setZoomLevel(5);
+      minimap->setZoomLevel(10);
       break;
    case SDLK_KP_ENTER:
       if (Mix_PausedMusic()) {
