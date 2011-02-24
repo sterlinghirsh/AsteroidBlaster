@@ -47,9 +47,12 @@ std::list<Object3D*>* Radar :: getFullReading() {
    return allNew;
 }
 
-/* Provides a filtered reading of the environment based on what's near the owner AsteroidShip.
+/**
+ * Provides a filtered reading of the environment based on what's near 
+ * the owner AsteroidShip.
+ * The distance which objects must be within to be returned by getNearbyReading()
  */
-std::list<Object3D*>* Radar :: getNearbyReading() {
+std::list<Object3D*>* Radar :: getNearbyReading(float radius) {
    /* Get the custodian out of gameState, and get its vector of Objects.
     * Use this vector to construct a new copied vector (to be safe), and return that one.
     */
@@ -66,8 +69,8 @@ std::list<Object3D*>* Radar :: getNearbyReading() {
       checkee = *vectorIter;
       
       // If the object is within the required nearby distance to be drawn
-      if(checkee != NULL && owner->position->distanceFrom(*(checkee->position)) <= REQUIRED_NEARBY_DIST)
-      {
+      if(checkee != NULL && 
+       owner->position->distanceFrom(*(checkee->position)) <= radius) {
          nearList->push_back(checkee);
       }
    }

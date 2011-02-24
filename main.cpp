@@ -40,7 +40,6 @@ bool fullScreen = false;
 
 int TextureImporter::curTexID;
 std::map<string, int> TextureImporter::texIDMap;
-double minimapSizeFactor = 0.5;
 
 // Fonts
 int *fontsArr[] = {
@@ -175,9 +174,6 @@ void init() {
     fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
     exit(1);
   }
-
-  // Try to create a child window (for the minimap)
-  //SDL_Window SDL_OpenChildWindow(gDrawSurface, 10, 10, 50, 50)
 
   // Set the timer
   SDL_Init(SDL_INIT_TIMER);

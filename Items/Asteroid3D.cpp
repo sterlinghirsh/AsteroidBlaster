@@ -394,7 +394,7 @@ double Asteroid3D::randRadius(double r) {
 void Asteroid3D::drawInMinimap() {
    glPushMatrix();
    position->glTranslate();
-   gluSphere(quadric, collisionRadius, 5, 5);
+   gluSphere(quadric, 0.5 * collisionRadius, 5, 5);
    glPopMatrix();
 }
 

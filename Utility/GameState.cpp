@@ -567,17 +567,37 @@ void GameState::keyDown(int key) {
    case SDLK_z:
       ship->prevWeapon();
       break;
+   // Minimap Display Size
    case SDLK_1:
-      minimapSizeFactor = 1;
+      minimap->setDisplaySize(1);
       break;
    case SDLK_2:
-      minimapSizeFactor = 0.5;
+      minimap->setDisplaySize(0.5);
       break;
    case SDLK_3:
-      minimapSizeFactor = 0.333;
+      minimap->setDisplaySize(0.333);
       break;
    case SDLK_4:
-      minimapSizeFactor = 0.25;
+      minimap->setDisplaySize(0.25);
+      break;
+   case SDLK_0:
+      minimap->setDisplaySize(0);
+      break;
+   // Minimap Zoom
+   case SDLK_5:
+      minimap->setZoomLevel(80);
+      break;
+   case SDLK_6:
+      minimap->setZoomLevel(40);
+      break;
+   case SDLK_7:
+      minimap->setZoomLevel(20);
+      break;
+   case SDLK_8:
+      minimap->setZoomLevel(10);
+      break;
+   case SDLK_9:
+      minimap->setZoomLevel(5);
       break;
    case SDLK_KP_ENTER:
       if (Mix_PausedMusic()) {

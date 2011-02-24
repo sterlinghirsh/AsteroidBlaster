@@ -16,9 +16,6 @@
 // Incomplete declaration so we can use the pointer.
 class AsteroidShip;
 
-// The distance which objects must be within to be returned by getNearbyReading()
-const double REQUIRED_NEARBY_DIST = 40.0;
-
 class Radar {
    public:
       // Takes in a reference to the ship that constructed it.
@@ -30,7 +27,7 @@ class Radar {
       std::list<Object3D*>* getFullReading();
       
       // Provides a filtered reading of the environment based on what's near the owner AsteroidShip.
-      virtual std::list<Object3D*>* getNearbyReading();
+      virtual std::list<Object3D*>* getNearbyReading(float radius);
       
       // Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
       virtual std::list<Object3D*>* getViewFrustumReading();

@@ -10,7 +10,7 @@
 #include "Items/Object3D.h"
 
 #define DEFAULT_DISPLAYSIZE 0.5
-#define DEFAULT_ZOOMLEVEL 20
+#define DEFAULT_ZOOMLEVEL 40
 
 Minimap::Minimap(AsteroidShip* _ship) :
  ship(_ship), displaySize(DEFAULT_DISPLAYSIZE), zoomLevel(DEFAULT_ZOOMLEVEL) {
@@ -48,12 +48,12 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
             radius2D = distance2D(objectPosition.x, objectPosition.z);
             radius3D = distance3D(objectPosition.x, objectPosition.y, objectPosition.z);
 
-            if (radius3D < 20) {
+            if (radius3D < 0.5 * zoomLevel) {
                glColor3f(1, 0, 0);
-               setMaterial(RedTransparent);
-            } else if (radius3D < 30) {
+               setMaterial(RedFlat);
+            } else if (radius3D < 0.75 * zoomLevel) {
                glColor3f(1, 1, 0);
-               setMaterial(YellowTransparent);
+               setMaterial(YellowFlat);
             } else {
                glColor3f(0, 1, 0);
                setMaterial(GreenTransparent);
@@ -79,9 +79,20 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
    glPopMatrix();
 }
 
+/**
+ * This draws the minimap.
+ * If displaySize is 0, the minimap is not shown.
+ * Otherwise displaySize is how big the map is drawn.
+ *    1 is full screen, .25 is quarter screen, etc.
+ * zoomLevel is the maximum distance that should be drawn.
+ *    40 draws items within 40 units of the ship.
+ *    5 draws items within 5 units of the ship.
+ */
 void Minimap::draw() {
+   if (displaySize == 0)
+      return;
    // Get a reading of all the nearby Object3Ds from the Radar
-   std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading();
+   std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading(zoomLevel);
    static Vector3D positionVector;
    const float scaleFactor = 1 / zoomLevel;
    double radius3D; // Radius from the ship in 3D space.
@@ -115,6 +126,7 @@ void Minimap::draw() {
 
       glDisable(GL_LIGHT0); // turn off the normal light, put a light at the center.
       glEnable(GL_LIGHT1);
+      glScalef(2, 2, 2);
 
       glPushMatrix();
          ship->glRotate(false);
@@ -134,10 +146,10 @@ void Minimap::draw() {
             // TODO: Make this not copy code from below.
             if (*listIter != NULL && ((*listIter)->shouldDrawInMinimap || *listIter == ship)) {
                radius3D = ship->position->distanceFrom(*(*listIter)->position);
-               if (radius3D < 20) {
+               if (radius3D < 0.5 * zoomLevel) {
                   glColor3f(1, 0, 0);
                   setMaterial(RedFlat);
-               } else if (radius3D < 30) {
+               } else if (radius3D < 0.75 * zoomLevel) {
                   glColor3f(1, 1, 0);
                   setMaterial(YellowFlat);
                } else {
@@ -157,7 +169,7 @@ void Minimap::draw() {
       setMaterial(GrayTransparent);
       //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_CULL_FACE);
-      gluSphere(quadric, 2, 20, 20);
+      gluSphere(quadric, 1, 20, 20);
       glEnable(GL_CULL_FACE);
    glPopMatrix();
 }
