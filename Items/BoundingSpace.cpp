@@ -62,17 +62,18 @@ void BoundingSpace::draw() {
    glBegin(GL_LINES);
    //glEnable(GL_BLEND);
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   const float increment = wall / 40;
    glLineWidth(2.5);
-   for (double i = -wall; i <= wall; i += wall / 40) {
+   for (double i = -wall; i <= wall; i += increment) {
       glColor4f(0.0, 1.0, 0.0, alpha);
       // Floor
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(j, -wall, i);
             glVertex3f(0 + 1, -wall, i);
       }
       
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(i, -wall, j);
             glVertex3f(i, -wall, j + 1);
@@ -80,13 +81,13 @@ void BoundingSpace::draw() {
 
       // Ceiling
       glColor4f(0.0, 0.0, 1.0, alpha);
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(j, wall, i);
             glVertex3f(j +1, wall, i);
       }
       
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(i, wall, j);
             glVertex3f(i, wall, j + 1);
@@ -95,26 +96,26 @@ void BoundingSpace::draw() {
       
       // Left Wall
       glColor4f(1, 0.0, 1.0, alpha);
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(-wall, j, i);
             glVertex3f(-wall, j + 1, i);
       }
 
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(-wall, i, j);
             glVertex3f(-wall, i, j + 1);
       }
       // Right Wall
       glColor4f(0.0, 1.0, 1.0, alpha);
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(wall, j, i);
             glVertex3f(wall, j + 1, i);
       }
       
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(wall, i, j);
             glVertex3f(wall, i, j + 1);
@@ -122,13 +123,13 @@ void BoundingSpace::draw() {
 
       // Back Wall
       glColor4f(1.0, 1.0, 0.0, alpha);
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(j, i, -wall);
             glVertex3f(j + 1, i, -wall);
       }
       
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(i, j, -wall);
             glVertex3f(i, j + 1, -wall);
@@ -136,20 +137,42 @@ void BoundingSpace::draw() {
 
       // Front Wall
       glColor4f(1, 0, 0, alpha);
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(j, i, wall);
             glVertex3f(j + 1, i, wall);
       }
       
-      for(double j = -wall; j <= wall - 1; j += wall/40)
+      for(double j = -wall; j <= wall - 1; j += increment)
       {
             glVertex3f(i, j, wall);
             glVertex3f(i, j + 1, wall);
       }
    }
    glEnd();
+
+   glBegin(GL_QUADS);
+   std::list<GlowSquare*>::iterator glowSquare;
+   for (glowSquare = glowingSquares.begin(); glowSquare != glowingSquares.end();
+    ++glowSquare) {
+      (*glowSquare)->draw();   
+   }
+   glEnd();
+
    glEnable(GL_LIGHTING);
    glLineWidth(1.0);
    glUseProgram(0);
+}
+
+void BoundingSpace::update(double timeDiff) {
+   std::list<GlowSquare*>::iterator glowSquare;
+   double curTime = doubleTime();
+   double lifeTime = 1;
+   for (glowSquare = glowingSquares.begin(); glowSquare != glowingSquares.end();
+    ++glowSquare) {
+      (*glowSquare)->update(timeDiff);
+      if (curTime - (*glowSquare)->timeCreated < lifeTime) {
+         glowingSquares.erase(glowSquare);
+      }
+   }
 }

@@ -10,6 +10,8 @@
 
 #include "Utility/Point3D.h"
 #include "Items/Object3D.h"
+#include "Items/GlowSquare.h"
+#include <list>
 
 class BoundingSpace {
    public:
@@ -20,6 +22,9 @@ class BoundingSpace {
       ~BoundingSpace();
       virtual void constrain(Object3D* item);
       void draw();
+      void update(double timeDiff);
+   private:
+      std::list<GlowSquare*> glowingSquares;
 };
 
 #endif
