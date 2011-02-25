@@ -7,6 +7,7 @@
 
 #include "Graphics/TextureImporter.h"
 #include "Utility/GlobalUtility.h"
+#include <algorithm>
 
 
 TextureImporter::TextureImporter(std::string filename) {
@@ -74,6 +75,7 @@ int TextureImporter::ImageLoad(std::string filename) {
   unsigned short int planes;  /*  number of planes in image (must be 1)  */
   unsigned short int bpp;     /*  number of bits per pixel (must be 24) */
   char temp;                  /*  used to convert bgr to rgb color. */
+  int tempColorValue = 0; // The sum of the three colors. This / 3 is the alpha.
   
   /*  make sure the file is there. */
   if ((file = fopen(filename.c_str(), "rb")) == NULL) {
@@ -125,10 +127,10 @@ int TextureImporter::ImageLoad(std::string filename) {
     data[i * bytesPerPixel] = data[(i * bytesPerPixel) + 2];
     data[(i * bytesPerPixel) + 2] = temp;
     data[(i * bytesPerPixel) + 3] = 127;
-    if (data[i * bytesPerPixel] == 0 &&
-        data[i * bytesPerPixel + 1] == 0 &&
-        data[i * bytesPerPixel + 2] == 0)
-       data[i * bytesPerPixel + 3] = 0;
+    data[i * bytesPerPixel + 3] = std::max(
+       data[i * bytesPerPixel], std::max(
+       data[i * bytesPerPixel + 1],
+       data[i * bytesPerPixel + 2]));
   }
   
   /*
