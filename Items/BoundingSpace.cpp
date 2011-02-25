@@ -66,75 +66,87 @@ void BoundingSpace::draw() {
    for (double i = -wall; i <= wall; i += wall / 40) {
       glColor4f(0.0, 1.0, 0.0, alpha);
       // Floor
-      glVertex3f(-wall, -wall, i);
-      glVertex3f(0, -wall, i);
-      glVertex3f(0, -wall, i);
-      glVertex3f(wall, -wall, i);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(j, -wall, i);
+            glVertex3f(0 + 1, -wall, i);
+      }
       
-      glVertex3f(i, -wall, -wall);
-      glVertex3f(i, -wall, 0);
-      glVertex3f(i, -wall, 0);
-      glVertex3f(i, -wall, wall);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(i, -wall, j);
+            glVertex3f(i, -wall, j + 1);
+      }
 
       // Ceiling
       glColor4f(0.0, 0.0, 1.0, alpha);
-      glVertex3f(-wall, wall, i);
-      glVertex3f(0, wall, i);
-      glVertex3f(0, wall, i);
-      glVertex3f(wall, wall, i);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(j, wall, i);
+            glVertex3f(j +1, wall, i);
+      }
       
-      glVertex3f(i, wall, -wall);
-      glVertex3f(i, wall, 0);
-      glVertex3f(i, wall, 0);
-      glVertex3f(i, wall, wall);
-
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(i, wall, j);
+            glVertex3f(i, wall, j + 1);
+      }
+      
+      
       // Left Wall
       glColor4f(1, 0.0, 1.0, alpha);
-      glVertex3f(-wall, -wall, i);
-      glVertex3f(-wall, 0, i);
-      glVertex3f(-wall, 0, i);
-      glVertex3f(-wall, wall, i);
-      
-      glVertex3f(-wall, i, -wall);
-      glVertex3f(-wall, i, 0);
-      glVertex3f(-wall, i, 0);
-      glVertex3f(-wall, i, wall);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(-wall, j, i);
+            glVertex3f(-wall, j + 1, i);
+      }
 
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(-wall, i, j);
+            glVertex3f(-wall, i, j + 1);
+      }
       // Right Wall
       glColor4f(0.0, 1.0, 1.0, alpha);
-      glVertex3f(wall, -wall, i);
-      glVertex3f(wall, 0, i);
-      glVertex3f(wall, 0, i);
-      glVertex3f(wall, wall, i);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(wall, j, i);
+            glVertex3f(wall, j + 1, i);
+      }
       
-      glVertex3f(wall, i, -wall);
-      glVertex3f(wall, i, 0);
-      glVertex3f(wall, i, 0);
-      glVertex3f(wall, i, wall);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(wall, i, j);
+            glVertex3f(wall, i, j + 1);
+      }
 
       // Back Wall
       glColor4f(1.0, 1.0, 0.0, alpha);
-      glVertex3f(-wall, i, -wall);
-      glVertex3f(0, i, -wall);
-      glVertex3f(0, i, -wall);
-      glVertex3f(wall, i, -wall);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(j, i, -wall);
+            glVertex3f(j + 1, i, -wall);
+      }
       
-      glVertex3f(i, -wall, -wall);
-      glVertex3f(i, 0, -wall);
-      glVertex3f(i, 0, -wall);
-      glVertex3f(i, wall, -wall);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(i, j, -wall);
+            glVertex3f(i, j + 1, -wall);
+      }
 
       // Front Wall
       glColor4f(1, 0, 0, alpha);
-      glVertex3f(-wall, i, wall);
-      glVertex3f(0, i, wall);
-      glVertex3f(0, i, wall);
-      glVertex3f(wall, i, wall);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(j, i, wall);
+            glVertex3f(j + 1, i, wall);
+      }
       
-      glVertex3f(i, -wall, wall);
-      glVertex3f(i, 0, wall);
-      glVertex3f(i, 0, wall);
-      glVertex3f(i, wall, wall);
+      for(double j = -wall; j <= wall - 1; j += wall/40)
+      {
+            glVertex3f(i, j, wall);
+            glVertex3f(i, j + 1, wall);
+      }
    }
    glEnd();
    glEnable(GL_LIGHTING);
