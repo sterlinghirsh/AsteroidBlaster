@@ -302,9 +302,7 @@ void GameState::vBlur() {
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
    glPopMatrix();
-   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    glUseProgram(0);
-
 }
 
 void GameState::drawBloom() {

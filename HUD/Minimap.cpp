@@ -36,6 +36,7 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
       modelViewMatrix.loadModelviewMatrix();
    glPopMatrix();
 
+
    glPushMatrix();
       glScalef(scaleFactor, scaleFactor, scaleFactor);
       setMaterial(WhiteSolid);
@@ -68,7 +69,13 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
                glDisable(GL_LIGHTING);
             glPopMatrix();
 
+            glDisable(GL_LIGHTING);
             glBegin(GL_LINES);
+               // Draw a line from the ship to the object's position on the ship's plane.
+               glVertex3f(0, 0, 0);
+               glVertex3f(objectPosition.x, 0, objectPosition.z);
+               
+               // Now draw a point from the plane up to the object's position in 3d.
                // Draw a point at the object's position.
                glVertex3f(objectPosition.x, objectPosition.y, objectPosition.z);
                // Draw the other point at the object's position without the Y component.
@@ -91,6 +98,7 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
 void Minimap::draw() {
    if (displaySize == 0)
       return;
+
    // Get a reading of all the nearby Object3Ds from the Radar
    std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading(zoomLevel);
    static Vector3D positionVector;
