@@ -21,7 +21,7 @@ void main()
       pixelAlpha = (sqrt(v.x * v.x + v.y * v.y + v.z * v.z) - 40.0) / 30.0;
       
       //This makes the lowest alpha possible .1
-      pixelAlpha = (pixelAlpha * .9) + .25;
       pixelAlpha *= pixelAlpha;
+      pixelAlpha = (pixelAlpha * .85) + .15;
 }
 

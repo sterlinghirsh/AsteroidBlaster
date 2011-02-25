@@ -141,6 +141,7 @@ void GameState::update(double timeDiff) {
    }
    weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
    healthBar->setAmount(ship->getHealth() / 100.0);
+   cube->update(timeDiff);
 }
 
 /**

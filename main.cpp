@@ -74,6 +74,11 @@ GLfloat minimaplight_amb[4] = {1, 1, 1, 0.5};
 GLfloat minimaplight_diff[4] = {1, 1, 1, 0.5};
 GLfloat minimaplight_spec[4] = {1, 1, 1, 0.5};
 
+GLfloat ambientlight_pos[4] = {0, 0, 0, 1};
+GLfloat ambientlight_amb[4] = {1, 1, 1, 0.5};
+GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
+GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
+
 void display() {
   double startTime = doubleTime();
 
@@ -224,6 +229,12 @@ void init() {
   glLightfv(GL_LIGHT1, GL_DIFFUSE, minimaplight_diff);
   glLightfv(GL_LIGHT1, GL_SPECULAR, minimaplight_spec);
   glLightfv(GL_LIGHT1, GL_POSITION, minimaplight_pos);
+  
+  glEnable(GL_LIGHT2);
+  glLightfv(GL_LIGHT2, GL_AMBIENT, ambientlight_amb);
+  glLightfv(GL_LIGHT2, GL_DIFFUSE, ambientlight_diff);
+  glLightfv(GL_LIGHT2, GL_SPECULAR, ambientlight_spec);
+  glLightfv(GL_LIGHT2, GL_POSITION, ambientlight_pos);
   //glShadeModel(GL_SMOOTH);
   glEnable(GL_NORMALIZE);
 
