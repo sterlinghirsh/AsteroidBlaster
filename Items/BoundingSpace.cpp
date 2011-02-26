@@ -76,7 +76,9 @@ void BoundingSpace::draw() {
    glBegin(GL_LINES);
    //glEnable(GL_BLEND);
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   const float increment = wall / 40;
+   
+   // NOTE: When you put wall / 20, it makes these sweet Ls instead of boxes.
+   const float increment = wall / 20;
    glLineWidth(2.5);
    for (double i = -wall; i <= wall; i += increment) {
       glColor4f(0.0, 1.0, 0.0, alpha);
