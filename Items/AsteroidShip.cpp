@@ -45,8 +45,8 @@ AsteroidShip::AsteroidShip() :
 
       // Bounding box stuff.
       //shipRadius = 1; NOT USED
-      maxX = maxY = maxZ = 0.3;
-      minX = minY = minZ = -0.3;
+      maxX = maxY = maxZ = 0.5;
+      minX = minY = minZ = -0.5;
       updateBoundingBox();
 
       // Orientation vectors.
