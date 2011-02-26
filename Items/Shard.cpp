@@ -28,6 +28,14 @@ Shard::Shard(double r, double worldSizeIn) :
       worldSize = worldSizeIn;
       orbiters = glGenLists(1);
       genOrbiters();
+
+
+      cubeList = glGenLists(1);
+      glNewList(cubeList, GL_COMPILE);
+      glutSolidCube (0.6);
+      glEndList();
+      transparentZ = -8.0;
+
       InitShard(r, worldSizeIn);
    }
 
@@ -80,7 +88,7 @@ void Shard::InitShard(double r, double worldSizeIn) {
    for (int j = npts / 2; j >= 0; j--) {
       double tmpangle = (M_PI * 2 / (double)npts * (double)j);
       double tmpRad = r * sin(tmpangle);
-      double tmpH = r * cos(tmpangle);
+      double tmpH = r * cos(tmpangle) * 2.0;
       int tmpPts = npts * (tmpRad / r);
       if (tmpPts < 0) {
          tmpPts *= -1;
@@ -218,33 +226,33 @@ void Shard::drawGlow() {
    drawOtherOrbiters();
    // For each ring of orbiters, rotate the proper amount.
    /*for (int i = 0; i < NUM_ORBIT_RINGS; i++) {
-      ORBITER_CLR;
-      double tilt = 180.0 / (double)NUM_ORBIT_RINGS;
-      glRotatef(tilt, axis->xMag, axis->yMag, axis->zMag);
-      glPushMatrix();
-      // Calculate the current rotation for the current orbiter ring.
-      // Alternates between positive and negative.
-      double tmpRot = ORBIT_RATE * angle * 2.0 * (1.0 + 0.1 * i);
-      for (int j = 0; j < i; j++) {
-         tmpRot *= -1;
-      }
-      glRotatef(tmpRot, 0, 1, 0);
-      glScalef(scalex, scaley, scalez);
-      //double initAngle = (double)rand() / (double)RAND_MAX
-      double initAngle = 360.0 / NUM_ORBIT_RINGS * i;
-      for (int k = 0; k < NUM_ORBITERS; k++) {
-         //printf("ring %d, orbiter %d, tilt[%d] = %f\n", i, k, i, tilt * i);
-         glPushMatrix();
-         // Rotate each orbiter by the appropriate amount to form a ring.
-         glRotatef(360.0 / NUM_ORBITERS * k + initAngle, 0, 1, 0);
-         // Move the orbiter away from the origin to set the ring's radius.
-         glTranslatef(RING_RAD, 0.0, 0.0);
-         glScalef(ORBITER_RAD, ORBITER_RAD, ORBITER_RAD);
-         // Draw an orbiter from the list.
-         //glCallList(orbiters);
-         glPopMatrix();
-      }
-      glPopMatrix();
+     ORBITER_CLR;
+     double tilt = 180.0 / (double)NUM_ORBIT_RINGS;
+     glRotatef(tilt, axis->xMag, axis->yMag, axis->zMag);
+     glPushMatrix();
+   // Calculate the current rotation for the current orbiter ring.
+   // Alternates between positive and negative.
+   double tmpRot = ORBIT_RATE * angle * 2.0 * (1.0 + 0.1 * i);
+   for (int j = 0; j < i; j++) {
+   tmpRot *= -1;
+   }
+   glRotatef(tmpRot, 0, 1, 0);
+   glScalef(scalex, scaley, scalez);
+   //double initAngle = (double)rand() / (double)RAND_MAX
+   double initAngle = 360.0 / NUM_ORBIT_RINGS * i;
+   for (int k = 0; k < NUM_ORBITERS; k++) {
+   //printf("ring %d, orbiter %d, tilt[%d] = %f\n", i, k, i, tilt * i);
+   glPushMatrix();
+   // Rotate each orbiter by the appropriate amount to form a ring.
+   glRotatef(360.0 / NUM_ORBITERS * k + initAngle, 0, 1, 0);
+   // Move the orbiter away from the origin to set the ring's radius.
+   glTranslatef(RING_RAD, 0.0, 0.0);
+   glScalef(ORBITER_RAD, ORBITER_RAD, ORBITER_RAD);
+   // Draw an orbiter from the list.
+   //glCallList(orbiters);
+   glPopMatrix();
+   }
+   glPopMatrix();
    }
    */
 
@@ -254,11 +262,18 @@ void Shard::drawGlow() {
 }
 
 void Shard::draw() {
+   GLfloat mat_specular[] = { 0.1, 0.1, 0.3, 0.75 };
+   GLfloat mat_shininess[] = { 100.0 };
+
+   GLfloat mat_transparent[] = { 0.2, 0.2, 0.5, 0.9 };
+   GLfloat mat_emission[] = { 0.0, 0.1, 0.3, 0.2 };
+   GLfloat mat_no_emission[] = { 0.0, 0.0, 0.0, 1.0 };
+
    glColor3f(1, 1, 1);
    // Call the display list if it has one.
    Object3D::draw();
    // Disable materials.
-   glEnable(GL_COLOR_MATERIAL);
+   //glEnable(GL_COLOR_MATERIAL);
    //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
@@ -267,8 +282,13 @@ void Shard::draw() {
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
 
-   setMaterial(Rock);
-   glColor4f(0.4, 0.5, 0.7, 0.7);
+   //setMaterial(Rock);
+   glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
+   glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_transparent);
+   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+   //glDepthMask(GL_FALSE);
+   //glColor4f(0.4, 0.5, 0.7, 0.7);
    // Set polygon offset to be behind the lines.
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
@@ -276,6 +296,8 @@ void Shard::draw() {
    // Draw all triangles in the mesh with smoothing turned off.
    mesh.draw(false);
    glDisable(GL_POLYGON_OFFSET_FILL);
+   glMaterialfv(GL_FRONT, GL_EMISSION, mat_no_emission);
+   //glDepthMask(GL_TRUE);
 
    glColor3f(0.325, 0.71, 0.808);
    // Set polygon offset to be in front of the faces.
@@ -291,37 +313,37 @@ void Shard::draw() {
    drawOtherOrbiters();
    // For each ring of orbiters, rotate the proper amount.
    /*for (int i = 0; i < NUM_ORBIT_RINGS; i++) {
-      ORBITER_CLR;
-      double tilt = 180.0 / (double)NUM_ORBIT_RINGS;
-      glRotatef(tilt, axis->xMag, axis->yMag, axis->zMag);
-      glPushMatrix();
-      // Calculate the current rotation for the current orbiter ring.
-      // Alternates between positive and negative.
-      double tmpRot = ORBIT_RATE * angle * 2.0 * (1.0 + 0.1 * i);
-      for (int j = 0; j < i; j++) {
-         tmpRot *= -1;
-      }
-      glRotatef(tmpRot, 0, 1, 0);
-      glScalef(scalex, scaley, scalez);
-      //double initAngle = (double)rand() / (double)RAND_MAX
-      double initAngle = 360.0 / NUM_ORBIT_RINGS * i;
-      for (int k = 0; k < NUM_ORBITERS; k++) {
-         //printf("ring %d, orbiter %d, tilt[%d] = %f\n", i, k, i, tilt * i);
-         glPushMatrix();
-         // Rotate each orbiter by the appropriate amount to form a ring.
-         glRotatef(360.0 / NUM_ORBITERS * k + initAngle, 0, 1, 0);
-         // Move the orbiter away from the origin to set the ring's radius.
-         glTranslatef(RING_RAD, 0.0, 0.0);
-         glScalef(ORBITER_RAD, ORBITER_RAD, ORBITER_RAD);
-         // Draw an orbiter from the list.
-         //glCallList(orbiters);
-         glPopMatrix();
-      }
-      glPopMatrix();
+     ORBITER_CLR;
+     double tilt = 180.0 / (double)NUM_ORBIT_RINGS;
+     glRotatef(tilt, axis->xMag, axis->yMag, axis->zMag);
+     glPushMatrix();
+   // Calculate the current rotation for the current orbiter ring.
+   // Alternates between positive and negative.
+   double tmpRot = ORBIT_RATE * angle * 2.0 * (1.0 + 0.1 * i);
+   for (int j = 0; j < i; j++) {
+   tmpRot *= -1;
+   }
+   glRotatef(tmpRot, 0, 1, 0);
+   glScalef(scalex, scaley, scalez);
+   //double initAngle = (double)rand() / (double)RAND_MAX
+   double initAngle = 360.0 / NUM_ORBIT_RINGS * i;
+   for (int k = 0; k < NUM_ORBITERS; k++) {
+   //printf("ring %d, orbiter %d, tilt[%d] = %f\n", i, k, i, tilt * i);
+   glPushMatrix();
+   // Rotate each orbiter by the appropriate amount to form a ring.
+   glRotatef(360.0 / NUM_ORBITERS * k + initAngle, 0, 1, 0);
+   // Move the orbiter away from the origin to set the ring's radius.
+   glTranslatef(RING_RAD, 0.0, 0.0);
+   glScalef(ORBITER_RAD, ORBITER_RAD, ORBITER_RAD);
+   // Draw an orbiter from the list.
+   //glCallList(orbiters);
+   glPopMatrix();
+   }
+   glPopMatrix();
    }
    */
 
-   glDisable(GL_COLOR_MATERIAL);
+   //glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();
 }
 

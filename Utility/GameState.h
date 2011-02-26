@@ -11,6 +11,7 @@
 
 #include "Items/AsteroidShip.h"
 #include "Items/BoundingSpace.h"
+#include "Items/BoundingSphere.h"
 #include "Items/Asteroid3D.h"
 #include "Graphics/Skybox.h"
 #include "Graphics/Sprite.h"
@@ -103,6 +104,7 @@ class GameState : public InputReceiver {
       Skybox* skybox;
       Camera* camera;
       BoundingSpace* cube;
+      BoundingSphere* sphere;
       Minimap* minimap;
 
       std::list<Object3D*> objects;

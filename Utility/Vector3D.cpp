@@ -251,6 +251,20 @@ void Vector3D::glTranslate(double length = 1) {
    glTranslatef(length * xMag, length * yMag, length * zMag);
 }
 
+void Vector3D::reflect(Vector3D& axis) {
+   double x = xMag;
+   double y = yMag;
+   double z = zMag;
+   double u = axis.xMag;
+   double v = axis.yMag;
+   double w = axis.zMag;
+   double l_dot_n = dot(axis);
+
+   xMag = -x + (2 * l_dot_n * u);
+   yMag = -y + (2 * l_dot_n * v);
+   zMag = -z + (2 * l_dot_n * w);
+}
+
 Vector3D Vector3D::getNormalVector() {
    double closestToZero = min(fabs(xMag), min(fabs(yMag), fabs(zMag)));
    Vector3D otherPoint(1, 1, 1);

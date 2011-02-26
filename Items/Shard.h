@@ -48,6 +48,8 @@ class Shard : public Object3D {
       bool handleHit(std::list<Shard*>& asteroids);
       void drawInMinimap();
       void debug();
+      GLuint cubeList;
+      float transparentZ;
 
    private:
       double randRadius(double r);

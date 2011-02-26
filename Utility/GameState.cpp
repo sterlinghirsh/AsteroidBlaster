@@ -23,6 +23,7 @@ GameState::GameState(double worldSizeIn) {
    minimap = new Minimap(ship);
    camera = new Camera(ship);
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
+   //sphere = new BoundingSphere(worldSize, 0, 0, 0);
    // Set up our text objects to be displayed on screen.
    curFPS = 0;
 

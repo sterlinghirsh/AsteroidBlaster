@@ -53,6 +53,7 @@ class Vector3D {
       void scalarMultiplyUpdate(double);
       void setLength(double);
       void glTranslate(double length);
+      void reflect(Vector3D& axis);
       Vector3D getNormalVector();
       void negativeX();
       void negativeY();
