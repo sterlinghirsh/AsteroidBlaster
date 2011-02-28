@@ -578,10 +578,26 @@ void GameState::keyDown(int key) {
       break;
 
    case SDLK_v:
-      ship->nextWeapon();
+      // If we're in godMode, ignore whether or not a weapon is purchased
+      if(gameState->godMode)
+         ship->prevWeapon();
+      else {
+         // Keep scrolling through weapons as long as they're not purchased.
+         do { 
+            ship->nextWeapon();
+         } while (!ship->getCurrentWeapon()->purchased);
+      }
       break;
    case SDLK_z:
-      ship->prevWeapon();
+      // If we're in godMode, ignore whether or not a weapon is purchased
+      if(gameState->godMode)
+         ship->prevWeapon();
+      else {
+         // Keep scrolling through weapons as long as they're not purchased.
+         do {
+            ship->prevWeapon();
+         } while (!ship->getCurrentWeapon()->purchased);
+      }
       break;
    // Minimap Display Size
    case SDLK_1:
@@ -709,11 +725,13 @@ void GameState::keyUp(int key) {
  */
 void GameState::mouseDown(int button) {
    switch(button) {
+   // Left mouse down
    case 1:
       //ship->selectWeapon(0);
       ship->fire(true);
       break;
 
+   // Right mouse down
    case 3:
       doYaw = !doYaw;
       ship->setRollSpeed(0);
@@ -721,13 +739,28 @@ void GameState::mouseDown(int button) {
       break;
 
    case 4:
-      ship->prevWeapon();
+      // If we're in godMode, ignore whether or not a weapon is purchased
+      if(gameState->godMode)
+         ship->prevWeapon();
+      else {
+         // Keep scrolling through weapons as long as they're not purchased.
+         do { 
+            ship->prevWeapon();
+         } while (!ship->getCurrentWeapon()->purchased);
+      }
       break;
    case 5:
-      ship->nextWeapon();
+      // If we're in godMode, ignore whether or not a weapon is purchased
+      if(gameState->godMode)
+         ship->nextWeapon();
+      else {
+         // Keep scrolling through weapons as long as they're not purchased.
+         do { 
+            ship->nextWeapon();
+         } while (!ship->getCurrentWeapon()->purchased);
+      }
       break;
    }
-   //ship->fire(true);
 }
 
 /**
@@ -735,9 +768,11 @@ void GameState::mouseDown(int button) {
  */
 void GameState::mouseUp(int button) {
    switch (button) {
+   // Left mouse up
    case 1:
       ship->fire(false);
       break;
+   // Right mouse up
    case 3:
       doYaw = !doYaw;
       ship->setRollSpeed(0);

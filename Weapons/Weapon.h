@@ -54,6 +54,10 @@ class Weapon {
        * The current amount of ammo available to use. -1 is infinite.
        */
       int curAmmo;
+      /*
+       * True if the ship owns it, false if it doesn't.
+       */
+      bool purchased;
       
       protected:
          WeaponType type; // Do we need this?

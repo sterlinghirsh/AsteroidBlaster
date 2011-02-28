@@ -16,6 +16,7 @@ RailGun::RailGun(AsteroidShip* owner)
    coolDown = 2; // Seconds
    name = "Rail Gun";
    curAmmo = 15;
+   purchased = false;
 }
 
 RailGun::~RailGun() {

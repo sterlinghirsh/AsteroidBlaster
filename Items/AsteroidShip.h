@@ -99,6 +99,14 @@ class AsteroidShip : public Object3D {
       int nShards;
       Vector3D shotDirection; // If we shoot a shot, where will it go?
       Weapon* getCurrentWeapon();
+      /*
+       * Just tell us what the next weapon up would be, but don't switch to it.
+       */
+      Weapon* getNextWeapon();
+      /*
+       * Just tell us what the previous weapon would be, but don't switch to it.
+       */
+      Weapon* getPreviousWeapon();
       float getCurrentWeaponCoolDown();
       Vector3D* getShotDirection();
       Weapon* getWeapon(int wep);

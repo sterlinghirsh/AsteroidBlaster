@@ -55,8 +55,9 @@ int fontSpot = 0; // TODO: What is this?
 
 // Pointer to the global gamestate object.
 GameState* gameState = NULL;
-// Pointer to the global menu object.
-Menu* menu = NULL;
+// Pointers to the global menu objects.
+Menu* mainMenu = NULL;
+Menu* purchasingMenu = NULL;
 // This handles all the input.
 InputManager* inputManager = NULL;
 
@@ -325,24 +326,26 @@ int main(int argc, char* argv[]) {
   gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
 
 
-  //Initialize gameState
+  // Initialize the gameState
   gameState = new GameState(WORLD_SIZE);
-  //initialize menu
-  menu = new Menu();
+  // Initialize the menus
+  mainMenu = new Menu();
+  purchasingMenu = new Menu();
+  //purchasingMenu-> menuActive = false;
 
   //Initialize the input manager
   inputManager = new InputManager();
   //Connect the input manager to the gameState
   inputManager->addReceiver(gameState);
-  inputManager->addReceiver(menu);
+  inputManager->addReceiver(mainMenu);
 
   //declare the event that will be reused
   SDL_Event event;
 
   while (running) {
-    if (menu->isActive()) {
-      menu->draw();
-      timerFunc(menu->isActive());
+    if (mainMenu->isActive()) {
+      mainMenu->draw();
+      timerFunc(mainMenu->isActive());
     } else if (gameState->isGameRunning()) {
       timerFunc(false);
       display();

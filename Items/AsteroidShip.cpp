@@ -774,6 +774,21 @@ Weapon* AsteroidShip::getCurrentWeapon() {
    return weapons[currentWeapon];
 }
 
+/*
+ * Just tell us what the next weapon up would be, but don't switch to it.
+ */
+Weapon* AsteroidShip :: getNextWeapon() {
+   return weapons[(currentWeapon + 1) %weapons.size()];
+}
+
+
+/*
+ * Just tell us what the previous weapon would be, but don't switch to it.
+ */
+Weapon* AsteroidShip :: getPreviousWeapon() {
+   return weapons[(currentWeapon - 1) %weapons.size()];
+}
+
 /**
  * Increment the current weapon and mod by the number of weapons.
  */

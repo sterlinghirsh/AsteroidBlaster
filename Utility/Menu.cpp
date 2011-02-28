@@ -73,16 +73,18 @@ void Menu::draw() {
    
    //draw the text
    glPushMatrix();
-   useOrtho();
-   glDisable(GL_LIGHTING);
-   SDL_FillRect(gDrawSurface, NULL, 0);
-   SDL_BlitSurface(titleImage, &src, gDrawSurface, &dest);
-   newGame->draw();
-   saveLoadGame->draw();
-   settings->draw();
-   quit->draw();
-   glEnable(GL_LIGHTING);
-   usePerspective();
+      useOrtho();
+      glDisable(GL_LIGHTING);
+      SDL_FillRect(gDrawSurface, NULL, 0);
+      SDL_BlitSurface(titleImage, &src, gDrawSurface, &dest);
+
+      newGame->draw();
+      saveLoadGame->draw();
+      settings->draw();
+      quit->draw();
+
+      glEnable(GL_LIGHTING);
+      usePerspective();
    glPopMatrix();
 
    SDL_GL_SwapBuffers();
@@ -165,6 +167,4 @@ void Menu::mouseMove(int dx, int dy, int _x, int _y) {
       quit->setColor(1.0,1.0,1.0);
    }
 }
-
-
 

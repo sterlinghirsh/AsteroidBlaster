@@ -17,6 +17,7 @@ TractorBeam::TractorBeam(AsteroidShip* owner) : Weapon(owner) {
    lastFiredFrame = 0; // We use these three to handle the audio.
    soundPlaying = false;
    curAmmo = 2000;
+   purchased = false;
 }
 
 TractorBeam::~TractorBeam() {
