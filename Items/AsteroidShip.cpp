@@ -84,7 +84,10 @@ AsteroidShip::AsteroidShip() :
       // Add weapons to the list!
       weapons.push_back(new Blaster(this));
       weapons.push_back(new RailGun(this));
+      /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
+       */
       weapons.push_back(new TractorBeam(this));
+
       // The ship's currently selected weapon.
       currentWeapon = 0;
       soundHandle = -1;
@@ -702,7 +705,7 @@ void AsteroidShip::drawCrosshair() {
 void AsteroidShip::drawShotDirectionIndicators() {
    // Don't draw this while firing the tractorbeam.
    // TODO: Make 2 not a magic number.
-   if (currentWeapon == 2 && isFiring) {
+   if (currentWeapon == 2 && isFiring && weapons[2]->curAmmo > 0 || (gameState->godMode && isFiring)) {
       return;
    }
    // The coords of the boxes.

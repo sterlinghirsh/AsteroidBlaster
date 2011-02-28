@@ -44,3 +44,4 @@ double Weapon::getCoolDownAmount() {
       return 1;
    return clamp((doubleTime() - timeLastFired) / coolDown, 0, 1);
 }
+

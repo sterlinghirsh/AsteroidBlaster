@@ -15,9 +15,10 @@ Blaster::Blaster(AsteroidShip* owner)
 : Weapon(owner) {
    shotSpeed = 40; // Units per second
    coolDown = 0.15; // Seconds
-   randomVariationAmount = 2; // Units
+   randomVariationAmount = 1.5; // Units
    name = "Blaster";
    lastShotPos = new Point3D(0, 1, 0);
+   curAmmo = -1; // Infinite ammo
 }
 
 Blaster::~Blaster() {
@@ -52,6 +53,7 @@ void Blaster::fire() {
    ship->shotDirection.movePoint(start);
    gameState->custodian.add(new ProjectileShot(start,
             shotDirection, ship));
+   // Don't play sound effects in godMode b/c there would be too many.
    if (!gameState->godMode) {
       SoundEffect::playSoundEffect(1);
    }

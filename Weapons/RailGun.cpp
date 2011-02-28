@@ -15,6 +15,7 @@ RailGun::RailGun(AsteroidShip* owner)
 : Weapon(owner) {
    coolDown = 2; // Seconds
    name = "Rail Gun";
+   curAmmo = 15;
 }
 
 RailGun::~RailGun() {
@@ -33,7 +34,7 @@ void RailGun::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void RailGun::fire() {
-   if (!isCooledDown() && !gameState->godMode)
+   if ((!isCooledDown() && !gameState->godMode) || (!gameState->godMode && curAmmo <= 0))
       return;
    timeLastFired = doubleTime();
    Point3D start = *ship->position;
@@ -42,6 +43,8 @@ void RailGun::fire() {
             ship->shotDirection, ship));
    if (!gameState->godMode) {
       SoundEffect::playSoundEffect(2);
+      // Only take away some ammo if we're not in godMode
+      curAmmo--;
    }
 }
 

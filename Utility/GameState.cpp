@@ -15,6 +15,8 @@
 
 extern double minimapSizeFactor;
 
+std::ostringstream GameState :: sstream2;
+
 GameState::GameState(double worldSizeIn) {
    gameIsRunning = true;
    worldSize = worldSizeIn;
@@ -35,8 +37,12 @@ GameState::GameState(double worldSizeIn) {
    healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 100);
    gameOverText = new BitmapTextDisplay("GAME OVER", GW/2, GH/2);
    winText = new BitmapTextDisplay("YOU WIN!", GW/2, GH/2);
-   weaponText = new BitmapTextDisplay("Current Weapon: ", ship->getCurrentWeapon()->getName(),
-         "", 10, 120);
+   weaponText = new BitmapTextDisplay("Current Weapon: ", ship->getCurrentWeapon()->getName(), "", 10, 120);
+   // Get the ammo into a stream to turn it into a string.
+   sstream2 << ship->getCurrentWeapon()->curAmmo;
+   ammoText = new BitmapTextDisplay("Ammo: ", sstream2.str(), "", 10, 140);
+   // Clear the sstream2
+   sstream2.str("");
 
    // Improve the positioning code.
    weaponReadyBar = new ProgressBar(0.5, 0.1, -1.2, -0.3);
@@ -365,6 +371,7 @@ void GameState::drawAllText() {
    shardText->draw();
    healthText->draw();
    weaponText->draw();
+   ammoText->draw();
 
 }
 
@@ -378,6 +385,14 @@ void GameState::updateText() {
    shardText->updateBody(ship->getShards());
    healthText->updateBody(ship->getHealth());
    weaponText->updateBody(ship->getCurrentWeapon()->getName());
+   // If the gun has infinite ammo, say so.
+   if(ship->getCurrentWeapon()->curAmmo == -1)
+      ammoText->updateBody("Inf");
+   else {
+      sstream2 << ship->getCurrentWeapon()->curAmmo;
+      ammoText->updateBody(sstream2.str());
+      sstream2.str("");
+   }
 }
 
 void GameState::checkCollisions() {
@@ -759,6 +774,4 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 double GameState::getMouseX() { return mouseX; }
 double GameState::getMouseY() { return mouseY; }
 Camera* GameState::getCamera() { return camera; }
-
-
 

@@ -49,6 +49,11 @@ class Weapon {
       virtual void update(double timeDiff)=0;
       AsteroidShip* ship;
       virtual std::string getName();
+
+      /* 
+       * The current amount of ammo available to use. -1 is infinite.
+       */
+      int curAmmo;
       
       protected:
          WeaponType type; // Do we need this?

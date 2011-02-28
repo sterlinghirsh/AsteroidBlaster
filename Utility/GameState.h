@@ -23,11 +23,14 @@
 #include "HUD/ProgressBar.h"
 #include "HUD/Minimap.h"
 #include <list>
+#include <sstream>
 
 class AsteroidShip;
 class Minimap;
 
 class GameState : public InputReceiver {
+   static std::ostringstream sstream2;
+
    public:
       AsteroidShip* ship;
       /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
@@ -40,7 +43,8 @@ class GameState : public InputReceiver {
                         *healthText,
                         *gameOverText,
                         *winText,
-                        *weaponText;
+                        *weaponText,
+                        *ammoText;
       // Used when looping over Object3Ds
       std::vector<Object3D*>::iterator item;
       // Used when looping over Object3Ds in drawMinimap
