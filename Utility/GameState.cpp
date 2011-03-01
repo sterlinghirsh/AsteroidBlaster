@@ -638,6 +638,13 @@ void GameState::keyDown(int key) {
          Music::pauseMusic();
       }
       break;
+   // If the user presses F11, give them all of the weapons.
+   case SDLK_F11:
+      // Make all of the weapons be purchased.
+      for (int i = 0; i < ship->getNumWeapons(); i++)
+         ship->getWeapon(i)->purchased = true;
+
+      break;
    }
 }
 

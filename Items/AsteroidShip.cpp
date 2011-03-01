@@ -804,6 +804,16 @@ void AsteroidShip::prevWeapon() {
    currentWeapon = (currentWeapon + weapons.size() - 1) % weapons.size();
 }
 
+// Return a reference to the list of weapons that the ship has.
+std::vector<Weapon*> AsteroidShip :: getWeaponsList() {
+   return weapons;
+}
+
+// Get the number of types of weapons the ship has. They're indexed 0 - (n-1)
+int AsteroidShip :: getNumWeapons() {
+   return weapons.size();
+}
+
 /**
  * Gets the cooldownamount of the currently selected weapon.
  */
