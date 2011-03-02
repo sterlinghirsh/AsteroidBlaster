@@ -76,26 +76,25 @@ void ElectricityShot::draw() {
       GLint loc1;
       float j;
       float k;
-      float x = 0;
-      float y = 0;
-      float z = 0;
-      int l = 0;
+      float x;
+      float y;
+      float z;
       
-      //rotation for the Y value of the vertex using cosine
+      //multipliers for randomness in lightning
       float rot;
-      
-      //rotation for the X value of the vertex using sine
       float srot;
       
-      //Number of lines you want generated in the rotating tractor beam
-      float numCurves = 2;
+      //width of inidvidual lightning lines
+      float thickness = 1.0;
       
-      //used as a multiplier to create the correct gap in between the lines
-      float gap = length / numCurves;
+      //density of the lightning in the beam
+      float density = 4;
       
-      //must be 2 for the cone to be complete, less than 2 for an incomplete cone, more 
-      //than 2 for spacing to be irregular between the lines
-      float sharpness = 2;
+      //Width of the lightning shot
+      int elecWidth = 20;
+      
+      //how fast you want the lighting flashing from blue to white. Higher number == faster flash
+      float flash = .7;
       
       float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
       //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
@@ -104,8 +103,7 @@ void ElectricityShot::draw() {
       start.glTranslate();
       
       glRotate();
-      //glRotatef(-spin++,0,0,1);
-      spin = spin + .2;
+      spin = spin + flash;
       if (spin >= 360 ) {
          spin = 0;
       }
@@ -113,28 +111,28 @@ void ElectricityShot::draw() {
       glUniform1f(loc1,spin);
 
       setMaterial(GreenShiny);
-      glLineWidth(.50);
+      glLineWidth(thickness);
+      
       glBegin(GL_LINES);
-      z = length;
+      
       //Creates the twisted lines whose vertices are sent to the shader to modify
-      for(k = -numCurves/2; k < numCurves/2; k = k+1){
-            for(j = 0; j < length ; j = j+.1){
-                  //rot = cos(rand());
-                  //srot = sin(rand());
+      for(k = -density/2; k < density/2; k = k+1){
+            x = 0;
+            y = 0;
+            z = length;
+            for(j = 0; j < length ; j = j+.5){
                   glVertex3f(x, y, z);
                   
-                  rot = cos(rand()) * 3;
-                  srot = sin(rand()) * 3;
-                  glVertex3f(srot * (l % 4) *  (1 / length), rot  * (l % 4) *  (1 / length), length - j - .1);
-                  glVertex3f(-x, -y, z);
-                  x = srot * (l % 4) *  (1 / length);
-                  y = rot * (l % 4) *  (1 / length);
-                  z = length - j - .1;
-                  glVertex3f(-x, -y, z);
-                  l++;
+                  rot = rand() % elecWidth - elecWidth/2;
+                  srot = rand() % elecWidth - elecWidth/2;
+                  glVertex3f(srot * (1 / length), rot  * (1 / length), length - j - .5);
+                  x = srot * (1 / length);
+                  y = rot * (1 / length);
+                  z = length - j - .5;
             }
       }
       glEnd();
+      
 
    glLineWidth(1.0);
    glPopMatrix();

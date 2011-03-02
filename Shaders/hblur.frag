@@ -32,7 +32,7 @@ void main(void)
             blurMultiplyVec) * incrementalGaussian.x;
       avgValue += texture2D(RTScene, gl_TexCoord[0].xy + i * blurSize *
             blurMultiplyVec) * incrementalGaussian.x;
-      coefficientSum += 2 * incrementalGaussian.x;
+      coefficientSum += 2.0 * incrementalGaussian.x;
       incrementalGaussian.xy *= incrementalGaussian.yz;
    }
 
