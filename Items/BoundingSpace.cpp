@@ -6,6 +6,7 @@
  */
 
 #include "Items/BoundingSpace.h"
+#include <math.h>
 
 BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z) {
    extent = extentIn;
@@ -15,62 +16,90 @@ BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z) {
    xMin = x - extent;
    yMin = y - extent;
    zMin = z - extent;
+   squareSize = 2; // this is how big a square should be.
+
+   wallColors[WALL_TOP] = new Color(0, 0, 1);
+   wallColors[WALL_FRONT] = new Color(0, 1, 0);
+   wallColors[WALL_RIGHT] = new Color(1, 0, 0);
+   wallColors[WALL_BOTTOM] = new Color(1, 0, 1);
+   wallColors[WALL_BACK] = new Color(0, 1, 1);
+   wallColors[WALL_LEFT] = new Color(1, 1, 0);
+   
+   // Initialize walls.
+   for (int i = 0; i < 6; ++i) {
+      walls[i] = new BoundingWall(squareSize, extent, wallColors[i], i);
+   }
 }
 
 BoundingSpace::~BoundingSpace() {
+}
+
+int BoundingSpace::getNumSquares() {
+   return round(extent / squareSize);
 }
 
 void BoundingSpace::constrain(Object3D* item) {
    if (!item->shouldConstrain)
       return;
 
-   const float squareSize = extent / 40; // How big the drawn squares should be.
-
    if (item->maxPosition->x > xMax) {
+      // Right
       item->position->x = xMax - item->maxX;
       item->velocity->negativeX();
-      glowingSquares.push_back(new GlowSquare(0, 1, 1, squareSize, 
-       xMax, item->position->y, item->position->z));
+      walls[WALL_RIGHT]->constrain(item);
    }
    if (item->maxPosition->y > yMax) {
+      // Top
       item->position->y = yMax - item->maxY;
       item->velocity->negativeY();
-      glowingSquares.push_back(new GlowSquare(0, 0, 1, squareSize, 
-       item->position->x, yMax, item->position->z));
+      walls[WALL_TOP]->constrain(item);
    }
    if (item->maxPosition->z > zMax) {
+      // Front
       item->position->z = zMax - item->maxZ;
       item->velocity->negativeZ();
-      glowingSquares.push_back(new GlowSquare(1, 0, 0, squareSize, 
-       item->position->x, item->position->y, zMax));
+      walls[WALL_FRONT]->constrain(item);
    }
 
    if (item->minPosition->x < xMin) {
+      // Left
       item->position->x = xMin - item->minX;
       item->velocity->positiveX();
-      glowingSquares.push_back(new GlowSquare(1, 0, 1, squareSize, 
-       xMin, item->position->y, item->position->z));
+      walls[WALL_LEFT]->constrain(item);
    }
    if (item->minPosition->y < yMin) {
+      // Bottom
       item->position->y = yMin - item->minY;
       item->velocity->positiveY();
-      glowingSquares.push_back(new GlowSquare(0, 1, 0, squareSize, 
-       item->position->x, yMin, item->position->z));
+      walls[WALL_BOTTOM]->constrain(item);
    }
    if (item->minPosition->z < zMin) {
+      // Back
       item->position->z = zMin - item->minZ;
       item->velocity->positiveZ();
-      glowingSquares.push_back(new GlowSquare(1, 1, 0, squareSize, 
-       item->position->x, item->position->y, zMin));
+      walls[WALL_BACK]->constrain(item);
    }
 }
 
 /* Draw the bounding box grid on the world.
 */
 void BoundingSpace::draw() {
-   glUseProgram(fadeShader);
    const double wall = extent;
    const double alpha = 0;
+   glDisable(GL_LIGHTING);
+   glDisable(GL_CULL_FACE);
+
+   for (int i = 0; i < 6; ++i) {
+      walls[i]->draw();
+   }
+
+   glEnable(GL_LIGHTING);
+   glEnable(GL_CULL_FACE);
+
+
+   glUseProgram(0);
+   return;
+   // Old stuff.
    //glClearColor(0.0,0.0,0.0,0.0);
    //glDisable(GL_LIGHTING);
    glBegin(GL_LINES);
@@ -195,15 +224,7 @@ void BoundingSpace::draw() {
 }
 
 void BoundingSpace::update(double timeDiff) {
-   std::list<GlowSquare*>::iterator glowSquare;
-   double curTime = doubleTime();
-   
-   for (glowSquare = glowingSquares.begin(); glowSquare != glowingSquares.end();) {
-      (*glowSquare)->update(timeDiff);
-      if (curTime - (*glowSquare)->timeCreated > GlowSquare::lifetime) {
-         glowSquare = glowingSquares.erase(glowSquare);
-      } else {
-         glowSquare++;
-      }
+   for (int i = 0; i < 6; ++i) {
+      walls[i]->update(timeDiff);
    }
 }

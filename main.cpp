@@ -283,6 +283,7 @@ int main(int argc, char* argv[]) {
   srand(time(NULL));
   GW = 800;
   GH = 600;
+  updateDoubleTime();
 
   //initialize glut
   glutInit(&argc, argv);
@@ -345,6 +346,8 @@ int main(int argc, char* argv[]) {
   SDL_Event event;
 
   while (running) {
+    updateDoubleTime();
+
     if (mainMenu->isActive()) {
       mainMenu->draw();
       timerFunc(mainMenu->isActive());

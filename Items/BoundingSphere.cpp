@@ -50,8 +50,9 @@ void BoundingSphere::constrain(Object3D* item) {
       item->position->y = normal->yMag - yNeg * item->maxY;
       item->position->z = normal->zMag - zNeg * item->maxZ;
 
-      glowingSquares.push_back(new GlowSquare(0, 1, 1, squareSize,
+      /*glowingSquares.push_back(new GlowSquare(0, 1, 1, squareSize,
                item->position->z, item->position->y, item->position->z));
+               */
 
       //printf("moved to %f, %f, %f (distance of %f)\n", item->position->x, item->position->y, item->position->z,
       //      item->position->distanceFrom(*center));
@@ -106,6 +107,7 @@ void BoundingSphere::draw() {
 }
 
 void BoundingSphere::update(double timeDiff) {
+   /*
    std::list<GlowSquare*>::iterator glowSquare;
    double curTime = doubleTime();
 
@@ -117,4 +119,5 @@ void BoundingSphere::update(double timeDiff) {
          glowSquare++;
       }
    }
+   */
 }

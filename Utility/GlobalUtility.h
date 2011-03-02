@@ -83,6 +83,19 @@ extern materialStruct CyanSolid;
 extern materialStruct Rock;
 
 void setMaterial(materialStruct material);
+void updateDoubleTime();
+
+struct Color {
+   GLfloat r, g, b, a;
+   Color(GLfloat _r, GLfloat _g, GLfloat _b, GLfloat _a = 1) :
+      r(_r), g(_g), b(_b), a(_a) {}
+   void setColor() {
+      glColor4f(r, g, b, a);
+   }
+   void setColorWithAlpha(GLfloat tempAlpha) {
+      glColor4f(r, g, b, tempAlpha);
+   }
+};
 
 
 #endif

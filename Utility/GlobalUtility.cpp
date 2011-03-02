@@ -31,6 +31,7 @@ GLuint hBlurShader;
 GLuint vBlurShader;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
+double currentTime;
 
 using namespace std;
 
@@ -141,7 +142,7 @@ double randdouble() {
    return (double)rand() / (double) RAND_MAX;
 }
 
-double doubleTime() {
+void updateDoubleTime() {
    double answer = 0;
 #ifdef WIN32
    SYSTEMTIME st;
@@ -152,9 +153,12 @@ double doubleTime() {
    gettimeofday(&tp, NULL);
    answer = (double)(tp.tv_sec) + ((tp.tv_usec) / 1000000.0);
 #endif
+   currentTime = answer;
+   
+}
 
-   return answer;
-
+double doubleTime() {
+   return currentTime;
 }
 
 void drawCylinder(double radius, double length) {
