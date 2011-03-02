@@ -98,7 +98,11 @@ void BoundingWall::constrain(Object3D* item) {
       return;
    }
 
-   square->hit();
+   double speed = item->velocity->getLength();
+   int distanceLimit = (item->radius * item->radius * 0.3) + 2;
+   double delay = 1 / (4 * speed);
+
+   square->hit(distanceLimit, delay);
 
 }
 

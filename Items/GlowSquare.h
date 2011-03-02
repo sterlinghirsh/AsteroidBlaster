@@ -41,7 +41,7 @@ class GlowSquare {
       GlowSquare(Color* _color, 
        float size, float _x, float _y, float _z, BoundingWall* _wall, int _xIndex, int _yIndex);
       static float lifetime;
-      void hit();
+      void hit(int distanceLimit, double delay);
 };
 
 #endif
