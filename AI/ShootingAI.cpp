@@ -87,11 +87,14 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
 }
 
 // kinda useless right now.
-void ShootingAI::chooseWeapon(Object3D* target) {
-   if (target != NULL) {
-      if ((dynamic_cast<Shard*>(target)) != NULL && ship->getWeapon(2)->curAmmo != 0) {
+void ShootingAI::chooseWeapon(Object3D** target) {
+   if (*target != NULL) {
+
+      if ((dynamic_cast<Shard*>(*target)) != NULL) {
          ship->selectWeapon(2);
-      } else if (target->radius < 2 && ship->getWeapon(1)->isCooledDown() && ship->getWeapon(1)->curAmmo != 0) {
+      }
+      else if ((*target)->radius < 2 && ship->getWeapon(1)->isCooledDown()
+       && ship->getWeapon(1)->curAmmo != 0) {
          ship->selectWeapon(1);
       }
       else
@@ -104,31 +107,36 @@ Object3D* ShootingAI::chooseTarget() {
    std::list<Object3D*>* targets = gameState->viewFrustumObjects;
    std::list<Object3D*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
-   double curDist, shortestDist = -1;
+   Point3D vec;
+   double curWeight, maxWeight = -1;
+   const double distWeight = 1000;
+   const double radiusWeight = 1;
+   const double proximityWeight = 3;
    
    targets_iterator = targets->begin();
    Object3D* closest = NULL;
    
    for ( ; targets_iterator != targets->end(); targets_iterator++) {
-      // get closest asteroid
-      //if (*targets_iterator == NULL || *targets_iterator == ship || NULL == (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) || asteroid->isShard  )
-      // Trying this with shard subclass
-      // IF THE AI BREAKS, REMOVE THIS
       if (*targets_iterator == NULL ||
        (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL &&
         dynamic_cast<Shard*>(*targets_iterator) == NULL)) {
-      // END OF NEW CODE
          continue;
       }
       if (dynamic_cast<Shard*>(*targets_iterator) != NULL &&
        (*targets_iterator)->position->distanceFrom(*ship_position) > 30)
          continue;
 
-      curDist = 1 / (((*targets_iterator)->radius) *
-       pow((*targets_iterator)->position->distanceFrom( *ship_position ),2));
+      curWeight = radiusWeight / ((*targets_iterator)->radius);
+      vec = (*(*targets_iterator)->position - *ship->position);
+      curWeight += distWeight / (vec * vec);
+      vec = vec.normalize();
+      curWeight += vec * lastShotPos * proximityWeight;
+
+      if (dynamic_cast<Shard*>(*targets_iterator) != NULL)
+         curWeight *= ship->getWeapon(2)->curAmmo != 0;
       
-      if (shortestDist < 0 || curDist > shortestDist) {
-         shortestDist = curDist;
+      if (maxWeight < 0 || curWeight > maxWeight) {
+         maxWeight = curWeight;
          closest = *targets_iterator;
       } 
    }
@@ -156,8 +164,6 @@ int ShootingAI::think(double dt) {
 
    /* This order is tentative. We will probably change it. */
    
-   // choose weapon railgun
-
    Object3D* target = chooseTarget();
    if (target == NULL && target != lastTarget) {
       printf("Could not find a target!\n");
@@ -172,9 +178,7 @@ int ShootingAI::think(double dt) {
       target->position->print();
       lastTarget = target;
    }
-   chooseWeapon(target);
-
-   chooseWeapon(target);
+   chooseWeapon(&target);
 
    if (target != NULL) {
       target->setTargeted(true);

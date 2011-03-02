@@ -71,8 +71,8 @@ Vector3D* FlyingAI :: getFlyDirection() {
    Vector3D *sum = new Vector3D();   
    
    // Add a small weight towards the center
-   sum->addUpdate( Vector3D(*ship->position, Point3D(0,0,0)) );
-   sum->normalize();   
+   sum->addUpdate(*ship->position);
+   sum->normalize();
    
    for( i = asteroids->begin(); i != asteroids->end(); ++i) {
    
