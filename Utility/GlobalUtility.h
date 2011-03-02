@@ -32,6 +32,7 @@ extern bool drawPerspective;
 extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
 extern GLuint fadeShader;
+extern GLuint elecShader;
 extern GLuint hBlurShader;
 extern GLuint vBlurShader;
 extern SDL_Surface* gDrawSurface;

@@ -27,6 +27,7 @@ bool drawPerspective = true;
 GLUquadricObj *quadric;
 GLuint tractorBeamShader;
 GLuint fadeShader;
+GLuint elecShader;
 GLuint hBlurShader;
 GLuint vBlurShader;
 SDL_Surface* gDrawSurface = NULL;
