@@ -8,10 +8,11 @@
 #include "Items/BoundingWall.h"
 #include <math.h>
 
-BoundingWall::BoundingWall(double _squareSize, int _wallSize, Color* _wallColor, int _wallID) :
+BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID) :
  squareSize(_squareSize), wallSize(_wallSize), wallColor(_wallColor), wallID(_wallID) {
    // Initialize Wall Squares
-   numSquares = round(2 * wallSize / squareSize);
+   squaresPerSide = round(2 * wallSize / squareSize);
+   numSquares = squaresPerSide * squaresPerSide;
    squares.reserve(numSquares); 
 
    /* These three variables dictate where this will be positioned relative
@@ -27,23 +28,23 @@ BoundingWall::BoundingWall(double _squareSize, int _wallSize, Color* _wallColor,
    // These will probably always be the same.
    minX = minY = -wallSize;
    // Create the squares.
-   for (int y = 0; y < numSquares; ++y) {
-      for (int x = 0; x < numSquares; ++x) {
-         squareX = minX + x * squareSize;
-         squareY = minY + y * squareSize;
+   for (int y = 0; y < squaresPerSide; ++y) {
+      for (int x = 0; x < squaresPerSide; ++x) {
+         squareX = minX + (x * squareSize);
+         squareY = minY + (y * squareSize);
 
          if (wallID % 3 == 0) {
             // If wall is top or bottom.
             squares.push_back(new GlowSquare(wallColor, squareSize, 
-             squareX, squareZ, squareY, wallID));    
+             squareX, squareZ, squareY, this, x, y));
          } else if (wallID % 3 == 1) {
             // If wall is Front or Back.
             squares.push_back(new GlowSquare(wallColor, squareSize, 
-             squareX, squareY, squareZ, wallID));    
+             squareX, squareY, squareZ, this, x, y));
          } else {
             // If wall is Left or Right.
             squares.push_back(new GlowSquare(wallColor, squareSize, 
-             squareZ, squareX, squareY, wallID));    
+             squareZ, squareX, squareY, this, x, y));
          }
       }
    }
@@ -51,18 +52,22 @@ BoundingWall::BoundingWall(double _squareSize, int _wallSize, Color* _wallColor,
 }
 
 int BoundingWall::getSquareX(int squareID) {
-   return squareID % wallSize;
+   return squareID % squaresPerSide;
 }
 
 int BoundingWall::getSquareY(int squareID) {
-   return squareID / wallSize;
+   return squareID / squaresPerSide;
 }
 
 int BoundingWall::getSquareID(int squareX, int squareY) {
-   return (squareY * wallSize) + squareX;
+   return (squareY * squaresPerSide) + squareX;
 }
 
-int BoundingWall::getSquareIDFromObject(Object3D* item) {
+GlowSquare* BoundingWall::getSquareByCoords(int x, int y) {
+   return getSquareByID(getSquareID(x, y));
+}
+
+void BoundingWall::getSquareCoordsFromObject(Object3D* item, int& squareXIndex, int& squareYIndex) {
    float squareX, squareY;
    if (wallID == WALL_TOP || wallID == WALL_BOTTOM) {
       squareX = item->position->x;
@@ -75,9 +80,8 @@ int BoundingWall::getSquareIDFromObject(Object3D* item) {
       squareY = item->position->z;
    }
 
-   int squareXIndex = floor((squareX + wallSize) / squareSize);
-   int squareYIndex = floor((squareY + wallSize) / squareSize);
-   return getSquareID(squareXIndex, squareYIndex);
+   squareXIndex = floor((squareX + wallSize) / squareSize);
+   squareYIndex = floor((squareY + wallSize) / squareSize);
 }
 
 GlowSquare* BoundingWall::getSquareByID(int index) {
@@ -87,17 +91,15 @@ GlowSquare* BoundingWall::getSquareByID(int index) {
 }
 
 void BoundingWall::constrain(Object3D* item) {
-   /*
-   glowingSquares.push_back(new GlowSquare(wallColor, squareSize, 
-    xMax, item->position->y, item->position->z));
-    */
-   int index = getSquareIDFromObject(item);
-   GlowSquare* square = getSquareByID(index);
+   int x, y;
+   getSquareCoordsFromObject(item, x, y);
+   GlowSquare* square = getSquareByCoords(x, y);
    if (square == NULL) {
       return;
    }
 
    square->hit();
+
 }
 
 void BoundingWall::draw() {

@@ -76,3 +76,6 @@ clean:
 
 gprof:
 	gprof ${PROGNAME} gmon.out | less
+
+killall:
+	killall -9 ${PROGNAME}

@@ -16,7 +16,9 @@ BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z) {
    xMin = x - extent;
    yMin = y - extent;
    zMin = z - extent;
-   squareSize = 2; // this is how big a square should be.
+
+   // 4 performs well, 2 looks better, 1 looks best but is slow.
+   squareSize = 2; // this is how big a square should be. Should be a power of 2.
 
    wallColors[WALL_TOP] = new Color(0, 0, 1);
    wallColors[WALL_FRONT] = new Color(0, 1, 0);
@@ -213,7 +215,6 @@ void BoundingSpace::draw() {
       (*glowSquare)->draw();   
       count++;
    }
-   //printf("drew %d squares\n", count);
    glEnd();
    glEnable(GL_CULL_FACE);
    glDisable(GL_LIGHT1);

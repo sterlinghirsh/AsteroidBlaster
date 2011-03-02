@@ -21,6 +21,7 @@
 #include <vector>
 
 class Object3D;
+class GlowSquare;
 
 class BoundingWall {
    public:
@@ -30,16 +31,18 @@ class BoundingWall {
       int wallSize;
       std::vector<GlowSquare*> squares;
       int numSquares;
-      double squareSize;
+      int squareSize;
+      int squaresPerSide;
 
-      BoundingWall(double _squareSize, int _wallSize, Color* _wallColor, int _wallID);
+      BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID);
       void draw();
       void update(double timeDiff);
       int getSquareX(int squareID);
       int getSquareY(int squareID);
       int getSquareID(int squareX, int squareY);
-      int getSquareIDFromObject(Object3D* item);
+      void getSquareCoordsFromObject(Object3D* item, int& squareXIndex, int& squareYIndex);
       GlowSquare* getSquareByID(int index);
+      GlowSquare* getSquareByCoords(int x, int y);
 };
 
 #endif

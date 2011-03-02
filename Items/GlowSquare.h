@@ -10,6 +10,19 @@
 #include "Utility/Point3D.h"
 #include "Utility/Vector3D.h"
 #include "Utility/GlobalUtility.h"
+#include "Items/BoundingWall.h"
+#include <queue>
+#include <vector>
+
+class BoundingWall;
+
+// Comparison class for priority_queue
+class GetMin {
+   public:
+      bool operator() (const double& lhs, const double& rhs) const {
+         return lhs > rhs;
+      }
+};
 
 class GlowSquare {
    public:
@@ -19,11 +32,14 @@ class GlowSquare {
       Color* color;
       Point3D p1, p2, p3, p4;
       Vector3D normal;
+      BoundingWall* wall;
+      int x, y; // X and Y index in the wall.
+      std::priority_queue<double, std::vector<double>, GetMin> flashTimes;
 
       void draw();
       void update(double timeDiff);
       GlowSquare(Color* _color, 
-       float size, float x, float y, float z, int wallID);
+       float size, float _x, float _y, float _z, BoundingWall* _wall, int _xIndex, int _yIndex);
       static float lifetime;
       void hit();
 };
