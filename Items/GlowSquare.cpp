@@ -33,11 +33,20 @@ GlowSquare::GlowSquare(Color* _color,
       p3.update(_x, _y + size, _z + size);
       p4.update(_x, _y, _z + size);
    }
+
+   switch(wall->wallID) {
+      case WALL_TOP: normal.updateMagnitude(0, -1, 0); break;
+      case WALL_BOTTOM: normal.updateMagnitude(0, 1, 0); break;
+      case WALL_FRONT: normal.updateMagnitude(0, 0, -1); break;
+      case WALL_BACK: normal.updateMagnitude(0, 0, 1); break;
+      case WALL_LEFT: normal.updateMagnitude(1, 0, 0); break;
+      case WALL_RIGHT: normal.updateMagnitude(-1, 0, 0); break;
+   }
 }
 
 void GlowSquare::draw() {
    double timeDiff;
-   double fadeTime = 0.3;
+   double fadeTime = 2;
    double fadeScale = 1 / fadeTime;
    timeDiff = doubleTime() - timeLastHit;
    
@@ -64,14 +73,17 @@ void GlowSquare::draw() {
       glUseProgram(0);
       glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
       color->setColorWithAlpha(alpha);
+      glPushMatrix();
+      normal.glTranslate(sin(4 * 2 * M_PI * alpha * alpha));
+      glBegin(GL_QUADS);
+      p1.draw();
+      p2.draw();
+      p3.draw();
+      p4.draw();
+      glEnd();
+      glPopMatrix();
    }
 
-   glBegin(GL_QUADS);
-   p1.draw();
-   p2.draw();
-   p3.draw();
-   p4.draw();
-   glEnd();
 }
 
 void GlowSquare::update(double timeDiff) {
