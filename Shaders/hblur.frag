@@ -1,23 +1,40 @@
 uniform sampler2D RTScene; // the texture with the scene you want to blur
-varying vec2 vTexCoord;
-
+ 
 const float blurSize = 1.0/512.0; // I've chosen this size because this will result in that every step will be one pixel wide if the RTScene texture is of size 512x512
+
+const float sigma = 5.0;
+
+const float pi = 3.14159265;
+
+const float numBlurPixelsPerSide = 4.0;
+const vec2  blurMultiplyVec      = vec2(1.0, 0.0);
 
 void main(void)
 {
-  vec4 sum = vec4(0.0);
+   // Incremental Gaussian Coefficent Calculation (See GPU Gems 3 pp. 877 - 889)
+   vec3 incrementalGaussian;
+   incrementalGaussian.x = 1.0 / (sqrt(2.0 * pi) * sigma);
+   incrementalGaussian.y = exp(-0.5 / (sigma * sigma));
+   incrementalGaussian.z = incrementalGaussian.y * incrementalGaussian.y;
 
-  // blur in y (vertical)
-  // take nine samples, with the distance blurSize between them
-  sum += texture2D(RTScene, vec2(vTexCoord.x - 4.0*blurSize, vTexCoord.y)) * 0.05;
-  sum += texture2D(RTScene, vec2(vTexCoord.x - 3.0*blurSize, vTexCoord.y)) * 0.09;
-  sum += texture2D(RTScene, vec2(vTexCoord.x - 2.0*blurSize, vTexCoord.y)) * 0.12;
-  sum += texture2D(RTScene, vec2(vTexCoord.x - blurSize, vTexCoord.y)) * 0.15;
-  sum += texture2D(RTScene, vec2(vTexCoord.x, vTexCoord.y)) * 0.16;
-  sum += texture2D(RTScene, vec2(vTexCoord.x + blurSize, vTexCoord.y)) * 0.15;
-  sum += texture2D(RTScene, vec2(vTexCoord.x + 2.0*blurSize, vTexCoord.y)) * 0.12;
-  sum += texture2D(RTScene, vec2(vTexCoord.x + 3.0*blurSize, vTexCoord.y)) * 0.09;
-  sum += texture2D(RTScene, vec2(vTexCoord.x + 4.0*blurSize, vTexCoord.y)) * 0.05;
+   vec4 avgValue = vec4(0.0, 0.0, 0.0, 0.0);
+   float coefficientSum = 0.0;
 
-  gl_FragColor = sum;
+   // Take the central sample first...
+   avgValue += texture2D(RTScene, gl_TexCoord[0].xy)
+      * incrementalGaussian.x;
+   coefficientSum += incrementalGaussian.x;
+   incrementalGaussian.xy *= incrementalGaussian.yz;
+
+   // Go through the remaining 8 vertical samples (4 on each side of the center)
+   for (float i = 1.0; i <= numBlurPixelsPerSide; i++) {
+      avgValue += texture2D(RTScene, gl_TexCoord[0].xy - i * blurSize *
+            blurMultiplyVec) * incrementalGaussian.x;
+      avgValue += texture2D(RTScene, gl_TexCoord[0].xy + i * blurSize *
+            blurMultiplyVec) * incrementalGaussian.x;
+      coefficientSum += 2 * incrementalGaussian.x;
+      incrementalGaussian.xy *= incrementalGaussian.yz;
+   }
+
+   gl_FragColor = avgValue / coefficientSum;
 }

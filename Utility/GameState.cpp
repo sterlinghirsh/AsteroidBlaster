@@ -314,7 +314,7 @@ void GameState::vBlur() {
 
 void GameState::drawBloom() {
    hBlur();
-   vBlur();
+   //vBlur();
 }
 
 void GameState::drawHud() {
