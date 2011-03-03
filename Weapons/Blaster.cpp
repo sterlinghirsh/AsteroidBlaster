@@ -56,7 +56,7 @@ void Blaster::fire() {
             shotDirection, ship));
    // Don't play sound effects in godMode b/c there would be too many.
    if (!gameState->godMode) {
-      SoundEffect::playSoundEffect(1);
+      SoundEffect::playSoundEffect("BlasterShot2.wav");
    }
 }
 

@@ -144,7 +144,7 @@ void GameState::update(double timeDiff) {
    updateText();
    // If the player lost, draw the game over text
    if (!gameIsRunning && ship->getHealth() <= 0) {
-      SoundEffect::playSoundEffect(7);
+      SoundEffect::playSoundEffect("GameOver.wav");
    }
    weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
    healthBar->setAmount(ship->getHealth() / 100.0);

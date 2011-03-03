@@ -3,6 +3,8 @@
 #define __SOUNDEFFECT_H__
 
 #include <list>
+#include <map>
+#include <iostream>
 #include "SDL_mixer.h"
 
 class SoundEffect {
@@ -12,15 +14,15 @@ class SoundEffect {
       
       static int numChannels;
       
-      static void Add(const char *file);
-      static int playSoundEffect(int idx, bool loop = false);
-      static void pauseSoundEffect(int idx);
-      void resumeSoundEffect(int idx);
-      static void stopSoundEffect(int idx);
-      int currentlyPlaying(int idx);
+      static void Add(std::string file, std::string keyName);
+      static int playSoundEffect(std::string file, bool loop = false);
+      static void pauseSoundEffect(int handle);
+      void resumeSoundEffect(int handle);
+      static void stopSoundEffect(int handle);
+      int currentlyPlaying(int handle);
 
    private:
-      static std::list<Mix_Chunk*> soundEffects;
+      static std::map<std::string, Mix_Chunk*> soundEffects;
       static int currChannel;
       static int volume;
 };

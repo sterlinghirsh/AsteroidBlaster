@@ -296,8 +296,9 @@ int main(int argc, char* argv[]) {
   new TextureImporter("Images/SkybusterExplosion.bmp");
   // get particle texture
   Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
-  //load the shader files
   
+  
+  //load the shader files
   elecShader = setShaders( (char *) "./Shaders/elec.vert", (char *) "./Shaders/elec.frag");
   tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
   fadeShader = setShaders( (char *) "./Shaders/fade.vert", (char *) "./Shaders/fade.frag");
@@ -307,21 +308,20 @@ int main(int argc, char* argv[]) {
   //vBlurShader = setShaders( (char *) "./Shaders/old/vblur.vert", (char *) "./Shaders/vblur.frag");
 
   //load and start BGM
-  //Music::Add("Sounds/Mists_of_Time-4T.ogg");
   Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
   Music::playMusic("8-bit3.ogg");
 
   //load sound effects
   //SoundEffect::Add("Sounds/blaster1.wav");
-  SoundEffect::Add("Sounds/blaster2.wav"); // 0
-  SoundEffect::Add("Sounds/BlasterShot2.wav"); // 1
+  SoundEffect::Add("Sounds/blaster2.wav", "blaster2.wav");
+  SoundEffect::Add("Sounds/BlasterShot2.wav", "BlasterShot2.wav");
   //SoundEffect::Add("Sounds/railgun1.wav");
-  SoundEffect::Add("Sounds/Rail2.wav"); // 2
-  SoundEffect::Add("Sounds/Explosion1.wav"); // 3
-  SoundEffect::Add("Sounds/CrystalCollect.wav"); // 4
-  SoundEffect::Add("Sounds/TractorBeam.wav"); // 5
-  SoundEffect::Add("Sounds/ShipEngine.wav"); // 6
-  SoundEffect::Add("Sounds/GameOver.wav"); // 7
+  SoundEffect::Add("Sounds/Rail2.wav", "Rail2.wav");
+  SoundEffect::Add("Sounds/Explosion1.wav", "Explosion1.wav");
+  SoundEffect::Add("Sounds/CrystalCollect.wav", "CrystalCollect.wav");
+  SoundEffect::Add("Sounds/TractorBeam.wav", "TractorBeam.wav");
+  SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
+  SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
 
   //get the quadradic up
   quadric = gluNewQuadric();

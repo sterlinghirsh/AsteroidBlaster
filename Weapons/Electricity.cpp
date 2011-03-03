@@ -29,7 +29,7 @@ void Electricity::update(double timeDiff) {
    if (currentFrame == lastFiredFrame && !soundPlaying) {
       // We should play sound.
       soundPlaying = true;
-      soundHandle = SoundEffect::playSoundEffect(5, true);
+      soundHandle = SoundEffect::playSoundEffect("TractorBeam.wav", true);
    } else if (currentFrame != lastFiredFrame && soundPlaying) {
       SoundEffect::stopSoundEffect(soundHandle);
       soundPlaying = false;

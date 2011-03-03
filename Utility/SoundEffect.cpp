@@ -2,10 +2,11 @@
 
 #include "Utility/SoundEffect.h"
 #include <iostream>
+#include <map>
 
 #define CHANNEL_MAX 16
 
-std::list<Mix_Chunk*> SoundEffect::soundEffects;
+std::map<std::string, Mix_Chunk*> SoundEffect::soundEffects;
 int SoundEffect::volume = MIX_MAX_VOLUME/7;
 int SoundEffect::numChannels = 16;
 int SoundEffect::currChannel = 0;
@@ -16,57 +17,59 @@ SoundEffect::SoundEffect() {
 }
 
 SoundEffect::~SoundEffect() {
-   std::list<Mix_Chunk*>::iterator it = soundEffects.begin();
+   std::map<std::string, Mix_Chunk*>::iterator it = SoundEffect::soundEffects.begin();
    for (; it != SoundEffect::soundEffects.end(); ++it ) {
-      Mix_FreeChunk(*it);
+      Mix_FreeChunk(it->second);
    }
 }
 
-void SoundEffect::Add(const char *file) {
+void SoundEffect::Add(std::string file, std::string keyName) {
    Mix_Chunk *temp;
    
-   temp=Mix_LoadWAV(file);
-   
-	if(!temp) {
+	if(!(temp=Mix_LoadWAV(file.c_str()))) {
 	   std::cerr << "Mix_LoadWAV: " << Mix_GetError() << std::endl;
 		exit(0);
    }
    
-   Mix_Volume(-1,volume);
-	soundEffects.push_back(temp);
+   soundEffects.insert( std::pair<std::string, Mix_Chunk*>(keyName,temp) );
 }
 
 
 /**
  * loop defaults to false.
  */
-int SoundEffect::playSoundEffect(int idx, bool loop) {
-   std::list<Mix_Chunk*>::iterator it = soundEffects.begin();
-   std::advance(it, idx);
+int SoundEffect::playSoundEffect(std::string file, bool loop) {
+   std::map<std::string, Mix_Chunk*>::iterator iter = soundEffects.find(file);
 
-   int handle = Mix_PlayChannel(-1, *it, loop ? -1 : 0);
-   
-	if (handle == -1) {
-	   std::cerr << "could not play SoundEffect # " << idx << ", exciting!" << std::endl;
-           //fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+   if (iter == soundEffects.end()) {
+      std::cerr << "failed to find: " << file << " in SoundEffect::soundEffects." << std::endl;
+      return -1;
    }
+   
+   int handle = Mix_PlayChannel(-1, iter->second, loop ? -1 : 0);
+   
+	if(handle == -1) {
+	   std::cerr << "could not play SoundEffect " << file << ", something went wrong!" << std::endl;
+		//exit(0);
+   }
+   
    return handle;
 }
 
-void SoundEffect::pauseSoundEffect(int idx) {
-   Mix_Pause(idx);
+void SoundEffect::pauseSoundEffect(int handle) {
+   Mix_Pause(handle);
 }
 
-void SoundEffect::resumeSoundEffect(int idx) {
-   Mix_Resume(idx);
+void SoundEffect::resumeSoundEffect(int handle) {
+   Mix_Resume(handle);
 }
 
-void SoundEffect::stopSoundEffect(int idx) {
-   Mix_HaltChannel(idx);
+void SoundEffect::stopSoundEffect(int handle) {
+   Mix_HaltChannel(handle);
 }
 
-int SoundEffect::currentlyPlaying(int idx) {
-   return Mix_Playing(idx);
+int SoundEffect::currentlyPlaying(int handle) {
+   return Mix_Playing(handle);
 }
 
 

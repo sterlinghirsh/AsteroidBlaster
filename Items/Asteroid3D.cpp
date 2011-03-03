@@ -337,7 +337,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
          }
       }
       if (health <= 0) {
-         SoundEffect::playSoundEffect(3);
+         SoundEffect::playSoundEffect("Explosion1.wav");
          shouldRemove = true;
          const int explosionFactor = 3;
          Sprite::sprites.push_back(
