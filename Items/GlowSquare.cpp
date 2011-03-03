@@ -42,6 +42,11 @@ GlowSquare::GlowSquare(Color* _color,
       case WALL_LEFT: normal.updateMagnitude(1, 0, 0); break;
       case WALL_RIGHT: normal.updateMagnitude(-1, 0, 0); break;
    }
+
+   midpoint1.midpoint(p1, p2);
+   midpoint2.midpoint(p2, p3);
+   midpoint3.midpoint(p3, p4);
+   midpoint4.midpoint(p4, p1);
 }
 
 void GlowSquare::draw() {
@@ -52,7 +57,8 @@ void GlowSquare::draw() {
    const double fadeScale = 1 / fadeTime;
    timeDiff = (doubleTime() - timeLastHit) / fadeTime;
    
-   while (flashTimes.size() > 0 && flashTimes.top() < doubleTime()) {
+   // Set the timeLastHit to the latest time that is <= the current time.
+   while (flashTimes.size() > 0 && flashTimes.top() <= doubleTime()) {
       timeLastHit = flashTimes.top();
       flashTimes.pop();
       timeDiff = (doubleTime() - timeLastHit) / fadeTime;
@@ -62,26 +68,63 @@ void GlowSquare::draw() {
    alpha = timeDiff < 0 ? 0 : fadeScale * (fadeTime - clamp(timeDiff, 0, fadeTime));
 
    color->setColorWithAlpha(1);
-   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
    glUseProgram(fadeShader);
+   /*
+   // This draws the empty box. Let's do something more interesting.
+   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
    glBegin(GL_QUADS);
    p1.draw();
    p2.draw();
    p3.draw();
    p4.draw();
    glEnd();
+   */
 
+   glBegin(GL_LINE_STRIP);
+   /*
+   p1.draw();
+   midpoint1.draw();
+   p3.draw();
+   midpoint2.draw();
+   */
+   /*
+   midpoint1.draw();
+   midpoint2.draw();
+   midpoint3.draw();
+   midpoint4.draw();
+   */
+   midpoint1.draw();
+   p1.draw();
+   midpoint4.draw();
+   glEnd();
+
+   // This draws the glowing filled in square.
    if (alpha != 0) {
       glUseProgram(0);
-      glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+      //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+      // Max alpha is 0.5
       color->setColorWithAlpha(alpha * 0.5);
       glPushMatrix();
       normal.glTranslate(shwobbleAmplitude * sin(numShwobbles * 2 * M_PI * alpha * alpha));
       glBegin(GL_QUADS);
+      /*
+      midpoint1.draw();
+      midpoint2.draw();
+      midpoint3.draw();
+      midpoint4.draw();
+      */
+      /*
       p1.draw();
       p2.draw();
       p3.draw();
       p4.draw();
+      */
+
+      p1.draw();
+      midpoint1.draw();
+      p3.draw();
+      midpoint3.draw();
+
       glEnd();
       glPopMatrix();
    }
@@ -101,7 +144,7 @@ void GlowSquare::hit(int distanceLimit, double delay) {
    // Now trigger neighbors
    std::vector<GlowSquare*>::iterator iter = wall->squares.begin();
 
-   delay = clamp(delay, 0.08, 0.2);
+   delay = clamp(delay, 0.1, 0.2);
 
    int distance;
    //const double delay = 0.1;

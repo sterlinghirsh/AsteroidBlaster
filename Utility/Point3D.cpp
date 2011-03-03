@@ -95,3 +95,50 @@ const Point3D Point3D::operator^(const Point3D &rhs) const {
    (x * rhs.y) - (y * rhs.x));
 }
 
+void Point3D::clone(Point3D* other) {
+   x = other->x;
+   y = other->y;
+   z = other->z;
+}
+
+void Point3D::update(double x2, double y2, double z2) {
+   x = x2;
+   y = y2;
+   z = z2;
+}
+   
+double Point3D::distanceFrom(Point3D& rhs) {
+   return distance3D(rhs.x - x, rhs.y - y, rhs.z - z);
+}
+
+void Point3D::draw() {
+   glVertex3f(x, y, z);
+}
+
+void Point3D::print() {
+   printf("(%f, %f, %f)\n", x, y, z);
+}
+
+void Point3D::glTranslate() {
+   glTranslatef(x, y, z);
+}
+
+void Point3D::offsetBy(double x2, double y2, double z2) {
+   x += x2;
+   y += y2;
+   z += z2;
+}
+
+Point3D Point3D::add(Point3D other) {
+   Point3D answer;
+   answer.x = x + other.x;
+   answer.y = y + other.y;
+   answer.z = z + other.z;
+   return answer;
+}
+
+void Point3D::midpoint(const Point3D& p1, const Point3D& p2) {
+   x = (p1.x + p2.x) / 2;
+   y = (p1.y + p2.y) / 2;
+   z = (p1.z + p2.z) / 2;
+}

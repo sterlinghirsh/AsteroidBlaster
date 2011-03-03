@@ -31,6 +31,7 @@ class GlowSquare {
       float alpha;
       Color* color;
       Point3D p1, p2, p3, p4;
+      Point3D midpoint1, midpoint2, midpoint3, midpoint4;
       Vector3D normal;
       BoundingWall* wall;
       int x, y; // X and Y index in the wall.

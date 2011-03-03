@@ -23,45 +23,16 @@ struct Point3D {
    Point3D(const Point3D& copy);
    Point3D(const Vector3D& copy);
 
-   void clone(Point3D* other) {
-      x = other->x;
-      y = other->y;
-      z = other->z;
-   }
+   void clone(Point3D* other);
+   void update(double x2, double y2, double z2);
+   double distanceFrom(Point3D& rhs);
 
-   void update(double x2, double y2, double z2) {
-      x = x2;
-      y = y2;
-      z = z2;
-   }
-   
-   double distanceFrom(Point3D& rhs) {
-      return distance3D(rhs.x - x, rhs.y - y, rhs.z - z);
-   }
-
-   virtual void draw() {
-      glVertex3f(x, y, z);
-   }
-   void print() {
-      printf("(%f, %f, %f)\n", x, y, z);
-   }
-   void glTranslate() {
-      glTranslatef(x, y, z);
-   }
-
-   void offsetBy(double x2, double y2, double z2) {
-      x += x2;
-      y += y2;
-      z += z2;
-   }
-
-   Point3D add(Point3D other) {
-      Point3D answer;
-      answer.x = x + other.x;
-      answer.y = y + other.y;
-      answer.z = z + other.z;
-      return answer;
-   }
+   virtual void draw();
+   void print();
+   void glTranslate();
+   void offsetBy(double x2, double y2, double z2);
+   Point3D add(Point3D other);
+   void midpoint(const Point3D& p1, const Point3D& p2);
 
    const Point3D operator+(const Point3D& rhs) const;
    const Point3D operator-(const Point3D& rhs) const;
