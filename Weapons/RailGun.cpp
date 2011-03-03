@@ -35,7 +35,7 @@ void RailGun::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void RailGun::fire() {
-   if ((!isCooledDown() && !gameState->godMode) || (!gameState->godMode && curAmmo <= 0))
+   if (!isCooledDown() || (!gameState->godMode && curAmmo <= 0))
       return;
    timeLastFired = doubleTime();
    Point3D start = *ship->position;

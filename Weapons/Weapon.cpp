@@ -25,7 +25,10 @@ Weapon::~Weapon() {
  * Returns true if the weapon is ready to be fired.
  */
 bool Weapon::isCooledDown() {
-   return doubleTime() > timeLastFired + coolDown;
+   if (!gameState->godMode) {
+      return doubleTime() > timeLastFired + coolDown;
+   }
+   return doubleTime() > timeLastFired + 0.1;
 }
 
 /**

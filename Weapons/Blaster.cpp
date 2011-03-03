@@ -39,7 +39,7 @@ void Blaster::update(double timeDiff) {
  */
 void Blaster::fire() {
    static Vector3D randomVariation;
-   if (!isCooledDown() && !gameState->godMode)
+   if (!isCooledDown())
       return;
    // Update timeLastFired with new current time.
    timeLastFired = doubleTime();
