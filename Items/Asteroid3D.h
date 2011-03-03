@@ -25,7 +25,7 @@ class Asteroid3D : public Object3D {
       double scalex, scaley, scalez;
       double worldSize;
       double initH;
-      int health;
+      double health;
       double sizeX, sizeY, sizeZ, collisionRadius;
       
       Asteroid3D(double r, double worldSizeIn);

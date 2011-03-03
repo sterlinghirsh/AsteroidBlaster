@@ -13,6 +13,7 @@
 #include "Shots/Shot.h"
 #include "Shots/BeamShot.h"
 #include "Shots/TractorBeamShot.h"
+#include "Shots/ElectricityShot.h"
 #include <algorithm>
 #include <math.h>
 #include "Utility/SoundEffect.h"
@@ -408,6 +409,7 @@ void Shard::handleCollision(Object3D* other) {
    AsteroidShip* ship;
    Asteroid3D* asteroid;
    Shot* shot;
+   ElectricityShot* Eshot;
    TractorBeamShot* TBshot; // Not tuberculosis
    if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
@@ -424,6 +426,9 @@ void Shard::handleCollision(Object3D* other) {
       } else if((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {
          // Pull the shot in.
          speed = position->distanceFrom(*TBshot->position) - TBshot->length;
+      } else if((Eshot = dynamic_cast<ElectricityShot*>(other)) != NULL) {
+         // Pull the shot in.
+         //speed = position->distanceFrom(*TBshot->position) - TBshot->length;
       } else {
          // Set speed to between the speed of the shot and the current speed.
          speed = shot->velocity->getLength();

@@ -11,7 +11,7 @@
 #include "Shots/ElectricityShot.h"
 #include <math.h>
 
-static float spin = 0;
+static float flashiness = 0;
 
 ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn, 
  AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
@@ -85,13 +85,13 @@ void ElectricityShot::draw() {
       float srot;
       
       //width of inidvidual lightning lines
-      float thickness = 1.0;
+      float thickness = 3.0;
       
       //density of the lightning in the beam
-      float density = 4;
+      float density = 2;
       
       //Width of the lightning shot
-      int elecWidth = 20;
+      int elecWidth = 60;
       
       //how fast you want the lighting flashing from blue to white. Higher number == faster flash
       float flash = .7;
@@ -103,12 +103,12 @@ void ElectricityShot::draw() {
       start.glTranslate();
       
       glRotate();
-      spin = spin + flash;
-      if (spin >= 360 ) {
-         spin = 0;
+      flashiness = flashiness + flash;
+      if (flashiness >= 360 ) {
+         flashiness = 0;
       }
-      loc1 = glGetUniformLocation(elecShader,"spin");
-      glUniform1f(loc1,spin);
+      loc1 = glGetUniformLocation(elecShader,"flash");
+      glUniform1f(loc1,flashiness);
 
       setMaterial(GreenShiny);
       glLineWidth(thickness);
@@ -120,15 +120,15 @@ void ElectricityShot::draw() {
             x = 0;
             y = 0;
             z = length;
-            for(j = 0; j < length ; j = j+.5){
+            for(j = 0; j < length ; j = j+2){
                   glVertex3f(x, y, z);
                   
                   rot = rand() % elecWidth - elecWidth/2;
                   srot = rand() % elecWidth - elecWidth/2;
-                  glVertex3f(srot * (1 / length), rot  * (1 / length), length - j - .5);
+                  glVertex3f(srot * (1 / length), rot  * (1 / length), length - j - 2);
                   x = srot * (1 / length);
                   y = rot * (1 / length);
-                  z = length - j - .5;
+                  z = length - j - 2;
             }
       }
       glEnd();

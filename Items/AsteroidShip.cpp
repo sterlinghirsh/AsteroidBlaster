@@ -87,6 +87,7 @@ AsteroidShip::AsteroidShip() :
       /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
        */
       weapons.push_back(new TractorBeam(this));
+      weapons.push_back(new Electricity(this));
 
       // The ship's currently selected weapon.
       currentWeapon = 0;

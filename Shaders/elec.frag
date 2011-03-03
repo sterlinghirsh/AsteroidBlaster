@@ -1,18 +1,16 @@
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-// simple fragment shader
-varying float poop;
-uniform float spin;
+//rate of flash passed from vert shader
+varying float flashRate;
+
+//variable passed in from ElectricityShot.cpp
+uniform float flash;
 
 void main()
 	{	
-	      float pee = sin(poop);
-	      //float some = cos(poop);
-	      //float other = tan(poop);
-	      pee = abs(pee);
-	      //some = abs(some);
-	      //other = abs(other);
-	      vec4 color = vec4(0, 0, 1, 1);
-	      color = vec4(pee, pee, 1, 1.0);
+	      float flashColor = sin(flashRate);
+
+	      flashColor = abs(flashColor);
+
+	      vec4 color = vec4(0.0, 0.0, 1.0, 1.0);
+	      color = vec4(flashColor, flashColor, 1.0, 1.0);
 		gl_FragColor = color;	
 	}

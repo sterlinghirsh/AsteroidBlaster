@@ -19,6 +19,7 @@
 #include "Weapons/Blaster.h"
 #include "Weapons/RailGun.h"
 #include "Weapons/TractorBeam.h"
+#include "Weapons/Electricity.h"
 #include <list>
 
 // Later we'll put in a model for the ship.
