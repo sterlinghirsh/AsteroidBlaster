@@ -28,7 +28,7 @@ bool Weapon::isCooledDown() {
    if (!gameState->godMode) {
       return doubleTime() > timeLastFired + coolDown;
    }
-   return doubleTime() > timeLastFired + 0.01;
+   return doubleTime() > timeLastFired + 0.05;
 }
 
 /**
