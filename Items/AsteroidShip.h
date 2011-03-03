@@ -63,6 +63,8 @@ class AsteroidShip : public Object3D {
       virtual void handleCollision(Object3D* other);
       virtual void debug();
 
+      float getShakeAmount();
+
       void drawShotDirectionIndicators();
       void drawCrosshair();
 
@@ -159,6 +161,8 @@ class AsteroidShip : public Object3D {
       int lastGunFired;
       int currentWeapon;
       Vector3D *upstart;
+
+      float shakeAmount;
 
       void updateShotDirectionVector();
       void brake(double brakeFactorIn);

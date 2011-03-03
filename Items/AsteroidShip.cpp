@@ -29,6 +29,7 @@ AsteroidShip::AsteroidShip() :
       /* Currently not braking or acceleration. */
       isBraking = false;
       isBoosting = false;
+      shakeAmount = 0;
       brakeFactor = 2;
       /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
       curForwardAccel = curRightAccel = curUpAccel = 0;
@@ -326,6 +327,13 @@ void AsteroidShip::update(double timeDiff) {
 
    }
 
+   if (shakeAmount != 0) {
+      shakeAmount -= 5 * shakeAmount * timeDiff;
+      if (shakeAmount < 0.01) {
+         shakeAmount = 0;
+      }
+   }
+
    createEngineParticles(timeDiff);
 }
 
@@ -620,6 +628,7 @@ void AsteroidShip::handleCollision(Object3D* other) {
       if (!gameState->godMode) {
          health -= 4 * ceil(asteroid->radius);
       }
+      shakeAmount = 1;
    }
 }
 
@@ -824,4 +833,8 @@ float AsteroidShip::getCurrentWeaponCoolDown() {
 
 Weapon* AsteroidShip::getWeapon(int wep) {
    return weapons[wep];
+}
+
+float AsteroidShip::getShakeAmount() {
+   return shakeAmount;
 }

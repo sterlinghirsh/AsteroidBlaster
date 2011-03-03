@@ -173,6 +173,7 @@ void GameState::draw() {
 
    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    camera->setCamera(true);
+   camera->shake(ship->getShakeAmount());
    skybox->draw(camera);
    cube->draw();
 

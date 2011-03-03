@@ -18,6 +18,7 @@ Camera::Camera(bool lockUp) {
    forward = new Vector3D(0, 0, 1);
    offset = new Vector3D(0, 0, 0);
    lockUpVector = lockUp;
+   shakeAmount = 0;
 }
 
 Camera::Camera(Object3D* object) {
@@ -32,14 +33,17 @@ Camera::~Camera() {
 }
 
 void Camera::setCamera(bool setPosition) {
+   Vector3D random;
+   random.randomMagnitude();
+   random.setLength(shakeAmount / 50);
    if (setPosition) {
       gluLookAt(
        position->x + offset->xMag, 
        position->y + offset->yMag, 
        position->z + offset->zMag,
-       position->x + offset->xMag + forward->xMag, 
-       position->y + offset->yMag + forward->yMag, 
-       position->z + offset->zMag + forward->zMag,
+       position->x + offset->xMag + forward->xMag + random.xMag, 
+       position->y + offset->yMag + forward->yMag + random.yMag, 
+       position->z + offset->zMag + forward->zMag + random.zMag,
        up->xMag, up->yMag, up->zMag);
    } else {
       gluLookAt(0, 0, 0, forward->xMag, forward->yMag, forward->zMag,
@@ -86,4 +90,6 @@ Point3D Camera::getEyePoint(){
    return eyePoint;
 }
 
-
+void Camera::shake(float newShakeAmount) {
+   shakeAmount = clamp(newShakeAmount, 0, 1);
+}
