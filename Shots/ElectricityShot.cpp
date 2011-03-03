@@ -16,7 +16,7 @@ static float flashiness = 0;
 ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn, 
  AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
    persist = true;
-   angle = M_PI / 20; // Radians from the center
+   angle = M_PI / 360; // Radians from the center
    length = 80;
    farRadius = length * tan(angle);
    framesAlive = 0;
@@ -85,13 +85,13 @@ void ElectricityShot::draw() {
       float srot;
       
       //width of inidvidual lightning lines
-      float thickness = 3.0;
+      float thickness = 5.0;
       
       //density of the lightning in the beam
       float density = 2;
       
       //Width of the lightning shot
-      int elecWidth = 60;
+      int elecWidth = 100;
       
       //how fast you want the lighting flashing from blue to white. Higher number == faster flash
       float flash = .7;
@@ -120,7 +120,7 @@ void ElectricityShot::draw() {
             x = 0;
             y = 0;
             z = length;
-            for(j = 0; j < length ; j = j+2){
+            for(j = 0; j < length ; j = j+(rand() % 10)){
                   glVertex3f(x, y, z);
                   
                   rot = rand() % elecWidth - elecWidth/2;
