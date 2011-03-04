@@ -838,6 +838,12 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 
 }
 
+double GameState::getWallxMin() { return cube->xMin; }
+double GameState::getWallxMax() { return cube->xMax; }
+double GameState::getWallyMin() { return cube->yMin; }
+double GameState::getWallyMax() { return cube->yMax; }
+double GameState::getWallzMin() { return cube->zMin; }
+double GameState::getWallzMax() { return cube->zMax; }
 
 double GameState::getMouseX() { return mouseX; }
 double GameState::getMouseY() { return mouseY; }

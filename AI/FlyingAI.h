@@ -44,6 +44,9 @@ public:
    virtual void disable();
    virtual bool isEnabled();
    
+   // Control Functions
+   void faceDirection( Vector3D* desiredForward );
+   void flyDirection( Vector3D* desiredTraj );
    
    // Helper Functions
    Vector3D* getFlyDirection();

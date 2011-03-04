@@ -71,7 +71,14 @@ class GameState : public InputReceiver {
       void setCurFPS(double fpsIn);
       bool isGameRunning();
       bool getMenuMode();
-
+      
+      double getWallxMin();
+      double getWallxMax();
+      double getWallyMin();
+      double getWallyMax();
+      double getWallzMin();
+      double getWallzMax();
+      
       double getMouseX();
       double getMouseY();
       Camera* getCamera();
