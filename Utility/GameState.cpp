@@ -73,28 +73,41 @@ GameState::GameState(double worldSizeIn) {
    //xSize = ySize = 8;
    //colorBits = new char[ xSize * ySize * 3 ];
    //texture creation..
-   glGenTextures(1,&hTexture);
-   glBindTexture(GL_TEXTURE_2D,hTexture);
+   glGenTextures(1, &hTexture);
+   glBindTexture(GL_TEXTURE_2D, hTexture);
 
-   glTexImage2D(GL_TEXTURE_2D,0 ,3 , xSize,
-         ySize, 0 , GL_RGB,
+   glTexImage2D(GL_TEXTURE_2D, 0, 3, xSize,
+         ySize, 0, GL_RGB,
          GL_UNSIGNED_BYTE, NULL);
 
    //you can set other texture parameters if you want
-   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-   glGenTextures(1,&vTexture);
-   glBindTexture(GL_TEXTURE_2D,vTexture);
+   glGenTextures(1, &vTexture);
+   glBindTexture(GL_TEXTURE_2D, vTexture);
 
-   glTexImage2D(GL_TEXTURE_2D,0 ,3 , xSize,
-         ySize, 0 , GL_RGB,
+   glTexImage2D(GL_TEXTURE_2D, 0, 3, xSize,
+         ySize, 0, GL_RGB,
          GL_UNSIGNED_BYTE, NULL);
 
    //you can set other texture parameters if you want
- 
-   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+   glGenTextures(1, &blurTex);
+   glBindTexture(GL_TEXTURE_2D, blurTex);
+
+   glTexImage2D(GL_TEXTURE_2D, 0, 3, xSize,
+         ySize, 0,GL_RGB,
+         GL_UNSIGNED_BYTE, NULL);
+
+   //you can set other texture parameters if you want
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 
    //clean up
    //delete[] colorBits;
@@ -193,7 +206,8 @@ void GameState::draw() {
    // Get a list of all of the objects after culling them down to the view frustum.
    //std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
    if (thirdPerson) {
       ship->drawShotDirectionIndicators();
    } else {
@@ -255,9 +269,10 @@ void GameState::drawGlow() {
 }
 
 void GameState::hBlur() {
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    useOrtho();
    glPushMatrix();
-   glBlendFunc(GL_ONE, GL_ONE);
+   //glBlendFunc(GL_ONE, GL_ONE);
    glDisable(GL_LIGHTING);
    float minY = -1.0;
    float maxY = 1.0;
@@ -270,7 +285,49 @@ void GameState::hBlur() {
    glUseProgram(hBlurShader);
    glUniform1i(texLoc, tex);
 
-   //glColor4f(1.0, 1.0, 1.0, 0.5);
+   glColor4f(1.0, 1.0, 1.0, 0.5);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(minX, minY, 0.0);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(maxX, minY, 0.0);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(maxX, maxY, 0.0);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(minX, maxY, 0.0);
+   glEnd();
+   glUseProgram(0);
+   glDisable(GL_TEXTURE_2D);
+   glEnable(GL_LIGHTING);
+
+   glBindTexture(GL_TEXTURE_2D, gameState->vTexture);
+
+   glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+         0,0, GW, GH, 0);
+
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glPopMatrix();
+   glBindTexture(GL_TEXTURE_2D, 0);
+   //printf("h\n");
+}
+
+void GameState::vBlur() {
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   useOrtho();
+   glPushMatrix();
+   //glBlendFunc(GL_ONE, GL_ONE);
+   glDisable(GL_LIGHTING);
+   float minY = -1.0;
+   float maxY = 1.0;
+   float minX = -1.0 * aspect;
+   float maxX = 1.0 * aspect;
+   int tex = vTexture;
+   glEnable(GL_TEXTURE_2D);
+   glBindTexture(GL_TEXTURE_2D, vTexture);
+   GLint texLoc = glGetUniformLocation(vBlurShader, "blurSampler");
+   glUseProgram(vBlurShader);
+   glUniform1i(texLoc, tex);
+
    glColor4f(1.0, 1.0, 1.0, 0.5);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -285,16 +342,19 @@ void GameState::hBlur() {
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
    glPopMatrix();
-   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    glUseProgram(0);
+   
+   glBindTexture(GL_TEXTURE_2D, gameState->blurTex);
 
-   glBindTexture(GL_TEXTURE_2D, vTexture);
-   glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0,0, (maxX - minX), (maxY - minY), 0);
+   glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+         0,0, GW, GH, 0);
+
    glBindTexture(GL_TEXTURE_2D, 0);
    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   //printf("v\n");
 }
 
-void GameState::vBlur() {
+void GameState::drawBloom() {
    useOrtho();
    glPushMatrix();
    glBlendFunc(GL_ONE, GL_ONE);
@@ -303,17 +363,9 @@ void GameState::vBlur() {
    float maxY = 1.0;
    float minX = -1.0 * aspect;
    float maxX = 1.0 * aspect;
-   //int tex = vTexture;
-   int tex = hTexture;
    glEnable(GL_TEXTURE_2D);
-   //glBindTexture(GL_TEXTURE_2D, vTexture);
-   glBindTexture(GL_TEXTURE_2D, hTexture);
-   GLint texLoc = glGetUniformLocation(vBlurShader, "blurSampler");
-   glUseProgram(vBlurShader);
-   //glUseProgram(0);
-   glUniform1i(texLoc, tex);
+   glBindTexture(GL_TEXTURE_2D, blurTex);
 
-   //glColor4f(1.0, 1.0, 1.0, 0.5);
    glColor4f(1.0, 1.0, 1.0, 0.5);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -328,19 +380,8 @@ void GameState::vBlur() {
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
    glPopMatrix();
-   glUseProgram(0);
+   
    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void GameState::drawBloom(bool doHBlur, bool doVBlur) {
-   if (doHBlur) {
-      //printf("horizontal bloom\n");
-      hBlur();
-   }
-   if (doVBlur) {
-      //printf("vertical bloom\n");
-      vBlur();
-   }
 }
 
 void GameState::drawHud() {
@@ -609,7 +650,7 @@ void GameState::keyDown(int key) {
          ship->prevWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
-         do { 
+         do {
             ship->nextWeapon();
          } while (!ship->getCurrentWeapon()->purchased);
       }
@@ -625,7 +666,7 @@ void GameState::keyDown(int key) {
          } while (!ship->getCurrentWeapon()->purchased);
       }
       break;
-   // Minimap Display Size
+      // Minimap Display Size
    case SDLK_1:
       minimap->setDisplaySize(1);
       break;
@@ -641,7 +682,7 @@ void GameState::keyDown(int key) {
    case SDLK_0:
       minimap->setDisplaySize(0);
       break;
-   // Minimap Zoom
+      // Minimap Zoom
    case SDLK_5:
       minimap->setZoomLevel(80);
       break;
@@ -664,7 +705,7 @@ void GameState::keyDown(int key) {
          Music::pauseMusic();
       }
       break;
-   // If the user presses F11, give them all of the weapons.
+      // If the user presses F11, give them all of the weapons.
    case SDLK_F11:
       // Make all of the weapons be purchased.
       for (int i = 0; i < ship->getNumWeapons(); i++)
@@ -758,13 +799,13 @@ void GameState::keyUp(int key) {
  */
 void GameState::mouseDown(int button) {
    switch(button) {
-   // Left mouse down
+      // Left mouse down
    case 1:
       //ship->selectWeapon(0);
       ship->fire(true);
       break;
 
-   // Right mouse down
+      // Right mouse down
    case 3:
       doYaw = !doYaw;
       ship->setRollSpeed(0);
@@ -777,7 +818,7 @@ void GameState::mouseDown(int button) {
          ship->prevWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
-         do { 
+         do {
             ship->prevWeapon();
          } while (!ship->getCurrentWeapon()->purchased);
       }
@@ -788,7 +829,7 @@ void GameState::mouseDown(int button) {
          ship->nextWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
-         do { 
+         do {
             ship->nextWeapon();
          } while (!ship->getCurrentWeapon()->purchased);
       }
@@ -801,11 +842,11 @@ void GameState::mouseDown(int button) {
  */
 void GameState::mouseUp(int button) {
    switch (button) {
-   // Left mouse up
+      // Left mouse up
    case 1:
       ship->fire(false);
       break;
-   // Right mouse up
+      // Right mouse up
    case 3:
       doYaw = !doYaw;
       ship->setRollSpeed(0);

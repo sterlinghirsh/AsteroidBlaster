@@ -58,7 +58,8 @@ class GameState : public InputReceiver {
       void draw();
       void hBlur();
       void vBlur();
-      void drawBloom(bool doHBlur, bool doVBlur);
+      void drawBlur();
+      void drawBloom();
       void drawGlow();
       void drawMinimap();
 
@@ -96,6 +97,7 @@ class GameState : public InputReceiver {
       int xSize, ySize;
       GLuint hTexture;
       GLuint vTexture;
+      GLuint blurTex;
       char* colorBits;
       float aspect;
 

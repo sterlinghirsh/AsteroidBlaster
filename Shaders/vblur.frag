@@ -11,6 +11,8 @@ const vec2  blurMultiplyVec      = vec2(0.0, 1.0);
 
 void main() {
 
+   //gl_FragColor = texture2D(RTScene, gl_TexCoord[0].xy);
+
    // Incremental Gaussian Coefficent Calculation (See GPU Gems 3 pp. 877 - 889)
    vec3 incrementalGaussian;
    incrementalGaussian.x = 1.0 / (sqrt(2.0 * pi) * sigma);
