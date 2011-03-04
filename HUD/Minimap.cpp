@@ -10,7 +10,7 @@
 #include "Items/Object3D.h"
 
 #define DEFAULT_DISPLAYSIZE 0.5
-#define DEFAULT_ZOOMLEVEL 40
+#define DEFAULT_ZOOMLEVEL 20
 
 Minimap::Minimap(AsteroidShip* _ship) :
  ship(_ship), displaySize(DEFAULT_DISPLAYSIZE), zoomLevel(DEFAULT_ZOOMLEVEL) {
@@ -177,7 +177,11 @@ void Minimap::draw() {
       setMaterial(GrayTransparent);
       //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_CULL_FACE);
-      gluSphere(quadric, 1, 20, 20);
+      ship->glRotate(true);
+      glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+      gluSphere(quadric, 1, 10, 10);
+      glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
       glEnable(GL_CULL_FACE);
    glPopMatrix();
 }
