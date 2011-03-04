@@ -58,7 +58,7 @@ class GameState : public InputReceiver {
       void draw();
       void hBlur();
       void vBlur();
-      void drawBloom();
+      void drawBloom(bool doHBlur, bool doVBlur);
       void drawGlow();
       void drawMinimap();
 
@@ -87,7 +87,8 @@ class GameState : public InputReceiver {
 
       // Bloom
       int xSize, ySize;
-      GLuint texture;
+      GLuint hTexture;
+      GLuint vTexture;
       char* colorBits;
       float aspect;
 

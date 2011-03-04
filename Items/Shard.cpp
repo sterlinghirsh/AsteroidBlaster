@@ -274,8 +274,8 @@ void Shard::draw() {
    // Call the display list if it has one.
    Object3D::draw();
    // Disable materials.
-   //glEnable(GL_COLOR_MATERIAL);
-   //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   glEnable(GL_COLOR_MATERIAL);
+   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
    // Push matrix and draw main shard.

@@ -37,6 +37,7 @@ class InputManager {
    void removeReceiver(InputReceiver* inReceiver);
    
    bool bloom;
+   bool bloom1;
    bool reg;
    bool godMode;
    private:

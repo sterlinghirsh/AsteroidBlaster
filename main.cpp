@@ -93,16 +93,18 @@ void display() {
   // Draw glowing objects to a texture for the bloom effect.
   gameState->aspect = (float)GW/(float)GH;
   //gameState->aspect = 1.0;
-  if (inputManager->bloom) {
+  if (inputManager->bloom || inputManager->bloom1) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
     gameState->drawGlow();
     //Particle::drawParticles();
-    glBindTexture(GL_TEXTURE_2D, gameState->texture);
+    glBindTexture(GL_TEXTURE_2D, gameState->hTexture);
 
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
         0,0, GW, GH, 0);
     glPopMatrix();
+    
+    //glBindTexture(GL_TEXTURE_2D, gameState->vTexture);
   }
 
 
@@ -122,9 +124,9 @@ void display() {
   // Draw the hud
   glClear(GL_DEPTH_BUFFER_BIT);
   gameState->drawHud();
-  if (inputManager->bloom) {
+  if (inputManager->bloom || inputManager->bloom1) {
     //printf("SPECUBLOOM\n");
-    gameState->drawBloom();
+    gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
   }
   glPopMatrix();
   // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
@@ -303,7 +305,7 @@ int main(int argc, char* argv[]) {
   tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
   fadeShader = setShaders( (char *) "./Shaders/fade.vert", (char *) "./Shaders/fade.frag");
   hBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/hblur.frag");
-  //vBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/vblur.frag");
+  vBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/vblur.frag");
   //hBlurShader = setShaders( (char *) "./Shaders/old/hblur.vert", (char *) "./Shaders/hblur.frag");
   //vBlurShader = setShaders( (char *) "./Shaders/old/vblur.vert", (char *) "./Shaders/vblur.frag");
 

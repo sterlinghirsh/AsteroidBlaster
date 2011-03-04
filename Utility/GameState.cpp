@@ -71,21 +71,34 @@ GameState::GameState(double worldSizeIn) {
    // Bloom
    xSize = ySize = 256;
    //xSize = ySize = 8;
-   colorBits = new char[ xSize * ySize * 3 ];
+   //colorBits = new char[ xSize * ySize * 3 ];
    //texture creation..
-   glGenTextures(1,&texture);
-   glBindTexture(GL_TEXTURE_2D,texture);
+   glGenTextures(1,&hTexture);
+   glBindTexture(GL_TEXTURE_2D,hTexture);
 
    glTexImage2D(GL_TEXTURE_2D,0 ,3 , xSize,
          ySize, 0 , GL_RGB,
-         GL_UNSIGNED_BYTE, colorBits);
+         GL_UNSIGNED_BYTE, NULL);
 
    //you can set other texture parameters if you want
    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR);
    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+   glGenTextures(1,&vTexture);
+   glBindTexture(GL_TEXTURE_2D,vTexture);
+
+   glTexImage2D(GL_TEXTURE_2D,0 ,3 , xSize,
+         ySize, 0 , GL_RGB,
+         GL_UNSIGNED_BYTE, NULL);
+
+   //you can set other texture parameters if you want
+ 
+   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
    //clean up
-   delete[] colorBits;
+   //delete[] colorBits;
+   //glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 
@@ -250,13 +263,13 @@ void GameState::hBlur() {
    float maxY = 1.0;
    float minX = -1.0 * aspect;
    float maxX = 1.0 * aspect;
-   int tex = texture;
+   int tex = hTexture;
+   glEnable(GL_TEXTURE_2D);
+   glBindTexture(GL_TEXTURE_2D, tex);
    GLint texLoc = glGetUniformLocation(hBlurShader, "RTscene");
    glUseProgram(hBlurShader);
    glUniform1i(texLoc, tex);
 
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, texture);
    //glColor4f(1.0, 1.0, 1.0, 0.5);
    glColor4f(1.0, 1.0, 1.0, 0.5);
    glBegin(GL_QUADS);
@@ -275,8 +288,10 @@ void GameState::hBlur() {
    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    glUseProgram(0);
 
-   glBindTexture(GL_TEXTURE_2D, tex);
+   glBindTexture(GL_TEXTURE_2D, vTexture);
    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0,0, (maxX - minX), (maxY - minY), 0);
+   glBindTexture(GL_TEXTURE_2D, 0);
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void GameState::vBlur() {
@@ -288,13 +303,16 @@ void GameState::vBlur() {
    float maxY = 1.0;
    float minX = -1.0 * aspect;
    float maxX = 1.0 * aspect;
-   int tex = texture;
-   GLint texLoc = glGetUniformLocation(vBlurShader, "RTBlurH");
+   //int tex = vTexture;
+   int tex = hTexture;
+   glEnable(GL_TEXTURE_2D);
+   //glBindTexture(GL_TEXTURE_2D, vTexture);
+   glBindTexture(GL_TEXTURE_2D, hTexture);
+   GLint texLoc = glGetUniformLocation(vBlurShader, "blurSampler");
    glUseProgram(vBlurShader);
+   //glUseProgram(0);
    glUniform1i(texLoc, tex);
 
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, texture);
    //glColor4f(1.0, 1.0, 1.0, 0.5);
    glColor4f(1.0, 1.0, 1.0, 0.5);
    glBegin(GL_QUADS);
@@ -311,11 +329,18 @@ void GameState::vBlur() {
    glEnable(GL_LIGHTING);
    glPopMatrix();
    glUseProgram(0);
+   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void GameState::drawBloom() {
-   hBlur();
-   //vBlur();
+void GameState::drawBloom(bool doHBlur, bool doVBlur) {
+   if (doHBlur) {
+      //printf("horizontal bloom\n");
+      hBlur();
+   }
+   if (doVBlur) {
+      //printf("vertical bloom\n");
+      vBlur();
+   }
 }
 
 void GameState::drawHud() {

@@ -18,6 +18,7 @@ using namespace std;
 InputManager::InputManager() {
    fullScreen = false;
    bloom = false;
+   bloom1 = false;
    reg = true;
    godMode = false;
    oldGW = GW;
@@ -82,6 +83,9 @@ void InputManager::update(const SDL_Event& e) {
    }
    if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F3) {
       reg = !reg;
+   }
+   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F4) {
+      bloom1 = !bloom1;
    }
    if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F12) {
       godMode = !godMode;
