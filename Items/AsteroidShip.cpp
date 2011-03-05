@@ -89,6 +89,7 @@ AsteroidShip::AsteroidShip() :
        */
       weapons.push_back(new TractorBeam(this));
       weapons.push_back(new Electricity(this));
+      weapons.push_back(new LawnMower(this));
 
       // The ship's currently selected weapon.
       currentWeapon = 0;

@@ -13,6 +13,7 @@
 #include "Shots/BeamShot.h"
 #include "Shots/TractorBeamShot.h"
 #include "Shots/ElectricityShot.h"
+#include "Shots/LawnMowerShot.h"
 #include "Utility/SoundEffect.h"
 #include <algorithm>
 #define _USE_MATH_DEFINES
@@ -290,6 +291,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
    Asteroid3D* otherAsteroid;
    AsteroidShip* ship;
    Shot* shot;
+   LawnMowerShot* lawnMowerShot;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       double d = (*(otherAsteroid->position)).distanceFrom(*position);
       double combinedRad = otherAsteroid->radius + radius;
@@ -322,6 +324,9 @@ void Asteroid3D::handleCollision(Object3D* other) {
             velocity->addUpdate(shot->velocity->scalarMultiply(10));
          } else if (dynamic_cast<TractorBeamShot*>(other) != NULL) {
             // Do nothing.
+         } else if ((lawnMowerShot = dynamic_cast<LawnMowerShot*>(other)) != NULL) {
+            health -= fabs((health / 8) + 0.05); // Fabsulous!!
+            velocity->updateMagnitude(*lawnMowerShot->position, *position);
          } else if (dynamic_cast<ElectricityShot*>(other) != NULL) {
             health = health - .05;
          } else {
