@@ -330,6 +330,7 @@ int main(int argc, char* argv[]) {
    SoundEffect::Add("Sounds/Explosion1.wav", "Explosion1.wav");
    SoundEffect::Add("Sounds/CrystalCollect.wav", "CrystalCollect.wav");
    SoundEffect::Add("Sounds/TractorBeam.wav", "TractorBeam.wav");
+   SoundEffect::Add("Sounds/Pikachu.wav", "Pikachu.wav");
    SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
    SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
 
