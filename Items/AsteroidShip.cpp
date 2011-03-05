@@ -838,3 +838,7 @@ Weapon* AsteroidShip::getWeapon(int wep) {
 float AsteroidShip::getShakeAmount() {
    return shakeAmount;
 }
+
+void AsteroidShip::setShakeAmount(float shakeIn) {
+   shakeAmount = shakeIn;
+}

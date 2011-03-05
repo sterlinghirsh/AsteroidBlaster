@@ -78,11 +78,11 @@ void BeamShot::update(double timeDiff) {
    }
 }
 
-void BeamShot::draw() {
+void BeamShot::drawBeam(bool drawDots) {
    const double length = 100;
    const double distanceDifference = 0.3; // :)
-   const double angleDiff = 40; // Degrees per unit of ball helix.
    const double ballOffset = 0.2;
+   const double angleDiff = 40; // Degrees per unit of ball helix.
    double curTime = doubleTime();
    double timeLeft;
    if (!gameState->godMode) {
@@ -106,24 +106,33 @@ void BeamShot::draw() {
       drawCylinder(0.1 , length);
    }
    glPopMatrix();
-
-   if (!gameState->godMode) {
-      // Dots
-      Vector3D normal(velocity->getNormalVector());
-      setMaterial(ballMaterial);
-      for (double distance = 0; distance < length;
-            distance += distanceDifference) {
-         glPushMatrix();
-         velocity->glTranslate(distance);
-         glRotatef(fmod(curTime, 4) * 90 + (distance*angleDiff), velocity->xMag,
-               velocity->yMag, velocity->zMag);
-         normal.glTranslate((1 - timeLeft) + ballOffset);
-         //glutSolidSphere(0.05 * (1 - timeLeft), 10, 10);
-         gluSphere(quadric, 0.05 * (1 - timeLeft), 5,5);
-         glPopMatrix();
+   if (drawDots) {
+      if (!gameState->godMode) {
+         // Dots
+         Vector3D normal(velocity->getNormalVector());
+         setMaterial(ballMaterial);
+         for (double distance = 0; distance < length;
+               distance += distanceDifference) {
+            glPushMatrix();
+            velocity->glTranslate(distance);
+            glRotatef(fmod(curTime, 4) * 90 + (distance*angleDiff), velocity->xMag,
+                  velocity->yMag, velocity->zMag);
+            normal.glTranslate((1 - timeLeft) + ballOffset);
+            //glutSolidSphere(0.05 * (1 - timeLeft), 10, 10);
+            gluSphere(quadric, 0.05 * (1 - timeLeft), 5,5);
+            glPopMatrix();
+         }
       }
    }
    glPopMatrix();
+}
+
+void BeamShot::draw() {
+   drawBeam(true);
+}
+
+void BeamShot::drawGlow() {
+   drawBeam(false);
 }
 
 /**

@@ -52,6 +52,7 @@ void Blaster::fire() {
    randomVariation.scalarMultiplyUpdate(randomVariationAmount);
    shotDirection.addUpdate(randomVariation);
    ship->shotDirection.movePoint(start);
+   ship->setShakeAmount(0.05);
    gameState->custodian.add(new ProjectileShot(start,
             shotDirection, ship));
    // Don't play sound effects in godMode b/c there would be too many.

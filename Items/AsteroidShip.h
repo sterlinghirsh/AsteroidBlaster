@@ -64,6 +64,7 @@ class AsteroidShip : public Object3D {
       virtual void debug();
 
       float getShakeAmount();
+      void setShakeAmount(float shakeIn);
 
       void drawShotDirectionIndicators();
       void drawCrosshair();
