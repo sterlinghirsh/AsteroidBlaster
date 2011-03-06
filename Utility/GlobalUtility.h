@@ -59,6 +59,7 @@ double doubleTime();
 void useOrtho();
 void usePerspective();
 void drawCylinder(double radius, double length);
+void getBrightColor(double hue, float& r, float& g, float& b);
 
 // Used for defining a material
 typedef struct materialStruct {

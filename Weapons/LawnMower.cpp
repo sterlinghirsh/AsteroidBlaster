@@ -45,7 +45,7 @@ void LawnMower::fire() {
       return;
 
    const double swingAmount = 0.5; // Radians from center.
-   const double swingPeriod = 4; // Seconds.
+   const double swingPeriod = 2; // Seconds.
 
    Point3D start = *ship->position;
    Vector3D shotDirection(*ship->forward);

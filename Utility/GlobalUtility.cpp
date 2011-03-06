@@ -446,6 +446,36 @@ void printProgramLog(GLuint obj) {
 		glGetProgramInfoLog(obj, infoLogLength, &charsWritten, infoLog);
 		printf("%s\n",infoLog);
 		free(infoLog);
-		}
-	}
+   }
+}
 
+void getBrightColor(double hue, float& r, float& g, float& b) {
+
+   hue = fmod((6.0 * hue), 6.0);
+   float colorValue = fmod(hue, 1);
+   if (hue < 1) {
+      r = 1;
+      g = colorValue;
+      b = 0;
+   } else if (hue < 2) {
+      r = 1 - colorValue;
+      g = 1;
+      b = 0;
+   } else if (hue < 3) {
+      r = 0;
+      g = 1;
+      b = colorValue;
+   } else if (hue < 4) {
+      r = 0;
+      g = 1 - colorValue;
+      b = 1;
+   } else if (hue < 5) {
+      r = colorValue;
+      g = 0;
+      b = 1;
+   } else {
+      r = 1;
+      g = 0;
+      b = 1 - colorValue;
+   }
+}

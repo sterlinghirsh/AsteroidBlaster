@@ -65,6 +65,8 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    velocity->randomMagnitude();
    velocity->setLength(randdouble() * 3); // Units per sec.
 
+   getBrightColor(randdouble(), cyan, magenta, yellow);
+
    Ring last;
    double a = randdouble() * 0.5 + 0.75;
    double b = randdouble() * 0.5 + 0.75;
@@ -223,11 +225,11 @@ void Asteroid3D::draw() {
    //if (health == 1) {
    //glColor3f(0.996, 0.312, 0.1);
    //} else if (health > 1) {
-   double step = (initH - health + 1);
-   double stepR = .004 / initH * step;
-   double stepG = .388 / initH * step;
-   double stepB = 1.0 / initH * step;
-   glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
+   double step = (initH - health) / initH;
+   double stepR = cyan * step;
+   double stepG = magenta * step;
+   double stepB = yellow * step;
+   glColor3f(1 - stepR, 1 - stepG, 1 - stepB);
    //}
    //glColor3f(0.996, 0.612, 0.0);
 

@@ -17,7 +17,7 @@ LawnMowerShot::LawnMowerShot(Point3D& posIn, Vector3D dirIn,
  AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
    persist = true;
    angle = M_PI / 40; // Radians from the center
-   length = 10;
+   length = 20;
    farRadius = length * tan(angle);
    framesAlive = 0;
    forward = new Vector3D(*velocity); // Goofy.
