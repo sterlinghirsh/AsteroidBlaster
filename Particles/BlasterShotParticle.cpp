@@ -49,11 +49,11 @@ void BlasterShotParticle::AddRainbow(Point3D* pos, Vector3D* vec, int particleNu
    float _fade = ( float )( rand( ) %10 ) / 10000.0f + 0.001f;
 
    // Test
-   float r = 1;
-   float g = 0;
-   float b = 0;
-   getBrightColor(particleNum / particleCycle, r, g, b);
+   float _r = 1;
+   float _g = 0;
+   float _b = 0;
+   getBrightColor((float)particleNum / particleCycle, _r, _g, _b);
 
-   particles.push_back(new BlasterShotParticle(pos, vec, PARTICLE_LIFE, _fade, r, g, b));
+   particles.push_back(new BlasterShotParticle(pos, vec, PARTICLE_LIFE, _fade, _r, _g, _b));
 
 }
