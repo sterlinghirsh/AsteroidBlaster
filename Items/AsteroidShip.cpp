@@ -674,7 +674,8 @@ void AsteroidShip::updateShotDirection(Point3D dir) {
  */
 void AsteroidShip::drawCrosshair() {
    
-   if (currentView != VIEW_FIRSTPERSON) {
+   if (currentView != VIEW_FIRSTPERSON_SHIP &&
+    currentView != VIEW_FIRSTPERSON_GUN) {
       return drawShotDirectionIndicators();
    }
 
@@ -703,7 +704,9 @@ void AsteroidShip::drawCrosshair() {
       glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
       glEnd();
       */
-   glTranslatef(getAimX(), getAimY(), 0.0);
+   if (currentView == VIEW_FIRSTPERSON_SHIP) {
+      glTranslatef(getAimX(), getAimY(), 0.0);
+   }
    static GLUquadricObj *outer;
    static GLUquadricObj *inner;
    outer = gluNewQuadric();
@@ -854,8 +857,9 @@ void AsteroidShip::setShakeAmount(float shakeIn) {
 
 Vector3D* AsteroidShip::getViewVector() {
    switch(currentView) {
-      case VIEW_FIRSTPERSON: return forward;
+      case VIEW_FIRSTPERSON_SHIP:
       case VIEW_THIRDPERSON_SHIP: return forward;
+      case VIEW_FIRSTPERSON_GUN: 
       case VIEW_THIRDPERSON_GUN: return getShotDirection();
       default:
        fprintf(stderr, "getViewVector got currentView %d\n", currentView);
@@ -864,7 +868,7 @@ Vector3D* AsteroidShip::getViewVector() {
 }
 
 Vector3D* AsteroidShip::getCameraOffset() {
-   if (currentView != VIEW_FIRSTPERSON) {
+   if (currentView != VIEW_FIRSTPERSON_SHIP && currentView != VIEW_FIRSTPERSON_GUN) {
       cameraOffset->updateMagnitude(getViewVector()->scalarMultiply(-3));
       cameraOffset->addUpdate(up->scalarMultiply(0.5));
    } else {
