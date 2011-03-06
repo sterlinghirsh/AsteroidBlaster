@@ -49,6 +49,10 @@ void Vector3D::updateMagnitude(Point3D p1, Point3D p2) {
    updateMagnitude(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
 }
 
+void Vector3D::updateMagnitude(Point3D* p1, Point3D* p2) {
+   updateMagnitude(p2->x - p1->x, p2->y - p1->y, p2->z - p1->z);
+}
+
 void Vector3D::updatePosition(Point3D point) {
    updatePosition(point.x, point.y, point.z);
 }
@@ -101,6 +105,17 @@ void Vector3D::update(double x, double y, double z, double a, double b, double c
  */
 double Vector3D::getLength() {
    return distance3D(xMag, yMag, zMag);
+}
+
+/**
+ * Returns a double that represents the 
+ * distance from head to tail squared.
+ * This allows us to do comparisons on the
+ * length without doing a costly sqrt();
+ */
+double Vector3D::getComparisonLength() {
+   return (xMag * xMag) + (yMag * yMag) + 
+   (zMag * zMag);
 }
 
 /**

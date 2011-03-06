@@ -34,8 +34,10 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn) 
       lifetime = 0.5;
       // In this context, velocity means direction.
       hitYet = false;
+      hitItem = NULL; // We use this to make sure it hits only one thing.
       persist = true;
       lastHitFrame = 0;
+      firstFrame = curFrame;
       Point3D endPoint1(*position);
       Point3D endPoint2(*position);
       // Set endPoint2 100 units away.
@@ -140,7 +142,7 @@ void BeamShot::drawGlow() {
  * This ignores checkOther, since the beam will be the final say on what gets hit.
  */
 bool BeamShot::detectCollision(Object3D* other, bool checkOther) {
-   if (hitYet && curFrame != lastHitFrame)
+   if (hitYet || curFrame != firstFrame)
       return false;
    Vector3D positionVector(*position);
    Vector3D otherVector(*other->position);
@@ -171,9 +173,11 @@ bool BeamShot::detectCollision(Object3D* other, bool checkOther) {
 }
 
 void BeamShot::handleCollision(Object3D* other) {
-   if (other == owner || hitYet || curFrame != lastHitFrame)
+   printf("Distance: %f\n", position->distanceFrom(*other->position));
+   if (other == owner || hitYet || curFrame != firstFrame)
       return;
    hitYet = true;
+   hitItem = other;
    lifetime = 0.4;
    timeFired = doubleTime();
    lastHitFrame = curFrame;

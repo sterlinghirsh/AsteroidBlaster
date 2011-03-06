@@ -293,6 +293,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
    Asteroid3D* otherAsteroid;
    AsteroidShip* ship;
    Shot* shot;
+   BeamShot* beamShot;
    LawnMowerShot* lawnMowerShot;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       double d = (*(otherAsteroid->position)).distanceFrom(*position);
@@ -321,9 +322,13 @@ void Asteroid3D::handleCollision(Object3D* other) {
       }
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
       if (health > 0) {
-         if (dynamic_cast<BeamShot*>(other) != NULL) {
-            health = 0;
-            velocity->addUpdate(shot->velocity->scalarMultiply(10));
+         if ((beamShot = dynamic_cast<BeamShot*>(other)) != NULL) {
+            if (((!beamShot->hitYet) || 
+             this == beamShot->hitItem) &&
+             curFrame == beamShot->firstFrame) {
+               health = 0;
+               velocity->addUpdate(shot->velocity->scalarMultiply(10));
+            }
          } else if (dynamic_cast<TractorBeamShot*>(other) != NULL) {
             // Do nothing.
          } else if ((lawnMowerShot = dynamic_cast<LawnMowerShot*>(other)) != NULL) {

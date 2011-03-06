@@ -30,12 +30,14 @@ class Vector3D {
       void addToPosition(Vector3D&);
       void addNormal();
       double getLength();
+      double getComparisonLength();
       double getAngleInRadians(Vector3D&);
       double getAngleInDegrees(Vector3D&);
       void draw();
       void normalize();
       void updateMagnitude(double, double, double);
       void updateMagnitude(Point3D, Point3D);
+      void updateMagnitude(Point3D*, Point3D*);
       void updateMagnitude(Point3D);
       void updateMagnitude(Vector3D);
       void updateMagnitude(Vector3D*);

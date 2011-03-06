@@ -12,7 +12,9 @@
 class BeamShot : public Shot {
    public:
       bool hitYet;
+      unsigned long firstFrame;
       unsigned long lastHitFrame;
+      Object3D* hitItem;
 
       BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
       void drawBeam(bool drawDots);

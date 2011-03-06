@@ -41,6 +41,17 @@ static bool compareByMaxX (Object3D* item1, Object3D* item2) {
    return item1->maxPosition->x < item2->maxPosition->x;
 }
 
+bool compareByDistance::operator() (Object3D* const& lhs, Object3D* const& rhs) const {
+   d1.updateMagnitude(curObject->position, lhs->position);
+   d2.updateMagnitude(curObject->position, rhs->position);
+   return d1.getComparisonLength() < 
+    d2.getComparisonLength();
+}
+Object3D* compareByDistance::curObject;
+Vector3D compareByDistance::d1;
+Vector3D compareByDistance::d2;
+
+
 /**
  * Run this after all objects have moved.
  * This sorts all the lists, then calculates each item's rank.
@@ -129,8 +140,11 @@ void Custodian::remove(Object3D* objectIn) {
  * This returns a pointer to a new std::list. You must delete
  * if after you use it.
  */
-std::set<Object3D*>* Custodian::findCollisions(Object3D* item, bool searchBackwards) {
-   std::set<Object3D*>* sublist = new std::set<Object3D*>();
+std::set<Object3D*, compareByDistance>* Custodian::findCollisions(Object3D* item, bool searchBackwards) {
+
+   compareByDistance::curObject = item;
+   // TODO: Order this by distance.
+   std::set<Object3D*, compareByDistance >* sublist = new std::set<Object3D*, compareByDistance>();
    // If we were passed a null pointer, don't worry about it, just return an empty list.
    if (item == NULL)
       return sublist;

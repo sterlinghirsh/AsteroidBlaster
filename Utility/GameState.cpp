@@ -130,8 +130,8 @@ GameState::~GameState() {
  */
 void GameState::update(double timeDiff) {
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
-   std::set<Object3D*>* collisions;
-   std::set<Object3D*>::iterator otherObject;
+   std::set<Object3D*, compareByDistance>* collisions;
+   std::set<Object3D*, compareByDistance>::iterator otherObject;
 
    // Determine whether or not the game should continue running
    if (ship->getHealth() <= 0) {
@@ -465,7 +465,7 @@ void GameState::checkCollisions() {
 
 void GameState::initAsteroids() {
    Asteroid3D* tempAsteroid;
-   std::set<Object3D*>* collisions;
+   std::set<Object3D*, compareByDistance>* collisions;
 
    /* We want this spaceHolder because we don't want to spawn asteroids
     * too close to the ship.
