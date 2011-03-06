@@ -57,7 +57,6 @@ GameState::GameState(double worldSizeIn) {
    mouseY = 0;
 
    scoreToWin = 15000;
-   thirdPerson = true;
    godMode = false;
 
    // TODO: comment this or rename it.
@@ -189,13 +188,17 @@ void GameState::drawMinimap() {
  */
 void GameState::draw() {
 
+   /*
    if (thirdPerson) {
       Vector3D newOffset(ship->forward->scalarMultiply(-3));
       newOffset.addUpdate(ship->up->scalarMultiply(0.5));
-      camera->setOffset(newOffset);
+      camera->setOffset(ship->getOffset);
    } else {
       camera->setOffset(0, 0, 0);
    }
+   */
+   camera->setViewVector(ship->getViewVector());
+   camera->setOffset(*ship->getCameraOffset());
 
    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    camera->setCamera(true);
@@ -208,11 +211,7 @@ void GameState::draw() {
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
-   if (thirdPerson) {
-      ship->drawShotDirectionIndicators();
-   } else {
-      ship->drawCrosshair();
-   }
+   ship->drawCrosshair();
 
    for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
       if (*listIter == NULL || *listIter == ship)
@@ -221,7 +220,7 @@ void GameState::draw() {
    }
 
    // Don't draw the ship in first Person mode.
-   if (thirdPerson) {
+   if (ship->getCurrentView() != VIEW_FIRSTPERSON) {
       ship->draw();
    }
 }
@@ -231,7 +230,7 @@ void GameState::draw() {
  */
 void GameState::drawGlow() {
 
-   if (thirdPerson) {
+   if (ship->getCurrentView() != VIEW_FIRSTPERSON) {
       Vector3D newOffset(ship->forward->scalarMultiply(-3));
       newOffset.addUpdate(ship->up->scalarMultiply(0.5));
       camera->setOffset(newOffset);
@@ -263,9 +262,8 @@ void GameState::drawGlow() {
    }
 
    // Don't draw the ship in first Person mode.
-   if (thirdPerson) {
+   if (ship->getCurrentView() != VIEW_FIRSTPERSON)
       ship->draw();
-   }
 }
 
 void GameState::hBlur() {
@@ -619,7 +617,7 @@ void GameState::keyDown(int key) {
       break;
 
    case SDLK_t:
-      thirdPerson = !thirdPerson;
+      ship->nextView();
       break;
 
    case SDLK_g:

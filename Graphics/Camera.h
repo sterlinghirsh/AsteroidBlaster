@@ -35,6 +35,7 @@ class Camera {
       void setOffset(Vector3D& newOffset);
       Point3D getEyePoint();
       void shake(float newShakeAmount);
+      void setViewVector(Vector3D* newView);
 };
 
 #endif

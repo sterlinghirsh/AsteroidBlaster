@@ -84,6 +84,10 @@ void Camera::setOffset(Vector3D& newOffset) {
    offset->updateMagnitude(newOffset);
 }
 
+void Camera::setViewVector(Vector3D* newView) {
+   forward = newView;
+}
+
 Point3D Camera::getEyePoint(){
    Point3D eyePoint(*position);
    offset->movePoint(eyePoint);

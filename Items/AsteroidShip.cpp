@@ -94,6 +94,9 @@ AsteroidShip::AsteroidShip() :
       // The ship's currently selected weapon.
       currentWeapon = 0;
       soundHandle = -1;
+
+      cameraOffset = new Vector3D(0, 2, 5);
+      currentView = VIEW_THIRDPERSON_SHIP;
    }
 
 /**
@@ -670,6 +673,11 @@ void AsteroidShip::updateShotDirection(Point3D dir) {
  * This is the crosshair for first person.
  */
 void AsteroidShip::drawCrosshair() {
+   
+   if (currentView != VIEW_FIRSTPERSON) {
+      return drawShotDirectionIndicators();
+   }
+
    double crosshairSizeX = 0.05;
    double crosshairSizeY = 0.05;
    double thicknessX = 0.01;
@@ -842,4 +850,41 @@ float AsteroidShip::getShakeAmount() {
 
 void AsteroidShip::setShakeAmount(float shakeIn) {
    shakeAmount = shakeIn;
+}
+
+Vector3D* AsteroidShip::getViewVector() {
+   switch(currentView) {
+      case VIEW_FIRSTPERSON: return forward;
+      case VIEW_THIRDPERSON_SHIP: return forward;
+      case VIEW_THIRDPERSON_GUN: return getShotDirection();
+      default:
+       fprintf(stderr, "getViewVector got currentView %d\n", currentView);
+      return forward;
+   }
+}
+
+Vector3D* AsteroidShip::getCameraOffset() {
+   if (currentView != VIEW_FIRSTPERSON) {
+      cameraOffset->updateMagnitude(getViewVector()->scalarMultiply(-3));
+      cameraOffset->addUpdate(up->scalarMultiply(0.5));
+   } else {
+      cameraOffset->updateMagnitude(0, 0, 0);
+   }
+   return cameraOffset;
+}
+
+void AsteroidShip::nextView() {
+   setView((currentView + 1) % VIEW_COUNT);
+}
+
+void AsteroidShip::setView(int _view) {
+   if (_view > VIEW_COUNT) {
+      fprintf(stderr, "setView got currentView %d\n", currentView);
+      _view %= VIEW_COUNT;
+   }
+   currentView = _view;
+}
+
+int AsteroidShip::getCurrentView() {
+   return currentView;
 }

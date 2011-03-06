@@ -23,6 +23,12 @@
 #include "Weapons/LawnMower.h"
 #include <list>
 
+// This should probably be an enum.
+#define VIEW_COUNT 3
+#define VIEW_FIRSTPERSON 0
+#define VIEW_THIRDPERSON_SHIP 1
+#define VIEW_THIRDPERSON_GUN 2
+
 // Later we'll put in a model for the ship.
 
 extern GLfloat headlight_pos[4];
@@ -69,6 +75,9 @@ class AsteroidShip : public Object3D {
 
       void drawShotDirectionIndicators();
       void drawCrosshair();
+      Vector3D* getViewVector();
+      Vector3D* getCameraOffset();
+      void nextView();
 
       /**
        * These are going to be the functions that either the local player
@@ -104,6 +113,8 @@ class AsteroidShip : public Object3D {
       ShootingAI* shooter;
       FlyingAI* flyingAI;
       
+      void setView(int _view);
+      
       int score;
       int nShards;
       Vector3D shotDirection; // If we shoot a shot, where will it go?
@@ -119,6 +130,8 @@ class AsteroidShip : public Object3D {
       float getCurrentWeaponCoolDown();
       Vector3D* getShotDirection();
       Weapon* getWeapon(int wep);
+      
+      int getCurrentView();
 
    protected:
       int soundHandle;
@@ -164,7 +177,10 @@ class AsteroidShip : public Object3D {
       int currentWeapon;
       Vector3D *upstart;
 
+      Vector3D *cameraOffset;
+
       float shakeAmount;
+      int currentView; // Defined by view names above.
 
       void updateShotDirectionVector();
       void brake(double brakeFactorIn);
