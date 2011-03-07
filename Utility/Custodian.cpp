@@ -7,10 +7,11 @@
 
 #include "Utility/Custodian.h"
 #include "Items/Asteroid3D.h"
+#include "Items/Shard.h"
 #include <algorithm>
 
 Custodian::Custodian() {
-   asteroidCount = 0;
+   shardCount = asteroidCount = 0;
 }
 
 /**
@@ -121,6 +122,8 @@ void Custodian::add(Object3D* objectIn) {
    objectIn->setCustodian(this);
    if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
       asteroidCount++;
+   } else if (dynamic_cast<Shard*>(objectIn) != NULL) {
+      shardCount++;
    }
 }
 
@@ -132,6 +135,8 @@ void Custodian::remove(Object3D* objectIn) {
    objectsByMaxX[objectIn->maxXRank] = NULL;
    if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
       asteroidCount--;
+   } else if (dynamic_cast<Shard*>(objectIn) != NULL) {
+      shardCount--;
    }
    delete objectIn;
 }
@@ -206,4 +211,5 @@ void Custodian::clear() {
    objectsByMinX.clear();
    objectsByMaxX.clear();
    asteroidCount = 0;
+   shardCount = 0;
 }

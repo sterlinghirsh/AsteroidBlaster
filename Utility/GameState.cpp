@@ -32,15 +32,16 @@ GameState::GameState(double worldSizeIn) {
    // Init Text Objects
    FPSText = new BitmapTextDisplay("FPS: ", curFPS, "", 10, 20);
    numAsteroidsText = new BitmapTextDisplay("Asteroids Remaining: ", custodian.asteroidCount, "", 10, 40);
-   scoreText = new BitmapTextDisplay("Score: ", ship->getScore(), "", 10, 60);
-   shardText = new BitmapTextDisplay("Shards: ", ship->getShards(), "", 10, 80);
-   healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 100);
+   numShardsText = new BitmapTextDisplay("Shards Remaining: ", custodian.shardCount, "", 10, 60);
+   scoreText = new BitmapTextDisplay("Score: ", ship->getScore(), "", 10, 80);
+   shardText = new BitmapTextDisplay("Shards: ", ship->getShards(), "", 10, 100);
+   healthText = new BitmapTextDisplay("Health: ", ship->getHealth(), "", 10, 120);
    gameOverText = new BitmapTextDisplay("GAME OVER", GW/2, GH/2);
    winText = new BitmapTextDisplay("YOU WIN!", GW/2, GH/2);
-   weaponText = new BitmapTextDisplay("Current Weapon: ", ship->getCurrentWeapon()->getName(), "", 10, 120);
+   weaponText = new BitmapTextDisplay("Current Weapon: ", ship->getCurrentWeapon()->getName(), "", 10, 140);
    // Get the ammo into a stream to turn it into a string.
    sstream2 << ship->getCurrentWeapon()->curAmmo;
-   ammoText = new BitmapTextDisplay("Ammo: ", sstream2.str(), "", 10, 140);
+   ammoText = new BitmapTextDisplay("Ammo: ", sstream2.str(), "", 10, 160);
    // Clear the sstream2
    sstream2.str("");
 
@@ -50,7 +51,7 @@ GameState::GameState(double worldSizeIn) {
 
    // Set up objects.
    custodian.add(ship);
-   numAsteroidsToSpawn = 10;
+   numAsteroidsToSpawn = 1;
    initAsteroids();
    doYaw = 0;
    mouseX = 0;
@@ -435,6 +436,7 @@ void GameState::drawAllText() {
    // Draw all of the BitmapTextDisplay objects.
    FPSText->draw();
    numAsteroidsText->draw();
+   numShardsText->draw();
    scoreText->draw();
    shardText->draw();
    healthText->draw();
@@ -449,6 +451,7 @@ void GameState::drawAllText() {
 void GameState::updateText() {
    FPSText->updateBody(curFPS);
    numAsteroidsText->updateBody(custodian.asteroidCount);
+   numShardsText->updateBody(custodian.shardCount);
    scoreText->updateBody(ship->getScore());
    shardText->updateBody(ship->getShards());
    healthText->updateBody(ship->getHealth());

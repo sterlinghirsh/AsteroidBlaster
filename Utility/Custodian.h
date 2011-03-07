@@ -34,6 +34,7 @@ class Custodian {
       std::vector<Object3D*>* getListOfObjects();
       void clear();
       int asteroidCount;
+      int shardCount;
       
       Custodian();
 

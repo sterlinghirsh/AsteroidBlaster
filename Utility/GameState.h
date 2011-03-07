@@ -38,6 +38,7 @@ class GameState : public InputReceiver {
        */
       BitmapTextDisplay *FPSText,
                         *numAsteroidsText,
+                        *numShardsText,
                         *scoreText,
                         *shardText,
                         *healthText,
