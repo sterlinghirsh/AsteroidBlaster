@@ -51,7 +51,7 @@ class AsteroidShip : public Object3D {
       int getShards();
       double getAimX();
       double getAimY();
-      void updateAcceleration();
+      void updatePlayerAcceleration();
       virtual void update(double timeDiff);
       void rotate();
       void nextWeapon();

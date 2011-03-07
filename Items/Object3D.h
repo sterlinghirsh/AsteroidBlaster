@@ -13,6 +13,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Utility/Custodian.h"
 #include "Items/Drawable.h"
+#include <queue>
 
 // Incomplete class declaration so we can have the pointer to it.
 class Custodian;
@@ -57,18 +58,22 @@ class Object3D : public Drawable {
 
       void setCustodian(Custodian* cust);
       void glRotate(bool doTranspose = true);
+      virtual void addAcceleration(Vector3D* newAccel);
    private:
 
    protected:
       double yawSpeed, pitchSpeed, rollSpeed;
       GLuint displayList;
       Custodian* custodian;
+      std::queue<Vector3D*> accelerations;
       bool targeted;
 
       void yaw(double angle);
       void roll(double angle);
       void pitch(double angle);
       void updateBoundingBox();
+
+      virtual void updateAcceleration(double timeDiff);
 };
 
 #endif

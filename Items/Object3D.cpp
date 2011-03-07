@@ -18,8 +18,9 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) : Drawabl
    minXRank = maxXRank = 0;
    updateBoundingBox();
    displayList = displayListIn;
-   velocity = NULL;
-   acceleration = NULL;
+   /* Initialize velocity and acceleration to 0. */
+   velocity = new Vector3D(0, 0, 0);
+   acceleration = new Vector3D(0, 0, 0);
    axis = NULL;
    angle = 0;
    shouldRemove = false; // True when custodian should remove this.
@@ -61,6 +62,7 @@ Object3D::~Object3D() {
 }
 
 void Object3D::update(double timeDifference) {
+   updateAcceleration(timeDifference);
    if (acceleration != NULL && velocity != NULL)
       velocity->addUpdate(acceleration->scalarMultiply(timeDifference));
    if (velocity != NULL && position != NULL)
@@ -277,3 +279,15 @@ double Object3D::getCullRadius() {
    }
 }
 
+void Object3D::addAcceleration(Vector3D* newAccel) {
+   accelerations.push(newAccel);
+}
+
+void Object3D::updateAcceleration(double timeDiff) {
+   acceleration->updateMagnitude(0, 0, 0);
+   while (!accelerations.empty()) {
+      acceleration->addUpdate(*accelerations.front());
+      delete accelerations.front();
+      accelerations.pop();
+   }
+}

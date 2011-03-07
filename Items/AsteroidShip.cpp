@@ -23,9 +23,6 @@ const float rotationFactor = 2;
 AsteroidShip::AsteroidShip() :
    Object3D(0, 0, 0, 0),     // Initialize superclass
    shotDirection(0, 0, 1) {  // Initialize shot direction to forward
-      /* Initialize velocity and acceleration to 0. */
-      velocity = new Vector3D(0, 0, 0);
-      acceleration = new Vector3D(0, 0, 0);
       /* Currently not braking or acceleration. */
       isBraking = false;
       isBoosting = false;
@@ -155,11 +152,11 @@ void AsteroidShip::setRollSpeed(double rollAmountIn) {
    rollSpeed = rotationFactor * rollAmountIn;
 }
 
-void AsteroidShip::updateAcceleration() {
-   acceleration->updateMagnitude(
+void AsteroidShip::updatePlayerAcceleration() {
+   addAcceleration(new Vector3D(
          forward->scalarMultiply(curForwardAccel).add(
             right->scalarMultiply(curRightAccel).add(
-               up->scalarMultiply(curUpAccel))));
+               up->scalarMultiply(curUpAccel)))));
 }
 
 void AsteroidShip::setBrake(bool doBrake) {
@@ -175,17 +172,17 @@ void AsteroidShip::setBoost(bool doBoost) {
  */
 void AsteroidShip::accelerateForward(int dir) {
    curForwardAccel = dir * maxForwardAccel;
-   updateAcceleration();
+   updatePlayerAcceleration();
 }
 
 void AsteroidShip::accelerateUp(int dir) {
    curUpAccel = dir * maxUpAccel;
-   updateAcceleration();
+   updatePlayerAcceleration();
 }
 
 void AsteroidShip::accelerateRight(int dir) {
    curRightAccel = dir * maxRightAccel;
-   updateAcceleration();
+   updatePlayerAcceleration();
 }
 
 void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
@@ -287,7 +284,7 @@ void AsteroidShip::update(double timeDiff) {
    {
       flyingAI->think(timeDiff);
    } else {
-      updateAcceleration();
+      updatePlayerAcceleration();
    }
    
    if (isBraking) {
