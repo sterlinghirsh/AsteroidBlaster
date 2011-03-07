@@ -311,8 +311,21 @@ void Asteroid3D::handleCollision(Object3D* other) {
       }
       double speed = velocity->getLength();
 
-      velocity->updateMagnitude(*(otherAsteroid->position), *position);
-      velocity->setLength(speed);
+      Vector3D reflectionAxis(*otherAsteroid->position, *position);
+      reflectionAxis.normalize();
+
+      Vector3D* newVelocity = new Vector3D(*velocity);
+      newVelocity->reflect(reflectionAxis);
+      newVelocity->setLength(otherAsteroid->velocity->getLength() + 1);
+      newVelocity->scalarMultiplyUpdate(0.3);
+      newVelocity->subtractUpdate(velocity->scalarMultiply(0.3));
+      addInstantAcceleration(newVelocity);
+      /*
+      Vector3D* push = new Vector3D(*otherAsteroid->position, *position);
+      addAcceleration(push);
+      */
+      printf("Collision with asteroid. New Velocity: %f, prereflect: %f\n", newVelocity->getLength(), speed);
+
    } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
       if (radius > 2) {
