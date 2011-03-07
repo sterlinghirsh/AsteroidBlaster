@@ -633,9 +633,18 @@ void GameState::keyDown(int key) {
       break;
 
    case SDLK_f:
+      // When you disable the flyingAI, stop accelerating the ship.
       if(ship->flyingAI->isEnabled()) {
          ship->flyingAI->disable();
+         ship->accelerateForward(0);
+         ship->accelerateRight(0);
+         ship->accelerateUp(0);
+         ship->setYawSpeed(0.0);
+         ship->setPitchSpeed(0.0);
+         ship->setRollSpeed(0.0);
       } else {
+         // Stop accelerating the ship when turning on the flyingAI as well.
+         ship->accelerateForward(0);
          ship->accelerateRight(0);
          ship->accelerateUp(0);
          ship->setYawSpeed(0.0);

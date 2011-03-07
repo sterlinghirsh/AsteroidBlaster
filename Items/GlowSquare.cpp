@@ -8,8 +8,6 @@
 #include <algorithm>
 #include <math.h>
 
-float GlowSquare::lifetime = 2;
-
 GlowSquare::GlowSquare(Color* _color,
  float size, float _x, float _y, float _z, BoundingWall* _wall,
  int _xIndex, int _yIndex) : 
@@ -51,7 +49,7 @@ GlowSquare::GlowSquare(Color* _color,
 
 void GlowSquare::draw() {
    double timeDiff;
-   const double fadeTime = 1;
+   const double fadeTime = 0.75;
    const double shwobbleAmplitude = 0.5;
    const int numShwobbles = 1;
    const double fadeScale = 1 / fadeTime;

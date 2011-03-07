@@ -1,7 +1,7 @@
 /**
  * Object3D
  * Sterling Hirsh / Taylor Arnicar
- * 1-16-22
+ * 1-16-11
  * CPE 476
  */
 
@@ -10,8 +10,7 @@
 #include <algorithm>
 #include "Utility/Matrix4.h"
 
-Object3D::Object3D(double x, double y, double z, GLuint displayListIn) :
- position(new Point3D(x, y, z)) {
+Object3D::Object3D(double x, double y, double z, GLuint displayListIn) : Drawable(0, 0, 0, 0) {
    minX = minY = minZ = -0.5;
    maxX = maxY = maxZ =  0.5;
    minPosition = new Point3D(0, 0, 0);
@@ -47,8 +46,6 @@ Object3D::~Object3D() {
       delete minPosition;
    if (maxPosition != NULL)
       delete maxPosition;
-   if (position != NULL)
-      delete position;
    if (velocity != NULL)
       delete velocity;
    if (acceleration != NULL)

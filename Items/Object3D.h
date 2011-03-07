@@ -12,16 +12,16 @@
 #include "Utility/Vector3D.h"
 #include "Utility/GlobalUtility.h"
 #include "Utility/Custodian.h"
+#include "Items/Drawable.h"
 
 // Incomplete class declaration so we can have the pointer to it.
 class Custodian;
 
-class Object3D {
+class Object3D : public Drawable {
    public:
       double minX, minY, minZ, maxX, maxY, maxZ;
       Point3D* minPosition;
       Point3D* maxPosition;
-      Point3D* position;
       Vector3D* velocity;
       Vector3D* acceleration;
       Vector3D* axis;

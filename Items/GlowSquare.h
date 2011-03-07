@@ -26,7 +26,6 @@ class GetMin {
 
 class GlowSquare {
    public:
-      //double lifetime;
       double timeLastHit;
       float alpha;
       Color* color;
@@ -41,7 +40,6 @@ class GlowSquare {
       void update(double timeDiff);
       GlowSquare(Color* _color, 
        float size, float _x, float _y, float _z, BoundingWall* _wall, int _xIndex, int _yIndex);
-      static float lifetime;
       void hit(int distanceLimit, double delay);
 };
 
