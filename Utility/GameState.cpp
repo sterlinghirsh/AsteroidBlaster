@@ -220,7 +220,8 @@ void GameState::draw() {
    }
 
    // Don't draw the ship in first Person mode.
-   if (ship->getCurrentView() != VIEW_FIRSTPERSON) {
+   if (ship->getCurrentView() != VIEW_FIRSTPERSON_SHIP &&
+    ship->getCurrentView() != VIEW_FIRSTPERSON_GUN) {
       ship->draw();
    }
 }
@@ -230,7 +231,8 @@ void GameState::draw() {
  */
 void GameState::drawGlow() {
 
-   if (ship->getCurrentView() != VIEW_FIRSTPERSON) {
+   if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
+    ship->getCurrentView() == VIEW_THIRDPERSON_GUN) {
       Vector3D newOffset(ship->forward->scalarMultiply(-3));
       newOffset.addUpdate(ship->up->scalarMultiply(0.5));
       camera->setOffset(newOffset);
@@ -262,7 +264,8 @@ void GameState::drawGlow() {
    }
 
    // Don't draw the ship in first Person mode.
-   if (ship->getCurrentView() != VIEW_FIRSTPERSON)
+   if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
+    ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
       ship->draw();
 }
 
