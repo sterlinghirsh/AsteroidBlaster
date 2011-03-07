@@ -479,3 +479,12 @@ void getBrightColor(double hue, float& r, float& g, float& b) {
       b = 1 - colorValue;
    }
 }
+
+void toggleGrabMode() {
+   // Toggle grab with the ~ key.
+   if (SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON) {
+      SDL_WM_GrabInput(SDL_GRAB_OFF);
+   } else {
+      SDL_WM_GrabInput(SDL_GRAB_ON);
+   }
+}

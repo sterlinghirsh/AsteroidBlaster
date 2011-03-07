@@ -722,6 +722,8 @@ void GameState::keyDown(int key) {
          ship->getWeapon(i)->purchased = true;
 
       break;
+   case SDLK_BACKQUOTE:
+      toggleGrabMode();
    }
 }
 

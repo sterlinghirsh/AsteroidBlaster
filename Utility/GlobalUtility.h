@@ -86,6 +86,7 @@ extern materialStruct Rock;
 
 void setMaterial(materialStruct material);
 void updateDoubleTime();
+void toggleGrabMode();
 
 struct Color {
    GLfloat r, g, b, a;

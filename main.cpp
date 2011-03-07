@@ -196,6 +196,9 @@ void init() {
    // Disable the cursor
    SDL_ShowCursor(SDL_DISABLE);
 
+   // Grab the input
+   SDL_WM_GrabInput(SDL_GRAB_ON);
+
    // Set the title
    SDL_WM_SetCaption("Asteroid Blaster", 0);
 
