@@ -59,6 +59,7 @@ class Object3D : public Drawable {
       void setCustodian(Custodian* cust);
       void glRotate(bool doTranspose = true);
       virtual void addAcceleration(Vector3D* newAccel);
+      virtual void addInstantAcceleration(Vector3D* newAccel);
    private:
 
    protected:
@@ -66,6 +67,7 @@ class Object3D : public Drawable {
       GLuint displayList;
       Custodian* custodian;
       std::queue<Vector3D*> accelerations;
+      std::queue<Vector3D*> instantAccelerations;
       bool targeted;
 
       void yaw(double angle);

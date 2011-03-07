@@ -197,7 +197,8 @@ void init() {
    SDL_ShowCursor(SDL_DISABLE);
 
    // Grab the input
-   SDL_WM_GrabInput(SDL_GRAB_ON);
+   // Disabled for debug purposes.
+   SDL_WM_GrabInput(SDL_GRAB_OFF);
 
    // Set the title
    SDL_WM_SetCaption("Asteroid Blaster", 0);

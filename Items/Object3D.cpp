@@ -65,6 +65,18 @@ void Object3D::update(double timeDifference) {
    updateAcceleration(timeDifference);
    if (acceleration != NULL && velocity != NULL)
       velocity->addUpdate(acceleration->scalarMultiply(timeDifference));
+
+   if (velocity != NULL) {
+      while (!instantAccelerations.empty()) {
+         if (instantAccelerations.front() != NULL) {
+            velocity->addUpdate(*instantAccelerations.front());
+            delete instantAccelerations.front();
+         }
+         instantAccelerations.pop();
+      }
+
+   }
+
    if (velocity != NULL && position != NULL)
       velocity->scalarMultiply(timeDifference).movePoint(*position);
    yaw(yawSpeed * timeDifference);
@@ -281,6 +293,10 @@ double Object3D::getCullRadius() {
 
 void Object3D::addAcceleration(Vector3D* newAccel) {
    accelerations.push(newAccel);
+}
+
+void Object3D::addInstantAcceleration(Vector3D* newAccel) {
+   instantAccelerations.push(newAccel);
 }
 
 void Object3D::updateAcceleration(double timeDiff) {

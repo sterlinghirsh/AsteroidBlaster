@@ -625,7 +625,7 @@ void AsteroidShip::handleCollision(Object3D* other) {
       // Try converting other into an Asteroid3D
    } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       // Decrease the player's health by an appropriate amount.
-      velocity->addUpdate(*(asteroid->velocity));
+      addInstantAcceleration(new Vector3D(*(asteroid->velocity)));
       if (!gameState->godMode) {
          health -= 4 * ceil(asteroid->radius);
       }
