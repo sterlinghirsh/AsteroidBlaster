@@ -49,6 +49,8 @@ public:
    void flyDirection( Vector3D* desiredTraj );
    
    // Helper Functions
+   Point3D* getClosestShard();
+   void printMatrix( Matrix4 *m) ;
    Vector3D* getFlyDirection();
    Vector3D* getPointDirection();
    std::list<Asteroid3D*>* getAsteroidList();

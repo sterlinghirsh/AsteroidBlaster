@@ -54,6 +54,34 @@ std::list<Asteroid3D*>* FlyingAI :: getAsteroidList() {
 }
 
 
+Point3D* FlyingAI :: getClosestShard() {
+   
+   float shortestDist = 9999, tempDist = 9999;
+   Point3D* closestShard = new Point3D(0,0,0);
+   Point3D temp;
+   std::list<Object3D*>* targets = radar->getFullReading();
+   std::list<Object3D*>::iterator iter;
+   
+   iter = targets->begin();
+   
+   for ( ; iter != targets->end(); iter++) {
+      if (*iter == NULL || (dynamic_cast<Shard*>(*iter) == NULL)) {
+         continue;
+      }  
+      tempDist = sqrt( pow((*iter)->position->x - ship->position->x, 2) +
+                       pow((*iter)->position->y - ship->position->y, 2) +
+                       pow((*iter)->position->z - ship->position->z, 2)  );
+         
+      if(shortestDist > tempDist) {
+         shortestDist = tempDist;
+         closestShard->x = (*iter)->position->x;
+         closestShard->y = (*iter)->position->y;
+         closestShard->z = (*iter)->position->z;
+      }
+   }
+   
+   return closestShard;
+}
 
 /** Creates a trajectory for the ship to fly.
  *
@@ -70,54 +98,48 @@ Vector3D* FlyingAI :: getFlyDirection() {
    
    std::list<Asteroid3D*>* asteroids = getAsteroidList();
    std::list<Asteroid3D*>::iterator i;
-   
+
    Vector3D *sum = new Vector3D();   
-   
-   // Add a small weight towards the center
-   //sum->addUpdate(*ship->position);
-   //sum->normalize();
-   
-   
-   
-   // Add wall vectors
    Vector3D v;
    
-   v.updatePosition(*ship->position);
-   v.updateMagnitude(Point3D(0,0,0), *ship->position);
-   v.scalarMultiplyUpdate(10000);
-   sum->addUpdate(v);
-   /*
-   // X walls
-   v.update(0,0,0, 1,0,0);
+   if(asteroids->size() == 0) {
+      v = Vector3D(*ship->position, *(getClosestShard()) );
+      sum->addUpdate(v);
+      sum->normalize();
+      return sum; 
+   }
+
+   // X walls   
+   v = Vector3D(Point3D(0,0,0), Point3D(1,0,0));
    dist = gameState->getWallxMax() - ship->position->x;
-   v.scalarMultiplyUpdate(fmax(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
-   v.update(0,0,0 ,-1,0,0);
+   v = Vector3D(Point3D(0,0,0), Point3D(-1,0,0));
    dist = ship->position->x - gameState->getWallxMin();
-   v.scalarMultiplyUpdate(fmax(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
-   
+
    // Y walls
-   v.update(0,0,0, 0,1,0);
+   v = Vector3D(Point3D(0,0,0), Point3D(0,1,0));
    dist = gameState->getWallyMax() - ship->position->y;
-   v.scalarMultiplyUpdate(fmax(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
-   v.update(0,0,0 ,0,-1,0);
+   v = Vector3D(Point3D(0,0,0), Point3D(0,-1,0));
    dist = ship->position->y - gameState->getWallyMin();
-   v.scalarMultiplyUpdate(fmax(Max_Dist, Max_Dist / dist));
-   sum->addUpdate(v);
+   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
+   sum->addUpdate(v);   
    
-   // Z Walls
-   v.update(0,0,0, 0,0,1);
+   // Z Walls   
+   v = Vector3D(Point3D(0,0,0), Point3D(0,0,1));
    dist = gameState->getWallzMax() - ship->position->z;
-   v.scalarMultiplyUpdate(fmax(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
-   v.update(0,0,0 ,0,0,-1);
+   v = Vector3D(Point3D(0,0,0), Point3D(0,0,-1));
    dist = ship->position->z - gameState->getWallzMin();
-   v.scalarMultiplyUpdate(fmax(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
    // Add asteroid vectors
@@ -131,7 +153,7 @@ Vector3D* FlyingAI :: getFlyDirection() {
          astrToShip.normalize();
          
          if (dist > 1) 
-            astrToShip.scalarMultiplyUpdate(fmax(Max_Dist, Max_Dist / dist));
+            astrToShip.scalarMultiplyUpdate(fmin(Max_Dist, Max_Dist / dist));
          else
             astrToShip.scalarMultiplyUpdate(Max_Dist);
             
@@ -139,8 +161,7 @@ Vector3D* FlyingAI :: getFlyDirection() {
       }
    }
    
-   */
-   
+   //sum->scalarMultiplyUpdate( 2.5 / Max_Dist );
    sum->normalize();
    
    // clean up
@@ -165,10 +186,19 @@ Vector3D* FlyingAI :: getPointDirection() {
    std::list<Asteroid3D*>::iterator i;
    Vector3D *sum = new Vector3D();
    
+   
+   if(asteroids->size() == 0) {
+      Vector3D v = Vector3D(*ship->position, *(getClosestShard()) );
+      sum->addUpdate(v);
+      sum->normalize();
+      return sum; 
+   }
+   
+   
    // Add a small weight towards the center
-   sum->addUpdate( Vector3D(*ship->position, Point3D(0,0,0)) );
-   sum->normalize();   
-   sum->scalarMultiplyUpdate(0.005);
+   //sum->addUpdate( Vector3D(*ship->position, Point3D(0,0,0)) );
+   //sum->normalize();   
+   //sum->scalarMultiplyUpdate(0.005);
    
    for( i = asteroids->begin(); i != asteroids->end(); ++i) {
    
@@ -204,7 +234,13 @@ Vector3D FlyingAI :: calcProjection( Vector3D *w, Vector3D *u1, Vector3D *u2) {
    return u1->scalarMultiply(scalar1).add( u2->scalarMultiply(scalar2) );
 }
 
-
+void FlyingAI :: printMatrix( Matrix4 *m) 
+{
+   cout << "\t[ " << m->_11 << ", " <<  m->_12 << ", " <<  m->_13 << ", " <<  m->_14 << " ]" << endl;
+   cout << "\t[ " << m->_21 << ", " <<  m->_22 << ", " <<  m->_23 << ", " <<  m->_24 << " ]" << endl;
+   cout << "\t[ " << m->_31 << ", " <<  m->_32 << ", " <<  m->_33 << ", " <<  m->_34 << " ]" << endl;
+   cout << "\t[ " << m->_41 << ", " <<  m->_42 << ", " <<  m->_43 << ", " <<  m->_44 << " ]" << endl;
+}
 
 void FlyingAI :: flyDirection ( Vector3D* desiredTraj ) {
    // Little bit of linear algebra solving for flight trajectory
@@ -217,13 +253,12 @@ void FlyingAI :: flyDirection ( Vector3D* desiredTraj ) {
                ship->right->xMag  , ship->right->yMag  , ship->right->zMag  , 0,
                ship->up->xMag     , ship->up->yMag     , ship->up->zMag     , 0,
                                  0,                   0,                   0, 0 );
-                                 
-   Matrix4 Soln = A.toInverse() * B;
    
-   //cout << "soln matrix" << endl;
-   //cout << "\t" << Soln[0][0] << endl;
+   Point3D trajControl; 
    
-   Point3D trajControl = Soln.getRow(0);
+   trajControl.x = A._11 * B._11 + A._12 * B._21 + A._13 * B._31; 
+   trajControl.y = A._21 * B._11 + A._22 * B._21 + A._23 * B._31;
+   trajControl.z = A._31 * B._11 + A._32 * B._21 + A._33 * B._31;
    
    ship->accelerateForward( trajControl.x * 2 );
    ship->accelerateRight( trajControl.y * 2 );
@@ -280,7 +315,7 @@ int FlyingAI :: think(double dt) {
    Vector3D* desiredTraj = getFlyDirection();
    
    // Issue flight commands
-   //faceDirection(desiredForward);   
+   faceDirection(desiredForward);   
    flyDirection(desiredTraj);
    
    // clean up
