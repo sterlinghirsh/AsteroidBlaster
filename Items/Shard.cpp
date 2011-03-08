@@ -30,11 +30,12 @@ Shard::Shard(double r, double worldSizeIn) :
       orbiters = glGenLists(1);
       genOrbiters();
 
-
+      /*
       cubeList = glGenLists(1);
       glNewList(cubeList, GL_COMPILE);
       glutSolidCube (0.6);
       glEndList();
+      */
       transparentZ = -8.0;
 
       InitShard(r, worldSizeIn);
