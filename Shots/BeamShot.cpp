@@ -173,7 +173,7 @@ bool BeamShot::detectCollision(Object3D* other, bool checkOther) {
 }
 
 void BeamShot::handleCollision(Object3D* other) {
-   printf("Distance: %f\n", position->distanceFrom(*other->position));
+   //printf("Distance: %f\n", position->distanceFrom(*other->position));
    if (other == owner || hitYet || curFrame != firstFrame)
       return;
    hitYet = true;

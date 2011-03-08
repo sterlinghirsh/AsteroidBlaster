@@ -17,10 +17,6 @@ using namespace std;
 
 InputManager::InputManager() {
    fullScreen = false;
-   bloom = false;
-   bloom1 = false;
-   reg = true;
-   godMode = false;
    oldGW = GW;
    oldGH = GH;
 }
@@ -77,29 +73,6 @@ void InputManager::update(const SDL_Event& e) {
          gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
          fullScreen = !fullScreen;
       }
-   }
-   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F2) {
-      bloom = !bloom;
-   }
-   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F3) {
-      reg = !reg;
-   }
-   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F4) {
-      bloom1 = !bloom1;
-   }
-   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F12) {
-      godMode = !godMode;
-      /*
-      if (godMode == 1) {
-            printf("Zoe mode enabled.\n");
-         } else {
-            printf("Zoe mode disabled.\n");
-         }
-      } else {
-         printf("god mode error.\n");
-      }
-      */
-      printf("Zoe mode: %d\n", godMode);
    }
 }
 

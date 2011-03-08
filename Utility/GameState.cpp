@@ -18,7 +18,12 @@ extern double minimapSizeFactor;
 std::ostringstream GameState :: sstream2;
 
 GameState::GameState(double worldSizeIn) {
+   godMode = false;
+   bloom = false;
+   bloom1 = false;
+   reg = true;
    gameIsRunning = true;
+   
    worldSize = worldSizeIn;
    skybox = new Skybox("Images/stars.bmp");
    ship = new AsteroidShip();
@@ -739,10 +744,23 @@ void GameState::keyDown(int key) {
       // Make all of the weapons be purchased.
       for (int i = 0; i < ship->getNumWeapons(); i++)
          ship->getWeapon(i)->purchased = true;
-
+      break;
+   case SDLK_F2:
+      bloom = !bloom;
+      break;
+   case SDLK_F3:
+      reg = !reg;
+      break;
+   case SDLK_F4:
+      bloom1 = !bloom1;
+      break;
+   case SDLK_F12:
+      godMode = !godMode;
+      printf("Zoe mode: %d\n", godMode);
       break;
    case SDLK_BACKQUOTE:
       toggleGrabMode();
+      break;
    }
 }
 

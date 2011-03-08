@@ -92,7 +92,7 @@ void display() {
 
    // Draw glowing objects to a texture for the bloom effect.
    gameState->aspect = (float)GW/(float)GH;
-   if (inputManager->bloom) {
+   if (gameState->bloom) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glPushMatrix();
       gameState->drawGlow();
@@ -103,7 +103,7 @@ void display() {
             0,0, GW, GH, 0);
       glPopMatrix();
 
-      if (inputManager->bloom) {
+      if (gameState->bloom) {
          gameState->hBlur();
          gameState->vBlur();
       }
@@ -113,7 +113,7 @@ void display() {
    usePerspective();
    // Draw the main screen
    glPushMatrix();
-   if (inputManager->reg) {
+   if (gameState->reg) {
       gameState->draw();
       //gameState->drawGlow();
    }
@@ -126,7 +126,7 @@ void display() {
    // Draw the hud
    glClear(GL_DEPTH_BUFFER_BIT);
    gameState->drawHud();
-   if (inputManager->bloom) {
+   if (gameState->bloom) {
       gameState->drawBloom();
    }
    /*
@@ -371,12 +371,6 @@ int main(int argc, char* argv[]) {
          timerFunc(false);
          display();
       }
-
-      if (inputManager->godMode != 0 && inputManager->godMode != 1) {
-         printf("error in inputManager: %d\n", inputManager->godMode);
-      }
-      gameState->godMode = inputManager->godMode;
-
       while (SDL_PollEvent(&event)) {
          inputManager->update(event);
       }

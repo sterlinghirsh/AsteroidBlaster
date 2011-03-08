@@ -347,7 +347,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
       reverseVelocity->scalarMultiplyUpdate(-1);
       addInstantAcceleration(reverseVelocity);
 
-      printf("Collision with asteroid. New Velocity: %f, prereflect: %f\n", newVelocity->getLength(), speed);
+      //printf("Collision with asteroid. New Velocity: %f, prereflect: %f\n", newVelocity->getLength(), speed);
 
    } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
