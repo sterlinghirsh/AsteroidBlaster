@@ -51,7 +51,8 @@ GameState::GameState(double worldSizeIn) {
 
    // Set up objects.
    custodian.add(ship);
-   numAsteroidsToSpawn = 1;
+   currLevel = 1;
+   numAsteroidsToSpawn = currLevel;
    initAsteroids();
    doYaw = 0;
    mouseX = 0;
@@ -130,6 +131,11 @@ GameState::~GameState() {
  * This is the step function.
  */
 void GameState::update(double timeDiff) {
+   //check if it should go to the next level
+   if(custodian.asteroidCount == 0) {
+      nextLevel();
+   }
+
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
    std::set<Object3D*, compareByDistance>* collisions;
    std::set<Object3D*, compareByDistance>::iterator otherObject;
@@ -528,6 +534,16 @@ void GameState::reset() {
    custodian.add(ship);
    initAsteroids();
 }
+
+void GameState::nextLevel() {
+   minimap = new Minimap(ship);
+   gameIsRunning = true;
+   currLevel++;
+   numAsteroidsToSpawn = currLevel;
+   printf("Leved up to %d!\n",currLevel);
+   initAsteroids();
+}
+
 
 /**
  * Handles the player pressing down a key

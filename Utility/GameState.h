@@ -86,6 +86,7 @@ class GameState : public InputReceiver {
       Camera* getCamera();
 
       void menuFunc();
+      void nextLevel();
       void reset();
 
       virtual void keyUp(int key);
@@ -114,6 +115,7 @@ class GameState : public InputReceiver {
       int scoreToWin;
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;
+      int currLevel;
 
       Skybox* skybox;
       Camera* camera;
