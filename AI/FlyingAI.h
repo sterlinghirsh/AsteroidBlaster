@@ -30,19 +30,19 @@ class AsteroidShip;
 class Radar;
 class Vector;
 
+enum FlyMode {
+   AGR,
+   DEF,
+   NEU
+};
+
+typedef enum FlyMode FlyMode;
+
 class FlyingAI : public AI {
-   static const double PI = 3.141592;
-   
    AsteroidShip* ship;
    Radar* radar;
    bool enabled;
-   
-public:  
-   FlyingAI(AsteroidShip* owner);
-   virtual int think(double dt);
-   virtual void enable();
-   virtual void disable();
-   virtual bool isEnabled();
+   FlyMode curMode;
    
    // Control Functions
    void faceDirection( Vector3D* desiredForward );
@@ -55,6 +55,14 @@ public:
    Vector3D* getPointDirection();
    std::list<Asteroid3D*>* getAsteroidList();
    Vector3D calcProjection( Vector3D *w, Vector3D *u1, Vector3D *u2);
+   FlyMode chooseMode(void);
+   
+public:  
+   FlyingAI(AsteroidShip* owner);
+   virtual int think(double dt);
+   virtual void enable();
+   virtual void disable();
+   virtual bool isEnabled();
 
 };
 

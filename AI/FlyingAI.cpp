@@ -279,8 +279,8 @@ void FlyingAI :: faceDirection( Vector3D* desiredForward ) {
    diff_right = acos(proj.dot(*ship->right));
    
    if(diff_front > 0.1) {
-      if(diff_right < 0.5 * PI) diff_front *= -1;
-      ship->setYawSpeed(diff_front / PI);
+      if(diff_right < 0.5 * M_PI) diff_front *= -1;
+      ship->setYawSpeed(diff_front / M_PI);
    } else {
       ship->setYawSpeed(0);
    }
@@ -292,28 +292,42 @@ void FlyingAI :: faceDirection( Vector3D* desiredForward ) {
    diff_up = acos(proj.dot(*ship->up));
    
    if(diff_front > 0.1) {
-      if(diff_up < 0.5 * PI) diff_front *= -1;
-      ship->setPitchSpeed(diff_front / PI);
+      if(diff_up < 0.5 * M_PI) diff_front *= -1;
+      ship->setPitchSpeed(diff_front / M_PI);
    } else {
       ship->setPitchSpeed(0);
    }
 }
 
-
+/**
+ * Choose a correct flying mode, based on the current situation.
+ */
+FlyMode FlyingAI :: chooseMode(void) {
+   return NEU;
+}
 
 /**
  * Preform flying AI operations
  */
 int FlyingAI :: think(double dt) {
-   
+   Vector3D* desiredForward;
+   Vector3D* desiredTraj;
    if(!enabled) {
       return 0;
    }
    
-   // Get relevent vectors
-   Vector3D* desiredForward = getPointDirection();
-   Vector3D* desiredTraj = getFlyDirection();
+   curMode = chooseMode();
    
+   switch (curMode) {
+
+   default:
+      // Get relevent vectors
+      desiredForward = getPointDirection();
+      desiredTraj = getFlyDirection();
+   
+   }
+
+   // Seems like this should always be done. This is independent of the mode.
    // Issue flight commands
    faceDirection(desiredForward);   
    flyDirection(desiredTraj);
