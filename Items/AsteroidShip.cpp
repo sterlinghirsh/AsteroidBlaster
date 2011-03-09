@@ -20,6 +20,10 @@
 using namespace std;
 extern Custodian* custodian;
 const float rotationFactor = 2;
+static float spin = 90;
+static float flashiness = 0;
+static float tracker = 0;
+static int rando = 1;
 
 AsteroidShip::AsteroidShip() :
    Object3D(0, 0, 0, 0),     // Initialize superclass
@@ -88,6 +92,7 @@ AsteroidShip::AsteroidShip() :
       weapons.push_back(new TractorBeam(this));
       weapons.push_back(new Electricity(this));
       weapons.push_back(new LawnMower(this));
+      weapons.push_back(new Ram(this));
 
       // The ship's currently selected weapon.
       currentWeapon = 0;
@@ -363,7 +368,210 @@ void AsteroidShip::keepFiring() {
    weapons[currentWeapon]->fire();
 }
 
+void draw_shield(){
+      /*glUseProgram(ramShader);
+   glPushMatrix();
+   float flash = 1;
+   GLint loc2;
+   glTranslatef(0, 0, -.1);
+   //Point3D start(*position);
+      //velocity->movePoint(start);
+      //start.glTranslate();
+      
+      //glRotate();
+      //printf("Position: %f, %f, %f\n", position->x, position->y, position->z);
+      //glTranslatef(0, 0, 1.3);
+      //glRotatef(180, 1, 0, 0);
+      glDisable(GL_CULL_FACE);
+      glBegin(GL_TRIANGLE_FAN);
+
+      flashiness = flashiness + flash;
+      if (flashiness >= 360 ) {
+         flashiness = 0;
+      }
+      loc2 = glGetUniformLocation(ramShader,"poop");
+      glUniform1f(loc2,flashiness);
+
+    // Center of fan is at the origin
+    glColor4f(1, 0, 0, 1);
+    glVertex3f(0.0f, 0.0f, 0.0);
+    int iPivot = 2;
+    float x, y, z, angle;
+    for(angle = 0.0f; angle < (2.0f*M_PI); angle += (M_PI/8.0f))
+
+        {
+
+        // Calculate x and y position of the next vertex
+
+        x = .5 * sin(angle);
+
+        y = .5 * cos(angle);
+
+        z = 1.5;
+
+        // Alternate color between red and green
+
+        if((iPivot %2) == 0)
+            //setMaterial(GreenShiny);
+            glColor4f(0.0f, 1.0f, 0.0f, 1.0);
+
+        else
+            //setMaterial(RedShiny);
+            glColor4f(1.0f, 1.0f, 0.0f, 1.0);
+
+
+
+        // Increment pivot to change color next time
+
+        iPivot++;
+
+
+
+        // Specify the next vertex for the triangle fan
+
+        glVertex3f(x, y, z);
+
+        }
+        
+        x = .5 * sin(angle);
+
+        y = .5 * cos(angle);
+
+        z = 1.5;
+        
+        glVertex3f(x, y, z);
+
+
+    // Done drawing the fan that covers the bottom
+
+    glEnd();
+      glEnable(GL_CULL_FACE);
+   //glutWireCone(.5, 2, 20, 20);
+   glPopMatrix();
+   glUseProgram(0);*/
+   glUseProgram(ramShader);
+   glPushMatrix();
+   
+      //floats used in loop iteration
+      GLint loc1;
+      float j;
+      float k;
+      float x;
+      float y;
+      float z;
+      
+      //multipliers for randomness in lightning
+      float rot;
+      float srot;
+      float length = 80;
+      //width of inidvidual lightning lines
+      float thickness = 5.0;
+      
+      //density of the lightning in the beam
+      float density = 2;
+      
+      //Width of the lightning shot
+      int elecWidth = 100;
+      
+      //how fast you want the lighting flashing from blue to white. Higher number == faster flash
+      float flash = .000000000001;
+      
+      float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
+      //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
+      //Point3D start(*position);
+      //velocity->movePoint(start);
+      //start.glTranslate();
+      
+      //glRotate();
+      //flashiness = flashiness + flash;
+      //int rando;
+      tracker++;
+      if (flashiness >= 360 ) {
+         flashiness = 0;
+      }
+      if (tracker > 75) {
+            tracker = 0;
+            rando = rand();
+      }
+       
+      flashiness = flashiness + (double)(rando % 50) / 10.0;
+      loc1 = glGetUniformLocation(ramShader,"poop");
+      glUniform1f(loc1,flashiness);
+      glTranslatef(0, 0, -.2);
+      setMaterial(GreenShiny);
+      glLineWidth(thickness);
+      glDisable(GL_CULL_FACE);
+      glBegin(GL_TRIANGLE_FAN);
+      //flashiness = flashiness + flash;
+      //if (flashiness >= 360 ) {
+        // flashiness = 0;
+      //}
+      //loc2 = glGetUniformLocation(ramShader,"poop");
+      //glUniform1f(loc2,flashiness);
+
+    // Center of fan is at the origin
+    glColor4f(1, 0, 0, 1);
+    glVertex3f(0.0f, 0.0f, 0.0);
+    int iPivot = 2;
+    //float x, y, z, 
+    float angle;
+    for(angle = 0.0f; angle < (2.0f*M_PI); angle += (M_PI/8.0f))
+
+        {
+
+        // Calculate x and y position of the next vertex
+
+        x = .5 * sin(angle);
+
+        y = .5 * cos(angle);
+
+        z = 1.5;
+
+        // Alternate color between red and green
+
+        if((iPivot %2) == 0)
+            //setMaterial(GreenShiny);
+            glColor4f(0.0f, 1.0f, 0.0f, 1.0);
+
+        else
+            //setMaterial(RedShiny);
+            glColor4f(1.0f, 1.0f, 0.0f, 1.0);
+
+
+
+        // Increment pivot to change color next time
+
+        iPivot++;
+
+
+
+        // Specify the next vertex for the triangle fan
+
+        glVertex3f(x, y, z);
+
+        }
+        
+        x = .5 * sin(angle);
+
+        y = .5 * cos(angle);
+
+        z = 1.5;
+        
+        glVertex3f(x, y, z);
+
+
+    // Done drawing the fan that covers the bottom
+
+    glEnd();
+      
+      glEnable(GL_CULL_FACE);
+   glLineWidth(1.0);
+   glPopMatrix();
+   glUseProgram(0);
+}
+
 void draw_ship(){
+   
    glDisable(GL_CULL_FACE);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
@@ -583,6 +791,7 @@ void AsteroidShip::drawInMinimap() {
    glScalef(10, 10, 10);
    glTranslatef(0, 0, -1);
    glColor4f(0, 0, 0, 0.2);
+   //draw_shield();
    draw_ship();
    glPopMatrix();
 }
@@ -606,7 +815,14 @@ void AsteroidShip::draw() {
    // Rotate to the current up/right/forward vectors.
    glRotate();
    glColor4f(0, 0, 0, 0.4);
+   //int rando = rand();
+   //flashiness = flashiness + (double)(rando % 50) / 10.0;
+      /*if (flashiness >= 360 ) {
+         flashiness = 0;
+      }*/
+   //glRotatef(-spin, 0, 1, 0);
    draw_ship();
+   //draw_shield();
    glPopMatrix();
 }
 

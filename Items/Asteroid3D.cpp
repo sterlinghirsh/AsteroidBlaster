@@ -15,6 +15,7 @@
 #include "Shots/TractorBeamShot.h"
 #include "Shots/ElectricityShot.h"
 #include "Shots/LawnMowerShot.h"
+#include "Shots/RamShot.h"
 #include "Utility/SoundEffect.h"
 #include <algorithm>
 #define _USE_MATH_DEFINES
@@ -373,6 +374,9 @@ void Asteroid3D::handleCollision(Object3D* other) {
             velocity->updateMagnitude(*lawnMowerShot->position, *position);
          } else if (dynamic_cast<ElectricityShot*>(other) != NULL) {
             health = health - .05;
+         }
+         else if (dynamic_cast<RamShot*>(other) != NULL) {
+            health = 0;
          } else {
             if (gameState->godMode) {
                health = 0;

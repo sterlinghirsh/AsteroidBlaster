@@ -35,6 +35,7 @@ extern GLuint fadeShader;
 extern GLuint elecShader;
 extern GLuint hBlurShader;
 extern GLuint vBlurShader;
+extern GLuint ramShader;
 extern SDL_Surface* gDrawSurface;
 extern const SDL_VideoInfo* vidinfo;
 
@@ -69,7 +70,9 @@ typedef struct materialStruct {
   GLfloat shininess[1];
 } materialStruct;
 
+
 extern materialStruct GreenShiny;
+extern materialStruct RedShiny;
 extern materialStruct GreenTransparent;
 extern materialStruct BlueShiny;
 extern materialStruct RedFlat;

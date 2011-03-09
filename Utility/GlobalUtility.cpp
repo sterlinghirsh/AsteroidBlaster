@@ -28,6 +28,7 @@ GLUquadricObj *quadric;
 GLuint tractorBeamShader;
 GLuint fadeShader;
 GLuint elecShader;
+GLuint ramShader;
 GLuint hBlurShader;
 GLuint vBlurShader;
 SDL_Surface* gDrawSurface = NULL;
@@ -232,6 +233,13 @@ materialStruct GreenShiny = {
   {0.0, 0.3, 0.0, 1.0},
   {0.0, 0.9, 0.0, 1.0},
   {0.2, 1.0, 0.2, 1.0},
+  {8.0}
+};
+
+materialStruct RedShiny = {
+  {0.3, 0.0, 0.0, 1.0},
+  {0.9, 0.0, 0.0, 1.0},
+  {1.0, 0.2, 0.2, 1.0},
   {8.0}
 };
 

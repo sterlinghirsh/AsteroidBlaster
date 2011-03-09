@@ -1,5 +1,5 @@
 /**
- * ElectricityShot.h
+ * RamShot.h
  * Incredibly attractive shots.
  * Vwahhhh
  * @author Sterling Hirsh (shirsh@calpoly.edu)
@@ -7,15 +7,14 @@
  * <3
  */
 
-#ifndef __ELECTRICITYSHOT_H__
-#define __ELECTRICITYSHOT_H__
+#ifndef __RAMSHOT_H__
+#define __RAMSHOT_H__
 
 #include "Shots/Shot.h"
-//#include "Items/Object3D.h"
 
-class ElectricityShot : public Shot {
+class RamShot : public Shot {
    public:
-      ElectricityShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
+      RamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
       virtual void draw();
       virtual void update(double timeDiff);
       int framesAlive;
