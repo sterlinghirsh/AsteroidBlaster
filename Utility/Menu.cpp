@@ -2,6 +2,7 @@
 #include <iostream>
 #include "SDL.h"
 #include "Utility/Menu.h"
+#include "Utility/Image.h"
 
 Menu::Menu() {
    menuActive = true;
@@ -10,10 +11,10 @@ Menu::Menu() {
    settings = new BitmapTextDisplay("Settings", GW/2 - 50, GH/2 + 20);
    quit = new BitmapTextDisplay("Quit", GW/2 - 50, GH/2 + 60);
 
-   newGame->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
-   saveLoadGame->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
-   settings->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
-   quit->setFont(GLUT_BITMAP_TIMES_ROMAN_24);
+   // grey out the option to show that it is disabled
+   saveLoadGame->setColor(0.5,0.5,0.5);
+   settings->setColor(0.5,0.5,0.5);
+   
    
    SDL_Surface *temp;
     
@@ -75,9 +76,18 @@ void Menu::draw() {
    glPushMatrix();
       useOrtho();
       glDisable(GL_LIGHTING);
-      SDL_FillRect(gDrawSurface, NULL, 0);
-      SDL_BlitSurface(titleImage, &src, gDrawSurface, &dest);
+      
+      //Temporary rectangle to hold the offsets
+      SDL_Rect offset;
 
+      //Get the offsets
+      offset.x = 0;
+      offset.y = 0;
+
+      //Blit the surface
+      //SDL_BlitSurface( Image::getImage("Logo.png"), NULL, gDrawSurface, &offset );
+      //SDL_Flip( gDrawSurface );
+      
       newGame->draw();
       saveLoadGame->draw();
       settings->draw();
