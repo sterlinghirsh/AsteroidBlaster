@@ -240,25 +240,33 @@ void init() {
 
 #endif
 
+
+
+   //GL setting calls
+   //This enables alpha transparency so that things are see through
+   glEnable(GL_BLEND);
+   
    //set the background to be black
    //glClearColor(0.0, 0.0, 0.0, 1.0);
-   glClearColor(1.0, 1.0, 1.0, 1.0);
+   //glClearColor(1.0, 1.0, 1.0, 1.0);
 
    //initialize some GL stuff
-   glEnable(GL_CULL_FACE);
-   glEnable(GL_DEPTH_TEST);
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   glEnable(GL_LIGHTING);
-   glEnable(GL_BLEND);
-   glEnable( GL_TEXTURE_2D );
+   //glEnable(GL_CULL_FACE);
+   //glEnable(GL_DEPTH_TEST);
+   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   
+   
+   //glEnable( GL_TEXTURE_2D );
 
+   // enables lighting so that minimap's sphere can have color
+   glEnable(GL_LIGHTING);
 
    //initialize light
-   glEnable(GL_LIGHT0);
-   glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
-   glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
+   //glEnable(GL_LIGHT0);
+   //glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
+   //glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
+   //glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
+   //glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
 
 
    glEnable(GL_LIGHT1);
@@ -267,19 +275,19 @@ void init() {
    glLightfv(GL_LIGHT1, GL_SPECULAR, minimaplight_spec);
    glLightfv(GL_LIGHT1, GL_POSITION, minimaplight_pos);
 
-   glEnable(GL_LIGHT2);
-   glLightfv(GL_LIGHT2, GL_AMBIENT, ambientlight_amb);
-   glLightfv(GL_LIGHT2, GL_DIFFUSE, ambientlight_diff);
-   glLightfv(GL_LIGHT2, GL_SPECULAR, ambientlight_spec);
-   glLightfv(GL_LIGHT2, GL_POSITION, ambientlight_pos);
+   //glEnable(GL_LIGHT2);
+   //glLightfv(GL_LIGHT2, GL_AMBIENT, ambientlight_amb);
+   //glLightfv(GL_LIGHT2, GL_DIFFUSE, ambientlight_diff);
+   //glLightfv(GL_LIGHT2, GL_SPECULAR, ambientlight_spec);
+   //glLightfv(GL_LIGHT2, GL_POSITION, ambientlight_pos);
    //glShadeModel(GL_SMOOTH);
-   glEnable(GL_NORMALIZE);
+   //glEnable(GL_NORMALIZE);
 
    //initialize textures
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+   //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+   //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 }
 
@@ -328,6 +336,13 @@ int main(int argc, char* argv[]) {
    // Initialize GL/SDL/glew/GLSL related things
    init();
 
+   
+   //loading textures
+   Texture::Add("Images/Logo.png", "Logo.png");
+   Texture::Add("Images/SkybusterExplosion.bmp", "SkybusterExplosion.bmp");
+   Texture::Add("Images/particle.bmp", "particle.bmp");
+   Texture::Add("Images/stars.bmp", "stars.bmp");
+   
    //load the shader files
    elecShader = setShaders( (char *) "./Shaders/elec.vert", (char *) "./Shaders/elec.frag");
    ramShader = setShaders( (char *) "./Shaders/ram.vert", (char *) "./Shaders/ram.frag");
@@ -354,11 +369,7 @@ int main(int argc, char* argv[]) {
    SoundEffect::Add("Sounds/Pikachu.wav", "Pikachu.wav");
    SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
    SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
-   
-   Texture::Add("Images/Logo.png", "Logo.png");
-   Texture::Add("Images/SkybusterExplosion.bmp", "SkybusterExplosion.bmp");
-   Texture::Add("Images/particle.bmp", "particle.bmp");
-   Texture::Add("Images/stars.bmp", "stars.bmp");
+
    
    
 
