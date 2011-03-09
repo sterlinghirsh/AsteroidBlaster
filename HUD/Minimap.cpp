@@ -10,7 +10,7 @@
 #include "Items/Object3D.h"
 
 #define DEFAULT_DISPLAYSIZE 0.5
-#define DEFAULT_ZOOMLEVEL 20
+#define DEFAULT_ZOOMLEVEL 80
 
 Minimap::Minimap(AsteroidShip* _ship) :
  ship(_ship), displaySize(DEFAULT_DISPLAYSIZE), zoomLevel(DEFAULT_ZOOMLEVEL) {

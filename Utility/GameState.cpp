@@ -56,8 +56,9 @@ GameState::GameState(double worldSizeIn) {
 
    // Set up objects.
    custodian.add(ship);
-   currLevel = 1;
-   numAsteroidsToSpawn = currLevel;
+   curLevel = 1;
+   curLevelText = new BitmapTextDisplay("Level: ", curLevel, "", 10, 180);
+   numAsteroidsToSpawn = curLevel;
    initAsteroids();
    doYaw = 0;
    mouseX = 0;
@@ -453,6 +454,7 @@ void GameState::drawAllText() {
    healthText->draw();
    weaponText->draw();
    ammoText->draw();
+   curLevelText->draw();
 
 }
 
@@ -543,9 +545,10 @@ void GameState::reset() {
 void GameState::nextLevel() {
    minimap = new Minimap(ship);
    gameIsRunning = true;
-   currLevel++;
-   numAsteroidsToSpawn = currLevel;
-   printf("Leved up to %d!\n",currLevel);
+   curLevel++;
+   curLevelText->updateBody(curLevel);
+   numAsteroidsToSpawn = curLevel;
+   printf("Level'd up to %d!\n",curLevel);
    initAsteroids();
 }
 

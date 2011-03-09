@@ -45,7 +45,8 @@ class GameState : public InputReceiver {
                         *gameOverText,
                         *winText,
                         *weaponText,
-                        *ammoText;
+                        *ammoText,
+                        *curLevelText;
       // Used when looping over Object3Ds
       std::vector<Object3D*>::iterator item;
       // Used when looping over Object3Ds in drawMinimap
@@ -119,7 +120,7 @@ class GameState : public InputReceiver {
       int scoreToWin;
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;
-      int currLevel;
+      int curLevel;
 
       Skybox* skybox;
       Camera* camera;
