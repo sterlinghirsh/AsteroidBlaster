@@ -5,7 +5,9 @@
  * This loads an image and can move through parts of it on a rectangle.
  */
 
+
 #include "Graphics/Sprite.h"
+#include "Utility/Texture.h"
 #include "Utility/Vector3D.h"
 #include <math.h>
 #include "Utility/GameState.h"
@@ -14,7 +16,7 @@ using namespace std;
 
 list<Sprite*> Sprite::sprites;
 
-Sprite::Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
+Sprite::Sprite(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
  Point3D posIn, double drawWidth, double drawHeight) : position(posIn) {
    framesX = framesXIn;
    framesY = framesYIn;
@@ -23,17 +25,17 @@ Sprite::Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn,
    height = drawHeight;
    frameWidth = 1.0 / framesX;
    frameHeight = 1.0 / framesY;
-   texture = new TextureImporter(filename);
+   textureID = texID;
    curMaterial = WhiteSolid;
    totalFrames = framesX * framesY;
    startTime = doubleTime();
    oneShot = true;
 }
 
-void Sprite::Add(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
+void Sprite::Add(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
  Point3D posIn, double drawWidth, double drawHeight) {
  
-   sprites.push_back(new Sprite(filename, framesXIn, framesYIn, fpsIn,
+   sprites.push_back(new Sprite(texID, framesXIn, framesYIn, fpsIn,
                posIn, drawWidth, drawHeight));
 }
  
@@ -63,7 +65,7 @@ bool Sprite::draw(Point3D* eyePoint) {
    
    setMaterial(curMaterial);
    glColor3f(1, 1, 1);
-   glBindTexture(GL_TEXTURE_2D, texture->texID);
+   glBindTexture(GL_TEXTURE_2D, textureID);
    
    glDisable(GL_CULL_FACE);
    glBegin(GL_QUADS);

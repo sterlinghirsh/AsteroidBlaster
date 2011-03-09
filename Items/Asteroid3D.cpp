@@ -5,6 +5,7 @@
  */
 
 #include "Utility/GlobalUtility.h"
+#include "Utility/Texture.h"
 #include "Graphics/Sprite.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
@@ -389,7 +390,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
          shouldRemove = true;
          const int explosionFactor = 3;
          Sprite::sprites.push_back(
-               new Sprite("Images/SkybusterExplosion.bmp", 4, 5, 20,
+               new Sprite(Texture::getTexture("SkybusterExplosion.bmp"), 4, 5, 20,
                   *position, radius * explosionFactor,
                   radius * explosionFactor));
          if (radius > 2) {

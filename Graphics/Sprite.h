@@ -8,14 +8,14 @@
 #ifndef __SPRITE_H__
 #define __SPRITE_H__
 
-#include "Graphics/TextureImporter.h"
+
 #include "Utility/Point3D.h"
 #include <string>
 #include <list>
 
 class Sprite {
    public:
-      TextureImporter* texture;
+      unsigned int textureID;
       int framesX;
       int framesY;
       int totalFrames;
@@ -31,9 +31,9 @@ class Sprite {
       static void drawSprites();
       bool oneShot;
 
-      Sprite(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
+      Sprite(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
        Point3D posIn, double drawWidth, double drawHeight);
-      static void Add(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
+      static void Add(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
        Point3D posIn, double drawWidth, double drawHeight);
       bool draw(Point3D* eyePoint);
 };

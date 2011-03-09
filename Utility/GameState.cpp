@@ -25,7 +25,7 @@ GameState::GameState(double worldSizeIn) {
    gameIsRunning = true;
    
    worldSize = worldSizeIn;
-   skybox = new Skybox("Images/stars.bmp");
+   skybox = new Skybox();
    ship = new AsteroidShip();
    minimap = new Minimap(ship);
    camera = new Camera(ship);

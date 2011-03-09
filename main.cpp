@@ -12,7 +12,6 @@
 #include "Utility/Point3D.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
-#include "Graphics/TextureImporter.h"
 #include "Graphics/Skybox.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Camera.h"
@@ -25,6 +24,7 @@
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
+#include "Utility/Texture.h"
 
 #include "SDL.h"
 #include "SDL_mixer.h"
@@ -37,9 +37,6 @@ const double WORLD_SIZE = 80.00;
 // True while the game is in play.
 bool running = true;
 bool fullScreen = false;
-
-int TextureImporter::curTexID;
-std::map<string, int> TextureImporter::texIDMap;
 
 // Fonts
 int *fontsArr[] = {
@@ -144,6 +141,9 @@ displayTime += doubleTime() - startTime;
 }
 
 void init() {
+    /* Flags to pass to SDL_SetVideoMode */
+    int videoFlags;
+
    // Initialize the SDL video/audio system
    if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)<0) {
       std::cerr << "Failed to initialize SDL Video/Audio!" << std::endl;
@@ -182,8 +182,30 @@ void init() {
 #endif
    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,  1);
 
-   // Get a framebuffer
-   gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+
+   /* get the flags to pass to SDL_SetVideoMode */
+   videoFlags  = SDL_OPENGL;          /* Enable OpenGL in SDL */
+   videoFlags |= SDL_GL_DOUBLEBUFFER; /* Enable double buffering */
+   videoFlags |= SDL_HWPALETTE;       /* Store the palette in hardware */
+   videoFlags |= SDL_RESIZABLE;       /* Enable window resizing */
+
+   /* This checks to see if surfaces can be stored in memory */
+   if ( vidinfo->hw_available ) {
+      videoFlags |= SDL_HWSURFACE;
+   } else {
+      videoFlags |= SDL_SWSURFACE;
+   }
+
+   /* This checks if hardware blits can be done */
+   if ( vidinfo->blit_hw ) {
+      videoFlags |= SDL_HWACCEL;
+   }
+
+   /* Sets up OpenGL double buffering */
+   SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+   // Get a surface
+   gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, videoFlags);
 
    if (!gDrawSurface) {
       fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
@@ -203,7 +225,7 @@ void init() {
    // Set the title
    SDL_WM_SetCaption("Asteroid Blaster", 0);
 
-
+    
    //setup glew and GLSL
 #ifdef __APPLE__
 #else
@@ -306,12 +328,6 @@ int main(int argc, char* argv[]) {
    // Initialize GL/SDL/glew/GLSL related things
    init();
 
-   // Load textures and shaders
-   new TextureImporter("Images/SkybusterExplosion.bmp");
-   // get particle texture
-   Particle::texture = (new TextureImporter("Images/particle.bmp"))->texID;
-
-
    //load the shader files
    elecShader = setShaders( (char *) "./Shaders/elec.vert", (char *) "./Shaders/elec.frag");
    tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag", (char *) "./Shaders/toon.geom");
@@ -337,6 +353,13 @@ int main(int argc, char* argv[]) {
    SoundEffect::Add("Sounds/Pikachu.wav", "Pikachu.wav");
    SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
    SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
+   
+   Texture::Add("Images/Logo.png", "Logo.png");
+   Texture::Add("Images/SkybusterExplosion.bmp", "SkybusterExplosion.bmp");
+   Texture::Add("Images/particle.bmp", "particle.bmp");
+   Texture::Add("Images/stars.bmp", "stars.bmp");
+   
+   
 
    //get the quadradic up
    quadric = gluNewQuadric();

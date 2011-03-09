@@ -25,8 +25,8 @@ CC=g++
 
 PROGNAME=AsteroidBlaster
 
-UTILITYFILES=Utility/Vector3D.cpp Utility/BitmapTextDisplay.cpp Utility/GameState.cpp Utility/Custodian.cpp Utility/InputManager.cpp Utility/Point3D.cpp Utility/Radar.cpp Utility/Quaternion.cpp Utility/ViewFrustum.cpp Utility/Matrix4.cpp Utility/GlobalUtility.cpp Utility/Menu.cpp Utility/Music.cpp Utility/SoundEffect.cpp Utility/Image.cpp
-GRAPHICSFILES=Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Sprite.cpp Graphics/TextureImporter.cpp Graphics/MeshImporter.cpp Graphics/Camera.cpp 
+UTILITYFILES=Utility/Vector3D.cpp Utility/BitmapTextDisplay.cpp Utility/GameState.cpp Utility/Custodian.cpp Utility/InputManager.cpp Utility/Point3D.cpp Utility/Radar.cpp Utility/Quaternion.cpp Utility/ViewFrustum.cpp Utility/Matrix4.cpp Utility/GlobalUtility.cpp Utility/Menu.cpp Utility/Music.cpp Utility/SoundEffect.cpp Utility/Texture.cpp
+GRAPHICSFILES=Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Sprite.cpp Graphics/MeshImporter.cpp Graphics/Camera.cpp 
 ITEMSFILES=Items/Drawable.cpp Items/Object3D.cpp Items/Asteroid3D.cpp Items/AsteroidShip.cpp Items/BoundingSpace.cpp Items/BoundingSphere.cpp Items/Player.cpp Items/Enemy.cpp Items/Ring.cpp Items/Shard.cpp Items/GlowSquare.cpp Items/BoundingWall.cpp
 SHOTSFILES=Shots/Shot.cpp Shots/BeamShot.cpp Shots/ProjectileShot.cpp Shots/TractorBeamShot.cpp Shots/ElectricityShot.cpp Shots/LawnMowerShot.cpp
 AIFILES=AI/FlyingAI.cpp AI/ShootingAI.cpp 

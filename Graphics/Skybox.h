@@ -15,9 +15,8 @@
 class Skybox {
    public:
       materialStruct curMaterial;
-      TextureImporter* tex;
 
-      Skybox(std::string filename);
+      Skybox();
       void draw(Camera* camera);
 
    private:
