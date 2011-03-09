@@ -187,17 +187,18 @@ void AsteroidShip::accelerateRight(int dir) {
 }
 
 void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
-      Vector3D& offsetDirectionX, Vector3D& offsetDirectionY) {
+      Vector3D& offsetDirectionX, Vector3D& offsetDirectionY, int color) {
    static Vector3D particleVariation;
    static Point3D curPoint;
    static Vector3D initialOffset;
    static Vector3D randomOffset;
+   const float randomAmount = 0.1;
    curPoint = emitter;
 
    // Translate the point in 2D
-   randomOffset.add(offsetDirectionX.scalarMultiply(randdouble() - 0.5));
-   randomOffset.add(offsetDirectionY.scalarMultiply(randdouble() - 0.5));
-   randomOffset.add(baseDirection.scalarMultiply(randdouble() -0.5));
+   randomOffset.add(offsetDirectionX.scalarMultiply(randomAmount * (randdouble() - 0.5)));
+   randomOffset.add(offsetDirectionY.scalarMultiply(randomAmount * (randdouble() - 0.5)));
+   randomOffset.add(baseDirection.scalarMultiply(randomAmount * (randdouble() -0.5)));
    randomOffset.scalarMultiplyUpdate(0.01);
 
    particleVariation.updateMagnitude(baseDirection.scalarMultiply(randdouble() * 2));
@@ -208,7 +209,7 @@ void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
    initialOffset.movePoint(curPoint);
    randomOffset.movePoint(curPoint);
    EngineParticle::Add(new Point3D(curPoint),
-         new Vector3D(baseDirection.add(particleVariation)));
+         new Vector3D(baseDirection.add(particleVariation)), color);
 }
 
 void AsteroidShip::createEngineParticles(double timeDiff) {
@@ -217,7 +218,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    const float increment = 0.01f;
 
    //const float length = acceleration->getLength;
-   const int newParticlesPerSecond = 500;
+   const int newParticlesPerSecond = 30;
    static Vector3D baseParticleAcceleration;
    static Point3D emitter;
 
@@ -244,30 +245,32 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    // Next do forward upAcceleration.
    if (curForwardAccel != 0) {
       // We want to do two streams.
-      baseParticleAcceleration = velocity->add(forward->scalarMultiply(-curForwardAccel * 0.2));
+      baseParticleAcceleration = velocity->add(forward->scalarMultiply(-curForwardAccel * 0.05));
       Point3D initialPoint(*position);
       forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
 
       // First do the right side.
-      //right->movePoint(initialPoint, 0.1);
-      baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
+      right->movePoint(initialPoint, 0.2);
+      //baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
-         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up);
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 2);
       }
 
       // Next do the left side.
-      //right->movePoint(initialPoint, -0.2);
-      baseParticleAcceleration.addUpdate(right->scalarMultiply(-1));
+      right->movePoint(initialPoint, -0.4);
+      //baseParticleAcceleration.addUpdate(right->scalarMultiply(-1));
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
-         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up);
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 3);
       }
 
+      /*
       // Next do the middle side.
-      //right->movePoint(initialPoint, 0.1);
-      baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
+      right->movePoint(initialPoint, 0.1);
+      //baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
-         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up);
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 3);
       }
+      */
    }
 
 }

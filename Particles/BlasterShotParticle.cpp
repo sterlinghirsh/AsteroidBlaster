@@ -19,7 +19,7 @@ bool BlasterShotParticle::step(double timeDifference) {
    velocity->xMag -= velocity->xMag * velocityScalePerSecond * timeDifference;
    velocity->yMag -= velocity->yMag * velocityScalePerSecond * timeDifference;
    velocity->zMag -= velocity->zMag * velocityScalePerSecond * timeDifference;
-   Particle::step(timeDifference);
+   return Particle::step(timeDifference);
 }
 
 void BlasterShotParticle::Add(Point3D* pos, Vector3D* vec) {
