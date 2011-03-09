@@ -9,6 +9,7 @@
 #include <time.h>
 #include "Utility/Quaternion.h"
 #include "Utility/SoundEffect.h"
+#include "Particles/EngineParticle.h"
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
@@ -206,7 +207,7 @@ void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
    //curPoint = position->add(randomPoint);
    initialOffset.movePoint(curPoint);
    randomOffset.movePoint(curPoint);
-   Particle::Add(new Point3D(curPoint),
+   EngineParticle::Add(new Point3D(curPoint),
          new Vector3D(baseDirection.add(particleVariation)));
 }
 

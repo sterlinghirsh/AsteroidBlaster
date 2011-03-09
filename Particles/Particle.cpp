@@ -1,4 +1,6 @@
-
+/**
+ * Particle base class.
+ */
 
 
 #include "Particles/Particle.h"
