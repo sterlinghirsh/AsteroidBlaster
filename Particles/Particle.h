@@ -13,12 +13,12 @@
 
 class Particle {
    public:
-      Particle(Point3D* p, Vector3D* v, float life, float fade, float r, float g, float b);
+      Particle(Point3D* p, Vector3D* v, float life, float r, float g, float b);
       
       static std::list<Particle*> particles;
       static void drawParticles();
       static void update(double timeDifference);
-      static void Add(Point3D* pos, Vector3D* vec);
+      //static void Add(Point3D* pos, Vector3D* vec) = 0;
       
       virtual void draw(Point3D* eyePoint);
       virtual bool step(double timeDifference);
@@ -32,7 +32,6 @@ class Particle {
       Vector3D* velocity;
       
       float life;
-      float fade;
       float r,g,b;
       float slowdown;
       double startTime;

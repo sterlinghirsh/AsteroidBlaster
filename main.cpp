@@ -288,6 +288,8 @@ void init() {
    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
+   glBlendEquation(GL_FUNC_ADD);
+
 }
 
 void timerFunc(bool paused) {

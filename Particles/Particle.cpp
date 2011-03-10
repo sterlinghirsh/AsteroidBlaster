@@ -20,14 +20,13 @@ using namespace std;
 
 list<Particle*> Particle::particles;
 
-Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _fade, float _r, float _g, float _b)
+Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _r, float _g, float _b)
 {
    position = _position;
    velocity = _velocity;
    slowdown = 2.0f;
    shouldRemove = false;
    life = _life;
-   fade = _fade;
    r = _r;
    g = _g;
    b = _b;
@@ -46,6 +45,9 @@ void Particle::update(double timeDifference)
    }
 }
 
+/**
+ * Return true to delete the particle.
+ */
 bool Particle::step(double timeDifference)
 {
    // Move On The X Axis By X Speed 
@@ -55,67 +57,7 @@ bool Particle::step(double timeDifference)
    // Move On The Z Axis By Z Speed 
    position->z += velocity->zMag * timeDifference;
    
-   //std::cout << "timeDifference= " << timeDifference << ": (" << position->x << "," << position->y << "," << position->z << ")" << std::endl;
-
-   // Reduce Particles Life By 'Fade'
-   life -= fade * timeDifference;
-   //std::cout << "timeDifference = " << timeDifference << std::endl;
-   //std::cout << "life = " << life << std::endl;
-   //std::cout << "fade = " << fade << std::endl;
-   return life < 0;
-}
-
-void Particle::Add(Point3D* pos, Vector3D* vec)
-{
-   if (particles.size() >= MAX_PARTICLES) {
-      std::cout << "max particles reached!" << std::endl;
-      return;
-   }
-   float _fade = ( float )( rand( ) %10 ) / 10000.0f + 0.001f;
-   float _r;// = (( float )( rand( ) %100 ) ) / 100.0f ;
-   float _g;// = (( float )( rand( ) %100 ) ) / 100.0f ;
-   float _b;// = (( float )( rand( ) %100 ) ) / 100.0f ;
-   
-   
-   float randHigh = (( float )( rand( ) %10 ) + 90.0f) / 100.0f ;
-   float randMid = (( float )( rand( ) %10 ) + 50.0f) / 100.0f ;
-   float randLow = (( float )( rand( ) %10 ) + 0.0f) / 100.0f ;
-   
-   int chooser = (rand() %6);
-   switch ( chooser ) {
-      case 0: 
-         _r = randHigh;
-         _g = randMid;
-         _b = randLow;
-         break;
-      case 1: 
-         _r = randHigh;
-         _g = randLow;
-         _b = randMid;
-         break;
-      case 2: 
-         _r = randMid;
-         _g = randHigh;
-         _b = randLow;
-         break;
-      case 3: 
-         _r = randMid;
-         _g = randLow;
-         _b = randHigh;
-         break;
-      case 4: 
-         _r = randLow;
-         _g = randMid;
-         _b = randHigh;
-         break;
-      case 5: 
-         _r = randLow;
-         _g = randHigh;
-         _b = randMid;
-         break;
-   }
-   
-   particles.push_back(new Particle(pos, vec, PARTICLE_LIFE, _fade, _r, _g, _b));
+   return doubleTime() > startTime + life;
 }
 
 void Particle::draw(Point3D* eyePoint)
@@ -136,11 +78,16 @@ void Particle::draw(Point3D* eyePoint)
 
    
    setMaterial(WhiteSolid);
-   //gluSphere(quadric, 0.05, 20, 20);
+   
+   float alpha = ((startTime + life) - doubleTime()); 
+   alpha = clamp(alpha, 0, 1);
 
    glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Particle") );
-   glColor4f( r,g,b, life );
+   glColor4f( r,g,b, alpha);
 
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glDisable(GL_COLOR_MATERIAL);
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
    glDisable(GL_CULL_FACE);
@@ -171,10 +118,6 @@ void Particle::draw(Point3D* eyePoint)
 
 void Particle::drawParticles()
 {
-   glDisable(GL_COLOR_MATERIAL);
-   //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   
    extern GameState* gameState;
    
    Point3D eyePoint = (gameState->getCamera()->getEyePoint());

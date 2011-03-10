@@ -4,11 +4,14 @@
 
 #include "Particles/EngineParticle.h"
 
-EngineParticle::EngineParticle(Point3D* p, Vector3D* v, float life, float fade, float r, float g, float b) : Particle(p, v, life, fade, r, g, b) {
+EngineParticle::EngineParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b) : Particle(p, v, life, r, g, b) {
    // Nothing special :/
    size = 0.1;
 };
 
+/**
+ * When color is 1, this makes red stuff. 2 is Green, 3 is Blue.
+ */
 void EngineParticle::Add(Point3D* pos, Vector3D* vec, int color) {
    if (particles.size() >= MAX_PARTICLES) {
       std::cout << "max particles reached!" << std::endl;
@@ -16,10 +19,10 @@ void EngineParticle::Add(Point3D* pos, Vector3D* vec, int color) {
       delete vec;
       return;
    }
+   const float minLife = 60; // Seconds
 
-   // TODO: Make this number make sense.
-   float _fade = randdouble() / 10000;
-   float _r = 0.9 + ((( float )( rand( ) %10 ) ) / 100.0f) ;
+   float _fade = (minLife * randdouble()) + minLife;
+   float _r = 0.9 + (randdouble() * 0.1) ;
    float _g = 0;
    float _b = 0;
 
@@ -33,7 +36,7 @@ void EngineParticle::Add(Point3D* pos, Vector3D* vec, int color) {
       _r = 0;
    }
 
-   particles.push_back(new EngineParticle(pos, vec, PARTICLE_LIFE, _fade, _r, _g, _b));
+   particles.push_back(new EngineParticle(pos, vec, _fade, _r, _g, _b));
 }
 
 bool EngineParticle::step(double timeDifference) {
@@ -41,5 +44,5 @@ bool EngineParticle::step(double timeDifference) {
    velocity->xMag -= velocity->xMag * velocityScalePerSecond * timeDifference;
    velocity->yMag -= velocity->yMag * velocityScalePerSecond * timeDifference;
    velocity->zMag -= velocity->zMag * velocityScalePerSecond * timeDifference;
-   Particle::step(timeDifference);
+   return Particle::step(timeDifference);
 }
