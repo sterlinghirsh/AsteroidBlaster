@@ -1,7 +1,7 @@
 #ifndef __PARTICLE_H__
 #define __PARTICLE_H__
 
-#include "Graphics/TextureImporter.h"
+#include "Utility/Texture.h"
 #include "Utility/Vector3D.h"
 #include "Utility/Point3D.h"
 #include "Utility/GlobalUtility.h"
@@ -14,7 +14,6 @@
 class Particle {
    public:
       Particle(Point3D* p, Vector3D* v, float life, float fade, float r, float g, float b);
-      static bool LoadGLTextures();
       
       static std::list<Particle*> particles;
       static void drawParticles();
@@ -26,7 +25,6 @@ class Particle {
        
       Particle(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
       Point3D posIn, double drawWidth, double drawHeight);
-      static GLuint texture;
       bool shouldRemove;
       
    protected:

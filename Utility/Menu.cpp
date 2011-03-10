@@ -101,7 +101,7 @@ void Menu::draw() {
    glShadeModel( GL_SMOOTH );
    
    /* Set the background black */
-   glClearColor( 1.0f, 0.0f, 0.0f, 0.5f );
+   glClearColor( 0.0f, 0.0f, 0.0f, 0.5f );
 
    /* Depth buffer setup */
    glClearDepth( 1.0f );

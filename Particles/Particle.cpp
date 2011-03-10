@@ -19,7 +19,6 @@
 using namespace std;
 
 list<Particle*> Particle::particles;
-GLuint Particle::texture; 
 
 Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _fade, float _r, float _g, float _b)
 {
@@ -34,46 +33,6 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
    b = _b;
    startTime = doubleTime();
    size = 0.01;
-}
-
-/* function to load in bitmap as a GL texture */
-bool Particle::LoadGLTextures()
-{
-    /* Status indicator */
-    bool Status = false;
-
-    /* Create storage space for the texture */
-    SDL_Surface *TextureImage[1]; 
-
-    /* Load The Bitmap, Check For Errors, If Bitmap's Not Found Quit */
-    if ( ( TextureImage[0] = SDL_LoadBMP( "Images/particle.bmp" ) ) ) {
-      /* Set the status to true */
-      Status = true;
-
-      glBindTexture( GL_TEXTURE_2D, Particle::texture );
-
-      /* Create The Texture */
-      glGenTextures( 1, &texture );
-
-      /* Typical Texture Generation Using Data From The Bitmap */
-      glBindTexture( GL_TEXTURE_2D, texture );
-
-      /* Generate The Texture */
-      glTexImage2D( GL_TEXTURE_2D, 0, 3, TextureImage[0]->w,
-         TextureImage[0]->h, 0, GL_BGR,
-         GL_UNSIGNED_BYTE, TextureImage[0]->pixels );
-
-      /* Linear Filtering */
-      glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-      glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-   }
-
-   /* Free up any memory we may have used */
-   if ( TextureImage[0] ) {
-      SDL_FreeSurface( TextureImage[0] );
-   }
-    
-   return Status;
 }
 
 void Particle::update(double timeDifference)
@@ -179,7 +138,7 @@ void Particle::draw(Point3D* eyePoint)
    //materials(Orange);
    //gluSphere(quadric, 0.05, 20, 20);
 
-   glBindTexture( GL_TEXTURE_2D, Particle::texture );
+   glBindTexture( GL_TEXTURE_2D, Texture::getTexture("particle.bmp") );
    glColor4f( r,g,b, life );
    
    glDisable(GL_LIGHTING);
