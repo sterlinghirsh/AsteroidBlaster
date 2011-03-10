@@ -143,7 +143,7 @@ void GameState::update(double timeDiff) {
       return;
    }
    //check if it should go to the next level
-   if(custodian.asteroidCount == 2) {
+   if(custodian.asteroidCount == 0) {
       SDL_ShowCursor(SDL_ENABLE);
       buyMenu->menuActive = true;
       nextLevel();

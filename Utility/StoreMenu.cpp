@@ -10,7 +10,11 @@ StoreMenu::StoreMenu() {
    buyRailGun = new BitmapTextDisplay("Buy Rail Gun", GW/2 - 50, GH/2 - 60);
    buyPikachusWrath = new BitmapTextDisplay("Buy Pikachu's Wrath", GW/2 - 50, GH/2 - 20);
    buyTractorBeam = new BitmapTextDisplay("Buy Tractor Beam", GW/2 - 50, GH/2 + 20);
-   done = new BitmapTextDisplay("Done", GW/2 - 50, GH/2 + 60);
+   buyHealth = new BitmapTextDisplay("Buy Health", GW/2 - 50, GH/2 + 60);
+   done = new BitmapTextDisplay("Done", GW/2 - 50, GH/2 + 100);
+   
+   
+   
    numOfShards = new BitmapTextDisplay("Shards: ", 5, "",50, 50);
    
 }
@@ -34,9 +38,10 @@ void StoreMenu::update() {
 }
 
 void StoreMenu::draw(int shards) {
-   buyRailGun->setPosition(GW/2 - 50, GH/2 - 20);
-   buyPikachusWrath->setPosition(GW/2 - 50, GH/2 + 20);
-   buyTractorBeam->setPosition(GW/2 - 50, GH/2 + 60);
+   buyRailGun->setPosition(GW/2 - 50, GH/2 - 60);
+   buyPikachusWrath->setPosition(GW/2 - 50, GH/2 - 20);
+   buyTractorBeam->setPosition(GW/2 - 50, GH/2 + 20);
+   buyHealth->setPosition(GW/2 - 50, GH/2 + 60);
    done->setPosition(GW/2 - 50, GH/2 + 100);
    numOfShards->updateBody(shards);
    
@@ -57,6 +62,7 @@ void StoreMenu::draw(int shards) {
       buyRailGun->draw();
       buyPikachusWrath->draw();
       buyTractorBeam->draw();
+      buyHealth->draw();
       done->draw();
       numOfShards->draw();
 
@@ -91,7 +97,7 @@ void StoreMenu::draw(int shards) {
       glColor3f(1.0, 1.0, 1.0);
 
       /* Select Our Texture */
-      glBindTexture( GL_TEXTURE_2D, Texture::getTexture("StoreLogo") );
+      glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Logo.png") );
 
       /* NOTE:
       *   The x coordinates of the glTexCoord2f function need to inverted
@@ -203,6 +209,14 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
    } else {
       buyTractorBeam->setColor(1.0,1.0,1.0);
    }
+   if (x >= buyHealth->xCoord &&
+         x <= buyHealth->xCoord + 50 &&
+         y >= buyHealth->yCoord - 20 &&
+         y <= buyHealth->yCoord ) {
+      buyHealth->setColor(1.0,0.0,0.0);
+   } else {
+      buyHealth->setColor(1.0,1.0,1.0);
+   }
    if (x >= done->xCoord &&
          x <= done->xCoord + 50 &&
          y >= done->yCoord - 20 &&
@@ -211,14 +225,7 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
    } else {
       done->setColor(1.0,1.0,1.0);
    }
-   if (x >= numOfShards->xCoord &&
-         x <= numOfShards->xCoord + 50 &&
-         y >= numOfShards->yCoord - 20 &&
-         y <= numOfShards->yCoord ) {
-      numOfShards->setColor(1.0,0.0,0.0);
-   } else {
-      numOfShards->setColor(1.0,1.0,1.0);
-   }
+
    
    
 }

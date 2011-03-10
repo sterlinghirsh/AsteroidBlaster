@@ -31,6 +31,7 @@ class StoreMenu : public InputReceiver {
    BitmapTextDisplay* buyPikachusWrath;
    BitmapTextDisplay* buyTractorBeam;
    BitmapTextDisplay* done;
+   BitmapTextDisplay* buyHealth;
    BitmapTextDisplay* numOfShards;
    
    SDL_Surface *titleImage;
