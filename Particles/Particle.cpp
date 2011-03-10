@@ -20,7 +20,8 @@ using namespace std;
 
 list<Particle*> Particle::particles;
 
-Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _r, float _g, float _b)
+Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _r, float _g, float _b) :
+   Drawable(0,0,0,0)
 {
    position = _position;
    velocity = _velocity;

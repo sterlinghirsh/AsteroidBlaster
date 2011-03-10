@@ -104,6 +104,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 }
 
 Object3D* ShootingAI::chooseTarget() {
+   // Make the AI choose from a list of Targetable objects instead of Drawable objects, which are inside the view frustum.
    std::list<Object3D*>* targets = gameState->viewFrustumObjects;
    std::list<Object3D*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;

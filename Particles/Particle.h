@@ -1,6 +1,7 @@
 #ifndef __PARTICLE_H__
 #define __PARTICLE_H__
 
+#include "Items/Drawable.h"
 #include "Utility/Texture.h"
 #include "Utility/Vector3D.h"
 #include "Utility/Point3D.h"
@@ -11,7 +12,7 @@
 #define MAX_PARTICLES 7000
 #define PARTICLE_LIFE 0.002f
 
-class Particle {
+class Particle : public Drawable {
    public:
       Particle(Point3D* p, Vector3D* v, float life, float r, float g, float b);
       

@@ -17,6 +17,7 @@ class Drawable {
       Drawable(double x, double y, double z, GLuint displayListIn);
       virtual ~Drawable();
       virtual void init();
+      double unrootedDist(Point3D *other);
 };
 
 #endif

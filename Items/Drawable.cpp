@@ -11,13 +11,31 @@ Drawable :: Drawable(double x, double y, double z, GLuint displayListIn) : posit
    // Initialize some other variables here.
 }
 
-// Deconstructor - not much to do at this high of a level
+/**
+ * Deconstructor - not much to do at this high of a level
+ */
 Drawable :: ~Drawable() {
    if (position != NULL)
       delete position;
 }
 
-// Init function
+/**
+ * Init function
+ */
 void Drawable :: init() {
    // Do cool display listing stuff here for the walls
+}
+
+/**
+ * Tell the <un-square-rooted> distance between the other point and this 
+ * Drawable object. This is not an accurate distance. This function should only
+ * be used for fast comparisons of relative distances between objects,
+ * not absolute distances.
+ * This function is equivalent to (x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2
+ */
+double Drawable :: unrootedDist(Point3D *other) {
+   double xDiff = position->x - other->x;
+   double yDiff = position->y - other->y;
+   double zDiff = position->z - other->z;
+   return (xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff);
 }
