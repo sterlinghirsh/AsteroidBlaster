@@ -12,6 +12,7 @@
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
+#include "Particles/Particle.h"
 
 extern double minimapSizeFactor;
 
@@ -531,8 +532,11 @@ bool GameState::isGameRunning() {
 void GameState::reset() {
    //delete ship;
    delete camera;
+   delete cube;
    custodian.clear();
-
+   
+   Particle::particles.clear();
+   cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
    ship = new AsteroidShip();
    minimap = new Minimap(ship);
    camera = new Camera(ship);
