@@ -49,6 +49,7 @@ class Asteroid3D : public Object3D {
       int _nPoints;
       // Holds a random color.
       float cyan, magenta, yellow;
+      void dropRandomItem();
 };
 
 #endif

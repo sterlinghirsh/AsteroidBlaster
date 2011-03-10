@@ -305,11 +305,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
       double d = (*(otherAsteroid->position)).distanceFrom(*position);
       double combinedRad = otherAsteroid->radius + radius;
       double maxR = max(radius, otherAsteroid->radius);
-      //printf("distance between stroids: %f (%f)\n", d, combinedRad);
       Vector3D* push = new Vector3D(*otherAsteroid->position, *position);
-      if (d != 0) {
-         push->setLength(0.1); // Units per sec per sec.
-      }
 
       if (d <=  maxR) {
          if (d == 0) {
@@ -325,8 +321,10 @@ void Asteroid3D::handleCollision(Object3D* other) {
             }
             */
          }
+         push->setLength(0.1); // Units per sec per sec.
          addAcceleration(push);
       }
+
       double speed = velocity->getLength();
 
       Vector3D reflectionAxis(*otherAsteroid->position, *position);
@@ -334,17 +332,12 @@ void Asteroid3D::handleCollision(Object3D* other) {
 
       double m1 = radius; // This Asteroid's Mass.
       double m2 = otherAsteroid->radius; // Other Asteroid's Mass.
+
       Vector3D* newVelocity = new Vector3D(*velocity);
       newVelocity->scalarMultiplyUpdate(m1 - m2);
       newVelocity->addUpdate(otherAsteroid->velocity->scalarMultiply(2 * m2));
       newVelocity->scalarMultiplyUpdate(1 / (m1 + m2 + 1)); // Added the 1 to make stuff lose some energy.
       
-      /*
-      newVelocity->reflect(reflectionAxis);
-      newVelocity->setLength(otherAsteroid->velocity->getLength() + 1);
-      newVelocity->scalarMultiplyUpdate(0.8);
-      newVelocity->subtractUpdate(velocity->scalarMultiply(0.5));
-      */
       // We want to only add acceleration away from the other item.
       if (newVelocity->dot(*push) < 0) {
          newVelocity->scalarMultiplyUpdate(-1);
@@ -355,8 +348,6 @@ void Asteroid3D::handleCollision(Object3D* other) {
       Vector3D* reverseVelocity = new Vector3D(*velocity);
       reverseVelocity->scalarMultiplyUpdate(-1);
       addInstantAcceleration(reverseVelocity);
-
-      //printf("Collision with asteroid. New Velocity: %f, prereflect: %f\n", newVelocity->getLength(), speed);
 
    } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
@@ -407,10 +398,8 @@ void Asteroid3D::handleCollision(Object3D* other) {
             int dimension = rand() % 3;
             custodian->add(makeChild(0, dimension));
             custodian->add(makeChild(1, dimension));
-         } else {
-            custodian->add(makeShard(0));
-            //printf("YOU JUST SHARDED\n");
          }
+         dropRandomItem();
       }
    }
 }
@@ -465,4 +454,17 @@ void Asteroid3D::debug() {
    maxPosition->print();
    velocity->print();
    printf("--\n");
+}
+
+void Asteroid3D::dropRandomItem() {
+   float whichItem = randdouble();
+   if (whichItem < 0.5) {
+      // Do nothing!
+   } else if (whichItem < 0.9) { 
+      custodian->add(makeShard(0));
+      //printf("YOU JUST SHARDED\n");
+   } else {
+      custodian->add(makeShard(0));
+      custodian->add(makeShard(0));
+   }
 }
