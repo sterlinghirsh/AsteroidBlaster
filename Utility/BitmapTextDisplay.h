@@ -16,7 +16,7 @@
 class BitmapTextDisplay {
    // private variables go here
    std::string textToDisplay, pre, post;
-   int xCoord, yCoord;
+   
    float r, g, b;
    void* font;
    static std::ostringstream sstream;
@@ -25,7 +25,7 @@ class BitmapTextDisplay {
    void renderBitmapString(std::string str);
 
    public:
-      
+      double xCoord, yCoord;
       //Constructor if you are displaying one string
       BitmapTextDisplay(std::string text, double x, double y);
       // Constructor if you are displaying multiple strings

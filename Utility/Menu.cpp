@@ -90,6 +90,7 @@ void Menu::draw() {
       glLoadIdentity( );
       glTranslatef( 0.0f, 1.0f, -5.0f );
       glScalef( 2.0, 0.5, 1.0 );
+      glColor3f(1.0, 1.0, 1.0);
 
       /* Select Our Texture */
       glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Logo.png") );
@@ -178,19 +179,19 @@ void Menu::mouseMove(int dx, int dy, int _x, int _y) {
    if (!menuActive) { return; }
    x = _x;
    y = _y;
-   if (x >= 350 &&
-         x <= 450 &&
-         y >= 230 &&
-         y <= 240) {
+   if (x >= newGame->xCoord &&
+         x <= newGame->xCoord + 100 &&
+         y >= newGame->yCoord - 20 &&
+         y <= newGame->yCoord ) {
       newGame->setColor(1.0,0.0,0.0);
    } else {
       newGame->setColor(1.0,1.0,1.0);
    }
 
-   if (x >= 350 &&
-         x <= 450 &&
-         y >= 345 &&
-         y <= 365) {
+   if (x >= quit->xCoord &&
+         x <= quit->xCoord + 50 &&
+         y >= quit->yCoord - 20 &&
+         y <= quit->yCoord ) {
       quit->setColor(1.0,0.0,0.0);
    } else {
       quit->setColor(1.0,1.0,1.0);
