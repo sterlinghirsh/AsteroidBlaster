@@ -338,7 +338,7 @@ int main(int argc, char* argv[]) {
    
    //loading textures
    Texture::Add("Images/Logo.png", "Logo.png");
-   Texture::Add("Images/SkybusterExplosion.bmp", "SkybusterExplosion.bmp");
+   Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
    Texture::Add("Images/particle.bmp", "particle.bmp");
    Texture::Add("Images/stars.bmp", "stars.bmp");
    

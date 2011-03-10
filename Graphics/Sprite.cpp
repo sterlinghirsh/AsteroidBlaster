@@ -56,34 +56,37 @@ bool Sprite::draw(Point3D* eyePoint) {
    }
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
-   glPushMatrix();
-   position.glTranslate();
-   glRotatef(angle, cross.xMag, cross.yMag, cross.zMag);
-   
-   double topLeftX = (curFrame % framesX) * frameWidth;
-   double topLeftY = 1 - ((curFrame / framesX) * frameHeight);
-   
-   setMaterial(curMaterial);
-   glColor3f(1, 1, 1);
-   glBindTexture(GL_TEXTURE_2D, textureID);
-   
    glDisable(GL_CULL_FACE);
-   glBegin(GL_QUADS);
-   glTexCoord2f(topLeftX, topLeftY);
-   glVertex3f(-width/2, height/2, 0);
+   
+   glPushMatrix();
+      position.glTranslate();
+      glRotatef(angle, cross.xMag, cross.yMag, cross.zMag);
+      
+      double topLeftX = (curFrame % framesX) * frameWidth;
+      double topLeftY = 1 - ((curFrame / framesX) * frameHeight);
+      
+      //setMaterial(curMaterial);
+      glColor3f(1, 1, 1);
+      glBindTexture(GL_TEXTURE_2D, textureID);
+      //glEnable(GL_ALPHA_TEST);
+      //glAlphaFunc(GL_GREATER, 0);
+      
+      glBegin(GL_QUADS);
+      glTexCoord2f(topLeftX, topLeftY);
+      glVertex3f(-width/2, height/2, 0);
 
-   glTexCoord2f(topLeftX + frameWidth, topLeftY);
-   glVertex3f(width/2, height/2, 0);
+      glTexCoord2f(topLeftX + frameWidth, topLeftY);
+      glVertex3f(width/2, height/2, 0);
 
-   glTexCoord2f(topLeftX + frameWidth, topLeftY - frameHeight);
-   glVertex3f(width/2, -height/2, 0);
+      glTexCoord2f(topLeftX + frameWidth, topLeftY - frameHeight);
+      glVertex3f(width/2, -height/2, 0);
 
-   glTexCoord2f(topLeftX, topLeftY - frameHeight);
-   glVertex3f(-width/2, -height/2, 0);
+      glTexCoord2f(topLeftX, topLeftY - frameHeight);
+      glVertex3f(-width/2, -height/2, 0);
 
-   glEnd();
-   glEnable(GL_CULL_FACE);
+      glEnd();
    glPopMatrix();
+   glEnable(GL_CULL_FACE);
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
    return true;

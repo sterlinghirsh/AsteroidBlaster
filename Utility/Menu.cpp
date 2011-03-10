@@ -17,32 +17,6 @@ Menu::Menu() {
    settings->setColor(0.5,0.5,0.5);
    
    
-   SDL_Surface *temp;
-    
-   temp = SDL_LoadBMP("Images/Logo.bmp");
-   
-   
-   if (temp == NULL) {
-	   printf("Unable to load bitmap: %s\n", SDL_GetError());
-	   exit(0);
-   }
-
-   SDL_SetColorKey(temp, (SDL_SRCCOLORKEY|SDL_RLEACCEL), SDL_MapRGB(temp->format, 0, 0, 0));
-
-   titleImage = SDL_DisplayFormat(temp);
-   SDL_FreeSurface(temp);
-   
-     
-   src.x = 0;
-   src.y = 0;
-   src.w = titleImage->w;
-   src.h = titleImage->h;
-    
-   dest.x = 100;
-   dest.y = 100;
-   dest.w = titleImage->w;
-   dest.h = titleImage->h;
-   
 }
 
 
@@ -71,7 +45,7 @@ void Menu::draw() {
    
    glDisable(GL_TEXTURE_2D);
    
-   glClearColor(0.0, 0.0, 0.0, 0.0);
+   glClearColor(0.0, 0.0, 0.0, 0.5);
    
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -99,9 +73,6 @@ void Menu::draw() {
    
    /* Enable smooth shading */
    glShadeModel( GL_SMOOTH );
-   
-   /* Set the background black */
-   glClearColor( 0.0f, 0.0f, 0.0f, 0.5f );
 
    /* Depth buffer setup */
    glClearDepth( 1.0f );

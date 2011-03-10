@@ -394,7 +394,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
          shouldRemove = true;
          const int explosionFactor = 3;
          Sprite::sprites.push_back(
-               new Sprite(Texture::getTexture("SkybusterExplosion.bmp"), 4, 5, 20,
+               new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20,
                   *position, radius * explosionFactor,
                   radius * explosionFactor));
          if (radius > 2) {
