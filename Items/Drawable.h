@@ -18,6 +18,7 @@ class Drawable {
       virtual ~Drawable();
       virtual void init();
       double unrootedDist(Point3D *other);
+      double unrootedDist(Drawable *other);
 };
 
 #endif

@@ -39,3 +39,11 @@ double Drawable :: unrootedDist(Point3D *other) {
    double zDiff = position->z - other->z;
    return (xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff);
 }
+
+/**
+ * This is like the function above, but accepts another Drawable*, instead
+ * of a Point3D*.
+ */
+double Drawable :: unrootedDist(Drawable *other) {
+   return unrootedDist(other->position);
+}
