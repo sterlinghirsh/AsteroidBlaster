@@ -308,21 +308,24 @@ void Asteroid3D::handleCollision(Object3D* other) {
       //printf("distance between stroids: %f (%f)\n", d, combinedRad);
       Vector3D* push = new Vector3D(*otherAsteroid->position, *position);
       if (d != 0) {
-         push->setLength(1); // Units per sec per sec.
+         push->setLength(0.1); // Units per sec per sec.
       }
 
       if (d <=  maxR) {
          if (d == 0) {
             //printf("stroid is stuck\n");
+            push->randomMagnitude();
+            addAcceleration(push);
+            /*
             shouldRemove = true;
             if (radius > 2) {
                int dimension = rand() % 3;
                custodian->add(makeChild(0, dimension));
                custodian->add(makeChild(1, dimension));
             }
-         } else {
-            addAcceleration(push);
+            */
          }
+         addAcceleration(push);
       }
       double speed = velocity->getLength();
 
