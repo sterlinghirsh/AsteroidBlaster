@@ -6,6 +6,7 @@
 
 EngineParticle::EngineParticle(Point3D* p, Vector3D* v, float life, float fade, float r, float g, float b) : Particle(p, v, life, fade, r, g, b) {
    // Nothing special :/
+   size = 0.1;
 };
 
 void EngineParticle::Add(Point3D* pos, Vector3D* vec, int color) {
