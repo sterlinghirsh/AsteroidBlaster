@@ -16,7 +16,7 @@ else
    PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -Wl,-framework,Cocoa
 endif
 
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g $(SDL_LIBS) -lSDL_mixer
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g $(SDL_LIBS) -lSDL_mixer -lSDL_image
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files

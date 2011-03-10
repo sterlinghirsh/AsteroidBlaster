@@ -3,8 +3,15 @@
 #include <iostream>
 #include <map>
 #include <math.h>
+
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#include <OpenGL/glext.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
+
 #include "SDL_image.h"
 
 std::map<std::string, unsigned int> Texture::textures;
