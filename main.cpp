@@ -250,7 +250,6 @@ void init() {
    //glClearColor(1.0, 1.0, 1.0, 1.0);
 
    //initialize some GL stuff
-   //glEnable(GL_CULL_FACE);
    //glEnable(GL_DEPTH_TEST);
    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    
@@ -343,6 +342,8 @@ int main(int argc, char* argv[]) {
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
    Texture::Add("Images/particle.png", "Particle");
    Texture::Add("Images/starsdark.bmp", "starsdark.png");
+
+   Particle::initDisplayList();
    
    //load the shader files
    elecShader = setShaders( (char *) "./Shaders/elec.vert", (char *) "./Shaders/elec.frag");

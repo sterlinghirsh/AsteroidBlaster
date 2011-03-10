@@ -19,6 +19,7 @@
 using namespace std;
 
 list<Particle*> Particle::particles;
+int Particle::particleDisplayList;
 
 Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _r, float _g, float _b) :
    Drawable(0,0,0,0)
@@ -77,43 +78,16 @@ void Particle::draw(Point3D* eyePoint)
    position->glTranslate();
    glRotatef(angle, cross.xMag, cross.yMag, cross.zMag);
 
+   glScalef(size, size, size);
    
    setMaterial(WhiteSolid);
    
    float alpha = ((startTime + life) - doubleTime()); 
    alpha = clamp(alpha, 0, 1);
 
-   glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Particle") );
    glColor4f( r,g,b, alpha);
 
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   glDisable(GL_COLOR_MATERIAL);
-   glDisable(GL_LIGHTING);
-   glEnable(GL_TEXTURE_2D);
-   glDisable(GL_CULL_FACE);
-   //glDisable(GL_DEPTH_TEST);
-   glBegin(GL_QUADS);
-   
-   // Top Left
-   glTexCoord2d( 0, 1 );
-   glVertex3f( -size, size, 0.0f );
-   // Top Right
-   glTexCoord2d( 1, 1 );
-   glVertex3f(size, size, 0.0f);
-   // Bottom Right
-   glTexCoord2d( 1, 0 );
-   glVertex3f( size, -size, 0.0f );
-   // Bottom Left
-   glTexCoord2d( 0, 0 );
-   glVertex3f( -size, -size, 0.0f );
-   glEnd( );
-   
-   glDisable(GL_TEXTURE_2D);
-   glEnable(GL_CULL_FACE);
-   glEnable(GL_LIGHTING);
-   //glEnable(GL_DEPTH_TEST);
-   //std::cout << "drew: (" << position->x << "," << position->y << "," << position->z << ")" << std::endl;
+   glCallList(particleDisplayList);
    glPopMatrix();
 }
 
@@ -130,3 +104,37 @@ void Particle::drawParticles()
    }
 }
 
+void Particle::initDisplayList() {
+   particleDisplayList = glGenLists(1);
+   glNewList(particleDisplayList, GL_COMPILE);
+   
+   glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Particle") );
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glDisable(GL_LIGHTING);
+   glEnable(GL_TEXTURE_2D);
+   glDisable(GL_CULL_FACE);
+   glBegin(GL_TRIANGLE_FAN);
+   
+   // Top Left
+   glTexCoord2d( 0, 1 );
+   glVertex3f( -1, 1, 0.0f );
+   // Top Right
+   glTexCoord2d( 1, 1 );
+   glVertex3f(1, 1, 0.0f);
+   // Bottom Right
+   glTexCoord2d( 1, 0 );
+   glVertex3f( 1, -1, 0.0f );
+   // Bottom Left
+   glTexCoord2d( 0, 0 );
+   glVertex3f( -1, -1, 0.0f );
+   glEnd( );
+   
+   glDisable(GL_TEXTURE_2D);
+   /*
+   glEnable(GL_CULL_FACE);
+   glEnable(GL_LIGHTING);
+   */
+
+   glEndList();
+}

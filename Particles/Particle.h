@@ -27,6 +27,8 @@ class Particle : public Drawable {
       Particle(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
       Point3D posIn, double drawWidth, double drawHeight);
       bool shouldRemove;
+      static int particleDisplayList;
+      static void initDisplayList();
       
    protected:
       Point3D* position;
