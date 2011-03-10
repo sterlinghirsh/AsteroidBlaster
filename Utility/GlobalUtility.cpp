@@ -31,6 +31,7 @@ GLuint elecShader;
 GLuint ramShader;
 GLuint hBlurShader;
 GLuint vBlurShader;
+GLuint particleShader;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 double currentTime;
@@ -427,6 +428,40 @@ GLuint setShaders(char * vert, char * frag) {
 	return(pro);
 }
 
+GLuint setShaders(char * vert) {
+	GLuint v, pro;
+	char *vs;
+
+	v = glCreateShader(GL_VERTEX_SHADER);
+
+	vs = textFileRead(vert);
+
+	const char * vv = vs;
+
+	glShaderSource(v, 1, &vv, NULL);
+
+	free(vs);
+
+	glCompileShader(v);
+
+	//fprintf(stderr, "vertex\n");
+	printShaderLog(v);
+
+	pro = glCreateProgram();
+	glAttachShader(pro,v);
+
+	glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
+	glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
+	int temp;
+	glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT,&temp);
+	glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
+	
+	glLinkProgram(pro);
+	printProgramLog(pro);
+
+	return(pro);
+}
+
 void printShaderLog(GLuint obj) { 
 	GLint infoLogLength = 0;
 	GLsizei charsWritten  = 0;
@@ -439,8 +474,8 @@ void printShaderLog(GLuint obj) {
 		glGetShaderInfoLog(obj, infoLogLength, &charsWritten, infoLog);
 		printf("%s\n",infoLog);
 		free(infoLog);
-		}
-	}
+   }
+}
 
 void printProgramLog(GLuint obj) {
 	GLint infoLogLength = 0;

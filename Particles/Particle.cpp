@@ -69,26 +69,21 @@ void Particle::draw(Point3D* eyePoint)
    * Fade The Particle Based On It's Life
    */
    
-   Vector3D forward(0, 0, 1);
-   Vector3D toCamera(*position, *eyePoint);
-   Vector3D cross = forward.cross(toCamera);
-
-   double angle = forward.getAngleInDegrees(toCamera);
    
    position->glTranslate();
-   glRotatef(angle, cross.xMag, cross.yMag, cross.zMag);
 
-   glScalef(size, size, size);
-   
-   setMaterial(WhiteSolid);
    
    float alpha = ((startTime + life) - doubleTime()); 
-   alpha = clamp(alpha, 0, 1);
 
+   // glColor4f clamps alpha to [0, 1].
    glColor4f( r,g,b, alpha);
+   glUseProgram(particleShader);
+   GLint sizeLoc = glGetUniformLocation(particleShader, "size");
+   glUniform1f(sizeLoc, size);
 
    glCallList(particleDisplayList);
    glPopMatrix();
+   glUseProgram(0);
 }
 
 void Particle::drawParticles()
@@ -109,6 +104,7 @@ void Particle::initDisplayList() {
    glNewList(particleDisplayList, GL_COMPILE);
    
    glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Particle") );
+   // TODO: The problem with this  is that particles don't fade out. They snap out.
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glDisable(GL_LIGHTING);

@@ -36,6 +36,7 @@ extern GLuint elecShader;
 extern GLuint hBlurShader;
 extern GLuint vBlurShader;
 extern GLuint ramShader;
+extern GLuint particleShader;
 extern SDL_Surface* gDrawSurface;
 extern const SDL_VideoInfo* vidinfo;
 
@@ -53,6 +54,7 @@ double clamp(double, double, double);
 double randdouble();
 GLuint setShaders(char * vert, char * frag, char * geom);
 GLuint setShaders(char * vert, char * frag);
+GLuint setShaders(char * vert);
 char *textFileRead(char *fn);
 void printShaderLog(GLuint obj);
 void printProgramLog(GLuint obj);
