@@ -533,9 +533,12 @@ void GameState::reset() {
    //delete ship;
    delete camera;
    delete cube;
-   custodian.clear();
+   delete ship;
+   delete minimap;
    
+   custodian.clear();
    Particle::particles.clear();
+   
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
    ship = new AsteroidShip();
    minimap = new Minimap(ship);
