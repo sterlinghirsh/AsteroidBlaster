@@ -365,9 +365,7 @@ void Asteroid3D::handleCollision(Object3D* other) {
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
       if (health > 0) {
          if ((beamShot = dynamic_cast<BeamShot*>(other)) != NULL) {
-            if (((!beamShot->hitYet) || 
-             this == beamShot->hitItem) &&
-             curFrame == beamShot->firstFrame) {
+            if (((!beamShot->hitYet) || this == beamShot->hitItem) && (curFrame - 1) <= beamShot->firstFrame) {
                health = 0;
                velocity->addUpdate(shot->velocity->scalarMultiply(10));
             }
