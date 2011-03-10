@@ -42,6 +42,10 @@ class GlowSquare {
        float size, float _x, float _y, float _z, BoundingWall* _wall, int _xIndex, int _yIndex);
       void hit(int distanceLimit, double delay);
       void drawLines();
+   private:
+      void initDisplayList();
+      int displayList;
+      void drawGlowingPart();
 };
 
 #endif

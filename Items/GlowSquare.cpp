@@ -45,6 +45,8 @@ GlowSquare::GlowSquare(Color* _color,
    midpoint2.midpoint(p2, p3);
    midpoint3.midpoint(p3, p4);
    midpoint4.midpoint(p4, p1);
+
+   initDisplayList();
 }
 
 void GlowSquare::drawLines() {
@@ -76,6 +78,29 @@ void GlowSquare::drawLines() {
    midpoint4.draw();
 }
 
+void GlowSquare::drawGlowingPart() {
+   glBegin(GL_QUADS);
+   /*
+   midpoint1.draw();
+   midpoint2.draw();
+   midpoint3.draw();
+   midpoint4.draw();
+   */
+   /*
+   p1.draw();
+   p2.draw();
+   p3.draw();
+   p4.draw();
+   */
+
+   p1.draw();
+   midpoint1.draw();
+   p3.draw();
+   midpoint3.draw();
+
+   glEnd();
+}
+
 void GlowSquare::draw() {
    double timeDiff;
    const double fadeTime = 0.75;
@@ -102,26 +127,7 @@ void GlowSquare::draw() {
       color->setColorWithAlpha(alpha * 0.5);
       glPushMatrix();
       normal.glTranslate(shwobbleAmplitude * sin(numShwobbles * 2 * M_PI * alpha * alpha));
-      glBegin(GL_QUADS);
-      /*
-      midpoint1.draw();
-      midpoint2.draw();
-      midpoint3.draw();
-      midpoint4.draw();
-      */
-      /*
-      p1.draw();
-      p2.draw();
-      p3.draw();
-      p4.draw();
-      */
-
-      p1.draw();
-      midpoint1.draw();
-      p3.draw();
-      midpoint3.draw();
-
-      glEnd();
+      glCallList(displayList);
       glPopMatrix();
    }
 
@@ -161,4 +167,11 @@ void GlowSquare::hit(int distanceLimit, double delay) {
       }
    }
 
+}
+
+void GlowSquare::initDisplayList() {
+   displayList = glGenLists(1);
+   glNewList(displayList, GL_COMPILE);
+   drawGlowingPart();
+   glEndList();
 }
