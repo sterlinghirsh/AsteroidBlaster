@@ -339,7 +339,7 @@ int main(int argc, char* argv[]) {
    //loading textures
    Texture::Add("Images/Logo.png", "Logo.png");
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
-   Texture::Add("Images/particle.bmp", "particle.bmp");
+   Texture::Add("Images/particle.png", "Particle");
    Texture::Add("Images/stars.bmp", "stars.bmp");
    
    //load the shader files

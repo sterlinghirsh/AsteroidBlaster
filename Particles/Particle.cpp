@@ -135,12 +135,12 @@ void Particle::draw(Point3D* eyePoint)
    glRotatef(angle, cross.xMag, cross.yMag, cross.zMag);
 
    
-   //materials(Orange);
+   setMaterial(WhiteSolid);
    //gluSphere(quadric, 0.05, 20, 20);
 
-   glBindTexture( GL_TEXTURE_2D, Texture::getTexture("particle.bmp") );
+   glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Particle") );
    glColor4f( r,g,b, life );
-   
+
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
    glDisable(GL_CULL_FACE);
