@@ -288,6 +288,10 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
 
 void Asteroid3D::update(double timeDiff) {
    Object3D::update(timeDiff);
+   if (velocity->getComparisonLength() > 40 * 40) {
+      // Set a speed limit of 40 u/s.
+      velocity->setLength(40);
+   }
    angle += rotationSpeed * timeDiff;
 }
 
