@@ -28,10 +28,10 @@ void BlasterShotParticle::Add(Point3D* pos, Vector3D* vec) {
       delete vec;
       return;
    }
-   const float minLife = 5; // Seconds
+   const float minLife = 2; // Seconds
 
    float _fade = (minLife * randdouble()) + minLife;
-   float _r = 0.9 + (randdouble() * 0.1) ;
+   float _r = 0.9 + (randdouble() * 0.1);
    float _g = 0;
    float _b = 0;
 
@@ -46,7 +46,7 @@ void BlasterShotParticle::AddRainbow(Point3D* pos, Vector3D* vec, int particleNu
       return;
    }
 
-   const float minLife = 5; // Seconds
+   const float minLife = 2; // Seconds
 
    float _fade = (minLife * randdouble()) + minLife;
    float _r = 0.9 + (randdouble() * 0.1) ;

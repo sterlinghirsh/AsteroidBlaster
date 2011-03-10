@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <math.h>
 #include "Utility/SoundEffect.h"
+#include "Particles/TractorAttractionParticle.h"
 
 using namespace std;
 
@@ -426,7 +427,19 @@ void Shard::handleCollision(Object3D* other) {
          speed = 80; // High speed from hard-hitting railgun.
       } else if((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {
          // Pull the shot in.
+         const int numParticles = 1;
          speed = position->distanceFrom(*TBshot->position) - TBshot->length;
+         Vector3D random;
+         for (int i = 0; i < numParticles; ++i) {
+            Point3D* particlePosition = new Point3D(*position);
+            random.randomMagnitude();
+            random.movePoint(*particlePosition);
+            Vector3D* particleVelocity = new Vector3D(*particlePosition, *TBshot->position);
+            particleVelocity->setLength(10); // Speed of the particle.
+            particleVelocity->addUpdate(*velocity);
+            // Make this go toward the ship.
+            TractorAttractionParticle::Add(particlePosition, particleVelocity, TBshot->owner->position); 
+         }
       } else if((Eshot = dynamic_cast<ElectricityShot*>(other)) != NULL) {
          // Pull the shot in.
          //speed = position->distanceFrom(*TBshot->position) - TBshot->length;

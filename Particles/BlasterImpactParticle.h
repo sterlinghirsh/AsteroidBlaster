@@ -1,7 +1,7 @@
 /**
- * Particles that come off the blaster shots.
+ * Particles that come off the blaster impacts.
  * @author Sterling Hirsh
- * @date 2/17/11
+ * @date 3/9/11
  */
 
 #ifndef __BLASTERIMPACTPARTICLE_H__
@@ -12,9 +12,8 @@
 class BlasterImpactParticle : public Particle  {
    public :
       BlasterImpactParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b);
-      bool step(double timeDifference);
+      virtual bool step(double timeDifference);
       static void Add(Point3D* pos, Vector3D* vec);
-      static void AddRainbow(Point3D* pos, Vector3D* vec, int particleNum, int particleCycle);
 };
 
 #endif

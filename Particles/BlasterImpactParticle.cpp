@@ -1,7 +1,7 @@
 /**
- * Particles that come off the blaster shots.
+ * Particles that come off the blaster impacts.
  * @author Sterling Hirsh
- * @date 2/17/11
+ * @date 3/9/11
  */
 
 #include "Particles/BlasterImpactParticle.h"
@@ -36,24 +36,4 @@ void BlasterImpactParticle::Add(Point3D* pos, Vector3D* vec) {
    float _b = 0;
 
    particles.push_back(new BlasterImpactParticle(pos, vec, _fade, _r, _g, _b));
-}
-
-void BlasterImpactParticle::AddRainbow(Point3D* pos, Vector3D* vec, int particleNum, int particleCycle) {
-   if (particles.size() >= MAX_PARTICLES) {
-      std::cout << "max particles reached!" << std::endl;
-      delete pos;
-      delete vec;
-      return;
-   }
-
-   const float minLife = 5; // Seconds
-
-   float _fade = (minLife * randdouble()) + minLife;
-   float _r = 0.9 + (randdouble() * 0.1) ;
-   float _g = 0;
-   float _b = 0;
-   getBrightColor((float)particleNum / particleCycle, _r, _g, _b);
-
-   particles.push_back(new BlasterImpactParticle(pos, vec, _fade, _r, _g, _b));
-
 }

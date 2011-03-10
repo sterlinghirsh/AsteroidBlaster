@@ -58,7 +58,7 @@ bool Particle::step(double timeDifference)
    // Move On The Z Axis By Z Speed 
    position->z += velocity->zMag * timeDifference;
    
-   return doubleTime() > startTime + life;
+   return doubleTime() > (startTime + life);
 }
 
 void Particle::draw(Point3D* eyePoint)

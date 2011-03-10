@@ -33,7 +33,7 @@ AIFILES=AI/FlyingAI.cpp AI/ShootingAI.cpp
 NETWORKFILES=
 WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/TractorBeam.cpp Weapons/Electricity.cpp Weapons/LawnMower.cpp Weapons/Ram.cpp
 HUDFILES=HUD/ProgressBar.cpp HUD/Minimap.cpp
-PARTICLEFILES=Particles/Particle.cpp Particles/BlasterShotParticle.cpp Particles/EngineParticle.cpp Particles/BlasterImpactParticle.cpp
+PARTICLEFILES=Particles/Particle.cpp Particles/BlasterShotParticle.cpp Particles/EngineParticle.cpp Particles/BlasterImpactParticle.cpp Particles/TractorAttractionParticle.cpp
 FILES=main.cpp $(UTILITYFILES) $(GRAPHICSFILES) $(ITEMSFILES) $(SHOTSFILES) $(AIFILES) $(NETWORKFILES) $(WEAPONSFILES) $(HUDFILES) $(PARTICLEFILES)
 
 OBJECTS=$(FILES:.cpp=.o)
