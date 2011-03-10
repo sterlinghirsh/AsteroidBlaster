@@ -35,6 +35,7 @@ GLuint particleShader;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 double currentTime;
+InputManager* inputManager = NULL;
 
 using namespace std;
 

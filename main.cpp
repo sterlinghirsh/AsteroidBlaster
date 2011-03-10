@@ -20,6 +20,7 @@
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/GameState.h"
 #include "Utility/Menu.h"
+#include "Utility/StoreMenu.h"
 #include "Utility/InputManager.h"
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
@@ -49,14 +50,10 @@ int *fontsArr[] = {
    (int*)GLUT_BITMAP_HELVETICA_18,
 };
 int fontSpot = 0; // TODO: What is this?
-
 // Pointer to the global gamestate object.
 GameState* gameState = NULL;
 // Pointers to the global menu objects.
 Menu* mainMenu = NULL;
-Menu* purchasingMenu = NULL;
-// This handles all the input.
-InputManager* inputManager = NULL;
 
 double displayTime = 0;
 // This double contains the FPS to be printed to the screen each frame.
@@ -339,6 +336,7 @@ int main(int argc, char* argv[]) {
    
    //loading textures
    Texture::Add("Images/Logo.png", "Logo.png");
+   Texture::Add("Images/StoreLogo.png", "StoreLogo");
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
    Texture::Add("Images/particle.png", "Particle");
    Texture::Add("Images/starsdark.bmp", "starsdark.png");
@@ -387,24 +385,29 @@ int main(int argc, char* argv[]) {
    gameState = new GameState(WORLD_SIZE);
    // Initialize the menus
    mainMenu = new Menu();
-   purchasingMenu = new Menu();
-   //purchasingMenu-> menuActive = false;
-
+   //turn the menu on for the inial menu display
+   mainMenu->menuActive = true;
+   SDL_ShowCursor(SDL_ENABLE);
+   
    //Initialize the input manager
    inputManager = new InputManager();
+   gameState->buyMenu = new StoreMenu();
    //Connect the input manager to the gameState
    inputManager->addReceiver(gameState);
    inputManager->addReceiver(mainMenu);
+   inputManager->addReceiver(gameState->buyMenu);
 
    //declare the event that will be reused
    SDL_Event event;
 
    while (running) {
       updateDoubleTime();
-
-      if (mainMenu->isActive()) {
+      if (mainMenu->menuActive) {
          mainMenu->draw();
-         timerFunc(mainMenu->isActive());
+         timerFunc(mainMenu->menuActive);
+      } else if (gameState->buyMenu->menuActive) {
+         gameState->buyMenu->draw(gameState->ship->nShards);
+         timerFunc(gameState->buyMenu);
       } else if (gameState->isGameRunning()) {
          timerFunc(false);
          display();

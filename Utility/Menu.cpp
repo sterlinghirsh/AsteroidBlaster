@@ -6,7 +6,7 @@
 #include "Utility/Texture.h"
 
 Menu::Menu() {
-   menuActive = true;
+   menuActive = false;
    newGame = new BitmapTextDisplay("New Game", GW/2 - 50, GH/2 - 60);
    saveLoadGame = new BitmapTextDisplay("Save/Load Game", GW/2 - 50, GH/2 - 20);
    settings = new BitmapTextDisplay("Settings", GW/2 - 50, GH/2 + 20);
@@ -22,15 +22,6 @@ Menu::Menu() {
 
 Menu::~Menu() {
    SDL_FreeSurface(titleImage);
-}
-
-bool Menu::isActive() {
-   if (menuActive) {
-      SDL_ShowCursor(SDL_ENABLE);
-   } else {
-      SDL_ShowCursor(SDL_DISABLE);
-   }
-   return menuActive;
 }
 
 void Menu::update() {
@@ -153,16 +144,18 @@ void Menu::keyUp(int key) {
  */
 void Menu::mouseDown(int button) {
    if (!menuActive) { return; }
-   if (x >= 350 &&
-         x <= 460 &&
-         y >= 225 &&
-         y <= 245) {
+   if (x >= newGame->xCoord &&
+         x <= newGame->xCoord + 100 &&
+         y >= newGame->yCoord - 20 &&
+         y <= newGame->yCoord ) {
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
-   } else if (x >= 350 &&
-         x <= 450 &&
-         y >= 345 &&
-         y <= 365) {
+   }
+   
+   if (x >= quit->xCoord &&
+         x <= quit->xCoord + 50 &&
+         y >= quit->yCoord - 20 &&
+         y <= quit->yCoord ) {
       exit(0);
    }
 }

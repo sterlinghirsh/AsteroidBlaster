@@ -1,18 +1,19 @@
 
-#ifndef __MENU_H__
-#define __MENU_H__
+#ifndef __STOREMENU_H__
+#define __STOREMENU_H__
 
 
 #include "Utility/BitmapTextDisplay.h"
 #include "Utility/InputManager.h"
 
-class Menu : public InputReceiver {
+class StoreMenu : public InputReceiver {
    public:
-   Menu();
-   ~Menu();
+   StoreMenu();
+   ~StoreMenu();
 
-   void draw();
+   void draw(int shards);
    void update();
+   bool isActive();
    
    virtual void keyUp(int key);
    virtual void keyDown(int key);
@@ -25,12 +26,12 @@ class Menu : public InputReceiver {
    
    bool menuActive;
    
-   
    //glut text display
-   BitmapTextDisplay* newGame;
-   BitmapTextDisplay* saveLoadGame;
-   BitmapTextDisplay* settings;
-   BitmapTextDisplay* quit;
+   BitmapTextDisplay* buyRailGun;
+   BitmapTextDisplay* buyPikachusWrath;
+   BitmapTextDisplay* buyTractorBeam;
+   BitmapTextDisplay* done;
+   BitmapTextDisplay* numOfShards;
    
    SDL_Surface *titleImage;
    SDL_Rect src, dest;

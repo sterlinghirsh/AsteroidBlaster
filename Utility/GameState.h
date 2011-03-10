@@ -22,6 +22,7 @@
 #include "Utility/InputManager.h"
 #include "HUD/ProgressBar.h"
 #include "HUD/Minimap.h"
+#include "Utility/StoreMenu.h"
 #include <list>
 #include <sstream>
 
@@ -108,6 +109,7 @@ class GameState : public InputReceiver {
       bool bloom1;
       bool reg;
       bool godMode;
+      StoreMenu* buyMenu;
    
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;

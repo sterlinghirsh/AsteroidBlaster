@@ -22,6 +22,7 @@
 #endif
 
 #include "SDL.h"
+#include "Utility/InputManager.h"
 #define VERT_FOV 50.0
 
 //Global Variables declared
@@ -39,6 +40,7 @@ extern GLuint ramShader;
 extern GLuint particleShader;
 extern SDL_Surface* gDrawSurface;
 extern const SDL_VideoInfo* vidinfo;
+extern InputManager* inputManager;
 
 double p2wx(int);
 double p2wy(int);

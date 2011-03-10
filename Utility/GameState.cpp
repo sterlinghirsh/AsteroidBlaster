@@ -13,6 +13,7 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Particles/Particle.h"
+#include "Utility/Menu.h"
 
 extern double minimapSizeFactor;
 
@@ -138,8 +139,13 @@ GameState::~GameState() {
  * This is the step function.
  */
 void GameState::update(double timeDiff) {
+   if (buyMenu->menuActive) {
+      return;
+   }
    //check if it should go to the next level
-   if(custodian.asteroidCount == 0) {
+   if(custodian.asteroidCount == 2) {
+      SDL_ShowCursor(SDL_ENABLE);
+      buyMenu->menuActive = true;
       nextLevel();
    }
 
@@ -201,7 +207,6 @@ void GameState::drawMinimap() {
  * Draw the main view.
  */
 void GameState::draw() {
-
    /*
    if (thirdPerson) {
       Vector3D newOffset(ship->forward->scalarMultiply(-3));
@@ -244,7 +249,6 @@ void GameState::draw() {
  * Draw the glowing objects.
  */
 void GameState::drawGlow() {
-
    if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
     ship->getCurrentView() == VIEW_THIRDPERSON_GUN) {
       Vector3D newOffset(ship->forward->scalarMultiply(-3));
