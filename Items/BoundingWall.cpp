@@ -48,7 +48,7 @@ BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, in
          }
       }
    }
-   
+   initDisplayList();
 }
 
 int BoundingWall::getSquareX(int squareID) {
@@ -107,6 +107,7 @@ void BoundingWall::constrain(Object3D* item) {
 }
 
 void BoundingWall::draw() {
+   glCallList(linesDisplayList);
    std::vector<GlowSquare*>::iterator square;
    for (square = squares.begin(); square != squares.end();
     ++square) {
@@ -120,4 +121,23 @@ void BoundingWall::update(double timeDiff) {
     ++square) {
       (*square)->update(timeDiff);
    }
+}
+
+void BoundingWall::initDisplayList() {
+   linesDisplayList = glGenLists(1);
+   glNewList(linesDisplayList, GL_COMPILE);
+   // Draw the lines here.
+   glUseProgram(fadeShader);
+   wallColor->setColorWithAlpha(1);
+
+   std::vector<GlowSquare*>::iterator square;
+   for (square = squares.begin(); square != squares.end();
+    ++square) {
+      glBegin(GL_LINE_STRIP);
+      (*square)->drawLines();
+      glEnd();
+   }
+
+   glUseProgram(0);
+   glEndList();
 }

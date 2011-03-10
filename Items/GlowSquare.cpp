@@ -47,6 +47,35 @@ GlowSquare::GlowSquare(Color* _color,
    midpoint4.midpoint(p4, p1);
 }
 
+void GlowSquare::drawLines() {
+   /*
+   // This draws the empty box. Let's do something more interesting.
+   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+   glBegin(GL_QUADS);
+   p1.draw();
+   p2.draw();
+   p3.draw();
+   p4.draw();
+   glEnd();
+   */
+
+   /*
+   p1.draw();
+   midpoint1.draw();
+   p3.draw();
+   midpoint2.draw();
+   */
+   /*
+   midpoint1.draw();
+   midpoint2.draw();
+   midpoint3.draw();
+   midpoint4.draw();
+   */
+   midpoint1.draw();
+   p1.draw();
+   midpoint4.draw();
+}
+
 void GlowSquare::draw() {
    double timeDiff;
    const double fadeTime = 0.75;
@@ -64,37 +93,6 @@ void GlowSquare::draw() {
 
    // If the timeLastHit is after the current time, consider it not hit yet.
    alpha = timeDiff < 0 ? 0 : fadeScale * (fadeTime - clamp(timeDiff, 0, fadeTime));
-
-   color->setColorWithAlpha(1);
-   glUseProgram(fadeShader);
-   /*
-   // This draws the empty box. Let's do something more interesting.
-   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-   glBegin(GL_QUADS);
-   p1.draw();
-   p2.draw();
-   p3.draw();
-   p4.draw();
-   glEnd();
-   */
-
-   glBegin(GL_LINE_STRIP);
-   /*
-   p1.draw();
-   midpoint1.draw();
-   p3.draw();
-   midpoint2.draw();
-   */
-   /*
-   midpoint1.draw();
-   midpoint2.draw();
-   midpoint3.draw();
-   midpoint4.draw();
-   */
-   midpoint1.draw();
-   p1.draw();
-   midpoint4.draw();
-   glEnd();
 
    // This draws the glowing filled in square.
    if (alpha != 0) {

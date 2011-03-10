@@ -43,6 +43,9 @@ class BoundingWall {
       void getSquareCoordsFromObject(Object3D* item, int& squareXIndex, int& squareYIndex);
       GlowSquare* getSquareByID(int index);
       GlowSquare* getSquareByCoords(int x, int y);
+      virtual void initDisplayList(); // Set up the displayList.
+   private:
+      int linesDisplayList;
 };
 
 #endif

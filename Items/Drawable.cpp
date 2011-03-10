@@ -7,6 +7,10 @@
 
 #include "Items/Drawable.h"
 
+/**
+ * We should get rid of the displayListIn thing, I think.
+ * -Sterling
+ */
 Drawable :: Drawable(double x, double y, double z, GLuint displayListIn) : position(new Point3D(x, y, z)) {
    // Initialize some other variables here.
 }
