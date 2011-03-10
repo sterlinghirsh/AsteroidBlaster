@@ -342,7 +342,7 @@ int main(int argc, char* argv[]) {
    Texture::Add("Images/Logo.png", "Logo.png");
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
    Texture::Add("Images/particle.png", "Particle");
-   Texture::Add("Images/stars.bmp", "stars.bmp");
+   Texture::Add("Images/starsdark.bmp", "starsdark.png");
    
    //load the shader files
    elecShader = setShaders( (char *) "./Shaders/elec.vert", (char *) "./Shaders/elec.frag");

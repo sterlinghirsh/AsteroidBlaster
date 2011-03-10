@@ -34,7 +34,7 @@ void Skybox::draw(Camera* camera) {
 void Skybox::drawcube() {
   glColor3f(1.0, 1.0, 1.0); //white
   setMaterial(curMaterial);
-  glBindTexture(GL_TEXTURE_2D, Texture::getTexture("stars.bmp"));
+  glBindTexture(GL_TEXTURE_2D, Texture::getTexture("starsdark.png"));
   glBegin(GL_QUADS);
   
   glTexCoord2f(0.0, 0.0);
