@@ -6,6 +6,7 @@
 
 #include "Shots/ProjectileShot.h"
 #include "Particles/BlasterShotParticle.h"
+#include "Particles/BlasterImpactParticle.h"
    
 const int particleCycle = 100;
 
@@ -54,11 +55,11 @@ void ProjectileShot::update(double timeDiff) {
 }
 
 void ProjectileShot::handleCollision(Object3D* other) {
-   const int particlesToEmit = 20;
+   const int particlesToEmit = 10;
    
    static Vector3D particleVariation;
    static Vector3D positionDifference;
-   const double particleSpeed = 5;
+   const double particleSpeed = 15;
 
    Asteroid3D* asteroid;
    // If we hit an asteroid.
@@ -70,7 +71,7 @@ void ProjectileShot::handleCollision(Object3D* other) {
          particleVariation.randomMagnitude();
          particleVariation.setLength(particleSpeed);
          particleVariation.addUpdate(positionDifference);
-         BlasterShotParticle::Add(new Point3D(*position), 
+         BlasterImpactParticle::Add(new Point3D(*position), 
           new Vector3D(particleVariation));
       }
    }
