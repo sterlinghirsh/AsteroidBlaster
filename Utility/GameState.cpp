@@ -140,12 +140,14 @@ GameState::~GameState() {
  */
 void GameState::update(double timeDiff) {
    if (buyMenu->menuActive) {
+      buyMenu->update();
       return;
    }
    //check if it should go to the next level
    if(custodian.asteroidCount == 0) {
       SDL_ShowCursor(SDL_ENABLE);
       buyMenu->menuActive = true;
+      buyMenu->timeStarted = doubleTime();
       nextLevel();
    }
 
@@ -156,9 +158,12 @@ void GameState::update(double timeDiff) {
    // Determine whether or not the game should continue running
    if (ship->getHealth() <= 0) {
       gameIsRunning = false;
-   } else if (ship->getScore() >= scoreToWin) {
+   } 
+   /*
+   else if (ship->getScore() >= scoreToWin) {
       gameIsRunning = false;
    }
+   */
 
 
    cube->constrain(ship);

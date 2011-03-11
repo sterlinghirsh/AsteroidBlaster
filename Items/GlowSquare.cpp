@@ -12,6 +12,7 @@ GlowSquare::GlowSquare(Color* _color,
  float size, float _x, float _y, float _z, BoundingWall* _wall,
  int _xIndex, int _yIndex) : 
  color(_color), wall(_wall), x(_xIndex), y(_yIndex) {
+   timeLastHit = 0;
    if (wall->wallID % 3 == 0) {
       // Top or bottom
       p1.update(_x, _y, _z);

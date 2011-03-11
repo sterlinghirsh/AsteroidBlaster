@@ -14,6 +14,7 @@ class StoreMenu : public InputReceiver {
    void draw(int shards);
    void update();
    bool isActive();
+   double timeStarted;
    
    virtual void keyUp(int key);
    virtual void keyDown(int key);
@@ -25,6 +26,8 @@ class StoreMenu : public InputReceiver {
    double x, y;
    
    bool menuActive;
+
+   double timeout;
    
    //glut text display
    BitmapTextDisplay* buyRailGun;
@@ -33,6 +36,7 @@ class StoreMenu : public InputReceiver {
    BitmapTextDisplay* done;
    BitmapTextDisplay* buyHealth;
    BitmapTextDisplay* numOfShards;
+   BitmapTextDisplay* timeLeftText;
    
    SDL_Surface *titleImage;
    SDL_Rect src, dest;

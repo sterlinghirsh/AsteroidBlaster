@@ -34,7 +34,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    // Start the AI as disabled
    enabled = false;
    //TODO possibly more stuff here.
-   lastTarget == NULL;
+   lastTarget = NULL;
 }
 
 double min(double a, double b) {

@@ -301,9 +301,11 @@ void Object3D::addInstantAcceleration(Vector3D* newAccel) {
 
 void Object3D::updateAcceleration(double timeDiff) {
    acceleration->updateMagnitude(0, 0, 0);
+   Vector3D* tempAccel;
    while (!accelerations.empty()) {
-      acceleration->addUpdate(*accelerations.front());
-      delete accelerations.front();
+      tempAccel = accelerations.front();
+      acceleration->addUpdate(*tempAccel);
+      delete tempAccel;
       accelerations.pop();
    }
 }

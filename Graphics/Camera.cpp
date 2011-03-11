@@ -23,6 +23,7 @@ Camera::Camera(bool lockUp) {
 
 Camera::Camera(Object3D* object) {
    lockUpVector = false;
+   shakeAmount = 0;
    offset = new Vector3D(0, 0, 0);
    viewFrom(object);
 }

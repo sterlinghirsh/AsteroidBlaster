@@ -16,6 +16,11 @@ StoreMenu::StoreMenu() {
    
    
    numOfShards = new BitmapTextDisplay("Shards: ", 5, "",50, 50);
+
+   timeout = 10; // Seconds;
+   timeLeftText = new BitmapTextDisplay("Time Left: ", timeout, " Seconds", 50, 70);
+
+   timeStarted = 0;
    
 }
 
@@ -34,7 +39,10 @@ bool StoreMenu::isActive() {
 }
 
 void StoreMenu::update() {
-
+   double timeLeft = timeout - (doubleTime() - timeStarted);
+   timeLeftText->updateBody(timeLeft);
+   if (timeLeft < 0)
+      menuActive = false;
 }
 
 void StoreMenu::draw(int shards) {
@@ -65,6 +73,7 @@ void StoreMenu::draw(int shards) {
       buyHealth->draw();
       done->draw();
       numOfShards->draw();
+      timeLeftText->draw();
 
       glEnable(GL_LIGHTING);
       usePerspective();

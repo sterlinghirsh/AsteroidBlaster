@@ -398,7 +398,7 @@ int main(int argc, char* argv[]) {
    inputManager->addReceiver(gameState->buyMenu);
 
    //declare the event that will be reused
-   SDL_Event event;
+   SDL_Event* event = new SDL_Event();
 
    while (running) {
       updateDoubleTime();
@@ -406,14 +406,15 @@ int main(int argc, char* argv[]) {
          mainMenu->draw();
          timerFunc(mainMenu->menuActive);
       } else if (gameState->buyMenu->menuActive) {
+         gameState->buyMenu->update();
          gameState->buyMenu->draw(gameState->ship->nShards);
          timerFunc(gameState->buyMenu);
       } else if (gameState->isGameRunning()) {
          timerFunc(false);
          display();
       }
-      while (SDL_PollEvent(&event)) {
-         inputManager->update(event);
+      while (SDL_PollEvent(event)) {
+         inputManager->update(*event);
       }
    }
    delete inputManager;
