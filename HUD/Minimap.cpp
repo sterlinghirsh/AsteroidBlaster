@@ -9,12 +9,21 @@
 #include "Utility/GlobalUtility.h"
 #include "Items/Object3D.h"
 
-#define DEFAULT_DISPLAYSIZE 0.5
+#define DEFAULT_DISPLAYSIZE 0.25
+#define MAX_DISPLAYSIZE 1.0
+#define MIN_DISPLAYSIZE 0
+
 #define DEFAULT_ZOOMLEVEL 80
+#define MAX_ZOOMLEVEL 80
+#define MIN_ZOOMLEVEL 10
 
 Minimap::Minimap(AsteroidShip* _ship) :
  ship(_ship), displaySize(DEFAULT_DISPLAYSIZE), zoomLevel(DEFAULT_ZOOMLEVEL) {
-   // Do nothing.
+   adjustZoomDirection = adjustDisplaySizeDirection = 0;
+   targetDisplaySize = DEFAULT_DISPLAYSIZE;
+   targetZoomLevel = DEFAULT_ZOOMLEVEL;
+   oldDisplaySize = DEFAULT_DISPLAYSIZE;
+   hidden = false;
 }
 
 void Minimap::drawLines(std::list<Object3D*>* objects) {
@@ -216,4 +225,46 @@ void Minimap::setDisplaySize(float newDisplaySize) {
  */
 void Minimap::setZoomLevel(float newZoomLevel) {
    zoomLevel = newZoomLevel;
+}
+
+/**
+ * Adjust the zoom level;
+ */
+void Minimap::adjustZoom(double changeAmount) {
+   targetZoomLevel += changeAmount;
+   targetZoomLevel = clamp(targetZoomLevel, MIN_ZOOMLEVEL, MAX_ZOOMLEVEL);
+}
+
+/**
+ * Adjust the display size.
+ */
+void Minimap::adjustDisplaySize(double changeAmount) {
+   targetDisplaySize += changeAmount;
+   targetDisplaySize = clamp(targetDisplaySize, MIN_DISPLAYSIZE, MAX_DISPLAYSIZE);
+}
+
+/**
+ * Update aspects of the minimap.
+ */
+void Minimap::update(double timeDiff) {
+   const double zoomScale = 40;
+   const double changeScale = 0.5;
+   adjustZoom(timeDiff * zoomScale * adjustZoomDirection);
+   adjustDisplaySize(timeDiff * changeScale * adjustDisplaySizeDirection);
+
+   double zoomIncrement = (targetZoomLevel - zoomLevel) * timeDiff * 2;
+   double sizeIncrement = (targetDisplaySize - displaySize) * timeDiff * 10;
+   zoomLevel += zoomIncrement;
+   displaySize += sizeIncrement;
+}
+
+void Minimap::toggle() {
+   if (hidden) {
+      targetDisplaySize = oldDisplaySize;
+      hidden = false;
+   } else {
+      oldDisplaySize = targetDisplaySize;
+      targetDisplaySize = 0;
+      hidden = true;
+   }
 }

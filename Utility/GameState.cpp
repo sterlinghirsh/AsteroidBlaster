@@ -199,6 +199,7 @@ void GameState::update(double timeDiff) {
    weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
    healthBar->setAmount(ship->getHealth() / 100.0);
    cube->update(timeDiff);
+   minimap->update(timeDiff);
 }
 
 /**
@@ -721,36 +722,22 @@ void GameState::keyDown(int key) {
       break;
       // Minimap Display Size
    case SDLK_1:
-      minimap->setDisplaySize(1);
+      minimap->adjustDisplaySizeDirection = 1;
       break;
    case SDLK_2:
-      minimap->setDisplaySize(0.5);
-      break;
-   case SDLK_3:
-      minimap->setDisplaySize(0.333);
-      break;
-   case SDLK_4:
-      minimap->setDisplaySize(0.25);
+      minimap->adjustDisplaySizeDirection = -1;
       break;
    case SDLK_0:
-      minimap->setDisplaySize(0);
+      minimap->toggle();
       break;
       // Minimap Zoom
-   case SDLK_5:
-      minimap->setZoomLevel(80);
+   case SDLK_3:
+      minimap->adjustZoomDirection = 1;
       break;
-   case SDLK_6:
-      minimap->setZoomLevel(60);
+   case SDLK_4:
+      minimap->adjustZoomDirection = -1;
       break;
-   case SDLK_7:
-      minimap->setZoomLevel(40);
-      break;
-   case SDLK_8:
-      minimap->setZoomLevel(20);
-      break;
-   case SDLK_9:
-      minimap->setZoomLevel(10);
-      break;
+
    case SDLK_KP_ENTER:
       if (Mix_PausedMusic()) {
          Music::resumeMusic();
@@ -858,6 +845,20 @@ void GameState::keyUp(int key) {
 
    case SDLK_b:
       ship->setBrake(false);
+      break;
+   // Minimap Size
+   case SDLK_1:
+      minimap->adjustDisplaySizeDirection = 0;
+      break;
+   case SDLK_2:
+      minimap->adjustDisplaySizeDirection = 0;
+      break;
+   // Minimap Zoom
+   case SDLK_3:
+      minimap->adjustZoomDirection = 0;
+      break;
+   case SDLK_4:
+      minimap->adjustZoomDirection = 0;
       break;
    }
 }
