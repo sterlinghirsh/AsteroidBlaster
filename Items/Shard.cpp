@@ -411,6 +411,7 @@ void Shard::handleCollision(Object3D* other) {
    AsteroidShip* ship;
    Asteroid3D* asteroid;
    Shot* shot;
+   Shard* otherShard;
    ElectricityShot* Eshot;
    TractorBeamShot* TBshot; // Not tuberculosis
    if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
@@ -451,6 +452,13 @@ void Shard::handleCollision(Object3D* other) {
       }
       velocity->updateMagnitude(*(shot->position), *position);
       velocity->setLength(speed);
+   } else if ((otherShard = dynamic_cast<Shard*>(other)) != NULL) {
+      Vector3D* push = new Vector3D(*other->position, *position);
+      if (push->getComparisonLength() == 0) {
+         push->randomMagnitude();
+      }
+      push->setLength(5);
+      addAcceleration(push);
    }
 }
 

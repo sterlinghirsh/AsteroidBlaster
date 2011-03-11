@@ -311,14 +311,6 @@ void Asteroid3D::handleCollision(Object3D* other) {
          if (d == 0) {
             //printf("stroid is stuck\n");
             push->randomMagnitude();
-            /*
-            shouldRemove = true;
-            if (radius > 2) {
-               int dimension = rand() % 3;
-               custodian->add(makeChild(0, dimension));
-               custodian->add(makeChild(1, dimension));
-            }
-            */
          }
          push->setLength(0.1); // Units per sec per sec.
          addAcceleration(push);
