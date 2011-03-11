@@ -14,7 +14,7 @@
 #define MIN_DISPLAYSIZE 0
 
 #define DEFAULT_ZOOMLEVEL 80
-#define MAX_ZOOMLEVEL 80
+#define MAX_ZOOMLEVEL 140
 #define MIN_ZOOMLEVEL 20
 
 Minimap::Minimap(AsteroidShip* _ship) :
@@ -48,22 +48,20 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
    const int ringsToDraw = 4;
    const float ringIncrement = zoomLevel / ringsToDraw;
    float ringDiameter;
-   
-   // Find the highest power of 2 under the zoom level.
-   for (ringDiameter = 8; (ringDiameter * 2) <= zoomLevel; ringDiameter *= 2) {
-      // Do nothing;
-   }
 
    glPushMatrix();
       glScalef(scaleFactor, scaleFactor, scaleFactor);
 
       glDisable(GL_LIGHTING);
-      glColor4f(1, 1, 1, 1);
+      float distanceFromEdge;
+      float alpha;
       glPushMatrix();
          glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
-         for (int i = 1; i <= ringsToDraw; i *= 2) {
+         for (ringDiameter = 8; ringDiameter <= zoomLevel; ringDiameter *= 2) {
+            distanceFromEdge = zoomLevel - ringDiameter;
+            alpha = clamp(distanceFromEdge / 5, 0, 0.5);
+            glColor4f(1, 1, 0, alpha);
             gluDisk(quadric, ringDiameter - (ringWidth / 2), ringDiameter + (ringWidth / 2) ,16,2);
-            ringDiameter /= 2;
          }
       glPopMatrix();
       glEnable(GL_LIGHTING);
@@ -252,7 +250,7 @@ void Minimap::adjustDisplaySize(double changeAmount) {
  * Update aspects of the minimap.
  */
 void Minimap::update(double timeDiff) {
-   const double zoomScale = 40;
+   const double zoomScale = 80;
    const double changeScale = 0.5;
    adjustZoom(timeDiff * zoomScale * adjustZoomDirection);
    adjustDisplaySize(timeDiff * changeScale * adjustDisplaySizeDirection);
