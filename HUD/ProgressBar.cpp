@@ -31,7 +31,7 @@ void ProgressBar::draw() {
       glVertex3f(-outerBoxThickness, -outerBoxThickness, backgroundZOffset);
 
       // Color goes from red to green.
-      glColor3f(1 - amount, amount, 0);
+      glColor3f(2 * (1 - amount), 2 * amount, 0);
       
       glVertex3f(0, drawHeight, 0); // Top left
       glVertex3f(width, drawHeight, 0); // top Right
