@@ -21,7 +21,7 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
    // Now draw the lines.
    // Load just the rotation matrix.
    static Matrix4 modelViewMatrix;
-   const float ringWidth = 1;
+   const float ringWidth = 1 / displaySize;
    double radius2D; // Radius when an object is projected onto the forward-right plane of the ship.
    double radius3D; // Radius from the ship in 3D space.
    const float scaleFactor = 1 / zoomLevel;
@@ -36,10 +36,24 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
       modelViewMatrix.loadModelviewMatrix();
    glPopMatrix();
 
+   const int ringsToDraw = 4;
+   const float ringIncrement = zoomLevel / ringsToDraw;
+   float ringDiameter;
 
    glPushMatrix();
       glScalef(scaleFactor, scaleFactor, scaleFactor);
       setMaterial(WhiteSolid);
+
+      glPushMatrix();
+         glEnable(GL_LIGHTING);
+         glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
+         for (int i = 1; i <= ringsToDraw; ++i) {
+            ringDiameter = ringIncrement * i;
+            gluDisk(quadric, ringDiameter - (ringWidth / 2), ringDiameter + (ringWidth / 2) ,16,2);
+         }
+      glDisable(GL_LIGHTING);
+      glPopMatrix();
+
       for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
          // Make sure it's not null, & then draw it in the minimap
          if (*listIter != NULL && (*listIter)->shouldDrawInMinimap && *listIter != ship) {
@@ -62,12 +76,14 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
 
             // Draw a disc.
             // This is the way that one game did it with the circles on a plane.
+            /*
             glPushMatrix();
                glEnable(GL_LIGHTING);
                glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
                gluDisk(quadric, radius2D - (ringWidth / 2), radius2D + (ringWidth / 2) ,16,2);
                glDisable(GL_LIGHTING);
             glPopMatrix();
+            */
 
             glDisable(GL_LIGHTING);
             glBegin(GL_LINES);
@@ -177,8 +193,9 @@ void Minimap::draw() {
       setMaterial(GrayTransparent);
       //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_CULL_FACE);
-      ship->glRotate(true);
+      ship->glRotate(false);
       glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+      glDisable(GL_COLOR_MATERIAL);
 
       gluSphere(quadric, 1, 10, 10);
       glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
