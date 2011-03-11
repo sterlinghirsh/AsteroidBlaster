@@ -15,7 +15,7 @@
 
 #define DEFAULT_ZOOMLEVEL 80
 #define MAX_ZOOMLEVEL 80
-#define MIN_ZOOMLEVEL 10
+#define MIN_ZOOMLEVEL 20
 
 Minimap::Minimap(AsteroidShip* _ship) :
  ship(_ship), displaySize(DEFAULT_DISPLAYSIZE), zoomLevel(DEFAULT_ZOOMLEVEL) {
@@ -48,20 +48,25 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
    const int ringsToDraw = 4;
    const float ringIncrement = zoomLevel / ringsToDraw;
    float ringDiameter;
+   
+   // Find the highest power of 2 under the zoom level.
+   for (ringDiameter = 8; (ringDiameter * 2) <= zoomLevel; ringDiameter *= 2) {
+      // Do nothing;
+   }
 
    glPushMatrix();
       glScalef(scaleFactor, scaleFactor, scaleFactor);
-      setMaterial(WhiteSolid);
 
-      glPushMatrix();
-         glEnable(GL_LIGHTING);
-         glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
-         for (int i = 1; i <= ringsToDraw; ++i) {
-            ringDiameter = ringIncrement * i;
-            gluDisk(quadric, ringDiameter - (ringWidth / 2), ringDiameter + (ringWidth / 2) ,16,2);
-         }
       glDisable(GL_LIGHTING);
+      glColor4f(1, 1, 1, 1);
+      glPushMatrix();
+         glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
+         for (int i = 1; i <= ringsToDraw; i *= 2) {
+            gluDisk(quadric, ringDiameter - (ringWidth / 2), ringDiameter + (ringWidth / 2) ,16,2);
+            ringDiameter /= 2;
+         }
       glPopMatrix();
+      glEnable(GL_LIGHTING);
 
       for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
          // Make sure it's not null, & then draw it in the minimap
