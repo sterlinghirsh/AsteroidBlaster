@@ -42,7 +42,10 @@ class FlyingAI : public AI {
    AsteroidShip* ship;
    Radar* radar;
    bool enabled;
+   Point3D *goalPoint;
+   std::vector<Point3D> *waypoints;
    FlyMode curMode;
+
    
    // Control Functions
    void faceDirection( Vector3D* desiredForward );

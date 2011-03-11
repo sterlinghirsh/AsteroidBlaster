@@ -18,6 +18,7 @@
 #include "Utility/Matrix4.h"
 #include "math.h"
 
+#include <stdio.h>
 #include <iostream>
 
 using namespace std;
@@ -30,6 +31,28 @@ FlyingAI::FlyingAI(AsteroidShip* owner) {
    ship = owner;
    radar = new Radar(ship);
    enabled = false;
+   
+   
+   goalPoint = new Point3D(0,0,0);
+   waypoints = new std::vector<Point3D>(14);
+   
+   waypoints->push_back(Point3D(34,0,0));
+   waypoints->push_back(Point3D(-34,0,0));
+   waypoints->push_back(Point3D(0,34,0));
+   waypoints->push_back(Point3D(0,-34,0));
+   waypoints->push_back(Point3D(0,0,34));
+   waypoints->push_back(Point3D(0,0,-34));
+   
+   waypoints->push_back(Point3D( 34, 34, 34));
+   waypoints->push_back(Point3D( 34, 34,-34));
+   waypoints->push_back(Point3D( 34,-34, 34));
+   waypoints->push_back(Point3D( 34,-34,-34));
+   waypoints->push_back(Point3D(-34, 34, 34));
+   waypoints->push_back(Point3D(-34, 34,-34));
+   waypoints->push_back(Point3D(-34,-34, 34));
+   waypoints->push_back(Point3D(-34,-34,-34));
+   
+
 }
 
 /**
@@ -68,9 +91,9 @@ Point3D* FlyingAI :: getClosestShard() {
       if (*iter == NULL || (dynamic_cast<Shard*>(*iter) == NULL)) {
          continue;
       }  
-      tempDist = sqrt( pow((*iter)->position->x - ship->position->x, 2) +
-                       pow((*iter)->position->y - ship->position->y, 2) +
-                       pow((*iter)->position->z - ship->position->z, 2)  );
+      tempDist = pow((*iter)->position->x - ship->position->x, 2) +
+                 pow((*iter)->position->y - ship->position->y, 2) +
+                 pow((*iter)->position->z - ship->position->z, 2)  ;
          
       if(shortestDist > tempDist) {
          shortestDist = tempDist;
@@ -108,38 +131,45 @@ Vector3D* FlyingAI :: getFlyDirection() {
       sum->normalize();
       return sum; 
    }
-
+   
+   
+   // Add goalPoint
+   v = Vector3D(*ship->position, *goalPoint);
+   v.normalize();
+   v.scalarMultiplyUpdate(2.5);
+   sum->addUpdate(v);
+   
    // X walls   
    v = Vector3D(Point3D(0,0,0), Point3D(1,0,0));
    dist = gameState->getWallxMax() - ship->position->x;
-   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
    v = Vector3D(Point3D(0,0,0), Point3D(-1,0,0));
    dist = ship->position->x - gameState->getWallxMin();
-   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
 
    // Y walls
    v = Vector3D(Point3D(0,0,0), Point3D(0,1,0));
    dist = gameState->getWallyMax() - ship->position->y;
-   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
    v = Vector3D(Point3D(0,0,0), Point3D(0,-1,0));
    dist = ship->position->y - gameState->getWallyMin();
-   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);   
    
    // Z Walls   
    v = Vector3D(Point3D(0,0,0), Point3D(0,0,1));
    dist = gameState->getWallzMax() - ship->position->z;
-   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
    v = Vector3D(Point3D(0,0,0), Point3D(0,0,-1));
    dist = ship->position->z - gameState->getWallzMin();
-   v.scalarMultiplyUpdate(-0.75 * fmin(Max_Dist, Max_Dist / dist));
+   v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
    // Add asteroid vectors
@@ -196,9 +226,9 @@ Vector3D* FlyingAI :: getPointDirection() {
    
    
    // Add a small weight towards the center
-   //sum->addUpdate( Vector3D(*ship->position, Point3D(0,0,0)) );
-   //sum->normalize();   
-   //sum->scalarMultiplyUpdate(0.005);
+   sum->addUpdate( Vector3D(*ship->position, Point3D(0,0,0)) );
+   sum->normalize();   
+   sum->scalarMultiplyUpdate(0.00001);
    
    for( i = asteroids->begin(); i != asteroids->end(); ++i) {
    
@@ -210,7 +240,7 @@ Vector3D* FlyingAI :: getPointDirection() {
       {
          astrToShip.normalize();
          
-         astrToShip.scalarMultiplyUpdate(-1 * dist / (Max_Dist * Max_Dist) + 1);
+         astrToShip.scalarMultiplyUpdate(-1 * dist / (Max_Dist) + 1);
       
          sum->addUpdate(astrToShip);
       }
@@ -266,7 +296,7 @@ void FlyingAI :: flyDirection ( Vector3D* desiredTraj ) {
 }
 
 void FlyingAI :: faceDirection( Vector3D* desiredForward ) {
-
+   const double PI = 3.14159265;
    double diff_front, diff_up, diff_right;
    
    // do some math to figure out the yaw and pitch difference from the current
@@ -278,9 +308,9 @@ void FlyingAI :: faceDirection( Vector3D* desiredForward ) {
    diff_front = acos(proj.dot(*ship->forward));
    diff_right = acos(proj.dot(*ship->right));
    
-   if(diff_front > 0.1) {
-      if(diff_right < 0.5 * M_PI) diff_front *= -1;
-      ship->setYawSpeed(diff_front / M_PI);
+   if(diff_front > 0.0) {
+      if(diff_right < 0.5 * PI) diff_front *= -1;
+      ship->setYawSpeed(1.75 * diff_front / PI);
    } else {
       ship->setYawSpeed(0);
    }
@@ -291,9 +321,9 @@ void FlyingAI :: faceDirection( Vector3D* desiredForward ) {
    diff_front = acos(proj.dot(*ship->forward));
    diff_up = acos(proj.dot(*ship->up));
    
-   if(diff_front > 0.1) {
-      if(diff_up < 0.5 * M_PI) diff_front *= -1;
-      ship->setPitchSpeed(diff_front / M_PI);
+   if(diff_front > 0.0) {
+      if(diff_up < 0.5 * PI) diff_front *= -1;
+      ship->setPitchSpeed(1.75 * diff_front / PI);
    } else {
       ship->setPitchSpeed(0);
    }
@@ -321,6 +351,17 @@ int FlyingAI :: think(double dt) {
    switch (curMode) {
 
    default:
+   
+      // Check waypoint
+      Point3D diff = *(ship->position) - *goalPoint;
+      double goalDist = sqrt ( diff * diff );
+      if( goalDist < 3 ) {
+         // pick a random point
+         int index = (int)(rand() % waypoints->size());
+         fprintf(stderr, "Index: %d \n", index); 
+         *goalPoint = (*waypoints)[index];
+      }
+   
       // Get relevent vectors
       desiredForward = getPointDirection();
       desiredTraj = getFlyDirection();
