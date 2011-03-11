@@ -21,7 +21,7 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
    // Now draw the lines.
    // Load just the rotation matrix.
    static Matrix4 modelViewMatrix;
-   const float ringWidth = 1 / displaySize;
+   const float ringWidth = (zoomLevel / 80) / displaySize;
    double radius2D; // Radius when an object is projected onto the forward-right plane of the ship.
    double radius3D; // Radius from the ship in 3D space.
    const float scaleFactor = 1 / zoomLevel;

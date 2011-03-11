@@ -79,6 +79,7 @@ void display() {
 
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    usePerspective();
 
    glMatrixMode(GL_MODELVIEW);
@@ -131,6 +132,8 @@ gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
 glPopMatrix();
 // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
 gameState->drawMinimap();
+      
+
 SDL_GL_SwapBuffers();
 displayTime += doubleTime() - startTime;
 ++curFrame;
