@@ -174,7 +174,13 @@ bool BeamShot::detectCollision(Object3D* other, bool checkOther) {
 
 void BeamShot::handleCollision(Object3D* other) {
    //printf("Distance: %f\n", position->distanceFrom(*other->position));
-   if (other == owner || hitYet || curFrame != firstFrame)
+   if (other == owner || hitYet || (curFrame - 1) > firstFrame)
+      return;
+   // Only count hits on Asteroids and Shards.
+   // TODO: Add ship.
+   if (dynamic_cast<Asteroid3D*>(other) == NULL && 
+    dynamic_cast<Shard*>(other) == NULL &&
+    dynamic_cast<AsteroidShip*>(other) == NULL)
       return;
    hitYet = true;
    hitItem = other;
