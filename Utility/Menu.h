@@ -3,7 +3,7 @@
 #define __MENU_H__
 
 
-#include "Utility/BitmapTextDisplay.h"
+#include "Utility/Text.h"
 #include "Utility/InputManager.h"
 
 class Menu : public InputReceiver {
@@ -27,10 +27,10 @@ class Menu : public InputReceiver {
    
    
    //glut text display
-   BitmapTextDisplay* newGame;
-   BitmapTextDisplay* saveLoadGame;
-   BitmapTextDisplay* settings;
-   BitmapTextDisplay* quit;
+   Text* newGame;
+   Text* saveLoadGame;
+   Text* settings;
+   Text* quit;
    
    SDL_Surface *titleImage;
    SDL_Rect src, dest;

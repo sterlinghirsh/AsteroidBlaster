@@ -17,10 +17,9 @@
 #include "Graphics/Camera.h"
 #include "Particles/Particle.h"
 #include "Items/BoundingSpace.h"
-#include "Utility/BitmapTextDisplay.h"
+#include "Utility/Text.h"
 #include "Utility/GameState.h"
 #include "Utility/Menu.h"
-#include "Utility/StoreMenu.h"
 #include "Utility/InputManager.h"
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
@@ -160,7 +159,12 @@ void init() {
       std::cerr << "Couldn't get video settings information! " << SDL_GetError() << std::endl;
       exit(1);
    }
-
+   
+   if (TTF_Init()) {
+      std::cerr << TTF_GetError() << std::endl;
+      exit(1);
+   }
+   
    //allocate channels for sound effects
    //SoundEffect::numChannels = Mix_AllocateChannels(32);
    SoundEffect::numChannels = Mix_AllocateChannels(16);
@@ -287,7 +291,7 @@ void init() {
    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-   glBlendEquation(GL_FUNC_ADD);
+   //glBlendEquation(GL_FUNC_ADD);
 
 }
 
@@ -394,11 +398,9 @@ int main(int argc, char* argv[]) {
    
    //Initialize the input manager
    inputManager = new InputManager();
-   gameState->buyMenu = new StoreMenu();
    //Connect the input manager to the gameState
    inputManager->addReceiver(gameState);
    inputManager->addReceiver(mainMenu);
-   inputManager->addReceiver(gameState->buyMenu);
 
    //declare the event that will be reused
    SDL_Event* event = new SDL_Event();
@@ -408,10 +410,6 @@ int main(int argc, char* argv[]) {
       if (mainMenu->menuActive) {
          mainMenu->draw();
          timerFunc(mainMenu->menuActive);
-      } else if (gameState->buyMenu->menuActive) {
-         gameState->buyMenu->update();
-         gameState->buyMenu->draw(gameState->ship->nShards);
-         timerFunc(gameState->buyMenu);
       } else if (gameState->isGameRunning()) {
          timerFunc(false);
          display();

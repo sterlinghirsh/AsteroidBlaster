@@ -17,12 +17,11 @@
 #include "Graphics/Sprite.h"
 #include "Particles/Particle.h"
 #include "Graphics/Camera.h"
-#include "Utility/BitmapTextDisplay.h"
+#include "Utility/Text.h"
 #include "Utility/Custodian.h"
 #include "Utility/InputManager.h"
 #include "HUD/ProgressBar.h"
 #include "HUD/Minimap.h"
-#include "Utility/StoreMenu.h"
 #include <list>
 #include <sstream>
 
@@ -37,7 +36,7 @@ class GameState : public InputReceiver {
       /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
        * update it in updateText(), and make it draw in drawAllText().
        */
-      BitmapTextDisplay *FPSText,
+      Text *FPSText,
                         *numAsteroidsText,
                         *numShardsText,
                         *scoreText,
@@ -109,7 +108,6 @@ class GameState : public InputReceiver {
       bool bloom1;
       bool reg;
       bool godMode;
-      StoreMenu* buyMenu;
    
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;

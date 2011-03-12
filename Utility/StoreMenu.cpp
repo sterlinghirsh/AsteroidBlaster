@@ -106,7 +106,7 @@ void StoreMenu::draw(int shards) {
       glColor3f(1.0, 1.0, 1.0);
 
       /* Select Our Texture */
-      glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Logo.png") );
+      glBindTexture( GL_TEXTURE_2D, Texture::getTexture("StoreLogo") );
 
       /* NOTE:
       *   The x coordinates of the glTexCoord2f function need to inverted
