@@ -20,6 +20,7 @@
 #include <algorithm>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "Particles/ElectricityImpactParticle.h"
 
 using namespace std;
 
@@ -363,6 +364,30 @@ void Asteroid3D::handleCollision(Object3D* other) {
             velocity->updateMagnitude(*lawnMowerShot->position, *position);
          } else if (dynamic_cast<ElectricityShot*>(other) != NULL) {
             health = health - .05;
+            const int numElecParticles = 1;
+            // First calculate hit point.
+            Vector3D shotDirection(*shot->velocity);
+            shotDirection.normalize();
+            Vector3D shotToAsteroid(*shot->position, *position);
+            double shotToAsteroidDistance = shotToAsteroid.dot(shotDirection);
+            shotDirection.setLength(shotToAsteroidDistance);
+            Point3D closestPoint(*shot->position);
+            shotDirection.movePoint(closestPoint);
+            double distanceFromCenter = closestPoint.distanceFrom(*position);
+            double halfThickness = sqrt((radius * radius) - (distanceFromCenter * distanceFromCenter));
+            shotDirection.setLength(halfThickness);
+            shotDirection.movePoint(closestPoint, -halfThickness);
+            Vector3D centerToImpactPoint(*position, closestPoint);
+            centerToImpactPoint.setLength(5);
+
+            for (int i = 0; i < numElecParticles; ++i) {
+               Point3D* particleStartPoint = new Point3D(closestPoint);
+               Vector3D* particleDirection = new Vector3D();
+               particleDirection->randomMagnitude();
+               particleDirection->setLength(3);
+               particleDirection->addUpdate(centerToImpactPoint);
+               ElectricityImpactParticle::Add(particleStartPoint, particleDirection);
+            }
          }
          else if (dynamic_cast<RamShot*>(other) != NULL) {
             health = 0;
