@@ -215,13 +215,15 @@ void Asteroid3D::draw() {
    if (isTargeted()) {
       glColor3f(1.0f, 0.0f, 0.0f);
    } else {
-      glColor3f(0.0, 0.0, 0.0);
+      //glColor3f(0.0, 0.0, 0.0);
+      glColor3f(1.0, 1.0, 1.0);
    }
 
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   mesh.draw(false);
+   //mesh.draw(false);
+   mesh.drawTextured(false, Texture::getTexture("AsteroidSurface"));
    glDisable(GL_POLYGON_OFFSET_FILL);
 
    //if (health == 1) {

@@ -14,8 +14,11 @@
 
 struct MeshPoint : public Point3D {
    Vector3D normal;
+   bool texDefined;
+   float texX, texY;
    MeshPoint(float xIn = 0, float yIn = 0, float zIn = 0);
-   void draw(bool drawNormal);
+   void setTexPoint(float xIn, float yIn);
+   void draw(bool drawNormal, bool drawTex);
 };
 
 #endif

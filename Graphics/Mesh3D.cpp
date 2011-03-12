@@ -14,29 +14,28 @@ Mesh3D::Mesh3D() : drawNormals(false) {
    xMax = xMin = yMax = yMin = zMax = zMin = 0;
 }
 
+void Mesh3D::drawTextured(bool drawSmooth, GLuint tex) {
+   glEnable(GL_TEXTURE_2D);
+   glBindTexture(GL_TEXTURE_2D, tex);
+   draw(drawSmooth, true);
+   glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void Mesh3D::drawLines(bool drawSmooth) {
    glDisable(GL_LIGHTING);
    glBegin(GL_LINE_LOOP);
-   for (unsigned int i = 0; i < faces.size(); ++i) {
-      if (!drawSmooth)
-         faces[i].normal.addNormal();
-      points[faces[i].p1].draw(drawSmooth);
-      points[faces[i].p2].draw(drawSmooth);
-      points[faces[i].p3].draw(drawSmooth);
-   }
+   drawPoints(drawSmooth);
    glEnd();
    glEnable(GL_LIGHTING);
 }
 
 void Mesh3D::draw(bool drawSmooth) {
+   draw(drawSmooth, false);
+}
+
+void Mesh3D::draw(bool drawSmooth, bool drawTex) {
    glBegin(GL_TRIANGLES);
-   for (unsigned int i = 0; i < faces.size(); ++i) {
-      if (!drawSmooth)
-         faces[i].normal.addNormal();
-      points[faces[i].p1].draw(drawSmooth);
-      points[faces[i].p2].draw(drawSmooth);
-      points[faces[i].p3].draw(drawSmooth);
-   }
+   drawPoints(drawSmooth, drawTex);
    glEnd();
 
    if (drawNormals) {
@@ -54,6 +53,62 @@ void Mesh3D::draw(bool drawSmooth) {
       }
       glEnable(GL_LIGHTING);
    }
+}
+
+void Mesh3D::drawPoints(bool drawSmooth) {
+   drawPoints(drawSmooth, false);
+}
+
+void Mesh3D::drawPoints(bool drawSmooth, bool drawTex) {
+   for (unsigned int i = 0; i < faces.size(); ++i) {
+      if (!drawSmooth)
+         faces[i].normal.addNormal();
+      /*
+      Vector3D v1 = Vector3D(points[faces[i].p1], points[faces[i].p2]);
+      Vector3D v2 = Vector3D(points[faces[i].p1], points[faces[i].p3]);
+      double x1 = 0.0;
+      double x2 = v1.getLength();
+      double x3 = v1.dot(v2) / (v1.getLength());
+      double y1 = 0.0;
+      double y2 = 0.0;
+      double y3 = 1.0;
+      double scale = std::max(std::max(x2, x3), 1.0);
+      printf("1: (%f, %f)\n", x1, y1);
+      printf("2: (%f, %f)\n", x2, y2);
+      printf("3: (%f, %f)\n", x3, y3);
+      */
+      double x1 = 0.0;
+      double x2 = 0.5;
+      double x3 = 1.0;
+      double y1 = 0.0;
+      double y2 = 1.0;
+      double y3 = 0.0;
+      points[faces[i].p1].draw(drawSmooth, drawTex);
+      if (drawTex)
+         glTexCoord2f(x1, y1);
+      points[faces[i].p2].draw(drawSmooth, drawTex);
+      if (drawTex)
+         glTexCoord2f(x2, y2);
+      points[faces[i].p3].draw(drawSmooth, drawTex);
+      if (drawTex)
+         glTexCoord2f(x3, y3);
+   }
+}
+
+/**
+ * Inserts a point with texture coordinates and returns its index.
+ */
+int Mesh3D::addPoint(double x, double y, double z, double texX, double texY) {
+   MeshPoint point(x, y, z);
+   point.setTexPoint(texX, texY);
+   points.push_back(point);
+   if (x > xMax) xMax = x;
+   if (x < xMin) xMin = x;
+   if (y > xMax) yMax = y;
+   if (y < xMin) yMin = y;
+   if (z > xMax) zMax = z;
+   if (z < xMin) zMin = z;
+   return points.size();
 }
 
 /**
