@@ -394,7 +394,6 @@ int main(int argc, char* argv[]) {
    mainMenu = new Menu();
    //turn the menu on for the inial menu display
    mainMenu->menuActive = true;
-   SDL_ShowCursor(SDL_ENABLE);
    
    //Initialize the input manager
    inputManager = new InputManager();
@@ -408,6 +407,7 @@ int main(int argc, char* argv[]) {
    while (running) {
       updateDoubleTime();
       if (mainMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
          mainMenu->draw();
          timerFunc(mainMenu->menuActive);
       } else if (gameState->isGameRunning()) {

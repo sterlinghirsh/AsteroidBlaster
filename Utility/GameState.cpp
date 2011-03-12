@@ -37,20 +37,33 @@ GameState::GameState(double worldSizeIn) {
    curFPS = 0;
 
    // Init Text Objects
-   FPSText = new Text("FPS: ", curFPS, "", 10, 20);
-   numAsteroidsText = new Text("Asteroids Remaining: ", custodian.asteroidCount, "", 10, 40);
-   numShardsText = new Text("Shards Remaining: ", custodian.shardCount, "", 10, 60);
-   scoreText = new Text("Score: ", ship->getScore(), "", 10, 80);
-   shardText = new Text("Shards: ", ship->getShards(), "", 10, 100);
-   healthText = new Text("Health: ", ship->getHealth(), "", 10, 120);
-   gameOverText = new Text("GAME OVER", GW/2, GH/2);
-   winText = new Text("YOU WIN!", GW/2, GH/2);
-   weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "", 10, 140);
+   SDL_Rect position = {0,0};
+   std::string fontName = "Font/FreeMono.ttf";
+   
+   FPSText = new Text("FPS: ", curFPS, "",  fontName, position, 12);
+   numAsteroidsText = new Text("Asteroids Remaining: ", custodian.asteroidCount, "",  fontName, position, 12);
+   numShardsText = new Text("Shards Remaining: ", custodian.shardCount, "",  fontName, position, 12);
+   scoreText = new Text("Score: ", ship->getScore(), "",  fontName, position, 12);
+   shardText = new Text("Shards: ", ship->getShards(), "",  fontName, position, 12);
+   healthText = new Text("Health: ", ship->getHealth(), "",  fontName, position, 12);
+   weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  fontName, position, 12);
+   
    // Get the ammo into a stream to turn it into a string.
    sstream2 << ship->getCurrentWeapon()->curAmmo;
-   ammoText = new Text("Ammo: ", sstream2.str(), "", 10, 160);
+   ammoText = new Text("Ammo: ", sstream2.str(), "",  fontName, position, 12);
    // Clear the sstream2
    sstream2.str("");
+   
+   curLevelText = new Text("Level: ", curLevel, "",  fontName, position, 12);
+   
+   
+   SDL_Rect centerRec = {GW/2, GH/2};
+   gameOverText = new Text("GAME OVER", fontName, centerRec, 32);
+   winText = new Text("YOU WIN!", fontName, centerRec, 32);
+
+
+
+
 
    // Improve the positioning code.
    weaponReadyBar = new ProgressBar(0.5, 0.1, -1.2, -0.3);
@@ -59,7 +72,6 @@ GameState::GameState(double worldSizeIn) {
    // Set up objects.
    custodian.add(ship);
    curLevel = 1;
-   curLevelText = new Text("Level: ", curLevel, "", 10, 180);
    numAsteroidsToSpawn = curLevel;
    initAsteroids();
    doYaw = 0;
@@ -439,7 +451,11 @@ void GameState::drawHud() {
  * one time here to improve efficiency.
  */
 void GameState::drawAllText() {
-   glPushMatrix();
+   
+   SDL_Rect position;
+   position.x = 10;
+   position.y = GH - 35;
+
    /* Don't draw stuff in front of the text. */
    //glDisable(GL_DEPTH_TEST);
 
@@ -452,14 +468,39 @@ void GameState::drawAllText() {
    }
 
    // Draw all of the Text objects.
+   FPSText->setPosition(position);
    FPSText->draw();
+   
+   position.y -= 15;
+   numAsteroidsText->setPosition(position);
    numAsteroidsText->draw();
+
+   position.y -= 15;
+   numShardsText->setPosition(position);
    numShardsText->draw();
+   
+   position.y -= 15;
+   scoreText->setPosition(position);
    scoreText->draw();
+   
+   position.y -= 15;
+   shardText->setPosition(position);
    shardText->draw();
+   
+   position.y -= 15;
+   healthText->setPosition(position);
    healthText->draw();
+   
+   position.y -= 15;
+   weaponText->setPosition(position);
    weaponText->draw();
+   
+   position.y -= 15;
+   ammoText->setPosition(position);
    ammoText->draw();
+   
+   position.y -= 15;
+   ammoText->setPosition(position);
    curLevelText->draw();
 
 }

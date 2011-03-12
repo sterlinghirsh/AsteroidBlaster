@@ -17,8 +17,9 @@
 
 
 // Constructor if you are displaying one string
-Text::Text(std::string text, double x, double y) {
-   font = TTF_OpenFont("FreeMonoBold.ttf", 12);
+Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
+   size = _size;
+   font = TTF_OpenFont(fontName.c_str(), size);
    if(!font)
    {
       printf("TTF_OpenFont: %s\n", TTF_GetError());
@@ -27,15 +28,16 @@ Text::Text(std::string text, double x, double y) {
    
    sstream << text;
    textToDisplay = sstream.str();
-   pos.x = x;
-   pos.y = y;
-   color.r = color.g = color.b = 0.0;
+   pos = _pos;
+   color.r = color.g = color.b = 255;
+   
    
 }
 
 // Constructor if you are displaying multiple strings
-Text::Text(std::string preText, std::string body, std::string postText, double x, double y) {
-   font = TTF_OpenFont("FreeMono.ttf", 12);
+Text::Text(std::string preText, std::string body, std::string postText, std::string fontName, SDL_Rect _pos, int _size) {
+   size = _size;
+   font = TTF_OpenFont(fontName.c_str(), size);
    if(!font)
    {
       printf("TTF_OpenFont: %s\n", TTF_GetError());
@@ -47,15 +49,15 @@ Text::Text(std::string preText, std::string body, std::string postText, double x
    // Set the pre & post strings for this Text accordingly.
    pre = preText;
    post = postText;
-   pos.x = x;
-   pos.y = y;
-   color.r = color.g = color.b = 0.0;
+   pos = _pos;
+   color.r = color.g = color.b = 255;
    
 }
 
 // Constructor if you are displaying an int
-Text::Text(std::string preText, int body, std::string postText, double x, double y) {
-   font = TTF_OpenFont("FreeMono.ttf", 12);
+Text::Text(std::string preText, int body, std::string postText, std::string fontName, SDL_Rect _pos, int _size) {
+   size = _size;
+   font = TTF_OpenFont(fontName.c_str(), size);
    if(!font)
    {
       printf("TTF_OpenFont: %s\n", TTF_GetError());
@@ -69,14 +71,14 @@ Text::Text(std::string preText, int body, std::string postText, double x, double
    // Set the pre & post strings for this Text accordingly.
    pre = preText;
    post = postText;
-   pos.x = x;
-   pos.y = y;
-   color.r = color.g = color.b = 0.0;
+   pos = _pos;
+   color.r = color.g = color.b = 255;
 }
 
 // Constructor if you are displaying a double
-Text::Text(std::string preText, double body, std::string postText, double x, double y) {
-   font = TTF_OpenFont("FreeMono.ttf", 12);
+Text::Text(std::string preText, double body, std::string postText, std::string fontName, SDL_Rect _pos, int _size) {
+   size = _size;
+   font = TTF_OpenFont(fontName.c_str(), size);
    if(!font)
    {
       printf("TTF_OpenFont: %s\n", TTF_GetError());
@@ -90,9 +92,8 @@ Text::Text(std::string preText, double body, std::string postText, double x, dou
    // Set the pre & post strings for this Text accordingly.
    pre = preText;
    post = postText;
-   pos.x = x;
-   pos.y = y;
-   color.r = color.g = color.b = 0.0;
+   pos = _pos;
+   color.r = color.g = color.b = 255;
 }
 
 // Destructor
@@ -156,9 +157,6 @@ void Text::draw() {
    glDisable(GL_DEPTH_TEST);
 
    /* Draw some text */
-   color.r = 255;
-   color.g = 255;
-   color.b = 255;
    /** A quick note about position.
    * Enable2D puts the origin in the lower-left corner of the
    * screen, which is different from the normal coordinate
@@ -252,6 +250,12 @@ void Text::SDL_GL_RenderText(const char *text,
 	/* Bad things happen if we delete the texture before it finishes */
 	glFinish();
 	
+	/* return the deltas in the unused w,h part of the rect */
+	location->w = initial->w;
+	location->h = initial->h;
+	
 	/* Clean up */
+	SDL_FreeSurface(initial);
+	SDL_FreeSurface(intermediary);
 	glDeleteTextures(1, &texture);
 }

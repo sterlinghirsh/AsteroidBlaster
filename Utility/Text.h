@@ -28,13 +28,13 @@ class Text {
       void glDisable2D();
    public:
       //Constructor if you are displaying one string
-      Text(std::string text, double x, double y);
+      Text(std::string text, std::string fontName, SDL_Rect _pos, int _size);
       // Constructor if you are displaying multiple strings
-      Text(std::string preText, std::string body, std::string postText, double x, double y);
+      Text(std::string preText, std::string body, std::string postText, std::string fontName, SDL_Rect _pos, int _size);
       // Constructor if you are displaying an int
-      Text(std::string preText, int body, std::string postText, double x, double y);
+      Text(std::string preText, int body, std::string postText, std::string fontName, SDL_Rect _pos, int _size);
       // Constructor if you are displaying a double
-      Text(std::string preText, double body, std::string postText, double x, double y);
+      Text(std::string preText, double body, std::string postText, std::string fontName, SDL_Rect _pos, int _size);
 
       // Destructor
       virtual ~Text();
@@ -60,6 +60,7 @@ class Text {
       SDL_Color color;
       SDL_Surface* textSurface;
       SDL_Rect pos;
+      int size;
       std::ostringstream sstream;
       std::string textToDisplay, pre, post;
       GLuint texture;

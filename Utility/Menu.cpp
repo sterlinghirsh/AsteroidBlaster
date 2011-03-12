@@ -9,15 +9,22 @@
 
 Menu::Menu() {
    menuActive = false;
-   newGame = new Text("New Game", GW/2 - 50, GH/2 - 60);
-   saveLoadGame = new Text("Save/Load Game", GW/2 - 50, GH/2 - 20);
-   settings = new Text("Settings", GW/2 - 50, GH/2 + 20);
-   quit = new Text("Quit", GW/2 - 50, GH/2 + 60);
+   
+   SDL_Rect position = {0,0};
+   std::string fontName = "Font/FreeMonoBold.ttf";
+   
+   newGame = new Text("New Game",  fontName, position, 24);
+   saveLoadGame = new Text("Save/Load Game",  fontName, position, 24);
+   settings = new Text("Settings",  fontName, position, 24);
+   quit = new Text("Quit", fontName, position, 24);
 
-   SDL_Color greyColor = {0.5,0.5,0.5};
+
+   SDL_Color greyColor = {128,128,128};
    // grey out the option to show that it is disabled
    saveLoadGame->setColor(greyColor);
    settings->setColor(greyColor);
+   
+
 }
 
 
@@ -32,13 +39,13 @@ void Menu::update() {
 void Menu::draw() {
    SDL_Rect position;
    position.x = GW/2 - 50;
-   position.y = GH/2 - 20;
+   position.y = GH/2 - 50;
    newGame->setPosition(position);
-   position.y -= (GH/10);
+   position.y -= GH/10;
    saveLoadGame->setPosition(position);
-   position.y -= (GH/10);
+   position.y -= GH/10;
    settings->setPosition(position);
-   position.y -= (GH/10);
+   position.y -= GH/10;
    quit->setPosition(position);
    
    glDisable(GL_TEXTURE_2D);
@@ -184,14 +191,14 @@ void Menu::mouseMove(int dx, int dy, int _x, int _y) {
    if (!menuActive) { return; }
    x = _x;
    y = _y;
-   if (x >= newGame->pos.x &&
-         x <= newGame->pos.x + 100 &&
+   if (x >= GH - newGame->pos.x + 20 &&
+         x <= GH - newGame->pos.x &&
          y >= newGame->pos.y - 20 &&
          y <= newGame->pos.y ) {
-      SDL_Color color = {1.0,0.0,0.0};
+      SDL_Color color = {255,0.0,0.0};
       newGame->setColor(color);
    } else {
-      SDL_Color color = {1.0,1.0,1.0};
+      SDL_Color color = {255,255,255};
       newGame->setColor(color);
    }
 
@@ -199,10 +206,10 @@ void Menu::mouseMove(int dx, int dy, int _x, int _y) {
          x <= quit->pos.x + 50 &&
          y >= quit->pos.y - 20 &&
          y <= quit->pos.y ) {
-      SDL_Color color = {1.0,0.0,0.0};
+      SDL_Color color = {255,0.0,0.0};
       quit->setColor(color);
    } else {
-      SDL_Color color = {1.0,1.0,1.0};
+      SDL_Color color = {255,255,255};
       quit->setColor(color);
    }
 }
