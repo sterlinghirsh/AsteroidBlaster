@@ -26,14 +26,9 @@ class Menu : public InputReceiver {
    bool menuActive;
    
    
-   //glut text display
-   Text* newGame;
-   Text* saveLoadGame;
-   Text* settings;
-   Text* quit;
+   std::vector<Text*> menuTexts;
    
-   SDL_Surface *titleImage;
-   SDL_Rect src, dest;
+   
 };
 
 

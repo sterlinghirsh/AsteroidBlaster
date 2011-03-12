@@ -39,30 +39,28 @@ GameState::GameState(double worldSizeIn) {
    // Init Text Objects
    SDL_Rect position = {0,0};
    std::string fontName = "Font/FreeMono.ttf";
+   int fontSize = 18;
    
-   FPSText = new Text("FPS: ", curFPS, "",  fontName, position, 12);
-   numAsteroidsText = new Text("Asteroids Remaining: ", custodian.asteroidCount, "",  fontName, position, 12);
-   numShardsText = new Text("Shards Remaining: ", custodian.shardCount, "",  fontName, position, 12);
-   scoreText = new Text("Score: ", ship->getScore(), "",  fontName, position, 12);
-   shardText = new Text("Shards: ", ship->getShards(), "",  fontName, position, 12);
-   healthText = new Text("Health: ", ship->getHealth(), "",  fontName, position, 12);
-   weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  fontName, position, 12);
+   FPSText = new Text("FPS: ", curFPS, "",  fontName, position, fontSize);
+   numAsteroidsText = new Text("Asteroids Remaining: ", custodian.asteroidCount, "",  fontName, position, fontSize);
+   numShardsText = new Text("Shards Remaining: ", custodian.shardCount, "",  fontName, position, fontSize);
+   scoreText = new Text("Score: ", ship->getScore(), "",  fontName, position, fontSize);
+   shardText = new Text("Shards: ", ship->getShards(), "",  fontName, position, fontSize);
+   healthText = new Text("Health: ", ship->getHealth(), "",  fontName, position, fontSize);
+   weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  fontName, position, fontSize);
    
    // Get the ammo into a stream to turn it into a string.
    sstream2 << ship->getCurrentWeapon()->curAmmo;
-   ammoText = new Text("Ammo: ", sstream2.str(), "",  fontName, position, 12);
+   ammoText = new Text("Ammo: ", sstream2.str(), "",  fontName, position, fontSize);
    // Clear the sstream2
    sstream2.str("");
    
-   curLevelText = new Text("Level: ", curLevel, "",  fontName, position, 12);
+   curLevelText = new Text("Level: ", curLevel, "",  fontName, position, fontSize);
    
    
    SDL_Rect centerRec = {GW/2, GH/2};
    gameOverText = new Text("GAME OVER", fontName, centerRec, 32);
    winText = new Text("YOU WIN!", fontName, centerRec, 32);
-
-
-
 
 
    // Improve the positioning code.
@@ -454,7 +452,7 @@ void GameState::drawAllText() {
    
    SDL_Rect position;
    position.x = 10;
-   position.y = GH - 35;
+   position.y = 10;
 
    /* Don't draw stuff in front of the text. */
    //glDisable(GL_DEPTH_TEST);
@@ -471,36 +469,36 @@ void GameState::drawAllText() {
    FPSText->setPosition(position);
    FPSText->draw();
    
-   position.y -= 15;
+   position.y += 15;
    numAsteroidsText->setPosition(position);
    numAsteroidsText->draw();
 
-   position.y -= 15;
+   position.y += 15;
    numShardsText->setPosition(position);
    numShardsText->draw();
    
-   position.y -= 15;
+   position.y += 15;
    scoreText->setPosition(position);
    scoreText->draw();
    
-   position.y -= 15;
+   position.y += 15;
    shardText->setPosition(position);
    shardText->draw();
    
-   position.y -= 15;
+   position.y += 15;
    healthText->setPosition(position);
    healthText->draw();
    
-   position.y -= 15;
+   position.y += 15;
    weaponText->setPosition(position);
    weaponText->draw();
    
-   position.y -= 15;
+   position.y += 15;
    ammoText->setPosition(position);
    ammoText->draw();
    
-   position.y -= 15;
-   ammoText->setPosition(position);
+   position.y += 15;
+   curLevelText->setPosition(position);
    curLevelText->draw();
 
 }

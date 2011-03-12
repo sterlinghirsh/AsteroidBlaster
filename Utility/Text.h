@@ -1,10 +1,11 @@
 /**
- * Text
- * Class to store one element of data which will be displayed via text in the corner of the screen.
- * Acceptable format is <string>, <string string string>, <string int string>, or <string double, string>
+ * Text class
+ * Stores everything you need to draw text on screen. Uses GlobalUtility just for GW/GH info so very easy to export
+ * to another project. It can handle simple string, string-int-string, string-string-string and string-double-string.
  * Ryuho Kudo
- * 1-19-11
+ * 3-11-11
  */
+
 #ifndef __TEXT_H__
 #define __TEXT_H__
 
@@ -13,9 +14,14 @@
 #include "SDL.h"
 #include <SDL_ttf.h>
 
-static const SDL_Color WHITE = {255,255,255};
-static const SDL_Color BLACK = {0,0,0};
-static const SDL_Color BLUE = {0,0,255}; 
+#define TEXT_INVERT_VALUE 40
+
+
+static const SDL_Color SDL_WHITE = {255,255,255};
+static const SDL_Color SDL_BLACK = {0,0,0};
+static const SDL_Color SDL_RED = {255,0,0}; 
+static const SDL_Color SDL_GREEN = {0,255,0}; 
+static const SDL_Color SDL_BLUE = {0,0,255}; 
 
 class Text {
    private:
@@ -37,24 +43,26 @@ class Text {
       Text(std::string preText, double body, std::string postText, std::string fontName, SDL_Rect _pos, int _size);
 
       // Destructor
-      virtual ~Text();
+      ~Text();
 
       // Sets the new body text to be used
-      virtual void updateBody(std::string newText);
+      void updateBody(std::string newText);
       // Sets the new body text to be used
-      virtual void updateBody(int newInt);
+      void updateBody(int newInt);
       // Sets the new body text to be used
-      virtual void updateBody(double newDouble);
+      void updateBody(double newDouble);
       // Sets the font to be used
-      virtual void setFont(int newFont);
+      void setFont(std::string fontName, int size);
       // Sets the color of the text
-      virtual void setColor(SDL_Color _color);
+      void setColor(SDL_Color _color);
       // Sets the position where the text will be drawn
-      virtual void setPosition(SDL_Rect val);
+      void setPosition(SDL_Rect val);
       // Gets the position of the text, and puts it into x and y
-      virtual SDL_Rect getPosition();
+      SDL_Rect getPosition();
       // Takes in the x and y position of where to draw the text
-      virtual void draw();
+      void draw();
+      // takes in x,y and answers if the mouse is over the text
+      bool mouseSelect(int x, int y);
       
       TTF_Font* font;
       SDL_Color color;
@@ -63,8 +71,9 @@ class Text {
       int size;
       std::ostringstream sstream;
       std::string textToDisplay, pre, post;
-      GLuint texture;
+      GLuint textTexture;
       int w, h;
+      bool selectable, selected;
 };
 
 #endif

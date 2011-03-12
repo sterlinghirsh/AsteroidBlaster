@@ -13,23 +13,25 @@ Menu::Menu() {
    SDL_Rect position = {0,0};
    std::string fontName = "Font/FreeMonoBold.ttf";
    
-   newGame = new Text("New Game",  fontName, position, 24);
-   saveLoadGame = new Text("Save/Load Game",  fontName, position, 24);
-   settings = new Text("Settings",  fontName, position, 24);
-   quit = new Text("Quit", fontName, position, 24);
-
+   menuTexts.push_back(new Text("New Game",  fontName, position, 24));
+   menuTexts.push_back(new Text("Save/Load Game",  fontName, position, 24));
+   menuTexts.push_back(new Text("Settings",  fontName, position, 24));
+   menuTexts.push_back(new Text("Quit", fontName, position, 24));
+   
 
    SDL_Color greyColor = {128,128,128};
    // grey out the option to show that it is disabled
-   saveLoadGame->setColor(greyColor);
-   settings->setColor(greyColor);
+   menuTexts[1]->setColor(greyColor);
+   menuTexts[2]->setColor(greyColor);
    
 
 }
 
 
 Menu::~Menu() {
-   SDL_FreeSurface(titleImage);
+   for(int i = 0; i < menuTexts.size(); i++) {
+      delete menuTexts[i];
+   }
 }
 
 void Menu::update() {
@@ -39,18 +41,13 @@ void Menu::update() {
 void Menu::draw() {
    SDL_Rect position;
    position.x = GW/2 - 50;
-   position.y = GH/2 - 50;
-   newGame->setPosition(position);
-   position.y -= GH/10;
-   saveLoadGame->setPosition(position);
-   position.y -= GH/10;
-   settings->setPosition(position);
-   position.y -= GH/10;
-   quit->setPosition(position);
+   position.y = GH/2 + 50;
+   for(int i = 0; i < menuTexts.size(); i++) {
+      menuTexts[i]->setPosition(position);
+      position.y += GH/10;
+   }
    
-   glDisable(GL_TEXTURE_2D);
    
-   glClearColor(0.0, 0.0, 0.0, 0.5);
    
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -62,10 +59,9 @@ void Menu::draw() {
       useOrtho();
       glDisable(GL_LIGHTING);
       
-      newGame->draw();
-      saveLoadGame->draw();
-      settings->draw();
-      quit->draw();
+      for(int i = 0; i < menuTexts.size(); i++) {
+         menuTexts[i]->draw();
+      }
 
       glEnable(GL_LIGHTING);
       usePerspective();
@@ -97,9 +93,9 @@ void Menu::draw() {
                      GL_CLAMP );
    
    glPushMatrix();
-      //glLoadIdentity( );
+      glLoadIdentity( );
       glTranslatef( 0.0f, 0.2f, -1.0f );
-      glScalef( 0.2, 0.1, 1.0 );
+      glScalef( 0.3625, 0.1, 1.0 );
       glColor3f(1.0, 1.0, 1.0);
 
       /* Select Our Texture */
@@ -163,19 +159,15 @@ void Menu::keyUp(int key) {
  */
 void Menu::mouseDown(int button) {
    if (!menuActive) { return; }
-   if (x >= newGame->pos.x &&
-         x <= newGame->pos.x + 100 &&
-         y >= newGame->pos.y - 20 &&
-         y <= newGame->pos.y ) {
-      SDL_ShowCursor(SDL_DISABLE);
-      menuActive = false;
-   }
    
-   if (x >= quit->pos.x &&
-         x <= quit->pos.x + 50 &&
-         y >= quit->pos.y - 20 &&
-         y <= quit->pos.y ) {
-      exit(0);
+   for(int i = 0; i < menuTexts.size(); i++) {
+      if(menuTexts[i]->mouseSelect(x,y) && i == 0) {
+         SDL_ShowCursor(SDL_DISABLE);
+         menuActive = false;
+      }
+      if(menuTexts[i]->mouseSelect(x,y) && i == 3) {
+         exit(0);
+      }
    }
 }
 
@@ -188,29 +180,20 @@ void Menu::mouseUp(int button) {
 }
 
 void Menu::mouseMove(int dx, int dy, int _x, int _y) {
+   std::cout << "mouseMove=(" << _x << "," << _y << ")" << std::endl;
    if (!menuActive) { return; }
    x = _x;
    y = _y;
-   if (x >= GH - newGame->pos.x + 20 &&
-         x <= GH - newGame->pos.x &&
-         y >= newGame->pos.y - 20 &&
-         y <= newGame->pos.y ) {
-      SDL_Color color = {255,0.0,0.0};
-      newGame->setColor(color);
+   
+   if(menuTexts[0]->mouseSelect(x,y)) {
+      menuTexts[0]->setColor(SDL_RED);
    } else {
-      SDL_Color color = {255,255,255};
-      newGame->setColor(color);
+      menuTexts[0]->setColor(SDL_WHITE);
    }
-
-   if (x >= quit->pos.x &&
-         x <= quit->pos.x + 50 &&
-         y >= quit->pos.y - 20 &&
-         y <= quit->pos.y ) {
-      SDL_Color color = {255,0.0,0.0};
-      quit->setColor(color);
+   if(menuTexts[3]->mouseSelect(x,y)) {
+      menuTexts[3]->setColor(SDL_RED);
    } else {
-      SDL_Color color = {255,255,255};
-      quit->setColor(color);
+      menuTexts[3]->setColor(SDL_WHITE);
    }
 }
 

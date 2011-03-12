@@ -1,19 +1,21 @@
 /**
- * Text
- * Class to store one element of data which will be displayed via text in the corner of the screen.
- * Acceptable format is <strin>, <string string string>, <string int string>, or <string double, string>,
- * The text defaults to use the font GLUT_BITMAP_HELVETICA_18, with a white color.
- * Taylor Arnicar / Sterling Hirsh
- * 1-19-11
+ * Text class
+ * Stores everything you need to draw text on screen. Uses GlobalUtility just for GW/GH info so very easy to export
+ * to another project. It can handle simple string, string-int-string, string-string-string and string-double-string.
+ * Ryuho Kudo
+ * 3-11-11
  */
 
+#include "Utility/GlobalUtility.h"
+#include "Text.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <cstring>
 #include <stdio.h>
 #include <iostream>
 #include <math.h>
-#include "Text.h"
+
+
 
 
 // Constructor if you are displaying one string
@@ -29,8 +31,8 @@ Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
    sstream << text;
    textToDisplay = sstream.str();
    pos = _pos;
-   color.r = color.g = color.b = 255;
-   
+   color = SDL_WHITE;
+   selectable = selected = false;
    
 }
 
@@ -50,7 +52,8 @@ Text::Text(std::string preText, std::string body, std::string postText, std::str
    pre = preText;
    post = postText;
    pos = _pos;
-   color.r = color.g = color.b = 255;
+   color = SDL_WHITE;
+   selectable = selected = false;
    
 }
 
@@ -72,7 +75,8 @@ Text::Text(std::string preText, int body, std::string postText, std::string font
    pre = preText;
    post = postText;
    pos = _pos;
-   color.r = color.g = color.b = 255;
+   color = SDL_WHITE;
+   selectable = selected = false;
 }
 
 // Constructor if you are displaying a double
@@ -93,19 +97,20 @@ Text::Text(std::string preText, double body, std::string postText, std::string f
    pre = preText;
    post = postText;
    pos = _pos;
-   color.r = color.g = color.b = 255;
+   color = SDL_WHITE;
+   selectable = selected = false;
 }
 
 // Destructor
 Text::~Text() {
    // There's not a whole lot to destruct here.
    // Possibly call delete font; ?
+   
 }
 
 // Update the middle body text
 void Text::updateBody(std::string newText) {
    textToDisplay = pre + newText + post;
-   //textSurface = TTF_RenderText_Shaded(font, textToDisplay.c_str(), foregroundColor, backgroundColor);
 }
 
 // Update the middle body int
@@ -114,7 +119,6 @@ void Text::updateBody(int newInt) {
    sstream << pre << newInt << post;
    // Get a string out of the osteringstream
    textToDisplay = sstream.str();
-   //textSurface = TTF_RenderText_Shaded(font, textToDisplay.c_str(), foregroundColor, backgroundColor);
 }
 
 // Update the middle body double
@@ -123,16 +127,19 @@ void Text::updateBody(double newDouble) {
    sstream << pre << newDouble << post;
    // Get a string out of the osteringstream
    textToDisplay = sstream.str();
-   //textSurface = TTF_RenderText_Shaded(font, textToDisplay.c_str(), foregroundColor, backgroundColor);
 }
 
-void Text::setFont(int newFont) {
-
+void Text::setFont(std::string fontName, int size) {
+   font = TTF_OpenFont(fontName.c_str(), size);
+   if(!font)
+   {
+      printf("TTF_OpenFont: %s\n", TTF_GetError());
+      exit(3);
+   }
 }
 
 void Text::setColor(SDL_Color _color) {
    color = _color;
-   //textSurface = TTF_RenderText_Shaded(font, textToDisplay.c_str(), foregroundColor, backgroundColor);
 }
 
 // Sets the position where the text will be drawn
@@ -145,11 +152,7 @@ SDL_Rect Text::getPosition() {
    return pos;
 }
 
-/*TODO: Possible optimization - extract all the lookAt, useOrtho, lighting, and color code
-  into a function that calls all of the draw() functions for text that we'll be doing each frame.
-  This way, all of this looking, ortho, lighting, and color function are only done once.
-*/
-// Takes in the x and y position of where to draw the text
+
 void Text::draw() {
       
    /* Go in HUD-drawing mode */
@@ -163,7 +166,13 @@ void Text::draw() {
    * space of most 2D api's. position, therefore,
    * gives the X,Y coordinates of the lower-left corner of the
    * rectangle **/
-   SDL_GL_RenderText(textToDisplay.c_str(), font, color, &pos);
+   
+   //SO let's translate it back to standard SDL (normal coordinate)
+   
+   SDL_Rect temp = {pos.x, GH - pos.y - TEXT_INVERT_VALUE};
+      
+   
+   SDL_GL_RenderText(textToDisplay.c_str(), font, color, &temp);
 
    /* Come out of HUD mode */
    glEnable(GL_DEPTH_TEST);
@@ -218,8 +227,8 @@ void Text::SDL_GL_RenderText(const char *text,
 	SDL_BlitSurface(initial, 0, intermediary, 0);
 	
 	/* Tell GL about our new texture */
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glGenTextures(1, &textTexture);
+	glBindTexture(GL_TEXTURE_2D, textTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h, 0, GL_BGRA, 
 			GL_UNSIGNED_BYTE, intermediary->pixels );
 			
@@ -229,7 +238,7 @@ void Text::SDL_GL_RenderText(const char *text,
 
 	/* prepare to render our texture */
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, textTexture);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	
 	/* Draw a quad at location */
@@ -251,11 +260,22 @@ void Text::SDL_GL_RenderText(const char *text,
 	glFinish();
 	
 	/* return the deltas in the unused w,h part of the rect */
-	location->w = initial->w;
-	location->h = initial->h;
+	location->w = w;
+	location->h = 100;
 	
 	/* Clean up */
 	SDL_FreeSurface(initial);
 	SDL_FreeSurface(intermediary);
-	glDeleteTextures(1, &texture);
+	glDeleteTextures(1, &textTexture);
 }
+
+bool Text::mouseSelect(int x, int y) {
+   if(x >= pos.x &&
+      x <= pos.x + textToDisplay.length()*(size/1.5) &&
+      y >= pos.y - TEXT_INVERT_VALUE &&
+      y <= pos.y - TEXT_INVERT_VALUE + (size/1.1)){
+      return true;
+   }
+   return false;
+}
+
