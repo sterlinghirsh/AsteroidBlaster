@@ -180,7 +180,7 @@ void Menu::mouseUp(int button) {
 }
 
 void Menu::mouseMove(int dx, int dy, int _x, int _y) {
-   std::cout << "mouseMove=(" << _x << "," << _y << ")" << std::endl;
+   //std::cout << "mouseMove=(" << _x << "," << _y << ")" << std::endl;
    if (!menuActive) { return; }
    x = _x;
    y = _y;
