@@ -24,6 +24,7 @@ class MainMenu : public Menu {
    double x, y;
    
    bool menuActive;
+   bool firstTime;
    
    
    std::vector<Text*> menuTexts;

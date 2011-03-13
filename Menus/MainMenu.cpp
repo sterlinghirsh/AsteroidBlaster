@@ -2,18 +2,27 @@
 #include <iostream>
 #include "SDL.h"
 #include "Utility/GlobalUtility.h"
+#include "Utility/GameState.h"
 #include "Menus/MainMenu.h"
 #include "Utility/Image.h"
 #include "Utility/Texture.h"
 #include "Utility/Text.h"
 
+#define NEWGAME_STRING_INDEX 0
+#define CONTINUE_STRING_INDEX 1
+#define SAVELOAD_STRING_INDEX 2
+#define SETTINGS_STRING_INDEX 3
+#define QUIT_STRING_INDEX 4
+
 MainMenu::MainMenu() {
    menuActive = false;
+   firstTime = true;
    
    SDL_Rect position = {0,0};
    std::string fontName = "Font/Slider.ttf";
    
    menuTexts.push_back(new Text("New Game",  fontName, position, 24));
+   menuTexts.push_back(new Text("Continue",  fontName, position, 24));
    menuTexts.push_back(new Text("Save/Load Game",  fontName, position, 24));
    menuTexts.push_back(new Text("Settings",  fontName, position, 24));
    menuTexts.push_back(new Text("Quit", fontName, position, 24));
@@ -21,8 +30,9 @@ MainMenu::MainMenu() {
 
    SDL_Color greyColor = {128,128,128};
    // grey out the option to show that it is disabled
-   menuTexts[1]->setColor(greyColor);
-   menuTexts[2]->setColor(greyColor);
+   menuTexts[CONTINUE_STRING_INDEX]->setColor(greyColor);
+   menuTexts[SAVELOAD_STRING_INDEX]->setColor(greyColor);
+   menuTexts[SETTINGS_STRING_INDEX]->setColor(greyColor);
    
 
 }
@@ -37,7 +47,7 @@ MainMenu::~MainMenu() {
 void MainMenu::draw() {
    SDL_Rect position;
    position.x = GW/2 - 50;
-   position.y = GH/2 + 50;
+   position.y = GH/2;
    for(int i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
       position.y += GH/10;
@@ -132,6 +142,9 @@ void MainMenu::keyDown(int key) {
       if(menuActive) {
          menuActive = false;
          SDL_ShowCursor(SDL_DISABLE);
+         //since there is a game now, enable continue
+         firstTime = false;
+         menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
       } else {
          SDL_ShowCursor(SDL_ENABLE);
          menuActive = true;
@@ -141,10 +154,13 @@ void MainMenu::keyDown(int key) {
    
    
    switch(key) {
-    case SDLK_ESCAPE: exit(0);
     case SDLK_n:
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
+      gameState->reset();
+      break;
+    case SDLK_ESCAPE: 
+      exit(0);
       break;
    }
 }
@@ -163,14 +179,16 @@ void MainMenu::keyUp(int key) {
 void MainMenu::mouseDown(int button) {
    if (!menuActive) { return; }
    
-   for(int i = 0; i < menuTexts.size(); i++) {
-      if(menuTexts[i]->mouseSelect(x,y) && i == 0) {
-         SDL_ShowCursor(SDL_DISABLE);
-         menuActive = false;
-      }
-      if(menuTexts[i]->mouseSelect(x,y) && i == 3) {
-         exit(0);
-      }
+   if(menuTexts[NEWGAME_STRING_INDEX]->mouseSelect(x,y)) {
+      SDL_ShowCursor(SDL_DISABLE);
+      gameState->reset();
+      menuActive = false;
+      firstTime = false;
+   } else if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y) && !firstTime) {
+      SDL_ShowCursor(SDL_DISABLE);
+      menuActive = false;
+   } else if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
+      exit(0);
    }
 }
 
@@ -179,7 +197,6 @@ void MainMenu::mouseDown(int button) {
  */
 void MainMenu::mouseUp(int button) {
    if (!menuActive) { return; }
-   
 }
 
 void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
@@ -188,15 +205,24 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
    x = _x;
    y = _y;
    
-   if(menuTexts[0]->mouseSelect(x,y)) {
-      menuTexts[0]->setColor(SDL_RED);
+   if(menuTexts[NEWGAME_STRING_INDEX]->mouseSelect(x,y)) {
+      menuTexts[NEWGAME_STRING_INDEX]->setColor(SDL_RED);
    } else {
-      menuTexts[0]->setColor(SDL_WHITE);
+      menuTexts[NEWGAME_STRING_INDEX]->setColor(SDL_WHITE);
    }
-   if(menuTexts[3]->mouseSelect(x,y)) {
-      menuTexts[3]->setColor(SDL_RED);
+   
+   if(!firstTime) {
+      if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y)) {
+         menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_RED);
+      } else {
+         menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
+      }
+   }
+   
+   if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
+      menuTexts[QUIT_STRING_INDEX]->setColor(SDL_RED);
    } else {
-      menuTexts[3]->setColor(SDL_WHITE);
+      menuTexts[QUIT_STRING_INDEX]->setColor(SDL_WHITE);
    }
 }
 
