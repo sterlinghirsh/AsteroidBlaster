@@ -38,8 +38,8 @@ SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 double currentTime = -1;
 InputManager* inputManager = NULL;
-extern MainMenu* mainMenu = NULL;
-extern StoreMenu* storeMenu = NULL;
+MainMenu* mainMenu = NULL;
+StoreMenu* storeMenu = NULL;
 
 using namespace std;
 

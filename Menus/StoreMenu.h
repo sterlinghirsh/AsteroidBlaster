@@ -5,7 +5,7 @@
 
 #include "Utility/Text.h"
 #include "Utility/InputManager.h"
-#include "Utility/Menu.h"
+#include "Menus/Menu.h"
 
 class StoreMenu : public Menu {
    public:

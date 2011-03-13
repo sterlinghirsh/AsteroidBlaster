@@ -19,7 +19,6 @@
 #include "Items/BoundingSpace.h"
 #include "Utility/Text.h"
 #include "Utility/GameState.h"
-#include "Utility/Menu.h"
 #include "Utility/StoreMenu.h"
 #include "Utility/InputManager.h"
 #include "Utility/Matrix4.h"
