@@ -301,7 +301,8 @@ void GameState::drawGlow() {
 }
 
 void GameState::hBlur() {
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT);
    useOrtho();
    glPushMatrix();
    //glBlendFunc(GL_ONE, GL_ONE);
@@ -344,7 +345,8 @@ void GameState::hBlur() {
 }
 
 void GameState::vBlur() {
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT);
    useOrtho();
    glPushMatrix();
    //glBlendFunc(GL_ONE, GL_ONE);

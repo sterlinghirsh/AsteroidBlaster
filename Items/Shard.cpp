@@ -194,12 +194,12 @@ void drawOtherOrbiters() {
 }
 
 void Shard::drawGlow() {
-   glColor3f(0, 0, 0);
+   glColor4f(0.3, 0.3, 1.0, 0.8);
    // Call the display list if it has one.
    Object3D::draw();
    // Disable materials.
-   //glEnable(GL_COLOR_MATERIAL);
-   //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   glEnable(GL_COLOR_MATERIAL);
+   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
    // Push matrix and draw main shard.
