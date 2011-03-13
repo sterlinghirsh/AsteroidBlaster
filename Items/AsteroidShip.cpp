@@ -849,6 +849,9 @@ void AsteroidShip::handleCollision(Drawable* other) {
       if (!gameState->godMode) {
          health -= 4 * ceil(asteroid->radius);
       }
+      if(health < 0) {
+         health = 0;
+      }
       shakeAmount = 1;
    }
 }
