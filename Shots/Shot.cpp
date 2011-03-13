@@ -39,7 +39,7 @@ void Shot::update(double timeDiff) {
 /**
  * Ignore collisions with the owner's ship.
  */
-void Shot::handleCollision(Object3D* other) {
+void Shot::handleCollision(Drawable* other) {
    if (other == owner)
       return;
    shouldRemove = true;

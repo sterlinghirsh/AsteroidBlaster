@@ -9,6 +9,7 @@
 #ifndef __CUSTODIAN_H__
 #define __CUSTODIAN_H__
 
+#include "Items/Drawable.h"
 #include "Items/Object3D.h"
 #include <vector>
 #include <set>
@@ -16,22 +17,23 @@
 
 // Incomplete class declaration so we can use pointers.
 class Object3D;
+class Drawable;
 
 struct compareByDistance {
-   static Object3D* curObject;
+   static Drawable* curObject;
    static Vector3D d1;
    static Vector3D d2;
-   bool operator() (Object3D* const& lhs, Object3D* const& rhs) const;
+   bool operator() (Drawable* const& lhs, Drawable* const& rhs) const;
 };
 
 class Custodian {
    public:
       void update();
-      void add(Object3D* objectIn);
-      void remove(Object3D* objectIn);
-      std::set<Object3D*, compareByDistance>* findCollisions(Object3D* item, bool searchBackwards = false);
+      void add(Drawable* objectIn);
+      void remove(Drawable* objectIn);
+      std::set<Drawable*, compareByDistance>* findCollisions(Drawable* item, bool searchBackwards = false);
       void findAllCollisions();
-      std::vector<Object3D*>* getListOfObjects();
+      std::vector<Drawable*>* getListOfObjects();
       void clear();
       int asteroidCount;
       int shardCount;
@@ -39,9 +41,9 @@ class Custodian {
       Custodian();
 
    private:
-      std::vector<Object3D*> objectsByMinX;
-      std::vector<Object3D*> objectsByMaxX;
-      std::list<Object3D*> objectsToAdd;
+      std::vector<Drawable*> objectsByMinX;
+      std::vector<Drawable*> objectsByMaxX;
+      std::list<Drawable*> objectsToAdd;
 };
 
 #endif

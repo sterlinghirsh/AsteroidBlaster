@@ -12,7 +12,7 @@
 class ElectricityImpactParticle : public Particle  {
    public :
       ElectricityImpactParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b);
-      virtual bool step(double timeDifference);
+      virtual void update(double timeDifference);
       static void Add(Point3D* pos, Vector3D* vec);
 };
 

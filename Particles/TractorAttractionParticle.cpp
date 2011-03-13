@@ -14,13 +14,14 @@ TractorAttractionParticle::TractorAttractionParticle(Point3D* _position,
       size = 0.3;
    }
 
-bool TractorAttractionParticle::step(double timeDifference) {
+void TractorAttractionParticle::update(double timeDifference) {
    const float velocityScalePerSecond = 2;
    Vector3D toTarget(*position, *target);
    toTarget.setLength(10);
    toTarget.scalarMultiplyUpdate(timeDifference);
    velocity->addUpdate(toTarget);
-   return Particle::step(timeDifference);
+   // Do the parent's update.
+   Particle::update(timeDifference);
 }
 
 void TractorAttractionParticle::Add(Point3D* pos, Vector3D* vec, Point3D* _target) {

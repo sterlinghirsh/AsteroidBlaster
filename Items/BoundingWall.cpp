@@ -7,6 +7,7 @@
 
 #include "Items/BoundingWall.h"
 #include <math.h>
+#include "Items/Object3D.h"
 
 BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID) :
  squareSize(_squareSize), wallSize(_wallSize), wallColor(_wallColor), wallID(_wallID) {
@@ -67,7 +68,7 @@ GlowSquare* BoundingWall::getSquareByCoords(int x, int y) {
    return getSquareByID(getSquareID(x, y));
 }
 
-void BoundingWall::getSquareCoordsFromObject(Object3D* item, int& squareXIndex, int& squareYIndex) {
+void BoundingWall::getSquareCoordsFromObject(Drawable* item, int& squareXIndex, int& squareYIndex) {
    float squareX, squareY;
    if (wallID == WALL_TOP || wallID == WALL_BOTTOM) {
       squareX = item->position->x;
@@ -90,7 +91,7 @@ GlowSquare* BoundingWall::getSquareByID(int index) {
    return squares[index];
 }
 
-void BoundingWall::constrain(Object3D* item) {
+void BoundingWall::constrain(Drawable* item) {
    int x, y;
    getSquareCoordsFromObject(item, x, y);
    GlowSquare* square = getSquareByCoords(x, y);

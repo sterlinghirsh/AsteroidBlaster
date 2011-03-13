@@ -13,7 +13,7 @@ class TractorAttractionParticle : public Particle  {
    public :
       TractorAttractionParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b, Point3D* _target);
       static void Add(Point3D* pos, Vector3D* vec, Point3D* _target);
-      virtual bool step(double timeDifference);
+      virtual void update(double timeDifference);
       Point3D* target;
 };
 

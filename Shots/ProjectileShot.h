@@ -13,7 +13,7 @@ class ProjectileShot : public Shot {
       ProjectileShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn );
       virtual void draw();
       virtual void update(double timeDiff);
-      virtual void handleCollision(Object3D* other);
+      virtual void handleCollision(Drawable* other);
       int particleNum;
 
 };

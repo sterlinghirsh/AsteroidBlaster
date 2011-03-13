@@ -13,9 +13,6 @@
 Object3D::Object3D(double x, double y, double z, GLuint displayListIn) : Drawable(0, 0, 0, 0) {
    minX = minY = minZ = -0.5;
    maxX = maxY = maxZ =  0.5;
-   minPosition = new Point3D(0, 0, 0);
-   maxPosition = new Point3D(0, 0, 0);
-   minXRank = maxXRank = 0;
    updateBoundingBox();
    displayList = displayListIn;
    /* Initialize velocity and acceleration to 0. */
@@ -23,7 +20,6 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) : Drawabl
    acceleration = new Vector3D(0, 0, 0);
    axis = NULL;
    angle = 0;
-   shouldRemove = false; // True when custodian should remove this.
    shouldConstrain = true; // True when the bounding space should constrain it.
    // Remove up, right, forward yaw, pitch, roll maybe?
    up = new Vector3D(0, 1, 0);
@@ -37,9 +33,6 @@ Object3D::Object3D(double x, double y, double z, GLuint displayListIn) : Drawabl
    radius = std::max(radius, fabs(maxZ));
    radius = std::max(radius, fabs(minZ));
    targeted = false;
-   shouldDrawInMinimap = false;
-   cullRadius = -1.0;
-   shouldBeCulled = true;
 }
 
 Object3D::~Object3D() {
@@ -62,6 +55,9 @@ Object3D::~Object3D() {
 }
 
 void Object3D::update(double timeDifference) {
+   // Do the parent's update.
+   Drawable::update(timeDifference);
+
    updateAcceleration(timeDifference);
    if (acceleration != NULL && velocity != NULL)
       velocity->addUpdate(acceleration->scalarMultiply(timeDifference));
@@ -106,17 +102,6 @@ void Object3D::draw() {
    if (axis != NULL)
       glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glCallList(displayList);
-   glPopMatrix();
-}
-
-/**
- * Subclasses can extend this, but this draws a sphere on the minimap.
- */
-void Object3D::drawInMinimap() {
-   glPushMatrix();
-      position->glTranslate();
-      setMaterial(RedFlat);
-      gluSphere(quadric, 5, 8, 8);
    glPopMatrix();
 }
 
@@ -171,29 +156,7 @@ void Object3D::pitch(double angle) {
 }
 
 
-/**
- * checkOther is set to true by default in Object3D.h.
- * If this doesn't detect a collision, then checkOther specifies if we should use other's 
- * collision detection function.
- * We use this as a last check so we can do other types of hit detection in the custodian.
- * If this is called first and another unoverrided detectCollision is called with
- * other->detectCollision(), this trusts the custodian's judgement.
- */
-bool Object3D::detectCollision(Object3D* other, bool checkOther) {
-   if (this == other) {
-      printf("detected collision with self!\n");
-   }
-   if (checkOther) {
-      return other->detectCollision(this, false);
-   }
-   
-   return !(other->maxPosition->y < minPosition->y || 
-       other->minPosition->y > maxPosition->y ||
-       other->maxPosition->z < minPosition->z ||
-       other->minPosition->z > maxPosition->z);
-}
-
-void Object3D::handleCollision(Object3D* other) {
+void Object3D::handleCollision(Drawable* other) {
    // Handle stuff in subclasses.
 }
 
@@ -237,10 +200,6 @@ void Object3D::updateBoundingBox() {
    maxPosition->offsetBy(maxX, maxY, maxZ);
 }
 
-void Object3D::setCustodian(Custodian *cust) {
-   custodian = cust;
-}
-
 /**
  * This debug function can be overridden with more specific debug info.
  * This one does not print velocity, since Object3D may have null velocity.
@@ -282,14 +241,6 @@ bool Object3D::isTargeted() {
    return targeted;
 }
 
-
-double Object3D::getCullRadius() {
-   if (cullRadius == -1.0) {
-      return radius;
-   } else {
-      return cullRadius;
-   }
-}
 
 void Object3D::addAcceleration(Vector3D* newAccel) {
    accelerations.push(newAccel);

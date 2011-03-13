@@ -29,7 +29,7 @@ class Minimap {
 
       Minimap(AsteroidShip* _ship);
       void draw();
-      void drawLines(std::list<Object3D*>* objects);
+      void drawLines(std::list<Drawable*>* objects);
       void setDisplaySize(float newDisplaySize);
       void setZoomLevel(float newZoomLevel);
       void adjustZoom(double changeAmount);

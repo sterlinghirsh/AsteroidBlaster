@@ -141,7 +141,7 @@ void BeamShot::drawGlow() {
  * This does the actual beam-weapon hit detection.
  * This ignores checkOther, since the beam will be the final say on what gets hit.
  */
-bool BeamShot::detectCollision(Object3D* other, bool checkOther) {
+bool BeamShot::detectCollision(Drawable* other, bool checkOther) {
    if (hitYet || curFrame != firstFrame)
       return false;
    Vector3D positionVector(*position);
@@ -172,7 +172,7 @@ bool BeamShot::detectCollision(Object3D* other, bool checkOther) {
    return fabs(distance) < other->radius;
 }
 
-void BeamShot::handleCollision(Object3D* other) {
+void BeamShot::handleCollision(Drawable* other) {
    //printf("Distance: %f\n", position->distanceFrom(*other->position));
    if (other == owner || hitYet || (curFrame - 1) > firstFrame)
       return;

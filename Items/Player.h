@@ -22,6 +22,6 @@ class Player : public Object3D {
       virtual void setForwardVelocity(double newVelocity);
       virtual void update(double timeDifference);
       virtual void reset();
-      virtual void handleCollision(Object3D* other);
+      virtual void handleCollision(Drawable* other);
       
 };

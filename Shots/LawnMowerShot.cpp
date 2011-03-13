@@ -129,7 +129,7 @@ void LawnMowerShot::draw() {
 /**
  * Is the object in the cone?
  */
-bool LawnMowerShot::detectCollision(Object3D* other, bool checkOther) {
+bool LawnMowerShot::detectCollision(Drawable* other, bool checkOther) {
    if (other == owner)
       return false;
    
@@ -160,7 +160,7 @@ bool LawnMowerShot::detectCollision(Object3D* other, bool checkOther) {
     (other->radius + requiredDistance));
 }
 
-void LawnMowerShot::handleCollision(Object3D* other) {
+void LawnMowerShot::handleCollision(Drawable* other) {
    if (other == owner)
       return;
 }

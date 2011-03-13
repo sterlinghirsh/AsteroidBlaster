@@ -43,7 +43,7 @@ void Player::setForwardVelocity(double newVelocity) {
    forwardVelocity = newVelocity;
 }
 
-void Player::handleCollision(Object3D* other) {
+void Player::handleCollision(Drawable* other) {
    Enemy* enemy;
    if ((enemy = dynamic_cast<Enemy*>(other)) != NULL && !enemy->wasHit) {
       ++score;

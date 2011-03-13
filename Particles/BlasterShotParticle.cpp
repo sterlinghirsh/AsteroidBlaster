@@ -13,12 +13,13 @@ BlasterShotParticle::BlasterShotParticle(Point3D* _position,
       size = 0.1;
    }
 
-bool BlasterShotParticle::step(double timeDifference) {
+void BlasterShotParticle::update(double timeDifference) {
    const float velocityScalePerSecond = 3;
    velocity->xMag -= velocity->xMag * velocityScalePerSecond * timeDifference;
    velocity->yMag -= velocity->yMag * velocityScalePerSecond * timeDifference;
    velocity->zMag -= velocity->zMag * velocityScalePerSecond * timeDifference;
-   return Particle::step(timeDifference);
+   // Do the parent's update.
+   Particle::update(timeDifference);
 }
 
 void BlasterShotParticle::Add(Point3D* pos, Vector3D* vec) {

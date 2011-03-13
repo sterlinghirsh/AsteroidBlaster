@@ -84,7 +84,7 @@ GameState::GameState(double worldSizeIn) {
    /* A view frustum culled list of objects to be used for drawing and by
       the shooting AI.
       */
-   std::list<Object3D*>* viewFrustumObjects;
+   std::list<Drawable*>* viewFrustumObjects;
 
 
    // Bloom
@@ -154,9 +154,9 @@ void GameState::update(double timeDiff) {
       nextLevel();
    }
 
-   std::vector<Object3D*>* objects = custodian.getListOfObjects();
-   std::set<Object3D*, compareByDistance>* collisions;
-   std::set<Object3D*, compareByDistance>::iterator otherObject;
+   std::vector<Drawable*>* objects = custodian.getListOfObjects();
+   std::set<Drawable*, compareByDistance>* collisions;
+   std::set<Drawable*, compareByDistance>::iterator otherObject;
 
    // Determine whether or not the game should continue running
    if (ship->getHealth() <= 0) {
@@ -183,7 +183,7 @@ void GameState::update(double timeDiff) {
    // Get updated list.
    objects = custodian.getListOfObjects();
 
-   Particle::update(timeDiff);
+   Particle :: updateParticles(timeDiff);
 
    for (item = objects->begin(); item != objects->end(); ++item) {
       collisions = custodian.findCollisions(*item, false);
@@ -529,7 +529,7 @@ void GameState::checkCollisions() {
 
 void GameState::initAsteroids() {
    Asteroid3D* tempAsteroid;
-   std::set<Object3D*, compareByDistance>* collisions;
+   std::set<Drawable*, compareByDistance>* collisions;
 
    /* We want this spaceHolder because we don't want to spawn asteroids
     * too close to the ship.
@@ -783,8 +783,10 @@ void GameState::keyDown(int key) {
       // If the user presses F11, give them all of the weapons.
    case SDLK_F11:
       // Make all of the weapons be purchased.
-      for (int i = 0; i < ship->getNumWeapons(); i++)
+      for (int i = 0; i < ship->getNumWeapons(); i++) {
          ship->getWeapon(i)->purchased = true;
+         ship->getWeapon(i)->curAmmo += 500;
+      }
       break;
    case SDLK_F2:
       bloom = !bloom;

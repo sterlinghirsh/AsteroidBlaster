@@ -105,8 +105,8 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 
 Object3D* ShootingAI::chooseTarget() {
    // Make the AI choose from a list of Targetable objects instead of Drawable objects, which are inside the view frustum.
-   std::list<Object3D*>* targets = gameState->viewFrustumObjects;
-   std::list<Object3D*>::iterator targets_iterator;
+   std::list<Drawable*>* targets = gameState->viewFrustumObjects;
+   std::list<Drawable*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
    Point3D vec;
    double curWeight, maxWeight = -1;
@@ -138,7 +138,7 @@ Object3D* ShootingAI::chooseTarget() {
       
       if (maxWeight < 0 || curWeight > maxWeight) {
          maxWeight = curWeight;
-         closest = *targets_iterator;
+         closest = dynamic_cast<Object3D*> (*targets_iterator);
       } 
    }
 

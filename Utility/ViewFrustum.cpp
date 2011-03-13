@@ -32,7 +32,7 @@ ViewFrustum :: ~ViewFrustum() {
 /* Returns true if the object3D is completely outside of the view frustum planes.
  * Returns false if it's even part-way inside.
  */
-bool ViewFrustum :: checkOutside(Object3D* obj) {
+bool ViewFrustum :: checkOutside(Drawable* obj) {
    // Decide each of the Results based on obj's min & max x, y, & z.
    return !( 
       left -> onPositiveSide(obj) && right -> onPositiveSide(obj) &&
@@ -41,11 +41,11 @@ bool ViewFrustum :: checkOutside(Object3D* obj) {
 }
 
 // Take in a list of all Object3D's, and cull it down to a list of only the Object 3D's in front.
-std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* all) {
+std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* all) {
    // The culled vector to be returned.
-   std::list<Object3D*>* returnMe = new std::list<Object3D*>;
+   std::list<Drawable*>* returnMe = new std::list<Drawable*>;
    // Set up an iterator to go over the list.
-   std::vector<Object3D*> :: iterator iter;
+   std::vector<Drawable*> :: iterator iter;
 
    // Save a copy of the model view matrix.
    glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&modelViewMatrix);
@@ -106,7 +106,7 @@ std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* a
    far->calcMag();
  
    // As opposed to the checker, the one doing the checking. 
-   Object3D* checkee;
+   Drawable* checkee;
    // call checkOutside() on each of the Object3D's in all.
    // Build a new set of Object3D's out of each of the ones that got back false.
    for (iter = all->begin(); iter != all->end(); ++iter)

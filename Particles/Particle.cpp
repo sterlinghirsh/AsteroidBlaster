@@ -26,6 +26,7 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
 {
    position = _position;
    velocity = _velocity;
+   
    slowdown = 2.0f;
    shouldRemove = false;
    life = _life;
@@ -36,22 +37,27 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
    size = 0.01;
 }
 
-void Particle::update(double timeDifference)
+void Particle::updateParticles(double timeDifference)
 {
    list<Particle*>::iterator particle = Particle::particles.begin();
    for (; particle != Particle::particles.end(); ++particle) 
    {
-      if ((*particle)->step(timeDifference)) {
-         particle = Particle::particles.erase(particle);
+      if (*particle != NULL) {
+         (*particle)->update(timeDifference);
+         if ((*particle)->shouldRemove) {
+            particle = Particle::particles.erase(particle);
+         }
       }
    }
 }
 
 /**
- * Return true to delete the particle.
+ * Sets the particle's shouldRemove to true if the particle has outlived its lifespan.
  */
-bool Particle::step(double timeDifference)
+void Particle::update(double timeDifference)
 {
+   // Do the parent's update.
+   Drawable::update(timeDifference);
    // Move On The X Axis By X Speed 
    position->x += velocity->xMag * timeDifference;
    // Move On The Y Axis By Y Speed 
@@ -59,7 +65,10 @@ bool Particle::step(double timeDifference)
    // Move On The Z Axis By Z Speed 
    position->z += velocity->zMag * timeDifference;
    
-   return doubleTime() > (startTime + life);
+   // This will take care of marking shouldRemove as true or not
+   if(doubleTime() > (startTime + life)) {
+      shouldRemove = true;
+   };
 }
 
 void Particle::draw(Point3D* eyePoint)

@@ -22,26 +22,32 @@ Radar :: ~Radar() {
    delete curFrustum;
 }
 
-/* Provides a complete, unfiltered reading of the whole environment.
+/**
+ * Provides a complete, unfiltered reading of the whole environment.
+ * This reading does not include Particles of any type!
  */
-std::list<Object3D*>* Radar :: getFullReading() {
+std::list<Drawable*>* Radar :: getFullReading() {
    /* Get the custodian out of gameState, and get its vector of Objects.
     * Use this vector to construct a new copied vector (to be safe), and return that one.
     */
-   std::vector<Object3D*>* all (gameState->custodian.getListOfObjects());
+   std::vector<Drawable*>* all (gameState->custodian.getListOfObjects());
    
    // The new list, which will be returned
-   std::list<Object3D*>* allNew = new std::list<Object3D*>();
+   std::list<Drawable*>* allNew = new std::list<Drawable*>();
    
    // As opposed to the checker, the one doing the checking. 
-   Object3D* checkee;
+   Drawable* checkee;
    
    // Iterate over all the Object3D's the custodian gave us
    for (vectorIter = all->begin(); vectorIter != all->end(); ++vectorIter)
    {
       // Copy all of the ptrs into a list
       checkee = *vectorIter;
-      allNew->push_back(checkee);
+
+      // Add the Drawable object to the allNew list if it's not a particle
+      if (dynamic_cast<Particle*>(checkee) == NULL) {
+         allNew->push_back(checkee);
+      }
    }
    
    return allNew;
@@ -51,26 +57,27 @@ std::list<Object3D*>* Radar :: getFullReading() {
  * Provides a filtered reading of the environment based on what's near 
  * the owner AsteroidShip.
  * The distance which objects must be within to be returned by getNearbyReading()
+ * This reading does not include Particles of any type!
  */
-std::list<Object3D*>* Radar :: getNearbyReading(float radius) {
+std::list<Drawable*>* Radar :: getNearbyReading(float radius) {
    /* Get the custodian out of gameState, and get its vector of Objects.
     * Use this vector to construct a new copied vector (to be safe), and return that one.
     */
-   std::vector<Object3D*>* all (gameState->custodian.getListOfObjects());
+   std::vector<Drawable*>* all (gameState->custodian.getListOfObjects());
    
-   std::list<Object3D*>* nearList = new std::list<Object3D*>();
+   std::list<Drawable*>* nearList = new std::list<Drawable*>();
    
    // As opposed to the checker, the one doing the checking. 
-   Object3D* checkee;
+   Drawable* checkee;
    
    // Iterate over all the Object3D's the custodian gave us
    for (vectorIter = all->begin(); vectorIter != all->end(); ++vectorIter)
    {
       checkee = *vectorIter;
       
-      // If the object is within the required nearby distance to be drawn
-      if(checkee != NULL && 
-       owner->position->distanceFrom(*(checkee->position)) <= radius) {
+      // If the object is not a particle & is within the required nearby distance to be drawn
+      if(checkee != NULL && (dynamic_cast<Particle*>(checkee) == NULL) &&
+            owner->position->distanceFrom(*(checkee->position)) <= radius) {
          nearList->push_back(checkee);
       }
    }
@@ -80,12 +87,15 @@ std::list<Object3D*>* Radar :: getNearbyReading(float radius) {
 
 /* Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
  */
-std::list<Object3D*>* Radar :: getViewFrustumReading() {
+std::list<Drawable*>* Radar :: getViewFrustumReading() {
    // Get the custodian out of gameState, and get its vector of Objects.
-   std::vector<Object3D*>* all (gameState->custodian.getListOfObjects());
+   std::vector<Drawable*>* all (gameState->custodian.getListOfObjects());
+   // vector += gameState->GiveMeAllYourParticles
+   // TODO Add Particles to this all vector so that they can be culled
    
+    
    // Turn the vector of all Objects into a list, & cull it
-   std::list<Object3D*>* culledList = curFrustum->cullToViewFrustum(all);
+   std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(all);
    
    //curFrustum->print();
    

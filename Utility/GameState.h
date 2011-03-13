@@ -47,13 +47,13 @@ class GameState : public InputReceiver {
                         *weaponText,
                         *ammoText,
                         *curLevelText;
-      // Used when looping over Object3Ds
-      std::vector<Object3D*>::iterator item;
-      // Used when looping over Object3Ds in drawMinimap
-      std::list<Object3D*>::iterator listIter;
+      // Used when looping over Drawable objects
+      std::vector<Drawable*>::iterator item;
+      // Used when looping over Drawable objects in drawMinimap
+      std::list<Drawable*>::iterator listIter;
       Custodian custodian;
 
-      std::list<Object3D*>* viewFrustumObjects;
+      std::list<Drawable*>* viewFrustumObjects;
 
       GameState(double worldSize);
       virtual ~GameState();

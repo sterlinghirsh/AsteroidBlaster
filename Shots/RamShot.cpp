@@ -271,7 +271,7 @@ void RamShot::draw() {
 /**
  * Is the object in the cone?
  */
-bool RamShot::detectCollision(Object3D* other, bool checkOther) {
+bool RamShot::detectCollision(Drawable* other, bool checkOther) {
    if (other == owner)
       return false;
    
@@ -302,7 +302,7 @@ bool RamShot::detectCollision(Object3D* other, bool checkOther) {
     (other->radius + requiredDistance));
 }
 
-void RamShot::handleCollision(Object3D* other) {
+void RamShot::handleCollision(Drawable* other) {
    if (other == owner)
       return;
 }

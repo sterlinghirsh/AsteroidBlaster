@@ -40,7 +40,7 @@ int BoundingSpace::getNumSquares() {
    return round(extent / squareSize);
 }
 
-void BoundingSpace::constrain(Object3D* item) {
+void BoundingSpace::constrain(Drawable* item) {
    if (!item->shouldConstrain)
       return;
 

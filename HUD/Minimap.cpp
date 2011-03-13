@@ -26,7 +26,7 @@ Minimap::Minimap(AsteroidShip* _ship) :
    hidden = false;
 }
 
-void Minimap::drawLines(std::list<Object3D*>* objects) {
+void Minimap::drawLines(std::list<Drawable*>* objects) {
    // Now draw the lines.
    // Load just the rotation matrix.
    static Matrix4 modelViewMatrix;
@@ -34,7 +34,7 @@ void Minimap::drawLines(std::list<Object3D*>* objects) {
    double radius2D; // Radius when an object is projected onto the forward-right plane of the ship.
    double radius3D; // Radius from the ship in 3D space.
    const float scaleFactor = 1 / zoomLevel;
-   std::list<Object3D*>::iterator listIter;
+   std::list<Drawable*>::iterator listIter;
    static Point3D objectPosition;
    static Vector3D positionVector;
    positionVector.updateMagnitude(*ship->position);
@@ -128,12 +128,12 @@ void Minimap::draw() {
       return;
 
    // Get a reading of all the nearby Object3Ds from the Radar
-   std::list<Object3D*>* objects = ship->getRadar()->getNearbyReading(zoomLevel);
+   std::list<Drawable*>* objects = ship->getRadar()->getNearbyReading(zoomLevel);
    static Vector3D positionVector;
    const float scaleFactor = 1 / zoomLevel;
    double radius3D; // Radius from the ship in 3D space.
    // Used when looping over Object3Ds in drawMinimap
-   std::list<Object3D*>::iterator listIter;
+   std::list<Drawable*>::iterator listIter;
  
    // Draw the minimap
    glPushMatrix();

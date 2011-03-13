@@ -129,7 +129,7 @@ void TractorBeamShot::draw() {
 /**
  * Is the object in the cone?
  */
-bool TractorBeamShot::detectCollision(Object3D* other, bool checkOther) {
+bool TractorBeamShot::detectCollision(Drawable* other, bool checkOther) {
    if (other == owner)
       return false;
    
@@ -160,7 +160,7 @@ bool TractorBeamShot::detectCollision(Object3D* other, bool checkOther) {
     (other->radius + requiredDistance));
 }
 
-void TractorBeamShot::handleCollision(Object3D* other) {
+void TractorBeamShot::handleCollision(Drawable* other) {
    if (other == owner)
       return;
 }

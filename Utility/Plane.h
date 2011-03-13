@@ -31,7 +31,7 @@ class Plane {
          return dist;
       }
 
-      bool onPositiveSide(Object3D* obj) {
+      bool onPositiveSide(Drawable* obj) {
          // Multiply by 2.05 instead of 2 to make sure things slightly off screen are still drawn, to be sure we prevent popping.
          return distanceTo(obj->position->x, obj->position->y, obj->position->z) > -1*obj->getCullRadius()*2.05;  
          // Test with radius instead of Axis Aligned Bounding Boxes
@@ -62,7 +62,6 @@ class Plane {
          printf("Normalized A, B, C, D: %f, %f, %f, %f\n", tmpA, tmpB, tmpC, tmpD);
          
       }
-      
 
    private:
 

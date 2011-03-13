@@ -15,7 +15,7 @@ class Enemy : public Object3D {
       bool wasHit;
       Enemy(double x, double z, double velocityX, double velocityZ, int displayListIn);
       virtual void draw();
-      virtual void handleCollision(Object3D* other);
+      virtual void handleCollision(Drawable* other);
 };
 
 #endif

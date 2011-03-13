@@ -298,7 +298,7 @@ void Asteroid3D::update(double timeDiff) {
    angle += rotationSpeed * timeDiff;
 }
 
-void Asteroid3D::handleCollision(Object3D* other) {
+void Asteroid3D::handleCollision(Drawable* other) {
    Asteroid3D* otherAsteroid;
    AsteroidShip* ship;
    Shot* shot;

@@ -145,7 +145,7 @@ void ElectricityShot::draw() {
 /**
  * Is the object in the cone?
  */
-bool ElectricityShot::detectCollision(Object3D* other, bool checkOther) {
+bool ElectricityShot::detectCollision(Drawable* other, bool checkOther) {
    if (other == owner)
       return false;
 
@@ -172,7 +172,7 @@ bool ElectricityShot::detectCollision(Object3D* other, bool checkOther) {
     (other->radius + requiredDistance));
 }
 
-void ElectricityShot::handleCollision(Object3D* other) {
+void ElectricityShot::handleCollision(Drawable* other) {
    if (other == owner)
       return;
 }

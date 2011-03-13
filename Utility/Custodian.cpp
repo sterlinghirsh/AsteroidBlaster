@@ -18,7 +18,7 @@ Custodian::Custodian() {
  * Compares by minX in Object3D.
  * Returns true if first argument goes before the second argument.* Sorts nulls last.
  */
-static bool compareByMinX (Object3D* item1, Object3D* item2) {
+static bool compareByMinX (Drawable* item1, Drawable* item2) {
    // If the first item is null, the second item comes first.
    if (item1 == NULL)
       return false;
@@ -32,7 +32,7 @@ static bool compareByMinX (Object3D* item1, Object3D* item2) {
  * Compares by maxX in Object3D.
  * Returns true if first argument goes before the second argument.* Sorts nulls last.
  */
-static bool compareByMaxX (Object3D* item1, Object3D* item2) {
+static bool compareByMaxX (Drawable* item1, Drawable* item2) {
    // If the first item is null, the second item comes first.
    if (item1 == NULL)
       return false;
@@ -42,13 +42,13 @@ static bool compareByMaxX (Object3D* item1, Object3D* item2) {
    return item1->maxPosition->x < item2->maxPosition->x;
 }
 
-bool compareByDistance::operator() (Object3D* const& lhs, Object3D* const& rhs) const {
+bool compareByDistance::operator() (Drawable* const& lhs, Drawable* const& rhs) const {
    d1.updateMagnitude(curObject->position, lhs->position);
    d2.updateMagnitude(curObject->position, rhs->position);
    return d1.getComparisonLength() < 
     d2.getComparisonLength();
 }
-Object3D* compareByDistance::curObject;
+Drawable* compareByDistance::curObject;
 Vector3D compareByDistance::d1;
 Vector3D compareByDistance::d2;
 
@@ -60,7 +60,7 @@ Vector3D compareByDistance::d2;
  * they are removed from the list.
  */
 void Custodian::update() {
-   Object3D* tempObject;
+   Drawable* tempObject;
    // Iterate over objects that need to be added.
    while (objectsToAdd.size() > 0) {
       // Get the first item in the list.
@@ -113,11 +113,11 @@ void Custodian::update() {
 }
 
 /**
- * Call this on an object if you want it to be custodian'd.
+ * Call this on a Drawable object if you want it to be custodian'd.
  * This doesn't add the item right away, but waits until the next udpate 
  * to do it. In effect, items are added to a queue of items to add.
  */
-void Custodian::add(Object3D* objectIn) {
+void Custodian::add(Drawable* objectIn) {
    objectsToAdd.push_back(objectIn);
    objectIn->setCustodian(this);
    if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
@@ -128,9 +128,9 @@ void Custodian::add(Object3D* objectIn) {
 }
 
 /**
- * Remove an object.
+ * Remove a Drawable object.
  */
-void Custodian::remove(Object3D* objectIn) {
+void Custodian::remove(Drawable* objectIn) {
    objectsByMinX[objectIn->minXRank] = NULL;
    objectsByMaxX[objectIn->maxXRank] = NULL;
    if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
@@ -145,18 +145,18 @@ void Custodian::remove(Object3D* objectIn) {
  * This returns a pointer to a new std::list. You must delete
  * if after you use it.
  */
-std::set<Object3D*, compareByDistance>* Custodian::findCollisions(Object3D* item, bool searchBackwards) {
+std::set<Drawable*, compareByDistance>* Custodian::findCollisions(Drawable* item, bool searchBackwards) {
 
    compareByDistance::curObject = item;
    // TODO: Order this by distance.
-   std::set<Object3D*, compareByDistance >* sublist = new std::set<Object3D*, compareByDistance>();
+   std::set<Drawable*, compareByDistance >* sublist = new std::set<Drawable*, compareByDistance>();
    // If we were passed a null pointer, don't worry about it, just return an empty list.
    if (item == NULL)
       return sublist;
 
-   std::set<Object3D*>::iterator iter;
+   std::set<Drawable*>::iterator iter;
    int numElements = objectsByMinX.size();
-   Object3D* other;
+   Drawable* other;
 
    if (searchBackwards) {
       /* Start at the current maxX - 1. Check whether elements to 
@@ -188,7 +188,7 @@ std::set<Object3D*, compareByDistance>* Custodian::findCollisions(Object3D* item
     * remove elements.
     */
    iter = sublist->begin();
-   std::set<Object3D*>::iterator current;
+   std::set<Drawable*>::iterator current;
    while (iter != sublist->end()) {
       current = iter++;
       other = *current;
@@ -203,7 +203,7 @@ std::set<Object3D*, compareByDistance>* Custodian::findCollisions(Object3D* item
    return sublist;
 }
 
-std::vector<Object3D*>* Custodian::getListOfObjects() {
+std::vector<Drawable*>* Custodian::getListOfObjects() {
    return &objectsByMinX;
 }
 

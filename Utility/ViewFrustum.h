@@ -23,7 +23,7 @@ class ViewFrustum {
       /* Takes in a list of all the Object 3D's around, and culls them down to only the ones
        * that are inside the view frustum.
        */
-      virtual std::list<Object3D*>* cullToViewFrustum(std::vector<Object3D*>* all);
+      virtual std::list<Drawable*>* cullToViewFrustum(std::vector<Drawable*>* all);
       
       /* Prints out details about all of the planes of the view frustum.
        */
@@ -39,10 +39,11 @@ class ViewFrustum {
       Plane* near;
       Plane* far;
 
-      /* Returns true if the object3D is completely outside of the view frustum planes.
+      /* Returns true if the Drawable object is completely outside of the 
+       * view frustum planes.
        * Returns false if it's even part-way inside.
        */
-      virtual bool checkOutside(Object3D* obj);
+      virtual bool checkOutside(Drawable* obj);
 };
 
 #endif

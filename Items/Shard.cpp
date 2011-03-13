@@ -407,7 +407,7 @@ void Shard::update(double timeDiff) {
 /*
  * Handle a collision with another Object3D.
  */
-void Shard::handleCollision(Object3D* other) {
+void Shard::handleCollision(Drawable* other) {
    AsteroidShip* ship;
    Asteroid3D* asteroid;
    Shot* shot;

@@ -22,8 +22,8 @@ class ElectricityShot : public Shot {
       double angle;
       double length;
       double farRadius;
-      bool detectCollision(Object3D* other, bool checkOther);
-      void handleCollision(Object3D* other);
+      bool detectCollision(Drawable* other, bool checkOther);
+      void handleCollision(Drawable* other);
 };
 
 #endif

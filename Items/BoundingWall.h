@@ -17,7 +17,7 @@
 
 
 #include "Items/GlowSquare.h"
-#include "Items/Object3D.h"
+#include "Items/Drawable.h"
 #include <vector>
 
 class Object3D;
@@ -25,7 +25,7 @@ class GlowSquare;
 
 class BoundingWall {
    public:
-      void constrain(Object3D* item);
+      void constrain(Drawable* item);
       Color* wallColor;
       int wallID;
       int wallSize;
@@ -40,7 +40,7 @@ class BoundingWall {
       int getSquareX(int squareID);
       int getSquareY(int squareID);
       int getSquareID(int squareX, int squareY);
-      void getSquareCoordsFromObject(Object3D* item, int& squareXIndex, int& squareYIndex);
+      void getSquareCoordsFromObject(Drawable* item, int& squareXIndex, int& squareYIndex);
       GlowSquare* getSquareByID(int index);
       GlowSquare* getSquareByCoords(int x, int y);
       virtual void initDisplayList(); // Set up the displayList.

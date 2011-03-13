@@ -44,7 +44,7 @@ class Shard : public Object3D {
       void drawGlow();
       void makeStrip(Ring r1, Ring r2);
       void update(double timeDiff);
-      virtual void handleCollision(Object3D* other);
+      virtual void handleCollision(Drawable* other);
       bool handleHit(std::list<Shard*>& asteroids);
       void drawInMinimap();
       void debug();

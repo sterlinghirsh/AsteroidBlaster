@@ -54,7 +54,7 @@ void ProjectileShot::update(double timeDiff) {
    }
 }
 
-void ProjectileShot::handleCollision(Object3D* other) {
+void ProjectileShot::handleCollision(Drawable* other) {
    const int particlesToEmit = 10;
    
    static Vector3D particleVariation;

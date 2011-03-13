@@ -830,7 +830,7 @@ void AsteroidShip::draw() {
  * This handles our collisions. Duh.
  * We use a series of dynamic_casts to figure out what we've hit.
  */
-void AsteroidShip::handleCollision(Object3D* other) {
+void AsteroidShip::handleCollision(Drawable* other) {
    Asteroid3D* asteroid;
    Shard* shard;
 

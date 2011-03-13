@@ -61,8 +61,8 @@ FlyingAI::FlyingAI(AsteroidShip* owner) {
 std::list<Asteroid3D*>* FlyingAI :: getAsteroidList() {
    std::list<Asteroid3D*>* asteroids = new std::list<Asteroid3D*>();
    //std::list<Object3D*>* targets = gameState->viewFrustumObjects;
-   std::list<Object3D*>* targets = radar->getFullReading();
-   std::list<Object3D*>::iterator targets_iterator;
+   std::list<Drawable*>* targets = radar->getFullReading();
+   std::list<Drawable*>::iterator targets_iterator;
    
    targets_iterator = targets->begin();
    
@@ -82,8 +82,8 @@ Point3D* FlyingAI :: getClosestShard() {
    float shortestDist = 9999, tempDist = 9999;
    Point3D* closestShard = new Point3D(0,0,0);
    Point3D temp;
-   std::list<Object3D*>* targets = radar->getFullReading();
-   std::list<Object3D*>::iterator iter;
+   std::list<Drawable*>* targets = radar->getFullReading();
+   std::list<Drawable*>::iterator iter;
    
    iter = targets->begin();
    

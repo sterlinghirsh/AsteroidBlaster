@@ -30,7 +30,7 @@ void Enemy::draw() {
    Object3D::draw();
 }
 
-void Enemy::handleCollision(Object3D* other) {
+void Enemy::handleCollision(Drawable* other) {
    if (dynamic_cast<Player*>(other) != NULL) {
       wasHit = true;
       velocity->updateMagnitude(0, 0, 0);

@@ -14,16 +14,16 @@ class BeamShot : public Shot {
       bool hitYet;
       unsigned long firstFrame;
       unsigned long lastHitFrame;
-      Object3D* hitItem;
+      Drawable* hitItem;
 
       BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
       void drawBeam(bool drawDots);
       virtual void draw();
       virtual void drawGlow();
       virtual void drawInMinimap();
-      virtual bool detectCollision(Object3D* other, bool checkOther);
+      virtual bool detectCollision(Drawable* other, bool checkOther);
       virtual void update(double timeDiff);
-      virtual void handleCollision(Object3D* other);
+      virtual void handleCollision(Drawable* other);
       virtual void debug();
 };
 

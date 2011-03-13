@@ -21,7 +21,7 @@ class BoundingSpace {
 
       BoundingSpace(double extentIn, double x, double y, double z);
       ~BoundingSpace();
-      virtual void constrain(Object3D* item);
+      virtual void constrain(Drawable* item);
       void draw();
       void update(double timeDiff);
       int getNumSquares();

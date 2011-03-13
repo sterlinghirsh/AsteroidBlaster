@@ -18,14 +18,16 @@ class Particle : public Drawable {
       
       static std::list<Particle*> particles;
       static void drawParticles();
-      static void update(double timeDifference);
+      static void updateParticles(double timeDifference);
       //static void Add(Point3D* pos, Vector3D* vec) = 0;
       
       virtual void draw(Point3D* eyePoint);
-      virtual bool step(double timeDifference);
+      virtual void update(double timeDifference);
        
       Particle(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
       Point3D posIn, double drawWidth, double drawHeight);
+
+      // Set to true by update() when the particle should be deleted
       bool shouldRemove;
       static int particleDisplayList;
       static void initDisplayList();
