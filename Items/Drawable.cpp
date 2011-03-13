@@ -19,6 +19,7 @@ Drawable :: Drawable(double x, double y, double z, GLuint displayListIn) : posit
    minXRank = maxXRank = 0;
    // Initialize some other variables here.
    cullRadius = -1.0;
+   radius = 0.0;
    shouldBeCulled = true;
    minX = minY = minZ = maxX = maxY = maxZ = 0;
    shouldDrawInMinimap = false;
