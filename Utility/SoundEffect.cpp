@@ -52,6 +52,8 @@ int SoundEffect::playSoundEffect(std::string file, bool loop) {
 	   std::cerr << "could not play SoundEffect " << file << ", something went wrong!" << std::endl;
 		//exit(0);
    }
+
+   Mix_Volume(handle, volume);
    
    return handle;
 }
