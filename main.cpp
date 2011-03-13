@@ -251,6 +251,7 @@ void update() {
    gameState->checkCollisions();
 
    lastTime = curTime;
+   ++curFrame;
 }
 
 void draw() {
