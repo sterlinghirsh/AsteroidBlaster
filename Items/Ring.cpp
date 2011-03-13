@@ -53,7 +53,19 @@ MeshPoint Ring::makePt(double angle) {
    double tmpx = _rad * cos(angle) + tweakX;
    double tmpy = _h + tweakY;
    double tmpz = _rad * sin(angle) + tweakZ;
+   double u, v;
+   v = acos(tmpz / _rad) / M_PI;
+   if (tmpy >= 0)
+      u = acos(tmpx / (_rad * sin(M_PI * v))) / (2 * M_PI);
+   else
+      u = (M_PI + acos(tmpx / (_rad * sin(M_PI * v)))) / (2 * M_PI);
+   /*
+   printf("u0: %f, u1: %f, v0: %f\n", M_PI * v, 
+         tmpx / (_rad * sin(M_PI * v)), tmpz / _rad);
+   printf("u: %f, v: %f\n", u, v);
+   */
    MeshPoint tmpPt = MeshPoint(tmpx, tmpy, tmpz);
+   tmpPt.setTexPoint(u, v);
    return tmpPt;
 }
 

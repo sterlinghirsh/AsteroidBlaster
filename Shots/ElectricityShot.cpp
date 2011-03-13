@@ -15,8 +15,8 @@ static float flashiness = 0;
 static float tracker = 0;
 static int rando = 1;
 
-ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn, 
- AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
+ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn,
+      AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
    persist = true;
    angle = M_PI / 360; // Radians from the center
    length = 80;
@@ -41,7 +41,7 @@ ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn,
    maxY = std::max(endPoint1.y, endPoint2.y);
    minZ = std::min(endPoint1.z, endPoint2.z);
    maxZ = std::max(endPoint1.z, endPoint2.z);
-   
+
    // Expand the bounding box to make sure it contains the whole cone.
    minX -= farRadius;
    minY -= farRadius;
@@ -53,7 +53,7 @@ ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn,
    timeFired = doubleTime();
    shouldConstrain = false;
    /* Make sure tractor beam shots aren't culled from the view frustum (necessary to make them appear)
-    */
+   */
    shouldBeCulled = false;
    updateBoundingBox();
 }
@@ -66,79 +66,102 @@ void ElectricityShot::update(double timeDiff) {
       shouldRemove = true;
 }
 
+void ElectricityShot::drawGlow() {
+   drawShot(true);
+}
+
+void ElectricityShot::draw() {
+   drawShot(false);
+}
+
 /**
  * We want to remove this after drawing it once.
  */
-void ElectricityShot::draw() {
-   
-   glUseProgram(elecShader);
+void ElectricityShot::drawShot(bool isGlow) {
+   if (!isGlow)
+      glUseProgram(elecShader);
    glPushMatrix();
-   
-      //floats used in loop iteration
-      GLint loc1;
-      float j;
-      float k;
-      float x;
-      float y;
-      float z;
-      
-      //multipliers for randomness in lightning
-      float rot;
-      float srot;
-      
-      //width of inidvidual lightning lines
-      float thickness = 5.0;
-      
-      //density of the lightning in the beam
-      float density = 2;
-      
-      //Width of the lightning shot
-      int elecWidth = 100;
-      
-      //how fast you want the lighting flashing from blue to white. Higher number == faster flash
-      float flash = .7;
-      
-      float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
-      //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
-      Point3D start(*position);
-      velocity->movePoint(start);
-      start.glTranslate();
-      
-      glRotate();
-      flashiness = flashiness + flash;
-      if (flashiness >= 360 ) {
-         flashiness = 0;
-      }
+
+   //floats used in loop iteration
+   GLint loc1;
+   float j;
+   float k;
+   float x;
+   float y;
+   float z;
+
+   //multipliers for randomness in lightning
+   float rot;
+   float srot;
+
+   //width of inidvidual lightning lines
+   float thickness = 5.0;
+   if (isGlow) {
+      thickness = 10.0;
+   }
+
+   //density of the lightning in the beam
+   float density = 2;
+
+   //Width of the lightning shot
+   int elecWidth = 25;
+
+   //how fast you want the lighting flashing from blue to white. Higher number == faster flash
+   float flash = .7;
+
+   float lpos[4] = {1.0, 0.5, 1.0, 0.0};   // light postion
+   //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
+   Point3D start(*position);
+   velocity->movePoint(start);
+   start.glTranslate();
+
+   glRotate();
+   flashiness = flashiness + flash;
+   //if (flashiness >= 360 ) {
+   if (flashiness >= 2 * M_PI) {
+      flashiness = 0;
+   }
+   if (!isGlow) {
       loc1 = glGetUniformLocation(elecShader,"flash");
       glUniform1f(loc1,flashiness);
-
       setMaterial(GreenShiny);
-      glLineWidth(thickness);
-      
-      glBegin(GL_LINES);
-      
-      //Creates the twisted lines whose vertices are sent to the shader to modify
-      for(k = -density/2; k < density/2; k = k+1){
-            x = 0;
-            y = 0;
-            z = length;
-            for(j = 0; j < length ; j = j+(rand() % 10)){
-                  glVertex3f(x, y, z);
-                  
-                  rot = rand() % elecWidth - elecWidth/2;
-                  srot = rand() % elecWidth - elecWidth/2;
-                  glVertex3f(srot * (1 / length), rot  * (1 / length), length - j - 2);
-                  x = srot * (1 / length);
-                  y = rot * (1 / length);
-                  z = length - j - 2;
-            }
+   } else {
+      glEnable(GL_COLOR_MATERIAL);
+      glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+      glColor3f(0.5, 0.5, 1.0);
+   }
+
+   glLineWidth(thickness);
+
+   glBegin(GL_LINES);
+   glBegin(GL_QUADS);
+
+   //Creates the twisted lines whose vertices are sent to the shader to modify
+   for(k = -density/2; k < density/2; k = k+1){
+      x = 0;
+      y = 0;
+      z = length;
+      for(j = 0; j < length ; j = j+(rand() % 10)){
+         glVertex3f(x, y, z);
+
+         rot = rand() % elecWidth - elecWidth/2;
+         srot = rand() % elecWidth - elecWidth/2;
+         glVertex3f(srot * (1 / length), rot  * (1 / length), length - j - 2);
+         x = srot * (1 / length);
+         y = rot * (1 / length);
+         z = length - j - 2;
       }
-      glEnd();
-      
+   }
+   glEnd();
+
 
    glLineWidth(1.0);
    glPopMatrix();
-   glUseProgram(0);
+   if (!isGlow) {
+      glUseProgram(0);
+   } else {
+      glDisable(GL_COLOR_MATERIAL);
+   }
 
 }
 
@@ -151,7 +174,7 @@ bool ElectricityShot::detectCollision(Drawable* other, bool checkOther) {
 
    // This is how far it is for position to other->position.
    Vector3D shotToTarget(*position, *other->position);
-   
+
    Vector3D tempDirection(*velocity);
    tempDirection.normalize();
 
@@ -169,7 +192,7 @@ bool ElectricityShot::detectCollision(Drawable* other, bool checkOther) {
    Point3D closestPoint(*position);
    tempDirection.movePoint(closestPoint, forwardDistance);
    return (other->position->distanceFrom(closestPoint) <=
-    (other->radius + requiredDistance));
+         (other->radius + requiredDistance));
 }
 
 void ElectricityShot::handleCollision(Drawable* other) {

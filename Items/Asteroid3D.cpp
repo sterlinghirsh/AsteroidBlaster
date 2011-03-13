@@ -163,6 +163,8 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 }
 
 void Asteroid3D::drawGlow() {
+   extern GameState* gameState;
+
    glColor3f(1, 1, 1);
    glDisable(GL_LIGHTING);
    // Call the display list if it has one.
@@ -181,13 +183,26 @@ void Asteroid3D::drawGlow() {
    mesh.draw(false);
    glDisable(GL_POLYGON_OFFSET_FILL);
 
+   /*
    double step = (initH - health + 1);
    double stepR = .004 / initH * step;
    double stepG = .388 / initH * step;
    double stepB = 1.0 / initH * step;
    glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
+   */
+   
+   double step = (initH - health) / initH;
+   double stepR = cyan * step;
+   double stepG = magenta * step;
+   double stepB = yellow * step;
+   glColor3f(1 - stepR / 2.0, 1 - stepG / 2.0, 1 - stepB / 2.0);
+   //}
 
-   glLineWidth(ASTEROID3D_LINE_W);
+   double shipDist = position->distanceFrom(*gameState->ship->position);
+   double lineW = worldSize / shipDist * ASTEROID3D_LINE_W + 0.5;
+   //printf("distance: %f, line width: %f\n", shipDist, lineW);
+   //glLineWidth(ASTEROID3D_LINE_W);
+   glLineWidth(lineW);
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -238,7 +253,10 @@ void Asteroid3D::draw() {
    //}
    //glColor3f(0.996, 0.612, 0.0);
 
-   glLineWidth(ASTEROID3D_LINE_W);
+   double shipDist = position->distanceFrom(*gameState->ship->position);
+   double lineW = worldSize / shipDist * ASTEROID3D_LINE_W + 1.0;
+   //glLineWidth(ASTEROID3D_LINE_W);
+   glLineWidth(lineW);
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

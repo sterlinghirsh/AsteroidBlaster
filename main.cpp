@@ -183,7 +183,7 @@ void init() {
    glEnable(GL_BLEND);
    
    //set the background to be black
-   //glClearColor(0.0, 0.0, 0.0, 1.0);
+   glClearColor(0.0, 0.0, 0.0, 1.0);
    //glClearColor(1.0, 1.0, 1.0, 1.0);
 
    //initialize some GL stuff
@@ -195,6 +195,11 @@ void init() {
 
    // enables lighting so that minimap's sphere can have color
    glEnable(GL_LIGHTING);
+
+   glEnable(GL_LINE_SMOOTH);
+   //glEnable(GL_MULTISAMPLE_ARB);
+   glHint(GL_LINE_SMOOTH_HINT, GL_PERSPECTIVE_CORRECTION_HINT);
+   //glEnable(GL_POLYGON_SMOOTH);
 
    //initialize light
    //glEnable(GL_LIGHT0);

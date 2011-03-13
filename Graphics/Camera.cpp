@@ -19,6 +19,7 @@ Camera::Camera(bool lockUp) {
    offset = new Vector3D(0, 0, 0);
    lockUpVector = lockUp;
    shakeAmount = 0;
+   zoomFactor = 1.0;
 }
 
 Camera::Camera(Object3D* object) {
@@ -26,6 +27,7 @@ Camera::Camera(Object3D* object) {
    shakeAmount = 0;
    offset = new Vector3D(0, 0, 0);
    viewFrom(object);
+   zoomFactor = 1.0;
 }
 
 Camera::~Camera() {
@@ -36,6 +38,7 @@ Camera::~Camera() {
 void Camera::setCamera(bool setPosition) {
    Vector3D random;
    random.randomMagnitude();
+   offset->scalarMultiplyUpdate(zoomFactor);
    random.setLength(shakeAmount / 50);
    if (setPosition) {
       gluLookAt(
@@ -79,10 +82,12 @@ void Camera::viewFrom(Object3D* object) {
  */
 void Camera::setOffset(double x, double y, double z) {
    offset->updateMagnitude(x, y, z);
+   //offset->scalarMultiplyUpdate(zoomFactor);
 }
 
 void Camera::setOffset(Vector3D& newOffset) {
    offset->updateMagnitude(newOffset);
+   //offset->scalarMultiplyUpdate(zoomFactor);
 }
 
 void Camera::setViewVector(Vector3D* newView) {
@@ -92,9 +97,18 @@ void Camera::setViewVector(Vector3D* newView) {
 Point3D Camera::getEyePoint(){
    Point3D eyePoint(*position);
    offset->movePoint(eyePoint);
+   //offset->scalarMultiplyUpdate(zoomFactor);
    return eyePoint;
 }
 
 void Camera::shake(float newShakeAmount) {
    shakeAmount = clamp(newShakeAmount, 0, 1);
+}
+
+void Camera::zoom() {
+   offset->print();
+   //offset->scalarMultiplyUpdate(2.0);
+   zoomFactor = (int)(zoomFactor / 2 + 1) % 2 + 1.0;
+   //offset->print();
+   printf("zoom: %d\n", (int)(zoomFactor / 2 + 1) % 2);
 }

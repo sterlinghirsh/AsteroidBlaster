@@ -17,6 +17,8 @@ class ElectricityShot : public Shot {
    public:
       ElectricityShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
       virtual void draw();
+      virtual void drawGlow();
+      virtual void drawShot(bool isGlow);
       virtual void update(double timeDiff);
       int framesAlive;
       double angle;

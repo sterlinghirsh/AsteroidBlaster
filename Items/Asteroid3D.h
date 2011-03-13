@@ -14,7 +14,7 @@
 #include <list>
 #include <vector>
 
-#define ASTEROID3D_LINE_W 1.5
+#define ASTEROID3D_LINE_W 0.5
 
 class Asteroid3D : public Object3D {
    public:

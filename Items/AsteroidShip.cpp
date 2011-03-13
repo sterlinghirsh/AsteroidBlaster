@@ -571,7 +571,10 @@ void draw_shield(){
 }
 
 void draw_ship(){
-   
+   glPolygonOffset(1.0f, 1.0f);
+   glEnable(GL_POLYGON_OFFSET_FILL);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
    glDisable(GL_CULL_FACE);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
@@ -665,8 +668,13 @@ void draw_ship(){
    glVertex3f(-0, 0, 1.6);
    glVertex3f(0, .15, 1);
    glEnd();
+   glDisable(GL_POLYGON_OFFSET_LINE);
 
    /* Outline of Ship */
+   glEnable(GL_POLYGON_OFFSET_LINE);
+   glPolygonOffset(-1.0f, -1.0f);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+   
    glLineWidth(1.5);
    glDisable(GL_LIGHTING);
    glBegin(GL_LINE_LOOP);
@@ -759,6 +767,8 @@ void draw_ship(){
    glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);
    glEnable(GL_CULL_FACE);
+   glDisable(GL_POLYGON_OFFSET_LINE);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void draw_vectors(){

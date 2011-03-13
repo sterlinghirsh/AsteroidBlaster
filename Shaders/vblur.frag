@@ -38,5 +38,5 @@ void main() {
       incrementalGaussian.xy *= incrementalGaussian.yz;
    }
 
-   gl_FragColor = avgValue / coefficientSum;
+   gl_FragColor = avgValue / coefficientSum * 1.5;
 }

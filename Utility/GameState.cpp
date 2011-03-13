@@ -87,8 +87,7 @@ GameState::GameState(double worldSizeIn) {
 
 
    // Bloom
-   xSize = ySize = 256;
-   //xSize = ySize = 8;
+   xSize = ySize = 512;
    //colorBits = new char[ xSize * ySize * 3 ];
    //texture creation..
    glGenTextures(1, &hTexture);
@@ -664,6 +663,10 @@ void GameState::keyDown(int key) {
    case SDLK_e:
       if(!ship->flyingAI->isEnabled())
          ship->accelerateRight(1);
+      break;
+
+   case SDLK_9:
+      camera->zoom();
       break;
 
    case SDLK_SPACE:
