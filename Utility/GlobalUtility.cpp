@@ -31,6 +31,7 @@ GLuint elecShader;
 GLuint ramShader;
 GLuint hBlurShader;
 GLuint vBlurShader;
+GLuint lawnShader;
 GLuint particleShader;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;

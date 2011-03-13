@@ -99,7 +99,8 @@ void TractorBeamShot::draw() {
       start.glTranslate();
       
       glRotate();
-      glRotatef(-spin++,0,0,1);
+      spin += 3;
+      glRotatef(-spin,0,0,1);
       if (spin >= 360 ) {
          spin = 0;
       }

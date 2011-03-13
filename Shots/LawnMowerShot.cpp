@@ -11,13 +11,21 @@
 #include "Shots/LawnMowerShot.h"
 #include <math.h>
 
-static float spin = 0;
+static float spin = 1;
+static float adder = .10;
+static float spinner = 0;
+static float otherSpin = 1.5;
+static float otherAdder = .05;
+static float spinster = 1.5;
+static float adderer = .08;
+static float poop = 2.5;
+static float bladder = .05;
 
 LawnMowerShot::LawnMowerShot(Point3D& posIn, Vector3D dirIn, 
  AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
    persist = true;
    angle = M_PI / 40; // Radians from the center
-   length = 20;
+   length = 10;
    farRadius = length * tan(angle);
    framesAlive = 0;
    forward = new Vector3D(*velocity); // Goofy.
@@ -69,12 +77,14 @@ void LawnMowerShot::update(double timeDiff) {
  */
 void LawnMowerShot::draw() {
    
-   //glUseProgram(tractorBeamShader);
+   glUseProgram(lawnShader);
    glPushMatrix();
    
       //floats used in loop iteration
       float j;
       float k;
+      float x, y, z;
+      GLint loc1;
       
       //rotation for the Y value of the vertex using cosine
       float rot;
@@ -83,7 +93,7 @@ void LawnMowerShot::draw() {
       float srot;
       
       //Number of lines you want generated in the rotating tractor beam
-      float numCurves = 8;
+      float numCurves = 1;
       
       //used as a multiplier to create the correct gap in between the lines
       float gap = length / numCurves;
@@ -94,36 +104,134 @@ void LawnMowerShot::draw() {
       
       float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
       //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
-      Point3D start(*position);
-      velocity->movePoint(start);
-      start.glTranslate();
+      //Point3D start(*position);
+      //velocity->movePoint(start);
+      position->glTranslate();
       
       glRotate();
-      glRotatef(-spin++,0,0,1);
-      if (spin >= 360 ) {
-         spin = 0;
+      spinner += 2;
+      glRotatef(-spinner,0,0,1);
+      if (spinner >= 360 ) {
+         spinner = 0;
       }
+      otherSpin += otherAdder;
+      spin = spin + adder;
+      spinster +=  adderer;
+      poop += bladder;
+      //printf("Spin variable: %f\n", spin);
+      //glRotatef(-spin,1, 0, 0);
+      if (spin >= 4 || spin <= 1) {
+         
+         adder *= -1;
+      }
+      if (otherSpin >= 2 || otherSpin <= 1) {
+         
+         otherAdder *= -1;
+      }
+      if (spinster >= 4 || spinster <= 1) {
+         
+         adderer *= -1;
+      }
+      if (poop >= 3 || poop <= 1) {
+         
+         bladder *= -1;
+      }
+      loc1 = glGetUniformLocation(lawnShader,"clr");
+      glUniform1f(loc1,10);
+      
       setMaterial(GreenShiny);
       glLineWidth(2.0);
       glBegin(GL_LINES);
       //Creates the twisted lines whose vertices are sent to the shader to modify
-      for(k = -numCurves/2; k < numCurves/2; k = k+1){
-            for(j = 0; j < length ; j = j+1){
-                  rot = cos((k * gap + j) / (length / sharpness) * M_PI);
-                  srot = sin((k * gap + j) / (length / sharpness) * M_PI);
-                  glVertex3f(srot * j * (farRadius / length), rot * j * (farRadius / length), length - j);
-                  
-                  rot = cos((k * gap + j + 1) / (length / sharpness) * M_PI);
-                  srot = sin((k * gap + j + 1) / (length / sharpness) * M_PI);
-                  glVertex3f(srot * (j + 1) * (farRadius / length), rot * (j + 1) * (farRadius / length), length - j - 1);
-                  
+      
+      //glVertex3f(0, 0, 0);
+      //glVertex3f(0, 0, -length);
+
+
+            x = y = z = 0; 
+            for(j = 0; j < length ; j = j+.5){
+            
+                  rot = cos((j / length) * M_PI/1.5);
+
+                  glVertex3f(x, y, z);
+
+                  glVertex3f(j/length * spin + rot * (j + 1) * (farRadius / length), j/length,  - j);
+
+                  glVertex3f(-x, y, z);
+                  glVertex3f(-j/length * spin + -rot * (j + 1) * (farRadius / length), j/length,  - j);
+                  x = j/length*spin + rot * (j + 1) * (farRadius / length);
+                  y = j/length;
+                  z = - j;
+
             }
-      }
+            glEnd();
+
+            glBegin(GL_LINES);
+
+
+            x = y = z = 0; 
+            for(j = 0; j < length ; j = j+.5){
+            
+                  rot = cos((j / length) * M_PI/1.5);
+
+                  glVertex3f(x, y, z);
+
+                  glVertex3f(j/length * spinster + rot * (j + 1) * (farRadius / length), -j/length,  - j);
+
+                  glVertex3f(-x, y, z);
+                  glVertex3f(-j/length * spinster + -rot * (j + 1) * (farRadius / length), -j/length,  - j);
+                  x = j/length*spinster + rot * (j + 1) * (farRadius / length);
+                  y = -j/length;
+                  z = - j;
+            }
+      
+      glEnd();
+      glBegin(GL_LINES);
+
+            x = y = z = 0; 
+            for(j = 0; j < length ; j = j+.5){
+            
+                  rot = cos((j / length) * M_PI/1.5);
+
+                  glVertex3f(x, y, z);
+
+                  glVertex3f(j/length * otherSpin + rot * (j + 1) * (farRadius / length), 2*j/length,  - j);
+
+                  glVertex3f(-x, y, z);
+                  glVertex3f(-j/length * otherSpin + -rot * (j + 1) * (farRadius / length), 2*j/length,  - j);
+                  x = j/length*otherSpin + rot * (j + 1) * (farRadius / length);
+                  y = 2*j/length;
+                  z = - j;
+
+            }
+            glEnd();
+            
+            glBegin(GL_LINES);
+      //Creates the twisted lines whose vertices are sent to the shader to modify
+
+
+            x = y = z = 0; 
+            for(j = 0; j < length ; j = j+.5){
+            
+                  rot = cos((j / length) * M_PI/1.5);
+
+                  glVertex3f(x, y, z);
+
+                  glVertex3f(j/length * poop + rot * (j + 1) * (farRadius / length), -2*j/length,  - j);
+
+                  glVertex3f(-x, y, z);
+                  glVertex3f(-j/length * poop + -rot * (j + 1) * (farRadius / length), -2*j/length,  - j);
+                  x = j/length*poop + rot * (j + 1) * (farRadius / length);
+                  y = -2*j/length;
+                  z = - j;
+
+            }
+      
       glEnd();
 
    glLineWidth(1.0);
    glPopMatrix();
-   //glUseProgram(0);
+   glUseProgram(0);
 }
 
 /**

@@ -34,6 +34,7 @@ extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
 extern GLuint fadeShader;
 extern GLuint elecShader;
+extern GLuint lawnShader;
 extern GLuint hBlurShader;
 extern GLuint vBlurShader;
 extern GLuint ramShader;

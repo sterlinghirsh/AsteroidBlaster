@@ -16,7 +16,7 @@ LawnMower::LawnMower(AsteroidShip* owner) : Weapon(owner) {
    currentFrame = 1; // Start this 1 ahead of lastFiredFame.
    lastFiredFrame = 0; // We use these three to handle the audio.
    soundPlaying = false;
-   curAmmo = 2000;
+   curAmmo = 100000;
    purchased = false;
 }
 
@@ -49,8 +49,8 @@ void LawnMower::fire() {
 
    Point3D start = *ship->position;
    Vector3D shotDirection(*ship->forward);
-   shotDirection.rotate(swingAmount * sin(M_PI * doubleTime() / swingPeriod), 
-    *ship->up);
+   //shotDirection.rotate(swingAmount * sin(M_PI * doubleTime() / swingPeriod), 
+   // *ship->up);
    gameState->custodian.add(new LawnMowerShot(start, shotDirection, ship));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new LawnMowerShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;

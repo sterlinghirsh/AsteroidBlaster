@@ -1,7 +1,6 @@
 
 varying float fade;
 varying vec4 thisColor;
-varying float stupid;
 
 uniform float poop;
 
