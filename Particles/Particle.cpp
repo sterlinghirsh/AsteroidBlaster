@@ -35,6 +35,8 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
    b = _b;
    startTime = doubleTime();
    size = 0.01;
+   cullRadius = 1;
+   radius = 1;
 }
 
 void Particle::updateParticles(double timeDifference)
@@ -71,16 +73,14 @@ void Particle::update(double timeDifference)
    };
 }
 
-void Particle::draw(Point3D* eyePoint)
+void Particle::draw()
 {
    glPushMatrix();
    /* Draw The Particle Using Our RGB Values,
    * Fade The Particle Based On It's Life
    */
    
-   
    position->glTranslate();
-
    
    float alpha = ((startTime + life) - doubleTime()); 
 
@@ -95,18 +95,20 @@ void Particle::draw(Point3D* eyePoint)
    glUseProgram(0);
 }
 
+/*
 void Particle::drawParticles()
 {
    extern GameState* gameState;
    
    Point3D eyePoint = (gameState->getCamera()->getEyePoint());
-   /* Modify each of the particles */
+   // Modify each of the particles
    list<Particle*>::iterator particle = Particle::particles.begin();
    for (; particle != Particle::particles.end(); ++particle) 
    {
       (*particle)->draw(&eyePoint);
    }
 }
+*/
 
 void Particle::initDisplayList() {
    particleDisplayList = glGenLists(1);

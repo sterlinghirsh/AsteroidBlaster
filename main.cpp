@@ -300,7 +300,7 @@ void draw() {
       //gameState->drawGlow();
    }
    Sprite::drawSprites();
-   Particle::drawParticles();
+   //Particle::drawParticles();
    //drawCrosshair();
    glPopMatrix();
 

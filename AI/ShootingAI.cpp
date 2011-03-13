@@ -114,6 +114,11 @@ Object3D* ShootingAI::chooseTarget() {
    const double radiusWeight = 1;
    const double proximityWeight = 3;
    
+   // If the list of targets from the viewFrustum does not exist, give the AI no target.
+   if(targets == NULL) {
+      return NULL;
+   }
+
    targets_iterator = targets->begin();
    Object3D* closest = NULL;
    

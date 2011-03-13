@@ -88,17 +88,46 @@ std::list<Drawable*>* Radar :: getNearbyReading(float radius) {
 /* Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
  */
 std::list<Drawable*>* Radar :: getViewFrustumReading() {
-   // Get the custodian out of gameState, and get its vector of Objects.
-   std::vector<Drawable*>* all (gameState->custodian.getListOfObjects());
+   // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
+   std::vector<Drawable*> all (*gameState->custodian.getListOfObjects());
+// TODO: Reverse this: get the list of particles first, and append objects to that, rather than getting the list of objects, and appending particles to it.
+   Drawable* curParticle;
+   // Add all of the particles to all.
+   for (particleIter = Particle::particles.begin(); particleIter != Particle::particles.end(); ++particleIter) {
+      curParticle = *particleIter;
+      all.push_back(curParticle);
+   }
+
    // vector += gameState->GiveMeAllYourParticles
    // TODO Add Particles to this all vector so that they can be culled
    
     
+   // Sterling:
+   // Consider each particle one at a time and cull it one at a time.
+   // Consider each object one at a time and cull it one at a time.
+   // Only add an object / particle to the list of things to draw if
+   // it has not been culled.
+
+   // This is a copy of all.
+   //std::vector<Drawable*>* allNew (all); 
+
    // Turn the vector of all Objects into a list, & cull it
-   std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(all);
+   std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(&all);
    
+   /*
+    * Make sure that we are receiving particles back from view frustum culling.
+    *
+   for(listIter = culledList->begin(); listIter != culledList->end(); ++listIter) {
+      Particle* part; 
+      if( (part = dynamic_cast<Particle*>(*listIter)) != NULL)
+         printf("particle was pushed back successfully!\n");
+   }
+   */
+    
+   // Print out the frustum for debugging.
    //curFrustum->print();
    
+   // Print debug info for the culled list.
    /*for (listIter = culledList->begin(); listIter != culledList->end(); ++listIter)
    {
      //(*listIter)->debug();

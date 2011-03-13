@@ -9,6 +9,7 @@
 #include "Items/Asteroid3D.h"
 #include "Items/Shard.h"
 #include <algorithm>
+#include <assert.h>
 
 Custodian::Custodian() {
    shardCount = asteroidCount = 0;
@@ -77,6 +78,7 @@ void Custodian::update() {
       objectsByMaxX.push_back(tempObject);
       // Remove the item.
       objectsToAdd.pop_front();
+      assert (objectsByMinX.size() == objectsByMaxX.size());
    }
 
    // This lets us know where we can stop searching.

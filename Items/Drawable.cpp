@@ -47,9 +47,9 @@ void Drawable :: draw() {
 }
 
 /*
- * drawGlow() is here to be overwritten by all subclasses.
+ * drawGlow() is here as a stub to be overwritten by all subclasses.
  */
-void Drawable :: drawGlow() {
+void Drawable::drawGlow() {
 }
 
 /**
@@ -59,7 +59,7 @@ void Drawable :: drawGlow() {
  * not absolute distances.
  * This function is equivalent to (x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2
  */
-double Drawable :: unrootedDist(Point3D *other) {
+double Drawable::unrootedDist(Point3D *other) {
    double xDiff = position->x - other->x;
    double yDiff = position->y - other->y;
    double zDiff = position->z - other->z;
@@ -70,14 +70,14 @@ double Drawable :: unrootedDist(Point3D *other) {
  * This is like the function above, but accepts another Drawable*, instead
  * of a Point3D*.
  */
-double Drawable :: unrootedDist(Drawable *other) {
+double Drawable::unrootedDist(Drawable *other) {
    return unrootedDist(other->position);
 }
 
 /**
  * Returns the radius of the object which should be used for View Frustum Culling.
  */
-double Drawable :: getCullRadius() {
+double Drawable::getCullRadius() {
    if (cullRadius == -1.0) {
       return radius;
    } else {
@@ -89,10 +89,10 @@ double Drawable :: getCullRadius() {
  * To be overwritten by all subclasses. This is an empty stub only for now.
  * Anything done here will happen to all Object3D's and Particles.
  */
-void Drawable :: update(double timeDifference) {
+void Drawable::update(double timeDifference) {
 }
 
-void Drawable :: setCustodian(Custodian *cust) {
+void Drawable::setCustodian(Custodian *cust) {
    custodian = cust;
 }
 

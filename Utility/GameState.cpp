@@ -25,6 +25,11 @@ GameState::GameState(double worldSizeIn) {
    reg = true;
    gameIsRunning = true;
    
+   /* A view frustum culled list of objects to be used for drawing and by
+      the shooting AI.
+      */
+   viewFrustumObjects = NULL;
+
    worldSize = worldSizeIn;
    skybox = new Skybox();
    ship = new AsteroidShip();
@@ -80,10 +85,6 @@ GameState::GameState(double worldSizeIn) {
 
    // TODO: comment this or rename it.
    isW = isA = isS = isD = false;
-   /* A view frustum culled list of objects to be used for drawing and by
-      the shooting AI.
-      */
-   std::list<Drawable*>* viewFrustumObjects;
 
 
    // Bloom
@@ -240,15 +241,16 @@ void GameState::draw() {
    ship->drawCrosshair();
 
    for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
-      if (*listIter == NULL || *listIter == ship)
+      if (*listIter == NULL) {
          continue;
-      (*listIter)->draw();
-   }
-
-   // Don't draw the ship in first Person mode.
-   if (ship->getCurrentView() != VIEW_FIRSTPERSON_SHIP &&
-    ship->getCurrentView() != VIEW_FIRSTPERSON_GUN) {
-      ship->draw();
+      } else if (*listIter == ship && 
+       ship->getCurrentView() != VIEW_FIRSTPERSON_SHIP &&
+       ship->getCurrentView() != VIEW_FIRSTPERSON_GUN) {
+         // Don't draw the ship in first Person mode.
+         (*listIter)->draw();
+      } else {      
+         (*listIter)->draw();
+      }
    }
 }
 

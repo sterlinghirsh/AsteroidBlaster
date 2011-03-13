@@ -11,6 +11,7 @@
 #include "Items/AsteroidShip.h"
 #include "Utility/ViewFrustum.h"
 #include "Utility/GameState.h"
+#include "Particles/Particle.h"
 #include <list>
 
 // Incomplete declaration so we can use the pointer.
@@ -46,6 +47,8 @@ class Radar {
       ViewFrustum* curFrustum;
       // Set up a list iterator to go over a list.
       std::list<Drawable*> :: iterator listIter;
+      // Set up a particle list iterator.
+      std::list<Particle*> :: iterator particleIter;
       // Set up a vector iterator to go over a vector.
       std::vector<Drawable*> :: iterator vectorIter;
 

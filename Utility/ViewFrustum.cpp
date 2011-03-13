@@ -107,8 +107,8 @@ std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* a
  
    // As opposed to the checker, the one doing the checking. 
    Drawable* checkee;
-   // call checkOutside() on each of the Object3D's in all.
-   // Build a new set of Object3D's out of each of the ones that got back false.
+   // call checkOutside() on each of the Drawables in all.
+   // Build a new set of Drawables out of each of the ones that got back false.
    for (iter = all->begin(); iter != all->end(); ++iter)
    {
       checkee = *iter;
@@ -120,9 +120,10 @@ std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* a
       /* If it's inside the view frustum, or if it just shouldn't be 
          culled (ex: Beam Shots)
        */
-      if(!checkOutside(checkee) || !checkee->shouldBeCulled)
+      if(!checkOutside(checkee) || !checkee->shouldBeCulled) {
          // Then add it to the list of things to be returned in the culled list.
          returnMe->push_back(checkee);
+      }
    }
    return returnMe;
 }

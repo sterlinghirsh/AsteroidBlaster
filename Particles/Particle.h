@@ -17,11 +17,11 @@ class Particle : public Drawable {
       Particle(Point3D* p, Vector3D* v, float life, float r, float g, float b);
       
       static std::list<Particle*> particles;
-      static void drawParticles();
+      //static void drawParticles();
       static void updateParticles(double timeDifference);
       //static void Add(Point3D* pos, Vector3D* vec) = 0;
       
-      virtual void draw(Point3D* eyePoint);
+      virtual void draw();
       virtual void update(double timeDifference);
        
       Particle(std::string filename, int framesXIn, int framesYIn, double fpsIn, 
@@ -33,9 +33,6 @@ class Particle : public Drawable {
       static void initDisplayList();
       
    protected:
-      Point3D* position;
-      Vector3D* velocity;
-      
       float life;
       float r,g,b;
       float slowdown;
