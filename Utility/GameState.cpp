@@ -13,7 +13,6 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Particles/Particle.h"
-#include "Utility/Menu.h"
 
 extern double minimapSizeFactor;
 
@@ -524,8 +523,6 @@ void GameState::updateText() {
    }
 }
 
-void GameState::checkCollisions() {
-}
 
 void GameState::initAsteroids() {
    Asteroid3D* tempAsteroid;

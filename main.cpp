@@ -52,8 +52,6 @@ int *fontsArr[] = {
 int fontSpot = 0; // TODO: What is this?
 // Pointer to the global gamestate object.
 GameState* gameState = NULL;
-// Pointers to the global menu objects.
-Menu* mainMenu = NULL;
 
 double displayTime = 0;
 // This double contains the FPS to be printed to the screen each frame.
@@ -247,8 +245,6 @@ void update() {
    
    gameState->update(timeDiff);
 
-   // Check for all collisions
-   gameState->checkCollisions();
 
    lastTime = curTime;
    ++curFrame;
@@ -378,9 +374,6 @@ int main(int argc, char* argv[]) {
    SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
    SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
 
-   
-   
-
    //get the quadradic up
    quadric = gluNewQuadric();
    //set the quadradic up
@@ -390,12 +383,14 @@ int main(int argc, char* argv[]) {
 
    // Initialize the gameState
    gameState = new GameState(WORLD_SIZE);
+   
    // Initialize the menus
-   mainMenu = new Menu();
+   mainMenu = new MainMenu();
+   storeMenu = new StoreMenu();
    //turn the menu on for the inial menu display
    mainMenu->menuActive = true;
    
-   StoreMenu* storeMenu = new StoreMenu();
+   
    
    //Initialize the input manager
    inputManager = new InputManager();

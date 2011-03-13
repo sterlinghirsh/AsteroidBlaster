@@ -68,7 +68,6 @@ class GameState : public InputReceiver {
       void drawAllText();
       void drawHud();
       void updateText();
-      void checkCollisions();
       void update(double timeDiff);
       void initAsteroids();
       void setCurFPS(double fpsIn);

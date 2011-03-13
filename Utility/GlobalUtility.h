@@ -23,6 +23,9 @@
 
 #include "SDL.h"
 #include "Utility/InputManager.h"
+#include "Menus/MainMenu.h"
+#include "Menus/StoreMenu.h"
+
 #define VERT_FOV 50.0
 
 //Global Variables declared
@@ -42,6 +45,11 @@ extern GLuint particleShader;
 extern SDL_Surface* gDrawSurface;
 extern const SDL_VideoInfo* vidinfo;
 extern InputManager* inputManager;
+extern MainMenu* mainMenu;
+extern StoreMenu* storeMenu;
+
+
+
 
 double p2wx(int);
 double p2wy(int);

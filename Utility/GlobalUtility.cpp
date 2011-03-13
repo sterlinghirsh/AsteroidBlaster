@@ -21,22 +21,25 @@
 #endif
 
 //global variables
-int GW, GH;
-unsigned long curFrame;
+int GW = -1;
+int GH = -1;
+unsigned long curFrame = 0;
 bool drawPerspective = true;
-GLUquadricObj *quadric;
-GLuint tractorBeamShader;
-GLuint fadeShader;
-GLuint elecShader;
-GLuint ramShader;
-GLuint hBlurShader;
-GLuint vBlurShader;
-GLuint lawnShader;
-GLuint particleShader;
+GLUquadricObj *quadric = NULL;
+GLuint tractorBeamShader = -1;
+GLuint fadeShader = -1;
+GLuint elecShader = -1;
+GLuint ramShader = -1;
+GLuint hBlurShader = -1;
+GLuint vBlurShader = -1;
+GLuint lawnShader = -1;
+GLuint particleShader = -1;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
-double currentTime;
+double currentTime = -1;
 InputManager* inputManager = NULL;
+extern MainMenu* mainMenu = NULL;
+extern StoreMenu* storeMenu = NULL;
 
 using namespace std;
 
