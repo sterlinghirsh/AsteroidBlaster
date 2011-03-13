@@ -119,7 +119,7 @@ void GlowSquare::draw() {
 
 
    // This draws the glowing filled in square.
-   if (timeDiff > 0) {
+   if (timeDiff < fadeTime) {
       glPushMatrix();
       // If the timeLastHit is after the current time, consider it not hit yet.
       alpha = fadeScale * (fadeTime - clamp(timeDiff, 0, fadeTime));
