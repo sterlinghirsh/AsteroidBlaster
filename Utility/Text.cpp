@@ -8,8 +8,14 @@
 
 #include "Utility/GlobalUtility.h"
 #include "Text.h"
-#include <GL/gl.h>
-#include <GL/glu.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#include <OpenGL/glext.h>
+#else
+#include <GL/glew.h>
+#define GLUT_DISABLE_ATEXIT_HACK 
+#include <GL/glut.h>
+#endif
 #include <cstring>
 #include <stdio.h>
 #include <iostream>

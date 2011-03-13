@@ -17,8 +17,6 @@
 #include <OpenGL/glext.h>
 #else
 #include <GL/glew.h>
-#define GLUT_DISABLE_ATEXIT_HACK 
-#include <GL/glut.h>
 #endif
 
 #include "SDL.h"
