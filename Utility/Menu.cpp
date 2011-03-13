@@ -133,7 +133,13 @@ void Menu::draw() {
  */
 void Menu::keyDown(int key) {
    if (key == SDLK_m )  {
-      menuActive = !menuActive;
+      if(menuActive) {
+         menuActive = false;
+         SDL_ShowCursor(SDL_DISABLE);
+      } else {
+         SDL_ShowCursor(SDL_ENABLE);
+         menuActive = true;
+      }
    }
    if (!menuActive) { return; }
    

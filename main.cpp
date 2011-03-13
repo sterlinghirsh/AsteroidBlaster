@@ -74,70 +74,6 @@ GLfloat ambientlight_amb[4] = {1, 1, 1, 0.5};
 GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
 GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
 
-void display() {
-   double startTime = doubleTime();
-
-   // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   usePerspective();
-
-   glMatrixMode(GL_MODELVIEW);
-
-
-   // Draw glowing objects to a texture for the bloom effect.
-   gameState->aspect = (float)GW/(float)GH;
-   if (gameState->bloom) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glPushMatrix();
-      gameState->drawGlow();
-      glBindTexture(GL_TEXTURE_2D, gameState->hTexture);
-
-      glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-            0,0, GW, GH, 0);
-      glPopMatrix();
-
-      if (gameState->bloom) {
-         gameState->hBlur();
-         gameState->vBlur();
-      }
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   }
-
-   usePerspective();
-   // Draw the main screen
-   glPushMatrix();
-   if (gameState->reg) {
-      gameState->draw();
-      //gameState->drawGlow();
-   }
-   Sprite::drawSprites();
-   Particle::drawParticles();
-   //drawCrosshair();
-   glPopMatrix();
-
-   glPushMatrix();
-   // Draw the hud
-   glClear(GL_DEPTH_BUFFER_BIT);
-   gameState->drawHud();
-   if (gameState->bloom) {
-      gameState->drawBloom();
-   }
-   /*
-   if (inputManager->bloom || inputManager->bloom1) {
-      //printf("SPECUBLOOM\n");
-      gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
-   }
-   */
-   glPopMatrix();
-   // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
-   gameState->drawMinimap();
-
-   SDL_GL_SwapBuffers();
-   displayTime += doubleTime() - startTime;
-   ++curFrame;
-}
-
 void init() {
     /* Flags to pass to SDL_SetVideoMode */
     int videoFlags;
@@ -295,14 +231,10 @@ void init() {
 
 }
 
-void timerFunc(bool paused) {
+void update() {
+   // the absolute time update was last called
    static double lastTime = 0;
-   if (paused) {
-      lastTime = 0;
-      return;
-   }
-
-   // Get the time
+   // get the current absolute time
    double curTime = doubleTime();
 
    if (lastTime == 0) {
@@ -310,16 +242,86 @@ void timerFunc(bool paused) {
       return;
    }
 
+   // the time difference since last update call
    double timeDiff = curTime - lastTime;
-   gameState->setCurFPS(1 / timeDiff);
-
+   
    gameState->update(timeDiff);
 
    // Check for all collisions
    gameState->checkCollisions();
 
    lastTime = curTime;
+}
 
+void draw() {
+   // the absolute time update was last called
+   static double lastTime = 0;
+   // get the current absolute time
+   double curTime = doubleTime();
+
+   // the time difference since last update call
+   double timeDiff = curTime - lastTime;
+   
+   gameState->setCurFPS(1 / timeDiff);
+   
+   // Clear the screen
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   usePerspective();
+
+   glMatrixMode(GL_MODELVIEW);
+
+
+   // Draw glowing objects to a texture for the bloom effect.
+   gameState->aspect = (float)GW/(float)GH;
+   if (gameState->bloom) {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glPushMatrix();
+      gameState->drawGlow();
+      glBindTexture(GL_TEXTURE_2D, gameState->hTexture);
+
+      glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+            0,0, GW, GH, 0);
+      glPopMatrix();
+
+      if (gameState->bloom) {
+         gameState->hBlur();
+         gameState->vBlur();
+      }
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   }
+
+   usePerspective();
+   // Draw the main screen
+   glPushMatrix();
+   if (gameState->reg) {
+      gameState->draw();
+      //gameState->drawGlow();
+   }
+   Sprite::drawSprites();
+   Particle::drawParticles();
+   //drawCrosshair();
+   glPopMatrix();
+
+   glPushMatrix();
+   // Draw the hud
+   glClear(GL_DEPTH_BUFFER_BIT);
+   gameState->drawHud();
+   if (gameState->bloom) {
+      gameState->drawBloom();
+   }
+   /*
+   if (inputManager->bloom || inputManager->bloom1) {
+      //printf("SPECUBLOOM\n");
+      gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
+   }
+   */
+   glPopMatrix();
+   // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
+   gameState->drawMinimap();
+
+   SDL_GL_SwapBuffers();
+   lastTime = curTime;
 }
 
 int main(int argc, char* argv[]) {
@@ -408,14 +410,14 @@ int main(int argc, char* argv[]) {
       if (mainMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          mainMenu->draw();
-         timerFunc(mainMenu->menuActive);
+         update();
       } else if (storeMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          storeMenu->draw();
-         timerFunc(storeMenu->menuActive);
+         update();
       } else if (gameState->isGameRunning()) {
-         timerFunc(false);
-         display();
+         update();
+         draw();
       }
       while (SDL_PollEvent(event)) {
          inputManager->update(*event);
