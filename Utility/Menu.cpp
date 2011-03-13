@@ -57,19 +57,20 @@ void Menu::draw() {
    //draw the text
    glPushMatrix();
       useOrtho();
+      glDisable(GL_CULL_FACE);
       glDisable(GL_LIGHTING);
+      
       
       for(int i = 0; i < menuTexts.size(); i++) {
          menuTexts[i]->draw();
       }
+      
 
-      glEnable(GL_LIGHTING);
       usePerspective();
    glPopMatrix();
 
 
-   //draw the text
-   glDisable(GL_LIGHTING);
+
    glEnable(GL_TEXTURE_2D);
    
    /* Enable smooth shading */

@@ -11,8 +11,8 @@ class Menu : public InputReceiver {
    Menu();
    ~Menu();
 
-   void draw();
-   void update();
+   virtual void draw();
+   virtual void update();
    
    virtual void keyUp(int key);
    virtual void keyDown(int key);

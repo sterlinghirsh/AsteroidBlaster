@@ -154,11 +154,10 @@ SDL_Rect Text::getPosition() {
 
 
 void Text::draw() {
-      
    /* Go in HUD-drawing mode */
    glEnable2D();
    glDisable(GL_DEPTH_TEST);
-
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    /* Draw some text */
    /** A quick note about position.
    * Enable2D puts the origin in the lower-left corner of the

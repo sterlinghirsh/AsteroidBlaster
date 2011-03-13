@@ -3,43 +3,33 @@
 #define __STOREMENU_H__
 
 
-#include "Utility/BitmapTextDisplay.h"
+#include "Utility/Text.h"
 #include "Utility/InputManager.h"
+#include "Utility/Menu.h"
 
-class StoreMenu : public InputReceiver {
+class StoreMenu : public Menu {
    public:
    StoreMenu();
    ~StoreMenu();
 
-   void draw(int shards);
+   void draw();
    void update();
-   bool isActive();
-   double timeStarted;
    
-   virtual void keyUp(int key);
-   virtual void keyDown(int key);
-   virtual void mouseDown(int button);
-   virtual void mouseMove(int dx, int dy, int x, int y);
-   virtual void mouseUp(int button);
+   void keyUp(int key);
+   void keyDown(int key);
+   void mouseDown(int button);
+   void mouseMove(int dx, int dy, int x, int y);
+   void mouseUp(int button);
    
    //the current mouse location
    double x, y;
    
    bool menuActive;
-
-   double timeout;
    
-   //glut text display
-   BitmapTextDisplay* buyRailGun;
-   BitmapTextDisplay* buyPikachusWrath;
-   BitmapTextDisplay* buyTractorBeam;
-   BitmapTextDisplay* done;
-   BitmapTextDisplay* buyHealth;
-   BitmapTextDisplay* numOfShards;
-   BitmapTextDisplay* timeLeftText;
    
-   SDL_Surface *titleImage;
-   SDL_Rect src, dest;
+   std::vector<Text*> menuTexts;
+   
+   
 };
 
 

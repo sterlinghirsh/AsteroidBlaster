@@ -1,61 +1,49 @@
 
 #include <iostream>
 #include "SDL.h"
+#include "Utility/GlobalUtility.h"
 #include "Utility/StoreMenu.h"
 #include "Utility/Image.h"
 #include "Utility/Texture.h"
+#include "Utility/Text.h"
 
 StoreMenu::StoreMenu() {
    menuActive = false;
-   buyRailGun = new BitmapTextDisplay("Buy Rail Gun", GW/2 - 50, GH/2 - 60);
-   buyPikachusWrath = new BitmapTextDisplay("Buy Pikachu's Wrath", GW/2 - 50, GH/2 - 20);
-   buyTractorBeam = new BitmapTextDisplay("Buy Tractor Beam", GW/2 - 50, GH/2 + 20);
-   buyHealth = new BitmapTextDisplay("Buy Health", GW/2 - 50, GH/2 + 60);
-   done = new BitmapTextDisplay("Done", GW/2 - 50, GH/2 + 100);
    
+   SDL_Rect position = {0,0};
+   std::string fontName = "Font/FreeMonoBold.ttf";
    
+   menuTexts.push_back(new Text("Buy stuff",  fontName, position, 24));
+   menuTexts.push_back(new Text("Buy more stuff",  fontName, position, 24));
+   menuTexts.push_back(new Text("Buy even more stuff",  fontName, position, 24));
+   menuTexts.push_back(new Text("Done", fontName, position, 24));
    
-   numOfShards = new BitmapTextDisplay("Shards: ", 5, "",50, 50);
 
-   timeout = 10; // Seconds;
-   timeLeftText = new BitmapTextDisplay("Time Left: ", timeout, " Seconds", 50, 70);
-
-   timeStarted = 0;
    
+
 }
 
 
 StoreMenu::~StoreMenu() {
-   SDL_FreeSurface(titleImage);
-}
-
-bool StoreMenu::isActive() {
-   if (menuActive) {
-      SDL_ShowCursor(SDL_ENABLE);
-   } else {
-      SDL_ShowCursor(SDL_DISABLE);
+   for(int i = 0; i < menuTexts.size(); i++) {
+      delete menuTexts[i];
    }
-   return menuActive;
 }
 
 void StoreMenu::update() {
-   double timeLeft = timeout - (doubleTime() - timeStarted);
-   timeLeftText->updateBody(timeLeft);
-   if (timeLeft < 0)
-      menuActive = false;
+
 }
 
-void StoreMenu::draw(int shards) {
-   buyRailGun->setPosition(GW/2 - 50, GH/2 - 60);
-   buyPikachusWrath->setPosition(GW/2 - 50, GH/2 - 20);
-   buyTractorBeam->setPosition(GW/2 - 50, GH/2 + 20);
-   buyHealth->setPosition(GW/2 - 50, GH/2 + 60);
-   done->setPosition(GW/2 - 50, GH/2 + 100);
-   numOfShards->updateBody(shards);
+void StoreMenu::draw() {
+   SDL_Rect position;
+   position.x = GW/2 - 50;
+   position.y = GH/2 + 50;
+   for(int i = 0; i < menuTexts.size(); i++) {
+      menuTexts[i]->setPosition(position);
+      position.y += GH/10;
+   }
    
-   glDisable(GL_TEXTURE_2D);
    
-   glClearColor(0.0, 0.0, 0.0, 0.5);
    
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -67,13 +55,9 @@ void StoreMenu::draw(int shards) {
       useOrtho();
       glDisable(GL_LIGHTING);
       
-      buyRailGun->draw();
-      buyPikachusWrath->draw();
-      buyTractorBeam->draw();
-      buyHealth->draw();
-      done->draw();
-      numOfShards->draw();
-      timeLeftText->draw();
+      for(int i = 0; i < menuTexts.size(); i++) {
+         menuTexts[i]->draw();
+      }
 
       glEnable(GL_LIGHTING);
       usePerspective();
@@ -99,10 +83,15 @@ void StoreMenu::draw(int shards) {
    /* Really Nice Perspective Calculations */
    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
    
+   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                     GL_CLAMP );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+                     GL_CLAMP );
+   
    glPushMatrix();
       glLoadIdentity( );
-      glTranslatef( 0.0f, 1.0f, -5.0f );
-      glScalef( 2.0, 0.5, 1.0 );
+      glTranslatef( 0.0f, 0.2f, -1.0f );
+      glScalef( 0.3625, 0.1, 1.0 );
       glColor3f(1.0, 1.0, 1.0);
 
       /* Select Our Texture */
@@ -117,13 +106,13 @@ void StoreMenu::draw(int shards) {
       glBegin(GL_QUADS);
          /* Front Face */
          /* Bottom Left Of The Texture and Quad */
-         glTexCoord2f( 0.0f, 1.0f ); glVertex3f( -1.0f, -1.0f, 1.0f );
+         glTexCoord2f( 0.0f, 1.0f ); glVertex2f( -1.0f, -1.0f);
          /* Bottom Right Of The Texture and Quad */
-         glTexCoord2f( 1.0f, 1.0f ); glVertex3f(  1.0f, -1.0f, 1.0f );
+         glTexCoord2f( 1.0f, 1.0f ); glVertex2f(  1.0f, -1.0f);
          /* Top Right Of The Texture and Quad */
-         glTexCoord2f( 1.0f, 0.0f ); glVertex3f(  1.0f,  1.0f, 1.0f );
+         glTexCoord2f( 1.0f, 0.0f ); glVertex2f(  1.0f,  1.0f);
          /* Top Left Of The Texture and Quad */
-         glTexCoord2f( 0.0f, 0.0f ); glVertex3f( -1.0f,  1.0f, 1.0f );
+         glTexCoord2f( 0.0f, 0.0f ); glVertex2f( -1.0f,  1.0f);
       glEnd();
       glEnable(GL_CULL_FACE);
    glPopMatrix();
@@ -138,11 +127,11 @@ void StoreMenu::draw(int shards) {
  * Handles the player pressing down a key
  */
 void StoreMenu::keyDown(int key) {
-   if (key == SDLK_m )  {
+   if (key == SDLK_p )  {
       menuActive = !menuActive;
+      std::cout << "StoreMenu toggled" << std::endl;
    }
    if (!menuActive) { return; }
-   
    
    switch(key) {
     case SDLK_ESCAPE: exit(0);
@@ -166,19 +155,15 @@ void StoreMenu::keyUp(int key) {
  */
 void StoreMenu::mouseDown(int button) {
    if (!menuActive) { return; }
-   if (x >= buyRailGun->xCoord &&
-         x <= buyRailGun->xCoord + 100 &&
-         y >= buyRailGun->yCoord - 20 &&
-         y <= buyRailGun->yCoord ) {
-          
-   }
    
-   if (x >= done->xCoord &&
-         x <= done->xCoord + 50 &&
-         y >= done->yCoord - 20 &&
-         y <= done->yCoord ) {
-      menuActive = false;
-      SDL_ShowCursor(SDL_DISABLE);
+   for(int i = 0; i < menuTexts.size(); i++) {
+      if(menuTexts[i]->mouseSelect(x,y) && i == 0) {
+         SDL_ShowCursor(SDL_DISABLE);
+         menuActive = false;
+      }
+      if(menuTexts[i]->mouseSelect(x,y) && i == 3) {
+         exit(0);
+      }
    }
 }
 
@@ -191,52 +176,30 @@ void StoreMenu::mouseUp(int button) {
 }
 
 void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
+   //std::cout << "mouseMove=(" << _x << "," << _y << ")" << std::endl;
    if (!menuActive) { return; }
    x = _x;
    y = _y;
-   if (x >= buyRailGun->xCoord &&
-         x <= buyRailGun->xCoord + 100 &&
-         y >= buyRailGun->yCoord - 20 &&
-         y <= buyRailGun->yCoord ) {
-      buyRailGun->setColor(1.0,0.0,0.0);
-   } else {
-      buyRailGun->setColor(1.0,1.0,1.0);
-   }
-   if (x >= buyPikachusWrath->xCoord &&
-         x <= buyPikachusWrath->xCoord + 50 &&
-         y >= buyPikachusWrath->yCoord - 20 &&
-         y <= buyPikachusWrath->yCoord ) {
-      buyPikachusWrath->setColor(1.0,0.0,0.0);
-   } else {
-      buyPikachusWrath->setColor(1.0,1.0,1.0);
-   }
-   if (x >= buyTractorBeam->xCoord &&
-         x <= buyTractorBeam->xCoord + 50 &&
-         y >= buyTractorBeam->yCoord - 20 &&
-         y <= buyTractorBeam->yCoord ) {
-      buyTractorBeam->setColor(1.0,0.0,0.0);
-   } else {
-      buyTractorBeam->setColor(1.0,1.0,1.0);
-   }
-   if (x >= buyHealth->xCoord &&
-         x <= buyHealth->xCoord + 50 &&
-         y >= buyHealth->yCoord - 20 &&
-         y <= buyHealth->yCoord ) {
-      buyHealth->setColor(1.0,0.0,0.0);
-   } else {
-      buyHealth->setColor(1.0,1.0,1.0);
-   }
-   if (x >= done->xCoord &&
-         x <= done->xCoord + 50 &&
-         y >= done->yCoord - 20 &&
-         y <= done->yCoord ) {
-      done->setColor(1.0,0.0,0.0);
-   } else {
-      done->setColor(1.0,1.0,1.0);
-   }
-
    
-   
+   if(menuTexts[0]->mouseSelect(x,y)) {
+      menuTexts[0]->setColor(SDL_RED);
+   } else {
+      menuTexts[0]->setColor(SDL_WHITE);
+   }
+   if(menuTexts[1]->mouseSelect(x,y)) {
+      menuTexts[1]->setColor(SDL_RED);
+   } else {
+      menuTexts[1]->setColor(SDL_WHITE);
+   }
+   if(menuTexts[2]->mouseSelect(x,y)) {
+      menuTexts[2]->setColor(SDL_RED);
+   } else {
+      menuTexts[2]->setColor(SDL_WHITE);
+   }
+   if(menuTexts[3]->mouseSelect(x,y)) {
+      menuTexts[3]->setColor(SDL_RED);
+   } else {
+      menuTexts[3]->setColor(SDL_WHITE);
+   }
 }
-
 

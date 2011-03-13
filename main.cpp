@@ -20,6 +20,7 @@
 #include "Utility/Text.h"
 #include "Utility/GameState.h"
 #include "Utility/Menu.h"
+#include "Utility/StoreMenu.h"
 #include "Utility/InputManager.h"
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
@@ -123,19 +124,18 @@ void display() {
       gameState->drawBloom();
    }
    /*
-      if (inputManager->bloom || inputManager->bloom1) {
-//printf("SPECUBLOOM\n");
-gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
-}
-*/
-glPopMatrix();
-// Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
-gameState->drawMinimap();
-      
+   if (inputManager->bloom || inputManager->bloom1) {
+      //printf("SPECUBLOOM\n");
+      gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
+   }
+   */
+   glPopMatrix();
+   // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
+   gameState->drawMinimap();
 
-SDL_GL_SwapBuffers();
-displayTime += doubleTime() - startTime;
-++curFrame;
+   SDL_GL_SwapBuffers();
+   displayTime += doubleTime() - startTime;
+   ++curFrame;
 }
 
 void init() {
@@ -296,7 +296,6 @@ void init() {
 }
 
 void timerFunc(bool paused) {
-   static unsigned long lastSecond = 0;
    static double lastTime = 0;
    if (paused) {
       lastTime = 0;
@@ -321,10 +320,6 @@ void timerFunc(bool paused) {
 
    lastTime = curTime;
 
-   // Timing statistics
-   if (floor(curTime) > lastSecond) {
-      lastSecond = floor(curTime);
-   }
 }
 
 int main(int argc, char* argv[]) {
@@ -396,11 +391,14 @@ int main(int argc, char* argv[]) {
    //turn the menu on for the inial menu display
    mainMenu->menuActive = true;
    
+   StoreMenu* storeMenu = new StoreMenu();
+   
    //Initialize the input manager
    inputManager = new InputManager();
    //Connect the input manager to the gameState
    inputManager->addReceiver(gameState);
    inputManager->addReceiver(mainMenu);
+   inputManager->addReceiver(storeMenu);
 
    //declare the event that will be reused
    SDL_Event* event = new SDL_Event();
@@ -411,6 +409,10 @@ int main(int argc, char* argv[]) {
          SDL_ShowCursor(SDL_ENABLE);
          mainMenu->draw();
          timerFunc(mainMenu->menuActive);
+      } else if (storeMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
+         storeMenu->draw();
+         timerFunc(storeMenu->menuActive);
       } else if (gameState->isGameRunning()) {
          timerFunc(false);
          display();
