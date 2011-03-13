@@ -13,7 +13,6 @@ class StoreMenu : public Menu {
    ~StoreMenu();
 
    void draw();
-   void update();
    
    void keyUp(int key);
    void keyDown(int key);

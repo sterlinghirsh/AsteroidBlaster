@@ -9,16 +9,15 @@
 class Menu : public InputReceiver {
    public:
    Menu();
-   ~Menu();
+   virtual ~Menu();
 
-   virtual void draw();
-   virtual void update();
+   virtual void draw() = 0;
    
-   virtual void keyUp(int key);
-   virtual void keyDown(int key);
-   virtual void mouseDown(int button);
-   virtual void mouseMove(int dx, int dy, int x, int y);
-   virtual void mouseUp(int button);
+   virtual void keyUp(int key) = 0;
+   virtual void keyDown(int key) = 0;
+   virtual void mouseDown(int button) = 0;
+   virtual void mouseMove(int dx, int dy, int x, int y) = 0;
+   virtual void mouseUp(int button) = 0;
    
    //the current mouse location
    double x, y;

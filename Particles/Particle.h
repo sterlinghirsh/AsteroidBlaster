@@ -9,7 +9,7 @@
 #include <string>
 #include <list>
 
-#define MAX_PARTICLES 7000
+#define MAX_PARTICLES 70000
 #define PARTICLE_LIFE 0.002f
 
 class Particle : public Drawable {

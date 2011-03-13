@@ -28,7 +28,9 @@
 
 #define VERT_FOV 50.0
 
-//Global Variables declared
+class GameState;
+
+// the window width and window height
 extern int GW, GH;
 extern int flopY(int);
 extern unsigned long curFrame;
@@ -47,6 +49,7 @@ extern const SDL_VideoInfo* vidinfo;
 extern InputManager* inputManager;
 extern MainMenu* mainMenu;
 extern StoreMenu* storeMenu;
+extern GameState* gameState;
 
 
 

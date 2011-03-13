@@ -42,7 +42,7 @@ GameState::GameState(double worldSizeIn) {
 
    // Init Text Objects
    SDL_Rect position = {0,0};
-   std::string fontName = "Font/FreeMono.ttf";
+   std::string fontName = "Font/Slider.ttf";
    int fontSize = 18;
    
    FPSText = new Text("FPS: ", curFPS, "",  fontName, position, fontSize);
@@ -150,7 +150,9 @@ GameState::~GameState() {
 void GameState::update(double timeDiff) {
    //check if it should go to the next level
    if(custodian.asteroidCount == 0) {
+      storeMenu->menuActive = true;
       nextLevel();
+      return;
    }
 
    std::vector<Drawable*>* objects = custodian.getListOfObjects();
@@ -745,6 +747,9 @@ void GameState::keyDown(int key) {
             ship->nextWeapon();
          } while (!ship->getCurrentWeapon()->purchased);
       }
+      break;
+   case SDLK_F10:
+      gameState->ship->nShards += 1;
       break;
    case SDLK_z:
       // If we're in godMode, ignore whether or not a weapon is purchased

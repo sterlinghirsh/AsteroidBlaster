@@ -12,14 +12,13 @@ class MainMenu : public Menu {
    MainMenu();
    ~MainMenu();
 
-   virtual void draw();
-   virtual void update();
+   void draw();
    
-   virtual void keyUp(int key);
-   virtual void keyDown(int key);
-   virtual void mouseDown(int button);
-   virtual void mouseMove(int dx, int dy, int x, int y);
-   virtual void mouseUp(int button);
+   void keyUp(int key);
+   void keyDown(int key);
+   void mouseDown(int button);
+   void mouseMove(int dx, int dy, int x, int y);
+   void mouseUp(int button);
    
    //the current mouse location
    double x, y;

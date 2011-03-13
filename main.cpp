@@ -38,20 +38,6 @@ const double WORLD_SIZE = 80.00;
 bool running = true;
 bool fullScreen = false;
 
-// Fonts
-int *fontsArr[] = {
-   (int*)GLUT_BITMAP_8_BY_13,
-   (int*)GLUT_BITMAP_9_BY_15,
-   (int*)GLUT_BITMAP_TIMES_ROMAN_10,
-   (int*)GLUT_BITMAP_TIMES_ROMAN_24,
-   (int*)GLUT_BITMAP_HELVETICA_10,
-   (int*)GLUT_BITMAP_HELVETICA_12,
-   (int*)GLUT_BITMAP_HELVETICA_18,
-};
-int fontSpot = 0; // TODO: What is this?
-// Pointer to the global gamestate object.
-GameState* gameState = NULL;
-
 double displayTime = 0;
 // This double contains the FPS to be printed to the screen each frame.
 

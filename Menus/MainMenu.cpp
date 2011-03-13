@@ -11,7 +11,7 @@ MainMenu::MainMenu() {
    menuActive = false;
    
    SDL_Rect position = {0,0};
-   std::string fontName = "Font/FreeMonoBold.ttf";
+   std::string fontName = "Font/Slider.ttf";
    
    menuTexts.push_back(new Text("New Game",  fontName, position, 24));
    menuTexts.push_back(new Text("Save/Load Game",  fontName, position, 24));
@@ -32,10 +32,6 @@ MainMenu::~MainMenu() {
    for(int i = 0; i < menuTexts.size(); i++) {
       delete menuTexts[i];
    }
-}
-
-void MainMenu::update() {
-
 }
 
 void MainMenu::draw() {
