@@ -1,33 +1,31 @@
 /**
- * Blaster! The original Asteroids Weapon.
+ * Tractor Beam
+ * This pulls in crystals.
  * @author Sterling Hirsh (shirsh@calpoly.edu)
- * @date 2/14/2011
- * <3
+ * @date Valentine's Day <3
  */
 
-#ifndef __BLASTER_H__
-#define __BLASTER_H__
-
+#ifndef __RAM_H__
+#define __RAM_H__
 #include "Weapons/Weapon.h"
+#include "Items/AsteroidShip.h"
 
-struct Point3D;
-/* Classter Blaster */
-class Blaster : public Weapon {
+class AsteroidShip;
+
+class SpikeBall : public Weapon {
    public:
-      Blaster(AsteroidShip* owner);
-      virtual ~Blaster();
+      SpikeBall(AsteroidShip* owner);
+      virtual ~SpikeBall();
       virtual Point3D project(Object3D*);
-      virtual void update(double timeDiff);
       virtual bool shouldFire(Point3D*, Point3D*);
-      void godMode(bool enabled);
+      virtual void update(double timeDiff);
       virtual void debug();
       virtual void fire();
-
-   protected:
-      double shotSpeed;
-      double turnSpeed;
-      double randomVariationAmount;
-      Point3D* lastShotPos;
+   private:
+      int currentFrame;
+      int lastFiredFrame;
+      bool soundPlaying;
+      int soundHandle;
 };
 
 #endif

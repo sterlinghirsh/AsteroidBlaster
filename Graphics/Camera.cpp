@@ -106,9 +106,5 @@ void Camera::shake(float newShakeAmount) {
 }
 
 void Camera::zoom() {
-   offset->print();
-   //offset->scalarMultiplyUpdate(2.0);
    zoomFactor = (int)(zoomFactor / 2 + 1) % 2 + 1.0;
-   //offset->print();
-   printf("zoom: %d\n", (int)(zoomFactor / 2 + 1) % 2);
 }

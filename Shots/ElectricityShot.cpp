@@ -134,7 +134,6 @@ void ElectricityShot::drawShot(bool isGlow) {
    glLineWidth(thickness);
 
    glBegin(GL_LINES);
-   glBegin(GL_QUADS);
 
    //Creates the twisted lines whose vertices are sent to the shader to modify
    for(k = -density/2; k < density/2; k = k+1){

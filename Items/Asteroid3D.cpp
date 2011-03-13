@@ -199,7 +199,7 @@ void Asteroid3D::drawGlow() {
    //}
 
    double shipDist = position->distanceFrom(*gameState->ship->position);
-   double lineW = worldSize / shipDist * ASTEROID3D_LINE_W + 0.5;
+   double lineW = (worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2;
    //printf("distance: %f, line width: %f\n", shipDist, lineW);
    //glLineWidth(ASTEROID3D_LINE_W);
    glLineWidth(lineW);
