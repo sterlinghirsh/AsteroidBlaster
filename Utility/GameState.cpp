@@ -456,7 +456,7 @@ void GameState::drawAllText() {
    
    SDL_Rect position;
    position.x = 10;
-   position.y = 10;
+   position.y = 30;
 
    /* Don't draw stuff in front of the text. */
    //glDisable(GL_DEPTH_TEST);
