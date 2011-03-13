@@ -73,10 +73,10 @@ void BoundingSphere::draw() {
    //glClearColor(0.0,0.0,0.0,0.0);
    glDisable(GL_LIGHTING);
    glColor4f(0.0, 1.0, 0.0, alpha);
-   glutWireSphere(wall, 48, 48);
+   //glutWireSphere(wall, 48, 48);
    //glutWireSphere(wall, 24, 24);
    glColor4f(0.0, 0.0, 1.0, 1.0);
-   glutSolidSphere(radius * 0.1, 24, 24);
+   //glutSolidSphere(radius * 0.1, 24, 24);
    glEnable(GL_LIGHTING);
    glUseProgram(0);
 
