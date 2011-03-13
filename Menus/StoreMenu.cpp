@@ -12,6 +12,7 @@
 #define TRACTORBEAM_STRING_INDEX 1
 #define PIKACHUSWRATH_STRING_INDEX 2
 #define DONE_STRING_INDEX 3
+#define SHARDS_STRING_INDEX 4
 
 #define RAILGUN_WEAPON_INDEX 1
 #define TRACTORBEAM_WEAPON_INDEX 2
@@ -25,9 +26,9 @@
 #define TRACTORBEAM_AMMO_AMOUNT 1000
 #define PIKACHUSWRATH_AMMO_AMOUNT 500
 
-#define RAILGUN_AMMO_PRICE 20
-#define TRACTORBEAM_AMMO_PRICE 10
-#define PIKACHUSWRATH_AMMO_PRICE 20
+#define RAILGUN_AMMO_PRICE 10
+#define TRACTORBEAM_AMMO_PRICE 5
+#define PIKACHUSWRATH_AMMO_PRICE 10
 
 StoreMenu::StoreMenu() {
    menuActive = false;
@@ -35,22 +36,22 @@ StoreMenu::StoreMenu() {
    SDL_Rect position = {0,0};
    std::string fontName = "Font/Slider.ttf";
    
-   
-   
    std::stringstream out;
-   out << "Buy Railgun  $" << RAILGUN_PRICE << " (" << gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo << ")";
+   out << "Buy Railgun  $" << RAILGUN_PRICE;
    menuTexts.push_back(new Text(out.str(), fontName, position, 24));
    
    out.str("");
-   out << "Buy Tractor Beam $" << TRACTORBEAM_PRICE << " (" << gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->curAmmo << ")";
+   out << "Buy Tractor Beam $" << TRACTORBEAM_PRICE;
    menuTexts.push_back(new Text(out.str(), fontName, position, 24));
 
    out.str(""); 
-   out << "Buy Pikachu's Wrath $" << PIKACHUSWRATH_PRICE << " (" << gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo << ")";
+   out << "Buy Pikachu's Wrath $" << PIKACHUSWRATH_PRICE;
    menuTexts.push_back(new Text(out.str(), fontName, position, 24));
    
    
    menuTexts.push_back(new Text("Done", fontName, position, 24));
+   
+   menuTexts.push_back(new Text("Shards: ", 0, "", fontName, position, 24));
    
 }
 
@@ -64,24 +65,49 @@ StoreMenu::~StoreMenu() {
 void StoreMenu::draw() {
    SDL_Rect position;
    position.x = GW/3;
-   position.y = GH/2 + 50;
+   position.y = GH/2;
+   int currAmmo = -1;
    
-   std::stringstream out;
-   out << "Buy Railgun  $" << RAILGUN_PRICE << " (" << gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo << ")";
-   menuTexts[RAILGUN_STRING_INDEX]->updateBody(out.str());
    
-   out.str("");
-   out << "Buy Tractor Beam $" << TRACTORBEAM_PRICE << " (" << gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->curAmmo << ")";
-   menuTexts[TRACTORBEAM_STRING_INDEX]->updateBody(out.str());
-
-   out.str(""); 
-   out << "Buy Pikachu's Wrath $" << PIKACHUSWRATH_PRICE << " (" << gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo << ")";
-   menuTexts[PIKACHUSWRATH_STRING_INDEX]->updateBody(out.str());
-   
-   for(int i = 0; i < menuTexts.size(); i++) {
-      menuTexts[i]->setPosition(position);
-      position.y += GH/10;
+   //Set the position and the string depending on if the weapon was bought
+   menuTexts[RAILGUN_STRING_INDEX]->setPosition(position);
+   currAmmo = gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo;
+   if (gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased) {
+      std::stringstream out;
+      out << "Buy " << RAILGUN_AMMO_AMOUNT << " Railgun Ammo $" << RAILGUN_AMMO_PRICE << " (" << currAmmo << ")";
+      menuTexts[RAILGUN_STRING_INDEX]->updateBody(out.str());
    }
+   
+   //Set the position and the string depending on if the weapon was bought
+   position.y += GH/10;
+   menuTexts[TRACTORBEAM_STRING_INDEX]->setPosition(position);
+   currAmmo = gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->curAmmo;
+   if (gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->purchased) {
+      std::stringstream out;
+      out << "Buy " << TRACTORBEAM_AMMO_AMOUNT << " Tractor Beam Ammo $" << TRACTORBEAM_AMMO_PRICE << " (" << currAmmo << ")";
+      menuTexts[TRACTORBEAM_STRING_INDEX]->updateBody(out.str());
+   }
+   
+   //Set the position and the string depending on if the weapon was bought
+   position.y += GH/10;
+   menuTexts[PIKACHUSWRATH_STRING_INDEX]->setPosition(position);
+   currAmmo = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo;
+   if (gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased) {
+      std::stringstream out;
+      out << "Buy " << PIKACHUSWRATH_AMMO_AMOUNT << " Pikachu's Wrath Ammo $" << PIKACHUSWRATH_AMMO_PRICE << " (" << currAmmo << ")";
+      menuTexts[PIKACHUSWRATH_STRING_INDEX]->updateBody(out.str());
+   }
+   
+   //Done
+   position.y += GH/10;
+   menuTexts[3]->setPosition(position);
+   
+   
+   //shards
+   position.x = GW/9;
+   position.y = GH/2;
+   menuTexts[SHARDS_STRING_INDEX]->updateBody(gameState->ship->nShards);
+   menuTexts[SHARDS_STRING_INDEX]->setPosition(position);
    
    
    
@@ -195,56 +221,65 @@ void StoreMenu::keyUp(int key) {
  */
 void StoreMenu::mouseDown(int button) {
    if (!menuActive) { return; }
-
+   bool weaponBought = false;
+   int shardsOwned = -1;
+   int currAmmo = -1;
+   bool boughtSomething = false;
    //for railgun
    if(menuTexts[RAILGUN_STRING_INDEX]->mouseSelect(x,y)) {
-      if(gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased && gameState->ship->nShards >= RAILGUN_AMMO_PRICE) {
+      weaponBought = gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased;
+      shardsOwned = gameState->ship->nShards;
+      currAmmo = gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo;
+      if(weaponBought && shardsOwned >= RAILGUN_AMMO_PRICE) {
          std::cout << "bought railgun ammo" << std::endl;
          gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo += RAILGUN_AMMO_AMOUNT;
          gameState->ship->nShards -= RAILGUN_AMMO_PRICE;
-      } else if(gameState->ship->nShards >= RAILGUN_PRICE) {
+      } else if(shardsOwned >= RAILGUN_PRICE) {
          std::cout << "bought railgun" << std::endl;
          gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased = true;
          gameState->ship->nShards -= RAILGUN_PRICE;
-         
-         std::stringstream out;
-         out << "Buy " << RAILGUN_AMMO_AMOUNT << " Railgun Ammo $" << RAILGUN_AMMO_PRICE;
-         menuTexts[RAILGUN_STRING_INDEX]->updateBody(out.str());
-         
+      } else {
+         std::cout << "not enough money!" << std::endl;
       }
    }
+   
    //for tractor beam
    if(menuTexts[TRACTORBEAM_STRING_INDEX]->mouseSelect(x,y)) {
-      if(gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->purchased && gameState->ship->nShards >= 5) {
-         std::cout << "bought tractor beam ammo" << std::endl;
+      weaponBought = gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->purchased;
+      shardsOwned = gameState->ship->nShards;
+      currAmmo = gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->curAmmo;
+      if(weaponBought && shardsOwned >= TRACTORBEAM_AMMO_PRICE) {
+         std::cout << "bought TRACTORBEAM ammo" << std::endl;
          gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->curAmmo += TRACTORBEAM_AMMO_AMOUNT;
          gameState->ship->nShards -= TRACTORBEAM_AMMO_PRICE;
-      } else if(gameState->ship->nShards >= TRACTORBEAM_PRICE) {
-         std::cout << "bought tractor beam" << std::endl;
+      } else if(shardsOwned >= TRACTORBEAM_PRICE) {
+         std::cout << "bought TRACTORBEAM" << std::endl;
          gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->purchased = true;
          gameState->ship->nShards -= TRACTORBEAM_PRICE;
-         
-         std::stringstream out;
-         out << "Buy " << RAILGUN_AMMO_AMOUNT << " Tractor Beam Ammo $" << TRACTORBEAM_AMMO_PRICE;
-         menuTexts[TRACTORBEAM_STRING_INDEX]->updateBody(out.str());
+      } else {
+         std::cout << "not enough money!" << std::endl;
       }
    }
+   
    //for pikachu's wrath
    if(menuTexts[PIKACHUSWRATH_STRING_INDEX]->mouseSelect(x,y)) {
-      if(gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased && gameState->ship->nShards >= PIKACHUSWRATH_AMMO_PRICE) {
-         std::cout << "bought pikachu's wrath ammo" << std::endl;
+      weaponBought = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased;
+      shardsOwned = gameState->ship->nShards;
+      currAmmo = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo;
+      if(weaponBought && shardsOwned >= PIKACHUSWRATH_AMMO_PRICE) {
+         std::cout << "bought PIKACHUSWRATH ammo" << std::endl;
          gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo += PIKACHUSWRATH_AMMO_AMOUNT;
          gameState->ship->nShards -= PIKACHUSWRATH_AMMO_PRICE;
-      } else if(gameState->ship->nShards >= PIKACHUSWRATH_PRICE) {
-         std::cout << "bought pikachu's wrath" << std::endl;
+      } else if(shardsOwned >= PIKACHUSWRATH_PRICE) {
+         std::cout << "bought PIKACHUSWRATH" << std::endl;
          gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased = true;
+         weaponBought = true;
          gameState->ship->nShards -= PIKACHUSWRATH_PRICE;
-         
-         std::stringstream out;
-         out << "Buy " << PIKACHUSWRATH_AMMO_AMOUNT << " Pikachu's Wrath Ammo $" << PIKACHUSWRATH_AMMO_PRICE;
-         menuTexts[PIKACHUSWRATH_STRING_INDEX]->updateBody(out.str());
+      } else {
+         std::cout << "not enough money!" << std::endl;
       }
    }
+   
    if(menuTexts[DONE_STRING_INDEX]->mouseSelect(x,y)) {
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;

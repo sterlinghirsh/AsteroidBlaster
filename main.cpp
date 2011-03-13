@@ -38,7 +38,12 @@ const double WORLD_SIZE = 80.00;
 bool running = true;
 bool fullScreen = false;
 
-double displayTime = 0;
+
+// the absolute time update was last called
+static double lastUpdateTime = 0;
+// the absolute time update was last called
+static double lastDrawTime = 0;
+   
 // This double contains the FPS to be printed to the screen each frame.
 
 // TODO: Move this out of here.
@@ -220,34 +225,30 @@ void init() {
 }
 
 void update() {
-   // the absolute time update was last called
-   static double lastTime = 0;
    // get the current absolute time
    double curTime = doubleTime();
 
-   if (lastTime == 0) {
-      lastTime = curTime;
+   if (lastUpdateTime == 0) {
+      lastUpdateTime = curTime;
       return;
    }
 
    // the time difference since last update call
-   double timeDiff = curTime - lastTime;
+   double timeDiff = curTime - lastUpdateTime;
    
    gameState->update(timeDiff);
 
 
-   lastTime = curTime;
+   lastUpdateTime = curTime;
    ++curFrame;
 }
 
 void draw() {
-   // the absolute time update was last called
-   static double lastTime = 0;
    // get the current absolute time
    double curTime = doubleTime();
 
    // the time difference since last update call
-   double timeDiff = curTime - lastTime;
+   double timeDiff = curTime - lastDrawTime;
    
    gameState->setCurFPS(1 / timeDiff);
    
@@ -308,7 +309,7 @@ void draw() {
    gameState->drawMinimap();
 
    SDL_GL_SwapBuffers();
-   lastTime = curTime;
+   lastDrawTime = curTime;
 }
 
 int main(int argc, char* argv[]) {
@@ -397,11 +398,13 @@ int main(int argc, char* argv[]) {
       if (mainMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          mainMenu->draw();
-         update();
+         //update();
+         lastUpdateTime = doubleTime();
       } else if (storeMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          storeMenu->draw();
-         update();
+         //update();
+         lastUpdateTime = doubleTime();
       } else if (gameState->isGameRunning()) {
          update();
          draw();

@@ -15,8 +15,7 @@
 #include <iostream>
 #include <math.h>
 
-
-
+#define TEXT_INVERT_VALUE 20
 
 // Constructor if you are displaying one string
 Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
@@ -169,9 +168,13 @@ void Text::draw() {
    //SO let's translate it back to standard SDL (normal coordinate)
    
    SDL_Rect temp = {pos.x, GH - pos.y - TEXT_INVERT_VALUE};
-      
-   
+
    SDL_GL_RenderText(textToDisplay.c_str(), font, color, &temp);
+   
+   pos.w = temp.w;
+   pos.h = temp.h;
+   
+   
 
    /* Come out of HUD mode */
    glEnable(GL_DEPTH_TEST);
@@ -259,8 +262,11 @@ void Text::SDL_GL_RenderText(const char *text,
 	glFinish();
 	
 	/* return the deltas in the unused w,h part of the rect */
-	location->w = w;
-	location->h = 100;
+	int width = -1;
+	int height = -1;
+   TTF_SizeText(font,text, &width, &height);
+	location->w = width;
+	location->h = height;
 	
 	/* Clean up */
 	SDL_FreeSurface(initial);
@@ -270,9 +276,9 @@ void Text::SDL_GL_RenderText(const char *text,
 
 bool Text::mouseSelect(int x, int y) {
    if(x >= pos.x &&
-      x <= pos.x + textToDisplay.length()*(size/1.5) &&
+      x <= pos.x + pos.w &&
       y >= pos.y - TEXT_INVERT_VALUE &&
-      y <= pos.y - TEXT_INVERT_VALUE + (size/1.1)){
+      y <= pos.y - TEXT_INVERT_VALUE + pos.h){
       return true;
    }
    return false;
