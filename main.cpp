@@ -318,10 +318,6 @@ int main(int argc, char* argv[]) {
    GH = 600;
    updateDoubleTime();
 
-   //initialize glut
-   glutInit(&argc, argv);
-   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-
    // Initialize GL/SDL/glew/GLSL related things
    init();
 

@@ -11,12 +11,6 @@
 #ifndef __FACE3D_H__
 #define __FACE3D_H__
 
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
-
 #include "Utility/Vector3D.h"
 
 struct Face3D {

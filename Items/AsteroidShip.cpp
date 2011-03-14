@@ -440,7 +440,6 @@ void draw_shield(){
 
     glEnd();
       glEnable(GL_CULL_FACE);
-   //glutWireCone(.5, 2, 20, 20);
    glPopMatrix();
    glUseProgram(0);*/
    glUseProgram(ramShader);
