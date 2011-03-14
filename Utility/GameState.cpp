@@ -59,7 +59,6 @@ GameState::GameState(double worldSizeIn) {
    // Clear the sstream2
    sstream2.str("");
    
-   curLevelText = new Text("Level: ", curLevel, "",  fontName, position, fontSize);
    
    
    SDL_Rect centerRec = {GW/2, GH/2};
@@ -86,6 +85,7 @@ GameState::GameState(double worldSizeIn) {
    // TODO: comment this or rename it.
    isW = isA = isS = isD = false;
 
+   curLevelText = new Text("Level: ", curLevel, "",  fontName, position, fontSize);
 
    // Bloom
    xSize = ySize = 512;
