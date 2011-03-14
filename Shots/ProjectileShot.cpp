@@ -7,6 +7,7 @@
 #include "Shots/ProjectileShot.h"
 #include "Particles/BlasterShotParticle.h"
 #include "Particles/BlasterImpactParticle.h"
+#include "Utility/SoundEffect.h"
    
 const int particleCycle = 100;
 
@@ -64,6 +65,7 @@ void ProjectileShot::handleCollision(Drawable* other) {
    Asteroid3D* asteroid;
    // If we hit an asteroid.
    if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+      SoundEffect::playSoundEffect("BlasterHit.wav");
       // Make some particles!
       positionDifference.updateMagnitude(*asteroid->position, *position);
       positionDifference.setLength(particleSpeed);

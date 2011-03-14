@@ -863,6 +863,7 @@ void AsteroidShip::handleCollision(Drawable* other) {
          health = 0;
       }
       shakeAmount = 1;
+      SoundEffect::playSoundEffect("ShipHit.wav");
    }
 }
 

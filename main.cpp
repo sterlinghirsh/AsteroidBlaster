@@ -366,6 +366,8 @@ int main(int argc, char* argv[]) {
    SoundEffect::Add("Sounds/Pikachu.wav", "Pikachu.wav");
    SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
    SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
+   SoundEffect::Add("Sounds/ShipHit.wav", "ShipHit.wav");
+   SoundEffect::Add("Sounds/BlasterHit.wav", "BlasterHit.wav");
 
    //get the quadradic up
    quadric = gluNewQuadric();
