@@ -7,17 +7,20 @@
 #include "Particles/BlasterShotParticle.h"
 #include "math.h"
 
+const float startingSize = 0.3;
+
 BlasterShotParticle::BlasterShotParticle(Point3D* _position,
       Vector3D* _velocity, float _life, float _r, float _g, float _b) :
    Particle(_position, _velocity, _life, _r, _g, _b) {
-      size = 0.1;
+      size = startingSize;
    }
 
 void BlasterShotParticle::update(double timeDifference) {
-   const float velocityScalePerSecond = 3;
+   const float velocityScalePerSecond = 1;
    velocity->xMag -= velocity->xMag * velocityScalePerSecond * timeDifference;
    velocity->yMag -= velocity->yMag * velocityScalePerSecond * timeDifference;
    velocity->zMag -= velocity->zMag * velocityScalePerSecond * timeDifference;
+   size -= timeDifference * startingSize / life;
    // Do the parent's update.
    Particle::update(timeDifference);
 }
@@ -29,9 +32,9 @@ void BlasterShotParticle::Add(Point3D* pos, Vector3D* vec) {
       delete vec;
       return;
    }
-   const float minLife = 2; // Seconds
+   const float minLife = 0.5; // Seconds
 
-   float _fade = (minLife * randdouble()) + minLife;
+   float _fade = minLife;
    float _r = 0.9 + (randdouble() * 0.1);
    float _g = 0;
    float _b = 0;
@@ -47,10 +50,10 @@ void BlasterShotParticle::AddRainbow(Point3D* pos, Vector3D* vec, int particleNu
       return;
    }
 
-   const float minLife = 2; // Seconds
+   const float minLife = 1; // Seconds
 
-   float _fade = (minLife * randdouble()) + minLife;
-   float _r = 0.9 + (randdouble() * 0.1) ;
+   float _fade = minLife;
+   float _r = 0;
    float _g = 0;
    float _b = 0;
    getBrightColor((float)particleNum / particleCycle, _r, _g, _b);
