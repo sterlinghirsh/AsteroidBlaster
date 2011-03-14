@@ -7,6 +7,8 @@
 #include "Utility/Texture.h"
 #include "Utility/Text.h"
 #include "Items/AsteroidShip.h"
+#include "Utility/Music.h"
+#include "Utility/SoundEffect.h"
 
 #define RAILGUN_STRING_INDEX 0
 #define TRACTORBEAM_STRING_INDEX 1
@@ -194,8 +196,19 @@ void StoreMenu::draw() {
  */
 void StoreMenu::keyDown(int key) {
    if (key == SDLK_p )  {
-      menuActive = !menuActive;
-      std::cout << "StoreMenu toggled" << std::endl;
+      if(menuActive){
+         std::cout << "StoreMenu off" << std::endl;
+         menuActive = false;
+         SoundEffect::stopAllSoundEffect();
+         Music::stopMusic();
+         Music::playMusic("8-bit3.ogg");
+      } else {
+         std::cout << "StoreMenu on" << std::endl;
+         menuActive = true;
+         SoundEffect::stopAllSoundEffect();
+         Music::stopMusic();
+         Music::playMusic("Asteroids2.ogg");
+      }
    }
    if (!menuActive) { return; }
    
@@ -204,6 +217,8 @@ void StoreMenu::keyDown(int key) {
     case SDLK_n:
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
+      Music::stopMusic();
+      Music::playMusic("8-bit3.ogg");
       break;
    }
 }
@@ -283,6 +298,8 @@ void StoreMenu::mouseDown(int button) {
    if(menuTexts[DONE_STRING_INDEX]->mouseSelect(x,y)) {
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
+      Music::stopMusic();
+      Music::playMusic("8-bit3.ogg");
    }
 }
 

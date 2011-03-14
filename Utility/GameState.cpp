@@ -150,7 +150,6 @@ GameState::~GameState() {
 void GameState::update(double timeDiff) {
    //check if it should go to the next level
    if(custodian.asteroidCount == 0) {
-      storeMenu->menuActive = true;
       nextLevel();
       return;
    }
@@ -597,6 +596,11 @@ void GameState::reset() {
 }
 
 void GameState::nextLevel() {
+   SoundEffect::stopAllSoundEffect();
+   Music::stopMusic();
+   Music::playMusic("Asteroids2.ogg");
+   storeMenu->menuActive = true;
+
    minimap = new Minimap(ship);
    gameIsRunning = true;
    curLevel++;

@@ -74,5 +74,9 @@ int SoundEffect::currentlyPlaying(int handle) {
    return Mix_Playing(handle);
 }
 
+void SoundEffect::stopAllSoundEffect(){
+   Mix_HaltChannel(-1);
+}
+
 
 

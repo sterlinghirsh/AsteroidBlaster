@@ -17,9 +17,10 @@ class SoundEffect {
       static void Add(std::string file, std::string keyName);
       static int playSoundEffect(std::string file, bool loop = false);
       static void pauseSoundEffect(int handle);
-      void resumeSoundEffect(int handle);
+      static void resumeSoundEffect(int handle);
       static void stopSoundEffect(int handle);
-      int currentlyPlaying(int handle);
+      static int currentlyPlaying(int handle);
+      static void stopAllSoundEffect();
 
    private:
       static std::map<std::string, Mix_Chunk*> soundEffects;

@@ -7,6 +7,8 @@
 #include "Utility/Image.h"
 #include "Utility/Texture.h"
 #include "Utility/Text.h"
+#include "Utility/Music.h"
+#include "Utility/SoundEffect.h"
 
 #define NEWGAME_STRING_INDEX 0
 #define CONTINUE_STRING_INDEX 1
@@ -21,11 +23,11 @@ MainMenu::MainMenu() {
    SDL_Rect position = {0,0};
    std::string fontName = "Font/Slider.ttf";
    
-   menuTexts.push_back(new Text("New Game",  fontName, position, 24));
-   menuTexts.push_back(new Text("Continue",  fontName, position, 24));
+   menuTexts.push_back(new Text("New Game (n)",  fontName, position, 24));
+   menuTexts.push_back(new Text("Continue (c)",  fontName, position, 24));
    menuTexts.push_back(new Text("Save/Load Game",  fontName, position, 24));
    menuTexts.push_back(new Text("Settings",  fontName, position, 24));
-   menuTexts.push_back(new Text("Quit", fontName, position, 24));
+   menuTexts.push_back(new Text("Quit (esc)", fontName, position, 24));
    
 
    SDL_Color greyColor = {128,128,128};
@@ -145,9 +147,14 @@ void MainMenu::keyDown(int key) {
          //since there is a game now, enable continue
          firstTime = false;
          menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
+         Music::stopMusic();
+         Music::playMusic("8-bit3.ogg");
       } else {
          SDL_ShowCursor(SDL_ENABLE);
          menuActive = true;
+         SoundEffect::stopAllSoundEffect();
+         Music::stopMusic();
+         Music::playMusic("Asteroids2.ogg");
       }
    }
    if (!menuActive) { return; }
@@ -158,6 +165,14 @@ void MainMenu::keyDown(int key) {
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
       gameState->reset();
+      Music::stopMusic();
+      Music::playMusic("8-bit3.ogg");
+      break;
+    case SDLK_c:
+      SDL_ShowCursor(SDL_DISABLE);
+      menuActive = false;
+      Music::stopMusic();
+      Music::playMusic("8-bit3.ogg");
       break;
     case SDLK_ESCAPE: 
       exit(0);
@@ -184,9 +199,13 @@ void MainMenu::mouseDown(int button) {
       gameState->reset();
       menuActive = false;
       firstTime = false;
+      Music::stopMusic();
+      Music::playMusic("8-bit3.ogg");
    } else if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y) && !firstTime) {
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
+      Music::stopMusic();
+      Music::playMusic("8-bit3.ogg");
    } else if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
       exit(0);
    }
