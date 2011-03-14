@@ -22,6 +22,14 @@
 #define TEXT_INVERT_VALUE 20
 
 // Constructor if you are displaying one string
+/*
+Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
+   Text(text, fontName, _pos, _size, false);
+}
+*/
+
+// Constructor if you are displaying one string
+//Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size, bool _centered) {
 Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
    size = _size;
    font = TTF_OpenFont(fontName.c_str(), size);
@@ -36,6 +44,10 @@ Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
    pos = _pos;
    color = SDL_WHITE;
    selectable = selected = false;
+
+   //centered = _centered;
+   //centered = true;
+   centered = false;
    
 }
 
@@ -57,6 +69,9 @@ Text::Text(std::string preText, std::string body, std::string postText, std::str
    pos = _pos;
    color = SDL_WHITE;
    selectable = selected = false;
+   
+   //centered = true;
+   centered = false;
    
 }
 
@@ -80,6 +95,8 @@ Text::Text(std::string preText, int body, std::string postText, std::string font
    pos = _pos;
    color = SDL_WHITE;
    selectable = selected = false;
+   //centered = true;
+   centered = false;
 }
 
 // Constructor if you are displaying a double
@@ -102,6 +119,8 @@ Text::Text(std::string preText, double body, std::string postText, std::string f
    pos = _pos;
    color = SDL_WHITE;
    selectable = selected = false;
+   //centered = true;
+   centered = false;
 }
 
 // Destructor
@@ -175,8 +194,11 @@ void Text::draw() {
 
    SDL_GL_RenderText(textToDisplay.c_str(), font, color, &temp);
    
-   pos.w = temp.w;
+   pos.w = temp.w * 1.5;
    pos.h = temp.h;
+   if (centered) {
+      pos.x -= temp.w / 2;
+   }
    
    
 
@@ -223,9 +245,14 @@ void Text::SDL_GL_RenderText(const char *text,
 	/* Use SDL_TTF to render our text */
 	initial = TTF_RenderText_Blended(font, text, color);
 	
+        //double dw, dh;
 	/* Convert the rendered text to a known format */
 	w = (int)(pow(2,ceil(log(initial->w) / log(2)) + 0.5));
 	h = (int)(pow(2,ceil(log(initial->h) / log(2)) + 0.5));
+	//dw = (pow(2,log(initial->w) / log(2)) + 0.5);
+	//dh = (pow(2,log(initial->h) / log(2)) + 0.5);
+        //w = (int)dw;
+        //h = (int)dh;
 	
 	intermediary = SDL_CreateRGBSurface(0, w, h, 32, 
 			0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
@@ -246,20 +273,27 @@ void Text::SDL_GL_RenderText(const char *text,
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textTexture);
 	glColor3f(1.0f, 1.0f, 1.0f);
-	
+
+        /* Center the text */
+        double textX = location->x;
+        double textW = w;
+        if (centered) {
+           textX -= initial->w / 2.0;
+        }
+
 	/* Draw a quad at location */
 	glBegin(GL_QUADS);
 		/* Recall that the origin is in the lower-left corner
 		   That is why the TexCoords specify different corners
 		   than the Vertex coors seem to. */
 		glTexCoord2f(0.0f, 1.0f); 
-			glVertex2f(location->x    , location->y);
+			glVertex2f(textX, location->y);
 		glTexCoord2f(1.0f, 1.0f); 
-			glVertex2f(location->x + w, location->y);
+			glVertex2f(textX + textW, location->y);
 		glTexCoord2f(1.0f, 0.0f); 
-			glVertex2f(location->x + w, location->y + h);
+			glVertex2f(textX + textW, location->y + h);
 		glTexCoord2f(0.0f, 0.0f); 
-			glVertex2f(location->x    , location->y + h);
+			glVertex2f(textX, location->y + h);
 	glEnd();
 	
 	/* Bad things happen if we delete the texture before it finishes */
@@ -269,7 +303,9 @@ void Text::SDL_GL_RenderText(const char *text,
 	int width = -1;
 	int height = -1;
    TTF_SizeText(font,text, &width, &height);
-	location->w = width;
+	//location->w = width;
+	//location->h = height;
+	location->w = textW / 2;
 	location->h = height;
 	
 	/* Clean up */

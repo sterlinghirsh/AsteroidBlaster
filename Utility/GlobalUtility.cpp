@@ -40,6 +40,7 @@ double currentTime = -1;
 InputManager* inputManager = NULL;
 MainMenu* mainMenu = NULL;
 StoreMenu* storeMenu = NULL;
+CreditsMenu* creditsMenu = NULL;
 GameState* gameState = NULL;
 
 using namespace std;

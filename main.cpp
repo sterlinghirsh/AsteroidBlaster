@@ -379,6 +379,7 @@ int main(int argc, char* argv[]) {
    // Initialize the menus
    mainMenu = new MainMenu();
    storeMenu = new StoreMenu();
+   creditsMenu = new CreditsMenu();
    //turn the menu on for the inial menu display
    mainMenu->menuActive = true;
    
@@ -390,6 +391,7 @@ int main(int argc, char* argv[]) {
    inputManager->addReceiver(gameState);
    inputManager->addReceiver(mainMenu);
    inputManager->addReceiver(storeMenu);
+   inputManager->addReceiver(creditsMenu);
 
    //declare the event that will be reused
    SDL_Event* event = new SDL_Event();
@@ -404,6 +406,11 @@ int main(int argc, char* argv[]) {
       } else if (storeMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          storeMenu->draw();
+         //update();
+         lastUpdateTime = doubleTime();
+      } else if (creditsMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
+         creditsMenu->draw();
          //update();
          lastUpdateTime = doubleTime();
       } else if (gameState->isGameRunning()) {

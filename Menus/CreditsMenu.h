@@ -1,6 +1,6 @@
 
-#ifndef __MAINMENU_H__
-#define __MAINMENU_H__
+#ifndef __CREDITMENU_H__
+#define __CREDITMENU_H__
 
 
 #include "Utility/Text.h"
@@ -24,7 +24,6 @@ class CreditsMenu : public Menu {
    double x, y;
    
    bool menuActive;
-   bool firstTime;
    
    
    std::vector<Text*> menuTexts;

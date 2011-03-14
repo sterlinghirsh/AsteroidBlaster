@@ -31,6 +31,7 @@ class Text {
    public:
       //Constructor if you are displaying one string
       Text(std::string text, std::string fontName, SDL_Rect _pos, int _size);
+      //Text(std::string text, std::string fontName, SDL_Rect _pos, int _size, bool _centered);
       // Constructor if you are displaying multiple strings
       Text(std::string preText, std::string body, std::string postText, std::string fontName, SDL_Rect _pos, int _size);
       // Constructor if you are displaying an int
@@ -69,6 +70,7 @@ class Text {
       std::string textToDisplay, pre, post;
       GLuint textTexture;
       bool selectable, selected;
+      bool centered;
 };
 
 #endif

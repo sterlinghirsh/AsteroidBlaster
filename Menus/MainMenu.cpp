@@ -14,7 +14,8 @@
 #define CONTINUE_STRING_INDEX 1
 #define SAVELOAD_STRING_INDEX 2
 #define SETTINGS_STRING_INDEX 3
-#define QUIT_STRING_INDEX 4
+#define CREDITS_STRING_INDEX 4
+#define QUIT_STRING_INDEX 5
 
 MainMenu::MainMenu() {
    menuActive = false;
@@ -27,8 +28,12 @@ MainMenu::MainMenu() {
    menuTexts.push_back(new Text("Continue (c)",  fontName, position, 24));
    menuTexts.push_back(new Text("Save/Load Game",  fontName, position, 24));
    menuTexts.push_back(new Text("Settings",  fontName, position, 24));
+   menuTexts.push_back(new Text("Credits",  fontName, position, 24));
    menuTexts.push_back(new Text("Quit (esc)", fontName, position, 24));
-   
+
+   for (int i = 0; i < menuTexts.size(); i++) {
+      menuTexts[i]->centered = true;
+   }
 
    SDL_Color greyColor = {128,128,128};
    // grey out the option to show that it is disabled
@@ -48,7 +53,7 @@ MainMenu::~MainMenu() {
 
 void MainMenu::draw() {
    SDL_Rect position;
-   position.x = GW/2 - 50;
+   position.x = GW/2;
    position.y = GH/2;
    for(int i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
@@ -206,6 +211,11 @@ void MainMenu::mouseDown(int button) {
       menuActive = false;
       Music::stopMusic();
       Music::playMusic("Asteroids2.ogg");
+   } else if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
+      menuActive = false;
+      creditsMenu->menuActive = true;
+      Music::stopMusic();
+      Music::playMusic("Careless_Whisper.ogg");
    } else if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
       exit(0);
    }
@@ -236,6 +246,12 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
       } else {
          menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
       }
+   }
+
+   if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
+      menuTexts[CREDITS_STRING_INDEX]->setColor(SDL_RED);
+   } else {
+      menuTexts[CREDITS_STRING_INDEX]->setColor(SDL_WHITE);
    }
    
    if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {

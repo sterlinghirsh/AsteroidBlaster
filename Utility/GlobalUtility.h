@@ -23,6 +23,7 @@
 #include "Utility/InputManager.h"
 #include "Menus/MainMenu.h"
 #include "Menus/StoreMenu.h"
+#include "Menus/CreditsMenu.h"
 
 #define VERT_FOV 50.0
 
@@ -47,6 +48,7 @@ extern const SDL_VideoInfo* vidinfo;
 extern InputManager* inputManager;
 extern MainMenu* mainMenu;
 extern StoreMenu* storeMenu;
+extern CreditsMenu* creditsMenu;
 extern GameState* gameState;
 
 
