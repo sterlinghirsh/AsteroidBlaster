@@ -157,9 +157,6 @@ class AsteroidShip : public Object3D {
 
       double shotPhi; // Radians
       double shotTheta; // Radians
-      double shotSpeed; // Units per second
-      double timeOfLastShot; // Seconds
-      double timeOfLastBeam; // Seconds
 
       double curForwardAccel; // Units per second^2
       double curRightAccel;
@@ -175,7 +172,6 @@ class AsteroidShip : public Object3D {
       bool isBoosting;
       bool isFiring;
       int health;
-      int lastGunFired;
       int currentWeapon;
       Vector3D *upstart;
 
@@ -190,7 +186,7 @@ class AsteroidShip : public Object3D {
       void rightAcceleration(double newAcc);
       void upAcceleration(double newAcc);
 
-      double xOff, yOff;
+      double aimX, aimY;
       
       void createEngineParticles(double timeDiff);
       void addNewParticle(Point3D& emitter, Vector3D& initialOffset, Vector3D& offsetDirectionX,

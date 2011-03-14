@@ -37,14 +37,8 @@ AsteroidShip::AsteroidShip() :
       curForwardAccel = curRightAccel = curUpAccel = 0;
 
       yawSpeed = rollSpeed = pitchSpeed = 0;
-      maxSpeed = 10; // Units/s, probably will be changed with an upgrade.
+      maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
       maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
-      shotSpeed = 40; // Also probably will be changed with an upgrade.
-
-      // Timing stuff
-      timeOfLastShot = 0;
-      timeOfLastBeam = 0;
-      lastGunFired = 0;
 
       // Bounding box stuff.
       //shipRadius = 1; NOT USED
@@ -352,8 +346,8 @@ void AsteroidShip::update(double timeDiff) {
  * a phi and a theta from the ship.
  */
 void AsteroidShip::updateShotDirection(double xOffset, double yOffset) {
-   xOff = xOffset;
-   yOff = yOffset;
+   aimX = xOffset;
+   aimY = yOffset;
    shotPhi = (M_PI/180) * yOffset * VERT_FOV / 2;
    shotTheta = (M_PI/180) * xOffset * VERT_FOV / (/*((double) GW/GH) / */ -2);
    updateShotDirectionVector();
@@ -874,10 +868,10 @@ void AsteroidShip::updateShotDirectionVector() {
 }
 
 double AsteroidShip::getAimX() {
-   return xOff;
+   return aimX;
 }
 double AsteroidShip::getAimY() {
-   return yOff;
+   return aimY;
 }
 
 void AsteroidShip::debug() {
