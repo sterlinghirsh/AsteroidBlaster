@@ -55,6 +55,8 @@ class Shard : public Object3D {
       double randRadius(double r);
       std::vector<Ring> _rList;
       int _nPoints;
+      void drawOtherOrbiters();
+      double orbiterOffset;
 };
 
 #endif

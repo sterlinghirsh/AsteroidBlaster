@@ -18,6 +18,7 @@
 #include <math.h>
 #include "Utility/SoundEffect.h"
 #include "Particles/TractorAttractionParticle.h"
+#include "Particles/ShardParticle.h"
 
 using namespace std;
 
@@ -66,8 +67,6 @@ void Shard::genOrbiters() {
  * Initialize the shard.
  */
 void Shard::InitShard(double r, double worldSizeIn) {
-   const double pi = 3.141592;
-
    angle = 0;
    radius = r;
    worldSize = worldSizeIn;
@@ -150,23 +149,23 @@ void Shard::InitShard(double r, double worldSizeIn) {
    sizeZ = maxZ - minZ;
    collisionRadius = radius;
    updateBoundingBox();
+
+   orbiterOffset = randdouble() * 10;
 }
 
-void drawOtherOrbiters() {
+void Shard::drawOtherOrbiters() {
    double curTime = doubleTime();
-   const int numBalls = 1;
+   const int numBalls = 1; // This is the number of balls per ring, so x3
 
    // Make it so balls will draw evenly spaced.
    double increment = M_PI * (2.0 / numBalls);
    double t; // parameter for parametric function.
    double dx, dy, dz;
-   glPushMatrix();
    int j;
    //glScalef(3, 3, 3);
-   setMaterial(WhiteSolid);
    //setMaterial(BlackSolid);
    for (int i = 0; i < numBalls; ++i) {
-      t = 5 * curTime + increment * i;
+      t = 5 * curTime + increment * i + orbiterOffset;
 
       for (j = 0; j < 3; ++j) {
          dx = 0;
@@ -184,13 +183,14 @@ void drawOtherOrbiters() {
             dz = sin(t + M_PI * 2 / 3);
             dx = cos(t + M_PI * 2 / 3);
          }
-         glPushMatrix();
-         glTranslatef(dx, dy, dz);
-         gluSphere(quadric, 0.1f, 16, 16);
-         glPopMatrix();
+         Vector3D rotationOffset(dx, dy, dz);
+         rotationOffset.rotateByDegrees(angle, *axis);
+         Point3D* particlePoint = new Point3D(*position);
+         rotationOffset.movePoint(*particlePoint);
+         Vector3D* particleVel = new Vector3D(0, 0, 0);
+         ShardParticle::Add(particlePoint, particleVel);
       }
    }
-   glPopMatrix();
 }
 
 void Shard::drawGlow() {
