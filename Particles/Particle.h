@@ -9,7 +9,8 @@
 #include <string>
 #include <list>
 
-#define MAX_PARTICLES 70000
+// Sensible limit on particles. Maybe should be even lower?
+#define MAX_PARTICLES 5000
 #define PARTICLE_LIFE 0.002f
 
 class Particle : public Drawable {

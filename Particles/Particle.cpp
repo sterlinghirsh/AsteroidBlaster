@@ -137,8 +137,9 @@ void Particle::initDisplayList() {
 
 void Particle::Add(Particle* newParticle) {
    if (particles.size() >= MAX_PARTICLES) {
-      std::cout << "max particles reached!" << std::endl;
-      delete newParticle;
+      // Erase the oldest particle silently.
+      delete particles.front();
+      particles.pop_front();
       return;
    }
    particles.push_back(newParticle);
