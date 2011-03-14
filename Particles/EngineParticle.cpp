@@ -21,7 +21,7 @@ void EngineParticle::Add(Point3D* pos, Vector3D* vec, int color) {
    }
    const float minLife = 60; // Seconds
 
-   float _fade = (minLife * randdouble()) + minLife;
+   float _fade = randdouble() + minLife;
    float _r = 0.9 + (randdouble() * 0.1) ;
    float _g = 0;
    float _b = 0;
