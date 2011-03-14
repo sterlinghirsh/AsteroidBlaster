@@ -285,8 +285,6 @@ void AsteroidShip::update(double timeDiff) {
 
    if (shooter->isEnabled()) {
       shooter->think(timeDiff);
-   } else {
-      updateShotDirectionVector();
    }
    
    if(flyingAI->isEnabled())
@@ -319,6 +317,10 @@ void AsteroidShip::update(double timeDiff) {
    roll(timeDiff * rollSpeed);
    pitch(timeDiff * pitchSpeed);
    yaw(timeDiff * yawSpeed);
+   
+   if (!shooter->isEnabled()) {
+      updateShotDirectionVector();
+   }
 
    // Update weapons.
    for (std::vector<Weapon*>::iterator iter = weapons.begin();
