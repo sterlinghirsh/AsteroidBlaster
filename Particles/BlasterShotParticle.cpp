@@ -8,6 +8,8 @@
 #include "math.h"
 
 const float startingSize = 0.3;
+const float minLife = 1; // Seconds
+
 
 BlasterShotParticle::BlasterShotParticle(Point3D* _position,
       Vector3D* _velocity, float _life, float _r, float _g, float _b) :
@@ -26,12 +28,6 @@ void BlasterShotParticle::update(double timeDifference) {
 }
 
 void BlasterShotParticle::Add(Point3D* pos, Vector3D* vec) {
-   if (particles.size() >= MAX_PARTICLES) {
-      std::cout << "max particles reached!" << std::endl;
-      delete pos;
-      delete vec;
-      return;
-   }
    const float minLife = 0.5; // Seconds
 
    float _fade = minLife;
@@ -39,7 +35,7 @@ void BlasterShotParticle::Add(Point3D* pos, Vector3D* vec) {
    float _g = 0;
    float _b = 0;
 
-   particles.push_back(new BlasterShotParticle(pos, vec, _fade, _r, _g, _b));
+   Particle::Add(new BlasterShotParticle(pos, vec, _fade, _r, _g, _b));
 }
 
 void BlasterShotParticle::AddRainbow(Point3D* pos, Vector3D* vec, int particleNum, int particleCycle) {
@@ -49,8 +45,6 @@ void BlasterShotParticle::AddRainbow(Point3D* pos, Vector3D* vec, int particleNu
       delete vec;
       return;
    }
-
-   const float minLife = 1; // Seconds
 
    float _fade = minLife;
    float _r = 0;

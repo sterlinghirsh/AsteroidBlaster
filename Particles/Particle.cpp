@@ -39,6 +39,10 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
    radius = 1;
 }
 
+Particle::~Particle() {
+
+}
+
 void Particle::updateParticles(double timeDifference)
 {
    list<Particle*>::iterator particle = Particle::particles.begin();
@@ -95,21 +99,6 @@ void Particle::draw()
    glUseProgram(0);
 }
 
-/*
-void Particle::drawParticles()
-{
-   extern GameState* gameState;
-   
-   Point3D eyePoint = (gameState->getCamera()->getEyePoint());
-   // Modify each of the particles
-   list<Particle*>::iterator particle = Particle::particles.begin();
-   for (; particle != Particle::particles.end(); ++particle) 
-   {
-      (*particle)->draw(&eyePoint);
-   }
-}
-*/
-
 void Particle::initDisplayList() {
    particleDisplayList = glGenLists(1);
    glNewList(particleDisplayList, GL_COMPILE);
@@ -144,4 +133,13 @@ void Particle::initDisplayList() {
    */
 
    glEndList();
+}
+
+void Particle::Add(Particle* newParticle) {
+   if (particles.size() >= MAX_PARTICLES) {
+      std::cout << "max particles reached!" << std::endl;
+      delete newParticle;
+      return;
+   }
+   particles.push_back(newParticle);
 }

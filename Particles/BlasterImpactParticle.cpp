@@ -7,10 +7,13 @@
 #include "Particles/BlasterImpactParticle.h"
 #include "math.h"
 
+const float startingSize = 0.3;
+const float minLife = 0.5; // Seconds
+
 BlasterImpactParticle::BlasterImpactParticle(Point3D* _position,
       Vector3D* _velocity, float _life, float _r, float _g, float _b) :
    Particle(_position, _velocity, _life, _r, _g, _b) {
-      size = 0.3;
+      size = startingSize;
    }
 
 void BlasterImpactParticle::update(double timeDifference) {
@@ -23,18 +26,11 @@ void BlasterImpactParticle::update(double timeDifference) {
 }
 
 void BlasterImpactParticle::Add(Point3D* pos, Vector3D* vec) {
-   if (particles.size() >= MAX_PARTICLES) {
-      std::cout << "max particles reached!" << std::endl;
-      delete pos;
-      delete vec;
-      return;
-   }
-   const float minLife = 0.5; // Seconds
 
    float _fade = (0.5 * randdouble()) + minLife;
    float _r = 0.9 + (randdouble() * 0.1) ;
    float _g = 0;
    float _b = 0;
 
-   particles.push_back(new BlasterImpactParticle(pos, vec, _fade, _r, _g, _b));
+   Particle::Add(new BlasterImpactParticle(pos, vec, _fade, _r, _g, _b));
 }

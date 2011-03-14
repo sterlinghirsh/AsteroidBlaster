@@ -15,11 +15,12 @@
 class Particle : public Drawable {
    public:
       Particle(Point3D* p, Vector3D* v, float life, float r, float g, float b);
+      virtual ~Particle();
       
       static std::list<Particle*> particles;
-      //static void drawParticles();
       static void updateParticles(double timeDifference);
-      //static void Add(Point3D* pos, Vector3D* vec) = 0;
+
+      static void Add(Particle* newParticle);
       
       virtual void draw();
       virtual void update(double timeDifference);

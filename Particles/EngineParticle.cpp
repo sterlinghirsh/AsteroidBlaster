@@ -4,23 +4,18 @@
 
 #include "Particles/EngineParticle.h"
 
+const float startingSize = 0.1;
+const float minLife = 60; // Seconds
+
 EngineParticle::EngineParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b) : Particle(p, v, life, r, g, b) {
    // Nothing special :/
-   size = 0.1;
+   size = startingSize;
 };
 
 /**
  * When color is 1, this makes red stuff. 2 is Green, 3 is Blue.
  */
 void EngineParticle::Add(Point3D* pos, Vector3D* vec, int color) {
-   if (particles.size() >= MAX_PARTICLES) {
-      std::cout << "max particles reached!" << std::endl;
-      delete pos;
-      delete vec;
-      return;
-   }
-   const float minLife = 60; // Seconds
-
    float _fade = randdouble() + minLife;
    float _r = 0.9 + (randdouble() * 0.1) ;
    float _g = 0;
@@ -36,7 +31,7 @@ void EngineParticle::Add(Point3D* pos, Vector3D* vec, int color) {
       _r = 0;
    }
 
-   particles.push_back(new EngineParticle(pos, vec, _fade, _r, _g, _b));
+   Particle::Add(new EngineParticle(pos, vec, _fade, _r, _g, _b));
 }
 
 void EngineParticle::update(double timeDifference) {
