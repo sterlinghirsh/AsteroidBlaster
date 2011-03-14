@@ -148,13 +148,13 @@ void MainMenu::keyDown(int key) {
          firstTime = false;
          menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
          Music::stopMusic();
-         Music::playMusic("8-bit3.ogg");
+         Music::playMusic("Asteroids2.ogg");
       } else {
          SDL_ShowCursor(SDL_ENABLE);
          menuActive = true;
          SoundEffect::stopAllSoundEffect();
          Music::stopMusic();
-         Music::playMusic("Asteroids2.ogg");
+         Music::playMusic("8-bit3.ogg");
       }
    }
    if (!menuActive) { return; }
@@ -166,13 +166,13 @@ void MainMenu::keyDown(int key) {
       menuActive = false;
       gameState->reset();
       Music::stopMusic();
-      Music::playMusic("8-bit3.ogg");
+      Music::playMusic("Asteroids2.ogg");
       break;
     case SDLK_c:
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
       Music::stopMusic();
-      Music::playMusic("8-bit3.ogg");
+      Music::playMusic("Asteroids2.ogg");
       break;
     case SDLK_ESCAPE: 
       exit(0);
@@ -200,12 +200,12 @@ void MainMenu::mouseDown(int button) {
       menuActive = false;
       firstTime = false;
       Music::stopMusic();
-      Music::playMusic("8-bit3.ogg");
+      Music::playMusic("Asteroids2.ogg");
    } else if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y) && !firstTime) {
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
       Music::stopMusic();
-      Music::playMusic("8-bit3.ogg");
+      Music::playMusic("Asteroids2.ogg");
    } else if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
       exit(0);
    }

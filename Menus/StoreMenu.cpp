@@ -201,13 +201,13 @@ void StoreMenu::keyDown(int key) {
          menuActive = false;
          SoundEffect::stopAllSoundEffect();
          Music::stopMusic();
-         Music::playMusic("8-bit3.ogg");
+         Music::playMusic("Asteroids2.ogg");
       } else {
          std::cout << "StoreMenu on" << std::endl;
          menuActive = true;
          SoundEffect::stopAllSoundEffect();
          Music::stopMusic();
-         Music::playMusic("Asteroids2.ogg");
+         Music::playMusic("8-bit3.ogg");
       }
    }
    if (!menuActive) { return; }
@@ -218,7 +218,7 @@ void StoreMenu::keyDown(int key) {
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
       Music::stopMusic();
-      Music::playMusic("8-bit3.ogg");
+      Music::playMusic("Asteroids2.ogg");
       break;
    }
 }
@@ -299,7 +299,7 @@ void StoreMenu::mouseDown(int button) {
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
       Music::stopMusic();
-      Music::playMusic("8-bit3.ogg");
+      Music::playMusic("Asteroids2.ogg");
    }
 }
 

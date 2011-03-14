@@ -598,7 +598,7 @@ void GameState::reset() {
 void GameState::nextLevel() {
    SoundEffect::stopAllSoundEffect();
    Music::stopMusic();
-   Music::playMusic("Asteroids2.ogg");
+   Music::playMusic("8-bit3.ogg");
    storeMenu->menuActive = true;
 
    minimap = new Minimap(ship);
