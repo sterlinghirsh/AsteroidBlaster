@@ -37,7 +37,7 @@ AsteroidShip::AsteroidShip() :
       curForwardAccel = curRightAccel = curUpAccel = 0;
 
       yawSpeed = rollSpeed = pitchSpeed = 0;
-      maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
+      maxSpeed = 10; // Units/s, probably will be changed with an upgrade.
       maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
       shotSpeed = 40; // Also probably will be changed with an upgrade.
 
@@ -72,9 +72,7 @@ AsteroidShip::AsteroidShip() :
       maxForwardAccel = 10;
       maxRightAccel = 5;
       maxUpAccel = 5;
-      maxYawSpeed = 2;
-      maxPitchSpeed = 2;
-      maxRollSpeed = 2;
+      maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
 
 
       // TODO: create all of the shooters that this ship will have.

@@ -7,7 +7,7 @@
 #define CHANNEL_MAX 16
 
 std::map<std::string, Mix_Chunk*> SoundEffect::soundEffects;
-int SoundEffect::volume = MIX_MAX_VOLUME/7;
+int SoundEffect::volume = MIX_MAX_VOLUME/3;
 int SoundEffect::numChannels = 16;
 int SoundEffect::currChannel = 0;
 
