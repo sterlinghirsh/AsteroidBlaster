@@ -351,6 +351,7 @@ int main(int argc, char* argv[]) {
    //load and start BGM
    Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
    Music::Add("Sounds/Asteroids2.ogg", "Asteroids2.ogg");
+   Music::Add("Sounds/Careless_Whisper.ogg","Careless_Whisper.ogg");
    Music::playMusic("8-bit3.ogg");
    //Music::playMusic("Asteroids2.ogg");
 
