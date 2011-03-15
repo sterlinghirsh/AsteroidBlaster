@@ -138,13 +138,9 @@ void CreditsMenu::draw() {
       }
       i += j - 1;
    }
-   //position.x = GW/2;
-   //yPos = GH * 7/8;
    position.x = GW;
    yPos = GH;
    position.y = yPos;
-   //position.y = yPos + yOffset;
-   //position.y = GH * 7/8;
    menuTexts[QUIT_STRING_INDEX]->setPosition(position);
 
    // Clear the screen
