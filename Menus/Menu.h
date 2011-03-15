@@ -3,7 +3,7 @@
 #define __MENU_H__
 
 
-#include "Utility/Text.h"
+#include "Text/Text.h"
 #include "Utility/InputManager.h"
 
 class Menu : public InputReceiver {

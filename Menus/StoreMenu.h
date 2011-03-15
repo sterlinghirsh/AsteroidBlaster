@@ -3,9 +3,8 @@
 #define __STOREMENU_H__
 
 
-#include "Utility/Text.h"
-#include "Utility/InputManager.h"
 #include "Menus/Menu.h"
+#include "Utility/InputManager.h"
 
 class StoreMenu : public Menu {
    public:

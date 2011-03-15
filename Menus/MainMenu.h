@@ -3,9 +3,8 @@
 #define __MAINMENU_H__
 
 
-#include "Utility/Text.h"
-#include "Utility/InputManager.h"
 #include "Menus/Menu.h"
+#include "Utility/InputManager.h"
 
 class MainMenu : public Menu {
    public:

@@ -6,7 +6,6 @@
 #include "Menus/CreditsMenu.h"
 #include "Utility/Image.h"
 #include "Utility/Texture.h"
-#include "Utility/Text.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 

@@ -17,7 +17,7 @@
 #include "Graphics/Camera.h"
 #include "Particles/Particle.h"
 #include "Items/BoundingSpace.h"
-#include "Utility/Text.h"
+#include "Text/Text.h"
 #include "Utility/GameState.h"
 #include "Utility/StoreMenu.h"
 #include "Utility/InputManager.h"

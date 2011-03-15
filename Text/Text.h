@@ -40,7 +40,7 @@ class Text {
       Text(std::string preText, double body, std::string postText, std::string fontName, SDL_Rect _pos, int _size);
 
       // Destructor
-      ~Text();
+      virtual ~Text();
 
       // Sets the new body text to be used
       void updateBody(std::string newText);

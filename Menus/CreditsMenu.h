@@ -3,9 +3,8 @@
 #define __CREDITMENU_H__
 
 
-#include "Utility/Text.h"
-#include "Utility/InputManager.h"
 #include "Menus/Menu.h"
+#include "Utility/InputManager.h"
 
 #define SCROLL_RATE -0.000001
 

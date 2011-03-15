@@ -17,7 +17,7 @@
 #include "Graphics/Sprite.h"
 #include "Particles/Particle.h"
 #include "Graphics/Camera.h"
-#include "Utility/Text.h"
+#include "Text/Text.h"
 #include "Utility/Custodian.h"
 #include "Utility/InputManager.h"
 #include "HUD/ProgressBar.h"
