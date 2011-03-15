@@ -544,9 +544,14 @@ void GameState::initAsteroids() {
    custodian.add(spaceHolder);
 
    int numCollisions = 0;
+   double baseMinAsteroidSize = 8;
+   double minAsteroidSize = 8;
+   double asteroidSizeVariation = 5;
+   double asteroidSize;
    // Spawn the initial asteroids for the game.
    for (int i = 0; i < numAsteroidsToSpawn; ++i) {
-      tempAsteroid = new Asteroid3D(5 + 5 * randdouble(), worldSize);
+      asteroidSize = (minAsteroidSize + asteroidSizeVariation * randdouble()) / sqrt(numAsteroidsToSpawn);
+      tempAsteroid = new Asteroid3D(minAsteroidSize + asteroidSizeVariation * randdouble(), worldSize);
       // Add each asteroid to the custodian so we know of its existence.
       custodian.add(tempAsteroid);
       do {

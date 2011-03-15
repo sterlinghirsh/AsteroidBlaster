@@ -348,7 +348,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
       Vector3D* newVelocity = new Vector3D(*velocity);
       newVelocity->scalarMultiplyUpdate(m1 - m2);
       newVelocity->addUpdate(otherAsteroid->velocity->scalarMultiply(2 * m2));
-      newVelocity->scalarMultiplyUpdate(1 / (m1 + m2 + 1)); // Added the 1 to make stuff lose some energy.
+      newVelocity->scalarMultiplyUpdate(1 / (m1 + m2 + 0.2)); // Added the 0.2 to make stuff lose some energy.
       
       // We want to only add acceleration away from the other item.
       if (newVelocity->dot(*push) < 0) {
