@@ -85,34 +85,43 @@ std::list<Drawable*>* Radar :: getNearbyReading(float radius) {
    return nearList;
 }
 
-/* Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
+/**
+ * Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
+ * This ONLY returns targetable objects, NOT particles.
+ * Ex: Asteroid3D's, Shards.
+ */
+std::list<Drawable*>* Radar :: getTargetableViewFrustumReading() {
+   // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
+   std::vector<Drawable*> allObjects (*gameState->custodian.getListOfObjects());
+
+   // Turn the vector of allObjects into a list. True says to cull it down to only the targetable ones (no particles)
+   std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(&allObjects, true);
+   
+   return culledList;
+}
+
+/**
+ * Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
  */
 std::list<Drawable*>* Radar :: getViewFrustumReading() {
    // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
-   std::vector<Drawable*> all (*gameState->custodian.getListOfObjects());
+   std::vector<Drawable*> allObjects (*gameState->custodian.getListOfObjects());
 // TODO: Reverse this: get the list of particles first, and append objects to that, rather than getting the list of objects, and appending particles to it.
    Drawable* curParticle;
-   // Add all of the particles to all.
+   // Add all of the particles to allObjects.
    for (particleIter = Particle::particles.begin(); particleIter != Particle::particles.end(); ++particleIter) {
       curParticle = *particleIter;
-      all.push_back(curParticle);
+      allObjects.push_back(curParticle);
    }
 
-   // vector += gameState->GiveMeAllYourParticles
-   // TODO Add Particles to this all vector so that they can be culled
-   
-    
    // Sterling:
    // Consider each particle one at a time and cull it one at a time.
    // Consider each object one at a time and cull it one at a time.
    // Only add an object / particle to the list of things to draw if
    // it has not been culled.
 
-   // This is a copy of all.
-   //std::vector<Drawable*>* allNew (all); 
-
-   // Turn the vector of all Objects into a list, & cull it
-   std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(&all);
+   // Turn the vector of allObjects into a list, & cull it down to only Drawable objects.
+   std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(&allObjects, false);
    
    /*
     * Make sure that we are receiving particles back from view frustum culling.

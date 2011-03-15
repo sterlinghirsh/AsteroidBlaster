@@ -38,8 +38,12 @@ class Radar {
        */
       virtual std::list<Drawable*>* getNearbyReading(float radius);
       
-      // Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
+      /* Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
+       */
       virtual std::list<Drawable*>* getViewFrustumReading();
+      /* Same as getViewFrustumReading, but only returns targetable objects for the AI. No particles are included.
+       */
+      virtual std::list<Drawable*>* getTargetableViewFrustumReading();
       
    private:
       // The ship that owns this Radar

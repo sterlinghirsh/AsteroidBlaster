@@ -29,6 +29,7 @@ GameState::GameState(double worldSizeIn) {
       the shooting AI.
       */
    viewFrustumObjects = NULL;
+   targetableViewFrustumObjects = NULL;
 
    worldSize = worldSizeIn;
    skybox = new Skybox();
@@ -237,6 +238,8 @@ void GameState::draw() {
    // Get a list of all of the objects after culling them down to the view frustum.
    //std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
+   targetableViewFrustumObjects = ship->getRadar()->getTargetableViewFrustumReading();
+   
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
    ship->drawCrosshair();

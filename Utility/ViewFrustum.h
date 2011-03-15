@@ -23,7 +23,7 @@ class ViewFrustum {
       /* Takes in a list of all the Object 3D's around, and culls them down to only the ones
        * that are inside the view frustum.
        */
-      virtual std::list<Drawable*>* cullToViewFrustum(std::vector<Drawable*>* all);
+      virtual std::list<Drawable*>* cullToViewFrustum(std::vector<Drawable*>* all, bool skipParticles);
       
       /* Prints out details about all of the planes of the view frustum.
        */
@@ -39,11 +39,18 @@ class ViewFrustum {
       Plane* near;
       Plane* far;
 
+      /** 
+       * A modified version of chedDrawableOutside, used by the AI. This stops the
+       * AI from targeting Drawable objects which are slightly outside the field
+       * of view, which still need to be drawn.
+       */
+      bool checkTargetableOutside(Drawable* obj);
+
       /* Returns true if the Drawable object is completely outside of the 
        * view frustum planes.
        * Returns false if it's even part-way inside.
        */
-      virtual bool checkOutside(Drawable* obj);
+      virtual bool checkDrawableOutside(Drawable* obj);
 };
 
 #endif

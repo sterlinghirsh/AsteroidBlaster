@@ -105,7 +105,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 
 Object3D* ShootingAI::chooseTarget() {
    // Make the AI choose from a list of Targetable objects instead of Drawable objects, which are inside the view frustum.
-   std::list<Drawable*>* targets = gameState->viewFrustumObjects;
+   std::list<Drawable*>* targets = gameState->targetableViewFrustumObjects;
    std::list<Drawable*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
    Point3D vec;
@@ -121,11 +121,20 @@ Object3D* ShootingAI::chooseTarget() {
 
    targets_iterator = targets->begin();
    Object3D* closest = NULL;
-   
-   for ( ; targets_iterator != targets->end(); targets_iterator++) {
-      if (*targets_iterator == NULL ||
-       (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL &&
-        dynamic_cast<Shard*>(*targets_iterator) == NULL)) {
+
+   for ( ; targets_iterator != targets->end(); ++targets_iterator) {
+      //printf("starting null check.\n");
+      if (*targets_iterator == NULL) {
+      printf("targets_iterator was null!\n\n\n\n\n\n");
+         continue;
+      }
+     // printf ("Made it past targets_iterator null check!\n");
+     if (dynamic_cast<Particle*>(*targets_iterator) != NULL) {
+        //printf("continuing b/c of a particle!!! \n");
+        continue;
+     }
+
+      if (*targets_iterator == NULL || (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && dynamic_cast<Shard*>(*targets_iterator) == NULL)) {
          continue;
       }
       if (dynamic_cast<Shard*>(*targets_iterator) != NULL &&

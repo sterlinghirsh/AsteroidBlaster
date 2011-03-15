@@ -54,6 +54,7 @@ class GameState : public InputReceiver {
       Custodian custodian;
 
       std::list<Drawable*>* viewFrustumObjects;
+      std::list<Drawable*>* targetableViewFrustumObjects;
 
       GameState(double worldSize);
       virtual ~GameState();

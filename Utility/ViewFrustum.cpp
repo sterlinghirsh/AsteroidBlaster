@@ -7,6 +7,7 @@
 
 #include "Utility/GlobalUtility.h"
 #include "Utility/ViewFrustum.h"
+#include "Particles/Particle.h"
 
 ViewFrustum :: ViewFrustum() {
    // This should not need to be initialized, since it happens when calling culltoViewFrustum.
@@ -29,19 +30,32 @@ ViewFrustum :: ~ViewFrustum() {
    delete far;
 }
 
+/** 
+ * A modified version of chedDrawableOutside, used by the AI. This stops the
+ * AI from targeting Drawable objects which are slightly outside the field
+ * of view, which still need to be drawn.
+ */
+bool ViewFrustum :: checkTargetableOutside(Drawable* obj) {
+   // Decide each of the Results based on obj's min & max x, y, & z.
+   return !( 
+      left -> onTargetablePositiveSide(obj) && right -> onTargetablePositiveSide(obj) &&
+      top -> onTargetablePositiveSide(obj) && bottom -> onTargetablePositiveSide(obj) &&
+      near -> onTargetablePositiveSide(obj) && far -> onTargetablePositiveSide(obj)); 
+}
+
 /* Returns true if the object3D is completely outside of the view frustum planes.
  * Returns false if it's even part-way inside.
  */
-bool ViewFrustum :: checkOutside(Drawable* obj) {
+bool ViewFrustum :: checkDrawableOutside(Drawable* obj) {
    // Decide each of the Results based on obj's min & max x, y, & z.
    return !( 
-      left -> onPositiveSide(obj) && right -> onPositiveSide(obj) &&
-      top -> onPositiveSide(obj) && bottom -> onPositiveSide(obj) &&
-      near -> onPositiveSide(obj) && far -> onPositiveSide(obj)); 
+      left -> onDrawablePositiveSide(obj) && right -> onDrawablePositiveSide(obj) &&
+      top -> onDrawablePositiveSide(obj) && bottom -> onDrawablePositiveSide(obj) &&
+      near -> onDrawablePositiveSide(obj) && far -> onDrawablePositiveSide(obj)); 
 }
 
-// Take in a list of all Object3D's, and cull it down to a list of only the Object 3D's in front.
-std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* all) {
+// Take in a list of all Drawables, and cull it down to a list of only the Drawables in front.
+std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* all, bool skipParticles) {
    // The culled vector to be returned.
    std::list<Drawable*>* returnMe = new std::list<Drawable*>;
    // Set up an iterator to go over the list.
@@ -117,20 +131,38 @@ std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* a
       if(checkee == NULL)
          continue;
 
-      /* If it's inside the view frustum, or if it just shouldn't be 
-         culled (ex: Beam Shots)
-       */
-      if(!checkOutside(checkee) || !checkee->shouldBeCulled) {
-         // Then add it to the list of things to be returned in the culled list.
-         returnMe->push_back(checkee);
+      // If we should be skipping Particles
+      if(skipParticles) {
+         // Only consider adding it to the culled list if it's not a particle
+         if(dynamic_cast<Particle*>(checkee) == NULL) {
+            /**
+             * Only actually add it if it's inside the targetable area
+             * (slightly different than the drawable area).
+             */
+            if(!checkTargetableOutside(checkee) || !checkee->shouldBeCulled) {
+               returnMe->push_back(checkee);
+            }
+         }
+      }
+      // Otherwise, we're not skipping particles
+      else {
+         /**
+          * If it's inside the view frustum, or if it just shouldn't be 
+          * culled (ex: Beam Shots)
+          */
+         if(!checkDrawableOutside(checkee) || !checkee->shouldBeCulled) {
+            // Since we're not skipping particles, then just add it.
+            returnMe->push_back(checkee);
+         }
       }
    }
    return returnMe;
 }
 
-/* Prints out details about all of the planes of the view frustum.
+/**
+ * Prints out details about all of the planes of the view frustum.
  */
-void ViewFrustum :: print() {
+void ViewFrustum::print() {
    printf("Top plane:\n");
    top->print();
    printf("----------\n");
