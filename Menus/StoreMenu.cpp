@@ -35,7 +35,7 @@ StoreMenu::StoreMenu() {
    menuActive = false;
    
    SDL_Rect position = {0,0};
-   std::string fontName = "Font/Slider.ttf";
+   std::string fontName = DEFAULT_FONT; 
    
    std::stringstream out;
    out << "Buy Railgun  $" << RAILGUN_PRICE;

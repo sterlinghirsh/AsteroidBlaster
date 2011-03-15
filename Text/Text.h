@@ -8,10 +8,19 @@
 #ifndef __TEXT_H__
 #define __TEXT_H__
 
+#define DEFAULT_FONT "Fonts/Slider.ttf"
+
 #include <string>
 #include <sstream>
 #include "SDL.h"
 #include <SDL_ttf.h>
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <OpenGL/glext.h>
+#else
+#include <GL/glew.h>
+#endif
 
 static const SDL_Color SDL_WHITE = {255,255,255};
 static const SDL_Color SDL_BLACK = {0,0,0};

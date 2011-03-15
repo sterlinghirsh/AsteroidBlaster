@@ -20,7 +20,7 @@ CreditsMenu::CreditsMenu() {
    menuActive = false;
 
    SDL_Rect position = {0,0};
-   std::string fontName = "Font/Slider.ttf";
+   std::string fontName = DEFAULT_FONT;
 
    // Feel free to change your nickname, everyone.
    // Just make sure it's better than the one I gave you.
@@ -59,7 +59,7 @@ CreditsMenu::~CreditsMenu() {
 void CreditsMenu::addTitle(std::string name)
 {
    SDL_Rect position = {0,0};
-   std::string fontName = "Font/Slider.ttf";
+   std::string fontName = DEFAULT_FONT; 
    menuTexts.push_back(new Text(name, fontName, position, 48));
    types.push_back(TITLE_TYPE);
 }
@@ -67,7 +67,7 @@ void CreditsMenu::addTitle(std::string name)
 void CreditsMenu::addDualColName(std::string name)
 {
    SDL_Rect position = {0,0};
-   std::string fontName = "Font/Slider.ttf";
+   std::string fontName = DEFAULT_FONT;
    menuTexts.push_back(new Text(name, fontName, position, 24));
    types.push_back(DUAL_NAME_TYPE);
 }
@@ -75,7 +75,7 @@ void CreditsMenu::addDualColName(std::string name)
 void CreditsMenu::addSingleColName(std::string name)
 {
    SDL_Rect position = {0,0};
-   std::string fontName = "Font/Slider.ttf";
+   std::string fontName = DEFAULT_FONT;
    menuTexts.push_back(new Text(name, fontName, position, 28));
    types.push_back(SINGLE_NAME_TYPE);
 }

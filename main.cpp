@@ -18,6 +18,7 @@
 #include "Particles/Particle.h"
 #include "Items/BoundingSpace.h"
 #include "Text/Text.h"
+#include "Text/GameMessage.h"
 #include "Utility/GameState.h"
 #include "Utility/StoreMenu.h"
 #include "Utility/InputManager.h"
@@ -237,7 +238,7 @@ void update() {
    double timeDiff = curTime - lastUpdateTime;
    
    gameState->update(timeDiff);
-
+   GameMessage::updateAllMessages(timeDiff);
 
    lastUpdateTime = curTime;
    ++curFrame;
@@ -304,6 +305,7 @@ void draw() {
       gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
    }
    */
+
    glPopMatrix();
    // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
    gameState->drawMinimap();

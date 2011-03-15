@@ -21,7 +21,7 @@ MainMenu::MainMenu() {
    firstTime = true;
    
    SDL_Rect position = {0,0};
-   std::string fontName = "Font/Slider.ttf";
+   std::string fontName = DEFAULT_FONT;
    
    menuTexts.push_back(new Text("New Game (n)",  fontName, position, 24));
    menuTexts.push_back(new Text("Continue (c)",  fontName, position, 24));
@@ -60,12 +60,8 @@ void MainMenu::draw() {
       position.y += GH/10;
    }
    
-   
-   
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   
-
    
    //draw the text
    glPushMatrix();
@@ -73,16 +69,12 @@ void MainMenu::draw() {
       glDisable(GL_CULL_FACE);
       glDisable(GL_LIGHTING);
       
-      
       for(int i = 0; i < menuTexts.size(); i++) {
          menuTexts[i]->draw();
       }
-      
 
       usePerspective();
    glPopMatrix();
-
-
 
    glEnable(GL_TEXTURE_2D);
    

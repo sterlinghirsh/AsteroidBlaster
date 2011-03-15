@@ -129,6 +129,7 @@ class GameState : public InputReceiver {
       Minimap* minimap;
 
       std::list<Object3D*> objects;
+      void addLevelMessage();
 };
 
 #endif

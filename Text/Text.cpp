@@ -6,14 +6,8 @@
  * 3-11-11
  */
 
-#include "Utility/GlobalUtility.h"
 #include "Text.h"
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#include <OpenGL/glext.h>
-#else
-#include <GL/glew.h>
-#endif
+#include "Utility/GlobalUtility.h"
 #include <cstring>
 #include <stdio.h>
 #include <iostream>

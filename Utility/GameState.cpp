@@ -13,6 +13,7 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Particles/Particle.h"
+#include "Text/GameMessage.h"
 
 extern double minimapSizeFactor;
 
@@ -43,7 +44,7 @@ GameState::GameState(double worldSizeIn) {
 
    // Init Text Objects
    SDL_Rect position = {0,0};
-   std::string fontName = "Font/Slider.ttf";
+   std::string fontName = DEFAULT_FONT;
    int fontSize = 18;
    
    FPSText = new Text("FPS: ", curFPS, "",  fontName, position, fontSize);
@@ -506,6 +507,8 @@ void GameState::drawAllText() {
    position.y += 15;
    curLevelText->setPosition(position);
    curLevelText->draw();
+   GameMessage::drawAllMessages();
+
 
 }
 
@@ -601,6 +604,13 @@ void GameState::reset() {
 
    custodian.add(ship);
    initAsteroids();
+   addLevelMessage();
+}
+
+void GameState::addLevelMessage() {
+   std::ostringstream levelMessage;
+   levelMessage << "Level " << curLevel;
+   GameMessage::Add(levelMessage.str(), 30, 5);
 }
 
 void GameState::nextLevel() {
@@ -616,6 +626,7 @@ void GameState::nextLevel() {
    numAsteroidsToSpawn = curLevel;
    printf("Level'd up to %d!\n",curLevel);
    initAsteroids();
+   addLevelMessage();
 }
 
 
