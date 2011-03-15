@@ -604,6 +604,7 @@ void GameState::reset() {
 
    custodian.add(ship);
    initAsteroids();
+   GameMessage::Clear();
    addLevelMessage();
 }
 
@@ -626,6 +627,7 @@ void GameState::nextLevel() {
    numAsteroidsToSpawn = curLevel;
    printf("Level'd up to %d!\n",curLevel);
    initAsteroids();
+   GameMessage::Clear();
    addLevelMessage();
 }
 

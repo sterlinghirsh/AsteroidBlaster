@@ -24,6 +24,7 @@ class GameMessage : public Text {
       static void drawAllMessages();
       static void updateAllMessages(double timeDiff);
       static void Add(std::string _text, double _size, double _lifetime);
+      static void Clear();
 };
 
 #endif
