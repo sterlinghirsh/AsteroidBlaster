@@ -31,7 +31,8 @@ MainMenu::MainMenu() {
    menuTexts.push_back(new Text("Quit (esc)", fontName, position, 24));
 
    for (int i = 0; i < menuTexts.size(); i++) {
-      menuTexts[i]->centered = true;
+      //menuTexts[i]->centered = true;
+      menuTexts[i]->alignment = CENTERED;
    }
 
    SDL_Color greyColor = {128,128,128};

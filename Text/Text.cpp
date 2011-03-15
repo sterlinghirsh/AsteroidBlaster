@@ -47,7 +47,8 @@ Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
 
    //centered = _centered;
    //centered = true;
-   centered = false;
+   //centered = false;
+   alignment = CENTERED;
    
 }
 
@@ -71,7 +72,8 @@ Text::Text(std::string preText, std::string body, std::string postText, std::str
    selectable = selected = false;
    
    //centered = true;
-   centered = false;
+   //centered = false;
+   alignment = CENTERED;
    
 }
 
@@ -96,7 +98,8 @@ Text::Text(std::string preText, int body, std::string postText, std::string font
    color = SDL_WHITE;
    selectable = selected = false;
    //centered = true;
-   centered = false;
+   //centered = false;
+   alignment = CENTERED;
 }
 
 // Constructor if you are displaying a double
@@ -120,7 +123,8 @@ Text::Text(std::string preText, double body, std::string postText, std::string f
    color = SDL_WHITE;
    selectable = selected = false;
    //centered = true;
-   centered = false;
+   //centered = false;
+   alignment = CENTERED;
 }
 
 // Destructor
@@ -174,7 +178,6 @@ SDL_Rect Text::getPosition() {
    return pos;
 }
 
-
 void Text::draw() {
    /* Go in HUD-drawing mode */
    glEnable2D();
@@ -196,11 +199,17 @@ void Text::draw() {
    
    pos.w = temp.w * 1.5;
    pos.h = temp.h;
-   if (centered) {
+   //if (centered) {
+   if (alignment == CENTERED)
+   {
+      // Centered.
       pos.x -= temp.w / 2;
    }
-   
-   
+   else if (alignment == RIGHT_ALIGN)
+   {
+      // Right Aligned.
+      pos.x -= temp.w;
+   }
 
    /* Come out of HUD mode */
    glEnable(GL_DEPTH_TEST);
@@ -277,8 +286,15 @@ void Text::SDL_GL_RenderText(const char *text,
         /* Center the text */
         double textX = location->x;
         double textW = w;
-        if (centered) {
+        //if (centered) {
+        if (alignment == CENTERED)
+        {
+           // Centered.
            textX -= initial->w / 2.0;
+        }
+        else if (alignment == RIGHT_ALIGN)
+        {
+           textX -= initial->w;
         }
 
 	/* Draw a quad at location */

@@ -12,6 +12,9 @@
 #define TITLE_STRING_INDEX 0
 //#define QUIT_STRING_INDEX 6
 #define QUIT_STRING_INDEX (menuTexts.size() - 1)
+#define TITLE_TYPE 0
+#define DUAL_NAME_TYPE 1
+#define SINGLE_NAME_TYPE 2
 
 CreditsMenu::CreditsMenu() {
    menuActive = false;
@@ -19,31 +22,29 @@ CreditsMenu::CreditsMenu() {
    SDL_Rect position = {0,0};
    std::string fontName = "Font/Slider.ttf";
 
-   addTitle("Tha Boyz");
-   addDualColName("Taylor Arnicar");
-   addDualColName("Chris Brenton");
-   addDualColName("Sterling Hirsh");
-   addDualColName("Jake Juszak");
-   addDualColName("Ryuho Kudo");
-   addTitle("Tha AI Boyz");
-   addDualColName("Sean Ghiocel");
-   addDualColName("Justin Kuehn");
-   addDualColName("Mike Smith");
-   addTitle("Tha Music Man");
+   // Feel free to change your nickname, everyone.
+   // Just make sure it's better than the one I gave you.
+   addTitle("The Boyz");
+   addDualColName("Taylor \'\'White Chocolate\'\' Arnicar");
+   addDualColName("Chris \'\'Rolling Thunder\'\' Brenton");
+   addDualColName("Sterling \'\'Are You A Wizard\'\' Hirsh");
+   addDualColName("Jake \'\'Jacuzzi\'\' Juszak");
+   addDualColName("Ryuho \'\'Silent But Deadly\'\' Kudo");
+   // AI boyz, please pick nicknames for yourselves (or better yet, for each
+   // other). Pretty much anything would be better than these.
+   addTitle("The A.I. Boyz");
+   addDualColName("Sean \'\'GEOCELL\'\' Ghiocel");
+   addDualColName("Justin \'\'The Coon\'\' Kuehn");
+   addDualColName("Mike \'\'Dammit Mike\'\' Smith");
+   addTitle("The Music Man");
    addSingleColName("George Michael Himself");
-   /*
-      menuTexts.push_back(new Text("Tha Boyz",  fontName, position, 48));
-      menuTexts.push_back(new Text("Taylor Arnicar",  fontName, position, 24));
-      menuTexts.push_back(new Text("Chris Brenton",  fontName, position, 24));
-      menuTexts.push_back(new Text("Sterling Hirsh",  fontName, position, 24));
-      menuTexts.push_back(new Text("Jake Juszak",  fontName, position, 24));
-      menuTexts.push_back(new Text("Ryuho Kudo",  fontName, position, 24));
-      */
-   menuTexts.push_back(new Text("Return to Main Menu", fontName, position, 24));
+   menuTexts.push_back(new Text("Return to Main Menu", fontName, position, 18));
 
-   for (int i = 0; i < menuTexts.size(); i++) {
-      menuTexts[i]->centered = true;
+   for (int i = 0; i < QUIT_STRING_INDEX; i++) {
+      //menuTexts[i]->centered = true;
+      menuTexts[i]->alignment = CENTERED;
    }
+   menuTexts[QUIT_STRING_INDEX]->alignment = RIGHT_ALIGN;
 
    firstDrawn = false;
    yOffset = 0.0;
@@ -60,7 +61,7 @@ void CreditsMenu::addTitle(std::string name)
    SDL_Rect position = {0,0};
    std::string fontName = "Font/Slider.ttf";
    menuTexts.push_back(new Text(name, fontName, position, 48));
-   types.push_back(0);
+   types.push_back(TITLE_TYPE);
 }
 
 void CreditsMenu::addDualColName(std::string name)
@@ -68,7 +69,7 @@ void CreditsMenu::addDualColName(std::string name)
    SDL_Rect position = {0,0};
    std::string fontName = "Font/Slider.ttf";
    menuTexts.push_back(new Text(name, fontName, position, 24));
-   types.push_back(1);
+   types.push_back(DUAL_NAME_TYPE);
 }
 
 void CreditsMenu::addSingleColName(std::string name)
@@ -76,7 +77,7 @@ void CreditsMenu::addSingleColName(std::string name)
    SDL_Rect position = {0,0};
    std::string fontName = "Font/Slider.ttf";
    menuTexts.push_back(new Text(name, fontName, position, 28));
-   types.push_back(2);
+   types.push_back(SINGLE_NAME_TYPE);
 }
 
 void CreditsMenu::update(double ms)
@@ -117,10 +118,11 @@ void CreditsMenu::draw() {
          j++;
       }
       int k = j;
-      while ((types[i + j] == 1 || types[i + j] == 2)
+      while ((types[i + j] == DUAL_NAME_TYPE
+               || types[i + j] == SINGLE_NAME_TYPE)
             && i + j < menuTexts.size() - 1)
       {
-         if (types[i + j] == 1)
+         if (types[i + j] == DUAL_NAME_TYPE)
          {
             position.x = GW/4 + (GW/2 * ((j - k) % 2));
             yPos += GH / 10 * (j % 2);
@@ -136,8 +138,10 @@ void CreditsMenu::draw() {
       }
       i += j - 1;
    }
-   position.x = GW/2;
-   yPos = GH * 7/8;
+   //position.x = GW/2;
+   //yPos = GH * 7/8;
+   position.x = GW;
+   yPos = GH;
    position.y = yPos;
    //position.y = yPos + yOffset;
    //position.y = GH * 7/8;
@@ -163,13 +167,18 @@ void CreditsMenu::draw() {
       */
 
    for(int i = 0; i < menuTexts.size(); i++) {
-      //if (menuTexts[i]->getPosition()->x)
       int loc = menuTexts[i]->getPosition().y + yOffset;
       if (loc < GH * 1.3 + menuTexts[i]->size && loc > GH * -3.0)
       {
          menuTexts[i]->draw();
       }
    }
+   /*
+   if (menuTexts[QUIT_STRING_INDEX - 1]->getPosition().y + yOffset < GH / 2)
+   {
+      printf("last item at halfway point.\n");
+   }
+   */
 
    usePerspective();
    glPopMatrix();

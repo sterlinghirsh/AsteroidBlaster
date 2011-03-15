@@ -70,7 +70,8 @@ class Text {
       std::string textToDisplay, pre, post;
       GLuint textTexture;
       bool selectable, selected;
-      bool centered;
+      //bool centered;
+      int alignment;
 };
 
 #endif
