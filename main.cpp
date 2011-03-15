@@ -399,6 +399,7 @@ int main(int argc, char* argv[]) {
    while (running) {
       updateDoubleTime();
       if (mainMenu->menuActive) {
+         //printf("main active\n");
          SDL_ShowCursor(SDL_ENABLE);
          mainMenu->draw();
          //update();
@@ -409,8 +410,10 @@ int main(int argc, char* argv[]) {
          //update();
          lastUpdateTime = doubleTime();
       } else if (creditsMenu->menuActive) {
+         //printf("credits menu active\n");
          SDL_ShowCursor(SDL_ENABLE);
-         creditsMenu->draw();
+         //creditsMenu->update(doubleTime() - lastUpdateTime);
+         creditsMenu->update(lastUpdateTime);
          //update();
          lastUpdateTime = doubleTime();
       } else if (gameState->isGameRunning()) {

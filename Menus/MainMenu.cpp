@@ -54,7 +54,7 @@ MainMenu::~MainMenu() {
 void MainMenu::draw() {
    SDL_Rect position;
    position.x = GW/2;
-   position.y = GH/2;
+   position.y = GH/2.3;
    for(int i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
       position.y += GH/10;
@@ -214,6 +214,8 @@ void MainMenu::mouseDown(int button) {
    } else if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       creditsMenu->menuActive = true;
+      printf("creditsMenu active: %d\n", creditsMenu->menuActive);
+      printf("menuActive: %d\n", menuActive);
       Music::stopMusic();
       Music::playMusic("Careless_Whisper.ogg");
    } else if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
