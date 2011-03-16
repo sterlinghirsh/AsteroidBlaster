@@ -21,6 +21,14 @@
 #define PIKACHUSWRATH_WEAPONSTEXTSINDEX 1
 #define ANTIINERTIA_WEAPONSTEXTSINDEX 2
 
+#define BLASTER_UPGRADESTEXTSINDEX 0
+#define RAILGUN_UPGRADESTEXTSINDEX 1
+#define PIKACHUSWRATH_UPGRADESTEXTSINDEX 2
+
+#define BLASTERUPGRADE_PRICE 10
+#define RAILGUNUPGRADE_PRICE 10
+#define PIKACHUSWRATHUPGRADE_PRICE 10
+
 #define RAILGUN_AMMOTEXTSINDEX 0
 #define PIKACHUSWRATH_AMMOTEXTSINDEX 1
 #define ANTIINERTIA_AMMOTEXTSINDEX 2
@@ -28,6 +36,7 @@
 #define BUYHEALTH_SHIPTEXTSINDEX 0
 #define ENGINEUPGRADE_SHIPTEXTSINDEX 1
 
+#define BLASTER_WEAPON_INDEX 0
 #define RAILGUN_WEAPON_INDEX 1
 #define PIKACHUSWRATH_WEAPON_INDEX 3
 #define ANTIINERTIA_WEAPON_INDEX 6
@@ -91,7 +100,15 @@ StoreMenu::StoreMenu() {
    
    //get upgrade text in upgradesTexts
    out.str(""); 
-   out << "Upgrades Unavailable!";
+   out << "Upgrade Blaster $";
+   upgradesTexts.push_back(new Text(out.str(), fontName, position, 24));
+   
+   out.str(""); 
+   out << "Upgrade Railgun $";
+   upgradesTexts.push_back(new Text(out.str(), fontName, position, 24));
+   
+   out.str(""); 
+   out << "Upgrade Pikachu's Wrath $";
    upgradesTexts.push_back(new Text(out.str(), fontName, position, 24));
    
    
@@ -253,9 +270,9 @@ void StoreMenu::draw() {
       weaponsTexts[ANTIINERTIA_WEAPONSTEXTSINDEX]->setPosition(position);
    
       drawTexts(weaponsTexts);
-      
-      
+
    } else if(menuSelection == UPGRADES) {
+      int wLevel = -1;
       //set menu colors
       menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[UPGRADES_STOREMENUINDEX]->setColor(SDL_BLUE);
@@ -263,13 +280,58 @@ void StoreMenu::draw() {
       menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_WHITE);
       
       position.y = GH*(5.0/10.0);
-      //set the poistion for all menus
-      for(int i = 0; i < upgradesTexts.size(); i++) {
-         upgradesTexts[i]->setPosition(position);
-         position.y += GH/10;
+      // buy blaster upgrade
+      out.str(""); 
+      wLevel = gameState->ship->getWeapon(BLASTER_WEAPON_INDEX)->level + 1;
+      if (wLevel <= 5) {
+         out << "Buy Upgrade Blaster Level " <<  wLevel << " $" << wLevel*BLASTERUPGRADE_PRICE;
+         upgradesTexts[BLASTER_UPGRADESTEXTSINDEX]->selectable = true;
+      } else {
+         out << "Can't Upgrade Blaster Anymore!";
+         upgradesTexts[BLASTER_UPGRADESTEXTSINDEX]->selectable = false;
       }
-      drawTexts(upgradesTexts);
+      upgradesTexts[BLASTER_UPGRADESTEXTSINDEX]->updateBody(out.str());
+      upgradesTexts[BLASTER_UPGRADESTEXTSINDEX]->setPosition(position);
+      position.y += GH/10;
       
+      // buy railgun upgrade
+      out.str(""); 
+      wLevel = gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->level + 1;
+      if (gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased) {
+         if (wLevel <= 5) {
+            out << "Buy Upgrade Railgun Level " <<  wLevel << " $" << wLevel*RAILGUNUPGRADE_PRICE;
+            upgradesTexts[RAILGUN_UPGRADESTEXTSINDEX]->selectable = true;
+         } else {
+            out << "Can't Upgrade Railgun Anymore!";
+            upgradesTexts[RAILGUN_UPGRADESTEXTSINDEX]->selectable = false;
+         }
+      } else {
+         out << "Buy Railgun first!";
+         upgradesTexts[RAILGUN_UPGRADESTEXTSINDEX]->selectable = false;
+      }
+      upgradesTexts[RAILGUN_UPGRADESTEXTSINDEX]->updateBody(out.str());
+      upgradesTexts[RAILGUN_UPGRADESTEXTSINDEX]->setPosition(position);
+      position.y += GH/10;
+      
+      // buy pikachu's wrath upgrade
+      out.str(""); 
+      wLevel = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->level + 1;
+      if (gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased) {
+         if (wLevel <= 5) {
+            out << "Buy Upgrade Pikachu's Wrath Level " <<  wLevel << " $" << wLevel*PIKACHUSWRATHUPGRADE_PRICE;
+            upgradesTexts[PIKACHUSWRATH_UPGRADESTEXTSINDEX]->selectable = true;
+         } else {
+            out << "Can't Upgrade Pikachu's Wrath Anymore!";
+            upgradesTexts[PIKACHUSWRATH_UPGRADESTEXTSINDEX]->selectable = false;
+         }
+      } else {
+         out << "Buy Pikachu's Wrath first!";
+         upgradesTexts[PIKACHUSWRATH_UPGRADESTEXTSINDEX]->selectable = false;
+      }
+      upgradesTexts[PIKACHUSWRATH_UPGRADESTEXTSINDEX]->updateBody(out.str());
+      upgradesTexts[PIKACHUSWRATH_UPGRADESTEXTSINDEX]->setPosition(position);
+
+      drawTexts(upgradesTexts);
       
    }  else if(menuSelection == AMMO) {
       //set menu colors
@@ -341,7 +403,7 @@ void StoreMenu::draw() {
       // buy engine upgrade
       out.str(""); 
       if (nextEngineLevel <= 5) {
-         out << "Buy Engine Upgrade Level " << nextEngineLevel << " $" << nextEngineLevel*10;
+         out << "Buy Engine Upgrade Level " << nextEngineLevel << " $" << nextEngineLevel*ENGINEUPGRADE_PRICE;
          shipTexts[ENGINEUPGRADE_SHIPTEXTSINDEX]->selectable = true;
       } else {
          out << "Can't upgrade engine anymore!";
@@ -497,7 +559,21 @@ void StoreMenu::mouseDown(int button) {
          gameState->ship->nShards -= ANTIINERTIA_PRICE;
       }
    } else if(menuSelection == UPGRADES) {
-   
+      int level = gameState->ship->getWeapon(BLASTER_WEAPON_INDEX)->level + 1;
+      if(upgradesTexts[BLASTER_UPGRADESTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= BLASTERUPGRADE_PRICE*level) {
+         gameState->ship->nShards -= BLASTERUPGRADE_PRICE*level;
+         gameState->ship->getWeapon(BLASTER_WEAPON_INDEX)->level += 1;
+      }
+      level = gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->level + 1;
+      if(upgradesTexts[RAILGUN_UPGRADESTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= RAILGUNUPGRADE_PRICE*level) {
+         gameState->ship->nShards -= RAILGUNUPGRADE_PRICE*level;
+         gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->level += 1;
+      }
+      level = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->level + 1;
+      if(upgradesTexts[PIKACHUSWRATH_UPGRADESTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= PIKACHUSWRATHUPGRADE_PRICE*level) {
+         gameState->ship->nShards -= PIKACHUSWRATHUPGRADE_PRICE*level;
+         gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->level += 1;
+      }
    } else if(menuSelection == AMMO) {
       if(ammoTexts[RAILGUN_AMMOTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= RAILGUN_AMMO_PRICE) {
          gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo += RAILGUN_AMMO_AMOUNT;

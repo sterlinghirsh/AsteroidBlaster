@@ -26,7 +26,7 @@ Weapon::~Weapon() {
  */
 bool Weapon::isCooledDown() {
    if (!gameState->godMode) {
-      return doubleTime() > timeLastFired + coolDown;
+      return doubleTime() > timeLastFired + (coolDown/((double)level));
    }
    return doubleTime() > timeLastFired + 0.05;
 }
@@ -45,6 +45,6 @@ std::string Weapon::getName() {
 double Weapon::getCoolDownAmount() {
    if (coolDown == 0)
       return 1;
-   return clamp((doubleTime() - timeLastFired) / coolDown, 0, 1);
+   return clamp((doubleTime() - timeLastFired) / (coolDown/((double)level)), 0, 1);
 }
 

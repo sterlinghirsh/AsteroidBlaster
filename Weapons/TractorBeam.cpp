@@ -18,6 +18,7 @@ TractorBeam::TractorBeam(AsteroidShip* owner) : Weapon(owner) {
    soundPlaying = false;
    curAmmo = -1;
    purchased = true;
+   level = 0;
 }
 
 TractorBeam::~TractorBeam() {

@@ -58,6 +58,7 @@ class Weapon {
        * True if the ship owns it, false if it doesn't.
        */
       bool purchased;
+      int level;
       
       protected:
          WeaponType type; // Do we need this?
