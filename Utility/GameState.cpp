@@ -65,7 +65,9 @@ GameState::GameState(double worldSizeIn) {
    
    SDL_Rect centerRec = {GW/2, GH/2};
    gameOverText = new Text("GAME OVER", fontName, centerRec, 32);
+   gameOverText->alignment = CENTERED;
    winText = new Text("YOU WIN!", fontName, centerRec, 32);
+   winText->alignment = CENTERED;
 
 
    // Improve the positioning code.
