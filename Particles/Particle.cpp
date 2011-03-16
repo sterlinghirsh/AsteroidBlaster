@@ -143,7 +143,6 @@ void Particle::Add(Particle* newParticle) {
       // Erase the oldest particle silently.
       delete particles.front();
       particles.pop_front();
-      return;
    }
    particles.push_back(newParticle);
 }
