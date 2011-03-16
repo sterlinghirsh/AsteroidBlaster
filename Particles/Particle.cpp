@@ -40,7 +40,6 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
 }
 
 Particle::~Particle() {
-
 }
 
 void Particle::updateParticles(double timeDifference)

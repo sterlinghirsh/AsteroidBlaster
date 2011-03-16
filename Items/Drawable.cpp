@@ -15,6 +15,7 @@ Drawable :: Drawable(double x, double y, double z, GLuint displayListIn) : posit
    minPosition = new Point3D(0, 0, 0);
    maxPosition = new Point3D(0, 0, 0);
 
+   velocity = NULL;
    shouldRemove = false; // True when custodian should remove this.
    minXRank = maxXRank = 0;
    // Initialize some other variables here.
@@ -31,6 +32,8 @@ Drawable :: Drawable(double x, double y, double z, GLuint displayListIn) : posit
 Drawable :: ~Drawable() {
    if (position != NULL)
       delete position;
+   //if (velocity != NULL)
+      //delete velocity;
 }
 
 /**

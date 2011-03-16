@@ -10,7 +10,6 @@
 
 #include "Utility/Point3D.h"
 
-
 // Incomplete class declaration so we can have the pointer to it.
 class Custodian;
 
@@ -30,7 +29,6 @@ class Drawable {
       // This might not belong here.
       double minX, minY, minZ, maxX, maxY, maxZ;
       Vector3D* velocity;
-
 
 
       Drawable(double x, double y, double z, GLuint displayListIn);
