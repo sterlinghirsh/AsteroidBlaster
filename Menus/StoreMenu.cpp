@@ -101,7 +101,7 @@ StoreMenu::StoreMenu() {
    ammoTexts.push_back(new Text(out.str(), fontName, position, 24));
    
    out.str(""); 
-   out << "Buy " << PIKACHUSWRATH_AMMO_AMOUNT << " Pikachu's Wrath Ammo Ammo $" << PIKACHUSWRATH_AMMO_PRICE;
+   out << "Buy " << PIKACHUSWRATH_AMMO_AMOUNT << " Pikachu's Wrath Ammo $" << PIKACHUSWRATH_AMMO_PRICE;
    ammoTexts.push_back(new Text(out.str(), fontName, position, 24));
    
    out.str(""); 
@@ -122,7 +122,7 @@ StoreMenu::StoreMenu() {
       weaponsTexts[i]->selectable = true;
    }
    for(int i = 0; i < upgradesTexts.size(); i++) {
-      upgradesTexts[i]->selectable = true;
+      //upgradesTexts[i]->selectable = true;
    }
    for(int i = 0; i < ammoTexts.size(); i++) {
       ammoTexts[i]->selectable = true;
@@ -157,6 +157,7 @@ void StoreMenu::draw() {
    SDL_Rect position;
    position.x = GW/3;
    position.y = GH/2;
+   std::stringstream out;
 
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -196,33 +197,100 @@ void StoreMenu::draw() {
    position.y += GH/10;
    menuTexts[SHIP_STOREMENUINDEX]->setPosition(position);
 
-
    drawTexts(menuTexts);
    
    position.x = GW*(3.0/10.0);
    position.y = GH*(5.0/10.0);
    if(menuSelection == WEAPONS) {
-      for(int i = 0; i < weaponsTexts.size(); i++) {
-         weaponsTexts[i]->setPosition(position);
-         position.y += GH/10;
+      //set menu colors
+      menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_BLUE);
+      menuTexts[UPGRADES_STOREMENUINDEX]->setColor(SDL_WHITE);
+      menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_WHITE);
+      menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_WHITE);
+      
+      // railgun
+      if(gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased) {
+         out.str(""); 
+         out << "Railgun Already Bought!";
+         weaponsTexts[RAILGUN_WEAPONSTEXTSINDEX]->updateBody(out.str());
+         weaponsTexts[RAILGUN_WEAPONSTEXTSINDEX]->selectable = false;
+      } else {
+         out.str(""); 
+         out << "Buy Railgun  $" << RAILGUN_PRICE;
+         weaponsTexts[RAILGUN_WEAPONSTEXTSINDEX]->updateBody(out.str());
+         weaponsTexts[RAILGUN_WEAPONSTEXTSINDEX]->selectable = true;
       }
+      weaponsTexts[RAILGUN_WEAPONSTEXTSINDEX]->setPosition(position);
+      position.y += GH/10;
+      
+      // pikachu's wrath
+      if(gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased) {
+         out.str(""); 
+         out << "Pikachu's Wrath Already Bought!";
+         weaponsTexts[PIKACHUSWRATH_WEAPONSTEXTSINDEX]->updateBody(out.str());
+         weaponsTexts[PIKACHUSWRATH_WEAPONSTEXTSINDEX]->selectable = false;
+      } else {
+         out.str(""); 
+         out << "Buy Pikachu's Wrath $" << PIKACHUSWRATH_PRICE;
+         weaponsTexts[PIKACHUSWRATH_WEAPONSTEXTSINDEX]->updateBody(out.str());
+         weaponsTexts[PIKACHUSWRATH_WEAPONSTEXTSINDEX]->selectable = true;
+      }
+      weaponsTexts[PIKACHUSWRATH_WEAPONSTEXTSINDEX]->setPosition(position);
+      position.y += GH/10;
+      
+      // Anti Intertia
+      if(gameState->ship->getWeapon(ANTIINERTIA_WEAPON_INDEX)->purchased) {
+         out.str(""); 
+         out << "Anti Intertia Beam Already Bought!";
+         weaponsTexts[ANTIINERTIA_WEAPONSTEXTSINDEX]->updateBody(out.str());
+         weaponsTexts[ANTIINERTIA_WEAPONSTEXTSINDEX]->selectable = false;
+      } else {
+         out.str(""); 
+         out << "Anti Intertia Beam $" << ANTIINERTIA_PRICE;
+         weaponsTexts[ANTIINERTIA_WEAPONSTEXTSINDEX]->updateBody(out.str());
+         weaponsTexts[ANTIINERTIA_WEAPONSTEXTSINDEX]->selectable = true;
+      }
+      weaponsTexts[ANTIINERTIA_WEAPONSTEXTSINDEX]->setPosition(position);
+   
       drawTexts(weaponsTexts);
+      
+      
    } else if(menuSelection == UPGRADES) {
+      menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_WHITE);
+      menuTexts[UPGRADES_STOREMENUINDEX]->setColor(SDL_BLUE);
+      menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_WHITE);
+      menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_WHITE);
+      
       position.y = GH*(5.0/10.0);
+      //set the poistion for all menus
       for(int i = 0; i < upgradesTexts.size(); i++) {
          upgradesTexts[i]->setPosition(position);
          position.y += GH/10;
       }
       drawTexts(upgradesTexts);
    }  else if(menuSelection == AMMO) {
+      menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_WHITE);
+      menuTexts[UPGRADES_STOREMENUINDEX]->setColor(SDL_WHITE);
+      menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_BLUE);
+      menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_WHITE);
+      
       position.y = GH*(5.0/10.0);
+      // railgun
+      
+      //set the poistion for all menus
       for(int i = 0; i < ammoTexts.size(); i++) {
          ammoTexts[i]->setPosition(position);
          position.y += GH/10;
       }
       drawTexts(ammoTexts);
    }  else if(menuSelection == SHIP) {
+      menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_WHITE);
+      menuTexts[UPGRADES_STOREMENUINDEX]->setColor(SDL_WHITE);
+      menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_WHITE);
+      menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_BLUE);
+      
       position.y = GH*(5.0/10.0);
+      //set the poistion for all menus
       for(int i = 0; i < shipTexts.size(); i++) {
          shipTexts[i]->setPosition(position);
          position.y += GH/10;
