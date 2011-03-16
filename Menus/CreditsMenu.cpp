@@ -27,7 +27,7 @@ CreditsMenu::CreditsMenu() {
    addTitle("The Boyz");
    addDualColName("Taylor \'\'White Chocolate\'\' Arnicar");
    addDualColName("Chris \'\'Rolling Thunder\'\' Brenton");
-   addDualColName("Sterling \'\'Are You A Wizard\'\' Hirsh");
+   addDualColName("Sterling \'\'Breakin\' Evil\'\' Hirsh");
    addDualColName("Jake \'\'Jacuzzi\'\' Juszak");
    addDualColName("Ryuho \'\'Silent But Deadly\'\' Kudo");
    // AI boyz, please pick nicknames for yourselves (or better yet, for each
