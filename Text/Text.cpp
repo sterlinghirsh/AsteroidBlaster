@@ -16,13 +16,6 @@
 #define TEXT_INVERT_VALUE 20
 
 // Constructor if you are displaying one string
-/*
-Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
-   Text(text, fontName, _pos, _size, false);
-}
-*/
-
-// Constructor if you are displaying one string
 //Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size, bool _centered) {
 Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
    size = _size;
@@ -39,10 +32,7 @@ Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
    color = SDL_WHITE;
    selectable = selected = false;
 
-   //centered = _centered;
-   //centered = true;
-   //centered = false;
-   alignment = CENTERED;
+   alignment = LEFT_ALIGN;
    
 }
 
@@ -65,9 +55,7 @@ Text::Text(std::string preText, std::string body, std::string postText, std::str
    color = SDL_WHITE;
    selectable = selected = false;
    
-   //centered = true;
-   //centered = false;
-   alignment = CENTERED;
+   alignment = LEFT_ALIGN;
    
 }
 
@@ -91,9 +79,7 @@ Text::Text(std::string preText, int body, std::string postText, std::string font
    pos = _pos;
    color = SDL_WHITE;
    selectable = selected = false;
-   //centered = true;
-   //centered = false;
-   alignment = CENTERED;
+   alignment = LEFT_ALIGN;
 }
 
 // Constructor if you are displaying a double
@@ -116,9 +102,7 @@ Text::Text(std::string preText, double body, std::string postText, std::string f
    pos = _pos;
    color = SDL_WHITE;
    selectable = selected = false;
-   //centered = true;
-   //centered = false;
-   alignment = CENTERED;
+   alignment = LEFT_ALIGN;
 }
 
 // Destructor
@@ -248,14 +232,9 @@ void Text::SDL_GL_RenderText(const char *text,
 	/* Use SDL_TTF to render our text */
 	initial = TTF_RenderText_Blended(font, text, color);
 	
-        //double dw, dh;
 	/* Convert the rendered text to a known format */
 	w = (int)(pow(2,ceil(log(initial->w) / log(2)) + 0.5));
 	h = (int)(pow(2,ceil(log(initial->h) / log(2)) + 0.5));
-	//dw = (pow(2,log(initial->w) / log(2)) + 0.5);
-	//dh = (pow(2,log(initial->h) / log(2)) + 0.5);
-        //w = (int)dw;
-        //h = (int)dh;
 	
 	intermediary = SDL_CreateRGBSurface(0, w, h, 32, 
 			0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
@@ -313,8 +292,6 @@ void Text::SDL_GL_RenderText(const char *text,
 	int width = -1;
 	int height = -1;
    TTF_SizeText(font,text, &width, &height);
-	//location->w = width;
-	//location->h = height;
 	location->w = textW / 2;
 	location->h = height;
 	
