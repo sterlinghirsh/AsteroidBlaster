@@ -67,7 +67,7 @@ turnin:
 	handin zwood csc471finalwebs2
 
 valgrind:
-	valgrind --leak-check=full --show-reachable=yes --track-origins=yes ./${PROGNAME}
+	valgrind -v --leak-check=full --show-reachable=yes --track-origins=yes ./${PROGNAME}
 
 gdb:
 	gdb ./${PROGNAME}

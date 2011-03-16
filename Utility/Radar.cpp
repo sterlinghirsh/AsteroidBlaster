@@ -9,10 +9,14 @@
 
 // Tell c++ that gameState was declared elsewhere (in main.cpp)
 extern GameState* gameState;
+Point3D* Radar::cameraPosition;
+Vector3D* Radar::viewVector;
 
 Radar :: Radar(AsteroidShip* const ship) {
    owner = ship;
    curFrustum = new ViewFrustum();
+   cameraPosition = NULL;
+   viewVector = NULL;
 }
 
 /* Deconstructor shouldn't need to do anything
@@ -20,6 +24,8 @@ Radar :: Radar(AsteroidShip* const ship) {
 Radar :: ~Radar() {
    delete owner;
    delete curFrustum;
+   if (cameraPosition != NULL)
+      delete cameraPosition;
 }
 
 /**
@@ -133,6 +139,22 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
    }
    */
     
+   /* We need to set the camera position which will be used to compare the distanes
+    * of the two drawable objects.
+    */
+   // Make a copy of the ship's position
+   Point3D movedCameraPosition(*(owner->position));
+   // Augment it by the camera offset
+   owner->getCameraOffset()->movePoint(movedCameraPosition);
+   // Save it again for use by the comparator
+   cameraPosition = &movedCameraPosition;
+
+   // Get the view vector from the owner ship.
+   viewVector = owner->getViewVector();
+
+   // Sort the culledList in z order for tranparencies to work correctly.
+   culledList->sort(compareDrawables); 
+    
    // Print out the frustum for debugging.
    //curFrustum->print();
    
@@ -142,4 +164,13 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
      //(*listIter)->debug();
    }*/  
    return culledList;
+}
+
+/**
+ * Comparator used for sorting by the z axis.
+ */
+bool Radar::compareDrawables(Drawable* one, Drawable* two) {
+   Vector3D cameraToOne(*cameraPosition, *one->position);
+   Vector3D cameraToTwo(*cameraPosition, *two->position);
+   return viewVector->dot(cameraToOne) > viewVector->dot(cameraToTwo);
 }

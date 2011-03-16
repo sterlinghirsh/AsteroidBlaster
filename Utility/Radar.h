@@ -12,6 +12,7 @@
 #include "Utility/ViewFrustum.h"
 #include "Utility/GameState.h"
 #include "Particles/Particle.h"
+#include "Items/Drawable.h"
 #include <list>
 
 // Incomplete declaration so we can use the pointer.
@@ -45,6 +46,13 @@ class Radar {
        */
       virtual std::list<Drawable*>* getTargetableViewFrustumReading();
       
+      /**
+       * Used for distance comparison for z ordering of objects
+       */
+      static bool compareDrawables(Drawable* one, Drawable* two);
+
+      static Point3D* cameraPosition;
+      static Vector3D* viewVector;
    private:
       // The ship that owns this Radar
       AsteroidShip* owner;

@@ -30,7 +30,6 @@ class Drawable {
       double minX, minY, minZ, maxX, maxY, maxZ;
       Vector3D* velocity;
 
-
       Drawable(double x, double y, double z, GLuint displayListIn);
       virtual ~Drawable();
       virtual void init();
@@ -44,6 +43,9 @@ class Drawable {
        */
       virtual void drawGlow();
 
+      /**
+       * Comparator used for sorting by the z axis.
+       */
       double unrootedDist(Point3D *other);
       double unrootedDist(Drawable *other);
 
