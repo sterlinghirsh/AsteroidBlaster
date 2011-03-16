@@ -19,6 +19,7 @@
 MainMenu::MainMenu() {
    menuActive = false;
    firstTime = true;
+   x = y = -1;
    
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT;
@@ -165,7 +166,9 @@ void MainMenu::keyDown(int key) {
       newGameDeactivate();
       break;
     case SDLK_c:
-      deactivate();
+      if(!firstTime) {
+         deactivate();
+      }
       break;
     case SDLK_ESCAPE: 
       exit(0);
@@ -194,8 +197,6 @@ void MainMenu::mouseDown(int button) {
    } else if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       creditsMenu->menuActive = true;
-      printf("creditsMenu active: %d\n", creditsMenu->menuActive);
-      printf("menuActive: %d\n", menuActive);
       Music::stopMusic();
       Music::playMusic("Careless_Whisper.ogg");
    } else if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
@@ -217,6 +218,7 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
    y = _y;
    //decide the color for each menu text
    menuTexts[NEWGAME_STRING_INDEX]->mouseHighlight(x,y);
+   menuTexts[CONTINUE_STRING_INDEX]->selectable = !firstTime;
    menuTexts[CONTINUE_STRING_INDEX]->mouseHighlight(x,y);
    menuTexts[CREDITS_STRING_INDEX]->mouseHighlight(x,y);
    menuTexts[QUIT_STRING_INDEX]->mouseHighlight(x,y);

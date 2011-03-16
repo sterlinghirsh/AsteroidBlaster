@@ -52,6 +52,8 @@ StoreMenu::StoreMenu() {
    menuActive = false;
    menuSelection = WEAPONS;
    
+   x = y = -1;
+   
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT; 
    std::stringstream out;
@@ -318,13 +320,11 @@ void StoreMenu::keyDown(int key) {
    
    if (key == SDLK_p)  {
       if(menuActive){
-         std::cout << "StoreMenu off" << std::endl;
          menuActive = false;
          SoundEffect::stopAllSoundEffect();
          Music::stopMusic();
          Music::playMusic("Asteroids2.ogg");
       } else {
-         std::cout << "StoreMenu on" << std::endl;
          menuActive = true;
          SoundEffect::stopAllSoundEffect();
          Music::stopMusic();

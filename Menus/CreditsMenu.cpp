@@ -18,7 +18,7 @@
 
 CreditsMenu::CreditsMenu() {
    menuActive = false;
-
+   x = y = -1;
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT;
 
@@ -251,9 +251,6 @@ void CreditsMenu::keyDown(int key) {
    if (!menuActive) { return; }
 
    switch(key) {
-   case SDLK_ESCAPE:
-      exit(0);
-      break;
    }
 }
 
@@ -269,14 +266,12 @@ void CreditsMenu::keyUp(int key) {
  */
 void CreditsMenu::mouseDown(int button) {
    if (!menuActive) { return; }
-
    if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       firstDrawn = false;
       mainMenu->menuActive = true;
-      printf("(credits) menuActive: %d\n", menuActive);
+      x = y = -1;
       Music::stopMusic();
-      //Music::playMusic("Asteroids2.ogg");
       Music::playMusic("8-bit3.ogg");
    }
 }
@@ -289,7 +284,6 @@ void CreditsMenu::mouseUp(int button) {
 }
 
 void CreditsMenu::mouseMove(int dx, int dy, int _x, int _y) {
-   //std::cout << "mouseMove=(" << _x << "," << _y << ")" << std::endl;
    if (!menuActive) { return; }
    x = _x;
    y = _y;
