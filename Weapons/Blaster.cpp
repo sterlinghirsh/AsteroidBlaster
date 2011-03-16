@@ -20,7 +20,6 @@ Blaster::Blaster(AsteroidShip* owner)
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
    purchased = true; // Start off owning the blaster
-   level = 0;
 }
 
 Blaster::~Blaster() {

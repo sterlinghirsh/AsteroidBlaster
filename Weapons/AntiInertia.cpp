@@ -18,7 +18,6 @@ AntiInertia::AntiInertia(AsteroidShip* owner) : Weapon(owner) {
    soundPlaying = false;
    curAmmo = 2000;
    purchased = false;
-   level = 0;
 }
 
 AntiInertia::~AntiInertia() {

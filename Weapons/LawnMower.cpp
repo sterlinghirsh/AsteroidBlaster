@@ -18,7 +18,6 @@ LawnMower::LawnMower(AsteroidShip* owner) : Weapon(owner) {
    soundPlaying = false;
    curAmmo = 100000;
    purchased = false;
-   level = 0;
 }
 
 LawnMower::~LawnMower() {

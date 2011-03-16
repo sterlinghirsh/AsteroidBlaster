@@ -15,6 +15,7 @@
 Weapon::Weapon(AsteroidShip* owner)
  : ship(owner), timeLastFired(0) {
    // Do nothing else.
+   level = 1;
 }
 
 Weapon::~Weapon() {
