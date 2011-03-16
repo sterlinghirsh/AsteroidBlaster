@@ -14,6 +14,7 @@
 #include "Shots/BeamShot.h"
 #include "Shots/TractorBeamShot.h"
 #include "Shots/ElectricityShot.h"
+#include "Shots/AntiInertiaShot.h"
 #include <algorithm>
 #include <math.h>
 #include "Utility/SoundEffect.h"
@@ -389,9 +390,15 @@ void Shard::handleCollision(Drawable* other) {
             // Make this go toward the ship.
             TractorAttractionParticle::Add(particlePosition, particleVelocity, TBshot->owner->position); 
          }
-      } else if((Eshot = dynamic_cast<ElectricityShot*>(other)) != NULL) {
-         // Pull the shot in.
-         //speed = position->distanceFrom(*TBshot->position) - TBshot->length;
+      } else if(dynamic_cast<AntiInertiaShot*>(other) != NULL) {
+         Vector3D* newVelocity = new Vector3D(*velocity);
+         newVelocity->scalarMultiplyUpdate(-0.1);
+         addInstantAcceleration(newVelocity);
+         if (rotationSpeed >= 0.5) {
+            rotationSpeed -= 0.5;
+         } else {
+            rotationSpeed = 0;
+         }
       } else {
          // Set speed to between the speed of the shot and the current speed.
          speed = shot->velocity->getLength();
