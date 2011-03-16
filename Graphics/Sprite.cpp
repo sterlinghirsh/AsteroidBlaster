@@ -17,7 +17,8 @@ using namespace std;
 list<Sprite*> Sprite::sprites;
 
 Sprite::Sprite(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
- Point3D posIn, double drawWidth, double drawHeight) : position(posIn) {
+ Point3D posIn, double drawWidth, double drawHeight) : Drawable(0, 0, 0, 0) {
+   position->clone(&posIn);
    framesX = framesXIn;
    framesY = framesYIn;
    framesPerSecond = fpsIn;
@@ -30,6 +31,7 @@ Sprite::Sprite(unsigned int texID, int framesXIn, int framesYIn, double fpsIn,
    totalFrames = framesX * framesY;
    startTime = doubleTime();
    oneShot = true;
+   shouldRemove = false;
 }
 
 void Sprite::Add(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
@@ -39,26 +41,19 @@ void Sprite::Add(unsigned int texID, int framesXIn, int framesYIn, double fpsIn,
                posIn, drawWidth, drawHeight));
 }
  
-bool Sprite::draw(Point3D* eyePoint) {
-   // Do rotation and translation here.
-   // Also update the current frame.
+void Sprite::draw() {
+   // Update the current frame.
    
-   Vector3D forward(0, 0, 1);
-   Vector3D toCamera(position, *eyePoint);
-   Vector3D cross = forward.cross(toCamera);
-
-   double angle = forward.getAngleInDegrees(toCamera);
-
+   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    double curTime = doubleTime();
    int curFrame = floor((curTime - startTime) * framesPerSecond);
    if (curFrame >= totalFrames && oneShot) {
-      return false;
+      shouldRemove = true;
    }
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
    glPushMatrix();
-   position.glTranslate();
-   glRotatef(angle, cross.xMag, cross.yMag, cross.zMag);
+   position->glTranslate();
    
    double topLeftX = (curFrame % framesX) * frameWidth;
    double topLeftY = 1 - ((curFrame / framesX) * frameHeight);
@@ -68,6 +63,9 @@ bool Sprite::draw(Point3D* eyePoint) {
    glBindTexture(GL_TEXTURE_2D, textureID);
    
    glDisable(GL_CULL_FACE);
+   glUseProgram(billboardShader);
+   GLint sizeLoc = glGetUniformLocation(billboardShader, "size");
+   glUniform1f(sizeLoc, 1);
    glBegin(GL_QUADS);
    glTexCoord2f(topLeftX, topLeftY);
    glVertex3f(-width/2, height/2, 0);
@@ -82,22 +80,20 @@ bool Sprite::draw(Point3D* eyePoint) {
    glVertex3f(-width/2, -height/2, 0);
 
    glEnd();
+   glUseProgram(0);
    glEnable(GL_CULL_FACE);
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
-   return true;
 }
 
 /**
  * Static method that draws all the sprites in Sprite::sprites.
  */
-void Sprite::drawSprites() {
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   extern GameState* gameState;
+void Sprite::updateSprites(double timeDiff) {
    list<Sprite*>::iterator sprite = Sprite::sprites.begin();
    for (; sprite != Sprite::sprites.end(); sprite++) {
-      if (!(*sprite)->draw(gameState->ship->position)) {
+      if ((*sprite)->shouldRemove) {
          sprite = Sprite::sprites.erase(sprite);
          continue;
       }

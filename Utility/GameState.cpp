@@ -215,6 +215,7 @@ void GameState::update(double timeDiff) {
    objects = custodian.getListOfObjects();
 
    Particle :: updateParticles(timeDiff);
+   Sprite::updateSprites(timeDiff);
 
    //TODO explain what this loop do
    for (item = objects->begin(); item != objects->end(); ++item) {

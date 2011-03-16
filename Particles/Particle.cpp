@@ -89,8 +89,8 @@ void Particle::draw()
 
    // glColor4f clamps alpha to [0, 1].
    glColor4f( r,g,b, alpha);
-   glUseProgram(particleShader);
-   GLint sizeLoc = glGetUniformLocation(particleShader, "size");
+   glUseProgram(billboardShader);
+   GLint sizeLoc = glGetUniformLocation(billboardShader, "size");
    glUniform1f(sizeLoc, size);
 
    glCallList(particleDisplayList);

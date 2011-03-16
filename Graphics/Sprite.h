@@ -9,11 +9,11 @@
 #define __SPRITE_H__
 
 
-#include "Utility/Point3D.h"
+#include "Items/Drawable.h"
 #include <string>
 #include <list>
 
-class Sprite {
+class Sprite : public Drawable {
    public:
       unsigned int textureID;
       int framesX;
@@ -26,16 +26,15 @@ class Sprite {
       double frameHeight;
       double startTime;
       materialStruct curMaterial;
-      Point3D position;
       static std::list<Sprite*> sprites;
-      static void drawSprites();
+      static void updateSprites(double timeDiff);
       bool oneShot;
 
       Sprite(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
        Point3D posIn, double drawWidth, double drawHeight);
       static void Add(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
        Point3D posIn, double drawWidth, double drawHeight);
-      bool draw(Point3D* eyePoint);
+      virtual void draw();
 };
 
 #endif

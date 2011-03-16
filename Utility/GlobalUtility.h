@@ -44,7 +44,7 @@ extern GLuint lawnShader;
 extern GLuint hBlurShader;
 extern GLuint vBlurShader;
 extern GLuint ramShader;
-extern GLuint particleShader;
+extern GLuint billboardShader;
 extern SDL_Surface* gDrawSurface;
 extern const SDL_VideoInfo* vidinfo;
 extern InputManager* inputManager;

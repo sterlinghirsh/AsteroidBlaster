@@ -120,6 +120,10 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
       allObjects.push_back(curParticle);
    }
 
+   for (spriteIter = Sprite::sprites.begin(); spriteIter != Sprite::sprites.end(); ++spriteIter) {
+      allObjects.push_back(*spriteIter);
+   }
+
    // Sterling:
    // Consider each particle one at a time and cull it one at a time.
    // Consider each object one at a time and cull it one at a time.
