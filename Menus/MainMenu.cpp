@@ -143,6 +143,7 @@ void MainMenu::keyDown(int key) {
          SDL_ShowCursor(SDL_DISABLE);
          //since there is a game now, enable continue
          firstTime = false;
+         
          menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
          Music::stopMusic();
          Music::playMusic("Asteroids2.ogg");
@@ -161,6 +162,8 @@ void MainMenu::keyDown(int key) {
     case SDLK_n:
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
+      firstTime = false;
+      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
       gameState->reset();
       Music::stopMusic();
       Music::playMusic("Asteroids2.ogg");
@@ -196,6 +199,7 @@ void MainMenu::mouseDown(int button) {
       gameState->reset();
       menuActive = false;
       firstTime = false;
+      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
       Music::stopMusic();
       Music::playMusic("Asteroids2.ogg");
    } else if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y) && !firstTime) {
