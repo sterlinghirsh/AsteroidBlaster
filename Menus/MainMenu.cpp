@@ -29,6 +29,13 @@ MainMenu::MainMenu() {
    menuTexts.push_back(new Text("Settings",  fontName, position, 24));
    menuTexts.push_back(new Text("Credits",  fontName, position, 24));
    menuTexts.push_back(new Text("Quit (esc)", fontName, position, 24));
+   
+   
+   menuTexts[NEWGAME_STRING_INDEX]->selectable = true;
+   menuTexts[CONTINUE_STRING_INDEX]->selectable = true;
+   menuTexts[CREDITS_STRING_INDEX]->selectable = true;
+   menuTexts[QUIT_STRING_INDEX]->selectable = true;
+   
 
    for (int i = 0; i < menuTexts.size(); i++) {
       //menuTexts[i]->centered = true;
@@ -209,29 +216,11 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
    x = _x;
    y = _y;
    //decide the color for each menu text
-   if(menuTexts[NEWGAME_STRING_INDEX]->mouseSelect(x,y)) {
-      menuTexts[NEWGAME_STRING_INDEX]->setColor(SDL_RED);
-   } else {
-      menuTexts[NEWGAME_STRING_INDEX]->setColor(SDL_WHITE);
-   }
+   menuTexts[NEWGAME_STRING_INDEX]->mouseHighlight(x,y);
+   menuTexts[CONTINUE_STRING_INDEX]->mouseHighlight(x,y);
+   menuTexts[CREDITS_STRING_INDEX]->mouseHighlight(x,y);
+   menuTexts[QUIT_STRING_INDEX]->mouseHighlight(x,y);
    
-   if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y)) {
-      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_RED);
-   } else {
-      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
-   }
-
-   if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
-      menuTexts[CREDITS_STRING_INDEX]->setColor(SDL_RED);
-   } else {
-      menuTexts[CREDITS_STRING_INDEX]->setColor(SDL_WHITE);
-   }
-   
-   if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
-      menuTexts[QUIT_STRING_INDEX]->setColor(SDL_RED);
-   } else {
-      menuTexts[QUIT_STRING_INDEX]->setColor(SDL_WHITE);
-   }
 }
 
 void MainMenu::activate() {

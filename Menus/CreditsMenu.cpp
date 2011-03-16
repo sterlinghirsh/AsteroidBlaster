@@ -38,7 +38,10 @@ CreditsMenu::CreditsMenu() {
    addDualColName("Mike \'\'Dammit Mike\'\' Smith");
    addTitle("The Music Man");
    addSingleColName("George Michael Himself");
+   
    menuTexts.push_back(new Text("Return to Main Menu", fontName, position, 18));
+
+   menuTexts[QUIT_STRING_INDEX]->selectable = true;
 
    for (int i = 0; i < QUIT_STRING_INDEX; i++) {
       //menuTexts[i]->centered = true;
@@ -291,10 +294,6 @@ void CreditsMenu::mouseMove(int dx, int dy, int _x, int _y) {
    x = _x;
    y = _y;
 
-   if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
-      menuTexts[QUIT_STRING_INDEX]->setColor(SDL_RED);
-   } else {
-      menuTexts[QUIT_STRING_INDEX]->setColor(SDL_WHITE);
-   }
+   menuTexts[QUIT_STRING_INDEX]->mouseHighlight(x,y);
 }
 
