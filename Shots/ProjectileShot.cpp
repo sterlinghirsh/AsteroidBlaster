@@ -61,6 +61,7 @@ void ProjectileShot::handleCollision(Drawable* other) {
    static Vector3D particleVariation;
    static Vector3D positionDifference;
    const double particleSpeed = 15;
+   // This should probably be moved to the Asteroid's code.
 
    Asteroid3D* asteroid;
    // If we hit an asteroid.

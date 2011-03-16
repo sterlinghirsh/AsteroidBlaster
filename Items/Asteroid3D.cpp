@@ -422,16 +422,16 @@ void Asteroid3D::handleCollision(Drawable* other) {
             } else {
                rotationSpeed = 0;
             }
-         } else {
+         } else if (dynamic_cast<ProjectileShot*>(other) != NULL) {
             if (gameState->godMode) {
                health = 0;
             } else {
                health--;
             }
-            double speed = velocity->getLength();
-            speed += 5.0 / radius;
-            velocity->addUpdate(*shot->velocity);
-            velocity->setLength(speed);
+            double speed = 10 / sqrt(radius);
+            Vector3D* newAcceleration = new Vector3D(*(shot->position), *position);
+            newAcceleration->setLength(speed);
+            addInstantAcceleration(newAcceleration);
          }
       }
       if (health <= 0) {
