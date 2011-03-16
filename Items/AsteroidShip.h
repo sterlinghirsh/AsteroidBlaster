@@ -22,6 +22,7 @@
 #include "Weapons/Electricity.h"
 #include "Weapons/LawnMower.h"
 #include "Weapons/Ram.h"
+#include "Weapons/AntiInertia.h"
 #include <list>
 
 // This should probably be an enum.

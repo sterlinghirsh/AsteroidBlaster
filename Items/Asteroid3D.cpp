@@ -16,6 +16,8 @@
 #include "Shots/ElectricityShot.h"
 #include "Shots/LawnMowerShot.h"
 #include "Shots/RamShot.h"
+#include "Shots/AntiInertiaShot.h"
+
 #include "Utility/SoundEffect.h"
 #include <algorithm>
 #define _USE_MATH_DEFINES
@@ -409,9 +411,17 @@ void Asteroid3D::handleCollision(Drawable* other) {
                particleDirection->addUpdate(centerToImpactPoint);
                ElectricityImpactParticle::Add(particleStartPoint, particleDirection);
             }
-         }
-         else if (dynamic_cast<RamShot*>(other) != NULL) {
+         } else if (dynamic_cast<RamShot*>(other) != NULL) {
             health = 0;
+         } else if (dynamic_cast<AntiInertiaShot*>(other) != NULL) {
+            Vector3D* newVelocity = new Vector3D(*velocity);
+            newVelocity->scalarMultiplyUpdate(-0.1);
+            addInstantAcceleration(newVelocity);
+            if (rotationSpeed >= 0.5) {
+               rotationSpeed -= 0.5;
+            } else {
+               rotationSpeed = 0;
+            }
          } else {
             if (gameState->godMode) {
                health = 0;
