@@ -86,6 +86,7 @@ void Shard::InitShard(double r, double worldSizeIn) {
       last = thisRing;
    }
 
+   /*
    minX = _rList[0].minX();
    maxX = _rList[0].maxX();
    minY = _rList[0].minY();
@@ -114,6 +115,9 @@ void Shard::InitShard(double r, double worldSizeIn) {
          maxZ = _rList[i].maxZ();
       }
    }
+   */
+   minX = minY = minZ = -1;
+   maxX = maxY = maxZ = 1;
 
    // Connect the rings from the beginning of _rList to the halfway point.
    for (unsigned i = 1; i <= _rList.size() / 2; i++) {
