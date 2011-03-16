@@ -173,7 +173,13 @@ void Text::draw() {
    
    SDL_Rect temp = {pos.x, GH - pos.y - TEXT_INVERT_VALUE};
 
-   SDL_GL_RenderText(textToDisplay.c_str(), font, color, &temp);
+   if(selected) {
+      SDL_GL_RenderText(textToDisplay.c_str(), font, SDL_RED, &temp);
+   } else {
+      SDL_GL_RenderText(textToDisplay.c_str(), font, color, &temp);
+   }
+
+   
    
    pos.w = temp.w * 1.5;
    pos.h = temp.h;
@@ -302,6 +308,7 @@ void Text::SDL_GL_RenderText(const char *text,
 }
 
 bool Text::mouseSelect(int x, int y) {
+   if(!selectable) { return false;}
    if(x >= pos.x &&
       x <= pos.x + pos.w &&
       y >= pos.y - TEXT_INVERT_VALUE &&
@@ -310,4 +317,18 @@ bool Text::mouseSelect(int x, int y) {
    }
    return false;
 }
+
+void Text::mouseHighlight(int x, int y) {
+   if(!selectable) { return;}
+   if(x >= pos.x &&
+      x <= pos.x + pos.w &&
+      y >= pos.y - TEXT_INVERT_VALUE &&
+      y <= pos.y - TEXT_INVERT_VALUE + pos.h){
+      selected = true;
+   } else {
+      selected = false;
+   }
+}
+
+
 

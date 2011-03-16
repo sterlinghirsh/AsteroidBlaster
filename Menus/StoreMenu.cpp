@@ -9,49 +9,125 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 
-#define RAILGUN_STRING_INDEX 0
-#define PIKACHUSWRATH_STRING_INDEX 1
-#define DONE_STRING_INDEX 2
-#define SHARDS_STRING_INDEX 3
+#define DONE_STOREMENUINDEX 0
+#define SHARDS_STOREMENUINDEX 1
+#define HEALTH_STOREMENUINDEX 2
+#define WEAPONS_STOREMENUINDEX 3
+#define UPGRADES_STOREMENUINDEX 4
+#define AMMO_STOREMENUINDEX 5
+#define SHIP_STOREMENUINDEX 6
+
+#define RAILGUN_WEAPONSTEXTSINDEX 0
+#define PIKACHUSWRATH_WEAPONSTEXTSINDEX 1
+#define ANTIINERTIA_WEAPONSTEXTSINDEX 2
+
+#define RAILGUN_AMMOTEXTSINDEX 0
+#define PIKACHUSWRATH_AMMOTEXTSINDEX 1
+#define ANTIINERTIA_AMMOTEXTSINDEX 2
+
+#define BUYHEALTH_SHIPTEXTSINDEX 0
+#define ENGINEUPGRADE_SHIPTEXTSINDEX 1
 
 #define RAILGUN_WEAPON_INDEX 1
-#define TRACTORBEAM_WEAPON_INDEX 2
 #define PIKACHUSWRATH_WEAPON_INDEX 3
+#define ANTIINERTIA_WEAPON_INDEX 6
 
 #define RAILGUN_PRICE 20
-#define TRACTORBEAM_PRICE 10
 #define PIKACHUSWRATH_PRICE 20
+#define ANTIINERTIA_PRICE 10
+
+#define ENGINEUPGRADE_PRICE 10
+#define ENGINEUPGRADE_UPPRICE 10
+
 
 #define RAILGUN_AMMO_AMOUNT 15
-#define TRACTORBEAM_AMMO_AMOUNT 1000
 #define PIKACHUSWRATH_AMMO_AMOUNT 500
+#define ANTIINERTIA_AMMO_AMOUNT 500
 
 #define RAILGUN_AMMO_PRICE 10
-#define TRACTORBEAM_AMMO_PRICE 5
 #define PIKACHUSWRATH_AMMO_PRICE 10
+#define ANTIINERTIA_AMMO_PRICE 10
 
 StoreMenu::StoreMenu() {
    menuActive = false;
+   menuSelection = WEAPONS;
    
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT; 
-   
    std::stringstream out;
-   out << "Buy Railgun  $" << RAILGUN_PRICE;
-   menuTexts.push_back(new Text(out.str(), fontName, position, 24));
    
-   //out.str("");
-   //out << "Buy Tractor Beam $" << TRACTORBEAM_PRICE;
-   //menuTexts.push_back(new Text(out.str(), fontName, position, 24));
-
+   
+   //Get shards, health and Done text onto menuTexts
+   menuTexts.push_back(new Text("Done (n)", fontName, position, 24));
+   menuTexts[DONE_STOREMENUINDEX]->selectable = true;
+   menuTexts.push_back(new Text("Shards: ", 0, "", fontName, position, 24));
+   menuTexts.push_back(new Text("Health: ", 0, "", fontName, position, 24));
+   
+   menuTexts.push_back(new Text("Weapons", fontName, position, 24));
+   menuTexts[WEAPONS_STOREMENUINDEX]->selectable = true;
+   menuTexts.push_back(new Text("Upgrades", fontName, position, 24));
+   menuTexts[UPGRADES_STOREMENUINDEX]->selectable = true;
+   menuTexts.push_back(new Text("Ammo", fontName, position, 24));
+   menuTexts[AMMO_STOREMENUINDEX]->selectable = true;
+   menuTexts.push_back(new Text("Ship", fontName, position, 24));
+   menuTexts[SHIP_STOREMENUINDEX]->selectable = true;
+   
+   
+   
+   //get weapon purchase text in weaponsTexts
+   out << "Buy Railgun  $" << RAILGUN_PRICE;
+   weaponsTexts.push_back(new Text(out.str(), fontName, position, 24));
+   
    out.str(""); 
    out << "Buy Pikachu's Wrath $" << PIKACHUSWRATH_PRICE;
-   menuTexts.push_back(new Text(out.str(), fontName, position, 24));
+   weaponsTexts.push_back(new Text(out.str(), fontName, position, 24));
+   
+   out.str(""); 
+   out << "Buy Anti Inertia Beam $" << ANTIINERTIA_PRICE;
+   weaponsTexts.push_back(new Text(out.str(), fontName, position, 24));
    
    
-   menuTexts.push_back(new Text("Done", fontName, position, 24));
+   //get upgrade text in upgradesTexts
+   out.str(""); 
+   out << "Upgrade Unavailable!";
+   upgradesTexts.push_back(new Text(out.str(), fontName, position, 24));
    
-   menuTexts.push_back(new Text("Shards: ", 0, "", fontName, position, 24));
+   
+   //get ammo text in ammoTexts
+   out.str(""); 
+   out << "Buy " << RAILGUN_AMMO_AMOUNT << " Railgun Ammo $" << RAILGUN_AMMO_PRICE;
+   ammoTexts.push_back(new Text(out.str(), fontName, position, 24));
+   
+   out.str(""); 
+   out << "Buy " << PIKACHUSWRATH_AMMO_AMOUNT << " Pikachu's Wrath Ammo Ammo $" << PIKACHUSWRATH_AMMO_PRICE;
+   ammoTexts.push_back(new Text(out.str(), fontName, position, 24));
+   
+   out.str(""); 
+   out << "Buy " << ANTIINERTIA_AMMO_AMOUNT << " Anti Inertia Beam Ammo $" << ANTIINERTIA_AMMO_PRICE;
+   ammoTexts.push_back(new Text(out.str(), fontName, position, 24));
+   
+   //get ship related text in shipTexts
+   out.str(""); 
+   out << "Buy Ship Health";
+   shipTexts.push_back(new Text(out.str(), fontName, position, 24));
+   
+   out.str(""); 
+   out << "Upgrade Engine $" <<ENGINEUPGRADE_PRICE;
+   shipTexts.push_back(new Text(out.str(), fontName, position, 24));
+    
+    
+   for(int i = 0; i < weaponsTexts.size(); i++) {
+      weaponsTexts[i]->selectable = true;
+   }
+   for(int i = 0; i < upgradesTexts.size(); i++) {
+      upgradesTexts[i]->selectable = true;
+   }
+   for(int i = 0; i < ammoTexts.size(); i++) {
+      ammoTexts[i]->selectable = true;
+   }
+   for(int i = 0; i < shipTexts.size(); i++) {
+      shipTexts[i]->selectable = true;
+   }
    
 }
 
@@ -60,67 +136,123 @@ StoreMenu::~StoreMenu() {
    for(int i = 0; i < menuTexts.size(); i++) {
       delete menuTexts[i];
    }
+   for(int i = 0; i < weaponsTexts.size(); i++) {
+      delete weaponsTexts[i];
+   }
+   for(int i = 0; i < upgradesTexts.size(); i++) {
+      delete upgradesTexts[i];
+   }
+   for(int i = 0; i < ammoTexts.size(); i++) {
+      delete ammoTexts[i];
+   }
+   for(int i = 0; i < shipTexts.size(); i++) {
+      delete shipTexts[i];
+   }
+   
 }
 
 void StoreMenu::draw() {
    SDL_Rect position;
    position.x = GW/3;
    position.y = GH/2;
-   int currAmmo = -1;
-   
-   
-   //Set the position and the string depending on if the weapon was bought
-   menuTexts[RAILGUN_STRING_INDEX]->setPosition(position);
-   currAmmo = gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo;
-   if (gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased) {
-      std::stringstream out;
-      out << "Buy " << RAILGUN_AMMO_AMOUNT << " Railgun Ammo $" << RAILGUN_AMMO_PRICE << " (" << currAmmo << ")";
-      menuTexts[RAILGUN_STRING_INDEX]->updateBody(out.str());
-   }
-   
-   //Set the position and the string depending on if the weapon was bought
-   position.y += GH/10;
-   menuTexts[PIKACHUSWRATH_STRING_INDEX]->setPosition(position);
-   currAmmo = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo;
-   if (gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased) {
-      std::stringstream out;
-      out << "Buy " << PIKACHUSWRATH_AMMO_AMOUNT << " Pikachu's Wrath Ammo $" << PIKACHUSWRATH_AMMO_PRICE << " (" << currAmmo << ")";
-      menuTexts[PIKACHUSWRATH_STRING_INDEX]->updateBody(out.str());
-   }
-   
-   //Done
-   position.y += GH/10;
-   menuTexts[DONE_STRING_INDEX]->setPosition(position);
-   
-   
-   //shards
-   position.x = GW/9;
-   position.y = GH/2;
-   menuTexts[SHARDS_STRING_INDEX]->updateBody(gameState->ship->nShards);
-   menuTexts[SHARDS_STRING_INDEX]->setPosition(position);
-   
-   
-   
+
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   
 
+
+   //Done
+   position.x = GW*(8.0/10.0);
+   position.y = GH*(9.5/10.0);
+   menuTexts[DONE_STOREMENUINDEX]->setPosition(position);
    
-   //draw the text
+   //shards
+   position.x = GW*(0.1/10.0);
+   position.y = GH*(9.5/10.0);
+   menuTexts[SHARDS_STOREMENUINDEX]->updateBody(gameState->ship->nShards);
+   menuTexts[SHARDS_STOREMENUINDEX]->setPosition(position);
+   
+   //health
+   position.x = GW*(2.0/10.0);
+   position.y = GH*(9.5/10.0);
+   menuTexts[HEALTH_STOREMENUINDEX]->updateBody(gameState->ship->health);
+   menuTexts[HEALTH_STOREMENUINDEX]->setPosition(position);
+   
+   //weapons
+   position.x = GW*(1.0/10.0);
+   position.y = GH*(5.0/10.0);
+   menuTexts[WEAPONS_STOREMENUINDEX]->setPosition(position);
+   
+   //upgrades
+   position.y += GH/10;
+   menuTexts[UPGRADES_STOREMENUINDEX]->setPosition(position);
+   
+   //weapons
+   position.y += GH/10;
+   menuTexts[AMMO_STOREMENUINDEX]->setPosition(position);
+   
+   //weapons
+   position.y += GH/10;
+   menuTexts[SHIP_STOREMENUINDEX]->setPosition(position);
+
+
+   drawTexts(menuTexts);
+   
+   position.x = GW*(3.0/10.0);
+   position.y = GH*(5.0/10.0);
+   if(menuSelection == WEAPONS) {
+      for(int i = 0; i < weaponsTexts.size(); i++) {
+         weaponsTexts[i]->setPosition(position);
+         position.y += GH/10;
+      }
+      drawTexts(weaponsTexts);
+   } else if(menuSelection == UPGRADES) {
+      position.y = GH*(5.0/10.0);
+      for(int i = 0; i < upgradesTexts.size(); i++) {
+         upgradesTexts[i]->setPosition(position);
+         position.y += GH/10;
+      }
+      drawTexts(upgradesTexts);
+   }  else if(menuSelection == AMMO) {
+      position.y = GH*(5.0/10.0);
+      for(int i = 0; i < ammoTexts.size(); i++) {
+         ammoTexts[i]->setPosition(position);
+         position.y += GH/10;
+      }
+      drawTexts(ammoTexts);
+   }  else if(menuSelection == SHIP) {
+      position.y = GH*(5.0/10.0);
+      for(int i = 0; i < shipTexts.size(); i++) {
+         shipTexts[i]->setPosition(position);
+         position.y += GH/10;
+      }
+      drawTexts(shipTexts);
+   } else {
+      std::cerr << "Menu selection error! Quitting..." << std::endl;
+      exit(1);
+   }
+   
+   drawLogo();
+   
+   SDL_GL_SwapBuffers();
+
+}
+
+void StoreMenu::drawTexts(std::vector<Text*> texts) {
    glPushMatrix();
       useOrtho();
       glDisable(GL_LIGHTING);
       
-      for(int i = 0; i < menuTexts.size(); i++) {
-         menuTexts[i]->draw();
+      for(int i = 0; i < texts.size(); i++) {
+         texts[i]->draw();
       }
 
       glEnable(GL_LIGHTING);
       usePerspective();
    glPopMatrix();
+}
 
 
-   //draw the text
+void StoreMenu::drawLogo() {
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
    
@@ -174,10 +306,8 @@ void StoreMenu::draw() {
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
-
-   SDL_GL_SwapBuffers();
-
 }
+
 
 /**
  * Handles the player pressing down a key
@@ -227,52 +357,39 @@ void StoreMenu::keyUp(int key) {
  */
 void StoreMenu::mouseDown(int button) {
    if (!menuActive) { return; }
-   bool weaponBought = false;
-   int shardsOwned = -1;
-   int currAmmo = -1;
-   bool boughtSomething = false;
-   //for railgun
-   if(menuTexts[RAILGUN_STRING_INDEX]->mouseSelect(x,y)) {
-      weaponBought = gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased;
-      shardsOwned = gameState->ship->nShards;
-      currAmmo = gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo;
-      if(weaponBought && shardsOwned >= RAILGUN_AMMO_PRICE) {
-         std::cout << "bought railgun ammo" << std::endl;
-         gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo += RAILGUN_AMMO_AMOUNT;
-         gameState->ship->nShards -= RAILGUN_AMMO_PRICE;
-      } else if(shardsOwned >= RAILGUN_PRICE) {
-         std::cout << "bought railgun" << std::endl;
-         gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased = true;
-         gameState->ship->nShards -= RAILGUN_PRICE;
-      } else {
-         std::cout << "not enough money!" << std::endl;
-      }
+   
+   if(menuSelection == WEAPONS) {
+   
+   } else if(menuSelection == UPGRADES) {
+   
+   }  else if(menuSelection == AMMO) {
+   
+   }  else if(menuSelection == SHIP) {
+   
+   } else {
+      std::cerr << "Menu selection error! Quitting..." << std::endl;
+      exit(1);
    }
    
-   //for pikachu's wrath
-   if(menuTexts[PIKACHUSWRATH_STRING_INDEX]->mouseSelect(x,y)) {
-      weaponBought = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased;
-      shardsOwned = gameState->ship->nShards;
-      currAmmo = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo;
-      if(weaponBought && shardsOwned >= PIKACHUSWRATH_AMMO_PRICE) {
-         std::cout << "bought PIKACHUSWRATH ammo" << std::endl;
-         gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo += PIKACHUSWRATH_AMMO_AMOUNT;
-         gameState->ship->nShards -= PIKACHUSWRATH_AMMO_PRICE;
-      } else if(shardsOwned >= PIKACHUSWRATH_PRICE) {
-         std::cout << "bought PIKACHUSWRATH" << std::endl;
-         gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased = true;
-         weaponBought = true;
-         gameState->ship->nShards -= PIKACHUSWRATH_PRICE;
-      } else {
-         std::cout << "not enough money!" << std::endl;
-      }
-   }
    
-   if(menuTexts[DONE_STRING_INDEX]->mouseSelect(x,y)) {
+   if(menuTexts[DONE_STOREMENUINDEX]->mouseSelect(x,y)) {
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
       Music::stopMusic();
       Music::playMusic("Asteroids2.ogg");
+   }
+   
+   if(menuTexts[WEAPONS_STOREMENUINDEX]->mouseSelect(x,y)) {
+      menuSelection = WEAPONS;
+   } 
+   if(menuTexts[UPGRADES_STOREMENUINDEX]->mouseSelect(x,y)) {
+      menuSelection = UPGRADES;
+   } 
+   if(menuTexts[AMMO_STOREMENUINDEX]->mouseSelect(x,y)) {
+      menuSelection = AMMO;
+   }
+   if(menuTexts[SHIP_STOREMENUINDEX]->mouseSelect(x,y)) {
+      menuSelection = SHIP;
    }
 }
 
@@ -290,22 +407,31 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
    x = _x;
    y = _y;
    
-   if(menuTexts[RAILGUN_STRING_INDEX]->mouseSelect(x,y)) {
-      menuTexts[RAILGUN_STRING_INDEX]->setColor(SDL_RED);
+   if(menuSelection == WEAPONS) {
+      for(int i = 0; i < weaponsTexts.size(); i++) {
+         weaponsTexts[i]->mouseHighlight(x,y);
+      }
+   } else if(menuSelection == UPGRADES) {
+      for(int i = 0; i < upgradesTexts.size(); i++) {
+         upgradesTexts[i]->mouseHighlight(x,y);
+      }
+   }  else if(menuSelection == AMMO) {
+      for(int i = 0; i < ammoTexts.size(); i++) {
+         ammoTexts[i]->mouseHighlight(x,y);
+      }
+   }  else if(menuSelection == SHIP) {
+      for(int i = 0; i < shipTexts.size(); i++) {
+         shipTexts[i]->mouseHighlight(x,y);
+      }
    } else {
-      menuTexts[RAILGUN_STRING_INDEX]->setColor(SDL_WHITE);
+      std::cerr << "Menu selection error! Quitting..." << std::endl;
+      exit(1);
    }
-   if(menuTexts[PIKACHUSWRATH_STRING_INDEX]->mouseSelect(x,y)) {
-      menuTexts[PIKACHUSWRATH_STRING_INDEX]->setColor(SDL_RED);
-   } else {
-      menuTexts[PIKACHUSWRATH_STRING_INDEX]->setColor(SDL_WHITE);
-   }
-   if(menuTexts[DONE_STRING_INDEX]->mouseSelect(x,y)) {
-      menuTexts[DONE_STRING_INDEX]->setColor(SDL_RED);
-   } else {
-      menuTexts[DONE_STRING_INDEX]->setColor(SDL_WHITE);
+   
+   
+   for(int i = 0; i < menuTexts.size(); i++) {
+      menuTexts[i]->mouseHighlight(x,y);
    }
 }
-
 
 

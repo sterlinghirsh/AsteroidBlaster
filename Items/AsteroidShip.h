@@ -120,6 +120,9 @@ class AsteroidShip : public Object3D {
       
       int score;
       int nShards;
+      int engineUpgrade;
+      int health;
+      
       Vector3D shotDirection; // If we shoot a shot, where will it go?
       Weapon* getCurrentWeapon();
       /*
@@ -172,9 +175,10 @@ class AsteroidShip : public Object3D {
       bool isBraking;
       bool isBoosting;
       bool isFiring;
-      int health;
       int currentWeapon;
       Vector3D *upstart;
+      
+
 
       Vector3D *cameraOffset;
 

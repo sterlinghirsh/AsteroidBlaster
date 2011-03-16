@@ -18,6 +18,8 @@ class StoreMenu : public Menu {
    void mouseDown(int button);
    void mouseMove(int dx, int dy, int x, int y);
    void mouseUp(int button);
+   void drawLogo();
+   void drawTexts(std::vector<Text*> texts);
    
    //the current mouse location
    double x, y;
@@ -26,6 +28,15 @@ class StoreMenu : public Menu {
    
    
    std::vector<Text*> menuTexts;
+   
+   std::vector<Text*> weaponsTexts;
+   std::vector<Text*> upgradesTexts;
+   std::vector<Text*> ammoTexts;
+   std::vector<Text*> shipTexts;
+   
+   enum StoreMenuEnum { WEAPONS, UPGRADES, AMMO, SHIP };
+
+   int menuSelection;
    
    
 };

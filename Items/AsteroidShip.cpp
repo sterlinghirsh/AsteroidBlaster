@@ -67,6 +67,8 @@ AsteroidShip::AsteroidShip() :
       maxRightAccel = 5;
       maxUpAccel = 5;
       maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
+      //engine upgrade, terminal speed is raised when leved up
+      int engineUpgrade = 0;
 
 
       // TODO: create all of the shooters that this ship will have.
