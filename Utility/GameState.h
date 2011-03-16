@@ -121,6 +121,7 @@ class GameState : public InputReceiver {
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;
       int curLevel;
+      double nextLevelCountDown;
 
       Skybox* skybox;
       Camera* camera;

@@ -2,7 +2,8 @@
  * Text class
  * Stores everything you need to draw text on screen. Uses GlobalUtility just for GW/GH info so very easy to export
  * to another project. It can handle simple string, string-int-string, string-string-string and string-double-string.
- * 3-11-11
+ * @author Ryuho Kudo <ryuhokudo@gmail.com>
+ * @date 3/11/11
  */
 
 #ifndef __TEXT_H__

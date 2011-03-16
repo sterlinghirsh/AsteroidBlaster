@@ -16,8 +16,8 @@ TractorBeam::TractorBeam(AsteroidShip* owner) : Weapon(owner) {
    currentFrame = 1; // Start this 1 ahead of lastFiredFame.
    lastFiredFrame = 0; // We use these three to handle the audio.
    soundPlaying = false;
-   curAmmo = 2000;
-   purchased = false;
+   curAmmo = -1;
+   purchased = true;
 }
 
 TractorBeam::~TractorBeam() {
@@ -38,17 +38,10 @@ void TractorBeam::update(double timeDiff) {
 }
 
 void TractorBeam::fire() {
-   if(!gameState->godMode && curAmmo <= 0)
-      return;
-
    Point3D start = *ship->position;
    gameState->custodian.add(new TractorBeamShot(start, ship->shotDirection, ship));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new TractorBeamShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;
-   if(!gameState->godMode) {
-      // Take away some ammo
-      curAmmo--;
-   }
 }
 
 void TractorBeam::debug() {

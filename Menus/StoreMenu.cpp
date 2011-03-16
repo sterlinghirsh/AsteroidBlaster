@@ -10,10 +10,9 @@
 #include "Utility/SoundEffect.h"
 
 #define RAILGUN_STRING_INDEX 0
-#define TRACTORBEAM_STRING_INDEX 1
-#define PIKACHUSWRATH_STRING_INDEX 2
-#define DONE_STRING_INDEX 3
-#define SHARDS_STRING_INDEX 4
+#define PIKACHUSWRATH_STRING_INDEX 1
+#define DONE_STRING_INDEX 2
+#define SHARDS_STRING_INDEX 3
 
 #define RAILGUN_WEAPON_INDEX 1
 #define TRACTORBEAM_WEAPON_INDEX 2
@@ -41,9 +40,9 @@ StoreMenu::StoreMenu() {
    out << "Buy Railgun  $" << RAILGUN_PRICE;
    menuTexts.push_back(new Text(out.str(), fontName, position, 24));
    
-   out.str("");
-   out << "Buy Tractor Beam $" << TRACTORBEAM_PRICE;
-   menuTexts.push_back(new Text(out.str(), fontName, position, 24));
+   //out.str("");
+   //out << "Buy Tractor Beam $" << TRACTORBEAM_PRICE;
+   //menuTexts.push_back(new Text(out.str(), fontName, position, 24));
 
    out.str(""); 
    out << "Buy Pikachu's Wrath $" << PIKACHUSWRATH_PRICE;
@@ -81,16 +80,6 @@ void StoreMenu::draw() {
    
    //Set the position and the string depending on if the weapon was bought
    position.y += GH/10;
-   menuTexts[TRACTORBEAM_STRING_INDEX]->setPosition(position);
-   currAmmo = gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->curAmmo;
-   if (gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->purchased) {
-      std::stringstream out;
-      out << "Buy " << TRACTORBEAM_AMMO_AMOUNT << " Tractor Beam Ammo $" << TRACTORBEAM_AMMO_PRICE << " (" << currAmmo << ")";
-      menuTexts[TRACTORBEAM_STRING_INDEX]->updateBody(out.str());
-   }
-   
-   //Set the position and the string depending on if the weapon was bought
-   position.y += GH/10;
    menuTexts[PIKACHUSWRATH_STRING_INDEX]->setPosition(position);
    currAmmo = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo;
    if (gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased) {
@@ -101,7 +90,7 @@ void StoreMenu::draw() {
    
    //Done
    position.y += GH/10;
-   menuTexts[3]->setPosition(position);
+   menuTexts[DONE_STRING_INDEX]->setPosition(position);
    
    
    //shards
@@ -257,24 +246,6 @@ void StoreMenu::mouseDown(int button) {
       }
    }
    
-   //for tractor beam
-   if(menuTexts[TRACTORBEAM_STRING_INDEX]->mouseSelect(x,y)) {
-      weaponBought = gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->purchased;
-      shardsOwned = gameState->ship->nShards;
-      currAmmo = gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->curAmmo;
-      if(weaponBought && shardsOwned >= TRACTORBEAM_AMMO_PRICE) {
-         std::cout << "bought TRACTORBEAM ammo" << std::endl;
-         gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->curAmmo += TRACTORBEAM_AMMO_AMOUNT;
-         gameState->ship->nShards -= TRACTORBEAM_AMMO_PRICE;
-      } else if(shardsOwned >= TRACTORBEAM_PRICE) {
-         std::cout << "bought TRACTORBEAM" << std::endl;
-         gameState->ship->getWeapon(TRACTORBEAM_WEAPON_INDEX)->purchased = true;
-         gameState->ship->nShards -= TRACTORBEAM_PRICE;
-      } else {
-         std::cout << "not enough money!" << std::endl;
-      }
-   }
-   
    //for pikachu's wrath
    if(menuTexts[PIKACHUSWRATH_STRING_INDEX]->mouseSelect(x,y)) {
       weaponBought = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased;
@@ -316,25 +287,20 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
    x = _x;
    y = _y;
    
-   if(menuTexts[0]->mouseSelect(x,y)) {
-      menuTexts[0]->setColor(SDL_RED);
+   if(menuTexts[RAILGUN_STRING_INDEX]->mouseSelect(x,y)) {
+      menuTexts[RAILGUN_STRING_INDEX]->setColor(SDL_RED);
    } else {
-      menuTexts[0]->setColor(SDL_WHITE);
+      menuTexts[RAILGUN_STRING_INDEX]->setColor(SDL_WHITE);
    }
-   if(menuTexts[1]->mouseSelect(x,y)) {
-      menuTexts[1]->setColor(SDL_RED);
+   if(menuTexts[PIKACHUSWRATH_STRING_INDEX]->mouseSelect(x,y)) {
+      menuTexts[PIKACHUSWRATH_STRING_INDEX]->setColor(SDL_RED);
    } else {
-      menuTexts[1]->setColor(SDL_WHITE);
+      menuTexts[PIKACHUSWRATH_STRING_INDEX]->setColor(SDL_WHITE);
    }
-   if(menuTexts[2]->mouseSelect(x,y)) {
-      menuTexts[2]->setColor(SDL_RED);
+   if(menuTexts[DONE_STRING_INDEX]->mouseSelect(x,y)) {
+      menuTexts[DONE_STRING_INDEX]->setColor(SDL_RED);
    } else {
-      menuTexts[2]->setColor(SDL_WHITE);
-   }
-   if(menuTexts[3]->mouseSelect(x,y)) {
-      menuTexts[3]->setColor(SDL_RED);
-   } else {
-      menuTexts[3]->setColor(SDL_WHITE);
+      menuTexts[DONE_STRING_INDEX]->setColor(SDL_WHITE);
    }
 }
 

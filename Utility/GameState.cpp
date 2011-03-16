@@ -82,6 +82,7 @@ GameState::GameState(double worldSizeIn) {
    doYaw = 0;
    mouseX = 0;
    mouseY = 0;
+   nextLevelCountDown = 5;
 
    scoreToWin = 15000;
    godMode = false;
@@ -154,8 +155,16 @@ GameState::~GameState() {
 void GameState::update(double timeDiff) {
    //check if it should go to the next level
    if(custodian.asteroidCount == 0) {
-      nextLevel();
-      return;
+      //check if it is done waiting until going to the next level
+      if(nextLevelCountDown <= 0) {
+         nextLevel();
+         return;
+      } else {
+         nextLevelCountDown -= timeDiff;
+         std::ostringstream gameMsg;
+         gameMsg << "Next Level In " << (int)(nextLevelCountDown + 0.5);
+         GameMessage::Add(gameMsg.str(), 30, 0);
+      }
    }
 
    std::vector<Drawable*>* objects = custodian.getListOfObjects();
@@ -631,6 +640,7 @@ void GameState::nextLevel() {
    initAsteroids();
    GameMessage::Clear();
    addLevelMessage();
+   nextLevelCountDown = 5;
 }
 
 
@@ -821,7 +831,9 @@ void GameState::keyDown(int key) {
       // Make all of the weapons be purchased.
       for (int i = 0; i < ship->getNumWeapons(); i++) {
          ship->getWeapon(i)->purchased = true;
-         ship->getWeapon(i)->curAmmo += 500;
+         if(ship->getWeapon(i)->curAmmo != -1) {
+            ship->getWeapon(i)->curAmmo += 500;
+         }
       }
       break;
    case SDLK_F2:
