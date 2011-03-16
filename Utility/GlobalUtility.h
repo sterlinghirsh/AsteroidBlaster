@@ -21,15 +21,13 @@
 #endif
 
 #include "SDL.h"
+#include "Utility/Constants.h"
 #include "Utility/InputManager.h"
 #include "Menus/MainMenu.h"
 #include "Menus/StoreMenu.h"
 #include "Menus/CreditsMenu.h"
 
-#define VERT_FOV 50.0
-#define LEFT_ALIGN 0
-#define CENTERED 1
-#define RIGHT_ALIGN 2
+
 
 class GameState;
 

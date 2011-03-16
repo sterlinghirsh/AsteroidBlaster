@@ -89,16 +89,15 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
 // kinda useless right now.
 void ShootingAI::chooseWeapon(Object3D** target) {
    if (*target != NULL) {
-
       if ((dynamic_cast<Shard*>(*target)) != NULL) {
-         ship->selectWeapon(2);
+         ship->selectWeapon(TRACTOR_WEAPON_INDEX);
       }
-      else if ((*target)->radius < 2 && ship->getWeapon(1)->isCooledDown()
-       && ship->getWeapon(1)->curAmmo != 0) {
-         ship->selectWeapon(1);
+      else if (ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased && (*target)->radius < 2 && ship->getWeapon(RAILGUN_WEAPON_INDEX)->isCooledDown()
+       && ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo != 0) {
+         ship->selectWeapon(RAILGUN_WEAPON_INDEX);
       }
       else
-         ship->selectWeapon(0);
+         ship->selectWeapon(BLASTER_WEAPON_INDEX);
    }
    chosenWeapon = ship->getCurrentWeapon();
 }
