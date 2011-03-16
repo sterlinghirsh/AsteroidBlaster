@@ -322,6 +322,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
    Shot* shot;
    BeamShot* beamShot;
    LawnMowerShot* lawnMowerShot;
+   TractorBeamShot* TBshot; // Not tuberculosis
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       double d = (*(otherAsteroid->position)).distanceFrom(*position);
       double combinedRad = otherAsteroid->radius + radius;
@@ -375,7 +376,9 @@ void Asteroid3D::handleCollision(Drawable* other) {
                health = 0;
                velocity->addUpdate(shot->velocity->scalarMultiply(10));
             }
-         } else if (dynamic_cast<TractorBeamShot*>(other) != NULL) {
+         } else if ((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {
+            velocity->updateMagnitude(TBshot->owner->velocity);
+            
             // Do nothing.
          } else if ((lawnMowerShot = dynamic_cast<LawnMowerShot*>(other)) != NULL) {
             health -= fabs((health / 8) + 0.05); // Fabsulous!!

@@ -86,6 +86,7 @@ typedef struct materialStruct {
   GLfloat diffuse[4];
   GLfloat specular[4];
   GLfloat shininess[1];
+  GLfloat emissive[4];
 } materialStruct;
 
 
@@ -104,6 +105,7 @@ extern materialStruct BlackSolid;
 extern materialStruct OrangeSolid;
 extern materialStruct CyanSolid;
 extern materialStruct Rock;
+extern materialStruct CrystalMaterial;
 
 void setMaterial(materialStruct material);
 void updateDoubleTime();

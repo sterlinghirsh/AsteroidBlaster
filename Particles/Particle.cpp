@@ -108,6 +108,8 @@ void Particle::initDisplayList() {
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
+   glDepthFunc(GL_ALWAYS);
+   //Disable(GL_DEPTH_TEST);
    glDisable(GL_CULL_FACE);
    glBegin(GL_TRIANGLE_FAN);
    
@@ -126,6 +128,8 @@ void Particle::initDisplayList() {
    glEnd( );
    
    glDisable(GL_TEXTURE_2D);
+   glDepthFunc(GL_LEQUAL);
+   //glEnable(GL_DEPTH_TEST);
    /*
    glEnable(GL_CULL_FACE);
    glEnable(GL_LIGHTING);

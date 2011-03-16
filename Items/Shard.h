@@ -34,11 +34,9 @@ class Shard : public Object3D {
       double scalex, scaley, scalez;
       double worldSize;
       double sizeX, sizeY, sizeZ, collisionRadius;
-      GLuint orbiters;
 
       Shard(double r, double worldSizeIn);
       virtual ~Shard();
-      void genOrbiters();
       void InitShard(double r, double worldSizeIn);
       void draw();
       void drawGlow();

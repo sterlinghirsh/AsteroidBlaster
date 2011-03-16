@@ -101,7 +101,7 @@ void Object3D::draw() {
       position->glTranslate();
    if (axis != NULL)
       glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
-   glCallList(displayList);
+   //glCallList(displayList);
    glPopMatrix();
 }
 
