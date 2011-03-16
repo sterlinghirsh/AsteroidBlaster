@@ -24,6 +24,7 @@
 #endif
 
 static const SDL_Color SDL_WHITE = {255,255,255};
+static const SDL_Color SDL_GREY = {128,128,128};
 static const SDL_Color SDL_BLACK = {0,0,0};
 static const SDL_Color SDL_RED = {255,0,0}; 
 static const SDL_Color SDL_GREEN = {0,255,0}; 

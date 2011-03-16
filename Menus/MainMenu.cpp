@@ -35,11 +35,10 @@ MainMenu::MainMenu() {
       menuTexts[i]->alignment = CENTERED;
    }
 
-   SDL_Color greyColor = {128,128,128};
+
    // grey out the option to show that it is disabled
-   menuTexts[CONTINUE_STRING_INDEX]->setColor(greyColor);
-   menuTexts[SAVELOAD_STRING_INDEX]->setColor(greyColor);
-   menuTexts[SETTINGS_STRING_INDEX]->setColor(greyColor);
+   menuTexts[SAVELOAD_STRING_INDEX]->setColor(SDL_GREY);
+   menuTexts[SETTINGS_STRING_INDEX]->setColor(SDL_GREY);
    
 
 }
@@ -58,6 +57,11 @@ void MainMenu::draw() {
    for(int i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
       position.y += GH/10;
+   }
+   
+   
+   if(firstTime) {
+      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_GREY);
    }
    
    // Clear the screen
@@ -138,21 +142,12 @@ void MainMenu::draw() {
  */
 void MainMenu::keyDown(int key) {
    if (key == SDLK_m )  {
-      if(menuActive) {
-         menuActive = false;
-         SDL_ShowCursor(SDL_DISABLE);
-         //since there is a game now, enable continue
-         firstTime = false;
-         
-         menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
-         Music::stopMusic();
-         Music::playMusic("Asteroids2.ogg");
+      if(menuActive && firstTime) {
+         newGameDeactivate();
+      } else if(menuActive && !firstTime) {
+         deactivate();
       } else {
-         SDL_ShowCursor(SDL_ENABLE);
-         menuActive = true;
-         SoundEffect::stopAllSoundEffect();
-         Music::stopMusic();
-         Music::playMusic("8-bit3.ogg");
+         activate();
       }
    }
    if (!menuActive) { return; }
@@ -160,19 +155,10 @@ void MainMenu::keyDown(int key) {
    
    switch(key) {
     case SDLK_n:
-      SDL_ShowCursor(SDL_DISABLE);
-      menuActive = false;
-      firstTime = false;
-      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
-      gameState->reset();
-      Music::stopMusic();
-      Music::playMusic("Asteroids2.ogg");
+      newGameDeactivate();
       break;
     case SDLK_c:
-      SDL_ShowCursor(SDL_DISABLE);
-      menuActive = false;
-      Music::stopMusic();
-      Music::playMusic("Asteroids2.ogg");
+      deactivate();
       break;
     case SDLK_ESCAPE: 
       exit(0);
@@ -195,18 +181,9 @@ void MainMenu::mouseDown(int button) {
    if (!menuActive) { return; }
    
    if(menuTexts[NEWGAME_STRING_INDEX]->mouseSelect(x,y)) {
-      SDL_ShowCursor(SDL_DISABLE);
-      gameState->reset();
-      menuActive = false;
-      firstTime = false;
-      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
-      Music::stopMusic();
-      Music::playMusic("Asteroids2.ogg");
+      newGameDeactivate();
    } else if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y) && !firstTime) {
-      SDL_ShowCursor(SDL_DISABLE);
-      menuActive = false;
-      Music::stopMusic();
-      Music::playMusic("Asteroids2.ogg");
+      deactivate();
    } else if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       creditsMenu->menuActive = true;
@@ -231,19 +208,17 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
    if (!menuActive) { return; }
    x = _x;
    y = _y;
-   
+   //decide the color for each menu text
    if(menuTexts[NEWGAME_STRING_INDEX]->mouseSelect(x,y)) {
       menuTexts[NEWGAME_STRING_INDEX]->setColor(SDL_RED);
    } else {
       menuTexts[NEWGAME_STRING_INDEX]->setColor(SDL_WHITE);
    }
    
-   if(!firstTime) {
-      if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y)) {
-         menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_RED);
-      } else {
-         menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
-      }
+   if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y)) {
+      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_RED);
+   } else {
+      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
    }
 
    if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
@@ -259,3 +234,26 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
    }
 }
 
+void MainMenu::activate() {
+   SDL_ShowCursor(SDL_ENABLE);
+   menuActive = true;
+   SoundEffect::stopAllSoundEffect();
+   Music::stopMusic();
+   Music::playMusic("8-bit3.ogg");
+}
+
+void MainMenu::deactivate() {
+      SDL_ShowCursor(SDL_DISABLE);
+      menuActive = false;
+      Music::stopMusic();
+      Music::playMusic("Asteroids2.ogg");
+}
+
+void MainMenu::newGameDeactivate() {
+      deactivate();
+      firstTime = false;
+      gameState->reset();
+      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
+}
+
+   

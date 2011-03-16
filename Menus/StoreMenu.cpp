@@ -183,7 +183,10 @@ void StoreMenu::draw() {
  * Handles the player pressing down a key
  */
 void StoreMenu::keyDown(int key) {
-   if (key == SDLK_p )  {
+   //do nothing if main menu is active
+   if(mainMenu->menuActive) { return;} 
+   
+   if (key == SDLK_p)  {
       if(menuActive){
          std::cout << "StoreMenu off" << std::endl;
          menuActive = false;
@@ -303,4 +306,6 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
       menuTexts[DONE_STRING_INDEX]->setColor(SDL_WHITE);
    }
 }
+
+
 

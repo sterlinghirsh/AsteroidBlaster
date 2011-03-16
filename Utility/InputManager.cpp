@@ -73,6 +73,10 @@ void InputManager::update(const SDL_Event& e) {
          gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
          fullScreen = !fullScreen;
       }
+   } else if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_BACKQUOTE) {
+      toggleGrabMode();
+   } else if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_ESCAPE) {
+      exit(0);
    }
 }
 

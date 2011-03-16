@@ -419,10 +419,11 @@ int main(int argc, char* argv[]) {
          creditsMenu->update(lastUpdateTime);
          //update();
          lastUpdateTime = doubleTime();
-      } else if (gameState->isGameRunning()) {
+      } else {
          update();
          draw();
       }
+      
       while (SDL_PollEvent(event)) {
          inputManager->update(*event);
       }

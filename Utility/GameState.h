@@ -72,7 +72,6 @@ class GameState : public InputReceiver {
       void update(double timeDiff);
       void initAsteroids();
       void setCurFPS(double fpsIn);
-      bool isGameRunning();
       bool getMenuMode();
       
       double getWallxMin();
@@ -108,20 +107,21 @@ class GameState : public InputReceiver {
       bool bloom1;
       bool reg;
       bool godMode;
+      bool gameIsRunning;
    
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
    private:
       //void reset();
       double curFPS, worldSize;
-      bool gameIsRunning;
+      
       bool doYaw;
       double mouseX, mouseY;
       int scoreToWin;
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;
       int curLevel;
-      double nextLevelCountDown;
+      double countDown;
 
       Skybox* skybox;
       Camera* camera;

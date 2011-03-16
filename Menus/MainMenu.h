@@ -19,6 +19,10 @@ class MainMenu : public Menu {
    void mouseMove(int dx, int dy, int x, int y);
    void mouseUp(int button);
    
+   void activate();
+   void deactivate();
+   void newGameDeactivate();
+   
    //the current mouse location
    double x, y;
    

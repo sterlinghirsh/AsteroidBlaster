@@ -61,15 +61,6 @@ GameState::GameState(double worldSizeIn) {
    // Clear the sstream2
    sstream2.str("");
    
-   
-   
-   SDL_Rect centerRec = {GW/2, GH/2};
-   gameOverText = new Text("GAME OVER", fontName, centerRec, 32);
-   gameOverText->alignment = CENTERED;
-   winText = new Text("YOU WIN!", fontName, centerRec, 32);
-   winText->alignment = CENTERED;
-
-
    // Improve the positioning code.
    weaponReadyBar = new ProgressBar(0.5, 0.1, -1.2, -0.3);
    healthBar = new ProgressBar(0.75, 0.05, -1, -0.3);
@@ -82,7 +73,7 @@ GameState::GameState(double worldSizeIn) {
    doYaw = 0;
    mouseX = 0;
    mouseY = 0;
-   nextLevelCountDown = 5;
+   countDown = 5;
 
    scoreToWin = 15000;
    godMode = false;
@@ -153,51 +144,79 @@ GameState::~GameState() {
  * This is the step function.
  */
 void GameState::update(double timeDiff) {
-   //check if it should go to the next level
-   if(custodian.asteroidCount == 0) {
+   // Determine whether or not the game should continue running
+   if (gameIsRunning && ship->getHealth() <= 0) {
+      gameIsRunning = false;
+      // Draw the win or lose text
+      if (!gameIsRunning && ship->getHealth() <= 0) {
+         std::ostringstream msg;
+         msg << "Game Over!";
+         GameMessage::Add(msg.str(), 30, 5);
+      } else if (!gameIsRunning && ship->getHealth() > 0) {
+         std::ostringstream msg;
+         msg << "Game Won!";
+         GameMessage::Add(msg.str(), 30, 5);
+      }
+      SoundEffect::stopAllSoundEffect();
+      SoundEffect::playSoundEffect("GameOver.wav");
+      ship->fire(false);
+      ship->setRollSpeed(0);
+      ship->accelerateForward(0);
+      ship->accelerateForward(0);
+      ship->setYawSpeed(0.0);
+      countDown = 5;
+   } else if(gameIsRunning && custodian.asteroidCount == 0) {
       //check if it is done waiting until going to the next level
-      if(nextLevelCountDown <= 0) {
+      if(countDown <= 0) {
          nextLevel();
          return;
       } else {
-         nextLevelCountDown -= timeDiff;
+         countDown -= timeDiff;
          std::ostringstream gameMsg;
-         gameMsg << "Next Level In " << (int)(nextLevelCountDown + 0.5);
+         gameMsg << "Next Level In " << (int)(countDown + 0.5);
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
+   } else if (!gameIsRunning){
+      countDown -= timeDiff;
+      if(countDown <= 0) {
+         mainMenu->menuActive = true;
+         SoundEffect::stopAllSoundEffect();
+         Music::stopMusic();
+         Music::playMusic("8-bit3.ogg");
+         gameState->reset();
+         mainMenu->firstTime = true;
+      }
    }
+   
+
 
    std::vector<Drawable*>* objects = custodian.getListOfObjects();
    std::set<Drawable*, compareByDistance>* collisions;
    std::set<Drawable*, compareByDistance>::iterator otherObject;
 
-   // Determine whether or not the game should continue running
-   if (ship->getHealth() <= 0) {
-      gameIsRunning = false;
-   } 
-   /*
-   else if (ship->getScore() >= scoreToWin) {
-      gameIsRunning = false;
-   }
-   */
-
-
+   //TODO explain what this does
    cube->constrain(ship);
+   
+   //TODO explain what this does
    for (item = objects->begin(); item != objects->end(); ++item) {
       if (*item == NULL)
          continue;
       (*item)->update(timeDiff);
       cube->constrain(*item);
    }
+   
    // Update the values of all of the text objects.
    ship->keepFiring();
 
+   //TODO explain what this does
    custodian.update();
+   
    // Get updated list.
    objects = custodian.getListOfObjects();
 
    Particle :: updateParticles(timeDiff);
 
+   //TODO explain what this loop do
    for (item = objects->begin(); item != objects->end(); ++item) {
       collisions = custodian.findCollisions(*item, false);
       for (otherObject = collisions->begin(); otherObject != collisions->end(); ++otherObject) {
@@ -206,12 +225,10 @@ void GameState::update(double timeDiff) {
       }
       delete collisions;
    }
+   
    // Update all of the text seen on screen.
    updateText();
-   // If the player lost, draw the game over text
-   if (!gameIsRunning && ship->getHealth() <= 0) {
-      SoundEffect::playSoundEffect("GameOver.wav");
-   }
+   
    weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
    healthBar->setAmount(ship->getHealth() / 100.0);
    cube->update(timeDiff);
@@ -475,14 +492,6 @@ void GameState::drawAllText() {
    /* Don't draw stuff in front of the text. */
    //glDisable(GL_DEPTH_TEST);
 
-   // If the player lost, draw the game over text
-   if (!gameIsRunning && ship->getHealth() <= 0) {
-      gameOverText->draw();
-   } else if (!gameIsRunning && ship->getHealth() > 0) {
-      // If the player won, draw the win text
-      winText->draw();
-   }
-
    // Draw all of the Text objects.
    FPSText->setPosition(position);
    FPSText->draw();
@@ -519,8 +528,6 @@ void GameState::drawAllText() {
    curLevelText->setPosition(position);
    curLevelText->draw();
    GameMessage::drawAllMessages();
-
-
 }
 
 /**
@@ -587,13 +594,6 @@ void GameState::setCurFPS(double fpsIn) {
 }
 
 /**
- * Tells whether or not the game is currently running (not game over or won)
- */
-bool GameState::isGameRunning() {
-   return gameIsRunning;
-}
-
-/**
  * Reset everything in the game to play again
  */
 void GameState::reset() {
@@ -640,7 +640,7 @@ void GameState::nextLevel() {
    initAsteroids();
    GameMessage::Clear();
    addLevelMessage();
-   nextLevelCountDown = 5;
+   countDown = 5;
 }
 
 
@@ -648,103 +648,92 @@ void GameState::nextLevel() {
  * Handles the player pressing down a key
  */
 void GameState::keyDown(int key) {
+   //If game is not running, do not take input anymore
+   if(!gameIsRunning){ return;}
+      
    switch(key) {
-
-   case SDLK_w:
-      isW = true;
-      if(!ship->flyingAI->isEnabled()) {
+   //movement keys, not valid if flying AI is enabled
+   
+   if(!ship->flyingAI->isEnabled()) {
+      case SDLK_w:
+         isW = true;
          if (isS) {
             ship->accelerateForward(0);
          } else {
             ship->accelerateForward(1);
          }
-      }
-      break;
-
-   case SDLK_s:
-      isS = true;
-      if(!ship->flyingAI->isEnabled()) {
+         break;
+         
+      case SDLK_s:
+         isS = true;
          if (isW) {
             ship->accelerateForward(0);
          } else {
             ship->accelerateForward(-1);
          }
-      }
-      break;
+         break;
 
-   case SDLK_a:
-      isA = true;
-      if(!ship->flyingAI->isEnabled()) {
+      case SDLK_a:
+         isA = true;
          if (isD) {
-            //printf("should be not turning left\n");
             ship->setYawSpeed(0.0);
          } else {
-            //printf("should be turning left\n");
             ship->setYawSpeed(1.0);
          }
-      }
-      break;
+         break;
 
-   case SDLK_d:
-      isD = true;
-      if(!ship->flyingAI->isEnabled()) {
+      case SDLK_d:
+         isD = true;
          if (isA) {
-            //printf("should be not turning right\n");
             ship->setYawSpeed(0.0);
          } else {
-            //printf("should be turning right\n");
             ship->setYawSpeed(-1.0);
          }
-      }
-      break;
+         break;
 
-   case SDLK_q:
-      if(!ship->flyingAI->isEnabled())
+      case SDLK_q:
          ship->accelerateRight(-1);
-      break;
+         break;
 
-   case SDLK_e:
-      if(!ship->flyingAI->isEnabled())
+      case SDLK_e:
          ship->accelerateRight(1);
-      break;
+         break;
 
+      case SDLK_SPACE:
+         ship->accelerateUp(1);
+         break;
+
+      case SDLK_LCTRL:
+         ship->accelerateUp(-1);
+         break;
+
+      case SDLK_RSHIFT:
+         doYaw = !doYaw;
+         ship->setRollSpeed(0);
+         break;
+
+      case SDLK_LSHIFT:
+         ship->setBoost(true);
+         break;
+
+      case SDLK_b:
+         ship->setBrake(true);
+         break;
+   
+   }
+
+
+   //Camera controls
    case SDLK_9:
       camera->zoom();
-      break;
-
-   case SDLK_SPACE:
-      if(!ship->flyingAI->isEnabled())
-         ship->accelerateUp(1);
-      break;
-
-   case SDLK_LCTRL:
-      if(!ship->flyingAI->isEnabled())
-         ship->accelerateUp(-1);
-      break;
-
-      //case SDLK_LSHIFT:
-   case SDLK_RSHIFT:
-      doYaw = !doYaw;
-      ship->setRollSpeed(0);
-      break;
-
-   case SDLK_LSHIFT:
-      if(!ship->flyingAI->isEnabled())
-         ship->setBoost(true);
-      break;
-
-   case SDLK_b:
-      ship->setBrake(true);
-      break;
-
-   case SDLK_ESCAPE:
-      exit(0);
       break;
 
    case SDLK_t:
       ship->nextView();
       break;
 
+
+   // AI controls
    case SDLK_g:
       //TODO: Based on how many shooting AIs this ship has, activate the correct one.
       if(ship->shooter->isEnabled())
@@ -776,6 +765,8 @@ void GameState::keyDown(int key) {
       }
       break;
 
+
+   //switch weapons
    case SDLK_v:
       // If we're in godMode, ignore whether or not a weapon is purchased
       if(gameState->godMode)
@@ -787,9 +778,7 @@ void GameState::keyDown(int key) {
          } while (!ship->getCurrentWeapon()->purchased);
       }
       break;
-   case SDLK_F10:
-      gameState->ship->nShards += 1;
-      break;
+      
    case SDLK_z:
       // If we're in godMode, ignore whether or not a weapon is purchased
       if(gameState->godMode)
@@ -801,7 +790,9 @@ void GameState::keyDown(int key) {
          } while (!ship->getCurrentWeapon()->purchased);
       }
       break;
-      // Minimap Display Size
+
+
+   // Minimap Display Size
    case SDLK_1:
       minimap->adjustDisplaySizeDirection = 1;
       break;
@@ -819,21 +810,13 @@ void GameState::keyDown(int key) {
       minimap->adjustZoomDirection = -1;
       break;
 
+
+   // Audio and Video settings
    case SDLK_KP_ENTER:
       if (Mix_PausedMusic()) {
          Music::resumeMusic();
       } else {
          Music::pauseMusic();
-      }
-      break;
-      // If the user presses F11, give them all of the weapons.
-   case SDLK_F11:
-      // Make all of the weapons be purchased.
-      for (int i = 0; i < ship->getNumWeapons(); i++) {
-         ship->getWeapon(i)->purchased = true;
-         if(ship->getWeapon(i)->curAmmo != -1) {
-            ship->getWeapon(i)->curAmmo += 500;
-         }
       }
       break;
    case SDLK_F2:
@@ -845,12 +828,26 @@ void GameState::keyDown(int key) {
    case SDLK_F4:
       bloom1 = !bloom1;
       break;
+   
+   
+   // DEBUG KEYS
+   case SDLK_F10:
+      gameState->ship->nShards += 1;
+      break;
+   // If the user presses F11, give them all of the weapons.
+   case SDLK_F11:
+      // Make all of the weapons be purchased.
+      for (int i = 0; i < ship->getNumWeapons(); i++) {
+         ship->getWeapon(i)->purchased = true;
+         if(ship->getWeapon(i)->curAmmo != -1) {
+            ship->getWeapon(i)->curAmmo += 500;
+         }
+      }
+      break;
+   // Enables God Mode
    case SDLK_F12:
       godMode = !godMode;
       printf("Zoe mode: %d\n", godMode);
-      break;
-   case SDLK_BACKQUOTE:
-      toggleGrabMode();
       break;
    }
 }
@@ -859,6 +856,9 @@ void GameState::keyDown(int key) {
  * Handles the player letting go of a key
  */
 void GameState::keyUp(int key) {
+   //If game is not running, do not take input anymore
+   if(!gameIsRunning){ return;}
+
    switch(key) {
 
    case SDLK_r:
@@ -952,6 +952,9 @@ void GameState::keyUp(int key) {
  * Handles the player clicking the mouse
  */
 void GameState::mouseDown(int button) {
+   //If game is not running, do not take input anymore
+   if(!gameIsRunning){ return;}
+   
    switch(button) {
       // Left mouse down
    case 1:
@@ -995,6 +998,9 @@ void GameState::mouseDown(int button) {
  * Handles the player letting go of a mouse click
  */
 void GameState::mouseUp(int button) {
+   //If game is not running, do not take input anymore
+   if(!gameIsRunning){ return;}
+   
    switch (button) {
       // Left mouse up
    case 1:
@@ -1009,6 +1015,9 @@ void GameState::mouseUp(int button) {
 }
 
 void GameState::mouseMove(int dx, int dy, int x, int y) {
+   //If game is not running, do not take input anymore
+   if(!gameIsRunning){ return;}
+   
    double worldX = p2wx(x);
    double worldY = p2wy(y);
 
