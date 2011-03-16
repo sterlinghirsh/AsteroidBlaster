@@ -832,7 +832,7 @@ void GameState::keyDown(int key) {
    
    // DEBUG KEYS
    case SDLK_F10:
-      gameState->ship->nShards += 1;
+      gameState->ship->nShards += 10;
       break;
    // If the user presses F11, give them all of the weapons.
    case SDLK_F11:

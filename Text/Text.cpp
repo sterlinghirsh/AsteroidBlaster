@@ -173,6 +173,8 @@ void Text::draw() {
    
    SDL_Rect temp = {pos.x, GH - pos.y - TEXT_INVERT_VALUE};
 
+   if(!selectable) { selected = false;}
+
    if(selected) {
       SDL_GL_RenderText(textToDisplay.c_str(), font, SDL_RED, &temp);
    } else {

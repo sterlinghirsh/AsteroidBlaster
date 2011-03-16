@@ -35,11 +35,11 @@
 #define RAILGUN_PRICE 20
 #define PIKACHUSWRATH_PRICE 20
 #define ANTIINERTIA_PRICE 10
-
 #define ENGINEUPGRADE_PRICE 10
 #define ENGINEUPGRADE_UPPRICE 10
+#define HEALTH_PRICE 10
 
-
+#define HEALTH_AMOUNT 10
 #define RAILGUN_AMMO_AMOUNT 15
 #define PIKACHUSWRATH_AMMO_AMOUNT 500
 #define ANTIINERTIA_AMMO_AMOUNT 500
@@ -91,7 +91,7 @@ StoreMenu::StoreMenu() {
    
    //get upgrade text in upgradesTexts
    out.str(""); 
-   out << "Upgrade Unavailable!";
+   out << "Upgrades Unavailable!";
    upgradesTexts.push_back(new Text(out.str(), fontName, position, 24));
    
    
@@ -110,7 +110,7 @@ StoreMenu::StoreMenu() {
    
    //get ship related text in shipTexts
    out.str(""); 
-   out << "Buy Ship Health";
+   out << "Buy Ship Health $" << HEALTH_PRICE;
    shipTexts.push_back(new Text(out.str(), fontName, position, 24));
    
    out.str(""); 
@@ -256,6 +256,7 @@ void StoreMenu::draw() {
       
       
    } else if(menuSelection == UPGRADES) {
+      //set menu colors
       menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[UPGRADES_STOREMENUINDEX]->setColor(SDL_BLUE);
       menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_WHITE);
@@ -268,34 +269,90 @@ void StoreMenu::draw() {
          position.y += GH/10;
       }
       drawTexts(upgradesTexts);
+      
+      
    }  else if(menuSelection == AMMO) {
+      //set menu colors
       menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[UPGRADES_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_BLUE);
       menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_WHITE);
       
+      int currAmmo = -1;
       position.y = GH*(5.0/10.0);
       // railgun
-      
-      //set the poistion for all menus
-      for(int i = 0; i < ammoTexts.size(); i++) {
-         ammoTexts[i]->setPosition(position);
-         position.y += GH/10;
+      out.str(""); 
+      if (gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased) {
+         currAmmo = gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo;
+         out << "Buy " << RAILGUN_AMMO_AMOUNT << " Railgun Ammo $" << RAILGUN_AMMO_PRICE << " (" << currAmmo << ")";
+         ammoTexts[RAILGUN_AMMOTEXTSINDEX]->selectable = true;
+      } else {
+         out << "Buy Railgun first!";
+         ammoTexts[RAILGUN_AMMOTEXTSINDEX]->selectable = false;
       }
+      ammoTexts[RAILGUN_AMMOTEXTSINDEX]->updateBody(out.str());
+      ammoTexts[RAILGUN_AMMOTEXTSINDEX]->setPosition(position);
+      position.y += GH/10;
+      
+      // pikachu's wrath
+      out.str(""); 
+      if (gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased) {
+         currAmmo = gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo;
+         out << "Buy " << PIKACHUSWRATH_AMMO_AMOUNT << " Pikachu's Wrath Ammo $" << PIKACHUSWRATH_AMMO_PRICE << " (" << currAmmo << ")";
+         ammoTexts[PIKACHUSWRATH_AMMOTEXTSINDEX]->selectable = true;
+      } else {
+         out << "Buy Pikachu's Wrath first!";
+         ammoTexts[PIKACHUSWRATH_AMMOTEXTSINDEX]->selectable = false;
+      }
+      ammoTexts[PIKACHUSWRATH_AMMOTEXTSINDEX]->updateBody(out.str());
+      ammoTexts[PIKACHUSWRATH_AMMOTEXTSINDEX]->setPosition(position);
+      position.y += GH/10;
+      
+      // anti inertia beam
+      out.str(""); 
+      if (gameState->ship->getWeapon(ANTIINERTIA_WEAPON_INDEX)->purchased) {
+         currAmmo = gameState->ship->getWeapon(ANTIINERTIA_WEAPON_INDEX)->curAmmo;
+         out << "Buy " << ANTIINERTIA_AMMO_AMOUNT << " Anti Inertia Beam Ammo $" << ANTIINERTIA_AMMO_PRICE << " (" << currAmmo << ")";
+         ammoTexts[ANTIINERTIA_AMMOTEXTSINDEX]->selectable = true;
+      } else {
+         out << "Buy Anti Inertia Beam first!";
+         ammoTexts[ANTIINERTIA_AMMOTEXTSINDEX]->selectable = false;
+      }
+      ammoTexts[ANTIINERTIA_AMMOTEXTSINDEX]->updateBody(out.str());
+      ammoTexts[ANTIINERTIA_AMMOTEXTSINDEX]->setPosition(position);
+      position.y += GH/10;
+      
       drawTexts(ammoTexts);
+      
+      
    }  else if(menuSelection == SHIP) {
+      int nextEngineLevel = gameState->ship->engineUpgrade + 1;
+      //set menu colors
       menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[UPGRADES_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_BLUE);
       
       position.y = GH*(5.0/10.0);
-      //set the poistion for all menus
-      for(int i = 0; i < shipTexts.size(); i++) {
-         shipTexts[i]->setPosition(position);
-         position.y += GH/10;
+      //health
+      shipTexts[BUYHEALTH_SHIPTEXTSINDEX]->setPosition(position);
+      position.y += GH/10;
+      
+      // buy engine upgrade
+      out.str(""); 
+      if (nextEngineLevel <= 5) {
+         out << "Buy Engine Upgrade Level " << nextEngineLevel << " $" << nextEngineLevel*10;
+         shipTexts[ENGINEUPGRADE_SHIPTEXTSINDEX]->selectable = true;
+      } else {
+         out << "Can't upgrade engine anymore!";
+         shipTexts[ENGINEUPGRADE_SHIPTEXTSINDEX]->selectable = false;
       }
+      shipTexts[ENGINEUPGRADE_SHIPTEXTSINDEX]->updateBody(out.str());
+      shipTexts[ENGINEUPGRADE_SHIPTEXTSINDEX]->setPosition(position);
+      
       drawTexts(shipTexts);
+      
+      
    } else {
       std::cerr << "Menu selection error! Quitting..." << std::endl;
       exit(1);
@@ -426,19 +483,50 @@ void StoreMenu::keyUp(int key) {
 void StoreMenu::mouseDown(int button) {
    if (!menuActive) { return; }
    
-   if(menuSelection == WEAPONS) {
+   int shardsOwned = gameState->ship->nShards;
    
+   if(menuSelection == WEAPONS) {
+      if(weaponsTexts[RAILGUN_WEAPONSTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= RAILGUN_PRICE) {
+         gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased = true;
+         gameState->ship->nShards -= RAILGUN_PRICE;
+      } else if(weaponsTexts[PIKACHUSWRATH_WEAPONSTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= PIKACHUSWRATH_PRICE) {
+         gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased = true;
+         gameState->ship->nShards -= PIKACHUSWRATH_PRICE;
+      } else if(weaponsTexts[ANTIINERTIA_WEAPONSTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= ANTIINERTIA_PRICE) {
+         gameState->ship->getWeapon(ANTIINERTIA_WEAPON_INDEX)->purchased = true;
+         gameState->ship->nShards -= ANTIINERTIA_PRICE;
+      }
    } else if(menuSelection == UPGRADES) {
    
-   }  else if(menuSelection == AMMO) {
-   
-   }  else if(menuSelection == SHIP) {
-   
+   } else if(menuSelection == AMMO) {
+      if(ammoTexts[RAILGUN_AMMOTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= RAILGUN_AMMO_PRICE) {
+         gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo += RAILGUN_AMMO_AMOUNT;
+         gameState->ship->nShards -= RAILGUN_AMMO_PRICE;
+      } else if(ammoTexts[PIKACHUSWRATH_AMMOTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= PIKACHUSWRATH_AMMO_PRICE) {
+         gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->curAmmo += PIKACHUSWRATH_AMMO_AMOUNT;
+         gameState->ship->nShards -= PIKACHUSWRATH_AMMO_PRICE;
+      } else if(ammoTexts[ANTIINERTIA_AMMOTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= ANTIINERTIA_AMMO_PRICE) {
+         gameState->ship->getWeapon(ANTIINERTIA_WEAPON_INDEX)->curAmmo += ANTIINERTIA_AMMO_AMOUNT;
+         gameState->ship->nShards -= ANTIINERTIA_AMMO_PRICE;
+      }
+   } else if(menuSelection == SHIP) {
+      int health = gameState->ship->health;
+      int nextEngineLevel = gameState->ship->engineUpgrade + 1;
+      if(shipTexts[BUYHEALTH_SHIPTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= HEALTH_PRICE) {
+         if(health >= (100 - HEALTH_AMOUNT)) {
+            gameState->ship->health = 100;
+         } else {
+            gameState->ship->health += HEALTH_AMOUNT;
+         }
+         gameState->ship->nShards -= HEALTH_PRICE;
+      } else if(shipTexts[ENGINEUPGRADE_SHIPTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= ENGINEUPGRADE_PRICE*nextEngineLevel) {
+         gameState->ship->nShards -= ENGINEUPGRADE_PRICE*nextEngineLevel;
+         gameState->ship->engineUpgrade += 1;
+      }
    } else {
       std::cerr << "Menu selection error! Quitting..." << std::endl;
       exit(1);
    }
-   
    
    if(menuTexts[DONE_STOREMENUINDEX]->mouseSelect(x,y)) {
       SDL_ShowCursor(SDL_DISABLE);

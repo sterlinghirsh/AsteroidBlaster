@@ -68,7 +68,7 @@ AsteroidShip::AsteroidShip() :
       maxUpAccel = 5;
       maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
       //engine upgrade, terminal speed is raised when leved up
-      int engineUpgrade = 0;
+      engineUpgrade = 0;
 
 
       // TODO: create all of the shooters that this ship will have.
@@ -301,10 +301,10 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    double speed = velocity->getLength();
-   if (!isBoosting && speed > maxSpeed) {
-      velocity->setLength(maxSpeed);
-   } else if (isBoosting && speed > maxBoostSpeed) {
-      velocity->setLength(maxBoostSpeed);
+   if (!isBoosting && speed > maxSpeed + (engineUpgrade*2)) {
+      velocity->setLength(maxSpeed+ (engineUpgrade*2));
+   } else if (isBoosting && speed > (maxBoostSpeed + (engineUpgrade*2))) {
+      velocity->setLength(maxBoostSpeed + (engineUpgrade*2));
    }
 
    Object3D::update(timeDiff);
