@@ -96,6 +96,7 @@ void Object3D::drawGlow() {
  * draw a displaylist if one exists.
  */
 void Object3D::draw() {
+   /*
    glPushMatrix();
    if (position != NULL)
       position->glTranslate();
@@ -103,6 +104,7 @@ void Object3D::draw() {
       glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    //glCallList(displayList);
    glPopMatrix();
+   */
 }
 
 

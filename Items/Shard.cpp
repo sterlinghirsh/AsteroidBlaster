@@ -237,7 +237,7 @@ void Shard::draw() {
 
    //setMaterial(Rock);
    glEnable(GL_LIGHTING);
-   glDisable(GL_CULL_FACE);
+   glEnable(GL_CULL_FACE);
    
    /*glColor3f(0.325, 0.71, 0.808);
    // Set polygon offset to be in front of the faces.
@@ -258,7 +258,13 @@ void Shard::draw() {
    //glPolygonOffset(0.1f, 0.1f);
    //glEnable(GL_POLYGON_OFFSET_FILL);
    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   glDepthFunc(GL_LESS);
+
+   // GL_ALWAYS it draws the crystal wrong. 
+   glDepthFunc(GL_ALWAYS);
+   // GL_LEQUAL draws the orbiters wrong. 
+   //glDepthFunc(GL_LEQUAL);
+
+
    // Draw all triangles in the mesh with smoothing turned off.
    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    mesh.draw(false);

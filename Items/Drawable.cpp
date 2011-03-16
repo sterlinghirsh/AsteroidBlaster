@@ -37,25 +37,6 @@ Drawable :: ~Drawable() {
 }
 
 /**
- * Init function
- */
-void Drawable :: init() {
-   // Do cool display listing stuff here for the walls
-}
-
-/*
- * draw() is here to be overwritten by all subclasses.
- */
-void Drawable :: draw() {
-}
-
-/*
- * drawGlow() is here as a stub to be overwritten by all subclasses.
- */
-void Drawable::drawGlow() {
-}
-
-/**
  * Tell the <un-square-rooted> distance between the other point and this 
  * Drawable object. This is not an accurate distance. This function should only
  * be used for fast comparisons of relative distances between objects,
@@ -135,3 +116,8 @@ void Drawable::drawInMinimap() {
       gluSphere(quadric, 5, 8, 8);
    glPopMatrix();
 }
+
+/*
+ * drawGlow() is here to be overwritten by all subclasses.
+ */
+void Drawable::drawGlow() {}

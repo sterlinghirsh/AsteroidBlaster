@@ -32,11 +32,11 @@ class Drawable {
 
       Drawable(double x, double y, double z, GLuint displayListIn);
       virtual ~Drawable();
-      virtual void init();
+      //virtual void init();
       /*
        * draw() is here to be overwritten by all subclasses.
        */
-      virtual void draw();
+      virtual void draw() = 0;
 
       /*
        * drawGlow() is here to be overwritten by all subclasses.
