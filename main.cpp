@@ -285,10 +285,8 @@ void draw() {
    usePerspective();
    // Draw the main screen
    glPushMatrix();
-   if (gameState->reg) {
-      gameState->draw();
+   gameState->draw();
       //gameState->drawGlow();
-   }
 
    //Particle::drawParticles();
    //drawCrosshair();
