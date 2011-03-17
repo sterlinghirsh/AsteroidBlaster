@@ -47,7 +47,8 @@ void Sprite::draw() {
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_BLEND);
-   glDepthFunc(GL_ALWAYS);
+   //glDepthFunc(GL_ALWAYS);
+   glDepthFunc(GL_LESS);
    double curTime = doubleTime();
    int curFrame = floor((curTime - startTime) * framesPerSecond);
    if (curFrame >= totalFrames && oneShot) {

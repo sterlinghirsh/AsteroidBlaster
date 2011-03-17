@@ -59,7 +59,7 @@ GameState::GameState(double worldSizeIn) {
    sstream2.str("");
    
    // Improve the positioning code.
-   weaponReadyBar = new ProgressBar(0.5, 0.05, -1.2, -0.3);
+   weaponReadyBar = new ProgressBar(0.75, 0.05, -1.2, -0.3);
    healthBar = new ProgressBar(0.75, 0.05, -1, -0.3);
    healthBar->setIcon("ShieldIcon");
    weaponReadyBar->setIcon("ShotIcon");

@@ -177,7 +177,8 @@ void Asteroid3D::drawGlow() {
    glTranslatef(position->x, position->y, position->z);
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
-   glDepthFunc(GL_ALWAYS);
+   //glDepthFunc(GL_ALWAYS);
+   glDepthFunc(GL_LEQUAL);
 
    glColor3f(0.0, 0.0, 0.0);
    glPolygonOffset(1.0f, 1.0f);
@@ -216,7 +217,7 @@ void Asteroid3D::drawGlow() {
 
    glDisable(GL_COLOR_MATERIAL);
    glEnable(GL_LIGHTING);
-   glDepthFunc(GL_LEQUAL);
+   //glDepthFunc(GL_LEQUAL);
    glPopMatrix();
 }
 
@@ -368,7 +369,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
 
    } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;
-      if (radius > 2) {
+      if (radius > 4) {
          int dimension = rand() % 3;
          custodian->add(makeChild(0, dimension));
          custodian->add(makeChild(1, dimension));
