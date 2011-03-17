@@ -95,7 +95,6 @@ void Particle::draw()
 
    glCallList(particleDisplayList);
    glPopMatrix();
-   glUseProgram(0);
 }
 
 void Particle::initDisplayList() {
@@ -135,6 +134,7 @@ void Particle::initDisplayList() {
    glEnable(GL_LIGHTING);
    */
 
+   glUseProgram(0);
    glEndList();
 }
 

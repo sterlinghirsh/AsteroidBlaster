@@ -45,6 +45,9 @@ void Sprite::draw() {
    // Update the current frame.
    
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glEnable(GL_BLEND);
+   glDepthFunc(GL_ALWAYS);
    double curTime = doubleTime();
    int curFrame = floor((curTime - startTime) * framesPerSecond);
    if (curFrame >= totalFrames && oneShot) {
@@ -58,7 +61,8 @@ void Sprite::draw() {
    double topLeftX = (curFrame % framesX) * frameWidth;
    double topLeftY = 1 - ((curFrame / framesX) * frameHeight);
    
-   setMaterial(curMaterial);
+   glDisable(GL_COLOR_MATERIAL);
+  // setMaterial(curMaterial);
    glColor3f(1, 1, 1);
    glBindTexture(GL_TEXTURE_2D, textureID);
    
@@ -85,6 +89,7 @@ void Sprite::draw() {
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
+   glDepthFunc(GL_LEQUAL);
 }
 
 /**

@@ -182,6 +182,7 @@ void Asteroid3D::drawGlow() {
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glDepthFunc(GL_ALWAYS);
    mesh.draw(false);
    glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -215,6 +216,7 @@ void Asteroid3D::drawGlow() {
 
    glDisable(GL_COLOR_MATERIAL);
    glEnable(GL_LIGHTING);
+   glDepthFunc(GL_LEQUAL);
    glPopMatrix();
 }
 
