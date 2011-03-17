@@ -8,11 +8,14 @@
 #ifndef __PROGRESSBAR_H__
 #define __PROGRESSBAR_H__
 
+#include <string>
+
 class ProgressBar {
    public:
       ProgressBar(float _height, float _width, float _x, float _y);
       void setAmount(float _amount);
       void draw();
+      void setIcon(std::string _texture);
    private:
       float outerBoxThickness;
       float amount; // The amount full the progress bar is, from 0 to 1.
@@ -21,6 +24,8 @@ class ProgressBar {
       float width;
       float x;
       float y;
+      bool hasIcon;
+      std::string icon;
 };
 
 #endif

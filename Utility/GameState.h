@@ -117,6 +117,7 @@ class GameState : public InputReceiver {
       
       bool doYaw;
       double mouseX, mouseY;
+      double shipControlX, shipControlY;
       int scoreToWin;
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;

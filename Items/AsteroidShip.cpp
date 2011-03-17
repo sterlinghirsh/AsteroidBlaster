@@ -19,7 +19,7 @@
 
 using namespace std;
 extern Custodian* custodian;
-const float rotationFactor = 2;
+const float rotationFactor = 3;
 static float spin = 90;
 static float flashiness = 0;
 static float tracker = 0;

@@ -61,6 +61,7 @@ GameState::GameState(double worldSizeIn) {
    // Improve the positioning code.
    weaponReadyBar = new ProgressBar(0.5, 0.1, -1.2, -0.3);
    healthBar = new ProgressBar(0.75, 0.05, -1, -0.3);
+   healthBar->setIcon("ShieldIcon");
 
    // Set up objects.
    custodian.add(ship);
@@ -974,6 +975,7 @@ void GameState::mouseDown(int button) {
    case 3:
       doYaw = !doYaw;
       ship->setRollSpeed(0);
+      ship->setYawSpeed(0);
       //printf("right mouse down\n");
       break;
 
@@ -1018,34 +1020,38 @@ void GameState::mouseUp(int button) {
    case 3:
       doYaw = !doYaw;
       ship->setRollSpeed(0);
+      ship->setYawSpeed(0);
       break;
    }
 }
 
 void GameState::mouseMove(int dx, int dy, int x, int y) {
    //If game is not running, do not take input anymore
-   if(!gameIsRunning){ return;}
+   if(!gameIsRunning)
+      return;
    
-   double worldX = p2wx(x);
-   double worldY = p2wy(y);
+   shipControlX = p2wx(x);
+   shipControlY = p2wy(y);
 
-   mouseX = worldX;
-   mouseY = worldY;
+   mouseX = shipControlX;
+   mouseY = shipControlY;
 
-   ship->updateShotDirection(worldX, worldY);
+   ship->updateShotDirection(shipControlX, shipControlY);
 
-   worldX = clamp(worldX * fabs(worldX), -1, 1);
-   worldY = clamp(-worldY * fabs(worldY), -1, 1);
+   shipControlX = shipControlX / p2wx(GW);
+   shipControlY = shipControlY / p2wy(0);
+
+   shipControlX = clamp(shipControlX * fabs(shipControlX), -1, 1);
+   shipControlY = clamp(-shipControlY * fabs(shipControlY), -1, 1);
 
    if(!ship->flyingAI->isEnabled()) {
       if (doYaw) {
-         ship->setYawSpeed(-worldX);
-      }
-      else {
-         ship->setRollSpeed(worldX);
+         ship->setYawSpeed(-shipControlX);
+      } else {
+         ship->setRollSpeed(shipControlX);
       }
 
-      ship->setPitchSpeed(worldY);
+      ship->setPitchSpeed(shipControlY);
    }
 
 }
