@@ -13,8 +13,9 @@
 #define CONTINUE_STRING_INDEX 1
 #define SAVELOAD_STRING_INDEX 2
 #define SETTINGS_STRING_INDEX 3
-#define CREDITS_STRING_INDEX 4
-#define QUIT_STRING_INDEX 5
+#define HELP_STRING_INDEX 4
+#define CREDITS_STRING_INDEX 5
+#define QUIT_STRING_INDEX 6
 
 MainMenu::MainMenu() {
    menuActive = false;
@@ -28,6 +29,7 @@ MainMenu::MainMenu() {
    menuTexts.push_back(new Text("Continue (c)",  fontName, position, 24));
    menuTexts.push_back(new Text("Save/Load Game",  fontName, position, 24));
    menuTexts.push_back(new Text("Settings",  fontName, position, 24));
+   menuTexts.push_back(new Text("Help",  fontName, position, 24));
    menuTexts.push_back(new Text("Credits",  fontName, position, 24));
    menuTexts.push_back(new Text("Quit (esc)", fontName, position, 24));
    
@@ -35,6 +37,7 @@ MainMenu::MainMenu() {
    menuTexts[NEWGAME_STRING_INDEX]->selectable = true;
    menuTexts[CONTINUE_STRING_INDEX]->selectable = true;
    menuTexts[SETTINGS_STRING_INDEX]->selectable = true;
+   menuTexts[HELP_STRING_INDEX]->selectable = true;
    menuTexts[CREDITS_STRING_INDEX]->selectable = true;
    menuTexts[QUIT_STRING_INDEX]->selectable = true;
    
@@ -47,9 +50,6 @@ MainMenu::MainMenu() {
 
    // grey out the option to show that it is disabled
    menuTexts[SAVELOAD_STRING_INDEX]->setColor(SDL_GREY);
-   //menuTexts[SETTINGS_STRING_INDEX]->setColor(SDL_GREY);
-   
-
 }
 
 
@@ -198,6 +198,9 @@ void MainMenu::mouseDown(int button) {
    } else if(menuTexts[SETTINGS_STRING_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       settingsMenu->menuActive = true;
+   } else if(menuTexts[HELP_STRING_INDEX]->mouseSelect(x,y)) {
+      menuActive = false;
+      helpMenu->menuActive = true;
    } else if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       creditsMenu->menuActive = true;
@@ -227,6 +230,7 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
       menuTexts[CONTINUE_STRING_INDEX]->mouseHighlight(x,y);
    }
    menuTexts[SETTINGS_STRING_INDEX]->mouseHighlight(x,y);
+   menuTexts[HELP_STRING_INDEX]->mouseHighlight(x,y);
    menuTexts[CREDITS_STRING_INDEX]->mouseHighlight(x,y);
    menuTexts[QUIT_STRING_INDEX]->mouseHighlight(x,y);
    

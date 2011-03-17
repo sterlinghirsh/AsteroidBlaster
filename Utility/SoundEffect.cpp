@@ -1,6 +1,7 @@
 
 
 #include "Utility/SoundEffect.h"
+#include "Utility/GlobalUtility.h"
 #include <iostream>
 #include <map>
 
@@ -54,16 +55,24 @@ int SoundEffect::playSoundEffect(std::string file, bool loop) {
    }
 
    Mix_Volume(handle, volume);
+
+   if (!soundOn) {
+      Mix_Pause(handle);
+   }
    
    return handle;
 }
 
 void SoundEffect::pauseSoundEffect(int handle) {
-   Mix_Pause(handle);
+   if (soundOn) {
+      Mix_Pause(handle);
+   }
 }
 
 void SoundEffect::resumeSoundEffect(int handle) {
-   Mix_Resume(handle);
+   if (!soundOn) {
+      Mix_Resume(handle);
+   }
 }
 
 void SoundEffect::stopSoundEffect(int handle) {

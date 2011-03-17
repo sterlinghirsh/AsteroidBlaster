@@ -15,6 +15,8 @@
 #define FULLSCREEN_INDEX 6
 #define MINIMAP_INDEX 8
 #define CAMERA_VIEW_INDEX 10
+#define MUSIC_INDEX 12
+#define SFX_INDEX 14
 #define RETURN_INDEX (menuTexts.size() - 1)
 
 #define TITLE_TYPE 0
@@ -31,7 +33,7 @@ SettingsMenu::SettingsMenu() {
 
    menuTexts.push_back(new Text("Settings",  fontName, position, 48));
    types.push_back(TITLE_TYPE);
-   menuTexts.push_back(new Text("Bloom:",  fontName, position, 24));
+   menuTexts.push_back(new Text("Bloom Lighting:",  fontName, position, 24));
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getStatus(bloom), fontName, position, 24));
    types.push_back(RIGHT_TYPE);
@@ -48,6 +50,14 @@ SettingsMenu::SettingsMenu() {
    menuTexts.push_back(new Text(getStatus(gameState->minimapOn()), fontName, position, 24));
    types.push_back(RIGHT_TYPE);
    menuTexts.push_back(new Text("Camera:",  fontName, position, 24));
+   types.push_back(LEFT_TYPE);
+   menuTexts.push_back(new Text(getViewStatus(gameState->ship->getCurrentView()), fontName, position, 24));
+   types.push_back(RIGHT_TYPE);
+   menuTexts.push_back(new Text("Music:",  fontName, position, 24));
+   types.push_back(LEFT_TYPE);
+   menuTexts.push_back(new Text(getViewStatus(!Mix_PausedMusic()), fontName, position, 24));
+   types.push_back(RIGHT_TYPE);
+   menuTexts.push_back(new Text("SFX:",  fontName, position, 24));
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getViewStatus(gameState->ship->getCurrentView()), fontName, position, 24));
    types.push_back(RIGHT_TYPE);
@@ -111,9 +121,10 @@ void SettingsMenu::draw() {
    menuTexts[FULLSCREEN_INDEX]->textToDisplay = getStatus(fullscreen);
    menuTexts[MINIMAP_INDEX]->textToDisplay = getStatus(gameState->minimapOn());
    menuTexts[CAMERA_VIEW_INDEX]->textToDisplay = getViewStatus(gameState->ship->getCurrentView());
+   menuTexts[MUSIC_INDEX]->textToDisplay = getStatus(musicOn);
+   menuTexts[SFX_INDEX]->textToDisplay = getStatus(soundOn);
    SDL_Rect position;
-   //position.y = GH/2.3;
-   position.y = GH/10;
+   position.y = GH/20;
    for(int i = 0; i < menuTexts.size(); i++) {
       switch (types[i]) {
       case TITLE_TYPE:
@@ -192,6 +203,15 @@ void SettingsMenu::mouseDown(int button) {
       gameState->toggleMinimap();
    } else if(menuTexts[CAMERA_VIEW_INDEX]->mouseSelect(x,y)) {
       gameState->ship->nextView();
+   } else if(menuTexts[SFX_INDEX]->mouseSelect(x,y)) {
+      soundOn = !soundOn;
+   } else if(menuTexts[MUSIC_INDEX]->mouseSelect(x,y)) {
+      if (!musicOn && Mix_PausedMusic()) {
+         Music::resumeMusic();
+      } else if (musicOn && !Mix_PausedMusic()) {
+         Music::pauseMusic();
+      }
+      musicOn = !musicOn;
    } else if(menuTexts[RETURN_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       mainMenu->menuActive = true;
@@ -217,6 +237,8 @@ void SettingsMenu::mouseMove(int dx, int dy, int _x, int _y) {
    menuTexts[FULLSCREEN_INDEX]->mouseHighlight(x,y);
    menuTexts[MINIMAP_INDEX]->mouseHighlight(x,y);
    menuTexts[CAMERA_VIEW_INDEX]->mouseHighlight(x,y);
+   menuTexts[SFX_INDEX]->mouseHighlight(x,y);
+   menuTexts[MUSIC_INDEX]->mouseHighlight(x,y);
    menuTexts[RETURN_INDEX]->mouseHighlight(x,y);
 
 }

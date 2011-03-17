@@ -384,6 +384,7 @@ int main(int argc, char* argv[]) {
    mainMenu = new MainMenu();
    storeMenu = new StoreMenu();
    settingsMenu = new SettingsMenu();
+   helpMenu = new HelpMenu();
    creditsMenu = new CreditsMenu();
    //turn the menu on for the inial menu display
    mainMenu->menuActive = true;
@@ -397,6 +398,7 @@ int main(int argc, char* argv[]) {
    inputManager->addReceiver(mainMenu);
    inputManager->addReceiver(storeMenu);
    inputManager->addReceiver(settingsMenu);
+   inputManager->addReceiver(helpMenu);
    inputManager->addReceiver(creditsMenu);
 
    //declare the event that will be reused
@@ -418,6 +420,11 @@ int main(int argc, char* argv[]) {
       } else if (settingsMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          settingsMenu->draw();
+         //update();
+         lastUpdateTime = doubleTime();
+      } else if (helpMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
+         helpMenu->draw();
          //update();
          lastUpdateTime = doubleTime();
       } else if (creditsMenu->menuActive) {

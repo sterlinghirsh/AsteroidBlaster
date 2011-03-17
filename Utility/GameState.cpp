@@ -828,6 +828,7 @@ void GameState::keyDown(int key) {
 
 
    // Audio and Video settings
+   /*
    case SDLK_KP_ENTER:
       if (Mix_PausedMusic()) {
          Music::resumeMusic();
@@ -835,7 +836,7 @@ void GameState::keyDown(int key) {
          Music::pauseMusic();
       }
       break;
-   
+   */
    
    // DEBUG KEYS
    case SDLK_F10:

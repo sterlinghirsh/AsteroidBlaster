@@ -26,6 +26,7 @@
 #include "Menus/MainMenu.h"
 #include "Menus/StoreMenu.h"
 #include "Menus/SettingsMenu.h"
+#include "Menus/HelpMenu.h"
 #include "Menus/CreditsMenu.h"
 
 
@@ -41,6 +42,8 @@ extern bool drawPerspective;
 extern bool bloom;
 extern bool mouseCapture;
 extern bool fullscreen;
+extern bool soundOn;
+extern bool musicOn;
 extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
 extern GLuint fadeShader;
@@ -55,6 +58,7 @@ extern const SDL_VideoInfo* vidinfo;
 extern InputManager* inputManager;
 extern MainMenu* mainMenu;
 extern StoreMenu* storeMenu;
+extern HelpMenu* helpMenu;
 extern SettingsMenu* settingsMenu;
 extern CreditsMenu* creditsMenu;
 extern GameState* gameState;
