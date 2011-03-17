@@ -36,6 +36,7 @@ class Minimap {
       void adjustDisplaySize(double changeAmount);
       void update(double timediff);
       void toggle();
+      bool isEnabled();
    private:
       bool hidden;
 };

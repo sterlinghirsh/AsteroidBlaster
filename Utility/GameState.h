@@ -65,6 +65,9 @@ class GameState : public InputReceiver {
       void drawBloom();
       void drawGlow();
       void drawMinimap();
+      
+      bool minimapOn();
+      void toggleMinimap();
 
       void drawAllText();
       void drawHud();

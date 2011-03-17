@@ -16,9 +16,6 @@
 using namespace std;
 
 InputManager::InputManager() {
-   fullScreen = false;
-   oldGW = GW;
-   oldGH = GH;
 }
 
 InputManager::~InputManager() {
@@ -56,6 +53,7 @@ void InputManager::update(const SDL_Event& e) {
          (*it)->keyUp(e.key.keysym.sym);
       break;
    }
+   /*
    if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F1) {
       if(!fullScreen) {
          oldGW = GW;
@@ -74,6 +72,8 @@ void InputManager::update(const SDL_Event& e) {
          fullScreen = !fullScreen;
       }
    } else if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_BACKQUOTE) {
+   */
+   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_BACKQUOTE) {
       toggleGrabMode();
    } else if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_ESCAPE) {
       exit(0);

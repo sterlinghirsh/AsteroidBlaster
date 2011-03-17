@@ -241,6 +241,20 @@ void GameState::drawMinimap() {
 }
 
 /**
+ * Returns whether the minimap is on.
+ */
+bool GameState::minimapOn() {
+   return minimap->isEnabled();
+}
+
+/**
+ * Toggles the minimap on or off.
+ */
+void GameState::toggleMinimap() {
+   minimap->toggle();
+}
+
+/**
  * Draw the main view.
  */
 void GameState::draw() {
@@ -710,9 +724,11 @@ void GameState::keyDown(int key) {
          ship->setRollSpeed(0);
          break;
 
+      /*
       case SDLK_LSHIFT:
          ship->setBoost(true);
          break;
+      */
 
       case SDLK_b:
          ship->setBrake(true);
@@ -722,9 +738,11 @@ void GameState::keyDown(int key) {
 
 
    //Camera controls
+   /*
    case SDLK_9:
       camera->zoom();
       break;
+   */
 
    case SDLK_t:
       ship->nextView();

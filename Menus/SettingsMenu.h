@@ -12,6 +12,7 @@ class SettingsMenu : public Menu {
    ~SettingsMenu();
 
    std::string getStatus(bool status);
+   std::string getViewStatus(int status);
    void draw();
    
    void keyUp(int key);
@@ -32,6 +33,7 @@ class SettingsMenu : public Menu {
    
    
    std::vector<Text*> menuTexts;
+   std::vector<int> types;
    
    
 };

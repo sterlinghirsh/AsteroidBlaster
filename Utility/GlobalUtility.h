@@ -34,11 +34,13 @@ class GameState;
 
 // the window width and window height
 extern int GW, GH;
+extern int prevGW, prevGH;
 extern int flopY(int);
 extern unsigned long curFrame;
 extern bool drawPerspective;
 extern bool bloom;
 extern bool mouseCapture;
+extern bool fullscreen;
 extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
 extern GLuint fadeShader;
@@ -114,6 +116,7 @@ extern materialStruct CrystalMaterial;
 void setMaterial(materialStruct material);
 void updateDoubleTime();
 void toggleGrabMode();
+void toggleFullScreen();
 
 struct Color {
    GLfloat r, g, b, a;

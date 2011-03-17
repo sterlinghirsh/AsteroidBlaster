@@ -25,13 +25,6 @@
 #include "Weapons/AntiInertia.h"
 #include <list>
 
-// This should probably be an enum.
-#define VIEW_COUNT 4
-#define VIEW_FIRSTPERSON_SHIP 0
-#define VIEW_FIRSTPERSON_GUN 1
-#define VIEW_THIRDPERSON_SHIP 2
-#define VIEW_THIRDPERSON_GUN 3
-
 // Later we'll put in a model for the ship.
 
 extern GLfloat headlight_pos[4];

@@ -1,7 +1,7 @@
 /**
  * Sterling Hirsh
  * GlobalUtility.cpp
- * Includes global variables and 
+ * Includes global variables and
  * helper functions globally accessable.
  */
 
@@ -23,10 +23,13 @@
 //global variables
 int GW = -1;
 int GH = -1;
+int prevGW = -1;
+int prevGH = -1;
 unsigned long curFrame = 0;
 bool drawPerspective = true;
-bool bloom = false;
+bool bloom = true;
 bool mouseCapture = false;
+bool fullscreen = false;
 GLUquadricObj *quadric = NULL;
 GLuint tractorBeamShader = -1;
 GLuint fadeShader = -1;
@@ -53,7 +56,7 @@ int flopY(int yIn) {
    return (GH - 1) - yIn;
 }
 
-double p2wx(int xp) { 
+double p2wx(int xp) {
    double d = ((GW - 1.0) / 2.0);
    double c = ((1 - GW) * GH) / (-2.0 * GW);
    return (xp - d) / c;
@@ -87,7 +90,7 @@ int w2px(double xw) {
    double c = ((1 - GW) * GH) / (-2.0 * GW);
 #ifdef WIN32
    answer = floor((xw * c) + d+0.5);
-#else 
+#else
    answer = round((xw * c) + d);
 #endif
 
@@ -101,7 +104,7 @@ int w2py(double yw) {
 
 #ifdef WIN32
    answer = flopY(floor((yw * e) + f)+0.5);
-#else 
+#else
    answer = flopY(round((yw * e) + f));
 #endif
 
@@ -117,7 +120,7 @@ void reshape (GLsizei w, GLsizei h) {
    if (drawPerspective) {
       gluPerspective(VERT_FOV, (double)w/h, 0.3, 200);
    } else {
-      glOrtho((double)w/-h, (double) w/h, -1, 1, -0.5, 0.5); 
+      glOrtho((double)w/-h, (double) w/h, -1, 1, -0.5, 0.5);
    }
    glMatrixMode(GL_MODELVIEW);
    glViewport(0, 0, w, h);
@@ -134,17 +137,17 @@ void useOrtho() {
 }
 
 double distance3D(double x1, double y1, double z1, double x2,
- double y2, double z2) {
+      double y2, double z2) {
    return sqrt(
-    (x2 - x1) * (x2 - x1) + 
-    (y2 - y1) * (y2 - y1) + 
-    (z2 - z1) * (z2 - z1));
+         (x2 - x1) * (x2 - x1) +
+         (y2 - y1) * (y2 - y1) +
+         (z2 - z1) * (z2 - z1));
 }
 
 double distance2D(double x1, double y1, double x2, double y2) {
    return sqrt(
-    (x2 - x1) * (x2 - x1) +
-    (y2 - y1) * (y2 - y1));
+         (x2 - x1) * (x2 - x1) +
+         (y2 - y1) * (y2 - y1));
 }
 
 double clamp(double num, double minVal, double maxVal) {
@@ -161,13 +164,13 @@ void updateDoubleTime() {
    SYSTEMTIME st;
    GetSystemTime(&st);
    answer = (double)(st.wSecond) + ((st.wMilliseconds) / 1000.0);
-#else 
+#else
    static struct timeval tp;
    gettimeofday(&tp, NULL);
    answer = (double)(tp.tv_sec) + ((tp.tv_usec) / 1000000.0);
 #endif
    currentTime = answer;
-   
+
 }
 
 double doubleTime() {
@@ -185,132 +188,132 @@ void drawCylinder(double radius, double length) {
 
 //sets up a specific material
 void setMaterial(materialStruct material) {
-  glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, material.shininess);
-  glMaterialfv(GL_FRONT, GL_EMISSION, material.emissive);
+   glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient);
+   glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse);
+   glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular);
+   glMaterialfv(GL_FRONT, GL_SHININESS, material.shininess);
+   glMaterialfv(GL_FRONT, GL_EMISSION, material.emissive);
 }
 
 GLdouble objectM[4][4] = {
-  {1.0, 0.0, 0.0, 0.0},
-  {0.0, 1.0, 0.0, 0.0},
-  {0.0, 0.0, 1.0, 0.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {1.0, 0.0, 0.0, 0.0},
+   {0.0, 1.0, 0.0, 0.0},
+   {0.0, 0.0, 1.0, 0.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct WhiteTransparent = {
-  {0.5, 0.5, 0.5, 0.5},
-  {0.0, 0.0, 0.0, 0.0},
-  {0.0, 0.0, 0.0, 0.0},
-  {0.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.5, 0.5, 0.5, 0.5},
+   {0.0, 0.0, 0.0, 0.0},
+   {0.0, 0.0, 0.0, 0.0},
+   {0.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct GrayTransparent = {
-  {1.0, 1.0, 1.0, 1.0},
-  {1.0, 1.0, 1.0, 0.7},
-  {1, 1, 1, 1},
-  {4.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {1.0, 1.0, 1.0, 1.0},
+   {1.0, 1.0, 1.0, 0.7},
+   {1, 1, 1, 1},
+   {4.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct WhiteSolid = {
-  {1.0, 1.0, 1.0, 1.0},
-  {1.0, 1.0, 1.0, 1.0},
-  {1.0, 1.0, 1.0, 1.0},
-  {1.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {1.0, 1.0, 1.0, 1.0},
+   {1.0, 1.0, 1.0, 1.0},
+   {1.0, 1.0, 1.0, 1.0},
+   {1.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct BlackSolid = {
-  {0.0, 0.0, 0.0, 1.0},
-  {0.0, 0.0, 0.0, 1.0},
-  {0.0, 0.0, 0.0, 1.0},
-  {0.0},
-  {0.0, 0.0, 0.0, 0.0}
+   {0.0, 0.0, 0.0, 1.0},
+   {0.0, 0.0, 0.0, 1.0},
+   {0.0, 0.0, 0.0, 1.0},
+   {0.0},
+   {0.0, 0.0, 0.0, 0.0}
 };
 
 materialStruct CyanSolid = {
-  {0.0, 1.0, 1.0, 1.0},
-  {0.0, 1.0, 1.0, 1.0},
-  {0.2, 1.0, 1.0, 1.0},
-  {0.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.0, 1.0, 1.0, 1.0},
+   {0.0, 1.0, 1.0, 1.0},
+   {0.2, 1.0, 1.0, 1.0},
+   {0.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct OrangeSolid = {
-  {1.0, .27, 0.0, 1.0},
-  {1.0, .27, 0.0, 1.0},
-  {1.0, .27, 0.0, 1.0},
-  {0.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {1.0, .27, 0.0, 1.0},
+   {1.0, .27, 0.0, 1.0},
+   {1.0, .27, 0.0, 1.0},
+   {0.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct GreenShiny = {
-  {0.0, 0.3, 0.0, 1.0},
-  {0.0, 0.9, 0.0, 1.0},
-  {0.2, 1.0, 0.2, 1.0},
-  {8.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.0, 0.3, 0.0, 1.0},
+   {0.0, 0.9, 0.0, 1.0},
+   {0.2, 1.0, 0.2, 1.0},
+   {8.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct RedShiny = {
-  {0.3, 0.0, 0.0, 1.0},
-  {0.9, 0.0, 0.0, 1.0},
-  {1.0, 0.2, 0.2, 1.0},
-  {8.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.3, 0.0, 0.0, 1.0},
+   {0.9, 0.0, 0.0, 1.0},
+   {1.0, 0.2, 0.2, 1.0},
+   {8.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct GreenTransparent = {
-  {0.0, 0.3, 0.0, 0.3},
-  {0.0, 0.9, 0.0, 0.3},
-  {0.2, 1.0, 0.2, 0.3},
-  {8.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.0, 0.3, 0.0, 0.3},
+   {0.0, 0.9, 0.0, 0.3},
+   {0.2, 1.0, 0.2, 0.3},
+   {8.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 
 materialStruct BlueShiny = {
-  {0.0, 0.0, 0.3, 1.0},
-  {0.0, 0.0, 0.9, 1.0},
-  {0.0, 0.0, 0.0, 1.0},
-  {0.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.0, 0.0, 0.3, 1.0},
+   {0.0, 0.0, 0.9, 1.0},
+   {0.0, 0.0, 0.0, 1.0},
+   {0.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct RedFlat = {
-  {0.3, 0.0, 0.0, 1.0},
-  {0.9, 0.0, 0.0, 1.0},
-  {0.0, 0.0, 0.0, 1.0},
-  {0.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.3, 0.0, 0.0, 1.0},
+   {0.9, 0.0, 0.0, 1.0},
+   {0.0, 0.0, 0.0, 1.0},
+   {0.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct RedTransparent = {
-  {0.3, 0.0, 0.0, 0.6},
-  {0.9, 0.0, 0.0, 0.6},
-  {0.0, 0.0, 0.0, 0.6},
-  {0.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.3, 0.0, 0.0, 0.6},
+   {0.9, 0.0, 0.0, 0.6},
+   {0.0, 0.0, 0.0, 0.6},
+   {0.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 
 materialStruct YellowFlat = {
-  {0.3, 0.3, 0.0, 1.0},
-  {0.9, 0.9, 0.0, 1.0},
-  {0.0, 0.0, 0.0, 1.0},
-  {0.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.3, 0.3, 0.0, 1.0},
+   {0.9, 0.9, 0.0, 1.0},
+   {0.0, 0.0, 0.0, 1.0},
+   {0.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct YellowTransparent = {
-  {0.3, 0.3, 0.0, 0.4},
-  {0.9, 0.9, 0.0, 0.4},
-  {0.0, 0.0, 0.0, 0.4},
-  {0.0},
-  {0.0, 0.0, 0.0, 1.0}
+   {0.3, 0.3, 0.0, 0.4},
+   {0.9, 0.9, 0.0, 0.4},
+   {0.0, 0.0, 0.0, 0.4},
+   {0.0},
+   {0.0, 0.0, 0.0, 1.0}
 };
 
 materialStruct Rock = {
@@ -333,196 +336,196 @@ materialStruct CrystalMaterial = {
 
 
 char *textFileRead(char *fn) {
-	FILE *fp;
-	char *content = NULL;
+   FILE *fp;
+   char *content = NULL;
 
-	int count=0;
+   int count=0;
 
-	if (fn != NULL) {
-		fp = fopen(fn,"rt");
+   if (fn != NULL) {
+      fp = fopen(fn,"rt");
 
-		if (fp != NULL) {
-      
-			fseek(fp, 0, SEEK_END);
-			count = ftell(fp);
-			rewind(fp);
+      if (fp != NULL) {
 
-			if (count > 0) {
-				content = (char *)malloc(sizeof(char) * (count+1));
-				count = fread(content,sizeof(char),count,fp);
-				content[count] = '\0';
-				}
-			fclose(fp);
-			}
-		}
-	
-	if (content == NULL) {
-	   fprintf(stderr, "ERROR: could not load in file %s\n", fn);
-	   exit(1);
-	   }
-	return content;
-	}  
-	
+         fseek(fp, 0, SEEK_END);
+         count = ftell(fp);
+         rewind(fp);
+
+         if (count > 0) {
+            content = (char *)malloc(sizeof(char) * (count+1));
+            count = fread(content,sizeof(char),count,fp);
+            content[count] = '\0';
+         }
+         fclose(fp);
+      }
+   }
+
+   if (content == NULL) {
+      fprintf(stderr, "ERROR: could not load in file %s\n", fn);
+      exit(1);
+   }
+   return content;
+}
+
 GLuint setShaders(char * vert, char * frag, char * geom) {
-	GLuint v,f, g, pro;
-	char *vs, *fs, *gs;
+   GLuint v,f, g, pro;
+   char *vs, *fs, *gs;
 
-	v = glCreateShader(GL_VERTEX_SHADER);
-	f = glCreateShader(GL_FRAGMENT_SHADER);
-	g = glCreateShader(GL_GEOMETRY_SHADER_EXT);
+   v = glCreateShader(GL_VERTEX_SHADER);
+   f = glCreateShader(GL_FRAGMENT_SHADER);
+   g = glCreateShader(GL_GEOMETRY_SHADER_EXT);
 
-	vs = textFileRead(vert);
-	fs = textFileRead(frag);
-	gs = textFileRead(geom);
+   vs = textFileRead(vert);
+   fs = textFileRead(frag);
+   gs = textFileRead(geom);
 
-	const char * vv = vs;
-	const char * ff = fs;
-	const char * gg = gs;
+   const char * vv = vs;
+   const char * ff = fs;
+   const char * gg = gs;
 
-	glShaderSource(v, 1, &vv, NULL);
-	glShaderSource(f, 1, &ff, NULL);
-	glShaderSource(g, 1, &gg, NULL);
+   glShaderSource(v, 1, &vv, NULL);
+   glShaderSource(f, 1, &ff, NULL);
+   glShaderSource(g, 1, &gg, NULL);
 
-	free(vs); free(fs); //free(gs);
+   free(vs); free(fs); //free(gs);
 
-	glCompileShader(v);
-	glCompileShader(f);
-	glCompileShader(g);
+   glCompileShader(v);
+   glCompileShader(f);
+   glCompileShader(g);
 
-	//fprintf(stderr, "vertex\n");
-	printShaderLog(v);
+   //fprintf(stderr, "vertex\n");
+   printShaderLog(v);
 
-	//fprintf(stderr, "fragment\n");
-	printShaderLog(f);
+   //fprintf(stderr, "fragment\n");
+   printShaderLog(f);
 
-	//fprintf(stderr, "geometry\n");
-	printShaderLog(g);
+   //fprintf(stderr, "geometry\n");
+   printShaderLog(g);
 
-	pro = glCreateProgram();
-	glAttachShader(pro,v);
-	glAttachShader(pro,f);
-	glAttachShader(pro,g);
+   pro = glCreateProgram();
+   glAttachShader(pro,v);
+   glAttachShader(pro,f);
+   glAttachShader(pro,g);
 
-	// geometry shader details
-	// input: GL_POINTS, GL_LINES, GL_LINES_ADJACENCY_EXT, GL_TRIANGLES, GL_TRIANGLES_ADJACENCY_EXT
-	// output: GL_POINTS, GL_LINE_STRIP, GL_TRIANGLE_STRIP 
-	
-	glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
-	glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
-	int temp;
-	glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT,&temp);
-	glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
-	
-	glLinkProgram(pro);
-	printProgramLog(pro);
+   // geometry shader details
+   // input: GL_POINTS, GL_LINES, GL_LINES_ADJACENCY_EXT, GL_TRIANGLES, GL_TRIANGLES_ADJACENCY_EXT
+   // output: GL_POINTS, GL_LINE_STRIP, GL_TRIANGLE_STRIP
 
-	return(pro);
+   glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
+   glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
+   int temp;
+   glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT,&temp);
+   glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
+
+   glLinkProgram(pro);
+   printProgramLog(pro);
+
+   return(pro);
 }
 
 GLuint setShaders(char * vert, char * frag) {
-	GLuint v,f, pro;
-	char *vs, *fs;
+   GLuint v,f, pro;
+   char *vs, *fs;
 
-	v = glCreateShader(GL_VERTEX_SHADER);
-	f = glCreateShader(GL_FRAGMENT_SHADER);
+   v = glCreateShader(GL_VERTEX_SHADER);
+   f = glCreateShader(GL_FRAGMENT_SHADER);
 
-	vs = textFileRead(vert);
-	fs = textFileRead(frag);
+   vs = textFileRead(vert);
+   fs = textFileRead(frag);
 
-	const char * vv = vs;
-	const char * ff = fs;
+   const char * vv = vs;
+   const char * ff = fs;
 
-	glShaderSource(v, 1, &vv, NULL);
-	glShaderSource(f, 1, &ff, NULL);
+   glShaderSource(v, 1, &vv, NULL);
+   glShaderSource(f, 1, &ff, NULL);
 
-	free(vs); free(fs);
+   free(vs); free(fs);
 
-	glCompileShader(v);
-	glCompileShader(f);
+   glCompileShader(v);
+   glCompileShader(f);
 
-	//fprintf(stderr, "vertex\n");
-	printShaderLog(v);
+   //fprintf(stderr, "vertex\n");
+   printShaderLog(v);
 
-	//fprintf(stderr, "fragment\n");
-	printShaderLog(f);
+   //fprintf(stderr, "fragment\n");
+   printShaderLog(f);
 
-	pro = glCreateProgram();
-	glAttachShader(pro,v);
-	glAttachShader(pro,f);
+   pro = glCreateProgram();
+   glAttachShader(pro,v);
+   glAttachShader(pro,f);
 
-	glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
-	glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
-	int temp;
-	glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT,&temp);
-	glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
-	
-	glLinkProgram(pro);
-	printProgramLog(pro);
+   glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
+   glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
+   int temp;
+   glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT,&temp);
+   glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
 
-	return(pro);
+   glLinkProgram(pro);
+   printProgramLog(pro);
+
+   return(pro);
 }
 
 GLuint setShaders(char * vert) {
-	GLuint v, pro;
-	char *vs;
+   GLuint v, pro;
+   char *vs;
 
-	v = glCreateShader(GL_VERTEX_SHADER);
+   v = glCreateShader(GL_VERTEX_SHADER);
 
-	vs = textFileRead(vert);
+   vs = textFileRead(vert);
 
-	const char * vv = vs;
+   const char * vv = vs;
 
-	glShaderSource(v, 1, &vv, NULL);
+   glShaderSource(v, 1, &vv, NULL);
 
-	free(vs);
+   free(vs);
 
-	glCompileShader(v);
+   glCompileShader(v);
 
-	//fprintf(stderr, "vertex\n");
-	printShaderLog(v);
+   //fprintf(stderr, "vertex\n");
+   printShaderLog(v);
 
-	pro = glCreateProgram();
-	glAttachShader(pro,v);
+   pro = glCreateProgram();
+   glAttachShader(pro,v);
 
-	glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
-	glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
-	int temp;
-	glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT,&temp);
-	glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
-	
-	glLinkProgram(pro);
-	printProgramLog(pro);
+   glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
+   glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
+   int temp;
+   glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT,&temp);
+   glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
 
-	return(pro);
+   glLinkProgram(pro);
+   printProgramLog(pro);
+
+   return(pro);
 }
 
-void printShaderLog(GLuint obj) { 
-	GLint infoLogLength = 0;
-	GLsizei charsWritten  = 0;
-	GLchar *infoLog;
+void printShaderLog(GLuint obj) {
+   GLint infoLogLength = 0;
+   GLsizei charsWritten  = 0;
+   GLchar *infoLog;
 
-	glGetShaderiv(obj, GL_INFO_LOG_LENGTH, &infoLogLength);
+   glGetShaderiv(obj, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-	if (infoLogLength > 0){
-		infoLog = (char *) malloc(infoLogLength);
-		glGetShaderInfoLog(obj, infoLogLength, &charsWritten, infoLog);
-		printf("%s\n",infoLog);
-		free(infoLog);
+   if (infoLogLength > 0){
+      infoLog = (char *) malloc(infoLogLength);
+      glGetShaderInfoLog(obj, infoLogLength, &charsWritten, infoLog);
+      printf("%s\n",infoLog);
+      free(infoLog);
    }
 }
 
 void printProgramLog(GLuint obj) {
-	GLint infoLogLength = 0;
-	GLsizei charsWritten  = 0;
-	GLchar *infoLog;
+   GLint infoLogLength = 0;
+   GLsizei charsWritten  = 0;
+   GLchar *infoLog;
 
-	glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &infoLogLength);
+   glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-	if (infoLogLength > 0){
-		infoLog = (char *) malloc(infoLogLength);
-		glGetProgramInfoLog(obj, infoLogLength, &charsWritten, infoLog);
-		printf("%s\n",infoLog);
-		free(infoLog);
+   if (infoLogLength > 0){
+      infoLog = (char *) malloc(infoLogLength);
+      glGetProgramInfoLog(obj, infoLogLength, &charsWritten, infoLog);
+      printf("%s\n",infoLog);
+      free(infoLog);
    }
 }
 
@@ -554,6 +557,24 @@ void getBrightColor(double hue, float& r, float& g, float& b) {
       r = 1;
       g = 0;
       b = 1 - colorValue;
+   }
+}
+
+void toggleFullScreen() {
+   if(!fullscreen) {
+      prevGW = GW;
+      prevGH = GH;
+      GW = 1280;
+      GH = 1024;
+      gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+      SDL_WM_ToggleFullScreen( gDrawSurface );
+      fullscreen = !fullscreen;
+   } else {
+      GW = prevGW;
+      GH = prevGH;
+      SDL_WM_ToggleFullScreen( gDrawSurface );
+      gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+      fullscreen = !fullscreen;
    }
 }
 

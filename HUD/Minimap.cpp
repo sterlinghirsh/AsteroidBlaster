@@ -271,3 +271,7 @@ void Minimap::toggle() {
       hidden = true;
    }
 }
+
+bool Minimap::isEnabled() {
+   return (!hidden);
+}
