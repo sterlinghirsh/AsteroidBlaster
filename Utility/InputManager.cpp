@@ -53,27 +53,10 @@ void InputManager::update(const SDL_Event& e) {
          (*it)->keyUp(e.key.keysym.sym);
       break;
    }
-   /*
+   
    if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F1) {
-      if(!fullScreen) {
-         oldGW = GW;
-         oldGH = GH;
-         GW = 1280;
-         GH = 1024;
-         gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
-         SDL_WM_ToggleFullScreen( gDrawSurface );
-         fullScreen = !fullScreen;
-      }
-      else {
-         GW = oldGW;
-         GH = oldGH;
-         SDL_WM_ToggleFullScreen( gDrawSurface );
-         gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
-         fullScreen = !fullScreen;
-      }
+      toggleFullScreen();
    } else if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_BACKQUOTE) {
-   */
-   if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_BACKQUOTE) {
       toggleGrabMode();
    } else if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_ESCAPE) {
       exit(0);
