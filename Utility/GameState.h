@@ -103,9 +103,6 @@ class GameState : public InputReceiver {
       char* colorBits;
       float aspect;
 
-      bool bloom;
-      bool bloom1;
-      bool reg;
       bool godMode;
       bool gameIsRunning;
    

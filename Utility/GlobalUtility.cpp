@@ -25,6 +25,8 @@ int GW = -1;
 int GH = -1;
 unsigned long curFrame = 0;
 bool drawPerspective = true;
+bool bloom = false;
+bool mouseCapture = false;
 GLUquadricObj *quadric = NULL;
 GLuint tractorBeamShader = -1;
 GLuint fadeShader = -1;
@@ -40,6 +42,7 @@ double currentTime = -1;
 InputManager* inputManager = NULL;
 MainMenu* mainMenu = NULL;
 StoreMenu* storeMenu = NULL;
+SettingsMenu* settingsMenu = NULL;
 CreditsMenu* creditsMenu = NULL;
 GameState* gameState = NULL;
 

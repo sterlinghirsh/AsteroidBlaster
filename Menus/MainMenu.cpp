@@ -34,6 +34,7 @@ MainMenu::MainMenu() {
    
    menuTexts[NEWGAME_STRING_INDEX]->selectable = true;
    menuTexts[CONTINUE_STRING_INDEX]->selectable = true;
+   menuTexts[SETTINGS_STRING_INDEX]->selectable = true;
    menuTexts[CREDITS_STRING_INDEX]->selectable = true;
    menuTexts[QUIT_STRING_INDEX]->selectable = true;
    
@@ -46,7 +47,7 @@ MainMenu::MainMenu() {
 
    // grey out the option to show that it is disabled
    menuTexts[SAVELOAD_STRING_INDEX]->setColor(SDL_GREY);
-   menuTexts[SETTINGS_STRING_INDEX]->setColor(SDL_GREY);
+   //menuTexts[SETTINGS_STRING_INDEX]->setColor(SDL_GREY);
    
 
 }
@@ -194,6 +195,9 @@ void MainMenu::mouseDown(int button) {
       newGameDeactivate();
    } else if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y) && !firstTime) {
       deactivate();
+   } else if(menuTexts[SETTINGS_STRING_INDEX]->mouseSelect(x,y)) {
+      menuActive = false;
+      settingsMenu->menuActive = true;
    } else if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       creditsMenu->menuActive = true;
@@ -219,7 +223,10 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
    //decide the color for each menu text
    menuTexts[NEWGAME_STRING_INDEX]->mouseHighlight(x,y);
    menuTexts[CONTINUE_STRING_INDEX]->selectable = !firstTime;
-   menuTexts[CONTINUE_STRING_INDEX]->mouseHighlight(x,y);
+   if (!firstTime) {
+      menuTexts[CONTINUE_STRING_INDEX]->mouseHighlight(x,y);
+   }
+   menuTexts[SETTINGS_STRING_INDEX]->mouseHighlight(x,y);
    menuTexts[CREDITS_STRING_INDEX]->mouseHighlight(x,y);
    menuTexts[QUIT_STRING_INDEX]->mouseHighlight(x,y);
    

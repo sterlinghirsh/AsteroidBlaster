@@ -263,7 +263,8 @@ void draw() {
 
    // Draw glowing objects to a texture for the bloom effect.
    gameState->aspect = (float)GW/(float)GH;
-   if (gameState->bloom) {
+   //if (gameState->bloom) {
+   if (bloom) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glPushMatrix();
       gameState->drawGlow();
@@ -273,7 +274,8 @@ void draw() {
             0,0, GW, GH, 0);
       glPopMatrix();
 
-      if (gameState->bloom) {
+      //if (gameState->bloom) {
+      if (bloom) {
          gameState->hBlur();
          gameState->vBlur();
       }
@@ -296,7 +298,8 @@ void draw() {
    // Draw the hud
    glClear(GL_DEPTH_BUFFER_BIT);
    gameState->drawHud();
-   if (gameState->bloom) {
+   //if (gameState->bloom) {
+   if (bloom) {
       gameState->drawBloom();
    }
    /*
@@ -382,6 +385,7 @@ int main(int argc, char* argv[]) {
    // Initialize the menus
    mainMenu = new MainMenu();
    storeMenu = new StoreMenu();
+   settingsMenu = new SettingsMenu();
    creditsMenu = new CreditsMenu();
    //turn the menu on for the inial menu display
    mainMenu->menuActive = true;
@@ -394,6 +398,7 @@ int main(int argc, char* argv[]) {
    inputManager->addReceiver(gameState);
    inputManager->addReceiver(mainMenu);
    inputManager->addReceiver(storeMenu);
+   inputManager->addReceiver(settingsMenu);
    inputManager->addReceiver(creditsMenu);
 
    //declare the event that will be reused
@@ -410,6 +415,11 @@ int main(int argc, char* argv[]) {
       } else if (storeMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          storeMenu->draw();
+         //update();
+         lastUpdateTime = doubleTime();
+      } else if (settingsMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
+         settingsMenu->draw();
          //update();
          lastUpdateTime = doubleTime();
       } else if (creditsMenu->menuActive) {

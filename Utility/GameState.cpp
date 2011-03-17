@@ -21,9 +21,6 @@ std::ostringstream GameState :: sstream2;
 
 GameState::GameState(double worldSizeIn) {
    godMode = false;
-   bloom = false;
-   bloom1 = false;
-   reg = true;
    gameIsRunning = true;
    
    /* A view frustum culled list of objects to be used for drawing and by
@@ -819,15 +816,6 @@ void GameState::keyDown(int key) {
       } else {
          Music::pauseMusic();
       }
-      break;
-   case SDLK_F2:
-      bloom = !bloom;
-      break;
-   case SDLK_F3:
-      reg = !reg;
-      break;
-   case SDLK_F4:
-      bloom1 = !bloom1;
       break;
    
    
