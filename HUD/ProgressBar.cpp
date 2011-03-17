@@ -53,6 +53,7 @@ void ProgressBar::draw() {
 
          glTranslatef(width/2, (-width * 2), 0);
          glScalef(width, width, width);
+         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
          glBegin(GL_QUADS);
             /* Front Face */
             /* Bottom Left Of The Texture and Quad */
@@ -65,6 +66,7 @@ void ProgressBar::draw() {
             glTexCoord2f( 0.0f, 0.0f ); glVertex2f( -1.0f,  1.0f);
          glEnd();
          glDisable(GL_TEXTURE_2D);
+         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       }
    glPopMatrix();
 }

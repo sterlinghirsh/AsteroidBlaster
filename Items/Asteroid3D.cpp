@@ -177,12 +177,12 @@ void Asteroid3D::drawGlow() {
    glTranslatef(position->x, position->y, position->z);
    glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
    glScalef(scalex, scaley, scalez);
+   glDepthFunc(GL_ALWAYS);
 
    glColor3f(0.0, 0.0, 0.0);
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   glDepthFunc(GL_ALWAYS);
    mesh.draw(false);
    glDisable(GL_POLYGON_OFFSET_FILL);
 

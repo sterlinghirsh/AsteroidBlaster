@@ -333,6 +333,7 @@ int main(int argc, char* argv[]) {
    Texture::Add("Images/starsdark.bmp", "starsdark.png");
    Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
    Texture::Add("Images/Shield.png", "ShieldIcon");
+   Texture::Add("Images/ShotIcon.png", "ShotIcon");
 
    Particle::initDisplayList();
    
