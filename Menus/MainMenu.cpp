@@ -65,7 +65,7 @@ void MainMenu::draw() {
    position.y = GH/2.3;
    for(int i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
-      position.y += GH/10;
+      position.y += GH/12;
    }
    
    
