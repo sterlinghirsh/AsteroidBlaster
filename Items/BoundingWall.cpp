@@ -8,6 +8,7 @@
 #include "Items/BoundingWall.h"
 #include <math.h>
 #include "Items/Object3D.h"
+#include "Utility/GameState.h"
 
 BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID) :
  squareSize(_squareSize), wallSize(_wallSize), wallColor(_wallColor), wallID(_wallID) {
@@ -108,6 +109,23 @@ void BoundingWall::constrain(Drawable* item) {
 }
 
 void BoundingWall::draw() {
+   Point3D cameraPosition(*gameState->ship->position);
+   gameState->ship->getCameraOffset()->movePoint(cameraPosition);
+   switch (wallID) {
+      case WALL_TOP:
+         if (cameraPosition.y > wallSize) return; break;
+      case WALL_BOTTOM:
+         if (-cameraPosition.y > wallSize) return; break;
+      case WALL_LEFT:
+         if (-cameraPosition.x > wallSize) return; break;
+      case WALL_RIGHT:
+         if (cameraPosition.x > wallSize) return; break;
+      case WALL_FRONT:
+         if (cameraPosition.z > wallSize) return; break;
+      case WALL_BACK:
+         if (-cameraPosition.z > wallSize) return; break;
+   }
+   
    glCallList(linesDisplayList);
    std::vector<GlowSquare*>::iterator square;
    for (square = squares.begin(); square != squares.end();
