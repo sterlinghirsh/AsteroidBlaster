@@ -1,6 +1,6 @@
 <html>
 <head>
-   <title>Roid Rage 3D! By Sterling Hirsh</title>
+   <title>AsteroidBlaster</title>
    <style type="text/css">
       body {
          background-color: black;
@@ -23,193 +23,24 @@
    </style>
 </head>
 <body>
-   <h1>Roid Rage <span style="color:red">3</span><span style="color:blue">D</span>!</h1>
+   <h1>AsteroidBlasterspan</h1>
    <h2>An Asteroids clone... in <span style="color:red">3</span><span style="color:blue">D</span>!</h2>
-   <h3>By Sterling Hirsh... in <span style="color:red">3</span><span style="color:blue">D</span>!</h3>
+   <h3>By Sterling Hirsh, Taylor Arnicar, Mike Smith, Ryuho Kudo, Sean Ghiocel, Chris Brenton, Jake Juszak and Justin Kuehn</h3>
+   <object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/U1S8ZXPnZ3A?hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/U1S8ZXPnZ3A?hl=en&fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>
+
+   <p>Asteroid Blaster is a space adventure game for players of all ages. The player can fly freely within a bounded environment in outer space and shoot asteroids, much like the classic arcade game, Asteroids. When asteroids are shot, they break apart into smaller asteroids, and sometimes they drop minerals that the player can gather. Players can fly to these minerals and touch them to pick them up / gather them, or they can use a tractor beam to pull the minerals towards their ships.</p>
+
+   <p>The player will use minerals that they have gathered to purchase upgrades for their ship, such as better armor, new and more powerful weapons, and  ammo for their weapons. Players will be able to fly and shoot from their own ship, or they can choose to have an AI player fly or shoot for them. Additionally, players will be able to play the game against a computer-controlled AI that will fight against the player.</p>
+
+   <p>The game uses primarily homemade sounds and music. It features several shaders, both vertex and fragment. It uses a lot of particle systems to make the world look pretty. It also uses billboarded sprites for explosions.</p>
+
+   <p>The game makes use of view frustum culling to prevent unnessecary data from being sent to the graphics card. Additionally, because the game makes heavy use of transparency, all objects are sorted back to front before being drawn.</p>
+
+   <p>AsteroidBlaster features an AI that will fly and shoot for the player. During the game, this can be enabled/disabled fith the F(lying) and G(unner) keys. In the future, this will be used to add additional ships to the world to allow the player to play against or alongside others.</p>
+
+   <p>To make the game more graphically appealing, we used a pixel shader to create a bloom effect.</p>
+
+   <p>AsteroidBlaster currently includes 5 weapons: Blaster, Tractor Beam, Rail Gun, Pikachu's Wrath, and the Anti-Inertia Beam. All of these guns are demonstrated in the video above.</p>
    
-   <img src="justasteroids.jpg" />
-   <p>I always liked Asteroids.
-      I had a ton of fun with Asteroids clones on my mac when I was a kid.
-      When it came time to do my final project, I figured Asteroids would be super fun.
-      Turns out, it was!
-      There are some other 3D versions of asteroids, but none are very good.
-      My project is not yet a game so much as an interactive environment.
-      It has no scoring, nor does it have a win or lose condition.
-      But it's fun to play with, nevertheless.
-   </p>
-   
-   <h4>Here's the idea</h4>
-   <p>
-      There are a ton of asteroids out there.
-      It's your job to make them blow up.
-      To help you, you've got two weapons and an invincible ship.
-   </p>
-   
-   <h4>Blaster</h4>
-   <img src="blaster.jpg" />
-   <p>
-      Blaster shots are projectiles.
-      They fire at 10 shots per second and stay around for two seconds.
-      They disappear when they hit an asteroid.
-      Blaster shots are red cones that point opposite to their velocity vector.
-      You can see one above the crosshair in the screenshot to the right.
-      Since they are small and move quickly, it is hard to take screenshots of them.
-      You fire blaster shots with the left mouse button.
-      Blaster shots do hit detection by iterating through all Asteroids and finding their distance from the current position of each existing blaster shot.
-      Each asteroid has a radius for hit detection purposes.
-      When the distance from the blaster shot to the asteroid's center is less than the radius, a collision is triggered.
-   </p>
-   
-   <h4>Railgun</h4>
-   <img src="railgun.jpg" />
-   <p>
-      The railgun is an instant-hit weapon that can fire once every two seconds.
-      It does its hit detection differently than the blaster shot.
-      For each asteroid, it calculates a plane such that the shot's direction is normal to the plane.
-      If the asteroid is behind the plane, it is skipped.
-      If the asteroid is in front of the plane, the distance is calculated from the line formed by the shot.
-      If the distance is less than the radius, a collision is triggered.
-   </p>
-   
-   <p>
-      The railgun is drawn using a hierarchical model.
-      The center beam is drawn as a cylinder that shrinks over time.
-      A helix of spheres is drawn around the beam.
-      I made the appearance of the railgun in the style of Quake Live's railgun.
-      Quake Live's railgun looks cooler, but that's not surprising.
-   </p>
-   
-   <h4>The Asteroids</h4>
-   <p>
-      The asteroids are all procedurally generated.
-      To accomplish this, I calculate the points on a sphere using spherical coordinates.
-      Then, I use a semi-random radius for each point.
-      This creates a jagged surface.
-      The asteroid surfaces are not texture mapped.
-      Maybe I will do this in a later version.
-   </p>
-   
-   <p>
-      When asteroids are hit by shots, one of two things can happen.
-      If the asteroid's radius is below a certain threshold, the asteroid explodes and disappears.
-      If the asteroid's radius is above that threshold, the asteroid explodes, but creates three new randomly generated asteroids, each with half the radius of the original.
-      New asteroids have a random velocity summed with the velocity of the original asteroid.
-      Combined with the explosion sprite that is displayed when the asteroids explode, this makes it feel like the player is breaking up asteroids.
-   </p>
-   
-   <p>
-      When asteroids hit the ship, they disappear.
-      Since this is not a game, yet, there is no lose condition.
-      Therefore, there isn't much else to do.
-   </p>
-   
-   <h4>The Explosions</h4>
-   <p>
-      I google image searched for an explosion sprite.
-      I found one that was 20 frames in an image. 
-      I adapted the provided texture importing code to read in the file and add alpha values.
-      This allowed me to use transparency with my explosions.
-      I then made a class that would move the image around to make the image show up as an animation.
-      The image shows up on a quad, but I needed to make the image face the camera.
-      I used the cross product of the normal to the sprite's plane and the vector from the sprite's position to the camera as the axis of rotation.
-      Then I rotated by the angle created by those two vectors.
-   </p>
-   
-   <h4>The Skybox</h4>
-   <p>
-      I created a cube centered around the player, but turned off depth testing.
-      The cube is a constant distance from the player, but without depth testing, it draws behind everything else.
-   </p>
-   
-   <h4>The Grid</h4>
-   <p>
-      I draw a grid of lines around the field of play.
-      This lets the user know where the edges are, but allows them to see through to the stars.
-      Each face of the cube is a different color.
-      This helps the user stay oriented properly, even when moving around space.
-      Some people have reported experiencing nausea when watching me play with this program.
-      I felt a little bit queasy when I first started using it, but it took only a minute for me to figure out how to think of my surroundings without getting sick.
-      The trick for me was quickly changing which wall was the "floor" in my mind.
-      After that, I had no problem flying around.
-      Trying to keep one wall as the floor is very difficult in the absence of gravity.
-   </p>
-   
-   <h4>The Code</h4>
-   <p>
-      I used an object-oriented design for this project.
-      This was exciting, since I had never really worked with object-oriented C++ before.
-      It definitely has a learning curve, but I think I picked it up.
-      I ended up putting a lot of code in .h files.
-      I know it's the "wrong thing to do," but it made development so much faster!
-      When I (hopefully) start working on this again for 476, I will refactor the code and split the files into .h and .cpp.
-      I did do Vector3D the right way, though, just to prove that I could.
-   </p>
-   
-   <p>
-      It turns out, having a good Vector3D class made the whole project much easier than it would have been if I had had to re-code vector math over and over.
-      I coded operations for scalar multiplication, vector addition, subtraction, cross product, dot product, and rotation.
-      My weapons used vectors, my ship used vectors, and my asteroids used vectors.
-   </p>
-   
-   <p>
-      For movement, it was important to have a consistent speed, regardless of CPU speed.
-      I used a glutIdleFunc, for all my animation and updates.
-      To avoid drastically varying speeds, I used the system's real-time clock.
-      I wrote a function that would retrieve the current time as a double.
-      This made all of my animations and movements incredibly simple.
-      I specified all speeds and accelerations in terms of units per second.
-      Then, each frame, I called updatePosition (or similar) on all objects that needed updating.
-      I would pass to these functions a double called timeDiff.
-      To calculate the change in position, I used the velocity vector (with length equal to the speed of the object) scalar multiplied by the time difference.
-      This way, each frame could be a different length while still maintaining consistent movement.
-   </p>
-   
-   <p>
-      For the ship, I had to store position, velocity, and acceleration.
-      I also had to store the ship's orientation.
-      Since the ship could be facing any direction, I had to store forward, up, and right vectors.
-      Rotations were done by rotating two orientation vectors about the third.
-      For example, roll was achieved by rotating up and right about forward.
-      The ship could travel in any direction, irrespective of its orientation.
-      That is to say, the ship's velocity does not change when the ship rotates.
-      I set the camera by placing the eye at the ship's position and the lookat point at the ship's position + the forward vector.
-   </p>
-   
-   <h4>Lighting</h4>
-   <p>
-      The ship has a directional headlight.
-      This means that wherever the ship is, asteroids should appear to be lit from the camera.
-      Asteroids and shots are the only things that are lit.
-      The skybox, explosions, and grid are not affected by the light.
-   </p>
-   
-   <h4>
-   
-   <h4>User Input</h4>
-   <p>
-      Users can accelerate the ship in any direction.
-      Users may also yaw, roll, and pitch the ship.
-      I have played other versions of 3D asteroids games where this was true, but the controls were confusing and difficult to learn.
-      Since the mouse is used for aiming, pitching and rolling, rotation is very intuitive.
-      Yaw is the only rotation that uses the keyboard (A and D).
-      Translation uses W and S for forward and backward.
-      Q and E strafe, and C and Spacebar move down and up respectively.
-      I wanted to use the Control key for downward acceleration, but GLUT has no means of detecting a modifier key's events.
-      Lastly, I added a brake on the B key.
-      When moving around, it can be difficult to judge your direction and slow down by accelerating in the opposite direction of travel.
-      Braking fixes that by gradually slowing the ship, regardless of its velocity and direction.
-   </p>
-   
-   <h4>Endgame</h4>
-   <p>
-      The program starts off with 30 asteroids.
-      Each one splits into three, and each of those split into at least three more, depending on size.
-      To clear the field, you would have to shoot approximately 15 metric ass-tonnes of asteroids.
-      I have never actually done it.
-      When I make this a game, I will definitely make it beatable.
-      I want to make it so there can be multiple ships flying around in a single world.
-      I want each ship to be able to have multiple players, firing in different directions.
-      I think it will be pretty awesome.
-   </p>
 </body>
 </html>

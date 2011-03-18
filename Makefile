@@ -62,10 +62,8 @@ libClean:
 	./lib.sh clean
 
 turnin:
-	handin zwood csc471finals2 *.cpp *.h *.bmp README
-	handin zwood csc471finalwebs2 asteroidssite/*
-	handin zwood csc471finals2
-	handin zwood csc471finalwebs2
+	handin zwood csc476finals ${FILES}
+	handin zwood csc476finalweb asteroidssite/*
 
 valgrind:
 	valgrind -v --leak-check=full --show-reachable=yes --track-origins=yes ./${PROGNAME}
@@ -81,3 +79,13 @@ gprof:
 
 killall:
 	killall -9 ${PROGNAME}
+
+glc-capture:
+	glc-capture -s -o ${PROGNAME}.glc ./${PROGNAME}
+
+glc-play:
+	glc-play ${PROGNAME}.glc
+
+glc-encode:
+	glc-play ${PROGNAME}.glc -y 1 -o - | mencoder -demuxer y4m - -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=1500 -o video.avi
+
