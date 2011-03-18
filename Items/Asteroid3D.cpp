@@ -441,12 +441,10 @@ void Asteroid3D::handleCollision(Drawable* other) {
          SoundEffect::playSoundEffect("Explosion1.wav");
          shouldRemove = true;
          const int explosionFactor = 3;
-         /*
          Sprite::sprites.push_back(
                new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20,
                   *position, radius * explosionFactor,
                   radius * explosionFactor));
-                  */
          if (radius > 2) {
             shot->owner->score += (int) radius * 10;
             int dimension = rand() % 3;
