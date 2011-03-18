@@ -184,7 +184,6 @@ void Shard::drawGlow() {
    Object3D::draw();
    // Disable materials.
    glEnable(GL_COLOR_MATERIAL);
-   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslatef(position->x, position->y, position->z);
    // Push matrix and draw main shard.
@@ -265,7 +264,6 @@ void Shard::draw() {
    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
    // GL_ALWAYS it draws the crystal wrong. 
-   glDepthFunc(GL_ALWAYS);
    // GL_LEQUAL draws the orbiters wrong. 
    //glDepthFunc(GL_LEQUAL);
 
@@ -281,7 +279,6 @@ void Shard::draw() {
 
    glPopMatrix();
    glDisable(GL_COLOR_MATERIAL);
-   glDepthFunc(GL_LEQUAL);
 
    /*
    drawBoundingBox();

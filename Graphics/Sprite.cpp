@@ -44,6 +44,7 @@ void Sprite::Add(unsigned int texID, int framesXIn, int framesYIn, double fpsIn,
 void Sprite::draw() {
    // Update the current frame.
    
+   glDepthMask(false);
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_BLEND);
@@ -92,7 +93,8 @@ void Sprite::draw() {
    glEnable(GL_LIGHTING);
    glDepthFunc(GL_LEQUAL);
    // This is kind of a hack, I think.
-   glClear(GL_DEPTH_BUFFER_BIT);
+   glDepthMask(true);
+   //glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 /**

@@ -105,9 +105,9 @@ void Particle::initDisplayList() {
    // TODO: The problem with this  is that particles don't fade out. They snap out.
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glDepthMask(false);
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
-   glDepthFunc(GL_ALWAYS);
    //Disable(GL_DEPTH_TEST);
    glDisable(GL_CULL_FACE);
    glBegin(GL_TRIANGLE_FAN);
@@ -127,14 +127,9 @@ void Particle::initDisplayList() {
    glEnd( );
    
    glDisable(GL_TEXTURE_2D);
-   glDepthFunc(GL_LEQUAL);
-   //glEnable(GL_DEPTH_TEST);
-   /*
-   glEnable(GL_CULL_FACE);
-   glEnable(GL_LIGHTING);
-   */
 
    glUseProgram(0);
+   glDepthMask(true);
    glEndList();
 }
 
