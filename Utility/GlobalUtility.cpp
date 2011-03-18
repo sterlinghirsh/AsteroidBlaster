@@ -51,6 +51,8 @@ SettingsMenu* settingsMenu = NULL;
 HelpMenu* helpMenu = NULL;
 CreditsMenu* creditsMenu = NULL;
 GameState* gameState = NULL;
+TTF_Font* hudFont = NULL;
+TTF_Font* menuFont = NULL;
 
 using namespace std;
 

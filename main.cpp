@@ -174,6 +174,20 @@ void init() {
    //This enables alpha transparency so that things are see through
    glEnable(GL_BLEND);
    
+   hudFont = TTF_OpenFont("Fonts/Slider.ttf", 18);
+   if(!hudFont)
+   {
+      printf("TTF_OpenFont: %s\n", TTF_GetError());
+      exit(3);
+   }
+   
+   menuFont = TTF_OpenFont("Fonts/Slider.ttf", 24);
+   if(!menuFont)
+   {
+      printf("TTF_OpenFont: %s\n", TTF_GetError());
+      exit(3);
+   }
+   
    //set the background to be black
    glClearColor(0.0, 0.0, 0.0, 1.0);
    //glClearColor(1.0, 1.0, 1.0, 1.0);

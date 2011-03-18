@@ -39,7 +39,7 @@ CreditsMenu::CreditsMenu() {
    addTitle("The Music Man");
    addSingleColName("George Michael Himself");
    
-   menuTexts.push_back(new Text("Return to Main Menu", fontName, position, 18));
+   menuTexts.push_back(new Text("Return to Main Menu", menuFont, position));
 
    menuTexts[QUIT_STRING_INDEX]->selectable = true;
 
@@ -63,7 +63,7 @@ void CreditsMenu::addTitle(std::string name)
 {
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT; 
-   menuTexts.push_back(new Text(name, fontName, position, 48));
+   menuTexts.push_back(new Text(name, menuFont, position));
    types.push_back(TITLE_TYPE);
 }
 
@@ -71,7 +71,7 @@ void CreditsMenu::addDualColName(std::string name)
 {
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT;
-   menuTexts.push_back(new Text(name, fontName, position, 24));
+   menuTexts.push_back(new Text(name, menuFont, position));
    types.push_back(DUAL_NAME_TYPE);
 }
 
@@ -79,7 +79,7 @@ void CreditsMenu::addSingleColName(std::string name)
 {
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT;
-   menuTexts.push_back(new Text(name, fontName, position, 28));
+   menuTexts.push_back(new Text(name, menuFont, position));
    types.push_back(SINGLE_NAME_TYPE);
 }
 

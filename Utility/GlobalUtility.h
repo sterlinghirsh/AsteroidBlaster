@@ -21,6 +21,7 @@
 #endif
 
 #include "SDL.h"
+#include "SDL_ttf.h"
 #include "Utility/Constants.h"
 #include "Utility/InputManager.h"
 #include "Menus/MainMenu.h"
@@ -62,6 +63,8 @@ extern HelpMenu* helpMenu;
 extern SettingsMenu* settingsMenu;
 extern CreditsMenu* creditsMenu;
 extern GameState* gameState;
+extern TTF_Font* hudFont;
+extern TTF_Font* menuFont;
 
 
 

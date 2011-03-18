@@ -41,14 +41,14 @@ class Text {
       void glDisable2D();
    public:
       //Constructor if you are displaying one string
-      Text(std::string text, std::string fontName, SDL_Rect _pos, int _size);
+      Text(std::string text, TTF_Font* _font, SDL_Rect _pos);
       //Text(std::string text, std::string fontName, SDL_Rect _pos, int _size, bool _centered);
       // Constructor if you are displaying multiple strings
-      Text(std::string preText, std::string body, std::string postText, std::string fontName, SDL_Rect _pos, int _size);
+      Text(std::string preText, std::string body, std::string postText, TTF_Font* _font, SDL_Rect _pos);
       // Constructor if you are displaying an int
-      Text(std::string preText, int body, std::string postText, std::string fontName, SDL_Rect _pos, int _size);
+      Text(std::string preText, int body, std::string postText, TTF_Font* _font, SDL_Rect _pos);
       // Constructor if you are displaying a double
-      Text(std::string preText, double body, std::string postText, std::string fontName, SDL_Rect _pos, int _size);
+      Text(std::string preText, double body, std::string postText, TTF_Font* _font, SDL_Rect _pos);
 
       // Destructor
       virtual ~Text();
@@ -60,7 +60,7 @@ class Text {
       // Sets the new body text to be used
       void updateBody(double newDouble);
       // Sets the font to be used
-      void setFont(std::string fontName, int size);
+      void setFont(TTF_Font* _font);
       // Sets the color of the text
       void setColor(SDL_Color _color);
       // Sets the position where the text will be drawn

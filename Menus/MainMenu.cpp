@@ -25,13 +25,13 @@ MainMenu::MainMenu() {
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT;
    
-   menuTexts.push_back(new Text("New Game (n)",  fontName, position, 24));
-   menuTexts.push_back(new Text("Continue (c)",  fontName, position, 24));
-   menuTexts.push_back(new Text("Save/Load Game",  fontName, position, 24));
-   menuTexts.push_back(new Text("Settings",  fontName, position, 24));
-   menuTexts.push_back(new Text("Help",  fontName, position, 24));
-   menuTexts.push_back(new Text("Credits",  fontName, position, 24));
-   menuTexts.push_back(new Text("Quit (esc)", fontName, position, 24));
+   menuTexts.push_back(new Text("New Game (n)",  menuFont, position));
+   menuTexts.push_back(new Text("Continue (c)",  menuFont, position));
+   menuTexts.push_back(new Text("Save/Load Game",  menuFont, position));
+   menuTexts.push_back(new Text("Settings",  menuFont, position));
+   menuTexts.push_back(new Text("Help",  menuFont, position));
+   menuTexts.push_back(new Text("Credits",  menuFont, position));
+   menuTexts.push_back(new Text("Quit (esc)", menuFont, position));
    
    
    menuTexts[NEWGAME_STRING_INDEX]->selectable = true;

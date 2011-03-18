@@ -17,15 +17,8 @@
 
 // Constructor if you are displaying one string
 //Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size, bool _centered) {
-Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
-   size = _size;
-   font = TTF_OpenFont(fontName.c_str(), size);
-   if(!font)
-   {
-      printf("TTF_OpenFont: %s\n", TTF_GetError());
-      exit(3);
-   }
-   
+Text::Text(std::string text, TTF_Font* _font, SDL_Rect _pos) {
+   font = _font;
    sstream << text;
    textToDisplay = sstream.str();
    pos = _pos;
@@ -37,14 +30,8 @@ Text::Text(std::string text, std::string fontName, SDL_Rect _pos, int _size) {
 }
 
 // Constructor if you are displaying multiple strings
-Text::Text(std::string preText, std::string body, std::string postText, std::string fontName, SDL_Rect _pos, int _size) {
-   size = _size;
-   font = TTF_OpenFont(fontName.c_str(), size);
-   if(!font)
-   {
-      printf("TTF_OpenFont: %s\n", TTF_GetError());
-      exit(3);
-   }
+Text::Text(std::string preText, std::string body, std::string postText, TTF_Font* _font, SDL_Rect _pos) {
+   font = _font;
    
    sstream << preText << body << postText;
    textToDisplay = preText + body + postText;
@@ -60,14 +47,8 @@ Text::Text(std::string preText, std::string body, std::string postText, std::str
 }
 
 // Constructor if you are displaying an int
-Text::Text(std::string preText, int body, std::string postText, std::string fontName, SDL_Rect _pos, int _size) {
-   size = _size;
-   font = TTF_OpenFont(fontName.c_str(), size);
-   if(!font)
-   {
-      printf("TTF_OpenFont: %s\n", TTF_GetError());
-      exit(3);
-   }
+Text::Text(std::string preText, int body, std::string postText, TTF_Font* _font, SDL_Rect _pos) {
+   font = _font;
    
    sstream << preText << body << postText;
    // Get a string out of the osteringstream
@@ -83,14 +64,8 @@ Text::Text(std::string preText, int body, std::string postText, std::string font
 }
 
 // Constructor if you are displaying a double
-Text::Text(std::string preText, double body, std::string postText, std::string fontName, SDL_Rect _pos, int _size) {
-   size = _size;
-   font = TTF_OpenFont(fontName.c_str(), size);
-   if(!font)
-   {
-      printf("TTF_OpenFont: %s\n", TTF_GetError());
-      exit(3);
-   }
+Text::Text(std::string preText, double body, std::string postText, TTF_Font* _font, SDL_Rect _pos) {
+   font = _font;
    
    sstream << preText << body << postText;
    // Get a string out of the osteringstream
@@ -133,13 +108,8 @@ void Text::updateBody(double newDouble) {
    textToDisplay = sstream.str();
 }
 
-void Text::setFont(std::string fontName, int size) {
-   font = TTF_OpenFont(fontName.c_str(), size);
-   if(!font)
-   {
-      printf("TTF_OpenFont: %s\n", TTF_GetError());
-      exit(3);
-   }
+void Text::setFont(TTF_Font* _font) {
+      font = _font;
 }
 
 void Text::setColor(SDL_Color _color) {

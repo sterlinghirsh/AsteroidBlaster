@@ -11,7 +11,7 @@
 std::list<GameMessage*> GameMessage::activeMessages;
 SDL_Rect DefaultSDLRect = {0, 0};
 
-GameMessage::GameMessage(std::string _text, double _size, double _lifetime) : Text(_text, DEFAULT_FONT, DefaultSDLRect, _size) {
+GameMessage::GameMessage(std::string _text, double _size, double _lifetime) : Text(_text, menuFont, DefaultSDLRect) {
    lifetime = _lifetime;
    alignment = CENTERED;
    timeCreated = doubleTime();

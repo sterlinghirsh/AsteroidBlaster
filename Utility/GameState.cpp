@@ -44,17 +44,17 @@ GameState::GameState(double worldSizeIn) {
    std::string fontName = DEFAULT_FONT;
    int fontSize = 18;
    
-   FPSText = new Text("FPS: ", curFPS, "",  fontName, position, fontSize);
-   numAsteroidsText = new Text("Asteroids Remaining: ", custodian.asteroidCount, "",  fontName, position, fontSize);
-   numShardsText = new Text("Shards Remaining: ", custodian.shardCount, "",  fontName, position, fontSize);
-   scoreText = new Text("Score: ", ship->getScore(), "",  fontName, position, fontSize);
-   shardText = new Text("Shards: ", ship->getShards(), "",  fontName, position, fontSize);
-   healthText = new Text("Health: ", ship->getHealth(), "",  fontName, position, fontSize);
-   weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  fontName, position, fontSize);
+   FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
+   numAsteroidsText = new Text("Asteroids Remaining: ", custodian.asteroidCount, "",  hudFont, position);
+   numShardsText = new Text("Shards Remaining: ", custodian.shardCount, "",  hudFont, position);
+   scoreText = new Text("Score: ", ship->getScore(), "",  hudFont, position);
+   shardText = new Text("Shards: ", ship->getShards(), "",  hudFont, position);
+   healthText = new Text("Health: ", ship->getHealth(), "",  hudFont, position);
+   weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  hudFont, position);
    
    // Get the ammo into a stream to turn it into a string.
    sstream2 << ship->getCurrentWeapon()->curAmmo;
-   ammoText = new Text("Ammo: ", sstream2.str(), "",  fontName, position, fontSize);
+   ammoText = new Text("Ammo: ", sstream2.str(), "",  hudFont, position);
    // Clear the sstream2
    sstream2.str("");
    
@@ -80,7 +80,7 @@ GameState::GameState(double worldSizeIn) {
    // TODO: comment this or rename it.
    isW = isA = isS = isD = false;
 
-   curLevelText = new Text("Level: ", curLevel, "",  fontName, position, fontSize);
+   curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
 
    // Bloom
    xSize = ySize = 512;

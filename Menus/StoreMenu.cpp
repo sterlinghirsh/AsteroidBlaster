@@ -72,70 +72,70 @@ StoreMenu::StoreMenu() {
    
    
    //Get shards, health and Done text onto menuTexts
-   menuTexts.push_back(new Text("Done (n)", fontName, position, 24));
+   menuTexts.push_back(new Text("Done (n)", menuFont, position));
    menuTexts[DONE_STOREMENUINDEX]->selectable = true;
-   menuTexts.push_back(new Text("Shards: ", 0, "", fontName, position, 24));
-   menuTexts.push_back(new Text("Health: ", 0, "", fontName, position, 24));
+   menuTexts.push_back(new Text("Shards: ", 0, "", menuFont, position));
+   menuTexts.push_back(new Text("Health: ", 0, "", menuFont, position));
    
-   menuTexts.push_back(new Text("Weapons", fontName, position, 24));
+   menuTexts.push_back(new Text("Weapons", menuFont, position));
    menuTexts[WEAPONS_STOREMENUINDEX]->selectable = true;
-   menuTexts.push_back(new Text("Upgrades", fontName, position, 24));
+   menuTexts.push_back(new Text("Upgrades", menuFont, position));
    menuTexts[UPGRADES_STOREMENUINDEX]->selectable = true;
-   menuTexts.push_back(new Text("Ammo", fontName, position, 24));
+   menuTexts.push_back(new Text("Ammo", menuFont, position));
    menuTexts[AMMO_STOREMENUINDEX]->selectable = true;
-   menuTexts.push_back(new Text("Ship", fontName, position, 24));
+   menuTexts.push_back(new Text("Ship", menuFont, position));
    menuTexts[SHIP_STOREMENUINDEX]->selectable = true;
    
    
    
    //get weapon purchase text in weaponsTexts
    out << "Buy Railgun  $" << RAILGUN_PRICE;
-   weaponsTexts.push_back(new Text(out.str(), fontName, position, 24));
+   weaponsTexts.push_back(new Text(out.str(), menuFont, position));
    
    out.str(""); 
    out << "Buy Pikachu's Wrath $" << PIKACHUSWRATH_PRICE;
-   weaponsTexts.push_back(new Text(out.str(), fontName, position, 24));
+   weaponsTexts.push_back(new Text(out.str(), menuFont, position));
    
    out.str(""); 
    out << "Buy Anti Inertia Beam $" << ANTIINERTIA_PRICE;
-   weaponsTexts.push_back(new Text(out.str(), fontName, position, 24));
+   weaponsTexts.push_back(new Text(out.str(), menuFont, position));
    
    
    //get upgrade text in upgradesTexts
    out.str(""); 
    out << "Upgrade Blaster $";
-   upgradesTexts.push_back(new Text(out.str(), fontName, position, 24));
+   upgradesTexts.push_back(new Text(out.str(), menuFont, position));
    
    out.str(""); 
    out << "Upgrade Railgun $";
-   upgradesTexts.push_back(new Text(out.str(), fontName, position, 24));
+   upgradesTexts.push_back(new Text(out.str(), menuFont, position));
    
    out.str(""); 
    out << "Upgrade Pikachu's Wrath $";
-   upgradesTexts.push_back(new Text(out.str(), fontName, position, 24));
+   upgradesTexts.push_back(new Text(out.str(), menuFont, position));
    
    
    //get ammo text in ammoTexts
    out.str(""); 
    out << "Buy " << RAILGUN_AMMO_AMOUNT << " Railgun Ammo $" << RAILGUN_AMMO_PRICE;
-   ammoTexts.push_back(new Text(out.str(), fontName, position, 24));
+   ammoTexts.push_back(new Text(out.str(), menuFont, position));
    
    out.str(""); 
    out << "Buy " << PIKACHUSWRATH_AMMO_AMOUNT << " Pikachu's Wrath Ammo $" << PIKACHUSWRATH_AMMO_PRICE;
-   ammoTexts.push_back(new Text(out.str(), fontName, position, 24));
+   ammoTexts.push_back(new Text(out.str(), menuFont, position));
    
    out.str(""); 
    out << "Buy " << ANTIINERTIA_AMMO_AMOUNT << " Anti Inertia Beam Ammo $" << ANTIINERTIA_AMMO_PRICE;
-   ammoTexts.push_back(new Text(out.str(), fontName, position, 24));
+   ammoTexts.push_back(new Text(out.str(), menuFont, position));
    
    //get ship related text in shipTexts
    out.str(""); 
    out << "Buy Ship Health $" << HEALTH_PRICE;
-   shipTexts.push_back(new Text(out.str(), fontName, position, 24));
+   shipTexts.push_back(new Text(out.str(), menuFont, position));
    
    out.str(""); 
    out << "Upgrade Engine $" <<ENGINEUPGRADE_PRICE;
-   shipTexts.push_back(new Text(out.str(), fontName, position, 24));
+   shipTexts.push_back(new Text(out.str(), menuFont, position));
     
     
    for(int i = 0; i < weaponsTexts.size(); i++) {
