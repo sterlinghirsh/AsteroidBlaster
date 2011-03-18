@@ -62,7 +62,7 @@ libClean:
 	./lib.sh clean
 
 turnin:
-	handin zwood csc476finals ${FILES}
+	handin zwood csc476final ${FILES}
 	handin zwood csc476finalweb asteroidssite/*
 
 valgrind:
