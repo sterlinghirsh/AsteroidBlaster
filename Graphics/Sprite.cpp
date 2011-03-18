@@ -91,6 +91,8 @@ void Sprite::draw() {
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
    glDepthFunc(GL_LEQUAL);
+   // This is kind of a hack, I think.
+   glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 /**
