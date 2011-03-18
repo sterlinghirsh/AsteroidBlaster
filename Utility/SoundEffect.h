@@ -7,6 +7,8 @@
 #include <iostream>
 #include "SDL_mixer.h"
 
+#define CHANNEL_MAX 32
+
 class SoundEffect {
    public:
       SoundEffect();

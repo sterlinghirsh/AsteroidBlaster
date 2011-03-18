@@ -510,12 +510,15 @@ void Asteroid3D::debug() {
 
 void Asteroid3D::dropRandomItem() {
    float whichItem = randdouble();
-   if (whichItem < 0.5) {
+   if (whichItem < 0.4) {
       // Do nothing!
-   } else if (whichItem < 0.9) { 
+   } else if (whichItem < 0.8) { 
       custodian->add(makeShard(0));
+      SoundEffect::playSoundEffect("CrystalRelease");
       //printf("YOU JUST SHARDED\n");
    } else {
+      // Don't play the sound effect twice on top of itself.
+      SoundEffect::playSoundEffect("DoubleCrystalRelease");
       custodian->add(makeShard(0));
       custodian->add(makeShard(0));
    }
