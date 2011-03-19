@@ -932,7 +932,7 @@ void AsteroidShip::drawCrosshair() {
       glEnd();
       */
    if (currentView == VIEW_FIRSTPERSON_SHIP) {
-      glTranslatef(getAimX(), getAimY(), 0.0);
+      glTranslatef((GLfloat)getAimX(),(GLfloat) getAimY(),(GLfloat)0.0f);
    }
    static GLUquadricObj *outer;
    static GLUquadricObj *inner;
