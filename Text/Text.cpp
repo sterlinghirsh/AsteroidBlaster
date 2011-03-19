@@ -311,5 +311,5 @@ void Text::mouseHighlight(int x, int y) {
 }
 
 void Text::mouseHighlight(double x, double y) {
-   mouseHighlight(x, y);
+   mouseHighlight((int) x, (int) y);
 }
