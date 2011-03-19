@@ -85,13 +85,13 @@ void Particle::draw()
    
    position->glTranslate();
    
-   float alpha = ((startTime + life) - doubleTime()); 
+   float alpha = (float) ((startTime + life) - doubleTime()); 
 
    // glColor4f clamps alpha to [0, 1].
    glColor4f( r,g,b, alpha);
    glUseProgram(billboardShader);
    GLint sizeLoc = glGetUniformLocation(billboardShader, "size");
-   glUniform1f(sizeLoc, size);
+   glUniform1f(sizeLoc, (float) size);
 
    glCallList(particleDisplayList);
    glPopMatrix();

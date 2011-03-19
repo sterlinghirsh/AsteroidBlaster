@@ -145,7 +145,7 @@ void Text::draw() {
    
    //SO let's translate it back to standard SDL (normal coordinate)
    
-   SDL_Rect temp = {pos.x, GH - pos.y - TEXT_INVERT_VALUE};
+   SDL_Rect temp = {pos.x, (Sint16) (GH - pos.y - TEXT_INVERT_VALUE)};
 
    if(!selectable) { selected = false;}
 
@@ -157,18 +157,18 @@ void Text::draw() {
 
    
    
-   pos.w = (int) (temp.w * 1.5);
+   pos.w = (Sint16) (temp.w * 1.5);
    pos.h = temp.h;
    //if (centered) {
    if (alignment == CENTERED)
    {
       // Centered.
-      pos.x -= temp.w / 2;
+      pos.x = (Sint16) (pos.x - (temp.w / 2));
    }
    else if (alignment == RIGHT_ALIGN)
    {
       // Right Aligned.
-      pos.x -= temp.w;
+      pos.x = (Sint16) (pos.x - temp.w);
    }
 
    /* Come out of HUD mode */
@@ -258,13 +258,13 @@ void Text::SDL_GL_RenderText(const char *text,
 		   That is why the TexCoords specify different corners
 		   than the Vertex coors seem to. */
 		glTexCoord2f(0.0f, 1.0f); 
-			glVertex2f(textX, location->y);
+			glVertex2d(textX, location->y);
 		glTexCoord2f(1.0f, 1.0f); 
-			glVertex2f(textX + textW, location->y);
+			glVertex2d(textX + textW, location->y);
 		glTexCoord2f(1.0f, 0.0f); 
-			glVertex2f(textX + textW, location->y + h);
+			glVertex2d(textX + textW, location->y + h);
 		glTexCoord2f(0.0f, 0.0f); 
-			glVertex2f(textX, location->y + h);
+			glVertex2d(textX, location->y + h);
 	glEnd();
 	
 	/* Bad things happen if we delete the texture before it finishes */
@@ -275,7 +275,7 @@ void Text::SDL_GL_RenderText(const char *text,
 	int height = -1;
    TTF_SizeText(font,text, &width, &height);
 	location->w = (Uint16) (textW / 2);
-	location->h = height;
+	location->h = (Uint16) height;
 	
 	/* Clean up */
 	SDL_FreeSurface(initial);

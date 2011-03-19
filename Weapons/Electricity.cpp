@@ -42,7 +42,7 @@ void Electricity::fire() {
       return;
 
    Point3D start = *ship->position;
-   ship->setShakeAmount(0.1);
+   ship->setShakeAmount(0.1f);
    gameState->custodian.add(new ElectricityShot(start, ship->shotDirection, ship));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new ElectricityShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;

@@ -10,16 +10,16 @@
 #include "Utility/Texture.h"
 
 ProgressBar::ProgressBar(float _height, float _width, float _x, float _y) :
- height(_height), width(_width), x(_x), y(_y), amount(0), outerBoxThickness(0.01), hasIcon(false) {
+ height(_height), width(_width), x(_x), y(_y), amount(0), outerBoxThickness(0.01f), hasIcon(false) {
 }
 
 void ProgressBar::setAmount(float _amount) {
-   amount = clamp(_amount, 0, 1);
+   amount = (float) clamp(_amount, 0, 1);
 }
 
 void ProgressBar::draw() {
    float drawHeight = amount * height;
-   const float backgroundZOffset = -0.01; // Some small negative number.
+   const float backgroundZOffset = -0.01f; // Some small negative number.
    glPushMatrix();
       glTranslatef(x, y, 0);
       setMaterial(BlackSolid);

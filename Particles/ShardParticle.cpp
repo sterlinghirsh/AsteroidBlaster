@@ -7,8 +7,8 @@
 #include "Particles/ShardParticle.h"
 #include "math.h"
 
-const float startingSize = 0.3;
-const float minLife = 0.5; // Seconds
+const float startingSize = 0.3f;
+const float minLife = 0.5f; // Seconds
 ShardParticle::ShardParticle(Point3D* _position,
       Vector3D* _velocity, float _life, float _r, float _g, float _b) :
    Particle(_position, _velocity, _life, _r, _g, _b) {
@@ -23,9 +23,9 @@ void ShardParticle::update(double timeDifference) {
 
 void ShardParticle::Add(Point3D* pos, Vector3D* vec) {
    float _fade = minLife;
-   float _r = 0.9 + (randdouble() * 0.1) ;
-   float _g = 0.9 + (randdouble() * 0.1) ;
-   float _b = 0.9 + (randdouble() * 0.1) ;
+   float _r = (float) (0.9 + (randdouble() * 0.1));
+   float _g = (float) (0.9 + (randdouble() * 0.1));
+   float _b = (float) (0.9 + (randdouble() * 0.1));
 
    particles.push_back(new ShardParticle(pos, vec, _fade, _r, _g, _b));
 }

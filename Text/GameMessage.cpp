@@ -29,13 +29,13 @@ void GameMessage::update(double timeDiff) {
 void GameMessage::drawAllMessages() {
    std::list<GameMessage*>::iterator listIter;
 
-   SDL_Rect position = {GW / 2, GH / 2};
+   SDL_Rect position = {(Sint16) (GW / 2), (Sint16) (GH / 2)};
    int lineHeight = 30;
 
    for (listIter = activeMessages.begin(); listIter != activeMessages.end(); ++listIter) {
       (*listIter)->setPosition(position);
       (*listIter)->draw();
-      position.y += lineHeight;
+      position.y = (Sint16) (position.y + lineHeight);
    }
 }
 

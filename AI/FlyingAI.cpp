@@ -97,9 +97,13 @@ Point3D* FlyingAI :: getClosestShard() {
       if (*iter == NULL || (dynamic_cast<Shard*>(*iter) == NULL)) {
          continue;
       }  
-      tempDist = pow((*iter)->position->x - ship->position->x, 2) +
-                 pow((*iter)->position->y - ship->position->y, 2) +
-                 pow((*iter)->position->z - ship->position->z, 2)  ;
+      tempDist = (float) (
+        ((*iter)->position->x - ship->position->x, 2) *
+        ((*iter)->position->x - ship->position->x, 2) +
+        ((*iter)->position->y - ship->position->y, 2) *
+        ((*iter)->position->y - ship->position->y, 2) +
+        ((*iter)->position->z - ship->position->z, 2) *
+        ((*iter)->position->z - ship->position->z, 2));
          
       if(shortestDist > tempDist) {
          shortestDist = tempDist;
@@ -280,14 +284,14 @@ void FlyingAI :: printMatrix( Matrix4 *m)
 
 void FlyingAI :: flyDirection ( Vector3D* desiredTraj ) {
    // Little bit of linear algebra solving for flight trajectory
-   Matrix4 B ( desiredTraj->xMag, 0, 0, 0,
-               desiredTraj->yMag, 0, 0, 0,
-               desiredTraj->zMag, 0, 0, 0,
+   Matrix4 B ( (float) desiredTraj->xMag, 0, 0, 0,
+               (float) desiredTraj->yMag, 0, 0, 0,
+               (float) desiredTraj->zMag, 0, 0, 0,
                                0, 0, 0, 0 );
   
-   Matrix4 A ( ship->forward->xMag, ship->forward->yMag, ship->forward->zMag, 0,
-               ship->right->xMag  , ship->right->yMag  , ship->right->zMag  , 0,
-               ship->up->xMag     , ship->up->yMag     , ship->up->zMag     , 0,
+   Matrix4 A ( (float) ship->forward->xMag, (float) ship->forward->yMag, (float) ship->forward->zMag, 0,
+               (float) ship->right->xMag  , (float) ship->right->yMag  , (float) ship->right->zMag  , 0,
+               (float) ship->up->xMag     , (float) ship->up->yMag     , (float) ship->up->zMag     , 0,
                                  0,                   0,                   0, 0 );
    
    Point3D trajControl; 

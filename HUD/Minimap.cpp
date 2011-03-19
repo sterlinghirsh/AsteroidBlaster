@@ -59,7 +59,7 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
          glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
          for (ringDiameter = 8; ringDiameter <= zoomLevel; ringDiameter *= 2) {
             distanceFromEdge = zoomLevel - ringDiameter;
-            alpha = clamp(distanceFromEdge / 5, 0, 0.5);
+            alpha = (float) clamp(distanceFromEdge / 5, 0, 0.5);
             glColor4f(1, 1, 0, alpha);
             gluDisk(quadric, ringDiameter - (ringWidth / 2), ringDiameter + (ringWidth / 2) ,16,2);
          }
@@ -101,13 +101,13 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
             glBegin(GL_LINES);
                // Draw a line from the ship to the object's position on the ship's plane.
                glVertex3f(0, 0, 0);
-               glVertex3f(objectPosition.x, 0, objectPosition.z);
+               glVertex3d(objectPosition.x, 0, objectPosition.z);
                
                // Now draw a point from the plane up to the object's position in 3d.
                // Draw a point at the object's position.
-               glVertex3f(objectPosition.x, objectPosition.y, objectPosition.z);
+               glVertex3d(objectPosition.x, objectPosition.y, objectPosition.z);
                // Draw the other point at the object's position without the Y component.
-               glVertex3f(objectPosition.x, 0, objectPosition.z);
+               glVertex3d(objectPosition.x, 0, objectPosition.z);
             glEnd();
          }
       }
@@ -141,7 +141,7 @@ void Minimap::draw() {
        * It should take up the bottom right corner of the screen.
        */
 
-      glViewport ((GLint) (GW * (1 - displaySize)), 0, (GLsizei) (GW * displaySize), (GLsizei) (GH * displaySize));
+      glViewport ((GLint) ((float) GW * (1.0f - displaySize)), 0, (GLsizei) ((float) GW * displaySize), (GLsizei) ((float) GH * displaySize));
       glMatrixMode (GL_PROJECTION);      /* Select The Projection Matrix */
       glLoadIdentity ();                     /* Reset The Projection Matrix */
 
@@ -220,7 +220,7 @@ void Minimap::draw() {
  * 0 (not drawn) to 1 (full screen)
  */
 void Minimap::setDisplaySize(float newDisplaySize) {
-   displaySize = clamp(newDisplaySize, 0, 1);
+   displaySize = (float) clamp(newDisplaySize, 0, 1);
 }
 
 /**
@@ -257,8 +257,8 @@ void Minimap::update(double timeDiff) {
 
    double zoomIncrement = (targetZoomLevel - zoomLevel) * timeDiff * 2;
    double sizeIncrement = (targetDisplaySize - displaySize) * timeDiff * 10;
-   zoomLevel += zoomIncrement;
-   displaySize += sizeIncrement;
+   zoomLevel += (float) zoomIncrement;
+   displaySize += (float) sizeIncrement;
 }
 
 void Minimap::toggle() {

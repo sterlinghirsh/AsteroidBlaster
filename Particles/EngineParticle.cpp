@@ -4,7 +4,7 @@
 
 #include "Particles/EngineParticle.h"
 
-const float startingSize = 0.1;
+const float startingSize = 0.1f;
 const float minLife = 60; // Seconds
 
 EngineParticle::EngineParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b) : Particle(p, v, life, r, g, b) {
@@ -16,8 +16,8 @@ EngineParticle::EngineParticle(Point3D* p, Vector3D* v, float life, float r, flo
  * When color is 1, this makes red stuff. 2 is Green, 3 is Blue.
  */
 void EngineParticle::Add(Point3D* pos, Vector3D* vec, int color) {
-   float _fade = randdouble() + minLife;
-   float _r = 0.9 + (randdouble() * 0.1) ;
+   float _fade = (float) randdouble() + minLife;
+   float _r = (float) (0.9 + (randdouble() * 0.1));
    float _g = 0;
    float _b = 0;
 

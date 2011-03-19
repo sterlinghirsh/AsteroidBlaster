@@ -7,7 +7,7 @@
 #include "Particles/BlasterShotParticle.h"
 #include "math.h"
 
-const float startingSize = 0.3;
+const float startingSize = 0.3f;
 const float minLife = 1; // Seconds
 
 
@@ -31,7 +31,7 @@ void BlasterShotParticle::Add(Point3D* pos, Vector3D* vec) {
    const float minLife = 0.5; // Seconds
 
    float _fade = minLife;
-   float _r = 0.9 + (randdouble() * 0.1);
+   float _r = 0.9f + ((float) randdouble() * 0.1f);
    float _g = 0;
    float _b = 0;
 
@@ -43,7 +43,7 @@ void BlasterShotParticle::AddRainbow(Point3D* pos, Vector3D* vec, int particleNu
    float _r = 0;
    float _g = 0;
    float _b = 0;
-   getBrightColor((float)particleNum / particleCycle, _r, _g, _b);
+   getBrightColor((float)(particleNum / particleCycle), _r, _g, _b);
 
    Particle::Add(new BlasterShotParticle(pos, vec, _fade, _r, _g, _b));
 

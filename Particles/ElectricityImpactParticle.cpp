@@ -7,8 +7,8 @@
 #include "Particles/ElectricityImpactParticle.h"
 #include "math.h"
 
-const float startingSize = 0.3;
-const float minLife = 0.8; // Seconds
+const float startingSize = 0.3f;
+const float minLife = 0.8f; // Seconds
 
 ElectricityImpactParticle::ElectricityImpactParticle(Point3D* _position,
       Vector3D* _velocity, float _life, float _r, float _g, float _b) :
@@ -28,10 +28,10 @@ void ElectricityImpactParticle::update(double timeDifference) {
 }
 
 void ElectricityImpactParticle::Add(Point3D* pos, Vector3D* vec) {
-   float _fade = (0.5 * randdouble()) + minLife;
+   float _fade = (float) ((0.5 * randdouble()) + minLife);
    float _r = 1;
    float _g = 1;
-   float _b = 0.8 + (randdouble() * 0.2) ;
+   float _b = (float) (0.8 + (randdouble() * 0.2));
 
    Particle::Add(new ElectricityImpactParticle(pos, vec, _fade, _r, _g, _b));
 }
