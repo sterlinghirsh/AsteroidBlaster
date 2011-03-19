@@ -71,6 +71,7 @@ class Text {
       void draw();
       // takes in x,y and answers if the mouse is over the text
       bool mouseSelect(int x, int y);
+      bool mouseSelect(double x, double y);
       // takes in x,y and highlights the text in a color if the mouse is over the text
       void mouseHighlight(int x, int y);
       

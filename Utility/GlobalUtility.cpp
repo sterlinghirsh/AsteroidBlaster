@@ -33,14 +33,14 @@ bool fullscreen = false;
 bool soundOn = true;
 bool musicOn = true;
 GLUquadricObj *quadric = NULL;
-GLuint tractorBeamShader = -1;
-GLuint fadeShader = -1;
-GLuint elecShader = -1;
-GLuint ramShader = -1;
-GLuint hBlurShader = -1;
-GLuint vBlurShader = -1;
-GLuint lawnShader = -1;
-GLuint billboardShader = -1;
+GLuint tractorBeamShader = 0;
+GLuint fadeShader = 0;
+GLuint elecShader = 0;
+GLuint ramShader = 0;
+GLuint hBlurShader = 0;
+GLuint vBlurShader = 0;
+GLuint lawnShader = 0;
+GLuint billboardShader = 0;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 double currentTime = -1;
@@ -96,7 +96,7 @@ int w2px(double xw) {
 #ifdef WIN32
    answer = floor((xw * c) + d+0.5);
 #else
-   answer = round((xw * c) + d);
+   answer = (int) round((xw * c) + d);
 #endif
 
    return answer;
@@ -110,7 +110,7 @@ int w2py(double yw) {
 #ifdef WIN32
    answer = flopY(floor((yw * e) + f)+0.5);
 #else
-   answer = flopY(round((yw * e) + f));
+   answer = flopY((int) round((yw * e) + f));
 #endif
 
    return answer;

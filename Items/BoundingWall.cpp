@@ -17,7 +17,7 @@
 BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID) :
  squareSize(_squareSize), wallSize(_wallSize), wallColor(_wallColor), wallID(_wallID) {
    // Initialize Wall Squares
-   squaresPerSide = round(2 * wallSize / squareSize);
+   squaresPerSide = (int) round(2 * wallSize / squareSize);
    numSquares = squaresPerSide * squaresPerSide;
    squares.reserve(numSquares); 
 
@@ -86,8 +86,8 @@ void BoundingWall::getSquareCoordsFromObject(Drawable* item, int& squareXIndex, 
       squareY = item->position->z;
    }
 
-   squareXIndex = floor((squareX + wallSize) / squareSize);
-   squareYIndex = floor((squareY + wallSize) / squareSize);
+   squareXIndex = (int) floor((squareX + wallSize) / squareSize);
+   squareYIndex = (int) floor((squareY + wallSize) / squareSize);
 }
 
 GlowSquare* BoundingWall::getSquareByID(int index) {
@@ -105,7 +105,7 @@ void BoundingWall::constrain(Drawable* item) {
    }
 
    double speed = item->velocity->getLength();
-   int distanceLimit = (item->radius * item->radius * 0.3) + 4;
+   int distanceLimit = (int) (item->radius * item->radius * 0.3) + 4;
    double delay = 1 / (4 * speed);
 
    square->hit(distanceLimit, delay);

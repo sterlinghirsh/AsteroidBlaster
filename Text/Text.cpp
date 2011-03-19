@@ -294,6 +294,10 @@ bool Text::mouseSelect(int x, int y) {
    return false;
 }
 
+bool Text::mouseSelect(double x, double y) {
+   return mouseSelect((int) x, (int) y);
+}
+
 void Text::mouseHighlight(int x, int y) {
    if(!selectable) { return;}
    if(x >= pos.x &&

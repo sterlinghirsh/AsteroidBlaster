@@ -70,7 +70,7 @@ void Texture::Add(std::string file, std::string keyName) {
    int tempLoop = 1;
    int loopVal = 1;
    while (loopVal < width) {
-      loopVal = pow((double)tempLoop, 2.0);
+      loopVal = tempLoop * tempLoop;
       tempLoop++;
    }
    w = loopVal;
@@ -78,7 +78,7 @@ void Texture::Add(std::string file, std::string keyName) {
    tempLoop = 1;
    loopVal = 1;
    while (loopVal < height) {
-      loopVal = pow((double)tempLoop, 2.0);
+      loopVal = tempLoop * tempLoop;
       tempLoop++;
    }
    h = loopVal;

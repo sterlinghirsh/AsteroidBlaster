@@ -296,9 +296,9 @@ void FlyingAI :: flyDirection ( Vector3D* desiredTraj ) {
    trajControl.y = A._21 * B._11 + A._22 * B._21 + A._23 * B._31;
    trajControl.z = A._31 * B._11 + A._32 * B._21 + A._33 * B._31;
    
-   ship->accelerateForward( trajControl.x * 2 );
-   ship->accelerateRight( trajControl.y * 2 );
-   ship->accelerateUp( trajControl.z * 2 );
+   ship->accelerateForward( (int) (trajControl.x * 2) );
+   ship->accelerateRight( (int) (trajControl.y * 2) );
+   ship->accelerateUp( (int) (trajControl.z * 2 ));
 }
 
 void FlyingAI :: faceDirection( Vector3D* desiredForward ) {

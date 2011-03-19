@@ -141,7 +141,7 @@ void Minimap::draw() {
        * It should take up the bottom right corner of the screen.
        */
 
-      glViewport (GW * (1 - displaySize), 0, GW * displaySize, GH * displaySize);
+      glViewport ((GLint) (GW * (1 - displaySize)), 0, (GLsizei) (GW * displaySize), (GLsizei) (GH * displaySize));
       glMatrixMode (GL_PROJECTION);      /* Select The Projection Matrix */
       glLoadIdentity ();                     /* Reset The Projection Matrix */
 
