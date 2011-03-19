@@ -16,13 +16,19 @@
 #include "Items/Asteroid3D.h"
 #include "Utility/Quaternion.h"
 #include "Utility/Matrix4.h"
-#include "math.h"
+#include <math.h>
+
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
 
 #include <stdio.h>
 #include <iostream>
 
 using namespace std;
 using std::vector;
+
+
 
 // Tell c++ that gameState was declared elsewhere (in main.cpp)
 extern GameState* gameState;

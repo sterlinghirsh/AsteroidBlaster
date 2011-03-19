@@ -41,11 +41,14 @@ void GameMessage::drawAllMessages() {
 
 void GameMessage::updateAllMessages(double timeDiff) {
    std::list<GameMessage*>::iterator listIter;
+
    for (listIter = activeMessages.begin(); listIter != activeMessages.end(); ++listIter) {
       (*listIter)->update(timeDiff);
       if ((*listIter)->shouldRemove) {
          delete *listIter;
          listIter = activeMessages.erase(listIter);
+		 if (listIter == activeMessages.end())
+			 break;
       }
    }
 }

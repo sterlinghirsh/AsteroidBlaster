@@ -11,6 +11,10 @@
 #include "Shots/RamShot.h"
 #include <math.h>
 
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
+
 static float flashiness = 0;
 static float tracker = 0;
 static int rando = 1;

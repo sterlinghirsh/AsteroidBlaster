@@ -156,7 +156,7 @@ std::set<Drawable*, compareByDistance>* Custodian::findCollisions(Drawable* item
    if (item == NULL)
       return sublist;
 
-   std::set<Drawable*>::iterator iter;
+   std::set<Drawable*, compareByDistance >::iterator iter;
    int numElements = objectsByMinX.size();
    Drawable* other;
 
@@ -190,7 +190,7 @@ std::set<Drawable*, compareByDistance>* Custodian::findCollisions(Drawable* item
     * remove elements.
     */
    iter = sublist->begin();
-   std::set<Drawable*>::iterator current;
+   std::set<Drawable*, compareByDistance >::iterator current;
    while (iter != sublist->end()) {
       current = iter++;
       other = *current;

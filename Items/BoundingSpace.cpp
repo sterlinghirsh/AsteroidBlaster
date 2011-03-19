@@ -8,6 +8,10 @@
 #include "Items/BoundingSpace.h"
 #include <math.h>
 
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
+
 BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z) {
    extent = extentIn;
    xMax = x + extent;

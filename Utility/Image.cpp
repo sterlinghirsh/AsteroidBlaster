@@ -2,6 +2,7 @@
 #include "Utility/Image.h"
 #include <iostream>
 #include <map>
+#include <string>
 #include "SDL_image.h"
 
 std::map<std::string, SDL_Surface*> Image::images;

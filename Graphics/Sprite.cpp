@@ -105,7 +105,8 @@ void Sprite::updateSprites(double timeDiff) {
    for (; sprite != Sprite::sprites.end(); sprite++) {
       if ((*sprite)->shouldRemove) {
          sprite = Sprite::sprites.erase(sprite);
-         continue;
+         if (sprite == Sprite::sprites.end())
+			 break;
       }
    }
 }

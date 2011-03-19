@@ -2,7 +2,7 @@
 #include <iostream>
 #include "SDL.h"
 #include "Utility/GlobalUtility.h"
-#include "Utility/StoreMenu.h"
+#include "Menus/StoreMenu.h"
 #include "Utility/Image.h"
 #include "Utility/Texture.h"
 #include "Items/AsteroidShip.h"

@@ -8,6 +8,10 @@
 #include <algorithm>
 #include <math.h>
 
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
+
 GlowSquare::GlowSquare(Color* _color,
  float size, float _x, float _y, float _z, BoundingWall* _wall,
  int _xIndex, int _yIndex) : 
@@ -157,7 +161,7 @@ void GlowSquare::hit(int distanceLimit, double delay) {
       // Weird
       //distance = sqrt(xDist * xDist * xDist + yDist * yDist * yDist);
       // Circle
-      distance = sqrt(xDist * xDist + yDist * yDist);
+      distance = sqrt((double)(xDist * xDist + yDist * yDist));
       // Box
       //distance = std::max(xDist, yDist);
       // Diamond

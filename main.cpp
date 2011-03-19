@@ -20,7 +20,7 @@
 #include "Text/Text.h"
 #include "Text/GameMessage.h"
 #include "Utility/GameState.h"
-#include "Utility/StoreMenu.h"
+#include "Menus/StoreMenu.h"
 #include "Utility/InputManager.h"
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"

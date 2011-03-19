@@ -13,6 +13,10 @@
 #include <iostream>
 #include <math.h>
 
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
+
 #define TEXT_INVERT_VALUE 20
 
 // Constructor if you are displaying one string
@@ -211,8 +215,8 @@ void Text::SDL_GL_RenderText(const char *text,
 	initial = TTF_RenderText_Blended(font, text, color);
 	
 	/* Convert the rendered text to a known format */
-	w = (int)(pow(2,ceil(log(initial->w) / log(2)) + 0.5));
-	h = (int)(pow(2,ceil(log(initial->h) / log(2)) + 0.5));
+	w = (int)(pow(2,ceil(log((double)initial->w) / log(2.0)) + 0.5));
+	h = (int)(pow(2,ceil(log((double)initial->h) / log(2.0)) + 0.5));
 	
 	intermediary = SDL_CreateRGBSurface(0, w, h, 32, 
 			0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);

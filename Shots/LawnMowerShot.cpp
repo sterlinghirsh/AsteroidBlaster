@@ -11,6 +11,10 @@
 #include "Shots/LawnMowerShot.h"
 #include <math.h>
 
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
+
 static float spin = 1;
 static float adder = .10;
 static float spinner = 0;

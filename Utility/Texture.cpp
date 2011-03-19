@@ -1,16 +1,25 @@
 
+
 #include "Utility/Texture.h"
 #include <iostream>
 #include <map>
 #include <math.h>
+#include <string>
 
-#ifdef __APPLE__
+#ifdef WIN32
+#include <windows.h>
+#include <GL/glew.h>
+#elif __APPLE__
 #include <GLUT/glut.h>
 #include <OpenGL/glext.h>
-#else
+#elif linux
 #include <GL/gl.h>
 #include <GL/glu.h>
+#else
+std::cout << "Not Windows, OSX or linux..." << std::endl;
+exit(1);
 #endif
+
 
 #include "SDL_image.h"
 
@@ -61,7 +70,7 @@ void Texture::Add(std::string file, std::string keyName) {
    int tempLoop = 1;
    int loopVal = 1;
    while (loopVal < width) {
-      loopVal = pow(tempLoop, 2);
+      loopVal = pow((double)tempLoop, 2.0);
       tempLoop++;
    }
    w = loopVal;
@@ -69,7 +78,7 @@ void Texture::Add(std::string file, std::string keyName) {
    tempLoop = 1;
    loopVal = 1;
    while (loopVal < height) {
-      loopVal = pow(tempLoop, 2);
+      loopVal = pow((double)tempLoop, 2.0);
       tempLoop++;
    }
    h = loopVal;

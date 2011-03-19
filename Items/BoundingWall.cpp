@@ -6,9 +6,13 @@
  */
 
 #include "Items/BoundingWall.h"
-#include <math.h>
 #include "Items/Object3D.h"
 #include "Utility/GameState.h"
+#include <math.h>
+
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
 
 BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID) :
  squareSize(_squareSize), wallSize(_wallSize), wallColor(_wallColor), wallID(_wallID) {

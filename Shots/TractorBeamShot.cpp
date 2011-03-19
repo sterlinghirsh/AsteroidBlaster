@@ -11,6 +11,10 @@
 #include "Shots/TractorBeamShot.h"
 #include <math.h>
 
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
+
 static float spin = 0;
 
 TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, 

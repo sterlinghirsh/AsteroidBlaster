@@ -21,6 +21,11 @@
 #include "Weapons/Weapon.h"
 #include <math.h>
 
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
+
+
 // Tell c++ that gameState was declared elsewhere (in main.cpp)
 extern GameState* gameState;
 
