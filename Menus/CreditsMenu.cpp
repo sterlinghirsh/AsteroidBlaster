@@ -105,9 +105,8 @@ void CreditsMenu::update(double ms)
 void CreditsMenu::draw() {
    double yPos = 0.0;
    SDL_Rect position;
-   position.x = 0.0;
-   yPos = 0.0;
-   position.y = yPos + yOffset;
+   position.x = 0;
+   position.y = (int) (yPos + yOffset);
    //position.y = GH/5;
    //menuTexts[TITLE_STRING_INDEX]->setPosition(position);
    for(int i = 0; i < menuTexts.size() - 1; i++) {
@@ -116,7 +115,7 @@ void CreditsMenu::draw() {
       {
          yPos += GH/5;
          position.x = GW/2;
-         position.y = yPos + yOffset;
+         position.y = (int) (yPos + yOffset);
          menuTexts[i + j]->setPosition(position);
          j++;
       }
@@ -135,7 +134,7 @@ void CreditsMenu::draw() {
             position.x = GW/2;
             yPos += GH / 10 * 1.5;
          }
-         position.y = yPos + yOffset;
+         position.y = (int) (yPos + yOffset);
          menuTexts[i + j]->setPosition(position);
          j++;
       }
@@ -143,7 +142,7 @@ void CreditsMenu::draw() {
    }
    position.x = GW;
    yPos = GH;
-   position.y = yPos;
+   position.y = (int) yPos;
    menuTexts[QUIT_STRING_INDEX]->setPosition(position);
 
    // Clear the screen
@@ -166,7 +165,7 @@ void CreditsMenu::draw() {
       */
 
    for(int i = 0; i < menuTexts.size(); i++) {
-      int loc = menuTexts[i]->getPosition().y + yOffset;
+      int loc = (int) (menuTexts[i]->getPosition().y + yOffset);
       if (loc < GH * 1.3 + menuTexts[i]->size && loc > GH * -3.0)
       {
          menuTexts[i]->draw();

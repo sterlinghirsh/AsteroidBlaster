@@ -184,25 +184,25 @@ void StoreMenu::draw() {
 
 
    //Done
-   position.x = GW*(8.0/10.0);
-   position.y = GH*(9.5/10.0);
+   position.x = (int) (GW*(8.0/10.0));
+   position.y = (int) (GH*(9.5/10.0));
    menuTexts[DONE_STOREMENUINDEX]->setPosition(position);
    
    //shards
-   position.x = GW*(0.1/10.0);
-   position.y = GH*(9.5/10.0);
+   position.x = (int) (GW*(0.1/10.0));
+   position.y = (int) (GH*(9.5/10.0));
    menuTexts[SHARDS_STOREMENUINDEX]->updateBody(gameState->ship->nShards);
    menuTexts[SHARDS_STOREMENUINDEX]->setPosition(position);
    
    //health
-   position.x = GW*(2.0/10.0);
-   position.y = GH*(9.5/10.0);
+   position.x = (int) (GW*(2.0/10.0));
+   position.y = (int) (GH*(9.5/10.0));
    menuTexts[HEALTH_STOREMENUINDEX]->updateBody(gameState->ship->health);
    menuTexts[HEALTH_STOREMENUINDEX]->setPosition(position);
    
    //weapons
-   position.x = GW*(1.0/10.0);
-   position.y = GH*(5.0/10.0);
+   position.x = (int) (GW*(1.0/10.0));
+   position.y = (int) (GH*(5.0/10.0));
    menuTexts[WEAPONS_STOREMENUINDEX]->setPosition(position);
    
    //upgrades
@@ -219,8 +219,8 @@ void StoreMenu::draw() {
 
    drawTexts(menuTexts);
    
-   position.x = GW*(3.0/10.0);
-   position.y = GH*(5.0/10.0);
+   position.x = (int) (GW*(3.0/10.0));
+   position.y = (int) (GH*(5.0/10.0));
    if(menuSelection == WEAPONS) {
       //set menu colors
       menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_BLUE);
@@ -282,7 +282,7 @@ void StoreMenu::draw() {
       menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_WHITE);
       
-      position.y = GH*(5.0/10.0);
+      position.y = (int) (GH*(5.0/10.0));
       // buy blaster upgrade
       out.str(""); 
       wLevel = gameState->ship->getWeapon(BLASTER_WEAPON_INDEX)->level + 1;
@@ -344,7 +344,7 @@ void StoreMenu::draw() {
       menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_WHITE);
       
       int currAmmo = -1;
-      position.y = GH*(5.0/10.0);
+      position.y = (int) (GH*(5.0/10.0));
       // railgun
       out.str(""); 
       if (gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased) {
@@ -398,7 +398,7 @@ void StoreMenu::draw() {
       menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_BLUE);
       
-      position.y = GH*(5.0/10.0);
+      position.y = (int) (GH*(5.0/10.0));
       //health
       shipTexts[BUYHEALTH_SHIPTEXTSINDEX]->setPosition(position);
       position.y += GH/10;

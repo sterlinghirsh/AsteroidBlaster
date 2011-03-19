@@ -86,7 +86,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
       double tmpangle = (M_PI * 2 / (double)npts * (double)j);
       double tmpRad = r * sin(tmpangle);
       double tmpH = r * cos(tmpangle);
-      int tmpPts = npts * (tmpRad / r);
+      int tmpPts = (int) (npts * (tmpRad / r));
       if (tmpPts < 0) {
          tmpPts *= -1;
       } else if (tmpPts == 0) {

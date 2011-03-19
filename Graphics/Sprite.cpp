@@ -51,7 +51,7 @@ void Sprite::draw() {
    //glDepthFunc(GL_ALWAYS);
    glDepthFunc(GL_LESS);
    double curTime = doubleTime();
-   int curFrame = floor((curTime - startTime) * framesPerSecond);
+   int curFrame = (int) floor((curTime - startTime) * framesPerSecond);
    if (curFrame >= totalFrames && oneShot) {
       shouldRemove = true;
    }

@@ -157,7 +157,7 @@ void Text::draw() {
 
    
    
-   pos.w = temp.w * 1.5;
+   pos.w = (int) (temp.w * 1.5);
    pos.h = temp.h;
    //if (centered) {
    if (alignment == CENTERED)
@@ -274,7 +274,7 @@ void Text::SDL_GL_RenderText(const char *text,
 	int width = -1;
 	int height = -1;
    TTF_SizeText(font,text, &width, &height);
-	location->w = textW / 2;
+	location->w = (Uint16) (textW / 2);
 	location->h = height;
 	
 	/* Clean up */
@@ -310,5 +310,6 @@ void Text::mouseHighlight(int x, int y) {
    }
 }
 
-
-
+void Text::mouseHighlight(double x, double y) {
+   mouseHighlight(x, y);
+}

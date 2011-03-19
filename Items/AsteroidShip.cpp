@@ -853,7 +853,7 @@ void AsteroidShip::handleCollision(Drawable* other) {
       // Decrease the player's health by an appropriate amount.
       addInstantAcceleration(new Vector3D(*(asteroid->velocity)));
       if (!gameState->godMode) {
-         health -= 4 * ceil(asteroid->radius);
+         health -= (int) (4 * ceil(asteroid->radius));
       }
       if(health < 0) {
          health = 0;

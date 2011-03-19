@@ -33,7 +33,7 @@ BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z) {
    
    // Initialize walls.
    for (int i = 0; i < 6; ++i) {
-      walls[i] = new BoundingWall(squareSize, extent, wallColors[i], i);
+      walls[i] = new BoundingWall((int) squareSize, (int) extent, wallColors[i], i);
    }
 }
 
@@ -41,7 +41,7 @@ BoundingSpace::~BoundingSpace() {
 }
 
 int BoundingSpace::getNumSquares() {
-   return round(extent / squareSize);
+   return (int) round(extent / squareSize);
 }
 
 void BoundingSpace::constrain(Drawable* item) {

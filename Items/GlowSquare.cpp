@@ -161,7 +161,7 @@ void GlowSquare::hit(int distanceLimit, double delay) {
       // Weird
       //distance = sqrt(xDist * xDist * xDist + yDist * yDist * yDist);
       // Circle
-      distance = sqrt((double)(xDist * xDist + yDist * yDist));
+      distance = (int) sqrt((double)(xDist * xDist + yDist * yDist));
       // Box
       //distance = std::max(xDist, yDist);
       // Diamond

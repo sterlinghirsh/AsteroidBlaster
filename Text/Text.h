@@ -74,6 +74,7 @@ class Text {
       bool mouseSelect(double x, double y);
       // takes in x,y and highlights the text in a color if the mouse is over the text
       void mouseHighlight(int x, int y);
+      void mouseHighlight(double x, double y);
       
       TTF_Font* font;
       SDL_Color color;
