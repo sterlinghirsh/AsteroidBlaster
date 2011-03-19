@@ -59,8 +59,8 @@ GameState::GameState(double worldSizeIn) {
    sstream2.str("");
    
    // Improve the positioning code.
-   weaponReadyBar = new ProgressBar(0.75, 0.05, -1.2, -0.3);
-   healthBar = new ProgressBar(0.75, 0.05, -1, -0.3);
+   weaponReadyBar = new ProgressBar(0.75f, 0.05f, -1.2f, -0.3f);
+   healthBar = new ProgressBar(0.75f, 0.05f, -1.0f, -0.3f);
    healthBar->setIcon("ShieldIcon");
    weaponReadyBar->setIcon("ShotIcon");
 
@@ -230,7 +230,7 @@ void GameState::update(double timeDiff) {
    updateText();
    
    weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
-   healthBar->setAmount(ship->getHealth() / 100.0);
+   healthBar->setAmount((float) (ship->getHealth() / 100.0));
    cube->update(timeDiff);
    minimap->update(timeDiff);
 }
@@ -354,8 +354,8 @@ void GameState::hBlur() {
    glDisable(GL_LIGHTING);
    float minY = -1.0;
    float maxY = 1.0;
-   float minX = -1.0 * aspect;
-   float maxX = 1.0 * aspect;
+   float minX = -1.0f * aspect;
+   float maxX = 1.0f * aspect;
    int tex = hTexture;
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, tex);
@@ -363,7 +363,7 @@ void GameState::hBlur() {
    glUseProgram(hBlurShader);
    glUniform1i(texLoc, tex);
 
-   glColor4f(1.0, 1.0, 1.0, 0.5);
+   glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(minX, minY, 0.0);
@@ -398,8 +398,8 @@ void GameState::vBlur() {
    glDisable(GL_LIGHTING);
    float minY = -1.0;
    float maxY = 1.0;
-   float minX = -1.0 * aspect;
-   float maxX = 1.0 * aspect;
+   float minX = -1.0f * aspect;
+   float maxX = 1.0f * aspect;
    int tex = vTexture;
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, vTexture);
@@ -440,8 +440,8 @@ void GameState::drawBloom() {
    glDisable(GL_LIGHTING);
    float minY = -1.0;
    float maxY = 1.0;
-   float minX = -1.0 * aspect;
-   float maxX = 1.0 * aspect;
+   float minX = -1.0f * aspect;
+   float maxX = 1.0f * aspect;
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, blurTex);
 
@@ -500,6 +500,7 @@ void GameState::drawHud() {
 void GameState::drawAllText() {
    
    SDL_Rect position;
+   const Sint16 positionDifferenceY = 15;
    position.x = 10;
    position.y = 30;
 
@@ -510,35 +511,35 @@ void GameState::drawAllText() {
    FPSText->setPosition(position);
    FPSText->draw();
    
-   position.y += 15;
+   position.y += positionDifferenceY;
    numAsteroidsText->setPosition(position);
    numAsteroidsText->draw();
 
-   position.y += 15;
+   position.y += positionDifferenceY;
    numShardsText->setPosition(position);
    numShardsText->draw();
    
-   position.y += 15;
+   position.y += positionDifferenceY;
    scoreText->setPosition(position);
    scoreText->draw();
    
-   position.y += 15;
+   position.y += positionDifferenceY;
    shardText->setPosition(position);
    shardText->draw();
    
-   position.y += 15;
+   position.y += positionDifferenceY;
    healthText->setPosition(position);
    healthText->draw();
    
-   position.y += 15;
+   position.y += positionDifferenceY;
    weaponText->setPosition(position);
    weaponText->draw();
    
-   position.y += 15;
+   position.y += positionDifferenceY;
    ammoText->setPosition(position);
    ammoText->draw();
    
-   position.y += 15;
+   position.y += positionDifferenceY;
    curLevelText->setPosition(position);
    curLevelText->draw();
    GameMessage::drawAllMessages();

@@ -54,13 +54,14 @@ void Vector3D::updatePosition(Point3D point) {
 
 void Vector3D::draw() {
    glBegin(GL_LINES);
-   glVertex3f(xPos, yPos, zPos);
-   glVertex3f(xPos + xMag * drawScale, yPos + yMag * drawScale, zPos + zMag * drawScale);
+   glVertex3f((GLfloat) xPos, (GLfloat) yPos, (GLfloat) zPos);
+   glVertex3f((GLfloat) (xPos + xMag * drawScale), 
+    (GLfloat) (yPos + yMag * drawScale), (GLfloat) (zPos + zMag * drawScale));
    glEnd();
 }
 
 void Vector3D::addNormal() {
-   glNormal3f(xMag, yMag, zMag);
+   glNormal3f((GLfloat) xMag, (GLfloat) yMag, (GLfloat) zMag);
 }
 
 void Vector3D::normalize() {
@@ -258,7 +259,8 @@ void Vector3D::rotateByDegrees(double angle, const Vector3D& axis) {
 }
 
 void Vector3D::glTranslate(double length = 1) {
-   glTranslatef(length * xMag, length * yMag, length * zMag);
+   glTranslatef((GLfloat) (length * xMag), (GLfloat) (length * yMag), 
+    (GLfloat) (length * zMag));
 }
 
 void Vector3D::reflect(Vector3D& axis) {

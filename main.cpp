@@ -49,7 +49,7 @@ static double lastDrawTime = 0;
 
 // TODO: Move this out of here.
 GLfloat headlight_pos[4] = {WORLD_SIZE / 2, WORLD_SIZE / 2, WORLD_SIZE / 2, 1};
-GLfloat headlight_amb[4] = {0.1, 0.1, 0.1, 1};
+GLfloat headlight_amb[4] = {0.1f, 0.1f, 0.1f, 1};
 GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
 GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
 

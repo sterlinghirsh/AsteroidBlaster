@@ -23,11 +23,11 @@ class Plane {
       }
       
       void calcMag() {
-         mag = sqrt((a*a) + (b*b) + (c*c));
+         mag = (float) sqrt((a*a) + (b*b) + (c*c));
       }
       
-      float distanceTo(float x, float y, float z) {
-         float dist =  (a * x) + (b * y) + (c * z) + d;
+      double distanceTo(double x, double y, double z) {
+         double dist =  (a * x) + (b * y) + (c * z) + d;
          return dist;
       }
 
@@ -57,8 +57,8 @@ class Plane {
       }
       
       void printNormalized() {
-         float tmpA, tmpB, tmpC,tmpD;
-         float mag = sqrt((a*a) + (b*b) + (c*c));
+         double tmpA, tmpB, tmpC,tmpD;
+         double mag = sqrt((a*a) + (b*b) + (c*c));
          tmpA = a/mag;
          tmpB = b/mag;
          tmpC = c/mag;
