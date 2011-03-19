@@ -90,7 +90,7 @@ void TractorBeamShot::draw() {
       float numCurves = 8;
       
       //used as a multiplier to create the correct gap in between the lines
-      float gap = length / numCurves;
+      float gap = (float) length / numCurves;
       
       //must be 2 for the cone to be complete, less than 2 for an incomplete cone, more 
       //than 2 for spacing to be irregular between the lines
@@ -114,13 +114,13 @@ void TractorBeamShot::draw() {
       //Creates the twisted lines whose vertices are sent to the shader to modify
       for(k = -numCurves/2; k < numCurves/2; k = k+1){
             for(j = 0; j < length ; j = j+1){
-                  rot = cos((k * gap + j) / (length / sharpness) * M_PI);
-                  srot = sin((k * gap + j) / (length / sharpness) * M_PI);
-                  glVertex3f(srot * j * (farRadius / length), rot * j * (farRadius / length), length - j);
+                  rot = (float) cos((k * gap + j) / (length / sharpness) * M_PI);
+                  srot = (float) sin((k * gap + j) / (length / sharpness) * M_PI);
+                  glVertex3d(srot * j * (farRadius / length), rot * j * (farRadius / length), length - j);
                   
-                  rot = cos((k * gap + j + 1) / (length / sharpness) * M_PI);
-                  srot = sin((k * gap + j + 1) / (length / sharpness) * M_PI);
-                  glVertex3f(srot * (j + 1) * (farRadius / length), rot * (j + 1) * (farRadius / length), length - j - 1);
+                  rot = (float) cos((k * gap + j + 1) / (length / sharpness) * M_PI);
+                  srot = (float) sin((k * gap + j + 1) / (length / sharpness) * M_PI);
+                  glVertex3d(srot * (j + 1) * (farRadius / length), rot * (j + 1) * (farRadius / length), length - j - 1);
                   
             }
       }

@@ -172,7 +172,7 @@ void RamShot::draw() {
       int elecWidth = 100;
       
       //how fast you want the lighting flashing from blue to white. Higher number == faster flash
-      float flash = .000000000001;
+      float flash = .000000000001f;
       
       float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
       //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
@@ -193,10 +193,10 @@ void RamShot::draw() {
             rando = rand();
       }
        
-      flashiness = flashiness + (double)(rando % 50) / 10.0;
+      flashiness = flashiness + (float)(rando % 50) / 10.0f;
       loc1 = glGetUniformLocation(ramShader,"poop");
       glUniform1f(loc1,flashiness);
-      glTranslatef(0, 0, -.2);
+      glTranslatef(0, 0, -.2f);
       setMaterial(GreenShiny);
       glLineWidth(thickness);
       glDisable(GL_CULL_FACE);
@@ -215,17 +215,17 @@ void RamShot::draw() {
     int iPivot = 2;
     //float x, y, z, 
     float angle;
-    for(angle = 0.0f; angle < (2.0f*M_PI); angle += (M_PI/8.0f))
+    for(angle = 0.0f; angle < (2.0f*M_PI); angle += (float) (M_PI/8.0f))
 
         {
 
         // Calculate x and y position of the next vertex
 
-        x = .5 * sin(angle);
+        x = (float) (.5 * sin(angle));
 
-        y = .5 * cos(angle);
+        y = (float) (.5 * cos(angle));
 
-        z = 1.5;
+        z = 1.5f;
 
         // Alternate color between red and green
 
@@ -251,11 +251,11 @@ void RamShot::draw() {
 
         }
         
-        x = .5 * sin(angle);
+        x = (float) (.5 * sin(angle));
 
-        y = .5 * cos(angle);
+        y = (float) (.5 * cos(angle));
 
-        z = 1.5;
+        z = 1.5f;
         
         glVertex3f(x, y, z);
 

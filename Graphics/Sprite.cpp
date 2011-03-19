@@ -73,17 +73,17 @@ void Sprite::draw() {
    GLint sizeLoc = glGetUniformLocation(billboardShader, "size");
    glUniform1f(sizeLoc, 1);
    glBegin(GL_QUADS);
-   glTexCoord2f(topLeftX, topLeftY);
-   glVertex3f(-width/2, height/2, 0);
+   glTexCoord2d(topLeftX, topLeftY);
+   glVertex3d(-width/2, height/2, 0);
 
-   glTexCoord2f(topLeftX + frameWidth, topLeftY);
-   glVertex3f(width/2, height/2, 0);
+   glTexCoord2d(topLeftX + frameWidth, topLeftY);
+   glVertex3d(width/2, height/2, 0);
 
-   glTexCoord2f(topLeftX + frameWidth, topLeftY - frameHeight);
-   glVertex3f(width/2, -height/2, 0);
+   glTexCoord2d(topLeftX + frameWidth, topLeftY - frameHeight);
+   glVertex3d(width/2, -height/2, 0);
 
-   glTexCoord2f(topLeftX, topLeftY - frameHeight);
-   glVertex3f(-width/2, -height/2, 0);
+   glTexCoord2d(topLeftX, topLeftY - frameHeight);
+   glVertex3d(-width/2, -height/2, 0);
 
    glEnd();
    glUseProgram(0);

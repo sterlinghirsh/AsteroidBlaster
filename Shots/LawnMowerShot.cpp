@@ -16,14 +16,14 @@
 #endif
 
 static float spin = 1;
-static float adder = .10;
+static float adder = .10f;
 static float spinner = 0;
-static float otherSpin = 1.5;
-static float otherAdder = .05;
-static float spinster = 1.5;
-static float adderer = .08;
-static float poop = 2.5;
-static float bladder = .05;
+static float otherSpin = 1.5f;
+static float otherAdder = .05f;
+static float spinster = 1.5f;
+static float adderer = .08f;
+static float poop = 2.5f;
+static float bladder = .05f;
 
 LawnMowerShot::LawnMowerShot(Point3D& posIn, Vector3D dirIn, 
  AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
@@ -100,7 +100,7 @@ void LawnMowerShot::draw() {
       float numCurves = 1;
       
       //used as a multiplier to create the correct gap in between the lines
-      float gap = length / numCurves;
+      float gap = (float) (length / numCurves);
       
       //must be 2 for the cone to be complete, less than 2 for an incomplete cone, more 
       //than 2 for spacing to be irregular between the lines
@@ -153,18 +153,18 @@ void LawnMowerShot::draw() {
 
 
             x = y = z = 0; 
-            for(j = 0; j < length ; j = j+.5){
+            for(j = 0; j < length ; j = j+.5f){
             
-                  rot = cos((j / length) * M_PI/1.5);
+                  rot = (float) cos((j / length) * M_PI/1.5);
 
                   glVertex3f(x, y, z);
 
-                  glVertex3f(j/length * spin + rot * (j + 1) * (farRadius / length), j/length,  - j);
+                  glVertex3d(j/length * spin + rot * (j + 1) * (farRadius / length), j/length,  - j);
 
                   glVertex3f(-x, y, z);
-                  glVertex3f(-j/length * spin + -rot * (j + 1) * (farRadius / length), j/length,  - j);
-                  x = j/length*spin + rot * (j + 1) * (farRadius / length);
-                  y = j/length;
+                  glVertex3d(-j/length * spin + -rot * (j + 1) * (farRadius / length), j/length,  - j);
+                  x = (float) (j/length*spin + rot * (j + 1) * (farRadius / length));
+                  y = (float) (j/length);
                   z = - j;
 
             }
@@ -174,18 +174,18 @@ void LawnMowerShot::draw() {
 
 
             x = y = z = 0; 
-            for(j = 0; j < length ; j = j+.5){
+            for(j = 0; j < length ; j = j+.5f){
             
-                  rot = cos((j / length) * M_PI/1.5);
+                  rot = (float) cos((j / length) * M_PI/1.5);
 
                   glVertex3f(x, y, z);
 
-                  glVertex3f(j/length * spinster + rot * (j + 1) * (farRadius / length), -j/length,  - j);
+                  glVertex3d(j/length * spinster + rot * (j + 1) * (farRadius / length), -j/length,  - j);
 
                   glVertex3f(-x, y, z);
-                  glVertex3f(-j/length * spinster + -rot * (j + 1) * (farRadius / length), -j/length,  - j);
-                  x = j/length*spinster + rot * (j + 1) * (farRadius / length);
-                  y = -j/length;
+                  glVertex3d(-j/length * spinster + -rot * (j + 1) * (farRadius / length), -j/length,  - j);
+                  x = (float) (j/length*spinster + rot * (j + 1) * (farRadius / length));
+                  y = (float) (-j/length);
                   z = - j;
             }
       
@@ -193,18 +193,18 @@ void LawnMowerShot::draw() {
       glBegin(GL_LINES);
 
             x = y = z = 0; 
-            for(j = 0; j < length ; j = j+.5){
+            for(j = 0; j < length ; j = j+.5f){
             
-                  rot = cos((j / length) * M_PI/1.5);
+                  rot = (float) cos((j / length) * M_PI/1.5);
 
                   glVertex3f(x, y, z);
 
-                  glVertex3f(j/length * otherSpin + rot * (j + 1) * (farRadius / length), 2*j/length,  - j);
+                  glVertex3d(j/length * otherSpin + rot * (j + 1) * (farRadius / length), 2*j/length,  - j);
 
                   glVertex3f(-x, y, z);
-                  glVertex3f(-j/length * otherSpin + -rot * (j + 1) * (farRadius / length), 2*j/length,  - j);
-                  x = j/length*otherSpin + rot * (j + 1) * (farRadius / length);
-                  y = 2*j/length;
+                  glVertex3d(-j/length * otherSpin + -rot * (j + 1) * (farRadius / length), 2*j/length,  - j);
+                  x = (float) (j/length*otherSpin + rot * (j + 1) * (farRadius / length));
+                  y = (float) (2*j/length);
                   z = - j;
 
             }
@@ -215,18 +215,18 @@ void LawnMowerShot::draw() {
 
 
             x = y = z = 0; 
-            for(j = 0; j < length ; j = j+.5){
+            for(j = 0; j < length ; j = j+.5f){
             
-                  rot = cos((j / length) * M_PI/1.5);
+                  rot = (float) cos((j / length) * M_PI/1.5);
 
                   glVertex3f(x, y, z);
 
-                  glVertex3f(j/length * poop + rot * (j + 1) * (farRadius / length), -2*j/length,  - j);
+                  glVertex3d(j/length * poop + rot * (j + 1) * (farRadius / length), -2*j/length,  - j);
 
                   glVertex3f(-x, y, z);
-                  glVertex3f(-j/length * poop + -rot * (j + 1) * (farRadius / length), -2*j/length,  - j);
-                  x = j/length*poop + rot * (j + 1) * (farRadius / length);
-                  y = -2*j/length;
+                  glVertex3d(-j/length * poop + -rot * (j + 1) * (farRadius / length), -2*j/length,  - j);
+                  x = (float) (j/length*poop + rot * (j + 1) * (farRadius / length));
+                  y = (float) (-2*j/length);
                   z = - j;
 
             }

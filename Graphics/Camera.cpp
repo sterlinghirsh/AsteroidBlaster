@@ -102,9 +102,9 @@ Point3D Camera::getEyePoint(){
 }
 
 void Camera::shake(float newShakeAmount) {
-   shakeAmount = clamp(newShakeAmount, 0, 1);
+   shakeAmount = (float) clamp(newShakeAmount, 0, 1);
 }
 
 void Camera::zoom() {
-   zoomFactor = (int)(zoomFactor / 2 + 1) % 2 + 1.0;
+   zoomFactor = (float) ((((int) (zoomFactor / 2)) + 1) % 2) + 1.0f;
 }

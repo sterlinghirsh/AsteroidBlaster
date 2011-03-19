@@ -103,28 +103,28 @@ std::string HelpMenu::getStatus(bool status) {
 
 void HelpMenu::draw() {
    SDL_Rect position;
-   position.y = GH/10;
+   position.y = (Sint16) (GH/10);
    for(int i = 0; i < menuTexts.size(); i++) {
       switch (types[i]) {
       case TITLE_TYPE:
-         position.x = GW/2;
-         position.y += GH/40;
+         position.x = (Sint16) (GW/2);
+         position.y = (Sint16) (position.y + (GH/40));
          menuTexts[i]->setPosition(position);
          //if (i > 1 && types[i - 1] != TITLE_TYPE) {
          if (i > 0) {
-            position.y += GH/20;
+            position.y = (Sint16) (position.y + (GH/20));
          }
          break;
       case INST_TYPE:
-         position.x = GW/3;
+         position.x = (Sint16) (GW/3);
          menuTexts[i]->setPosition(position);
-         position.y += GH/30;
+         position.y = (Sint16) (position.y + (GH/30));
          break;
       case SINGLE_SELECTABLE_TYPE:
-         position.x = GW/2;
-         position.y += GH/30;
+         position.x = (Sint16) (GW/2);
+         position.y = (Sint16) (position.y + (GH/30));
          menuTexts[i]->setPosition(position);
-         position.y += GH/30;
+         position.y = (Sint16) (position.y + (GH/30));
          break;
       }
    }

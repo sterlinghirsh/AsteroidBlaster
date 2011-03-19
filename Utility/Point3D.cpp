@@ -112,7 +112,7 @@ double Point3D::distanceFrom(Point3D& rhs) {
 }
 
 void Point3D::draw() {
-   glVertex3f(x, y, z);
+   glVertex3f((GLfloat)x, (GLfloat)y, (GLfloat)z);
 }
 
 void Point3D::print() {
@@ -120,7 +120,7 @@ void Point3D::print() {
 }
 
 void Point3D::glTranslate() {
-   glTranslatef(x, y, z);
+   glTranslatef((GLfloat)x, (GLfloat)y, (GLfloat)z);
 }
 
 void Point3D::offsetBy(double x2, double y2, double z2) {

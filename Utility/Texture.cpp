@@ -113,10 +113,10 @@ void Texture::Add(std::string file, std::string keyName) {
    }
 
    // set up rectangle
-   area.x = x * width;
-   area.y = y * height;
-   area.w = width;
-   area.h = height;
+   area.x = (Sint16) (x * width);
+   area.y = (Sint16) (y * height);
+   area.w = (Sint16) width;
+   area.h = (Sint16) height;
 
    if(SDL_BlitSurface(image, &area, temp, NULL)== -1){
       std::cerr << "Failed to blit bitmap to temporary surface..." << std::endl;

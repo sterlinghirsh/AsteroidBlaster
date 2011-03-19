@@ -85,13 +85,13 @@ void Mesh3D::drawPoints(bool drawSmooth, bool drawTex) {
       double y3 = 0.0;
       points[faces[i].p1].draw(drawSmooth, drawTex);
       if (drawTex)
-         glTexCoord2f(x1, y1);
+         glTexCoord2d(x1, y1);
       points[faces[i].p2].draw(drawSmooth, drawTex);
       if (drawTex)
-         glTexCoord2f(x2, y2);
+         glTexCoord2d(x2, y2);
       points[faces[i].p3].draw(drawSmooth, drawTex);
       if (drawTex)
-         glTexCoord2f(x3, y3);
+         glTexCoord2d(x3, y3);
    }
 }
 
@@ -100,7 +100,7 @@ void Mesh3D::drawPoints(bool drawSmooth, bool drawTex) {
  */
 int Mesh3D::addPoint(double x, double y, double z, double texX, double texY) {
    MeshPoint point(x, y, z);
-   point.setTexPoint(texX, texY);
+   point.setTexPoint((GLfloat)texX, (GLfloat)texY);
    points.push_back(point);
    if (x > xMax) xMax = x;
    if (x < xMin) xMin = x;

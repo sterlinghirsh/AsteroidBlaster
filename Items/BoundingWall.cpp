@@ -26,30 +26,30 @@ BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, in
     * The Z will be the constant value for this plane.
     */
    float squareX, squareY, squareZ;
-   float minX, minY;
+   double minX, minY;
 
    // If wall is top, front, or right
-   squareZ = wallID <= WALL_RIGHT ? wallSize : -wallSize;
+   squareZ = (float) (wallID <= WALL_RIGHT ? wallSize : -wallSize);
    
    // These will probably always be the same.
    minX = minY = -wallSize;
    // Create the squares.
    for (int y = 0; y < squaresPerSide; ++y) {
       for (int x = 0; x < squaresPerSide; ++x) {
-         squareX = minX + (x * squareSize);
-         squareY = minY + (y * squareSize);
+         squareX = (float) (minX + (x * squareSize));
+         squareY = (float) (minY + (y * squareSize));
 
          if (wallID % 3 == 0) {
             // If wall is top or bottom.
-            squares.push_back(new GlowSquare(wallColor, squareSize, 
+            squares.push_back(new GlowSquare(wallColor, (float) squareSize, 
              squareX, squareZ, squareY, this, x, y));
          } else if (wallID % 3 == 1) {
             // If wall is Front or Back.
-            squares.push_back(new GlowSquare(wallColor, squareSize, 
+            squares.push_back(new GlowSquare(wallColor, (float) squareSize, 
              squareX, squareY, squareZ, this, x, y));
          } else {
             // If wall is Left or Right.
-            squares.push_back(new GlowSquare(wallColor, squareSize, 
+            squares.push_back(new GlowSquare(wallColor, (float) squareSize, 
              squareZ, squareX, squareY, this, x, y));
          }
       }
@@ -74,7 +74,7 @@ GlowSquare* BoundingWall::getSquareByCoords(int x, int y) {
 }
 
 void BoundingWall::getSquareCoordsFromObject(Drawable* item, int& squareXIndex, int& squareYIndex) {
-   float squareX, squareY;
+   double squareX, squareY;
    if (wallID == WALL_TOP || wallID == WALL_BOTTOM) {
       squareX = item->position->x;
       squareY = item->position->z;

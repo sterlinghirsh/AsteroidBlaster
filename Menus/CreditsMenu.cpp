@@ -106,7 +106,7 @@ void CreditsMenu::draw() {
    double yPos = 0.0;
    SDL_Rect position;
    position.x = 0;
-   position.y = (int) (yPos + yOffset);
+   position.y = (Sint16) (yPos + yOffset);
    //position.y = GH/5;
    //menuTexts[TITLE_STRING_INDEX]->setPosition(position);
    for(int i = 0; i < menuTexts.size() - 1; i++) {
@@ -114,8 +114,8 @@ void CreditsMenu::draw() {
       while (types[i + j] == 0 && i + j < menuTexts.size() - 1)
       {
          yPos += GH/5;
-         position.x = GW/2;
-         position.y = (int) (yPos + yOffset);
+         position.x = (Sint16) (GW/2);
+         position.y = (Sint16) (yPos + yOffset);
          menuTexts[i + j]->setPosition(position);
          j++;
       }
@@ -126,23 +126,23 @@ void CreditsMenu::draw() {
       {
          if (types[i + j] == DUAL_NAME_TYPE)
          {
-            position.x = GW/4 + (GW/2 * ((j - k) % 2));
+            position.x = (Sint16) (GW/4 + (GW/2 * ((j - k) % 2)));
             yPos += GH / 10 * (j % 2);
          }
          else
          {
-            position.x = GW/2;
+            position.x = (Sint16) (GW/2);
             yPos += GH / 10 * 1.5;
          }
-         position.y = (int) (yPos + yOffset);
+         position.y = (Sint16) (yPos + yOffset);
          menuTexts[i + j]->setPosition(position);
          j++;
       }
       i += j - 1;
    }
-   position.x = GW;
+   position.x = (Sint16) GW;
    yPos = GH;
-   position.y = (int) yPos;
+   position.y = (Sint16) yPos;
    menuTexts[QUIT_STRING_INDEX]->setPosition(position);
 
    // Clear the screen
@@ -206,7 +206,7 @@ void CreditsMenu::draw() {
    glPushMatrix();
    glLoadIdentity( );
    glTranslatef( 0.0f, 0.2f, -1.0f );
-   glScalef( 0.3625, 0.1, 1.0 );
+   glScaled( 0.3625, 0.1, 1.0 );
    glColor3f(1.0, 1.0, 1.0);
 
    // Select Our Texture

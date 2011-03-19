@@ -31,7 +31,7 @@ void ProjectileShot::draw() {
    glColor3f(1, 0, 0);
    setMaterial(ShotMaterial);
    position->glTranslate();
-   glRotatef(zVector.getAngleInDegrees(*velocity), 
+   glRotated(zVector.getAngleInDegrees(*velocity), 
       axis.xMag, axis.yMag, axis.zMag);
    gluCylinder(quadric,0.08f,0.0f,0.8f,6,6);
    glEnable(GL_LIGHTING);

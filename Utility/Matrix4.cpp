@@ -73,9 +73,9 @@ void Matrix4::copy(const Matrix4 &rhs) {
 }
 
 Matrix4 Matrix4::fromPoint3D(const Point3D& point) {
-   Matrix4 temp(point.x, 0, 0, 0,
-                point.y, 0, 0, 0,
-                point.z, 0, 0, 0,
+   Matrix4 temp((float) point.x, 0, 0, 0,
+                (float) point.y, 0, 0, 0,
+                (float) point.z, 0, 0, 0,
                 0 , 0, 0, 0);
    return temp;
 }
@@ -154,7 +154,7 @@ const Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
 
    for (int i = 0; i < 4; i++)
       for (int j = 0; j < 4; j++) {
-         t.m[i][j] = getRow(i) * rhs.getCol(j) + m[3][i] * rhs.m[j][3];
+         t.m[i][j] = (float) (getRow(i) * rhs.getCol(j) + m[3][i] * rhs.m[j][3]);
       }
 
    return t;

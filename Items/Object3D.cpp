@@ -166,20 +166,20 @@ void Object3D::drawBoundingBox() {
    glDisable(GL_LIGHTING);
    glPushMatrix();
    glBegin(GL_LINES);
-   glVertex3f(minPosition->x, minPosition->y, minPosition->z); glVertex3f(minPosition->x, minPosition->y, maxPosition->z);
-   glVertex3f(minPosition->x, maxPosition->y, minPosition->z); glVertex3f(minPosition->x, maxPosition->y, maxPosition->z);
-   glVertex3f(maxPosition->x, minPosition->y, minPosition->z); glVertex3f(maxPosition->x, minPosition->y, maxPosition->z);
-   glVertex3f(maxPosition->x, maxPosition->y, minPosition->z); glVertex3f(maxPosition->x, maxPosition->y, maxPosition->z);
+   glVertex3d(minPosition->x, minPosition->y, minPosition->z); glVertex3d(minPosition->x, minPosition->y, maxPosition->z);
+   glVertex3d(minPosition->x, maxPosition->y, minPosition->z); glVertex3d(minPosition->x, maxPosition->y, maxPosition->z);
+   glVertex3d(maxPosition->x, minPosition->y, minPosition->z); glVertex3d(maxPosition->x, minPosition->y, maxPosition->z);
+   glVertex3d(maxPosition->x, maxPosition->y, minPosition->z); glVertex3d(maxPosition->x, maxPosition->y, maxPosition->z);
    
-   glVertex3f(minPosition->x, minPosition->y, minPosition->z); glVertex3f(minPosition->x, maxPosition->y, minPosition->z);
-   glVertex3f(minPosition->x, minPosition->y, maxPosition->z); glVertex3f(minPosition->x, maxPosition->y, maxPosition->z);
-   glVertex3f(maxPosition->x, minPosition->y, minPosition->z); glVertex3f(maxPosition->x, maxPosition->y, minPosition->z);
-   glVertex3f(maxPosition->x, minPosition->y, maxPosition->z); glVertex3f(maxPosition->x, maxPosition->y, maxPosition->z);
+   glVertex3d(minPosition->x, minPosition->y, minPosition->z); glVertex3d(minPosition->x, maxPosition->y, minPosition->z);
+   glVertex3d(minPosition->x, minPosition->y, maxPosition->z); glVertex3d(minPosition->x, maxPosition->y, maxPosition->z);
+   glVertex3d(maxPosition->x, minPosition->y, minPosition->z); glVertex3d(maxPosition->x, maxPosition->y, minPosition->z);
+   glVertex3d(maxPosition->x, minPosition->y, maxPosition->z); glVertex3d(maxPosition->x, maxPosition->y, maxPosition->z);
    
-   glVertex3f(minPosition->x, minPosition->y, minPosition->z); glVertex3f(maxPosition->x, minPosition->y, minPosition->z);
-   glVertex3f(minPosition->x, minPosition->y, maxPosition->z); glVertex3f(maxPosition->x, minPosition->y, maxPosition->z);
-   glVertex3f(minPosition->x, maxPosition->y, minPosition->z); glVertex3f(maxPosition->x, maxPosition->y, minPosition->z);
-   glVertex3f(minPosition->x, maxPosition->y, maxPosition->z); glVertex3f(maxPosition->x, maxPosition->y, maxPosition->z);
+   glVertex3d(minPosition->x, minPosition->y, minPosition->z); glVertex3d(maxPosition->x, minPosition->y, minPosition->z);
+   glVertex3d(minPosition->x, minPosition->y, maxPosition->z); glVertex3d(maxPosition->x, minPosition->y, maxPosition->z);
+   glVertex3d(minPosition->x, maxPosition->y, minPosition->z); glVertex3d(maxPosition->x, maxPosition->y, minPosition->z);
+   glVertex3d(minPosition->x, maxPosition->y, maxPosition->z); glVertex3d(maxPosition->x, maxPosition->y, maxPosition->z);
    glEnd();
    glPopMatrix();
    glEnable(GL_LIGHTING);

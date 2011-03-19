@@ -179,17 +179,17 @@ void Shard::drawOtherOrbiters() {
 }
 
 void Shard::drawGlow() {
-   glColor4f(0.3, 0.3, 1.0, 0.8);
+   glColor4d(0.3, 0.3, 1.0, 0.8);
    // Call the display list if it has one.
    Object3D::draw();
    // Disable materials.
    glEnable(GL_COLOR_MATERIAL);
    glPushMatrix();
-   glTranslatef(position->x, position->y, position->z);
+   glTranslated(position->x, position->y, position->z);
    // Push matrix and draw main shard.
    glPushMatrix();
-   glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
-   glScalef(scalex, scaley, scalez);
+   glRotated(angle, axis->xMag, axis->yMag, axis->zMag);
+   glScaled(scalex, scaley, scalez);
    glDisable(GL_LIGHTING);
 
    // Set polygon offset to be behind the lines.
@@ -233,11 +233,11 @@ void Shard::draw() {
    //glEnable(GL_COLOR_MATERIAL);
    //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
-   glTranslatef(position->x, position->y, position->z);
+   glTranslated(position->x, position->y, position->z);
    // Push matrix and draw main shard.
    glPushMatrix();
-   glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
-   glScalef(scalex, scaley, scalez);
+   glRotated(angle, axis->xMag, axis->yMag, axis->zMag);
+   glScaled(scalex, scaley, scalez);
 
    //setMaterial(Rock);
    glEnable(GL_LIGHTING);

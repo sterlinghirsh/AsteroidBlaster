@@ -124,28 +124,28 @@ void SettingsMenu::draw() {
    menuTexts[MUSIC_INDEX]->textToDisplay = getStatus(musicOn);
    menuTexts[SFX_INDEX]->textToDisplay = getStatus(soundOn);
    SDL_Rect position;
-   position.y = GH/20;
+   position.y = (Sint16) (GH/20);
    for(int i = 0; i < menuTexts.size(); i++) {
       switch (types[i]) {
       case TITLE_TYPE:
-         position.y += GH/10;
-         position.x = GW/2;
+         position.y = (Sint16) (position.y + (GH/10));
+         position.x = (Sint16) (GW/2);
          menuTexts[i]->setPosition(position);
-         position.y += GH/10;
+         position.y = (Sint16) (position.y + (GH/10));
          break;
       case LEFT_TYPE:
-         position.x = GW/8;
+         position.x = (Sint16) (GW/8);
          menuTexts[i]->setPosition(position);
          break;
       case RIGHT_TYPE:
-         position.x = GW * 7/8;
+         position.x = (Sint16) (GW * 7/8);
          menuTexts[i]->setPosition(position);
-         position.y += GH/10;
+         position.y = (Sint16) (position.y + (GH/10));
          break;
       case SINGLE_SELECTABLE_TYPE:
-         position.x = GW/2;
+         position.x = (Sint16) (GW/2);
          menuTexts[i]->setPosition(position);
-         position.y += GH/10;
+         position.y = (Sint16) (position.y + (GH/10));
          break;
       }
    }

@@ -61,11 +61,11 @@ MainMenu::~MainMenu() {
 
 void MainMenu::draw() {
    SDL_Rect position;
-   position.x = (int) (GW/2);
-   position.y = (int) (GH/2.3);
+   position.x = (Sint16) (GW/2);
+   position.y = (Sint16) (GH/2.3);
    for(int i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
-      position.y += GH/12;
+      position.y = (Sint16) (position.y + (GH/12));
    }
    
    
@@ -114,7 +114,7 @@ void MainMenu::draw() {
    glPushMatrix();
       glLoadIdentity( );
       glTranslatef( 0.0f, 0.2f, -1.0f );
-      glScalef( 0.3625, 0.1, 1.0 );
+      glScaled( 0.3625, 0.1, 1.0 );
       glColor3f(1.0, 1.0, 1.0);
 
       /* Select Our Texture */

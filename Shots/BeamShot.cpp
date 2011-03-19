@@ -9,23 +9,23 @@
 #include <algorithm>
 
 materialStruct beamMaterial = {
-   {1, 1, 0, .8},
-   {1, 1, 0, .8},
-   {1, 1, 0, .8},
+   {1, 1, 0, .8f},
+   {1, 1, 0, .8f},
+   {1, 1, 0, .8f},
    {0}
 };
 
 materialStruct hitBeamMaterial = {
-   {1, .5, 1, .8},
-   {1, .5, 1, .8},
-   {1, .5, 1, .8},
+   {1, .5f, 1, .8f},
+   {1, .5f, 1, .8f},
+   {1, .5f, 1, .8f},
    {0}
 };
 
 materialStruct ballMaterial = {
-   {0.3, 0.3, 0.3, 0.8},
-   {0.8, 0.8, 0.8, 0.8},
-   {0, 0,   0.8, 0.8},
+   {0.3f, 0.3f, 0.3f, 0.8f},
+   {0.8f, 0.8f, 0.8f, 0.8f},
+   {0, 0,   0.8f, 0.8f},
    {8}
 };
 
@@ -99,7 +99,7 @@ void BeamShot::drawBeam(bool drawDots) {
    setMaterial(hitYet ? hitBeamMaterial : beamMaterial);
    position->glTranslate();
    glPushMatrix();
-   glRotatef(180 + zVector.getAngleInDegrees(*velocity),
+   glRotated(180 + zVector.getAngleInDegrees(*velocity),
          axis.xMag, axis.yMag, axis.zMag);
    // It shrinks, probably should fade out.
    if (!gameState->godMode) {
@@ -117,7 +117,7 @@ void BeamShot::drawBeam(bool drawDots) {
                distance += distanceDifference) {
             glPushMatrix();
             velocity->glTranslate(distance);
-            glRotatef(fmod(curTime, 4) * 90 + (distance*angleDiff), velocity->xMag,
+            glRotated(fmod(curTime, 4) * 90 + (distance*angleDiff), velocity->xMag,
                   velocity->yMag, velocity->zMag);
             normal.glTranslate((1 - timeLeft) + ballOffset);
             //glutSolidSphere(0.05 * (1 - timeLeft), 10, 10);

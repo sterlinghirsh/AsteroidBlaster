@@ -194,15 +194,15 @@ void Quaternion::getAxisAngle(Point3D *axis, double *angle)
 
 void Quaternion::getMatrix(GLfloat* matri)
 {
-	float x2 = x * x;
-	float y2 = y * y;
-	float z2 = z * z;
-	float xy = x * y;
-	float xz = x * z;
-	float yz = y * z;
-	float wx = w * x;
-	float wy = w * y;
-	float wz = w * z;
+	GLfloat x2 = (GLfloat) (x * x);
+	GLfloat y2 = (GLfloat) (y * y);
+	GLfloat z2 = (GLfloat) (z * z);
+	GLfloat xy = (GLfloat) (x * y);
+	GLfloat xz = (GLfloat) (x * z);
+	GLfloat yz = (GLfloat) (y * z);
+	GLfloat wx = (GLfloat) (w * x);
+	GLfloat wy = (GLfloat) (w * y);
+	GLfloat wz = (GLfloat) (w * z);
     
    GLfloat matrix[16] = {
   			1.0f - 2.0f * (y2 + z2), 2.0f * (xy - wz), 2.0f * (xz + wy), 0.0f,

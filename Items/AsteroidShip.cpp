@@ -19,10 +19,10 @@
 
 using namespace std;
 extern Custodian* custodian;
-const float rotationFactor = 3;
-static float spin = 90;
-static float flashiness = 0;
-static float tracker = 0;
+const double rotationFactor = 3;
+static double spin = 90;
+static double flashiness = 0;
+static double tracker = 0;
 static int rando = 1;
 
 AsteroidShip::AsteroidShip() :
@@ -192,7 +192,7 @@ void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
    static Point3D curPoint;
    static Vector3D initialOffset;
    static Vector3D randomOffset;
-   const float randomAmount = 0.1;
+   const float randomAmount = 0.1f;
    curPoint = emitter;
 
    // Translate the point in 2D
@@ -335,7 +335,7 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    if (shakeAmount != 0) {
-      shakeAmount -= 5 * shakeAmount * timeDiff;
+      shakeAmount -= (float) (5 * shakeAmount * timeDiff);
       if (shakeAmount < 0.01) {
          shakeAmount = 0;
       }
@@ -470,7 +470,7 @@ void draw_shield(){
       int elecWidth = 100;
       
       //how fast you want the lighting flashing from blue to white. Higher number == faster flash
-      float flash = .000000000001;
+      double flash = .000000000001;
       
       float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
       //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
@@ -492,8 +492,8 @@ void draw_shield(){
        
       flashiness = flashiness + (double)(rando % 50) / 10.0;
       loc1 = glGetUniformLocation(ramShader,"poop");
-      glUniform1f(loc1,flashiness);
-      glTranslatef(0, 0, -.2);
+      glUniform1f(loc1,(GLfloat) flashiness);
+      glTranslated(0, 0, -.2);
       setMaterial(GreenShiny);
       glLineWidth(thickness);
       glDisable(GL_CULL_FACE);
@@ -511,15 +511,15 @@ void draw_shield(){
     int iPivot = 2;
     //float x, y, z, 
     float angle;
-    for(angle = 0.0f; angle < (2.0f*M_PI); angle += (M_PI/8.0f))
+    for(angle = 0.0f; angle < (2.0f*M_PI); angle += (float) (M_PI/8.0f))
 
         {
 
         // Calculate x and y position of the next vertex
 
-        x = .5 * sin(angle);
+        x = (float) (.5 * sin(angle));
 
-        y = .5 * cos(angle);
+        y = (float) (.5 * cos(angle));
 
         z = 1.5;
 
@@ -547,11 +547,11 @@ void draw_shield(){
 
         }
         
-        x = .5 * sin(angle);
+        x = (float) (.5 * sin(angle));
 
-        y = .5 * cos(angle);
+        y = (float) (.5 * cos(angle));
 
-        z = 1.5;
+        z = 1.5f;
         
         glVertex3f(x, y, z);
 
@@ -575,94 +575,94 @@ void draw_ship(){
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
    glEnable(GL_COLOR_MATERIAL);
-   glScalef(1.5, .5, .8);
+   glScaled(1.5, .5, .8);
 
    glBegin(GL_TRIANGLES);
    glEnable(GL_NORMALIZE);
    setMaterial(BlackSolid);
-   glNormal3f(.2, -.005, -.03);
-   glVertex3f(0, 0, 0);
-   glVertex3f(.2, .2, 1.3);
-   glVertex3f(.15, 0, 1);
+   glNormal3d(.2, -.005, -.03);
+   glVertex3d(0, 0, 0);
+   glVertex3d(.2, .2, 1.3);
+   glVertex3d(.15, 0, 1);
 
-   glNormal3f(-.005, .2, -.03);
-   glVertex3f(0, 0, 0);
-   glVertex3f(0, .15, 1);
-   glVertex3f(.2, .2, 1.3);
+   glNormal3d(-.005, .2, -.03);
+   glVertex3d(0, 0, 0);
+   glVertex3d(0, .15, 1);
+   glVertex3d(.2, .2, 1.3);
 
-   glNormal3f(.005, .2, -.03);
-   glVertex3f(0, 0, 0);
-   glVertex3f(-.2, .2, 1.3);
-   glVertex3f(0, .15, 1);
+   glNormal3d(.005, .2, -.03);
+   glVertex3d(0, 0, 0);
+   glVertex3d(-.2, .2, 1.3);
+   glVertex3d(0, .15, 1);
 
-   glNormal3f(-.2, -.005, -.03);
-   glVertex3f(0, 0, 0);
-   glVertex3f(-.15, 0, 1);
-   glVertex3f(-.2, .2, 1.3);
+   glNormal3d(-.2, -.005, -.03);
+   glVertex3d(0, 0, 0);
+   glVertex3d(-.15, 0, 1);
+   glVertex3d(-.2, .2, 1.3);
 
-   glNormal3f(-.2, .005, -.03);
-   glVertex3f(0, 0, 0);
-   glVertex3f(-.2, -.2, 1.3);
-   glVertex3f(-.15, 0, 1);
+   glNormal3d(-.2, .005, -.03);
+   glVertex3d(0, 0, 0);
+   glVertex3d(-.2, -.2, 1.3);
+   glVertex3d(-.15, 0, 1);
 
-   glNormal3f(0.005,-0.2,-0.03);
-   glVertex3f(0, 0, 0);
-   glVertex3f(0, -.15, 1);
-   glVertex3f(-.2, -.2, 1.3);
+   glNormal3d(0.005,-0.2,-0.03);
+   glVertex3d(0, 0, 0);
+   glVertex3d(0, -.15, 1);
+   glVertex3d(-.2, -.2, 1.3);
 
-   glNormal3f(-.005,-0.2,-0.03);
-   glVertex3f(0, 0, 0);
-   glVertex3f(.2, -.2, 1.3);
-   glVertex3f(0, -.15, 1);
+   glNormal3d(-.005,-0.2,-0.03);
+   glVertex3d(0, 0, 0);
+   glVertex3d(.2, -.2, 1.3);
+   glVertex3d(0, -.15, 1);
 
-   glNormal3f(0.2,0.005,-0.03) ;
-   glVertex3f(0, 0, 0);
-   glVertex3f(.15, 0, 1);
-   glVertex3f(.2, -.2, 1.3);
+   glNormal3d(0.2,0.005,-0.03) ;
+   glVertex3d(0, 0, 0);
+   glVertex3d(.15, 0, 1);
+   glVertex3d(.2, -.2, 1.3);
    //glPopMatrix();
 
    /* Back of Ship */
    setMaterial(BlackSolid);
 
-   glNormal3f(-0.045,-0.045,0.0375);
-   glVertex3f(.15, 0, 1);
-   glVertex3f(.2, .2, 1.3);
-   glVertex3f(0, .15, 1);
+   glNormal3d(-0.045,-0.045,0.0375);
+   glVertex3d(.15, 0, 1);
+   glVertex3d(.2, .2, 1.3);
+   glVertex3d(0, .15, 1);
 
-   glNormal3f(-0.045,0.045,0.0375);
-   glVertex3f(.15, 0, 1);
-   glVertex3f(0, -.15, 1);
-   glVertex3f(.2, -.2, 1.3);
+   glNormal3d(-0.045,0.045,0.0375);
+   glVertex3d(.15, 0, 1);
+   glVertex3d(0, -.15, 1);
+   glVertex3d(.2, -.2, 1.3);
 
-   glNormal3f(0.045,0.045,0.0375);
-   glVertex3f(-.15, 0, 1);
-   glVertex3f(-.2, -.2, 1.3);
-   glVertex3f(0, -.15, 1);
+   glNormal3d(0.045,0.045,0.0375);
+   glVertex3d(-.15, 0, 1);
+   glVertex3d(-.2, -.2, 1.3);
+   glVertex3d(0, -.15, 1);
 
-   glNormal3f(0.045,-0.045,0.0375);
-   glVertex3f(-.15, 0, 1);
-   glVertex3f(0, .15, 1);
-   glVertex3f(-.2, .2, 1.3);
+   glNormal3d(0.045,-0.045,0.0375);
+   glVertex3d(-.15, 0, 1);
+   glVertex3d(0, .15, 1);
+   glVertex3d(-.2, .2, 1.3);
 
-   glNormal3f(0.09,0.09,0.0225);
-   glVertex3f(.15, 0, 1);
-   glVertex3f(0, .15, 1);
-   glVertex3f(0, 0, 1.6);
+   glNormal3d(0.09,0.09,0.0225);
+   glVertex3d(.15, 0, 1);
+   glVertex3d(0, .15, 1);
+   glVertex3d(0, 0, 1.6);
 
-   glNormal3f(0.09,-0.09,0.0225);
-   glVertex3f(.15, 0, 1);
-   glVertex3f(0, 0, 1.6);
-   glVertex3f(0, -.15, 1);
+   glNormal3d(0.09,-0.09,0.0225);
+   glVertex3d(.15, 0, 1);
+   glVertex3d(0, 0, 1.6);
+   glVertex3d(0, -.15, 1);
 
-   glNormal3f(-0.09,-0.09,0.0225);
-   glVertex3f(-.15, 0, 1);
-   glVertex3f(0, -.15, 1);
-   glVertex3f(0, 0, 1.6);
+   glNormal3d(-0.09,-0.09,0.0225);
+   glVertex3d(-.15, 0, 1);
+   glVertex3d(0, -.15, 1);
+   glVertex3d(0, 0, 1.6);
 
-   glNormal3f(-0.09,0.09,0.0225);
-   glVertex3f(-.15, 0, 1);
-   glVertex3f(-0, 0, 1.6);
-   glVertex3f(0, .15, 1);
+   glNormal3d(-0.09,0.09,0.0225);
+   glVertex3d(-.15, 0, 1);
+   glVertex3d(-0, 0, 1.6);
+   glVertex3d(0, .15, 1);
    glEnd();
    glDisable(GL_POLYGON_OFFSET_LINE);
 
@@ -674,89 +674,89 @@ void draw_ship(){
    glLineWidth(1.5);
    glDisable(GL_LIGHTING);
    glBegin(GL_LINE_LOOP);
-   glColor3f(1, .4, 0);
+   glColor3d(1, .4, 0);
    setMaterial(OrangeSolid);
-   glVertex3f(.15, 0, 1);
-   glVertex3f(.2, .2, 1.3);
-   glVertex3f(0, .15, 1);
+   glVertex3d(.15, 0, 1);
+   glVertex3d(.2, .2, 1.3);
+   glVertex3d(0, .15, 1);
 
-   glVertex3f(.15, 0, 1);
-   glVertex3f(0, 0, 1.6);
-   glVertex3f(0, .15, 1);
+   glVertex3d(.15, 0, 1);
+   glVertex3d(0, 0, 1.6);
+   glVertex3d(0, .15, 1);
 
-   glVertex3f(.15, 0, 1);
-   glVertex3f(.2, -.2, 1.3);
-   glVertex3f(0, -.15, 1);
+   glVertex3d(.15, 0, 1);
+   glVertex3d(.2, -.2, 1.3);
+   glVertex3d(0, -.15, 1);
 
-   glVertex3f(.15, 0, 1);
-   glVertex3f(0, 0, 1.6);
-   glVertex3f(0, -.15, 1);
+   glVertex3d(.15, 0, 1);
+   glVertex3d(0, 0, 1.6);
+   glVertex3d(0, -.15, 1);
 
-   glVertex3f(-.15, 0, 1);
-   glVertex3f(-.2, -.2, 1.3);
-   glVertex3f(0, -.15, 1);
+   glVertex3d(-.15, 0, 1);
+   glVertex3d(-.2, -.2, 1.3);
+   glVertex3d(0, -.15, 1);
 
-   glVertex3f(-.15, 0, 1);
-   glVertex3f(0, 0, 1.6);
-   glVertex3f(0, -.15, 1);
+   glVertex3d(-.15, 0, 1);
+   glVertex3d(0, 0, 1.6);
+   glVertex3d(0, -.15, 1);
 
-   glVertex3f(-.15, 0, 1);
-   glVertex3f(-.2, .2, 1.3);
-   glVertex3f(0, .15, 1);
+   glVertex3d(-.15, 0, 1);
+   glVertex3d(-.2, .2, 1.3);
+   glVertex3d(0, .15, 1);
 
-   glVertex3f(-.15, 0, 1);
-   glVertex3f(-0, 0, 1.6);
-   glVertex3f(0, .15, 1);
+   glVertex3d(-.15, 0, 1);
+   glVertex3d(-0, 0, 1.6);
+   glVertex3d(0, .15, 1);
 
    glEnd();
 
    //glLineWidth(5.0);
    glBegin(GL_LINE_LOOP);
-   //glColor3f(1, .3, 0);
+   //glColor3d(1, .3, 0);
    setMaterial(OrangeSolid);
-   glVertex3f(.15, 0, 1.01);
-   glVertex3f(0, -.15, 1.01);
-   glVertex3f(-.15, 0, 1.01);
-   glVertex3f(0, .15, 1.01);
+   glVertex3d(.15, 0, 1.01);
+   glVertex3d(0, -.15, 1.01);
+   glVertex3d(-.15, 0, 1.01);
+   glVertex3d(0, .15, 1.01);
    glEnd();
 
 
    //glLineWidth(4.0);
    glBegin(GL_LINE_LOOP);
-   glColor3f(0, 1, 1);
+   glColor3d(0, 1, 1);
    setMaterial(CyanSolid);
-   glVertex3f(0, 0, 0);
-   glVertex3f(.2, .2, 1.3);
-   glVertex3f(.15, 0, 1);
+   glVertex3d(0, 0, 0);
+   glVertex3d(.2, .2, 1.3);
+   glVertex3d(.15, 0, 1);
 
    setMaterial(CyanSolid);
-   glVertex3f(0, 0, 0);
-   glVertex3f(.2, .2, 1.3);
-   glVertex3f(0, .15, 1);
+   glVertex3d(0, 0, 0);
+   glVertex3d(.2, .2, 1.3);
+   glVertex3d(0, .15, 1);
 
-   glVertex3f(0, 0, 0);
-   glVertex3f(-.2, .2, 1.3);
-   glVertex3f(0, .15, 1);
+   glVertex3d(0, 0, 0);
+   glVertex3d(-.2, .2, 1.3);
+   glVertex3d(0, .15, 1);
 
-   glVertex3f(0, 0, 0);
-   glVertex3f(-.2, .2, 1.3);
-   glVertex3f(-.15, 0, 1);
+   glVertex3d(0, 0, 0);
+   glVertex3d(-.2, .2, 1.3);
+   glVertex3d(-.15, 0, 1);
 
-   glVertex3f(0, 0, 0);
-   glVertex3f(-.2, -.2, 1.3);
-   glVertex3f(-.15, 0, 1);
+   glVertex3d(0, 0, 0);
+   glVertex3d(-.2, -.2, 1.3);
+   glVertex3d(-.15, 0, 1);
 
-   glVertex3f(0, 0, 0);
-   glVertex3f(-.2, -.2, 1.3);
-   glVertex3f(0, -.15, 1);
+   glVertex3d(0, 0, 0);
+   glVertex3d(-.2, -.2, 1.3);
+   glVertex3d(0, -.15, 1);
 
-   glVertex3f(0, 0, 0);
-   glVertex3f(.2, -.2, 1.3);
-   glVertex3f(0, -.15, 1);
+   glVertex3d(0, 0, 0);
+   glVertex3d(.2, -.2, 1.3);
+   glVertex3d(0, -.15, 1);
 
-   glVertex3f(0, 0, 0);
-   glVertex3f(.2, -.2, 1.3);
-   glVertex3f(.15, 0, 1);
+   glVertex3d(0, 0, 0);
+   glVertex3d(.2, -.2, 1.3);
+   glVertex3d(.15, 0, 1);
 
    glEnd();
    //glLineWidth(1.0);
@@ -770,14 +770,14 @@ void draw_ship(){
 void draw_vectors(){
    setMaterial(WhiteSolid);
    glBegin(GL_LINES);
-   glVertex3f(0,0,0);
-   glVertex3f(0,.5,0);
+   glVertex3d(0,0,0);
+   glVertex3d(0,.5,0);
 
-   glVertex3f(0,0,0);
-   glVertex3f(0,0,-1);
+   glVertex3d(0,0,0);
+   glVertex3d(0,0,-1);
 
-   glVertex3f(.5,0,0);
-   glVertex3f(-.5,0,0);
+   glVertex3d(.5,0,0);
+   glVertex3d(-.5,0,0);
 
    glEnd();
 
@@ -796,7 +796,7 @@ void AsteroidShip::drawInMinimap() {
    glRotate();
    glScalef(10, 10, 10);
    glTranslatef(0, 0, -1);
-   glColor4f(0, 0, 0, 0.2);
+   glColor4d(0, 0, 0, 0.2);
    //draw_shield();
    draw_ship();
    glPopMatrix();
@@ -820,7 +820,7 @@ void AsteroidShip::draw() {
    position->glTranslate();
    // Rotate to the current up/right/forward vectors.
    glRotate();
-   glColor4f(0, 0, 0, 0.4);
+   glColor4d(0, 0, 0, 0.4);
    //int rando = rand();
    //flashiness = flashiness + (double)(rando % 50) / 10.0;
       /*if (flashiness >= 360 ) {
@@ -974,7 +974,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
    glLineWidth(3.0);
    glBegin(GL_QUADS);
    // top right
-   glColor3f(0.2, 1, 0.0);
+   glColor3d(0.2, 1, 0.0);
    drawPoint.draw();
    up->movePoint(drawPoint, -boxSize);
    drawPoint.draw();
@@ -986,7 +986,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
    // Move again
    shotDirection.movePoint(drawPoint, 5);
    // top right
-   glColor3f(1, 0.2, 0.0);
+   glColor3d(1, 0.2, 0.0);
    right->movePoint(drawPoint, boxSize);
    drawPoint.draw();
    up->movePoint(drawPoint, -boxSize);
@@ -999,7 +999,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
    // Move again
    shotDirection.movePoint(drawPoint, 5);
    // top right
-   glColor3f(0, 0.2, 1);
+   glColor3d(0, 0.2, 1);
    right->movePoint(drawPoint, boxSize);
    drawPoint.draw();
    up->movePoint(drawPoint, -boxSize);
@@ -1067,7 +1067,7 @@ int AsteroidShip :: getNumWeapons() {
  * Gets the cooldownamount of the currently selected weapon.
  */
 float AsteroidShip::getCurrentWeaponCoolDown() {
-   return weapons[currentWeapon]->getCoolDownAmount();
+   return (float) weapons[currentWeapon]->getCoolDownAmount();
 }
 
 Weapon* AsteroidShip::getWeapon(int wep) {

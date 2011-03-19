@@ -111,7 +111,7 @@ void ElectricityShot::drawShot(bool isGlow) {
    int elecWidth = 25;
 
    //how fast you want the lighting flashing from blue to white. Higher number == faster flash
-   float flash = .7;
+   float flash = .7f;
 
    float lpos[4] = {1.0, 0.5, 1.0, 0.0};   // light postion
    //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
@@ -143,16 +143,16 @@ void ElectricityShot::drawShot(bool isGlow) {
    for(k = -density/2; k < density/2; k = k+1){
       x = 0;
       y = 0;
-      z = length;
-      for(j = 0; j < length ; j = j+(rand() % 10)){
+      z = (float) length;
+      for(j = 0; j < length ; j = j+(float)(rand() % 10)){
          glVertex3f(x, y, z);
 
-         rot = rand() % elecWidth - elecWidth/2;
-         srot = rand() % elecWidth - elecWidth/2;
-         glVertex3f(srot * (1 / length), rot  * (1 / length), length - j - 2);
-         x = srot * (1 / length);
-         y = rot * (1 / length);
-         z = length - j - 2;
+         rot = (float) (rand() % elecWidth - elecWidth/2);
+         srot = (float) (rand() % elecWidth - elecWidth/2);
+         glVertex3d(srot * (1 / length), rot  * (1 / length), length - j - 2);
+         x = (float) (srot * (1 / length));
+         y = (float) (rot * (1 / length));
+         z = (float) (length - j - 2);
       }
    }
    glEnd();

@@ -126,10 +126,10 @@ void GlowSquare::draw() {
    if (timeDiff < fadeTime) {
       glPushMatrix();
       // If the timeLastHit is after the current time, consider it not hit yet.
-      alpha = fadeScale * (fadeTime - clamp(timeDiff, 0, fadeTime));
+      alpha = (float) (fadeScale * (fadeTime - clamp(timeDiff, 0, fadeTime)));
       //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
       // Max alpha is 0.5
-      color->setColorWithAlpha(alpha * 0.5);
+      color->setColorWithAlpha((float) (alpha * 0.5));
       normal.glTranslate(shwobbleAmplitude * sin(numShwobbles * 2 * M_PI * alpha * alpha));
       glCallList(displayList);
       glPopMatrix();

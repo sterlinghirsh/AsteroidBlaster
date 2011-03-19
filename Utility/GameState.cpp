@@ -511,35 +511,35 @@ void GameState::drawAllText() {
    FPSText->setPosition(position);
    FPSText->draw();
    
-   position.y += positionDifferenceY;
+   position.y = (Sint16) (position.y + positionDifferenceY);
    numAsteroidsText->setPosition(position);
    numAsteroidsText->draw();
 
-   position.y += positionDifferenceY;
+   position.y = (Sint16) (position.y + positionDifferenceY);
    numShardsText->setPosition(position);
    numShardsText->draw();
    
-   position.y += positionDifferenceY;
+   position.y = (Sint16) (position.y + positionDifferenceY);
    scoreText->setPosition(position);
    scoreText->draw();
    
-   position.y += positionDifferenceY;
+   position.y = (Sint16) (position.y + positionDifferenceY);
    shardText->setPosition(position);
    shardText->draw();
    
-   position.y += positionDifferenceY;
+   position.y = (Sint16) (position.y + positionDifferenceY);
    healthText->setPosition(position);
    healthText->draw();
    
-   position.y += positionDifferenceY;
+   position.y = (Sint16) (position.y + positionDifferenceY);
    weaponText->setPosition(position);
    weaponText->draw();
    
-   position.y += positionDifferenceY;
+   position.y = (Sint16) (position.y + positionDifferenceY);
    ammoText->setPosition(position);
    ammoText->draw();
    
-   position.y += positionDifferenceY;
+   position.y = (Sint16) (position.y + positionDifferenceY);
    curLevelText->setPosition(position);
    curLevelText->draw();
    GameMessage::drawAllMessages();

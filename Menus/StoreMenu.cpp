@@ -175,8 +175,8 @@ StoreMenu::~StoreMenu() {
 
 void StoreMenu::draw() {
    SDL_Rect position;
-   position.x = GW/3;
-   position.y = GH/2;
+   position.x = (Sint16) (GW/3);
+   position.y = (Sint16) (GH/2);
    std::stringstream out;
 
    // Clear the screen
@@ -184,43 +184,43 @@ void StoreMenu::draw() {
 
 
    //Done
-   position.x = (int) (GW*(8.0/10.0));
-   position.y = (int) (GH*(9.5/10.0));
+   position.x = (Sint16) (GW*(8.0/10.0));
+   position.y = (Sint16) (GH*(9.5/10.0));
    menuTexts[DONE_STOREMENUINDEX]->setPosition(position);
    
    //shards
-   position.x = (int) (GW*(0.1/10.0));
-   position.y = (int) (GH*(9.5/10.0));
+   position.x = (Sint16) (GW*(0.1/10.0));
+   position.y = (Sint16) (GH*(9.5/10.0));
    menuTexts[SHARDS_STOREMENUINDEX]->updateBody(gameState->ship->nShards);
    menuTexts[SHARDS_STOREMENUINDEX]->setPosition(position);
    
    //health
-   position.x = (int) (GW*(2.0/10.0));
-   position.y = (int) (GH*(9.5/10.0));
+   position.x = (Sint16) (GW*(2.0/10.0));
+   position.y = (Sint16) (GH*(9.5/10.0));
    menuTexts[HEALTH_STOREMENUINDEX]->updateBody(gameState->ship->health);
    menuTexts[HEALTH_STOREMENUINDEX]->setPosition(position);
    
    //weapons
-   position.x = (int) (GW*(1.0/10.0));
-   position.y = (int) (GH*(5.0/10.0));
+   position.x = (Sint16) (GW*(1.0/10.0));
+   position.y = (Sint16) (GH*(5.0/10.0));
    menuTexts[WEAPONS_STOREMENUINDEX]->setPosition(position);
    
    //upgrades
-   position.y += GH/10;
+   position.y = (Sint16) (position.y + (GH/10));
    menuTexts[UPGRADES_STOREMENUINDEX]->setPosition(position);
    
    //weapons
-   position.y += GH/10;
+   position.y = (Sint16) (position.y + (GH/10));
    menuTexts[AMMO_STOREMENUINDEX]->setPosition(position);
    
    //weapons
-   position.y += GH/10;
+   position.y = (Sint16) (position.y + (GH/10));
    menuTexts[SHIP_STOREMENUINDEX]->setPosition(position);
 
    drawTexts(menuTexts);
    
-   position.x = (int) (GW*(3.0/10.0));
-   position.y = (int) (GH*(5.0/10.0));
+   position.x = (Sint16) (GW*(3.0/10.0));
+   position.y = (Sint16) (GH*(5.0/10.0));
    if(menuSelection == WEAPONS) {
       //set menu colors
       menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_BLUE);
@@ -241,7 +241,7 @@ void StoreMenu::draw() {
          weaponsTexts[RAILGUN_WEAPONSTEXTSINDEX]->selectable = true;
       }
       weaponsTexts[RAILGUN_WEAPONSTEXTSINDEX]->setPosition(position);
-      position.y += GH/10;
+      position.y = (Sint16) (position.y + (GH/10));
       
       // pikachu's wrath
       if(gameState->ship->getWeapon(PIKACHUSWRATH_WEAPON_INDEX)->purchased) {
@@ -256,7 +256,7 @@ void StoreMenu::draw() {
          weaponsTexts[PIKACHUSWRATH_WEAPONSTEXTSINDEX]->selectable = true;
       }
       weaponsTexts[PIKACHUSWRATH_WEAPONSTEXTSINDEX]->setPosition(position);
-      position.y += GH/10;
+      position.y = (Sint16) (position.y + (GH/10));
       
       // Anti Intertia
       if(gameState->ship->getWeapon(ANTIINERTIA_WEAPON_INDEX)->purchased) {
@@ -282,7 +282,7 @@ void StoreMenu::draw() {
       menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_WHITE);
       
-      position.y = (int) (GH*(5.0/10.0));
+      position.y = (Sint16) (GH*(5.0/10.0));
       // buy blaster upgrade
       out.str(""); 
       wLevel = gameState->ship->getWeapon(BLASTER_WEAPON_INDEX)->level + 1;
@@ -295,7 +295,7 @@ void StoreMenu::draw() {
       }
       upgradesTexts[BLASTER_UPGRADESTEXTSINDEX]->updateBody(out.str());
       upgradesTexts[BLASTER_UPGRADESTEXTSINDEX]->setPosition(position);
-      position.y += GH/10;
+      position.y = (Sint16) (position.y + (GH/10));
       
       // buy railgun upgrade
       out.str(""); 
@@ -314,7 +314,7 @@ void StoreMenu::draw() {
       }
       upgradesTexts[RAILGUN_UPGRADESTEXTSINDEX]->updateBody(out.str());
       upgradesTexts[RAILGUN_UPGRADESTEXTSINDEX]->setPosition(position);
-      position.y += GH/10;
+      position.y = (Sint16) (position.y + (GH/10));
       
       // buy pikachu's wrath upgrade
       out.str(""); 
@@ -344,7 +344,7 @@ void StoreMenu::draw() {
       menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_WHITE);
       
       int currAmmo = -1;
-      position.y = (int) (GH*(5.0/10.0));
+      position.y = (Sint16) (GH*(5.0/10.0));
       // railgun
       out.str(""); 
       if (gameState->ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased) {
@@ -357,7 +357,7 @@ void StoreMenu::draw() {
       }
       ammoTexts[RAILGUN_AMMOTEXTSINDEX]->updateBody(out.str());
       ammoTexts[RAILGUN_AMMOTEXTSINDEX]->setPosition(position);
-      position.y += GH/10;
+      position.y = (Sint16) (position.y + (GH/10));
       
       // pikachu's wrath
       out.str(""); 
@@ -371,7 +371,7 @@ void StoreMenu::draw() {
       }
       ammoTexts[PIKACHUSWRATH_AMMOTEXTSINDEX]->updateBody(out.str());
       ammoTexts[PIKACHUSWRATH_AMMOTEXTSINDEX]->setPosition(position);
-      position.y += GH/10;
+      position.y = (Sint16) (position.y + (GH/10));
       
       // anti inertia beam
       out.str(""); 
@@ -385,7 +385,7 @@ void StoreMenu::draw() {
       }
       ammoTexts[ANTIINERTIA_AMMOTEXTSINDEX]->updateBody(out.str());
       ammoTexts[ANTIINERTIA_AMMOTEXTSINDEX]->setPosition(position);
-      position.y += GH/10;
+      position.y = (Sint16) (position.y + (GH/10));
       
       drawTexts(ammoTexts);
       
@@ -398,10 +398,10 @@ void StoreMenu::draw() {
       menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_WHITE);
       menuTexts[SHIP_STOREMENUINDEX]->setColor(SDL_BLUE);
       
-      position.y = (int) (GH*(5.0/10.0));
+      position.y = (Sint16) (GH*(5.0/10.0));
       //health
       shipTexts[BUYHEALTH_SHIPTEXTSINDEX]->setPosition(position);
-      position.y += GH/10;
+      position.y = (Sint16) (position.y + (GH/10));
       
       // buy engine upgrade
       out.str(""); 
@@ -471,7 +471,7 @@ void StoreMenu::drawLogo() {
    glPushMatrix();
       glLoadIdentity( );
       glTranslatef( 0.0f, 0.2f, -1.0f );
-      glScalef( 0.3625, 0.1, 1.0 );
+      glScaled( 0.3625, 0.1, 1.0 );
       glColor3f(1.0, 1.0, 1.0);
 
       /* Select Our Texture */
