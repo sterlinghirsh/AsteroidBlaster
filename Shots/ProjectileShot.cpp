@@ -21,6 +21,12 @@ ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn,
    static int currentStartingParticleCycle = 0;
    particleNum = currentStartingParticleCycle;
    currentStartingParticleCycle = (currentStartingParticleCycle + 7) % particleCycle;
+   particleDirection = velocity->getNormalVector();
+   
+   Vector3D normalizedVelocity(*velocity);
+   normalizedVelocity.normalize();
+
+   particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
 }
 
 void ProjectileShot::draw() {
@@ -44,14 +50,23 @@ void ProjectileShot::update(double timeDiff) {
    Shot::update(timeDiff);
    const int particlesPerSecond = 4;
    
-   static Vector3D particleVariation;
+   //Vector3D normalizedVelocity(*velocity);
+   //normalizedVelocity.normalize();
+   //const double particleDirectionPeriod = 0.3;
+   //const double particleDirectionRotationSpeed = 2 * M_PI / particleDirectionPeriod;
+   //particleDirection.rotate(timeDiff * particleDirectionRotationSpeed, normalizedVelocity);
+   //particleDirection.normalize();
    
    for (int i = 0; i <= timeDiff * particlesPerSecond; ++i) {
       particleNum = (particleNum + 1) % particleCycle;
-      particleVariation.randomMagnitude();
-      particleVariation.setLength(0.1);
+      // This is the random way...
+      particleDirection.randomMagnitude();
+      particleDirection.setLength(0.1);
+      
+      // And this is the helix way.
       BlasterShotParticle::AddRainbow(new Point3D(*position), 
-       new Vector3D(particleVariation), particleNum, particleCycle);
+       new Vector3D(particleDirection), particleNum, particleCycle);
+      // Reflect and Duplicate the above for a double helix.
    }
 }
 
@@ -79,4 +94,8 @@ void ProjectileShot::handleCollision(Drawable* other) {
       }
    }
    Shot::handleCollision(other);
+}
+
+void ProjectileShot::hitWall(BoundingWall* wall) {
+   //particleDirection.reflect(wall->normal);
 }

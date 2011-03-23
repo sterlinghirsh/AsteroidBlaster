@@ -44,6 +44,7 @@ class BoundingWall {
       GlowSquare* getSquareByID(int index);
       GlowSquare* getSquareByCoords(int x, int y);
       virtual void initDisplayList(); // Set up the displayList.
+      Vector3D normal;
    private:
       int linesDisplayList;
 };

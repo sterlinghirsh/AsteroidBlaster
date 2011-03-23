@@ -12,6 +12,7 @@
 
 // Incomplete class declaration so we can have the pointer to it.
 class Custodian;
+class BoundingWall;
 
 class Drawable {
    public:
@@ -62,6 +63,7 @@ class Drawable {
       virtual bool detectCollision(Drawable* other, bool checkOther = true);
       virtual void handleCollision(Drawable* other);
       virtual void drawInMinimap();
+      virtual void hitWall(BoundingWall* wall);
    protected:
       Custodian* custodian;
 };

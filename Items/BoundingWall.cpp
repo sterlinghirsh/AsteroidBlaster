@@ -55,6 +55,14 @@ BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, in
       }
    }
    initDisplayList();
+   switch(wallID) {
+      case WALL_TOP: normal.updateMagnitude(0, -1, 0); break;
+      case WALL_BOTTOM: normal.updateMagnitude(0, 1, 0); break;
+      case WALL_FRONT: normal.updateMagnitude(0, 0, -1); break;
+      case WALL_BACK: normal.updateMagnitude(0, 0, 1); break;
+      case WALL_LEFT: normal.updateMagnitude(1, 0, 0); break;
+      case WALL_RIGHT: normal.updateMagnitude(-1, 0, 0); break;
+   }
 }
 
 int BoundingWall::getSquareX(int squareID) {
@@ -104,8 +112,12 @@ void BoundingWall::constrain(Drawable* item) {
       return;
    }
 
+   item->hitWall(this);
+
    double speed = item->velocity->getLength();
+   // How far out will the ripple effect go?
    int distanceLimit = (int) (item->radius * item->radius * 0.3) + 4;
+   // How much time will there be between stages of the ripple effect?
    double delay = 1 / (4 * speed);
 
    square->hit(distanceLimit, delay);

@@ -6,6 +6,7 @@
  */
 
 #include "Items/Drawable.h"
+#include "Items/BoundingWall.h"
 
 /**
  * We should get rid of the displayListIn thing, I think.
@@ -121,3 +122,10 @@ void Drawable::drawInMinimap() {
  * drawGlow() is here to be overwritten by all subclasses.
  */
 void Drawable::drawGlow() {}
+
+/**
+ * hitWall is here to be overriden. Called when the wall reflects it.
+ */
+void Drawable::hitWall(BoundingWall* wall) {
+   // Do nothing.
+}
