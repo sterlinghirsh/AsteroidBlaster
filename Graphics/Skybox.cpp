@@ -8,6 +8,7 @@
 #include "Graphics/Skybox.h"
 #include "Utility/GlobalUtility.h"
 #include "Utility/Texture.h"
+#include <math.h>
 
 Skybox::Skybox() {
    curMaterial = WhiteSolid;
@@ -21,6 +22,11 @@ void Skybox::draw(Camera* camera) {
    glEnable(GL_TEXTURE_2D);
    glDisable(GL_CULL_FACE);
    camera->setCamera(false);
+   const bool rotateSkybox = false;
+   if (rotateSkybox) {
+      const double period = 60; // seconds
+      glRotatef(fmod(doubleTime(), period) * (360/ period), 1, 1, 1);
+   }
    glScalef(3, 3, 3);
    drawcube();
 
