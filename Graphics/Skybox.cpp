@@ -25,7 +25,7 @@ void Skybox::draw(Camera* camera) {
    const bool rotateSkybox = false;
    if (rotateSkybox) {
       const double period = 60; // seconds
-      glRotatef(fmod(doubleTime(), period) * (360/ period), 1, 1, 1);
+      glRotatef( (GLfloat)(fmod(doubleTime(), period) * (360/ period)), 1, 1, 1);
    }
    glScalef(3, 3, 3);
    drawcube();

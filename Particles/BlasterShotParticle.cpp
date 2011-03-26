@@ -43,7 +43,7 @@ void BlasterShotParticle::AddRainbow(Point3D* pos, Vector3D* vec, int particleNu
    float _r = 0;
    float _g = 0;
    float _b = 0;
-   getBrightColor(((float)particleNum / particleCycle), _r, _g, _b);
+   getBrightColor(((float)particleNum / (float)particleCycle), _r, _g, _b);
 
    Particle::Add(new BlasterShotParticle(pos, vec, _fade, _r, _g, _b));
 
