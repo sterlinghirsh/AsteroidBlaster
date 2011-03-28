@@ -123,8 +123,7 @@ std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* a
    Drawable* checkee;
    // call checkOutside() on each of the Drawables in all.
    // Build a new set of Drawables out of each of the ones that got back false.
-   for (iter = all->begin(); iter != all->end(); ++iter)
-   {
+   for (iter = all->begin(); iter != all->end(); ++iter) {
       checkee = *iter;
 
       // Skip this one if it's NULL

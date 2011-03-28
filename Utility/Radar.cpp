@@ -6,6 +6,7 @@
  */
 
 #include "Radar.h"
+#include "Items/AsteroidShip.h"
 
 // Tell c++ that gameState was declared elsewhere (in main.cpp)
 extern GameState* gameState;
@@ -37,6 +38,9 @@ std::list<Drawable*>* Radar :: getFullReading() {
     * Use this vector to construct a new copied vector (to be safe), and return that one.
     */
    std::vector<Drawable*>* all (gameState->custodian.getListOfObjects());
+
+   if (gameState == NULL || all == NULL)
+      return NULL;
    
    // The new list, which will be returned
    std::list<Drawable*>* allNew = new std::list<Drawable*>();
@@ -45,8 +49,7 @@ std::list<Drawable*>* Radar :: getFullReading() {
    Drawable* checkee;
    
    // Iterate over all the Object3D's the custodian gave us
-   for (vectorIter = all->begin(); vectorIter != all->end(); ++vectorIter)
-   {
+   for (vectorIter = all->begin(); vectorIter != all->end(); ++vectorIter) {
       // Copy all of the ptrs into a list
       checkee = *vectorIter;
 
@@ -100,8 +103,13 @@ std::list<Drawable*>* Radar :: getTargetableViewFrustumReading() {
    // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
    std::vector<Drawable*> allObjects (*gameState->custodian.getListOfObjects());
 
-   // Turn the vector of allObjects into a list. True says to cull it down to only the targetable ones (no particles)
-   std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(&allObjects, true);
+   // Set the camera temporarily.
+
+   glPushMatrix();
+      owner->setCameraDirectly();
+      // Turn the vector of allObjects into a list. True says to cull it down to only the targetable ones (no particles)
+      std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(&allObjects, true);
+   glPopMatrix();
    
    return culledList;
 }

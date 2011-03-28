@@ -334,6 +334,8 @@ void AsteroidShip::update(double timeDiff) {
 
    }
 
+   keepFiring();
+
    if (shakeAmount != 0) {
       shakeAmount -= (float) (5 * shakeAmount * timeDiff);
       if (shakeAmount < 0.01) {
@@ -1118,4 +1120,12 @@ void AsteroidShip::setView(int _view) {
 
 int AsteroidShip::getCurrentView() {
    return currentView;
+}
+
+void AsteroidShip::setCameraDirectly() {
+   gluLookAt(position->x, position->y, position->z,
+         position->x + forward->xMag,
+         position->y + forward->yMag,
+         position->z + forward->zMag,
+         up->xMag, up->yMag, up->zMag);
 }

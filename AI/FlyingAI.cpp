@@ -70,6 +70,8 @@ std::list<Asteroid3D*>* FlyingAI :: getAsteroidList() {
    std::list<Drawable*>* targets = radar->getFullReading();
    std::list<Drawable*>::iterator targets_iterator;
    
+   if (targets == NULL)
+      return NULL;
    targets_iterator = targets->begin();
    
    for ( ; targets_iterator != targets->end(); targets_iterator++) {
@@ -343,13 +345,16 @@ void FlyingAI :: faceDirection( Vector3D* desiredForward ) {
  * Choose a correct flying mode, based on the current situation.
  */
 FlyMode FlyingAI :: chooseMode(void) {
-   return NEU;
+   return NEU; // What?
 }
 
 /**
  * Preform flying AI operations
  */
 int FlyingAI :: think(double dt) {
+   if (gameState == NULL)
+      return 0;
+   
    Vector3D* desiredForward;
    Vector3D* desiredTraj;
    if(!enabled) {

@@ -66,6 +66,13 @@ GameState::GameState(double worldSizeIn) {
 
    // Set up objects.
    custodian.add(ship);
+   AsteroidShip* otherShip = new AsteroidShip();
+   otherShip->position->update(3, 0, 0);
+   //otherShip->updateBoundingBox();
+   otherShip->flyingAI->enable();
+   otherShip->shooter->enable();
+   custodian.add(otherShip);
+
    curLevel = 1;
    numAsteroidsToSpawn = curLevel;
    initAsteroids();
@@ -193,10 +200,10 @@ void GameState::update(double timeDiff) {
    std::set<Drawable*, compareByDistance>* collisions;
    std::set<Drawable*, compareByDistance>::iterator otherObject;
 
-   //TODO explain what this does
+   // Keep items in the box.
    cube->constrain(ship);
    
-   //TODO explain what this does
+   // Update each item.
    for (item = objects->begin(); item != objects->end(); ++item) {
       if (*item == NULL)
          continue;
@@ -204,9 +211,6 @@ void GameState::update(double timeDiff) {
       cube->constrain(*item);
    }
    
-   // Update the values of all of the text objects.
-   ship->keepFiring();
-
    //TODO explain what this does
    custodian.update();
    
@@ -281,7 +285,7 @@ void GameState::draw() {
    // Get a list of all of the objects after culling them down to the view frustum.
    //std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
-   targetableViewFrustumObjects = ship->getRadar()->getTargetableViewFrustumReading();
+   // Get targetable view frustum objects in the shooting ai.
    
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
@@ -630,6 +634,15 @@ void GameState::reset() {
 
    custodian.add(ship);
    initAsteroids();
+
+   AsteroidShip* otherShip = new AsteroidShip();
+   otherShip->position->update(3, 0, 0);
+   //otherShip->updateBoundingBox();
+   otherShip->flyingAI->enable();
+   otherShip->shooter->enable();
+   custodian.add(otherShip);
+
+
    GameMessage::Clear();
    addLevelMessage();
 }

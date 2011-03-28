@@ -86,7 +86,9 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
    
    ship->updateShotDirection(aim);
    lastShotPos = aim;
-   ship->fire(chosenWeapon->shouldFire(&targetPos, &aim));
+   bool shouldFire = chosenWeapon->shouldFire(&targetPos, &aim);
+
+   ship->fire(shouldFire);
 
    return 0;
 }
@@ -108,8 +110,13 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 }
 
 Object3D* ShootingAI::chooseTarget() {
+   // if gameState not yet initialized.
+   if (gameState == NULL)
+      return NULL;
+
    // Make the AI choose from a list of Targetable objects instead of Drawable objects, which are inside the view frustum.
-   std::list<Drawable*>* targets = gameState->targetableViewFrustumObjects;
+   std::list<Drawable*>* targets;// = gameState->targetableViewFrustumObjects;
+   targets = ship->getRadar()->getTargetableViewFrustumReading();
    std::list<Drawable*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
    Point3D vec;
@@ -129,7 +136,7 @@ Object3D* ShootingAI::chooseTarget() {
    for ( ; targets_iterator != targets->end(); ++targets_iterator) {
       //printf("starting null check.\n");
       if (*targets_iterator == NULL) {
-      printf("targets_iterator was null!\n\n\n\n\n\n");
+         printf("targets_iterator was null!\n\n\n\n\n\n");
          continue;
       }
      // printf ("Made it past targets_iterator null check!\n");
@@ -138,7 +145,7 @@ Object3D* ShootingAI::chooseTarget() {
         continue;
      }
 
-      if (*targets_iterator == NULL || (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && dynamic_cast<Shard*>(*targets_iterator) == NULL)) {
+      if ((dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && dynamic_cast<Shard*>(*targets_iterator) == NULL)) {
          continue;
       }
       if (dynamic_cast<Shard*>(*targets_iterator) != NULL &&
@@ -160,6 +167,7 @@ Object3D* ShootingAI::chooseTarget() {
       } 
    }
 
+   delete targets;
    return closest;
 }
 
@@ -184,6 +192,7 @@ int ShootingAI::think(double dt) {
    /* This order is tentative. We will probably change it. */
    
    Object3D* target = chooseTarget();
+
    if (target == NULL && target != lastTarget) {
       printf("Could not find a target!\n");
       lastTarget = target;

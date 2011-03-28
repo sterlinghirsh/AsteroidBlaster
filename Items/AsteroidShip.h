@@ -132,6 +132,8 @@ class AsteroidShip : public Object3D {
       
       int getCurrentView();
 
+      void setCameraDirectly();
+
    protected:
       int soundHandle;
       std::vector<Weapon*> weapons;
