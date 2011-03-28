@@ -741,11 +741,9 @@ void GameState::keyDown(int key) {
 
 
    //Camera controls
-   /*
    case SDLK_9:
       camera->zoom();
       break;
-   */
 
    case SDLK_t:
       ship->nextView();
@@ -839,7 +837,18 @@ void GameState::keyDown(int key) {
       }
       break;
    
+   
    // DEBUG KEYS
+   case SDLK_F2:
+      bloom = !bloom;
+      break;
+   case SDLK_F3:
+      reg = !reg;
+      break;
+   case SDLK_F4:
+      bloom1 = !bloom1;
+      break;
+
    case SDLK_F10:
       gameState->ship->nShards += 10;
       break;
