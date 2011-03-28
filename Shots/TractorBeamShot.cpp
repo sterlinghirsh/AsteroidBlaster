@@ -24,8 +24,8 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn,
    length = 40;
    farRadius = length * tan(angle);
    framesAlive = 0;
-   forward = new Vector3D(*velocity); // Goofy.
-   up = new Vector3D(0, 1, 0);
+   forward = new Vector3D(*velocity);
+   up = new Vector3D(*ownerIn->up);
    Point3D endPoint1(*position);
    Point3D endPoint2(*position);
    // Set endPoint2 100 units away.
@@ -66,6 +66,9 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn,
 void TractorBeamShot::update(double timeDiff) {
    if (++framesAlive >= 2)
       shouldRemove = true;
+   
+   const float spinSpeed = 90; // Degrees per second.
+   spin += (float) (spinSpeed * timeDiff);
 }
 
 /**
@@ -103,7 +106,6 @@ void TractorBeamShot::draw() {
       start.glTranslate();
       
       glRotate();
-      spin += 3;
       glRotatef(-spin,0,0,1);
       if (spin >= 360 ) {
          spin = 0;
