@@ -842,12 +842,6 @@ void GameState::keyDown(int key) {
    case SDLK_F2:
       bloom = !bloom;
       break;
-   case SDLK_F3:
-      reg = !reg;
-      break;
-   case SDLK_F4:
-      bloom1 = !bloom1;
-      break;
 
    case SDLK_F10:
       gameState->ship->nShards += 10;
