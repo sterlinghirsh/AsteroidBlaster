@@ -11,6 +11,8 @@
 #include "Utility/SoundEffect.h"
 
 Electricity::Electricity(AsteroidShip* owner) : Weapon(owner) {
+   shotsFired = 0;
+   shotsPerSec = 100;
    coolDown = 0;
    name = "Pikachu's Wrath";
    currentFrame = 1; // Start this 1 ahead of lastFiredFame.
@@ -25,6 +27,8 @@ Electricity::~Electricity() {
 }
 
 void Electricity::update(double timeDiff) {
+   if (currentFrame != lastFiredFrame) 
+      shotsFired = 0;
    // Stop sound if we're no longer firing.
    if (currentFrame == lastFiredFrame && !soundPlaying) {
       // We should play sound.
@@ -38,18 +42,37 @@ void Electricity::update(double timeDiff) {
 }
 
 void Electricity::fire() {
+   if (shotsFired == 0) {
+      timeStartedFiring = doubleTime();
+   }
+   
+   double curTime = doubleTime();
+   double timeFired = curTime - timeStartedFiring;
+   int shotsToFire = 0;
+   //printf("Time fired: %f\n", timeStartedFiring);
+   if (timeFired == 0) {
+      shotsToFire = 1;
+   }
+   else {
+      while (((shotsFired + shotsToFire) / timeFired) <= shotsPerSec && ((curAmmo - shotsToFire) > 0)) {
+         shotsToFire++;
+      }
+   }
+   
    if(!gameState->godMode && curAmmo <= 0)
       return;
 
    Point3D start = *ship->position;
    ship->setShakeAmount(0.1f);
-   gameState->custodian.add(new ElectricityShot(start, ship->shotDirection, ship));
+   gameState->custodian.add(new ElectricityShot(start, ship->shotDirection, ship, shotsToFire));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new ElectricityShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;
+   shotsFired += shotsToFire;
    if(!gameState->godMode) {
       // Take away some ammo
-      curAmmo--;
+      curAmmo -= shotsToFire; 
    }
+
 }
 
 void Electricity::debug() {

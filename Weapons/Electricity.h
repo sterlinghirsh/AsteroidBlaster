@@ -21,6 +21,9 @@ class Electricity : public Weapon {
       virtual void update(double timeDiff);
       virtual void debug();
       virtual void fire();
+      int shotsFired;
+      int shotsPerSec;
+      double timeStartedFiring;
    private:
       int currentFrame;
       int lastFiredFrame;

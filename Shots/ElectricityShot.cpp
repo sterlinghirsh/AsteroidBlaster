@@ -20,10 +20,11 @@ static float tracker = 0;
 static int rando = 1;
 
 ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn,
-      AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
+      AsteroidShip* const ownerIn, double strengthOfShot) : Shot(posIn, dirIn, ownerIn) {
    persist = true;
    angle = M_PI / 360; // Radians from the center
    length = 80;
+   strength = strengthOfShot;
    farRadius = length * tan(angle);
    framesAlive = 0;
    forward = new Vector3D(*velocity); // Goofy.

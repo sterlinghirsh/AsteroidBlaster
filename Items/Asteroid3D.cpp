@@ -18,6 +18,7 @@
 #include "Shots/RamShot.h"
 #include "Shots/AntiInertiaShot.h"
 
+#include <time.h>
 #include "Utility/SoundEffect.h"
 #include <algorithm>
 #define _USE_MATH_DEFINES
@@ -25,6 +26,8 @@
 #include "Particles/ElectricityImpactParticle.h"
 
 using namespace std;
+
+static double timediff = clock();;
 
 Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
    Object3D(0, 0, 0, 0) {
@@ -327,6 +330,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
    Shot* shot;
    BeamShot* beamShot;
    LawnMowerShot* lawnMowerShot;
+   ElectricityShot* elecShot;
    TractorBeamShot* TBshot; // Not tuberculosis
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       double d = (*(otherAsteroid->position)).distanceFrom(*position);
@@ -388,8 +392,9 @@ void Asteroid3D::handleCollision(Drawable* other) {
          } else if ((lawnMowerShot = dynamic_cast<LawnMowerShot*>(other)) != NULL) {
             health -= fabs((health / 8) + 0.05); // Fabsulous!!
             velocity->updateMagnitude(*lawnMowerShot->position, *position);
-         } else if (dynamic_cast<ElectricityShot*>(other) != NULL) {
-            health = health - .05;
+         } else if ((elecShot = dynamic_cast<ElectricityShot*>(other)) != NULL) {
+            printf("Shot strength: %f\n", elecShot->strength);
+            health -= elecShot->strength * .05;
             const int numElecParticles = 1;
             // First calculate hit point.
             Vector3D shotDirection(*shot->velocity);
