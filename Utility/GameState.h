@@ -94,6 +94,8 @@ class GameState : public InputReceiver {
       void nextLevel();
       void reset();
 
+      void addAIPlayer();
+
       virtual void keyUp(int key);
       virtual void keyDown(int key);
       virtual void mouseDown(int button);

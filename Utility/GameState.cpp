@@ -20,6 +20,14 @@ extern double minimapSizeFactor;
 
 std::ostringstream GameState :: sstream2;
 
+void GameState::addAIPlayer() {
+   AsteroidShip* otherShip = new AsteroidShip();
+   otherShip->position->update(3, 0, 0);
+   otherShip->flyingAI->enable();
+   otherShip->shooter->enable();
+   custodian.add(otherShip);
+}
+
 GameState::GameState(double worldSizeIn) {
    godMode = false;
    gameIsRunning = true;
@@ -70,12 +78,6 @@ GameState::GameState(double worldSizeIn) {
 
    // Set up objects.
    custodian.add(ship);
-   AsteroidShip* otherShip = new AsteroidShip();
-   otherShip->position->update(3, 0, 0);
-   //otherShip->updateBoundingBox();
-   otherShip->flyingAI->enable();
-   otherShip->shooter->enable();
-   custodian.add(otherShip);
 
    curLevel = 1;
    numAsteroidsToSpawn = curLevel;
@@ -651,14 +653,6 @@ void GameState::reset() {
    custodian.add(ship);
    initAsteroids();
 
-   AsteroidShip* otherShip = new AsteroidShip();
-   otherShip->position->update(3, 0, 0);
-   //otherShip->updateBoundingBox();
-   otherShip->flyingAI->enable();
-   otherShip->shooter->enable();
-   custodian.add(otherShip);
-
-
    GameMessage::Clear();
    addLevelMessage();
 }
@@ -874,6 +868,9 @@ void GameState::keyDown(int key) {
    case SDLK_F3:
       showBloomScreen = !showBloomScreen;
       break;
+
+   case SDLK_F9:
+      addAIPlayer();
 
    case SDLK_F10:
       gameState->ship->nShards += 10;
