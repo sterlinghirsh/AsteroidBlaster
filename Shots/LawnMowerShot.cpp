@@ -86,15 +86,11 @@ void LawnMowerShot::draw() {
    
       //floats used in loop iteration
       float j;
-      float k;
       float x, y, z;
       GLint loc1;
       
       //rotation for the Y value of the vertex using cosine
       float rot;
-      
-      //rotation for the X value of the vertex using sine
-      float srot;
       
       //Number of lines you want generated in the rotating tractor beam
       float numCurves = 1;

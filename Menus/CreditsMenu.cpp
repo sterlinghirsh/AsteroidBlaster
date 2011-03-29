@@ -43,7 +43,7 @@ CreditsMenu::CreditsMenu() {
 
    menuTexts[QUIT_STRING_INDEX]->selectable = true;
 
-   for (int i = 0; i < QUIT_STRING_INDEX; i++) {
+   for (unsigned i = 0; i < QUIT_STRING_INDEX; i++) {
       //menuTexts[i]->centered = true;
       menuTexts[i]->alignment = CENTERED;
    }
@@ -54,7 +54,7 @@ CreditsMenu::CreditsMenu() {
 }
 
 CreditsMenu::~CreditsMenu() {
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       delete menuTexts[i];
    }
 }
@@ -109,9 +109,10 @@ void CreditsMenu::draw() {
    position.y = (Sint16) (yPos + yOffset);
    //position.y = GH/5;
    //menuTexts[TITLE_STRING_INDEX]->setPosition(position);
-   for(int i = 0; i < menuTexts.size() - 1; i++) {
-      int j = 0;
-      while (types[i + j] == 0 && i + j < menuTexts.size() - 1)
+   for(unsigned i = 0; i < menuTexts.size() - 1; i++) {
+      unsigned j = 0;
+	  //TODO
+      while (i + j < menuTexts.size() - 1 && types[i + j] == 0)
       {
          yPos += GH/5;
          position.x = (Sint16) (GW/2);
@@ -120,9 +121,9 @@ void CreditsMenu::draw() {
          j++;
       }
       int k = j;
-      while ((types[i + j] == DUAL_NAME_TYPE
-               || types[i + j] == SINGLE_NAME_TYPE)
-            && i + j < menuTexts.size() - 1)
+      while (i + j < menuTexts.size() - 1 && (
+		       types[i + j] == DUAL_NAME_TYPE
+               || types[i + j] == SINGLE_NAME_TYPE))
       {
          if (types[i + j] == DUAL_NAME_TYPE)
          {
@@ -164,7 +165,7 @@ void CreditsMenu::draw() {
       glEnd();
       */
 
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       int loc = (int) (menuTexts[i]->getPosition().y + yOffset);
       if (loc < GH * 1.3 + menuTexts[i]->size && loc > GH * -3.0)
       {
@@ -249,8 +250,8 @@ void CreditsMenu::draw() {
 void CreditsMenu::keyDown(int key) {
    if (!menuActive) { return; }
 
-   switch(key) {
-   }
+   //switch(key) {
+   //}
 }
 
 /**

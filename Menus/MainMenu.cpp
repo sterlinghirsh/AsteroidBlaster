@@ -42,7 +42,7 @@ MainMenu::MainMenu() {
    menuTexts[QUIT_STRING_INDEX]->selectable = true;
    
 
-   for (int i = 0; i < menuTexts.size(); i++) {
+   for (unsigned i = 0; i < menuTexts.size(); i++) {
       //menuTexts[i]->centered = true;
       menuTexts[i]->alignment = CENTERED;
    }
@@ -54,7 +54,7 @@ MainMenu::MainMenu() {
 
 
 MainMenu::~MainMenu() {
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       delete menuTexts[i];
    }
 }
@@ -63,7 +63,7 @@ void MainMenu::draw() {
    SDL_Rect position;
    position.x = (Sint16) (GW/2);
    position.y = (Sint16) (GH/2.3);
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
       position.y = (Sint16) (position.y + (GH/12));
    }
@@ -82,7 +82,7 @@ void MainMenu::draw() {
       glDisable(GL_CULL_FACE);
       glDisable(GL_LIGHTING);
       
-      for(int i = 0; i < menuTexts.size(); i++) {
+      for(unsigned i = 0; i < menuTexts.size(); i++) {
          menuTexts[i]->draw();
       }
 

@@ -98,7 +98,7 @@ void BoundingWall::getSquareCoordsFromObject(Drawable* item, int& squareXIndex, 
    squareYIndex = (int) floor((squareY + wallSize) / squareSize);
 }
 
-GlowSquare* BoundingWall::getSquareByID(int index) {
+GlowSquare* BoundingWall::getSquareByID(unsigned index) {
    if (index < 0 || index >= squares.size())
       return NULL;
    return squares[index];

@@ -64,7 +64,7 @@ SettingsMenu::SettingsMenu() {
    menuTexts.push_back(new Text("Return", menuFont, position));
    types.push_back(SINGLE_SELECTABLE_TYPE);
 
-   for (int i = 0; i < menuTexts.size(); i++) {
+   for (unsigned i = 0; i < menuTexts.size(); i++) {
       switch (types[i]) {
       case TITLE_TYPE:
          menuTexts[i]->alignment = CENTERED;
@@ -86,7 +86,7 @@ SettingsMenu::SettingsMenu() {
 }
 
 SettingsMenu::~SettingsMenu() {
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       delete menuTexts[i];
    }
 }
@@ -113,6 +113,7 @@ std::string SettingsMenu::getViewStatus(int status) {
       return "Third Person Gun";
       break;
    }
+   return "ERROR";
 }
 
 void SettingsMenu::draw() {
@@ -125,7 +126,7 @@ void SettingsMenu::draw() {
    menuTexts[SFX_INDEX]->textToDisplay = getStatus(soundOn);
    SDL_Rect position;
    position.y = (Sint16) (GH/20);
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       switch (types[i]) {
       case TITLE_TYPE:
          position.y = (Sint16) (position.y + (GH/10));
@@ -159,7 +160,7 @@ void SettingsMenu::draw() {
    glDisable(GL_CULL_FACE);
    glDisable(GL_LIGHTING);
 
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->draw();
    }
 

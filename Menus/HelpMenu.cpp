@@ -67,7 +67,7 @@ HelpMenu::HelpMenu() {
    menuTexts.push_back(new Text("Return", menuFont, position));
    types.push_back(SINGLE_SELECTABLE_TYPE);
 
-   for (int i = 0; i < menuTexts.size(); i++) {
+   for (unsigned i = 0; i < menuTexts.size(); i++) {
       switch (types[i]) {
       case TITLE_TYPE:
          menuTexts[i]->alignment = CENTERED;
@@ -89,7 +89,7 @@ HelpMenu::HelpMenu() {
 }
 
 HelpMenu::~HelpMenu() {
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       delete menuTexts[i];
    }
 }
@@ -104,7 +104,7 @@ std::string HelpMenu::getStatus(bool status) {
 void HelpMenu::draw() {
    SDL_Rect position;
    position.y = (Sint16) (GH/10);
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       switch (types[i]) {
       case TITLE_TYPE:
          position.x = (Sint16) (GW/2);
@@ -138,7 +138,7 @@ void HelpMenu::draw() {
    glDisable(GL_CULL_FACE);
    glDisable(GL_LIGHTING);
 
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->draw();
    }
 
@@ -192,7 +192,7 @@ void HelpMenu::mouseMove(int dx, int dy, int _x, int _y) {
    x = _x;
    y = _y;
    //decide the color for each menu text
-   for (int i = 0; i < menuTexts.size(); i++) {
+   for (unsigned i = 0; i < menuTexts.size(); i++) {
       if (types[i] != TITLE_TYPE) {
          menuTexts[i]->mouseHighlight(x,y);
       }

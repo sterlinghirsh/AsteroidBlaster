@@ -7,7 +7,7 @@
 #define __VECTOR3D_H__
 
 #include <stdio.h>
-#include "Point3D.h"
+#include "Utility/Point3D.h"
 
 #define drawScale 1
 

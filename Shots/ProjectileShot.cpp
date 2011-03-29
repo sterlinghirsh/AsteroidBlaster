@@ -8,7 +8,11 @@
 #include "Particles/BlasterShotParticle.h"
 #include "Particles/BlasterImpactParticle.h"
 #include "Utility/SoundEffect.h"
-   
+
+#ifdef WIN32
+#include "Utility/WindowsMathLib.h"
+#endif
+
 const int particleCycle = 100;
 
 ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn,

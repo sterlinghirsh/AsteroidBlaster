@@ -42,7 +42,7 @@ class BoundingWall {
       int getSquareY(int squareID);
       int getSquareID(int squareX, int squareY);
       void getSquareCoordsFromObject(Drawable* item, int& squareXIndex, int& squareYIndex);
-      GlowSquare* getSquareByID(int index);
+      GlowSquare* getSquareByID(unsigned index);
       GlowSquare* getSquareByCoords(int x, int y);
       virtual void initDisplayList(); // Set up the displayList.
       Vector3D normal;

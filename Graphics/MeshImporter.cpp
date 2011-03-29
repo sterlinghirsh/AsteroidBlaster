@@ -19,8 +19,8 @@
 
 using namespace std;
 
-#define FLT_MIN 1.1754E-38F
-#define FLT_MAX 1.1754E+38F
+//#define FLT_MIN 1.1754E-38F
+//#define FLT_MAX 1.1754E+38F
 
 //open the file for reading
 void MeshImporter::ReadFile(char* filename) {
@@ -129,7 +129,7 @@ void MeshImporter::draw() {
   glPushMatrix();
   //leave these transformations in as they center and scale each mesh correctly
   //scale object to window
-  glScalef(1.0/(float)max_extent, 1.0/(float)max_extent, 1.0/(float)max_extent);
+  glScalef(1.0f/(float)max_extent, 1.0f/(float)max_extent, 1.0f/(float)max_extent);
   //translate the object to the orgin
   glTranslatef(-(cx), - min_y, -(cz));
   

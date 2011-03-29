@@ -138,16 +138,16 @@ StoreMenu::StoreMenu() {
    shipTexts.push_back(new Text(out.str(), menuFont, position));
     
     
-   for(int i = 0; i < weaponsTexts.size(); i++) {
+   for(unsigned i = 0; i < weaponsTexts.size(); i++) {
       weaponsTexts[i]->selectable = true;
    }
-   for(int i = 0; i < upgradesTexts.size(); i++) {
+   for(unsigned i = 0; i < upgradesTexts.size(); i++) {
       //upgradesTexts[i]->selectable = true;
    }
-   for(int i = 0; i < ammoTexts.size(); i++) {
+   for(unsigned i = 0; i < ammoTexts.size(); i++) {
       ammoTexts[i]->selectable = true;
    }
-   for(int i = 0; i < shipTexts.size(); i++) {
+   for(unsigned i = 0; i < shipTexts.size(); i++) {
       shipTexts[i]->selectable = true;
    }
    
@@ -155,19 +155,19 @@ StoreMenu::StoreMenu() {
 
 
 StoreMenu::~StoreMenu() {
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       delete menuTexts[i];
    }
-   for(int i = 0; i < weaponsTexts.size(); i++) {
+   for(unsigned i = 0; i < weaponsTexts.size(); i++) {
       delete weaponsTexts[i];
    }
-   for(int i = 0; i < upgradesTexts.size(); i++) {
+   for(unsigned i = 0; i < upgradesTexts.size(); i++) {
       delete upgradesTexts[i];
    }
-   for(int i = 0; i < ammoTexts.size(); i++) {
+   for(unsigned i = 0; i < ammoTexts.size(); i++) {
       delete ammoTexts[i];
    }
-   for(int i = 0; i < shipTexts.size(); i++) {
+   for(unsigned i = 0; i < shipTexts.size(); i++) {
       delete shipTexts[i];
    }
    
@@ -434,7 +434,7 @@ void StoreMenu::drawTexts(std::vector<Text*> texts) {
       useOrtho();
       glDisable(GL_LIGHTING);
       
-      for(int i = 0; i < texts.size(); i++) {
+      for(unsigned i = 0; i < texts.size(); i++) {
          texts[i]->draw();
       }
 
@@ -643,19 +643,19 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
    y = _y;
    
    if(menuSelection == WEAPONS) {
-      for(int i = 0; i < weaponsTexts.size(); i++) {
+      for(unsigned i = 0; i < weaponsTexts.size(); i++) {
          weaponsTexts[i]->mouseHighlight(x,y);
       }
    } else if(menuSelection == UPGRADES) {
-      for(int i = 0; i < upgradesTexts.size(); i++) {
+      for(unsigned i = 0; i < upgradesTexts.size(); i++) {
          upgradesTexts[i]->mouseHighlight(x,y);
       }
    }  else if(menuSelection == AMMO) {
-      for(int i = 0; i < ammoTexts.size(); i++) {
+      for(unsigned i = 0; i < ammoTexts.size(); i++) {
          ammoTexts[i]->mouseHighlight(x,y);
       }
    }  else if(menuSelection == SHIP) {
-      for(int i = 0; i < shipTexts.size(); i++) {
+      for(unsigned i = 0; i < shipTexts.size(); i++) {
          shipTexts[i]->mouseHighlight(x,y);
       }
    } else {
@@ -664,7 +664,7 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
    }
    
    
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->mouseHighlight(x,y);
    }
 }

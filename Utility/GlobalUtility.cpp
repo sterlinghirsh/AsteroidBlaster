@@ -98,7 +98,7 @@ int w2px(double xw) {
    double d = ((GW - 1.0) / 2.0);
    double c = ((1 - GW) * GH) / (-2.0 * GW);
 #ifdef WIN32
-   answer = floor((xw * c) + d+0.5);
+   answer = (int)floor(((xw * c) + d+0.5));
 #else
    answer = (int) round((xw * c) + d);
 #endif
@@ -112,7 +112,7 @@ int w2py(double yw) {
    double f = e;
 
 #ifdef WIN32
-   answer = flopY(floor((yw * e) + f)+0.5);
+   answer = flopY((int)(floor((yw * e) + f)+0.5));
 #else
    answer = flopY((int) round((yw * e) + f));
 #endif

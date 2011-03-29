@@ -364,9 +364,9 @@ int FlyingAI :: think(double dt) {
    curMode = chooseMode();
    
    switch (curMode) {
-
+   case 0:
+      break;
    default:
-   
       // Check waypoint
       Point3D diff = *(ship->position) - *goalPoint;
       double goalDist = sqrt ( diff * diff );

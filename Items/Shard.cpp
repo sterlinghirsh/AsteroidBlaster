@@ -362,7 +362,6 @@ void Shard::handleCollision(Drawable* other) {
    Asteroid3D* asteroid;
    Shot* shot;
    Shard* otherShard;
-   ElectricityShot* Eshot;
    TractorBeamShot* TBshot; // Not tuberculosis
    if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
       shouldRemove = true;

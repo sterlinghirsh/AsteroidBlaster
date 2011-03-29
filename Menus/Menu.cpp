@@ -14,7 +14,7 @@ Menu::Menu() {
 
 
 Menu::~Menu() {
-   for(int i = 0; i < menuTexts.size(); i++) {
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
       delete menuTexts[i];
    }
 }

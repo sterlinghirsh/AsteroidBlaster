@@ -452,15 +452,11 @@ void draw_shield(){
    
       //floats used in loop iteration
       GLint loc1;
-      float j;
-      float k;
       float x;
       float y;
       float z;
       
       //multipliers for randomness in lightning
-      float rot;
-      float srot;
       float length = 80;
       //width of inidvidual lightning lines
       float thickness = 5.0;

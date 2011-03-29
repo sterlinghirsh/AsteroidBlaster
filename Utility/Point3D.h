@@ -13,7 +13,7 @@
 #include "Utility/GlobalUtility.h"
 
 struct Matrix4;
-struct Vector3D;
+class Vector3D;
 
 struct Point3D {
    double x, y, z;
@@ -37,7 +37,7 @@ struct Point3D {
    const Point3D operator+(const Point3D& rhs) const;
    const Point3D operator-(const Point3D& rhs) const;
    const double operator*(const Point3D& rhs) const;
-   const int operator==(const Point3D& rhs) const;
+   int operator==(const Point3D& rhs) const;
    Point3D &operator=(const Point3D &src);
    Point3D& operator/=(double scalar); 
    const Point3D operator*(double scalar) const;

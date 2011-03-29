@@ -23,7 +23,7 @@ void BoundingSphere::constrain(Object3D* item) {
    if (!item->shouldConstrain)
       return;
 
-   const float squareSize = radius / 40; // How big the drawn squares should be.
+   const float squareSize = (float)radius / 40.0f; // How big the drawn squares should be.
 
    double d = item->position->distanceFrom(*center);
 
@@ -72,7 +72,7 @@ void BoundingSphere::draw() {
    const double alpha = 0;
    //glClearColor(0.0,0.0,0.0,0.0);
    glDisable(GL_LIGHTING);
-   glColor4f(0.0, 1.0, 0.0, alpha);
+   glColor4f(0.0f, 1.0f, 0.0f, (float)alpha);
    //glutWireSphere(wall, 48, 48);
    //glutWireSphere(wall, 24, 24);
    glColor4f(0.0, 0.0, 1.0, 1.0);
