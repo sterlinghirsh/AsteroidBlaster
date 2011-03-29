@@ -145,35 +145,26 @@ bool BeamShot::detectCollision(Drawable* other, bool checkOther) {
    if (hitYet || curFrame != firstFrame)
       return false;
    Vector3D positionVector(*position);
-   Vector3D otherVector(*other->position);
+   Vector3D shipToItem(*position, *other->position);
 
-   // otherVector now is how far from the ship it is.
-   otherVector.subtractUpdate(positionVector);
-
-   double distance = velocity->dot(otherVector);
+   // Velocity is really shot direction normalized.
+   double distance = velocity->dot(shipToItem);
 
    // Is it behind me?
    if (distance < 0)
       return false;
 
    // Is it too far to one side?
-   Vector3D normalToDirection(velocity->getNormalVector());
-   distance = normalToDirection.dot(otherVector);
-   if (fabs(distance) > other->radius)
-      return false;
-
-   /* x1 is ship
-      x2 is direction
-      x0 is other
-      */
-
-   distance = (velocity->cross(otherVector).getLength() /
-         velocity->getLength());
-   return fabs(distance) < other->radius;
+   Point3D closestPoint(*position);
+   velocity->movePoint(closestPoint, distance);
+   
+   distance = closestPoint.distanceFrom(*other->position);
+   printf("Real Distance: %f, Radius: %f\n", distance, other->radius);
+   return fabs(distance) <= other->radius;
 }
 
 void BeamShot::handleCollision(Drawable* other) {
-   //printf("Distance: %f\n", position->distanceFrom(*other->position));
+   printf("Time: %f Distance: %f\n", doubleTime(), position->distanceFrom(*other->position));
    if (other == owner || hitYet || (curFrame - 1) > firstFrame)
       return;
    // Only count hits on Asteroids and Shards.
