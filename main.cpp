@@ -273,7 +273,9 @@ void initFbo() {
    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT,
          //GL_TEXTURE_2D, Texture::getTexture("vblurTex"), 0);
       GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
-
+   
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT,
+         GL_TEXTURE_2D, Texture::getTexture("trailTex"), 0);
 
    GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -389,11 +391,10 @@ void draw() {
       //Texture::Add(GW, GH, "rawTex");
       //Texture::Add(GW, GH, "bloomTex");
       //Texture::Add(GW, GH, "fboTex");
-      Texture::Add(texSize, texSize, "rawTex");
       Texture::Add(texSize, texSize, "bloomTex");
       Texture::Add(texSize, texSize, "fboTex");
       Texture::Add(texSize, texSize, "hblurTex");
-      Texture::Add(texSize, texSize, "vblurTex");
+      Texture::Add(texSize, texSize, "trailTex");
       Texture::Add("Images/Logo.png", "Logo.png");
       Texture::Add("Images/StoreLogo.png", "StoreLogo");
       Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
@@ -401,7 +402,7 @@ void draw() {
       Texture::Add("Images/starsdark.bmp", "starsdark.png");
       Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
       //Texture::Add("Images/fade.png", "Fade");
-      Texture::Add("Images/fade2.png", "Fade");
+      //Texture::Add("Images/fade2.png", "Fade");
       Texture::Add("Images/Shield.png", "ShieldIcon");
       Texture::Add("Images/ShotIcon.png", "ShotIcon");
 
