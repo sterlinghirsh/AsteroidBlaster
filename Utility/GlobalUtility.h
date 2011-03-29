@@ -41,6 +41,7 @@ extern int flopY(int);
 extern unsigned long curFrame;
 extern bool drawPerspective;
 extern bool bloom;
+extern bool showBloomScreen;
 extern bool mouseCapture;
 extern bool fullscreen;
 extern bool soundOn;

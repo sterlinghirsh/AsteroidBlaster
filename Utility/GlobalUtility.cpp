@@ -28,6 +28,7 @@ int prevGH = -1;
 unsigned long curFrame = 0;
 bool drawPerspective = true;
 bool bloom = false;
+bool showBloomScreen = false;
 bool mouseCapture = false;
 bool fullscreen = false;
 bool soundOn = true;

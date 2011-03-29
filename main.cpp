@@ -282,7 +282,8 @@ void draw() {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glPushMatrix();
       gameState->drawGlow();
-      glBindTexture(GL_TEXTURE_2D, gameState->hTexture);
+      //glBindTexture(GL_TEXTURE_2D, gameState->hTexture);
+      glBindTexture(GL_TEXTURE_2D, Texture::getTexture("rawTex"));
 
       glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
             0,0, GW, GH, 0);
@@ -324,6 +325,7 @@ void draw() {
    glPopMatrix();
    // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
    gameState->drawMinimap();
+   gameState->drawScreens();
 
    SDL_GL_SwapBuffers();
    lastDrawTime = curTime;
@@ -340,6 +342,8 @@ int main(int argc, char* argv[]) {
 
    
    //loading textures
+   Texture::Add(512, 512, "rawTex");
+   Texture::Add(512, 512, "bloomTex");
    Texture::Add("Images/Logo.png", "Logo.png");
    Texture::Add("Images/StoreLogo.png", "StoreLogo");
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");

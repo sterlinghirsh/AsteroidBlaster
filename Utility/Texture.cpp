@@ -184,6 +184,34 @@ void Texture::Add(std::string file, std::string keyName) {
    numOfTextures++;
 }
 
+// Should insert a new blank texture.
+void Texture::Add(int width, int height, std::string keyName) {
+   std::map<std::string, unsigned int>::iterator iter = textures.find(keyName);
+
+   if (iter != textures.end()) {
+      std::cerr << "That texture keyName (" << keyName << ") is already in use!" << std::endl;
+      exit(1);
+   }
+
+   GLuint texture;
+
+   // create texture
+   glGenTextures(1, &texture );
+   glBindTexture(GL_TEXTURE_2D, texture );
+
+   // turn bitmap into texture
+   glTexImage2D(GL_TEXTURE_2D, 0, 3, width,
+         height, 0, GL_RGB,
+         GL_UNSIGNED_BYTE, NULL);
+   
+   // set texture filtering
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+   textures.insert(std::pair<std::string, unsigned int>(keyName,texture));
+     
+   numOfTextures++;
+}
 
 unsigned int Texture::getTexture(std::string keyName) {
    std::map<std::string, unsigned int>::iterator iter = textures.find(keyName);

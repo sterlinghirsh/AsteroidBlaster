@@ -12,6 +12,7 @@
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
+#include "Utility/Texture.h"
 #include "Particles/Particle.h"
 #include "Text/GameMessage.h"
 
@@ -33,6 +34,9 @@ GameState::GameState(double worldSizeIn) {
    skybox = new Skybox();
    ship = new AsteroidShip();
    minimap = new Minimap(ship);
+   //bloomScreen = new Display((int)(GW * 0.8), (int)(GH * 0.8), Texture::getTexture("bloomTex"));
+   rawScreen = new Display(0, 0, Texture::getTexture("rawTex"));
+   bloomScreen = new Display(0, 1, Texture::getTexture("bloomTex"));
    camera = new Camera(ship);
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
    //sphere = new BoundingSphere(worldSize, 0, 0, 0);
@@ -247,6 +251,15 @@ void GameState::drawMinimap() {
 }
 
 /**
+ * Draws all Displays.
+ */
+void GameState::drawScreens() {
+   if (!showBloomScreen) { return; }
+   bloomScreen->draw();
+   rawScreen->draw();
+}
+
+/**
  * Returns whether the minimap is on.
  */
 bool GameState::minimapOn() {
@@ -360,7 +373,8 @@ void GameState::hBlur() {
    float maxY = 1.0;
    float minX = -1.0f * aspect;
    float maxX = 1.0f * aspect;
-   int tex = hTexture;
+   //int tex = hTexture;
+   int tex = Texture::getTexture("rawTex");
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, tex);
    GLint texLoc = glGetUniformLocation(hBlurShader, "RTscene");
@@ -427,7 +441,8 @@ void GameState::vBlur() {
    glPopMatrix();
    glUseProgram(0);
    
-   glBindTexture(GL_TEXTURE_2D, gameState->blurTex);
+   //glBindTexture(GL_TEXTURE_2D, gameState->blurTex);
+   glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
 
    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
          0,0, GW, GH, 0);
@@ -447,7 +462,8 @@ void GameState::drawBloom() {
    float minX = -1.0f * aspect;
    float maxX = 1.0f * aspect;
    glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, blurTex);
+   //glBindTexture(GL_TEXTURE_2D, blurTex);
+   glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
 
    glColor4f(1.0, 1.0, 1.0, 0.5);
    glBegin(GL_QUADS);
@@ -854,6 +870,9 @@ void GameState::keyDown(int key) {
    // DEBUG KEYS
    case SDLK_F2:
       bloom = !bloom;
+      break;
+   case SDLK_F3:
+      showBloomScreen = !showBloomScreen;
       break;
 
    case SDLK_F10:
