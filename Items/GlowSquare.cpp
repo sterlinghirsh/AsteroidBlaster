@@ -137,6 +137,10 @@ void GlowSquare::draw() {
 
 }
 
+void GlowSquare::drawGlow() {
+   draw();
+}
+
 void GlowSquare::update(double timeDiff) {
 }
 

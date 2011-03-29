@@ -107,6 +107,12 @@ void BoundingSpace::draw() {
    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 }
 
+void BoundingSpace::drawGlow() {
+   for (int i = 0; i < 6; ++i) {
+      walls[i]->drawGlow();
+   }
+}
+
 void BoundingSpace::update(double timeDiff) {
    for (int i = 0; i < 6; ++i) {
       walls[i]->update(timeDiff);

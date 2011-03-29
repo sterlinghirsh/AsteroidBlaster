@@ -37,6 +37,7 @@ class GlowSquare {
       std::priority_queue<double, std::vector<double>, GetMin> flashTimes;
 
       void draw();
+      void drawGlow();
       void update(double timeDiff);
       GlowSquare(Color* _color, 
        float size, float _x, float _y, float _z, BoundingWall* _wall, int _xIndex, int _yIndex);

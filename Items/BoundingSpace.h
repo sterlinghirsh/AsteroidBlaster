@@ -23,6 +23,7 @@ class BoundingSpace {
       ~BoundingSpace();
       virtual void constrain(Drawable* item);
       void draw();
+      void drawGlow();
       void update(double timeDiff);
       int getNumSquares();
    private:

@@ -43,8 +43,9 @@ GameState::GameState(double worldSizeIn) {
    ship = new AsteroidShip();
    minimap = new Minimap(ship);
    //bloomScreen = new Display((int)(GW * 0.8), (int)(GH * 0.8), Texture::getTexture("bloomTex"));
-   rawScreen = new Display(0, 0, Texture::getTexture("rawTex"));
+   rawScreen = new Display(0, 0, Texture::getTexture("hblurTex"));
    bloomScreen = new Display(0, 1, Texture::getTexture("bloomTex"));
+   fboScreen = new Display(1, 0, Texture::getTexture("fboTex"));
    camera = new Camera(ship);
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
    //sphere = new BoundingSphere(worldSize, 0, 0, 0);
@@ -259,6 +260,7 @@ void GameState::drawScreens() {
    if (!showBloomScreen) { return; }
    bloomScreen->draw();
    rawScreen->draw();
+   fboScreen->draw();
 }
 
 /**
@@ -376,32 +378,40 @@ void GameState::hBlur() {
    float minX = -1.0f * aspect;
    float maxX = 1.0f * aspect;
    //int tex = hTexture;
-   int tex = Texture::getTexture("rawTex");
+   //int tex = Texture::getTexture("rawTex");
+   int tex = Texture::getTexture("fboTex");
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, tex);
    GLint texLoc = glGetUniformLocation(hBlurShader, "RTscene");
    glUseProgram(hBlurShader);
    glUniform1i(texLoc, tex);
 
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+   glDrawBuffer(GL_COLOR_ATTACHMENT1_EXT);
+
+   float texMaxX = (float) GW / (float) texSize;
+   float texMaxY = (float) GH / (float) texSize;
    glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(minX, minY, 0.0);
-   glTexCoord2f(1.0, 0.0);
+   glTexCoord2f(texMaxX, 0.0);
    glVertex3f(maxX, minY, 0.0);
-   glTexCoord2f(1.0, 1.0);
+   glTexCoord2f(texMaxX, texMaxY);
    glVertex3f(maxX, maxY, 0.0);
-   glTexCoord2f(0.0, 1.0);
+   glTexCoord2f(0.0, texMaxY);
    glVertex3f(minX, maxY, 0.0);
    glEnd();
    glUseProgram(0);
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
 
-   glBindTexture(GL_TEXTURE_2D, gameState->vTexture);
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-   glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-         0,0, GW, GH, 0);
+   //glBindTexture(GL_TEXTURE_2D, gameState->vTexture);
+
+   //glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+         //0,0, GW, GH, 0);
 
    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glPopMatrix();
@@ -420,22 +430,28 @@ void GameState::vBlur() {
    float maxY = 1.0;
    float minX = -1.0f * aspect;
    float maxX = 1.0f * aspect;
-   int tex = vTexture;
+   //int tex = vTexture;
+   int tex = Texture::getTexture("hblurTex");
    glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, vTexture);
+   glBindTexture(GL_TEXTURE_2D, tex);
    GLint texLoc = glGetUniformLocation(vBlurShader, "blurSampler");
    glUseProgram(vBlurShader);
    glUniform1i(texLoc, tex);
+   
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+   glDrawBuffer(GL_COLOR_ATTACHMENT2_EXT);
 
+   float texMaxX = (float) GW / (float) texSize;
+   float texMaxY = (float) GH / (float) texSize;
    glColor4f(1.0, 1.0, 1.0, 0.5);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(minX, minY, 0.0);
-   glTexCoord2f(1.0, 0.0);
+   glTexCoord2f(texMaxX, 0.0);
    glVertex3f(maxX, minY, 0.0);
-   glTexCoord2f(1.0, 1.0);
+   glTexCoord2f(texMaxX, texMaxY);
    glVertex3f(maxX, maxY, 0.0);
-   glTexCoord2f(0.0, 1.0);
+   glTexCoord2f(0.0, texMaxY);
    glVertex3f(minX, maxY, 0.0);
    glEnd();
    glDisable(GL_TEXTURE_2D);
@@ -443,13 +459,15 @@ void GameState::vBlur() {
    glPopMatrix();
    glUseProgram(0);
    
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+   
    //glBindTexture(GL_TEXTURE_2D, gameState->blurTex);
-   glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
+   //glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
 
-   glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-         0,0, GW, GH, 0);
+   //glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+         //0,0, GW, GH, 0);
 
-   glBindTexture(GL_TEXTURE_2D, 0);
+   //glBindTexture(GL_TEXTURE_2D, 0);
    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    //printf("v\n");
 }
@@ -467,15 +485,17 @@ void GameState::drawBloom() {
    //glBindTexture(GL_TEXTURE_2D, blurTex);
    glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
 
+   float texMaxX = (float) GW / (float) texSize;
+   float texMaxY = (float) GH / (float) texSize;
    glColor4f(1.0, 1.0, 1.0, 0.5);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(minX, minY, 0.0);
-   glTexCoord2f(1.0, 0.0);
+   glTexCoord2f(texMaxX, 0.0);
    glVertex3f(maxX, minY, 0.0);
-   glTexCoord2f(1.0, 1.0);
+   glTexCoord2f(texMaxX, texMaxY);
    glVertex3f(maxX, maxY, 0.0);
-   glTexCoord2f(0.0, 1.0);
+   glTexCoord2f(0.0, texMaxY);
    glVertex3f(minX, maxY, 0.0);
    glEnd();
    glDisable(GL_TEXTURE_2D);

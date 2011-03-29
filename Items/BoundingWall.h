@@ -36,6 +36,7 @@ class BoundingWall {
 
       BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID);
       void draw();
+      void drawGlow();
       void update(double timeDiff);
       int getSquareX(int squareID);
       int getSquareY(int squareID);

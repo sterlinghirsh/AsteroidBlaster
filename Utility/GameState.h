@@ -135,6 +135,7 @@ class GameState : public InputReceiver {
       Minimap* minimap;
       Display* bloomScreen;
       Display* rawScreen;
+      Display* fboScreen;
 
       std::list<Object3D*> objects;
       void addLevelMessage();

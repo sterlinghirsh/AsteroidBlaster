@@ -39,12 +39,11 @@ const double WORLD_SIZE = 80.00;
 bool running = true;
 bool fullScreen = false;
 
-
 // the absolute time update was last called
 static double lastUpdateTime = 0;
 // the absolute time update was last called
 static double lastDrawTime = 0;
-   
+
 // This double contains the FPS to be printed to the screen each frame.
 
 // TODO: Move this out of here.
@@ -64,8 +63,8 @@ GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
 GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
 
 void init() {
-    /* Flags to pass to SDL_SetVideoMode */
-    int videoFlags;
+   /* Flags to pass to SDL_SetVideoMode */
+   int videoFlags;
 
    // Initialize the SDL video/audio system
    if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)<0) {
@@ -84,12 +83,12 @@ void init() {
       std::cerr << "Couldn't get video settings information! " << SDL_GetError() << std::endl;
       exit(1);
    }
-   
+
    if (TTF_Init()) {
       std::cerr << TTF_GetError() << std::endl;
       exit(1);
    }
-   
+
    //allocate channels for sound effects
    SoundEffect::numChannels = Mix_AllocateChannels(CHANNEL_MAX);
    //SoundEffect::numChannels = Mix_AllocateChannels(16);
@@ -153,7 +152,7 @@ void init() {
    // Set the title
    SDL_WM_SetCaption("Asteroid Blaster", 0);
 
-    
+
    //setup glew and GLSL
 #ifdef __APPLE__
 #else
@@ -173,21 +172,21 @@ void init() {
    //GL setting calls
    //This enables alpha transparency so that things are see through
    glEnable(GL_BLEND);
-   
+
    hudFont = TTF_OpenFont("Fonts/Slider.ttf", 18);
    if(!hudFont)
    {
       printf("TTF_OpenFont: %s\n", TTF_GetError());
       exit(3);
    }
-   
+
    menuFont = TTF_OpenFont("Fonts/Slider.ttf", 24);
    if(!menuFont)
    {
       printf("TTF_OpenFont: %s\n", TTF_GetError());
       exit(3);
    }
-   
+
    //set the background to be black
    glClearColor(0.0, 0.0, 0.0, 1.0);
    //glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -195,8 +194,8 @@ void init() {
    //initialize some GL stuff
    //glEnable(GL_DEPTH_TEST);
    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   
-   
+
+
    //glEnable( GL_TEXTURE_2D );
 
    // enables lighting so that minimap's sphere can have color
@@ -239,6 +238,48 @@ void init() {
 
 }
 
+void initFbo() {
+   glGenFramebuffersEXT(1, &fbo);
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+
+   glGenRenderbuffersEXT(1, &depthbuffer);
+   glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthbuffer);
+   glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT,
+         texSize, texSize);
+   glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+         GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthbuffer);
+
+   /*
+      GLuint img;
+      glGenTextures(1, &img);
+      glBindTexture(GL_TEXTURE_2D, img);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
+      GW, GH, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+      */
+   //Texture::Add(GW, GH, "fboTex");
+
+   //int maxbuffers;
+   //glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxbuffers);
+   //if (maxbuffers < 4) {
+   //printf("maxbuffers (%d) less than needed buffers (4)\n", maxbuffers);
+   //}
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+         GL_TEXTURE_2D, Texture::getTexture("fboTex"), 0);
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT,
+         GL_TEXTURE_2D, Texture::getTexture("hblurTex"), 0);
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT,
+         //GL_TEXTURE_2D, Texture::getTexture("vblurTex"), 0);
+      GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
+
+
+   GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+}
+
 void update() {
    // get the current absolute time
    double curTime = doubleTime();
@@ -250,7 +291,7 @@ void update() {
 
    // the time difference since last update call
    double timeDiff = curTime - lastUpdateTime;
-   
+
    gameState->update(timeDiff);
    GameMessage::updateAllMessages(timeDiff);
 
@@ -264,9 +305,9 @@ void draw() {
 
    // the time difference since last update call
    double timeDiff = curTime - lastDrawTime;
-   
+
    gameState->setCurFPS(1 / timeDiff);
-   
+
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -279,15 +320,19 @@ void draw() {
    gameState->aspect = (float)GW/(float)GH;
    //if (gameState->bloom) {
    if (bloom) {
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+      glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glPushMatrix();
       gameState->drawGlow();
       //glBindTexture(GL_TEXTURE_2D, gameState->hTexture);
-      glBindTexture(GL_TEXTURE_2D, Texture::getTexture("rawTex"));
+      //glBindTexture(GL_TEXTURE_2D, Texture::getTexture("rawTex"));
 
-      glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-            0,0, GW, GH, 0);
+      //glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+      //0,0, GW, GH, 0);
       glPopMatrix();
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
       //if (gameState->bloom) {
       if (bloom) {
@@ -301,7 +346,7 @@ void draw() {
    // Draw the main screen
    glPushMatrix();
    gameState->draw();
-      //gameState->drawGlow();
+   //gameState->drawGlow();
 
    //Particle::drawParticles();
    //drawCrosshair();
@@ -316,9 +361,9 @@ void draw() {
       gameState->drawBloom();
    }
    /*
-   if (inputManager->bloom || inputManager->bloom1) {
-      //printf("SPECUBLOOM\n");
-      gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
+      if (inputManager->bloom || inputManager->bloom1) {
+   //printf("SPECUBLOOM\n");
+   gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
    }
    */
 
@@ -329,142 +374,154 @@ void draw() {
 
    SDL_GL_SwapBuffers();
    lastDrawTime = curTime;
-}
-
-int main(int argc, char* argv[]) {
-   srand(time(NULL));
-   GW = 800;
-   GH = 600;
-   updateDoubleTime();
-
-   // Initialize GL/SDL/glew/GLSL related things
-   init();
-
-   
-   //loading textures
-   Texture::Add(512, 512, "rawTex");
-   Texture::Add(512, 512, "bloomTex");
-   Texture::Add("Images/Logo.png", "Logo.png");
-   Texture::Add("Images/StoreLogo.png", "StoreLogo");
-   Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
-   Texture::Add("Images/particle.png", "Particle");
-   Texture::Add("Images/starsdark.bmp", "starsdark.png");
-   Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
-   Texture::Add("Images/Shield.png", "ShieldIcon");
-   Texture::Add("Images/ShotIcon.png", "ShotIcon");
-
-   Particle::initDisplayList();
-   
-   //load the shader files
-   elecShader = setShaders( (char *) "./Shaders/elec.vert", (char *) "./Shaders/elec.frag");
-   ramShader = setShaders( (char *) "./Shaders/ram.vert", (char *) "./Shaders/ram.frag");
-   tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag");
-   lawnShader = setShaders( (char *) "./Shaders/lawn.vert", (char *) "./Shaders/lawn.frag", (char *) "./Shaders/lawn.geom");
-   fadeShader = setShaders( (char *) "./Shaders/fade.vert", (char *) "./Shaders/fade.frag");
-   hBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/hblur.frag");
-   vBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/vblur.frag");
-   billboardShader = setShaders( (char *) "./Shaders/billboard.vert", (char *) "./Shaders/billboard.frag");
-   //hBlurShader = setShaders( (char *) "./Shaders/old/hblur.vert", (char *) "./Shaders/hblur.frag");
-   //vBlurShader = setShaders( (char *) "./Shaders/old/vblur.vert", (char *) "./Shaders/vblur.frag");
-
-   //load and start BGM
-   Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
-   Music::Add("Sounds/Asteroids2.ogg", "Asteroids2.ogg");
-   Music::Add("Sounds/Careless_Whisper.ogg","Careless_Whisper.ogg");
-   Music::playMusic("8-bit3.ogg");
-   //Music::playMusic("Asteroids2.ogg");
-
-   //load sound effects
-   //SoundEffect::Add("Sounds/blaster1.wav");
-   SoundEffect::Add("Sounds/blaster2.wav", "blaster2.wav");
-   SoundEffect::Add("Sounds/BlasterShot2.wav", "BlasterShot2.wav");
-   //SoundEffect::Add("Sounds/railgun1.wav");
-   SoundEffect::Add("Sounds/Rail2.wav", "Rail2.wav");
-   SoundEffect::Add("Sounds/Explosion1.wav", "Explosion1.wav");
-   SoundEffect::Add("Sounds/CrystalCollect.wav", "CrystalCollect.wav");
-   SoundEffect::Add("Sounds/TractorBeam.wav", "TractorBeam.wav");
-   SoundEffect::Add("Sounds/Pikachu.wav", "Pikachu.wav");
-   SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
-   SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
-   SoundEffect::Add("Sounds/ShipHit.wav", "ShipHit.wav");
-   SoundEffect::Add("Sounds/BlasterHit.wav", "BlasterHit.wav");
-   SoundEffect::Add("Sounds/Pulse.ogg", "Pulse");
-   SoundEffect::Add("Sounds/CrystalRelease.wav", "CrystalRelease");
-   SoundEffect::Add("Sounds/DoubleCrystalRelease.wav", "DoubleCrystalRelease");
-
-   //get the quadradic up
-   quadric = gluNewQuadric();
-   //set the quadradic up
-   gluQuadricNormals(quadric, GLU_SMOOTH);
-   gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
-
-
-   // Initialize the gameState
-   gameState = new GameState(WORLD_SIZE);
-   
-   // Initialize the menus
-   mainMenu = new MainMenu();
-   storeMenu = new StoreMenu();
-   settingsMenu = new SettingsMenu();
-   helpMenu = new HelpMenu();
-   creditsMenu = new CreditsMenu();
-   //turn the menu on for the inial menu display
-   mainMenu->menuActive = true;
-   
-   
-   
-   //Initialize the input manager
-   inputManager = new InputManager();
-   //Connect the input manager to the gameState
-   inputManager->addReceiver(gameState);
-   inputManager->addReceiver(mainMenu);
-   inputManager->addReceiver(storeMenu);
-   inputManager->addReceiver(settingsMenu);
-   inputManager->addReceiver(helpMenu);
-   inputManager->addReceiver(creditsMenu);
-
-   //declare the event that will be reused
-   SDL_Event* event = new SDL_Event();
-
-   while (running) {
-      updateDoubleTime();
-      if (mainMenu->menuActive) {
-         //printf("main active\n");
-         SDL_ShowCursor(SDL_ENABLE);
-         mainMenu->draw();
-         //update();
-         lastUpdateTime = doubleTime();
-      } else if (storeMenu->menuActive) {
-         SDL_ShowCursor(SDL_ENABLE);
-         storeMenu->draw();
-         //update();
-         lastUpdateTime = doubleTime();
-      } else if (settingsMenu->menuActive) {
-         SDL_ShowCursor(SDL_ENABLE);
-         settingsMenu->draw();
-         //update();
-         lastUpdateTime = doubleTime();
-      } else if (helpMenu->menuActive) {
-         SDL_ShowCursor(SDL_ENABLE);
-         helpMenu->draw();
-         //update();
-         lastUpdateTime = doubleTime();
-      } else if (creditsMenu->menuActive) {
-         //printf("credits menu active\n");
-         SDL_ShowCursor(SDL_ENABLE);
-         //creditsMenu->update(doubleTime() - lastUpdateTime);
-         creditsMenu->update(lastUpdateTime);
-         //update();
-         lastUpdateTime = doubleTime();
-      } else {
-         update();
-         draw();
-      }
-      
-      while (SDL_PollEvent(event)) {
-         inputManager->update(*event);
-      }
    }
-   delete inputManager;
-   return 0;
-}
+
+   int main(int argc, char* argv[]) {
+      srand(time(NULL));
+      GW = 800;
+      GH = 600;
+      updateDoubleTime();
+
+      // Initialize GL/SDL/glew/GLSL related things
+      init();
+
+      //loading textures
+      //Texture::Add(GW, GH, "rawTex");
+      //Texture::Add(GW, GH, "bloomTex");
+      //Texture::Add(GW, GH, "fboTex");
+      Texture::Add(texSize, texSize, "rawTex");
+      Texture::Add(texSize, texSize, "bloomTex");
+      Texture::Add(texSize, texSize, "fboTex");
+      Texture::Add(texSize, texSize, "hblurTex");
+      Texture::Add(texSize, texSize, "vblurTex");
+      Texture::Add("Images/Logo.png", "Logo.png");
+      Texture::Add("Images/StoreLogo.png", "StoreLogo");
+      Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
+      Texture::Add("Images/particle.png", "Particle");
+      Texture::Add("Images/starsdark.bmp", "starsdark.png");
+      Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
+      //Texture::Add("Images/fade.png", "Fade");
+      Texture::Add("Images/fade2.png", "Fade");
+      Texture::Add("Images/Shield.png", "ShieldIcon");
+      Texture::Add("Images/ShotIcon.png", "ShotIcon");
+
+      Particle::initDisplayList();
+
+      // Initialize the framebuffer objects
+      initFbo();
+
+      //load the shader files
+      elecShader = setShaders( (char *) "./Shaders/elec.vert", (char *) "./Shaders/elec.frag");
+      ramShader = setShaders( (char *) "./Shaders/ram.vert", (char *) "./Shaders/ram.frag");
+      tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag");
+      lawnShader = setShaders( (char *) "./Shaders/lawn.vert", (char *) "./Shaders/lawn.frag", (char *) "./Shaders/lawn.geom");
+      fadeShader = setShaders( (char *) "./Shaders/fade.vert", (char *) "./Shaders/fade.frag");
+      hBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/hblur.frag");
+      vBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/vblur.frag");
+      billboardShader = setShaders( (char *) "./Shaders/billboard.vert", (char *) "./Shaders/billboard.frag");
+      //hBlurShader = setShaders( (char *) "./Shaders/old/hblur.vert", (char *) "./Shaders/hblur.frag");
+      //vBlurShader = setShaders( (char *) "./Shaders/old/vblur.vert", (char *) "./Shaders/vblur.frag");
+
+      //load and start BGM
+      Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
+      Music::Add("Sounds/Asteroids2.ogg", "Asteroids2.ogg");
+      Music::Add("Sounds/Careless_Whisper.ogg","Careless_Whisper.ogg");
+      Music::playMusic("8-bit3.ogg");
+      //Music::playMusic("Asteroids2.ogg");
+
+      //load sound effects
+      //SoundEffect::Add("Sounds/blaster1.wav");
+      SoundEffect::Add("Sounds/blaster2.wav", "blaster2.wav");
+      SoundEffect::Add("Sounds/BlasterShot2.wav", "BlasterShot2.wav");
+      //SoundEffect::Add("Sounds/railgun1.wav");
+      SoundEffect::Add("Sounds/Rail2.wav", "Rail2.wav");
+      SoundEffect::Add("Sounds/Explosion1.wav", "Explosion1.wav");
+      SoundEffect::Add("Sounds/CrystalCollect.wav", "CrystalCollect.wav");
+      SoundEffect::Add("Sounds/TractorBeam.wav", "TractorBeam.wav");
+      SoundEffect::Add("Sounds/Pikachu.wav", "Pikachu.wav");
+      SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
+      SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
+      SoundEffect::Add("Sounds/ShipHit.wav", "ShipHit.wav");
+      SoundEffect::Add("Sounds/BlasterHit.wav", "BlasterHit.wav");
+      SoundEffect::Add("Sounds/Pulse.ogg", "Pulse");
+      SoundEffect::Add("Sounds/CrystalRelease.wav", "CrystalRelease");
+      SoundEffect::Add("Sounds/DoubleCrystalRelease.wav", "DoubleCrystalRelease");
+
+      //get the quadradic up
+      quadric = gluNewQuadric();
+      //set the quadradic up
+      gluQuadricNormals(quadric, GLU_SMOOTH);
+      gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
+
+
+      // Initialize the gameState
+      gameState = new GameState(WORLD_SIZE);
+
+      // Initialize the menus
+      mainMenu = new MainMenu();
+      storeMenu = new StoreMenu();
+      settingsMenu = new SettingsMenu();
+      helpMenu = new HelpMenu();
+      creditsMenu = new CreditsMenu();
+      //turn the menu on for the inial menu display
+      mainMenu->menuActive = true;
+
+
+
+      //Initialize the input manager
+      inputManager = new InputManager();
+      //Connect the input manager to the gameState
+      inputManager->addReceiver(gameState);
+      inputManager->addReceiver(mainMenu);
+      inputManager->addReceiver(storeMenu);
+      inputManager->addReceiver(settingsMenu);
+      inputManager->addReceiver(helpMenu);
+      inputManager->addReceiver(creditsMenu);
+
+      //declare the event that will be reused
+      SDL_Event* event = new SDL_Event();
+
+      while (running) {
+         updateDoubleTime();
+         if (mainMenu->menuActive) {
+            //printf("main active\n");
+            SDL_ShowCursor(SDL_ENABLE);
+            mainMenu->draw();
+            //update();
+            lastUpdateTime = doubleTime();
+         } else if (storeMenu->menuActive) {
+            SDL_ShowCursor(SDL_ENABLE);
+            storeMenu->draw();
+            //update();
+            lastUpdateTime = doubleTime();
+         } else if (settingsMenu->menuActive) {
+            SDL_ShowCursor(SDL_ENABLE);
+            settingsMenu->draw();
+            //update();
+            lastUpdateTime = doubleTime();
+         } else if (helpMenu->menuActive) {
+            SDL_ShowCursor(SDL_ENABLE);
+            helpMenu->draw();
+            //update();
+            lastUpdateTime = doubleTime();
+         } else if (creditsMenu->menuActive) {
+            //printf("credits menu active\n");
+            SDL_ShowCursor(SDL_ENABLE);
+            //creditsMenu->update(doubleTime() - lastUpdateTime);
+            creditsMenu->update(lastUpdateTime);
+            //update();
+            lastUpdateTime = doubleTime();
+         } else {
+            update();
+            draw();
+         }
+
+         while (SDL_PollEvent(event)) {
+            inputManager->update(*event);
+         }
+      }
+      delete inputManager;
+      glDeleteFramebuffersEXT(1, &fbo);
+      glDeleteRenderbuffersEXT(1, &depthbuffer);
+      return 0;
+   }

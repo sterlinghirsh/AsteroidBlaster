@@ -150,6 +150,14 @@ void BoundingWall::draw() {
    }
 }
 
+void BoundingWall::drawGlow() {
+   std::vector<GlowSquare*>::iterator square;
+   for (square = squares.begin(); square != squares.end();
+    ++square) {
+      (*square)->draw();   
+   }
+}
+
 void BoundingWall::update(double timeDiff) {
    std::vector<GlowSquare*>::iterator square;
    for (square = squares.begin(); square != squares.end();
