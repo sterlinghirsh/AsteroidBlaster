@@ -271,10 +271,9 @@ void initFbo() {
          GL_TEXTURE_2D, Texture::getTexture("hblurTex"), 0);
 
    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT,
-         //GL_TEXTURE_2D, Texture::getTexture("vblurTex"), 0);
       GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
    
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT,
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT3_EXT,
          GL_TEXTURE_2D, Texture::getTexture("trailTex"), 0);
 
    GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
@@ -328,15 +327,10 @@ void draw() {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glPushMatrix();
       gameState->drawGlow();
-      //glBindTexture(GL_TEXTURE_2D, gameState->hTexture);
-      //glBindTexture(GL_TEXTURE_2D, Texture::getTexture("rawTex"));
 
-      //glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-      //0,0, GW, GH, 0);
       glPopMatrix();
       glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-      //if (gameState->bloom) {
       if (bloom) {
          gameState->hBlur();
          gameState->vBlur();
@@ -348,7 +342,6 @@ void draw() {
    // Draw the main screen
    glPushMatrix();
    gameState->draw();
-   //gameState->drawGlow();
 
    //Particle::drawParticles();
    //drawCrosshair();
@@ -358,16 +351,9 @@ void draw() {
    // Draw the hud
    glClear(GL_DEPTH_BUFFER_BIT);
    gameState->drawHud();
-   //if (gameState->bloom) {
    if (bloom) {
       gameState->drawBloom();
    }
-   /*
-      if (inputManager->bloom || inputManager->bloom1) {
-   //printf("SPECUBLOOM\n");
-   gameState->drawBloom(inputManager->bloom, inputManager->bloom1);
-   }
-   */
 
    glPopMatrix();
    // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
@@ -388,9 +374,6 @@ void draw() {
       init();
 
       //loading textures
-      //Texture::Add(GW, GH, "rawTex");
-      //Texture::Add(GW, GH, "bloomTex");
-      //Texture::Add(GW, GH, "fboTex");
       Texture::Add(texSize, texSize, "bloomTex");
       Texture::Add(texSize, texSize, "fboTex");
       Texture::Add(texSize, texSize, "hblurTex");

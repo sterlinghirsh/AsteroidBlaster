@@ -95,51 +95,6 @@ GameState::GameState(double worldSizeIn) {
    isW = isA = isS = isD = false;
 
    curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
-
-   // Bloom
-   xSize = ySize = 512;
-   //colorBits = new char[ xSize * ySize * 3 ];
-   //texture creation..
-   glGenTextures(1, &hTexture);
-   glBindTexture(GL_TEXTURE_2D, hTexture);
-
-   glTexImage2D(GL_TEXTURE_2D, 0, 3, xSize,
-         ySize, 0, GL_RGB,
-         GL_UNSIGNED_BYTE, NULL);
-
-   //you can set other texture parameters if you want
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-   glGenTextures(1, &vTexture);
-   glBindTexture(GL_TEXTURE_2D, vTexture);
-
-   glTexImage2D(GL_TEXTURE_2D, 0, 3, xSize,
-         ySize, 0, GL_RGB,
-         GL_UNSIGNED_BYTE, NULL);
-
-   //you can set other texture parameters if you want
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-   glGenTextures(1, &blurTex);
-   glBindTexture(GL_TEXTURE_2D, blurTex);
-
-   glTexImage2D(GL_TEXTURE_2D, 0, 3, xSize,
-         ySize, 0,GL_RGB,
-         GL_UNSIGNED_BYTE, NULL);
-
-   //you can set other texture parameters if you want
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-
-   //clean up
-   //delete[] colorBits;
-   //glBindTexture(GL_TEXTURE_2D, 0);
-
 }
 
 /**
