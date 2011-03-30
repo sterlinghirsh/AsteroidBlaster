@@ -203,7 +203,7 @@ void MainMenu::mouseDown(int button) {
       helpMenu->menuActive = true;
    } else if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
-      helpMenu->menuActive = true;
+      creditsMenu->menuActive = true;
       Music::stopMusic();
       Music::playMusic("Careless_Whisper.ogg");
    } else if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
