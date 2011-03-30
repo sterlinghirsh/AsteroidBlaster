@@ -62,7 +62,5 @@ Point3D RailGun::project(Object3D* target) {
 }
 
 bool RailGun::shouldFire(Point3D* target, Point3D* aim) {
-   Point3D temp = (*target - *ship->position).normalize();
-
-   return  temp == *aim;
+   return  ((*target - *ship->position).normalize() == *aim);
 }

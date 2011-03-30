@@ -194,16 +194,16 @@ int ShootingAI::think(double dt) {
    Object3D* target = chooseTarget();
 
    if (target == NULL && target != lastTarget) {
-      printf("Could not find a target!\n");
+      //printf("Could not find a target!\n");
       lastTarget = target;
    }
    else if (target != lastTarget) {
-      printf("Switching targets..\n");
+      //printf("Switching targets..\n");
       if (!lastTarget) {
-         printf("No previous target.\n");
+         //printf("No previous target.\n");
       }
-      printf("New target at: ");
-      target->position->print();
+      //printf("New target at: ");
+      //target->position->print();
       lastTarget = target;
    }
    chooseWeapon(&target);

@@ -47,8 +47,8 @@ static double lastDrawTime = 0;
 // This double contains the FPS to be printed to the screen each frame.
 
 // TODO: Move this out of here.
-GLfloat headlight_pos[4] = {WORLD_SIZE / 2, WORLD_SIZE / 2, WORLD_SIZE / 2, 1};
-GLfloat headlight_amb[4] = {0.1f, 0.1f, 0.1f, 1};
+GLfloat headlight_pos[4] = {(float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), 1.0f};
+GLfloat headlight_amb[4] = {0.1f, 0.1f, 0.1f, 1.0f};
 GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
 GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
 
@@ -365,7 +365,7 @@ void draw() {
    }
 
    int main(int argc, char* argv[]) {
-      srand(time(NULL));
+      srand((unsigned)time(NULL));
       GW = 800;
       GH = 600;
       updateDoubleTime();

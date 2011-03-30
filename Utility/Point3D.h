@@ -37,7 +37,7 @@ struct Point3D {
    const Point3D operator+(const Point3D& rhs) const;
    const Point3D operator-(const Point3D& rhs) const;
    const double operator*(const Point3D& rhs) const;
-   int operator==(const Point3D& rhs) const;
+   bool operator==(const Point3D& rhs) const;
    Point3D &operator=(const Point3D &src);
    Point3D& operator/=(double scalar); 
    const Point3D operator*(double scalar) const;

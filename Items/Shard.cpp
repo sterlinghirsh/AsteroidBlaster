@@ -372,7 +372,7 @@ void Shard::handleCollision(Drawable* other) {
       velocity->updateMagnitude(*(asteroid->position), *position);
       velocity->setLength(speed);
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
-      double speed;
+      double speed = 80;
       if (dynamic_cast<BeamShot*>(other) != NULL) {
          speed = 80; // High speed from hard-hitting railgun.
       } else if((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {

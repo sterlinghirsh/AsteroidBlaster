@@ -27,28 +27,29 @@ void GameMessage::update(double timeDiff) {
 }
 
 void GameMessage::drawAllMessages() {
-   std::list<GameMessage*>::iterator listIter;
-
    SDL_Rect position = {(Sint16) (GW / 2), (Sint16) (GH / 2)};
    int lineHeight = 30;
+   std::list<GameMessage*>::iterator listIter = activeMessages.begin();
 
-   for (listIter = activeMessages.begin(); listIter != activeMessages.end(); ++listIter) {
+   while(listIter != activeMessages.end()) {
       (*listIter)->setPosition(position);
       (*listIter)->draw();
       position.y = (Sint16) (position.y + lineHeight);
+      ++listIter;
    }
 }
 
 void GameMessage::updateAllMessages(double timeDiff) {
-   std::list<GameMessage*>::iterator listIter;
+   std::list<GameMessage*>::iterator listIter = activeMessages.begin();
 
-   for (listIter = activeMessages.begin(); listIter != activeMessages.end(); ++listIter) {
+   while(listIter != activeMessages.end()) {
       (*listIter)->update(timeDiff);
       if ((*listIter)->shouldRemove) {
          delete *listIter;
          listIter = activeMessages.erase(listIter);
-		 if (listIter == activeMessages.end())
-			 break;
+
+      } else {
+         ++listIter;
       }
    }
 }
@@ -58,10 +59,10 @@ void GameMessage::Add(std::string _text, double _size, double _lifetime) {
 }
 
 void GameMessage::Clear() {
-   std::list<GameMessage*>::iterator listIter;
-   for (listIter = activeMessages.begin(); listIter != activeMessages.end(); ++listIter) {
+   std::list<GameMessage*>::iterator listIter = activeMessages.begin();
+   while(listIter != activeMessages.end()) {
       delete *listIter;
-      listIter = activeMessages.erase(listIter);
+      ++listIter;
    }
-
+   activeMessages.erase(activeMessages.begin(), activeMessages.end());
 }

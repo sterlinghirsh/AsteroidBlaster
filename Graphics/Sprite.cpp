@@ -102,11 +102,14 @@ void Sprite::draw() {
  */
 void Sprite::updateSprites(double timeDiff) {
    list<Sprite*>::iterator sprite = Sprite::sprites.begin();
-   for (; sprite != Sprite::sprites.end(); sprite++) {
+
+   while(sprite != Sprite::sprites.end()) {
       if ((*sprite)->shouldRemove) {
+         delete *sprite;
          sprite = Sprite::sprites.erase(sprite);
-         if (sprite == Sprite::sprites.end())
-			 break;
+         std::cout << "removed sprite" << std::endl;
+      } else {
+         sprite++;
       }
    }
 }

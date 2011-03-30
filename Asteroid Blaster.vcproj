@@ -41,13 +41,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)Libraries\Windows\SDL&quot;;&quot;$(ProjectDir)Libraries\Windows\GL&quot;;&quot;$(ProjectDir)Libraries\Windows\GLEW&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -117,7 +117,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)Libraries\Windows\SDL&quot;;&quot;$(ProjectDir)Libraries\Windows\GL&quot;;&quot;$(ProjectDir)Libraries\Windows\GLEW&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -136,6 +136,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseLibraryDependencyInputs="false"
+				AdditionalOptions="/NODEFAULTLIB:library"
 				AdditionalDependencies="glew32.lib glew32s.lib SDL.lib SDL_image.lib SDL_mixer.lib Glu32.lib Opengl32.lib SDL_ttf.lib SDLmain.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\Libraries\Windows\lib&quot;"
@@ -239,6 +240,10 @@
 			</File>
 			<File
 				RelativePath=".\utility\Custodian.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HUD\Display.h"
 				>
 			</File>
 			<File
@@ -466,11 +471,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\weapons\Weapon.h"
+				>
+			</File>
+			<File
 				RelativePath=".\items\Weapon.h"
 				>
 			</File>
 			<File
-				RelativePath=".\weapons\Weapon.h"
+				RelativePath=".\Utility\WindowsMathLib.h"
 				>
 			</File>
 		</Filter>
@@ -539,6 +548,10 @@
 			</File>
 			<File
 				RelativePath=".\utility\Custodian.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HUD\Display.cpp"
 				>
 			</File>
 			<File

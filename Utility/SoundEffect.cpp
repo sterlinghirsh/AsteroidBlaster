@@ -48,7 +48,7 @@ int SoundEffect::playSoundEffect(std::string file, bool loop) {
    int handle = Mix_PlayChannel(-1, iter->second, loop ? -1 : 0);
    
 	if(handle == -1) {
-	   std::cerr << "could not play SoundEffect " << file << ", something went wrong!" << std::endl;
+	   std::cerr << "Failed to play " << file << "\r";
 		//exit(0);
    }
 

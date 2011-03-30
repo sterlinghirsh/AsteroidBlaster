@@ -45,13 +45,17 @@ Particle::~Particle() {
 void Particle::updateParticles(double timeDifference)
 {
    list<Particle*>::iterator particle = Particle::particles.begin();
-   for (; particle != Particle::particles.end(); ++particle) 
-   {
+
+   while(particle != Particle::particles.end()) {
       if (*particle != NULL) {
          (*particle)->update(timeDifference);
          if ((*particle)->shouldRemove) {
             particle = Particle::particles.erase(particle);
+         } else {
+            ++particle;
          }
+      } else {
+         particle = Particle::particles.erase(particle);
       }
    }
 }

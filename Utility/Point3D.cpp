@@ -48,12 +48,12 @@ Point3D& Point3D::operator/=(double scalar) {
    return *this;
 }
 
-int Point3D::operator==(const Point3D &rhs) const {
+bool Point3D::operator==(const Point3D &rhs) const {
    if (fabs(x - rhs.x) < EPSILON)
       if (fabs(y - rhs.y) < EPSILON)
          if (fabs(z - rhs.z) < EPSILON)
-            return 1;
-   return 0;
+            return false;
+   return true;
 }
 
 Point3D& Point3D::operator=(const Point3D &src) {

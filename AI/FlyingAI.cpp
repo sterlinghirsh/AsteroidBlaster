@@ -65,14 +65,14 @@ FlyingAI::FlyingAI(AsteroidShip* owner) {
  * Grabs a list of asteroids from the game radar.
  */
 std::list<Asteroid3D*>* FlyingAI :: getAsteroidList() {
-   std::list<Asteroid3D*>* asteroids = new std::list<Asteroid3D*>();
-   //std::list<Object3D*>* targets = gameState->viewFrustumObjects;
    std::list<Drawable*>* targets = radar->getFullReading();
-   std::list<Drawable*>::iterator targets_iterator;
-   
-   if (targets == NULL)
+   //std::list<Object3D*>* targets = gameState->viewFrustumObjects;
+   if (targets == NULL) {
       return NULL;
-   targets_iterator = targets->begin();
+   }
+
+   std::list<Asteroid3D*>* asteroids = new std::list<Asteroid3D*>();
+   std::list<Drawable*>::iterator targets_iterator = targets->begin();
    
    for ( ; targets_iterator != targets->end(); targets_iterator++) {
       if (*targets_iterator == NULL || (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL)) {
