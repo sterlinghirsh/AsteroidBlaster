@@ -37,8 +37,13 @@ class Minimap {
       void update(double timediff);
       void toggle();
       bool isEnabled();
+      void toggleAutoZoom();
    private:
       bool hidden;
+      bool autoZoom;
+      int itemsDisplayed;
+      int totalItems;
+      double furthestItemDistance;
 };
 
 #endif

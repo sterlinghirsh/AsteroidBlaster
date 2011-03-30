@@ -35,10 +35,10 @@ class Radar {
       /**
        * Provides a filtered reading of the environment based on what's near 
        * the owner AsteroidShip.
-       * The distance which objects must be within to be returned by getNearbyReading()
+       * The distance which objects must be within to be returned by getMinimapReading()
        * This reading does not include Particles of any type!
        */
-      virtual std::list<Drawable*>* getNearbyReading(float radius);
+      virtual std::list<Drawable*>* getMinimapReading(float radius, int& totalItems);
       
       /* Provides a filtered reading of the environment based on what's within the camera's viewFrustum right now.
        */

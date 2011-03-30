@@ -24,6 +24,10 @@ Minimap::Minimap(AsteroidShip* _ship) :
    targetZoomLevel = DEFAULT_ZOOMLEVEL;
    oldDisplaySize = DEFAULT_DISPLAYSIZE;
    hidden = false;
+   autoZoom = false;
+   itemsDisplayed = 1;
+   totalItems = 1;
+   furthestItemDistance = 0;
 }
 
 void Minimap::drawLines(std::list<Drawable*>* objects) {
@@ -84,17 +88,6 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
                setMaterial(GreenTransparent);
             }
 
-            // Draw a disc.
-            // This is the way that one game did it with the circles on a plane.
-            /*
-            glPushMatrix();
-               glEnable(GL_LIGHTING);
-               glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
-               gluDisk(quadric, radius2D - (ringWidth / 2), radius2D + (ringWidth / 2) ,16,2);
-               glDisable(GL_LIGHTING);
-            glPopMatrix();
-            */
-
             glDisable(GL_LIGHTING);
             glBegin(GL_LINES);
                // Draw a line from the ship to the object's position on the ship's plane.
@@ -126,7 +119,7 @@ void Minimap::draw() {
       return;
 
    // Get a reading of all the nearby Object3Ds from the Radar
-   std::list<Drawable*>* objects = ship->getRadar()->getNearbyReading(zoomLevel);
+   std::list<Drawable*>* objects = ship->getRadar()->getMinimapReading(zoomLevel, totalItems);
    static Vector3D positionVector;
    const float scaleFactor = 1 / zoomLevel;
    double radius3D; // Radius from the ship in 3D space.
@@ -173,13 +166,21 @@ void Minimap::draw() {
          oppositeOfPosition.glTranslate(-1);
          glDisable(GL_COLOR_MATERIAL);
 
+         itemsDisplayed = objects->size();
+         furthestItemDistance = 0;
          // For each item that needs to be drawn in the minimap
          for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {
 
             // Make sure it's not null, & then draw it in the minimap
             // TODO: Make this not copy code from below.
-            if (*listIter != NULL && ((*listIter)->shouldDrawInMinimap || *listIter == ship)) {
+            if (*listIter != NULL) {
                radius3D = ship->position->distanceFrom(*(*listIter)->position);
+
+               // Keep track of the furthest item we're actually drawing.
+               if (radius3D > furthestItemDistance) {
+                  furthestItemDistance = 0;
+               }
+
                if (radius3D < 0.5 * zoomLevel) {
                   glColor3f(1, 0, 0);
                   setMaterial(RedFlat);
@@ -250,6 +251,24 @@ void Minimap::adjustDisplaySize(double changeAmount) {
 void Minimap::update(double timeDiff) {
    const double zoomScale = 80;
    const double changeScale = 0.5;
+
+   const int minItemsToDisplay = 5;
+   const int maxItemsToDisplay = 8;
+   const float extraSpaceAfterFurthestItem = 5;
+   if (autoZoom) {
+      if (itemsDisplayed < minItemsToDisplay && totalItems >= itemsDisplayed) {
+         // If too few items are shown, zoom out.
+         adjustZoomDirection = 1;
+      } else if (itemsDisplayed > maxItemsToDisplay ||
+       (itemsDisplayed == totalItems &&
+        zoomLevel - furthestItemDistance > minItemsToDisplay)) {
+         // If too many items are shown, zoom in.
+         adjustZoomDirection = -1;
+      } else {
+         adjustZoomDirection = 0;
+      }
+   }
+
    adjustZoom(timeDiff * zoomScale * adjustZoomDirection);
    adjustDisplaySize(timeDiff * changeScale * adjustDisplaySizeDirection);
 
@@ -272,4 +291,8 @@ void Minimap::toggle() {
 
 bool Minimap::isEnabled() {
    return (!hidden);
+}
+
+void Minimap::toggleAutoZoom() {
+   autoZoom = !autoZoom;
 }

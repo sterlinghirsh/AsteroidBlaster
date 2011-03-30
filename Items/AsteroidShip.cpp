@@ -102,6 +102,8 @@ AsteroidShip::AsteroidShip() :
 
       cameraOffset = new Vector3D(0, 2, 5);
       currentView = VIEW_THIRDPERSON_SHIP;
+
+      shouldDrawInMinimap = true;
    }
 
 /**

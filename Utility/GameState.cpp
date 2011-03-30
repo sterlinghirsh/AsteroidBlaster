@@ -824,6 +824,8 @@ void GameState::keyDown(int key) {
    case SDLK_4:
       minimap->adjustZoomDirection = -1;
       break;
+   case SDLK_5:
+      minimap->toggleAutoZoom();
 
 
    // Audio and Video settings

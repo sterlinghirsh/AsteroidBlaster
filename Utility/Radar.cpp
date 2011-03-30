@@ -65,10 +65,12 @@ std::list<Drawable*>* Radar :: getFullReading() {
 /**
  * Provides a filtered reading of the environment based on what's near 
  * the owner AsteroidShip.
- * The distance which objects must be within to be returned by getNearbyReading()
+ * The distance which objects must be within to be returned by getMinimapReading()
  * This reading does not include Particles of any type!
+ *
+ * totalItems is the count of all drawable items that belong in the minimap.
  */
-std::list<Drawable*>* Radar :: getNearbyReading(float radius) {
+std::list<Drawable*>* Radar :: getMinimapReading(float radius, int& totalItems) {
    /* Get the custodian out of gameState, and get its vector of Objects.
     * Use this vector to construct a new copied vector (to be safe), and return that one.
     */
@@ -79,6 +81,7 @@ std::list<Drawable*>* Radar :: getNearbyReading(float radius) {
    // As opposed to the checker, the one doing the checking. 
    Drawable* checkee;
    
+   totalItems = 0;
    // Iterate over all the Object3D's the custodian gave us
    for (vectorIter = all->begin(); vectorIter != all->end(); ++vectorIter)
    {
@@ -86,8 +89,11 @@ std::list<Drawable*>* Radar :: getNearbyReading(float radius) {
       
       // If the object is not a particle & is within the required nearby distance to be drawn
       if(checkee != NULL && (dynamic_cast<Particle*>(checkee) == NULL) &&
-            owner->position->distanceFrom(*(checkee->position)) <= radius) {
-         nearList->push_back(checkee);
+       checkee->shouldDrawInMinimap) { 
+         ++totalItems;
+         if (owner->position->distanceFrom(*(checkee->position)) <= radius) {
+            nearList->push_back(checkee);
+         }
       }
    }
    
