@@ -52,8 +52,8 @@ bool Point3D::operator==(const Point3D &rhs) const {
    if (fabs(x - rhs.x) < EPSILON)
       if (fabs(y - rhs.y) < EPSILON)
          if (fabs(z - rhs.z) < EPSILON)
-            return false;
-   return true;
+            return true;
+   return false;
 }
 
 Point3D& Point3D::operator=(const Point3D &src) {
