@@ -706,8 +706,9 @@ void AsteroidShip::drawInMinimap() {
    position->glTranslate();
    // Counteract the rotation done in GameState::drawInMinimap();
    glRotate();
-   glScalef(10, 10, 10);
-   glTranslatef(0, 0, -1);
+   const float shipScale = 5;
+   glScalef(shipScale, shipScale, shipScale);
+   glTranslatef(0, 0, -3);
    glColor4d(0, 0, 0, 0.2);
    //draw_shield();
    draw_ship(curForwardAccel);

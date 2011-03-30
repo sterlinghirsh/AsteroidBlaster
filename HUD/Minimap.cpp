@@ -15,7 +15,7 @@
 
 #define DEFAULT_ZOOMLEVEL 80
 #define MAX_ZOOMLEVEL 140
-#define MIN_ZOOMLEVEL 20
+#define MIN_ZOOMLEVEL 30
 
 Minimap::Minimap(AsteroidShip* _ship) :
  ship(_ship), displaySize(DEFAULT_DISPLAYSIZE), zoomLevel(DEFAULT_ZOOMLEVEL) {
@@ -45,8 +45,6 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
       modelViewMatrix.loadModelviewMatrix();
    glPopMatrix();
 
-   const int ringsToDraw = 4;
-   const float ringIncrement = zoomLevel / ringsToDraw;
    float ringDiameter;
 
    glPushMatrix();
@@ -57,7 +55,7 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
       float alpha;
       glPushMatrix();
          glRotatef(-90.0,1.0f,0.0f,0.0f);   // Rotate By 0 On The X-Axis
-         for (ringDiameter = 8; ringDiameter <= zoomLevel; ringDiameter *= 2) {
+         for (ringDiameter = 16; ringDiameter <= zoomLevel; ringDiameter *= 2) {
             distanceFromEdge = zoomLevel - ringDiameter;
             alpha = (float) clamp(distanceFromEdge / 5, 0, 0.5);
             glColor4f(1, 1, 0, alpha);
