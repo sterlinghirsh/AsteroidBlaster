@@ -24,6 +24,13 @@ static double spin = 90;
 static double flashiness = 0;
 static double tracker = 0;
 static int rando = 1;
+static double x2Change = 0.075;
+static double y2Change = 0.075;
+static double z2Change = 0.3;
+static double xChange = 0;
+static double yChange = 0;
+static double zChange = 0;
+static double backChange = 0;
 
 AsteroidShip::AsteroidShip() :
    Object3D(0, 0, 0, 0),     // Initialize superclass
@@ -367,204 +374,7 @@ void AsteroidShip::keepFiring() {
    weapons[currentWeapon]->fire();
 }
 
-void draw_shield(){
-      /*glUseProgram(ramShader);
-   glPushMatrix();
-   float flash = 1;
-   GLint loc2;
-   glTranslatef(0, 0, -.1);
-   //Point3D start(*position);
-      //velocity->movePoint(start);
-      //start.glTranslate();
-      
-      //glRotate();
-      //printf("Position: %f, %f, %f\n", position->x, position->y, position->z);
-      //glTranslatef(0, 0, 1.3);
-      //glRotatef(180, 1, 0, 0);
-      glDisable(GL_CULL_FACE);
-      glBegin(GL_TRIANGLE_FAN);
-
-      flashiness = flashiness + flash;
-      if (flashiness >= 360 ) {
-         flashiness = 0;
-      }
-      loc2 = glGetUniformLocation(ramShader,"poop");
-      glUniform1f(loc2,flashiness);
-
-    // Center of fan is at the origin
-    glColor4f(1, 0, 0, 1);
-    glVertex3f(0.0f, 0.0f, 0.0);
-    int iPivot = 2;
-    float x, y, z, angle;
-    for(angle = 0.0f; angle < (2.0f*M_PI); angle += (M_PI/8.0f))
-
-        {
-
-        // Calculate x and y position of the next vertex
-
-        x = .5 * sin(angle);
-
-        y = .5 * cos(angle);
-
-        z = 1.5;
-
-        // Alternate color between red and green
-
-        if((iPivot %2) == 0)
-            //setMaterial(GreenShiny);
-            glColor4f(0.0f, 1.0f, 0.0f, 1.0);
-
-        else
-            //setMaterial(RedShiny);
-            glColor4f(1.0f, 1.0f, 0.0f, 1.0);
-
-
-
-        // Increment pivot to change color next time
-
-        iPivot++;
-
-
-
-        // Specify the next vertex for the triangle fan
-
-        glVertex3f(x, y, z);
-
-        }
-        
-        x = .5 * sin(angle);
-
-        y = .5 * cos(angle);
-
-        z = 1.5;
-        
-        glVertex3f(x, y, z);
-
-
-    // Done drawing the fan that covers the bottom
-
-    glEnd();
-      glEnable(GL_CULL_FACE);
-   glPopMatrix();
-   glUseProgram(0);*/
-   glUseProgram(ramShader);
-   glPushMatrix();
-   
-      //floats used in loop iteration
-      GLint loc1;
-      float x;
-      float y;
-      float z;
-      
-      //multipliers for randomness in lightning
-      float length = 80;
-      //width of inidvidual lightning lines
-      float thickness = 5.0;
-      
-      //density of the lightning in the beam
-      float density = 2;
-      
-      //Width of the lightning shot
-      int elecWidth = 100;
-      
-      //how fast you want the lighting flashing from blue to white. Higher number == faster flash
-      double flash = .000000000001;
-      
-      float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
-      //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
-      //Point3D start(*position);
-      //velocity->movePoint(start);
-      //start.glTranslate();
-      
-      //glRotate();
-      //flashiness = flashiness + flash;
-      //int rando;
-      tracker++;
-      if (flashiness >= 360 ) {
-         flashiness = 0;
-      }
-      if (tracker > 75) {
-            tracker = 0;
-            rando = rand();
-      }
-       
-      flashiness = flashiness + (double)(rando % 50) / 10.0;
-      loc1 = glGetUniformLocation(ramShader,"poop");
-      glUniform1f(loc1,(GLfloat) flashiness);
-      glTranslated(0, 0, -.2);
-      setMaterial(GreenShiny);
-      glLineWidth(thickness);
-      glDisable(GL_CULL_FACE);
-      glBegin(GL_TRIANGLE_FAN);
-      //flashiness = flashiness + flash;
-      //if (flashiness >= 360 ) {
-        // flashiness = 0;
-      //}
-      //loc2 = glGetUniformLocation(ramShader,"poop");
-      //glUniform1f(loc2,flashiness);
-
-    // Center of fan is at the origin
-    glColor4f(1, 0, 0, 1);
-    glVertex3f(0.0f, 0.0f, 0.0);
-    int iPivot = 2;
-    //float x, y, z, 
-    float angle;
-    for(angle = 0.0f; angle < (2.0f*M_PI); angle += (float) (M_PI/8.0f))
-
-        {
-
-        // Calculate x and y position of the next vertex
-
-        x = (float) (.5 * sin(angle));
-
-        y = (float) (.5 * cos(angle));
-
-        z = 1.5;
-
-        // Alternate color between red and green
-
-        if((iPivot %2) == 0)
-            //setMaterial(GreenShiny);
-            glColor4f(0.0f, 1.0f, 0.0f, 1.0);
-
-        else
-            //setMaterial(RedShiny);
-            glColor4f(1.0f, 1.0f, 0.0f, 1.0);
-
-
-
-        // Increment pivot to change color next time
-
-        iPivot++;
-
-
-
-        // Specify the next vertex for the triangle fan
-
-        glVertex3f(x, y, z);
-
-        }
-        
-        x = (float) (.5 * sin(angle));
-
-        y = (float) (.5 * cos(angle));
-
-        z = 1.5f;
-        
-        glVertex3f(x, y, z);
-
-
-    // Done drawing the fan that covers the bottom
-
-    glEnd();
-      
-      glEnable(GL_CULL_FACE);
-   glLineWidth(1.0);
-   glPopMatrix();
-   glUseProgram(0);
-}
-
-void draw_ship(){
+void draw_ship(double drawOrange){
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -574,10 +384,11 @@ void draw_ship(){
    glEnable(GL_LIGHTING);
    glEnable(GL_COLOR_MATERIAL);
    glScaled(1.5, .5, .8);
+   glScaled(5, 5, 5);
 
    glBegin(GL_TRIANGLES);
    glEnable(GL_NORMALIZE);
-   setMaterial(BlackSolid);
+
    glNormal3d(.2, -.005, -.03);
    glVertex3d(0, 0, 0);
    glVertex3d(.2, .2, 1.3);
@@ -617,11 +428,9 @@ void draw_ship(){
    glVertex3d(0, 0, 0);
    glVertex3d(.15, 0, 1);
    glVertex3d(.2, -.2, 1.3);
-   //glPopMatrix();
+   
 
    /* Back of Ship */
-   setMaterial(BlackSolid);
-
    glNormal3d(-0.045,-0.045,0.0375);
    glVertex3d(.15, 0, 1);
    glVertex3d(.2, .2, 1.3);
@@ -641,26 +450,71 @@ void draw_ship(){
    glVertex3d(-.15, 0, 1);
    glVertex3d(0, .15, 1);
    glVertex3d(-.2, .2, 1.3);
+   
+   if (drawOrange == 10.0) {
+      glColor4d(1, .4, 0, .4);
+      backChange += .12/20;
+      
+      if (backChange > .6) {
+         backChange = .6;
+      }
+      
+      //glNormal3d(0.09,0.09,0.0225);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, .15, 1);
+      glVertex3d(0, 0, 1 + backChange);
 
-   glNormal3d(0.09,0.09,0.0225);
-   glVertex3d(.15, 0, 1);
-   glVertex3d(0, .15, 1);
-   glVertex3d(0, 0, 1.6);
+      //glNormal3d(0.09,-0.09,0.0225);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(0, -.15, 1);
 
-   glNormal3d(0.09,-0.09,0.0225);
-   glVertex3d(.15, 0, 1);
-   glVertex3d(0, 0, 1.6);
-   glVertex3d(0, -.15, 1);
+      //glNormal3d(-0.09,-0.09,0.0225);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(0, -.15, 1);
+      glVertex3d(0, 0, 1 + backChange);
 
-   glNormal3d(-0.09,-0.09,0.0225);
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(0, -.15, 1);
-   glVertex3d(0, 0, 1.6);
+      //glNormal3d(-0.09,0.09,0.0225);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(-0, 0, 1 + backChange);
+      glVertex3d(0, .15, 1);
+   } else if (backChange == 0) {
+      glColor4d(0, 0, 0, .4);
 
-   glNormal3d(-0.09,0.09,0.0225);
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(-0, 0, 1.6);
-   glVertex3d(0, .15, 1);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, .15, 1);
+      
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, -.15, 1);
+   } else {
+      glColor4d(1, .4, 0, .4);
+      backChange -= .12/20;
+      if (backChange < 0) {
+         backChange = 0;
+      }
+      //glNormal3d(0.09,0.09,0.0225);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, .15, 1);
+      glVertex3d(0, 0, 1 + backChange);
+
+      //glNormal3d(0.09,-0.09,0.0225);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(0, -.15, 1);
+
+      //glNormal3d(-0.09,-0.09,0.0225);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(0, -.15, 1);
+      glVertex3d(0, 0, 1 + backChange);
+
+      //glNormal3d(-0.09,0.09,0.0225);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(-0, 0, 1 + backChange);
+      glVertex3d(0, .15, 1);
+   }
+   
    glEnd();
    glDisable(GL_POLYGON_OFFSET_LINE);
 
@@ -671,93 +525,155 @@ void draw_ship(){
    
    glLineWidth(1.5);
    glDisable(GL_LIGHTING);
-   glBegin(GL_LINE_LOOP);
-   glColor3d(1, .4, 0);
-   setMaterial(OrangeSolid);
-   glVertex3d(.15, 0, 1);
-   glVertex3d(.2, .2, 1.3);
-   glVertex3d(0, .15, 1);
+   
+   if (drawOrange == 10.0) {
+      
+      if (xChange > .15) {
+         xChange = 0;
+         yChange = 0;
+         zChange = 0;
+      }
+      
+      if (x2Change > .15) {
+         x2Change = 0;
+         y2Change = 0;
+         z2Change = 0;
+      }
+      
+      if (backChange == .6) {
+         glBegin(GL_LINE_LOOP);
+         glColor3d(1, .4, 0);
+         
+         glVertex3d(.15 - xChange, 0, 1 + zChange);
+         glVertex3d(0, .15 - yChange, 1 + zChange);
+         glVertex3d(-.15 + xChange, 0, 1 + zChange);
+         glVertex3d(0, -.15 + yChange, 1 + zChange);
+         glVertex3d(.15 - xChange, 0, 1 + zChange);
+         
+         glEnd();
+         
+         glBegin(GL_LINE_LOOP);
+         glVertex3d(.15 - x2Change, 0, 1 + z2Change);
+         glVertex3d(0, .15 - y2Change, 1 + z2Change);
+         glVertex3d(-.15 + x2Change, 0, 1 + z2Change);
+         glVertex3d(0, -.15 + y2Change, 1 + z2Change);
+         glVertex3d(.15 - x2Change, 0, 1 + z2Change);
+         glEnd();
+         
+        
 
-   glVertex3d(.15, 0, 1);
-   glVertex3d(0, 0, 1.6);
-   glVertex3d(0, .15, 1);
+         xChange += .03 / 20;
+         yChange += .03 / 20;
+         zChange += .12 / 20;
+         x2Change += .03 / 20;
+         y2Change += .03 / 20;
+         z2Change += .12 / 20;
+      }
+      
+      glBegin(GL_LINE_LOOP);
+      glColor3d(1, .4, 0);
+      
+      glVertex3d(.15, 0, 1);
+      glVertex3d(.2, .2, 1.3);
+      glVertex3d(0, .15, 1);
 
-   glVertex3d(.15, 0, 1);
-   glVertex3d(.2, -.2, 1.3);
-   glVertex3d(0, -.15, 1);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(0, .15, 1);
 
-   glVertex3d(.15, 0, 1);
-   glVertex3d(0, 0, 1.6);
-   glVertex3d(0, -.15, 1);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(.2, -.2, 1.3);
+      glVertex3d(0, -.15, 1);
 
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(-.2, -.2, 1.3);
-   glVertex3d(0, -.15, 1);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(0, -.15, 1);
 
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(0, 0, 1.6);
-   glVertex3d(0, -.15, 1);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(-.2, -.2, 1.3);
+      glVertex3d(0, -.15, 1);
 
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(-.2, .2, 1.3);
-   glVertex3d(0, .15, 1);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(0, -.15, 1);
 
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(-0, 0, 1.6);
-   glVertex3d(0, .15, 1);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(-.2, .2, 1.3);
+      glVertex3d(0, .15, 1);
 
-   glEnd();
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(-0, 0, 1 + backChange);
+      glVertex3d(0, .15, 1);
 
-   //glLineWidth(5.0);
-   glBegin(GL_LINE_LOOP);
-   //glColor3d(1, .3, 0);
-   setMaterial(OrangeSolid);
-   glVertex3d(.15, 0, 1.01);
-   glVertex3d(0, -.15, 1.01);
-   glVertex3d(-.15, 0, 1.01);
-   glVertex3d(0, .15, 1.01);
-   glEnd();
+      glEnd();
+   } else if (backChange == 0) {
+      glBegin(GL_LINE_LOOP);
+      glColor3d(1, .4, 0);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, .15, 1);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(0, -.15, 1);
+      glVertex3d(.15, 0, 1);
+      glEnd();
+   } else {
+      glBegin(GL_LINE_LOOP);
+      glColor3d(1, .4, 0);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(0, .15, 1);
+      
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, -.15, 1);
+      glVertex3d(0, 0, 1 + backChange);
+      
+      
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(0, -.15, 1);
+      glVertex3d(0, 0, 1 + backChange);
+      
+      
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(-0, 0, 1 + backChange);
+      glVertex3d(0, .15, 1);
+      glEnd();
+      
+      glBegin(GL_LINE_LOOP);
+      glColor3d(1, .4, 0);
+      glVertex3d(.15, 0, 1);
+      glVertex3d(0, .15, 1);
+      glVertex3d(-.15, 0, 1);
+      glVertex3d(0, -.15, 1);
+      glVertex3d(.15, 0, 1);
+      glEnd();
+   }
 
-
-   //glLineWidth(4.0);
-   glBegin(GL_LINE_LOOP);
+   glBegin(GL_LINES);
    glColor3d(0, 1, 1);
-   setMaterial(CyanSolid);
    glVertex3d(0, 0, 0);
    glVertex3d(.2, .2, 1.3);
-   glVertex3d(.15, 0, 1);
-
-   setMaterial(CyanSolid);
+   
    glVertex3d(0, 0, 0);
+   glVertex3d(-.2, .2, 1.3);
+   
+   glVertex3d(0, 0, 0);
+   glVertex3d(-.2, -.2, 1.3);
+   
+   glVertex3d(0, 0, 0);
+   glVertex3d(.2, -.2, 1.3);
+   glEnd(); 
+   
+   glBegin(GL_LINE_LOOP);
+   glVertex3d(.15, 0, 1);
    glVertex3d(.2, .2, 1.3);
    glVertex3d(0, .15, 1);
-
-   glVertex3d(0, 0, 0);
-   glVertex3d(-.2, .2, 1.3);
-   glVertex3d(0, .15, 1);
-
-   glVertex3d(0, 0, 0);
    glVertex3d(-.2, .2, 1.3);
    glVertex3d(-.15, 0, 1);
-
-   glVertex3d(0, 0, 0);
-   glVertex3d(-.2, -.2, 1.3);
-   glVertex3d(-.15, 0, 1);
-
-   glVertex3d(0, 0, 0);
    glVertex3d(-.2, -.2, 1.3);
    glVertex3d(0, -.15, 1);
-
-   glVertex3d(0, 0, 0);
-   glVertex3d(.2, -.2, 1.3);
-   glVertex3d(0, -.15, 1);
-
-   glVertex3d(0, 0, 0);
    glVertex3d(.2, -.2, 1.3);
    glVertex3d(.15, 0, 1);
-
    glEnd();
-   //glLineWidth(1.0);
+
    glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);
    glEnable(GL_CULL_FACE);
@@ -780,8 +696,6 @@ void draw_vectors(){
    glEnd();
 
    glLineWidth(1.0);
-
-
 }
 
 /**
@@ -796,20 +710,10 @@ void AsteroidShip::drawInMinimap() {
    glTranslatef(0, 0, -1);
    glColor4d(0, 0, 0, 0.2);
    //draw_shield();
-   draw_ship();
+   draw_ship(curForwardAccel);
    glPopMatrix();
 }
 
-
-void AsteroidShip::rotate(){
-   glMatrixMode(GL_MODELVIEW);
-   glPushMatrix();
-   glLoadIdentity();
-   //glRotatef(1 - up->zMag, 1, 0, 0);
-   //glMultMatrixf(trackballM);
-   //glGetFloatv(GL_MODELVIEW_MATRIX, trackballM);
-   glPopMatrix();
-}
 
 void AsteroidShip::draw() {
    glPushMatrix();
@@ -817,16 +721,12 @@ void AsteroidShip::draw() {
    // Translate to the position.
    position->glTranslate();
    // Rotate to the current up/right/forward vectors.
+   
    glRotate();
+   glTranslated(0, 0, -2.2);
    glColor4d(0, 0, 0, 0.4);
-   //int rando = rand();
-   //flashiness = flashiness + (double)(rando % 50) / 10.0;
-      /*if (flashiness >= 360 ) {
-         flashiness = 0;
-      }*/
-   //glRotatef(-spin, 0, 1, 0);
-   draw_ship();
-   //draw_shield();
+
+   draw_ship(curForwardAccel);
    glPopMatrix();
 }
 
@@ -1094,8 +994,8 @@ Vector3D* AsteroidShip::getViewVector() {
 
 Vector3D* AsteroidShip::getCameraOffset() {
    if (currentView != VIEW_FIRSTPERSON_SHIP && currentView != VIEW_FIRSTPERSON_GUN) {
-      cameraOffset->updateMagnitude(getViewVector()->scalarMultiply(-3));
-      cameraOffset->addUpdate(up->scalarMultiply(0.5));
+      cameraOffset->updateMagnitude(getViewVector()->scalarMultiply(-12));
+      cameraOffset->addUpdate(up->scalarMultiply(2));
    } else {
       cameraOffset->updateMagnitude(0, 0, 0);
    }
