@@ -10,10 +10,7 @@
 
 class Music {
    public:
-      Music();
-      ~Music();
-      
-      
+      static void FreeAll(); 
       static void Add(std::string file, std::string keyName);
       static void playMusic(std::string file);
       static void pauseMusic();

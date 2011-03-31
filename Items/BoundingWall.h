@@ -35,6 +35,7 @@ class BoundingWall {
       int squaresPerSide;
 
       BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID);
+      virtual ~BoundingWall();
       void draw();
       void drawGlow();
       void update(double timeDiff);

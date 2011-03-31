@@ -100,7 +100,7 @@ double Ring::maxX() {
 
 double Ring::maxFromCenter() {
    double max = 0.0;
-   MeshPoint center = *(new MeshPoint(0.0, 0.0, 0.0));
+   MeshPoint center(0.0, 0.0, 0.0);
    for (unsigned i = 0; i < _pList.size(); i++) {
       double tmpD = _pList[i].distanceFrom(center);
       if (tmpD > max) {

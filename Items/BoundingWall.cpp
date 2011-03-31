@@ -65,6 +65,13 @@ BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, in
    }
 }
 
+BoundingWall::~BoundingWall() {
+   for (int i = 0; i < squares.size(); ++i) {
+      delete squares[i];
+   }
+   
+}
+
 int BoundingWall::getSquareX(int squareID) {
    return squareID % squaresPerSide;
 }

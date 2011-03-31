@@ -11,11 +11,7 @@ int SoundEffect::numChannels = CHANNEL_MAX;
 int SoundEffect::currChannel = 0;
 
 
-SoundEffect::SoundEffect() {
-
-}
-
-SoundEffect::~SoundEffect() {
+void SoundEffect::FreeAll() {
    std::map<std::string, Mix_Chunk*>::iterator it = SoundEffect::soundEffects.begin();
    for (; it != SoundEffect::soundEffects.end(); ++it ) {
       Mix_FreeChunk(it->second);

@@ -11,9 +11,7 @@
 
 class SoundEffect {
    public:
-      SoundEffect();
-      ~SoundEffect();
-      
+      static void FreeAll();
       static int numChannels;
       
       static void Add(std::string file, std::string keyName);

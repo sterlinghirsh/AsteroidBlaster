@@ -62,6 +62,19 @@ GLfloat ambientlight_amb[4] = {1, 1, 1, 0.5};
 GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
 GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
 
+void cleanup() {
+   Music::FreeAll();
+   SoundEffect::FreeAll();
+   delete gameState;
+   delete mainMenu;
+   delete storeMenu;
+   delete settingsMenu;
+   delete helpMenu;
+   delete creditsMenu;
+   delete inputManager;
+
+}
+
 void init() {
    /* Flags to pass to SDL_SetVideoMode */
    int videoFlags;
@@ -74,7 +87,8 @@ void init() {
 
    // Tell system which functions to process when exit() call is made
    // THIS IS COMMENTED OUT BECAUSE THE EXIT TIME INCREASES BY 3-4 SECONDS
-   //atexit(SDL_Quit);
+   atexit(cleanup);
+   atexit(SDL_Quit);
 
    // Get optimal video settings
    vidinfo = SDL_GetVideoInfo();
@@ -504,7 +518,7 @@ void draw() {
             inputManager->update(*event);
          }
       }
-      delete inputManager;
+
       glDeleteFramebuffersEXT(1, &fbo);
       glDeleteRenderbuffersEXT(1, &depthbuffer);
       return 0;

@@ -38,6 +38,10 @@ BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z) {
 }
 
 BoundingSpace::~BoundingSpace() {
+   for (int i = 0; i < 6; ++i) {
+      delete walls[i];
+      delete wallColors[i];
+   }
 }
 
 int BoundingSpace::getNumSquares() {

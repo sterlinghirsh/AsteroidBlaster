@@ -11,11 +11,7 @@ std::map<std::string, Mix_Music*> Music::musics;
 std::string Music::currPlay = "\0";
 int Music::volume = SDL_MIX_MAXVOLUME;
 
-Music::Music() {
-
-}
-
-Music::~Music() {
+void Music::FreeAll() {
    std::map<std::string, Mix_Music*>::iterator it = Music::musics.begin();
    for (; it != Music::musics.end(); ++it ) {
       Mix_FreeMusic(it->second);
