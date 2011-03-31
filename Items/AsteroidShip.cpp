@@ -102,6 +102,8 @@ AsteroidShip::AsteroidShip() :
 
       cameraOffset = new Vector3D(0, 2, 5);
       currentView = VIEW_THIRDPERSON_SHIP;
+      zoomFactor = 1.0;
+      zoomSpeed = 0.0;
 
       shouldDrawInMinimap = true;
    }
@@ -285,14 +287,11 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 }
 
 void AsteroidShip::update(double timeDiff) {
-   //TODO: Make the shooting and AIs think.
-
    if (shooter->isEnabled()) {
       shooter->think(timeDiff);
    }
    
-   if(flyingAI->isEnabled())
-   {
+   if(flyingAI->isEnabled()) {
       flyingAI->think(timeDiff);
    } else {
       updatePlayerAcceleration();
@@ -340,9 +339,9 @@ void AsteroidShip::update(double timeDiff) {
          SoundEffect::stopSoundEffect(soundHandle);
          soundHandle = -1;
       }
-
    }
 
+   // Actually fire the weapons.
    keepFiring();
 
    if (shakeAmount != 0) {
@@ -353,6 +352,12 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    createEngineParticles(timeDiff);
+
+   // Update the zoom level.
+   const float minZoom = 1;
+   const float maxZoom = 3;
+   zoomFactor += timeDiff * zoomSpeed;
+   zoomFactor = clamp(zoomFactor, minZoom, maxZoom);
 }
 
 /**
@@ -1004,6 +1009,7 @@ Vector3D* AsteroidShip::getCameraOffset() {
    if (currentView != VIEW_FIRSTPERSON_SHIP && currentView != VIEW_FIRSTPERSON_GUN) {
       cameraOffset->updateMagnitude(getViewVector()->scalarMultiply(-12));
       cameraOffset->addUpdate(up->scalarMultiply(2));
+      cameraOffset->scalarMultiplyUpdate(zoomFactor);
    } else {
       cameraOffset->updateMagnitude(0, 0, 0);
    }
@@ -1032,4 +1038,8 @@ void AsteroidShip::setCameraDirectly() {
          position->y + forward->yMag,
          position->z + forward->zMag,
          up->xMag, up->yMag, up->zMag);
+}
+
+void AsteroidShip::setZoomSpeed(float speed) {
+   zoomSpeed = speed;
 }

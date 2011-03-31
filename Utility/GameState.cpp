@@ -732,8 +732,11 @@ void GameState::keyDown(int key) {
 
 
    //Camera controls
+   case SDLK_8:
+      ship->setZoomSpeed(-1);
+      break;
    case SDLK_9:
-      camera->zoom();
+      ship->setZoomSpeed(1);
       break;
 
    case SDLK_t:
@@ -956,6 +959,12 @@ void GameState::keyUp(int key) {
       break;
    case SDLK_4:
       minimap->adjustZoomDirection = 0;
+      break;
+   
+   // Camera
+   case SDLK_8:
+   case SDLK_9:
+      ship->setZoomSpeed(0);
       break;
    }
 }

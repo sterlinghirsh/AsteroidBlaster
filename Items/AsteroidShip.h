@@ -133,6 +133,7 @@ class AsteroidShip : public Object3D {
       int getCurrentView();
 
       void setCameraDirectly();
+      void setZoomSpeed(float speed);
 
    protected:
       int soundHandle;
@@ -172,8 +173,9 @@ class AsteroidShip : public Object3D {
       bool isFiring;
       int currentWeapon;
       Vector3D *upstart;
-      
 
+      float zoomFactor;
+      float zoomSpeed;
 
       Vector3D *cameraOffset;
 

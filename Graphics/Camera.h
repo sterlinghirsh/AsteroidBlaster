@@ -23,7 +23,6 @@ class Camera {
       Vector3D *offset;
       bool lockUpVector;
       float shakeAmount;
-      float zoomFactor;
 
       Camera(bool lockUp);
       Camera(Object3D*);
@@ -37,7 +36,6 @@ class Camera {
       Point3D getEyePoint();
       void shake(float newShakeAmount);
       void setViewVector(Vector3D* newView);
-      void zoom();
 };
 
 #endif
