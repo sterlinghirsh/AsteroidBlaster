@@ -301,13 +301,6 @@ void GameState::drawGlow() {
    //std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   /*
-      if (thirdPerson) {
-      ship->drawShotDirectionIndicators();
-      } else {
-      ship->drawCrosshair();
-      }
-      */
 
    for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
       if (*listIter == NULL || *listIter == ship)

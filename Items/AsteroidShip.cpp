@@ -860,7 +860,8 @@ void AsteroidShip::drawShotDirectionIndicators() {
    }
    // The coords of the boxes.
    Point3D drawPoint = *position;
-   const double boxSize = 0.5;
+   double boxSize = 1.0;
+   const double boxDecrement = 0.2;
 
    glPushMatrix();
    shotDirection.movePoint(drawPoint, 5);
@@ -884,6 +885,8 @@ void AsteroidShip::drawShotDirectionIndicators() {
    up->movePoint(drawPoint, boxSize);
    drawPoint.draw();
 
+   boxSize -= boxDecrement;
+
    // Move again
    shotDirection.movePoint(drawPoint, 5);
    // top right
@@ -896,6 +899,8 @@ void AsteroidShip::drawShotDirectionIndicators() {
    drawPoint.draw();
    up->movePoint(drawPoint, boxSize);
    drawPoint.draw();
+   
+   boxSize -= boxDecrement;
 
    // Move again
    shotDirection.movePoint(drawPoint, 5);
