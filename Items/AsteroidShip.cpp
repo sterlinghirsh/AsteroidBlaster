@@ -356,8 +356,8 @@ void AsteroidShip::update(double timeDiff) {
    // Update the zoom level.
    const float minZoom = 1;
    const float maxZoom = 3;
-   zoomFactor += timeDiff * zoomSpeed;
-   zoomFactor = clamp(zoomFactor, minZoom, maxZoom);
+   zoomFactor = (float) clamp(zoomFactor + (timeDiff * zoomSpeed)
+    , minZoom, maxZoom);
 }
 
 /**
