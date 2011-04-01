@@ -464,7 +464,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
 Shard* Asteroid3D::makeShard(int num) {
    Shard* shard;
    shard = new Shard(0.5, worldSize);
-   shard->velocity->update(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+   shard->velocity->updateMagnitude(0.0, 0.0, 0.0);
    shard->position->clone(position);
    shard->position->x += num == 0 ? radius/2 : -radius/2;
    return shard;

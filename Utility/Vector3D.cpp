@@ -8,18 +8,14 @@
 using namespace std;
 
 // Default, magnitude-only, and magnitude-and-position constructors all in one.
-Vector3D::Vector3D(double x, double y, double z, double a, 
- double b, double c) : xMag(x), yMag(y), zMag(z), xPos(a), yPos(b), 
-zPos(c) {}
+Vector3D::Vector3D(double x, double y, double z) : xMag(x), yMag(y), zMag(z) {}
 
 Vector3D::Vector3D(Point3D point) {
    updateMagnitude(point);
-   updatePosition(0, 0, 0);
 }
 
 Vector3D::Vector3D(Point3D p1, Point3D p2) {
    updateMagnitude(p1, p2);
-   updatePosition(p1);
 }
 
 void Vector3D::movePoint(Point3D& point, double scale) {
@@ -48,15 +44,10 @@ void Vector3D::updateMagnitude(Point3D* p1, Point3D* p2) {
    updateMagnitude(p2->x - p1->x, p2->y - p1->y, p2->z - p1->z);
 }
 
-void Vector3D::updatePosition(Point3D point) {
-   updatePosition(point.x, point.y, point.z);
-}
-
 void Vector3D::draw() {
    glBegin(GL_LINES);
-   glVertex3f((GLfloat) xPos, (GLfloat) yPos, (GLfloat) zPos);
-   glVertex3f((GLfloat) (xPos + xMag * drawScale), 
-    (GLfloat) (yPos + yMag * drawScale), (GLfloat) (zPos + zMag * drawScale));
+   glVertex3f(0, 0, 0);
+   glVertex3d(xMag, yMag, zMag);
    glEnd();
 }
 
@@ -83,17 +74,6 @@ void Vector3D::updateMagnitude(double x, double y, double z) {
 void Vector3D::randomMagnitude() {
    updateMagnitude(2 * randdouble() - 1, 2 * randdouble() - 1,
     2 * randdouble() - 1);
-}
-
-void Vector3D::updatePosition(double x, double y, double z) {
-   xPos = x;
-   yPos = y;
-   zPos = z;
-}
-
-void Vector3D::update(double x, double y, double z, double a, double b, double c) {
-   updateMagnitude(x, y, z);
-   updatePosition(a, b, c);
 }
 
 /**
@@ -166,8 +146,7 @@ void Vector3D::setLength(double newLength) {
  * Return a new vector with the sum of the magnitudes and the pos of this vector.
  */
 Vector3D Vector3D::add(Vector3D rhs) {
-   Vector3D sum(xMag + rhs.xMag, yMag + rhs.yMag, zMag + rhs.zMag,
-    xPos, yPos, zPos);
+   Vector3D sum(xMag + rhs.xMag, yMag + rhs.yMag, zMag + rhs.zMag);
    return sum;
 }
 
@@ -176,8 +155,7 @@ Vector3D Vector3D::add(Vector3D rhs) {
  * pos of this vector.
  */
 Vector3D Vector3D::subtract(Vector3D& rhs) {
-   Vector3D sum(xMag - rhs.xMag, yMag - rhs.yMag, zMag - rhs.zMag,
-    xPos, yPos, zPos);
+   Vector3D sum(xMag - rhs.xMag, yMag - rhs.yMag, zMag - rhs.zMag);
    return sum;
 }
 
@@ -196,12 +174,6 @@ void Vector3D::addUpdate(Vector3D rhs) {
    zMag += rhs.zMag;
 }
 
-void Vector3D::addToPosition(Vector3D& rhs) {
-   xPos += rhs.xMag;
-   yPos += rhs.yMag;
-   zPos += rhs.zMag;
-}
-
 void Vector3D::updateFromVirtualTrackball(double xi, double yi) {
    // Some stuff.
    double length = distance2D(xi, yi);
@@ -218,10 +190,6 @@ void Vector3D::updateFromVirtualTrackball(double xi, double yi) {
 
 void Vector3D::updateFromVirtualTrackball(int xp, int yp) {
    updateFromVirtualTrackball(p2ix(xp), p2iy(yp));
-}
-
-void Vector3D::setCamera(double upx = 0, double upy = 1, double upz = 0) {
-   gluLookAt(xPos, yPos, zPos, xPos + xMag, yPos + yMag, zPos + zMag, upx, upy, upz);
 }
 
 /**
@@ -328,9 +296,5 @@ Vector3D &Vector3D::operator=(const Vector3D& rhs) {
    xMag = rhs.xMag;
    yMag = rhs.yMag;
    zMag = rhs.zMag;
-   xPos = rhs.xPos;
-   yPos = rhs.yPos;
-   zPos = rhs.zPos;
-
    return *this;
 }
