@@ -178,7 +178,7 @@ void Asteroid3D::drawGlow() {
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslated(position->x, position->y, position->z);
-   glRotated(angle, axis->xMag, axis->yMag, axis->zMag);
+   glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
    //glDepthFunc(GL_ALWAYS);
    glDepthFunc(GL_LEQUAL);
@@ -233,7 +233,7 @@ void Asteroid3D::draw() {
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslated(position->x, position->y, position->z);
-   glRotated(angle, axis->xMag, axis->yMag, axis->zMag);
+   glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
 
    if (isTargeted()) {

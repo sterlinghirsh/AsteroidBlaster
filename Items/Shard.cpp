@@ -188,7 +188,7 @@ void Shard::drawGlow() {
    glTranslated(position->x, position->y, position->z);
    // Push matrix and draw main shard.
    glPushMatrix();
-   glRotated(angle, axis->xMag, axis->yMag, axis->zMag);
+   glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
    glDisable(GL_LIGHTING);
 
@@ -236,7 +236,7 @@ void Shard::draw() {
    glTranslated(position->x, position->y, position->z);
    // Push matrix and draw main shard.
    glPushMatrix();
-   glRotated(angle, axis->xMag, axis->yMag, axis->zMag);
+   glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
 
    //setMaterial(Rock);

@@ -42,7 +42,7 @@ void ProjectileShot::draw() {
    setMaterial(ShotMaterial);
    position->glTranslate();
    glRotated(zVector.getAngleInDegrees(*velocity), 
-      axis.xMag, axis.yMag, axis.zMag);
+      axis.x, axis.y, axis.z);
    gluCylinder(quadric,0.08f,0.0f,0.8f,6,6);
    glEnable(GL_LIGHTING);
 

@@ -36,9 +36,9 @@ void EngineParticle::Add(Point3D* pos, Vector3D* vec, int color) {
 
 void EngineParticle::update(double timeDifference) {
    const float velocityScalePerSecond = 3;
-   velocity->xMag -= velocity->xMag * velocityScalePerSecond * timeDifference;
-   velocity->yMag -= velocity->yMag * velocityScalePerSecond * timeDifference;
-   velocity->zMag -= velocity->zMag * velocityScalePerSecond * timeDifference;
+   velocity->x -= velocity->x * velocityScalePerSecond * timeDifference;
+   velocity->y -= velocity->y * velocityScalePerSecond * timeDifference;
+   velocity->z -= velocity->z * velocityScalePerSecond * timeDifference;
    // Do the parent's update.
    Particle::update(timeDifference);
 }

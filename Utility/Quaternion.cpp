@@ -58,9 +58,9 @@ Vector3D Quaternion::operator*(Vector3D &vec)
 	vn.normalize();
  
 	Quaternion vecQuat, resQuat;
-	vecQuat.x = vn.xMag;
-	vecQuat.y = vn.yMag;
-	vecQuat.z = vn.zMag;
+	vecQuat.x = vn.x;
+	vecQuat.y = vn.y;
+	vecQuat.z = vn.z;
 	vecQuat.w = 0.0f;
  
 	resQuat = vecQuat * getConjugate();
@@ -97,9 +97,9 @@ void Quaternion::FromAxis(const Vector3D &v, double angle)
  
 	sinAngle = sin(otherAngle);
  	cosAngle = cos(otherAngle);
-	x = (vn.xMag * sinAngle);
-	y = (vn.yMag * sinAngle);
-	z = (vn.zMag * sinAngle);
+	x = (vn.x * sinAngle);
+	y = (vn.y * sinAngle);
+	z = (vn.z * sinAngle);
 	w = cosAngle;
 }
 
@@ -146,9 +146,9 @@ void Quaternion::FromEuler(double pitch, double yaw, double roll)
 void Quaternion::getAxisAngle(Vector3D *axis, double *angle)
 {
 	double scale = sqrt(x * x + y * y + z * z);
-	axis->xMag = x / scale;
-	axis->yMag = y / scale;
-	axis->zMag = z / scale;
+	axis->x = x / scale;
+	axis->y = y / scale;
+	axis->z = z / scale;
 	*angle = acos(w) * 2.0f;
 }
 
@@ -172,9 +172,9 @@ void Quaternion::getAxisAngle(Point3D *axis, double *angle)
  
         rotQuat.w = cos(angle*0.5);
  
-        rotQuat.x=sinCoeff*rotVec.xMag;
-        rotQuat.y=sinCoeff*rotVec.yMag;
-        rotQuat.z=sinCoeff*rotVec.zMag;
+        rotQuat.x=sinCoeff*rotVec.x;
+        rotQuat.y=sinCoeff*rotVec.y;
+        rotQuat.z=sinCoeff*rotVec.z;
  
         pointQuat.a =0
         pointQuat.b = 0

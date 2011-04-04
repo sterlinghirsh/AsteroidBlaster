@@ -11,10 +11,10 @@
 
 class Vector3D {
    public:
-      double xMag, yMag, zMag;
+      double x, y, z;
       //const static double drawScale = 0.01;
 
-      Vector3D(double x = 0, double y = 0, double z = 0);
+      Vector3D(double _x = 0, double _y = 0, double _z = 0);
       Vector3D(Point3D);
       Vector3D(Point3D, Point3D);
       double dot(Vector3D&);
@@ -39,7 +39,7 @@ class Vector3D {
       void updateMagnitude(Vector3D*);
       void updateFromVirtualTrackball(double, double);
       void updateFromVirtualTrackball(int, int);
-      void rotate(double deg, double x, double y, double z);
+      void rotate(double deg, double _x, double _y, double _z);
       void rotate(double angle, const Vector3D& axis);
       void rotateByDegrees(double angle, const Vector3D& axis);
       void randomMagnitude();
@@ -56,7 +56,7 @@ class Vector3D {
       void positiveY();
       void positiveZ();
       void print() {
-         printf("Vector: (%f, %f, %f)\n", xMag, yMag, zMag);
+         printf("Vector: (%f, %f, %f)\n", x, y, z);
       }
 
       Vector3D &operator=(const Vector3D& rhs);

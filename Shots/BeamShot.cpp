@@ -100,7 +100,7 @@ void BeamShot::drawBeam(bool drawDots) {
    position->glTranslate();
    glPushMatrix();
    glRotated(180 + zVector.getAngleInDegrees(*velocity),
-         axis.xMag, axis.yMag, axis.zMag);
+         axis.x, axis.y, axis.z);
    // It shrinks, probably should fade out.
    if (!gameState->godMode) {
       drawCylinder(timeLeft * 0.04 , length);
@@ -117,8 +117,8 @@ void BeamShot::drawBeam(bool drawDots) {
                distance += distanceDifference) {
             glPushMatrix();
             velocity->glTranslate(distance);
-            glRotated(fmod(curTime, 4) * 90 + (distance*angleDiff), velocity->xMag,
-                  velocity->yMag, velocity->zMag);
+            glRotated(fmod(curTime, 4) * 90 + (distance*angleDiff), velocity->x,
+                  velocity->y, velocity->z);
             normal.glTranslate((1 - timeLeft) + ballOffset);
             //glutSolidSphere(0.05 * (1 - timeLeft), 10, 10);
             gluSphere(quadric, 0.05 * (1 - timeLeft), 5,5);

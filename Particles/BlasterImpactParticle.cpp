@@ -18,9 +18,9 @@ BlasterImpactParticle::BlasterImpactParticle(Point3D* _position,
 
 void BlasterImpactParticle::update(double timeDifference) {
    const float velocityScalePerSecond = 2;
-   velocity->xMag -= velocity->xMag * velocityScalePerSecond * timeDifference;
-   velocity->yMag -= velocity->yMag * velocityScalePerSecond * timeDifference;
-   velocity->zMag -= velocity->zMag * velocityScalePerSecond * timeDifference;
+   velocity->x -= velocity->x * velocityScalePerSecond * timeDifference;
+   velocity->y -= velocity->y * velocityScalePerSecond * timeDifference;
+   velocity->z -= velocity->z * velocityScalePerSecond * timeDifference;
    // Do the parent's update.
    Particle::update(timeDifference);
 }

@@ -68,11 +68,11 @@ void Particle::update(double timeDifference)
    // Do the parent's update.
    Drawable::update(timeDifference);
    // Move On The X Axis By X Speed 
-   position->x += velocity->xMag * timeDifference;
+   position->x += velocity->x * timeDifference;
    // Move On The Y Axis By Y Speed 
-   position->y += velocity->yMag * timeDifference;
+   position->y += velocity->y * timeDifference;
    // Move On The Z Axis By Z Speed 
-   position->z += velocity->zMag * timeDifference;
+   position->z += velocity->z * timeDifference;
    
    // This will take care of marking shouldRemove as true or not
    if(doubleTime() > (startTime + life)) {

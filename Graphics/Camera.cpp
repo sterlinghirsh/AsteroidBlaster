@@ -39,16 +39,16 @@ void Camera::setCamera(bool setPosition) {
    random.setLength(shakeAmount / 50);
    if (setPosition) {
       gluLookAt(
-       position->x + offset->xMag, 
-       position->y + offset->yMag, 
-       position->z + offset->zMag,
-       position->x + offset->xMag + forward->xMag + random.xMag, 
-       position->y + offset->yMag + forward->yMag + random.yMag, 
-       position->z + offset->zMag + forward->zMag + random.zMag,
-       up->xMag, up->yMag, up->zMag);
+       position->x + offset->x, 
+       position->y + offset->y, 
+       position->z + offset->z,
+       position->x + offset->x + forward->x + random.x, 
+       position->y + offset->y + forward->y + random.y, 
+       position->z + offset->z + forward->z + random.z,
+       up->x, up->y, up->z);
    } else {
-      gluLookAt(0, 0, 0, forward->xMag, forward->yMag, forward->zMag,
-            up->xMag, up->yMag, up->zMag);
+      gluLookAt(0, 0, 0, forward->x, forward->y, forward->z,
+            up->x, up->y, up->z);
    }
 }
 

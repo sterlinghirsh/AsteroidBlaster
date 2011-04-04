@@ -101,7 +101,7 @@ void Object3D::draw() {
    if (position != NULL)
       position->glTranslate();
    if (axis != NULL)
-      glRotatef(angle, axis->xMag, axis->yMag, axis->zMag);
+      glRotatef(angle, axis->x, axis->y, axis->z);
    //glCallList(displayList);
    glPopMatrix();
    */
@@ -225,8 +225,8 @@ void Object3D::glRotate(bool doTranspose) {
       // Create a new matrix.
       glLoadIdentity();
       // Make the modelview matrix be the rotation vector from the ship's forward and up vectors to the new ones.
-      gluLookAt(0, 0, 0, forward->xMag, forward->yMag, forward->zMag,
-       up->xMag, up->yMag, up->zMag);
+      gluLookAt(0, 0, 0, forward->x, forward->y, forward->z,
+       up->x, up->y, up->z);
       // Save a copy of the inverse model view matrix.
       modelViewMatrix.loadModelviewMatrix();
       if (doTranspose)

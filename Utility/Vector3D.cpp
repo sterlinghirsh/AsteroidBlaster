@@ -8,7 +8,7 @@
 using namespace std;
 
 // Default, magnitude-only, and magnitude-and-position constructors all in one.
-Vector3D::Vector3D(double x, double y, double z) : xMag(x), yMag(y), zMag(z) {}
+Vector3D::Vector3D(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
 
 Vector3D::Vector3D(Point3D point) {
    updateMagnitude(point);
@@ -19,9 +19,9 @@ Vector3D::Vector3D(Point3D p1, Point3D p2) {
 }
 
 void Vector3D::movePoint(Point3D& point, double scale) {
-   point.x += xMag * scale;
-   point.y += yMag * scale;
-   point.z += zMag * scale;
+   point.x += x * scale;
+   point.y += y * scale;
+   point.z += z * scale;
 }
 
 void Vector3D::updateMagnitude(Point3D point) {
@@ -29,11 +29,11 @@ void Vector3D::updateMagnitude(Point3D point) {
 }
 
 void Vector3D::updateMagnitude(Vector3D inVector) {
-   updateMagnitude(inVector.xMag, inVector.yMag, inVector.zMag);
+   updateMagnitude(inVector.x, inVector.y, inVector.z);
 }
 
 void Vector3D::updateMagnitude(Vector3D* inVector) {
-   updateMagnitude(inVector->xMag, inVector->yMag, inVector->zMag);
+   updateMagnitude(inVector->x, inVector->y, inVector->z);
 }
 
 void Vector3D::updateMagnitude(Point3D p1, Point3D p2) {
@@ -47,12 +47,12 @@ void Vector3D::updateMagnitude(Point3D* p1, Point3D* p2) {
 void Vector3D::draw() {
    glBegin(GL_LINES);
    glVertex3f(0, 0, 0);
-   glVertex3d(xMag, yMag, zMag);
+   glVertex3d(x, y, z);
    glEnd();
 }
 
 void Vector3D::addNormal() {
-   glNormal3f((GLfloat) xMag, (GLfloat) yMag, (GLfloat) zMag);
+   glNormal3f((GLfloat) x, (GLfloat) y, (GLfloat) z);
 }
 
 void Vector3D::normalize() {
@@ -60,15 +60,15 @@ void Vector3D::normalize() {
    if (length == 0)
       return;
 
-   xMag = xMag / length;
-   yMag = yMag / length;
-   zMag = zMag / length;
+   x = x / length;
+   y = y / length;
+   z = z / length;
 }
 
-void Vector3D::updateMagnitude(double x, double y, double z) {
-   xMag = x;
-   yMag = y;
-   zMag = z;
+void Vector3D::updateMagnitude(double _x, double _y, double _z) {
+   x = _x;
+   y = _y;
+   z = _z;
 }
 
 void Vector3D::randomMagnitude() {
@@ -80,7 +80,7 @@ void Vector3D::randomMagnitude() {
  * Return a double of the distance from head to tail.
  */
 double Vector3D::getLength() {
-   return distance3D(xMag, yMag, zMag);
+   return distance3D(x, y, z);
 }
 
 /**
@@ -90,8 +90,8 @@ double Vector3D::getLength() {
  * length without doing a costly sqrt();
  */
 double Vector3D::getComparisonLength() {
-   return (xMag * xMag) + (yMag * yMag) + 
-   (zMag * zMag);
+   return (x * x) + (y * y) + 
+   (z * z);
 }
 
 /**
@@ -113,40 +113,40 @@ double Vector3D::getAngleInDegrees(Vector3D& rhs) {
 }
 
 double Vector3D::dot(Vector3D& rhs) {
-   return (xMag * rhs.xMag) + (yMag * rhs.yMag) + (zMag * rhs.zMag);
+   return (x * rhs.x) + (y * rhs.y) + (z * rhs.z);
 }
 
 Vector3D Vector3D::cross(Vector3D& rhs) {
    Vector3D product(
-    (yMag * rhs.zMag) - (zMag * rhs.yMag),
-    (zMag * rhs.xMag) - (xMag * rhs.zMag),
-    (xMag * rhs.yMag) - (yMag * rhs.xMag));
+    (y * rhs.z) - (z * rhs.y),
+    (z * rhs.x) - (x * rhs.z),
+    (x * rhs.y) - (y * rhs.x));
    return product;
 }
 
 void Vector3D::scalarMultiplyUpdate(double scalar) {
-   xMag *= scalar;
-   yMag *= scalar;
-   zMag *= scalar;
+   x *= scalar;
+   y *= scalar;
+   z *= scalar;
 }
 
 Vector3D Vector3D::scalarMultiply(double scalar) {
-   Vector3D product (xMag * scalar, yMag * scalar, zMag * scalar);
+   Vector3D product (x * scalar, y * scalar, z * scalar);
    return product;
 }
 
 void Vector3D::setLength(double newLength) {
    normalize();
-   xMag *= newLength;
-   yMag *= newLength;
-   zMag *= newLength;
+   x *= newLength;
+   y *= newLength;
+   z *= newLength;
 }
 
 /**
  * Return a new vector with the sum of the magnitudes and the pos of this vector.
  */
 Vector3D Vector3D::add(Vector3D rhs) {
-   Vector3D sum(xMag + rhs.xMag, yMag + rhs.yMag, zMag + rhs.zMag);
+   Vector3D sum(x + rhs.x, y + rhs.y, z + rhs.z);
    return sum;
 }
 
@@ -155,36 +155,36 @@ Vector3D Vector3D::add(Vector3D rhs) {
  * pos of this vector.
  */
 Vector3D Vector3D::subtract(Vector3D& rhs) {
-   Vector3D sum(xMag - rhs.xMag, yMag - rhs.yMag, zMag - rhs.zMag);
+   Vector3D sum(x - rhs.x, y - rhs.y, z - rhs.z);
    return sum;
 }
 
 void Vector3D::subtractUpdate(const Vector3D rhs) {
-   xMag -= rhs.xMag;
-   yMag -= rhs.yMag;
-   zMag -= rhs.zMag;
+   x -= rhs.x;
+   y -= rhs.y;
+   z -= rhs.z;
 }
 
 /**
  * Add rhs to this vector and save the result in this vector.
  */
 void Vector3D::addUpdate(Vector3D rhs) {
-   xMag += rhs.xMag;
-   yMag += rhs.yMag;
-   zMag += rhs.zMag;
+   x += rhs.x;
+   y += rhs.y;
+   z += rhs.z;
 }
 
 void Vector3D::updateFromVirtualTrackball(double xi, double yi) {
    // Some stuff.
    double length = distance2D(xi, yi);
    if (length > 1) {
-      xMag = xi/length;
-      yMag = yi/length;
-      zMag = 0;
+      x = xi/length;
+      y = yi/length;
+      z = 0;
    } else {
-      xMag = xi;
-      yMag = yi;
-      zMag = sqrt(1 - ((xi * xi) + (yi * yi)));
+      x = xi;
+      y = yi;
+      z = sqrt(1 - ((xi * xi) + (yi * yi)));
    }
 }
 
@@ -199,12 +199,9 @@ void Vector3D::updateFromVirtualTrackball(int xp, int yp) {
  * http://www.blitzbasic.com/Community/posts.php?topic=57616
  */
 void Vector3D::rotate(double angle, const Vector3D& axis) {
-   double x = xMag;
-   double y = yMag;
-   double z = zMag;
-   double u = axis.xMag;
-   double v = axis.yMag;
-   double w = axis.zMag;
+   double u = axis.x;
+   double v = axis.y;
+   double w = axis.z;
    double ux = x * u;
    double uy = y * u;
    double uz = z * u;
@@ -216,9 +213,9 @@ void Vector3D::rotate(double angle, const Vector3D& axis) {
    double wz = z * w;
    double sa = sin(angle);
    double ca = cos(angle);
-   xMag = u * (ux+vy+wz) + (x * (v*v + w*w) - u * (vy+wz)) * ca + (-wy+vz) * sa;
-   yMag = v * (ux+vy+wz) + (y * (u*u + w*w) - v * (ux+wz)) * ca + (wx-uz)  * sa;
-   zMag = w * (ux+vy+wz) + (z * (u*u + v*v) - w * (ux+vy)) * ca + (-vx+uy) * sa;
+   x = u * (ux+vy+wz) + (x * (v*v + w*w) - u * (vy+wz)) * ca + (-wy+vz) * sa;
+   y = v * (ux+vy+wz) + (y * (u*u + w*w) - v * (ux+wz)) * ca + (wx-uz)  * sa;
+   z = w * (ux+vy+wz) + (z * (u*u + v*v) - w * (ux+vy)) * ca + (-vx+uy) * sa;
    normalize();
 }
 
@@ -227,31 +224,31 @@ void Vector3D::rotateByDegrees(double angle, const Vector3D& axis) {
 }
 
 void Vector3D::glTranslate(double length = 1) {
-   glTranslatef((GLfloat) (length * xMag), (GLfloat) (length * yMag), 
-    (GLfloat) (length * zMag));
+   glTranslatef((GLfloat) (length * x), (GLfloat) (length * y), 
+    (GLfloat) (length * z));
 }
 
 void Vector3D::reflect(Vector3D& axis) {
-   double x = xMag;
-   double y = yMag;
-   double z = zMag;
-   double u = axis.xMag;
-   double v = axis.yMag;
-   double w = axis.zMag;
+   double x = x;
+   double y = y;
+   double z = z;
+   double u = axis.x;
+   double v = axis.y;
+   double w = axis.z;
    double l_dot_n = dot(axis);
 
-   xMag = -x + (2 * l_dot_n * u);
-   yMag = -y + (2 * l_dot_n * v);
-   zMag = -z + (2 * l_dot_n * w);
+   x = -x + (2 * l_dot_n * u);
+   y = -y + (2 * l_dot_n * v);
+   z = -z + (2 * l_dot_n * w);
 }
 
 Vector3D Vector3D::getNormalVector() {
-   double closestToZero = min(fabs(xMag), min(fabs(yMag), fabs(zMag)));
+   double closestToZero = min(fabs(x), min(fabs(y), fabs(z)));
    Vector3D otherPoint(1, 1, 1);
 
-   if (fabs(xMag) == closestToZero) {
+   if (fabs(x) == closestToZero) {
       otherPoint.updateMagnitude(1, 0, 0);
-   } else if (fabs(yMag) == closestToZero) {
+   } else if (fabs(y) == closestToZero) {
       otherPoint.updateMagnitude(0, 1, 0);
    } else {
       otherPoint.updateMagnitude(0, 0, 1);
@@ -261,40 +258,40 @@ Vector3D Vector3D::getNormalVector() {
 }
 
 void Vector3D::negativeX() {
-   if (xMag > 0)
-      xMag = 0 - xMag;
+   if (x > 0)
+      x = 0 - x;
 }
 
 void Vector3D::positiveX() {
-   if (xMag < 0)
-      xMag = 0 - xMag;
+   if (x < 0)
+      x = 0 - x;
 }
 
 
 void Vector3D::negativeY() {
-   if (yMag > 0)
-      yMag = 0 - yMag;
+   if (y > 0)
+      y = 0 - y;
 }
 
 void Vector3D::positiveY() {
-   if (yMag < 0)
-      yMag = 0 - yMag;
+   if (y < 0)
+      y = 0 - y;
 }
 
 
 void Vector3D::negativeZ() {
-   if (zMag > 0)
-      zMag = 0 - zMag;
+   if (z > 0)
+      z = 0 - z;
 }
 
 void Vector3D::positiveZ() {
-   if (zMag < 0)
-      zMag = 0 - zMag;
+   if (z < 0)
+      z = 0 - z;
 }
 
 Vector3D &Vector3D::operator=(const Vector3D& rhs) {
-   xMag = rhs.xMag;
-   yMag = rhs.yMag;
-   zMag = rhs.zMag;
+   x = rhs.x;
+   y = rhs.y;
+   z = rhs.z;
    return *this;
 }

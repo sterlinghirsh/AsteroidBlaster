@@ -289,14 +289,14 @@ void AsteroidShip::update(double timeDiff) {
    }
    
    if (isBraking) {
-      velocity->xMag -= velocity->xMag * timeDiff * brakeFactor;
-      velocity->yMag -= velocity->yMag * timeDiff * brakeFactor;
-      velocity->zMag -= velocity->zMag * timeDiff * brakeFactor;
+      velocity->x -= velocity->x * timeDiff * brakeFactor;
+      velocity->y -= velocity->y * timeDiff * brakeFactor;
+      velocity->z -= velocity->z * timeDiff * brakeFactor;
    }
    if (isBoosting) {
-      velocity->xMag += velocity->xMag * timeDiff * brakeFactor;
-      velocity->yMag += velocity->yMag * timeDiff * brakeFactor;
-      velocity->zMag += velocity->zMag * timeDiff * brakeFactor;
+      velocity->x += velocity->x * timeDiff * brakeFactor;
+      velocity->y += velocity->y * timeDiff * brakeFactor;
+      velocity->z += velocity->z * timeDiff * brakeFactor;
    }
 
    double speed = velocity->getLength();
@@ -1025,10 +1025,10 @@ int AsteroidShip::getCurrentView() {
 
 void AsteroidShip::setCameraDirectly() {
    gluLookAt(position->x, position->y, position->z,
-         position->x + forward->xMag,
-         position->y + forward->yMag,
-         position->z + forward->zMag,
-         up->xMag, up->yMag, up->zMag);
+         position->x + forward->x,
+         position->y + forward->y,
+         position->z + forward->z,
+         up->x, up->y, up->z);
 }
 
 void AsteroidShip::setZoomSpeed(float speed) {

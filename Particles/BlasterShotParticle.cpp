@@ -19,9 +19,9 @@ BlasterShotParticle::BlasterShotParticle(Point3D* _position,
 
 void BlasterShotParticle::update(double timeDifference) {
    const float velocityScalePerSecond = 1;
-   velocity->xMag -= velocity->xMag * velocityScalePerSecond * timeDifference;
-   velocity->yMag -= velocity->yMag * velocityScalePerSecond * timeDifference;
-   velocity->zMag -= velocity->zMag * velocityScalePerSecond * timeDifference;
+   velocity->x -= velocity->x * velocityScalePerSecond * timeDifference;
+   velocity->y -= velocity->y * velocityScalePerSecond * timeDifference;
+   velocity->z -= velocity->z * velocityScalePerSecond * timeDifference;
    size -= timeDifference * startingSize / life;
    // Do the parent's update.
    Particle::update(timeDifference);

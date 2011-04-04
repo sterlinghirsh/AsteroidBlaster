@@ -21,9 +21,9 @@ Point3D::Point3D(const Point3D& copy) {
 }
 
 Point3D::Point3D(const Vector3D& copy) {
-   x = copy.xMag;
-   y = copy.yMag;
-   z = copy.zMag;
+   x = copy.x;
+   y = copy.y;
+   z = copy.z;
 }
 
 const Point3D Point3D::Zero(0, 0, 0);

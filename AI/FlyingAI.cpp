@@ -286,14 +286,14 @@ void FlyingAI :: printMatrix( Matrix4 *m)
 
 void FlyingAI :: flyDirection ( Vector3D* desiredTraj ) {
    // Little bit of linear algebra solving for flight trajectory
-   Matrix4 B ( (float) desiredTraj->xMag, 0, 0, 0,
-               (float) desiredTraj->yMag, 0, 0, 0,
-               (float) desiredTraj->zMag, 0, 0, 0,
+   Matrix4 B ( (float) desiredTraj->x, 0, 0, 0,
+               (float) desiredTraj->y, 0, 0, 0,
+               (float) desiredTraj->z, 0, 0, 0,
                                0, 0, 0, 0 );
   
-   Matrix4 A ( (float) ship->forward->xMag, (float) ship->forward->yMag, (float) ship->forward->zMag, 0,
-               (float) ship->right->xMag  , (float) ship->right->yMag  , (float) ship->right->zMag  , 0,
-               (float) ship->up->xMag     , (float) ship->up->yMag     , (float) ship->up->zMag     , 0,
+   Matrix4 A ( (float) ship->forward->x, (float) ship->forward->y, (float) ship->forward->z, 0,
+               (float) ship->right->x  , (float) ship->right->y  , (float) ship->right->z  , 0,
+               (float) ship->up->x     , (float) ship->up->y     , (float) ship->up->z     , 0,
                                  0,                   0,                   0, 0 );
    
    Point3D trajControl; 
