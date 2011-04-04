@@ -115,6 +115,9 @@ class AsteroidShip : public Object3D {
       int nShards;
       int engineUpgrade;
       int health;
+      double shotOriginScale;
+      
+      Point3D shotOrigin;
       
       Vector3D shotDirection; // If we shoot a shot, where will it go?
       Weapon* getCurrentWeapon();

@@ -44,7 +44,7 @@ void Blaster::fire() {
    // Update timeLastFired with new current time.
    timeLastFired = doubleTime();
    // Copy the ship's position for the start point.
-   Point3D start = *ship->position;
+   Point3D start = ship->shotOrigin;
    // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
    Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed));
    // Add a random variation to each of the shots.

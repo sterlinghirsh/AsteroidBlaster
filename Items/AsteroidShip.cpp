@@ -52,6 +52,11 @@ AsteroidShip::AsteroidShip() :
       maxX = maxY = maxZ = 0.5;
       minX = minY = minZ = -0.5;
       updateBoundingBox();
+      
+      shotOriginScale = 4;
+      shotOrigin = *position;
+      forward->movePoint(shotOrigin, shotOriginScale);
+      
 
       // Orientation vectors.
       upstart = new Vector3D(0, 1, 0);
@@ -341,6 +346,9 @@ void AsteroidShip::update(double timeDiff) {
          shakeAmount = 0;
       }
    }
+   
+   shotOrigin = *position;
+   forward->movePoint(shotOrigin, shotOriginScale);
 
    createEngineParticles(timeDiff);
 
@@ -381,11 +389,22 @@ void draw_ship(double drawOrange){
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
    glEnable(GL_COLOR_MATERIAL);
+   glTranslated(0, 0, -4);
    glScaled(1.5, .5, .8);
    glScaled(5, 5, 5);
+   
+   double frontx = 0, fronty = 0, frontz = 0;
+   double cornerx = .2, cornery = .2, cornerz = .5;
+   double middleXY = .15, middleZ = .2;
+   double backx = 0, backy = 0, backz = .8; 
 
    glBegin(GL_TRIANGLES);
    glEnable(GL_NORMALIZE);
+   
+   /*glNormal3d(.2, -.005, -.03);
+   glVertex3d(0, 0, frontz);
+   glVertex3d(cornerx, cornery, cornerz);
+   glVertex3d(middlexy, 0, middlez);*/
 
    glNormal3d(.2, -.005, -.03);
    glVertex3d(0, 0, 0);
@@ -702,13 +721,13 @@ void draw_vectors(){
 void AsteroidShip::drawInMinimap() {
    glPushMatrix();
    position->glTranslate();
+   //shotOrigin->glTranslate();
    // Counteract the rotation done in GameState::drawInMinimap();
    glRotate();
    const float shipScale = 5;
    glScalef(shipScale, shipScale, shipScale);
-   glTranslatef(0, 0, -3);
+   //glTranslatef(0, 0, -3);
    glColor4d(0, 0, 0, 0.2);
-   //draw_shield();
    draw_ship(curForwardAccel);
    glPopMatrix();
 }
@@ -719,10 +738,10 @@ void AsteroidShip::draw() {
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    // Translate to the position.
    position->glTranslate();
+   //shotOrigin->glTranslate();
    // Rotate to the current up/right/forward vectors.
    
    glRotate();
-   glTranslated(0, 0, -2.2);
    glColor4d(0, 0, 0, 0.4);
 
    draw_ship(curForwardAccel);

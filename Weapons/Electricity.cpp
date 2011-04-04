@@ -62,7 +62,7 @@ void Electricity::fire() {
    if(!gameState->godMode && curAmmo <= 0)
       return;
 
-   Point3D start = *ship->position;
+   Point3D start = ship->shotOrigin;
    ship->setShakeAmount(0.1f);
    gameState->custodian.add(new ElectricityShot(start, ship->shotDirection, ship, shotsToFire));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new ElectricityShot(start, ship->shotDirection, ship));

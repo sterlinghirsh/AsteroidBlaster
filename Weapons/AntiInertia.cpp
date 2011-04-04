@@ -41,7 +41,7 @@ void AntiInertia::fire() {
    if(!gameState->godMode && curAmmo <= 0)
       return;
 
-   Point3D start = *ship->position;
+   Point3D start = ship->shotOrigin;
    gameState->custodian.add(new AntiInertiaShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;
    if(!gameState->godMode) {

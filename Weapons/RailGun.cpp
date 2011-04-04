@@ -38,7 +38,7 @@ void RailGun::fire() {
    if (!isCooledDown() || (!gameState->godMode && curAmmo <= 0))
       return;
    timeLastFired = doubleTime();
-   Point3D start = *ship->position;
+   Point3D start = ship->shotOrigin;
    // Move start point by the shotDirection vector, multiplied by a scalar
    ship->setShakeAmount(5.5);
    gameState->custodian.add(new BeamShot(start,

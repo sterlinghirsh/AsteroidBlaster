@@ -41,7 +41,7 @@ void SpikeBall::fire() {
    if(!gameState->godMode && curAmmo <= 0)
       return;
 
-   Point3D start = *ship->position;
+   Point3D start = ship->shotOrigin;
    ship->setShakeAmount(0.0);
    //gameState->custodian.add(new SpikeBallShot(start, *(ship->forward), ship));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new SpikeBallShot(start, ship->shotDirection, ship));
