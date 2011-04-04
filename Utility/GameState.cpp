@@ -267,10 +267,9 @@ void GameState::draw() {
       if (*listIter == NULL) {
          continue;
       } else if (*listIter == ship && 
-       ship->getCurrentView() != VIEW_FIRSTPERSON_SHIP &&
-       ship->getCurrentView() != VIEW_FIRSTPERSON_GUN) {
+       (ship->getCurrentView() == VIEW_FIRSTPERSON_SHIP ||
+       ship->getCurrentView() == VIEW_FIRSTPERSON_GUN)) {
          // Don't draw the ship in first Person mode.
-         (*listIter)->draw();
       } else {      
          (*listIter)->draw();
       }
