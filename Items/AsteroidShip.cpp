@@ -233,9 +233,9 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    static Vector3D baseParticleAcceleration;
    static Point3D emitter;
 
-   // First do up upAcceleration.
+   // First do up Acceleration.
    if (curUpAccel != 0) {
-      baseParticleAcceleration = velocity->add(up->scalarMultiply(-curUpAccel * 0.2));
+      baseParticleAcceleration = up->scalarMultiply(-curUpAccel * 0.2);
       emitter = *position;
       forward->movePoint(emitter, -0.5);
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
@@ -243,9 +243,9 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
       }
    }
 
-   // Next do right upAcceleration.
+   // Next do right Acceleration.
    if (curRightAccel != 0) {
-      baseParticleAcceleration = velocity->add(right->scalarMultiply(-curRightAccel * 0.2));
+      baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
       emitter = *position;
       forward->movePoint(emitter, -0.7);
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
@@ -253,35 +253,26 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
       }
    }
 
-   // Next do forward upAcceleration.
+   // Next do forward Acceleration.
    if (curForwardAccel != 0) {
       // We want to do two streams.
-      baseParticleAcceleration = velocity->add(forward->scalarMultiply(-curForwardAccel * 0.05));
+      baseParticleAcceleration = forward->scalarMultiply(-curForwardAccel * 0.05);
       Point3D initialPoint(*position);
       forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
 
       // First do the right side.
-      right->movePoint(initialPoint, 0.2);
+      right->movePoint(initialPoint, 1);
       //baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
          addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 2);
       }
 
       // Next do the left side.
-      right->movePoint(initialPoint, -0.4);
+      right->movePoint(initialPoint, -2);
       //baseParticleAcceleration.addUpdate(right->scalarMultiply(-1));
       for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
          addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 3);
       }
-
-      /*
-      // Next do the middle side.
-      right->movePoint(initialPoint, 0.1);
-      //baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
-      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
-         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 3);
-      }
-      */
    }
 
 }
