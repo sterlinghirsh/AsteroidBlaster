@@ -371,17 +371,20 @@ void AsteroidShip::update(double timeDiff) {
          z2Change += zMove * timeDiff;
       }
       
-      if (xChange > .15) {
+      if (x2Change > .15) {
          xChange = 0;
          yChange = 0;
          zChange = 0;
+         x2Change = .075;
+         y2Change = .075;
+         z2Change = .3;
       }
       
-      if (x2Change > .15) {
-         x2Change = 0;
-         y2Change = 0;
-         z2Change = 0;
-      }
+      /*if (x2Change > .15) {
+         x2Change = .15;
+         y2Change = .15;
+         z2Change = .15;
+      }*/
       
    } else {
       backChange -= zMove * timeDiff;
