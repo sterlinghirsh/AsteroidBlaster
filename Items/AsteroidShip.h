@@ -116,6 +116,19 @@ class AsteroidShip : public Object3D {
       int engineUpgrade;
       int health;
       double shotOriginScale;
+      double spin;
+      double flashiness;
+      double tracker;
+      int rando;
+      double x2Change;
+      double y2Change;
+      double z2Change;
+      double xChange;
+      double yChange;
+      double zChange;
+      double backChange;
+      double lineMove;
+      double zMove;
       
       Point3D shotOrigin;
       
@@ -190,6 +203,7 @@ class AsteroidShip : public Object3D {
       void forwardAcceleration(double newAcc);
       void rightAcceleration(double newAcc);
       void upAcceleration(double newAcc);
+      void draw_ship();
 
       double aimX, aimY;
       

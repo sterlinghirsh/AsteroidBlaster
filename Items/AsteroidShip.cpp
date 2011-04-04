@@ -20,17 +20,6 @@
 using namespace std;
 extern Custodian* custodian;
 const double rotationFactor = 3;
-static double spin = 90;
-static double flashiness = 0;
-static double tracker = 0;
-static int rando = 1;
-static double x2Change = 0.075;
-static double y2Change = 0.075;
-static double z2Change = 0.3;
-static double xChange = 0;
-static double yChange = 0;
-static double zChange = 0;
-static double backChange = 0;
 
 AsteroidShip::AsteroidShip() :
    Object3D(0, 0, 0, 0),     // Initialize superclass
@@ -42,7 +31,9 @@ AsteroidShip::AsteroidShip() :
       brakeFactor = 2;
       /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
       curForwardAccel = curRightAccel = curUpAccel = 0;
-
+      
+      cullRadius = 4;
+      
       yawSpeed = rollSpeed = pitchSpeed = 0;
       maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
       maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
@@ -52,6 +43,20 @@ AsteroidShip::AsteroidShip() :
       maxX = maxY = maxZ = 0.5;
       minX = minY = minZ = -0.5;
       updateBoundingBox();
+      
+      spin = 90;
+      flashiness = 0;
+      tracker = 0;
+      rando = 1;
+      x2Change = 0.075;
+      y2Change = 0.075;
+      z2Change = 0.3;
+      xChange = 0;
+      yChange = 0;
+      zChange = 0;
+      backChange = 0;
+      zMove = 2;
+      lineMove = zMove / 4;
       
       shotOriginScale = 4;
       shotOrigin = *position;
@@ -349,6 +354,42 @@ void AsteroidShip::update(double timeDiff) {
    
    shotOrigin = *position;
    forward->movePoint(shotOrigin, shotOriginScale);
+   
+   if (curForwardAccel == 10) {
+      backChange += (zMove * timeDiff);
+      if (backChange > .6) {
+         backChange = .6;
+      }
+      
+      if (backChange == .6) {
+
+         xChange += lineMove * timeDiff;
+         yChange += lineMove * timeDiff;
+         zChange += zMove * timeDiff;
+         x2Change += lineMove * timeDiff;
+         y2Change += lineMove * timeDiff;
+         z2Change += zMove * timeDiff;
+      }
+      
+      if (xChange > .15) {
+         xChange = 0;
+         yChange = 0;
+         zChange = 0;
+      }
+      
+      if (x2Change > .15) {
+         x2Change = 0;
+         y2Change = 0;
+         z2Change = 0;
+      }
+      
+   } else {
+      backChange -= zMove * timeDiff;
+      if (backChange < 0) {
+         backChange = 0;
+      }
+   }
+   
 
    createEngineParticles(timeDiff);
 
@@ -380,7 +421,7 @@ void AsteroidShip::keepFiring() {
    weapons[currentWeapon]->fire();
 }
 
-void draw_ship(double drawOrange){
+void AsteroidShip::draw_ship() {
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -468,13 +509,8 @@ void draw_ship(double drawOrange){
    glVertex3d(0, .15, 1);
    glVertex3d(-.2, .2, 1.3);
    
-   if (drawOrange == 10.0) {
+   if (curForwardAccel == 10.0) {
       glColor4d(1, .4, 0, .4);
-      backChange += .12/20;
-      
-      if (backChange > .6) {
-         backChange = .6;
-      }
       
       //glNormal3d(0.09,0.09,0.0225);
       glVertex3d(.15, 0, 1);
@@ -507,10 +543,7 @@ void draw_ship(double drawOrange){
       glVertex3d(0, -.15, 1);
    } else {
       glColor4d(1, .4, 0, .4);
-      backChange -= .12/20;
-      if (backChange < 0) {
-         backChange = 0;
-      }
+
       //glNormal3d(0.09,0.09,0.0225);
       glVertex3d(.15, 0, 1);
       glVertex3d(0, .15, 1);
@@ -543,19 +576,7 @@ void draw_ship(double drawOrange){
    glLineWidth(1.5);
    glDisable(GL_LIGHTING);
    
-   if (drawOrange == 10.0) {
-      
-      if (xChange > .15) {
-         xChange = 0;
-         yChange = 0;
-         zChange = 0;
-      }
-      
-      if (x2Change > .15) {
-         x2Change = 0;
-         y2Change = 0;
-         z2Change = 0;
-      }
+   if (curForwardAccel == 10.0) {
       
       if (backChange == .6) {
          glBegin(GL_LINE_LOOP);
@@ -576,15 +597,7 @@ void draw_ship(double drawOrange){
          glVertex3d(0, -.15 + y2Change, 1 + z2Change);
          glVertex3d(.15 - x2Change, 0, 1 + z2Change);
          glEnd();
-         
-        
 
-         xChange += .03 / 20;
-         yChange += .03 / 20;
-         zChange += .12 / 20;
-         x2Change += .03 / 20;
-         y2Change += .03 / 20;
-         z2Change += .12 / 20;
       }
       
       glBegin(GL_LINE_LOOP);
@@ -728,7 +741,7 @@ void AsteroidShip::drawInMinimap() {
    glScalef(shipScale, shipScale, shipScale);
    //glTranslatef(0, 0, -3);
    glColor4d(0, 0, 0, 0.2);
-   draw_ship(curForwardAccel);
+   draw_ship();
    glPopMatrix();
 }
 
@@ -744,7 +757,7 @@ void AsteroidShip::draw() {
    glRotate();
    glColor4d(0, 0, 0, 0.4);
 
-   draw_ship(curForwardAccel);
+   draw_ship();
    glPopMatrix();
 }
 
