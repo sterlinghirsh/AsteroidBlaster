@@ -173,7 +173,8 @@ void GameState::update(double timeDiff) {
       cube->constrain(*item);
    }
    
-   //TODO explain what this does
+   // Add items that should be added, remove items that should be removed, update
+   // positions in the sorted lists.
    custodian.update();
    
    // Get updated list.
@@ -182,7 +183,7 @@ void GameState::update(double timeDiff) {
    Particle :: updateParticles(timeDiff);
    Sprite::updateSprites(timeDiff);
 
-   //TODO explain what this loop do
+   // Check every object for collisions.
    for (item = objects->begin(); item != objects->end(); ++item) {
       collisions = custodian.findCollisions(*item, false);
       for (otherObject = collisions->begin(); otherObject != collisions->end(); ++otherObject) {
@@ -609,6 +610,8 @@ void GameState::reset() {
    
    custodian.clear();
    Particle::particles.clear();
+
+   curLevel = 1;
    
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
    ship = new AsteroidShip();
@@ -842,8 +845,12 @@ void GameState::keyDown(int key) {
       showBloomScreen = !showBloomScreen;
       break;
 
+   case SDLK_F8:
+      debugPosition();
+      break;
    case SDLK_F9:
       addAIPlayer();
+      break;
 
    case SDLK_F10:
       gameState->ship->nShards += 10;
@@ -1078,3 +1085,37 @@ double GameState::getMouseX() { return mouseX; }
 double GameState::getMouseY() { return mouseY; }
 Camera* GameState::getCamera() { return camera; }
 
+void GameState::debugPosition() {
+   // First reset.
+   reset();
+   // Find the asteroid. Set its position.
+   Asteroid3D* asteroid = NULL;
+   std::vector<Drawable*>* objects = custodian.getListOfObjects();
+   std::vector<Drawable*>::iterator iter = objects->begin();
+
+   for (; iter != objects->end(); ++iter) {
+      asteroid = dynamic_cast<Asteroid3D*>(*iter);
+      if (asteroid != NULL)
+         break;
+   }
+
+   ship->position->update(0, 0, 0);
+   ship->forward->updateMagnitude(0, 1, 0);
+   ship->up->updateMagnitude(0, 0, 1);
+   ship->right->updateMagnitude(1, 0, 0);
+
+   asteroid->position->update(0, 20, 0);
+   asteroid->velocity->updateMagnitude(0, 0, 0);
+
+   asteroid->update(0.01);
+   asteroid->debug();
+   
+   // Make all of the weapons be purchased.
+   for (int i = 0; i < ship->getNumWeapons(); i++) {
+      ship->getWeapon(i)->purchased = true;
+      if(ship->getWeapon(i)->curAmmo != -1) {
+         ship->getWeapon(i)->curAmmo += 500;
+      }
+   }
+
+}

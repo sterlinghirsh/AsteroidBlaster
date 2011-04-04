@@ -168,7 +168,7 @@ std::set<Drawable*, compareByDistance>* Custodian::findCollisions(Drawable* item
          other = objectsByMaxX[i];
          if (other == NULL)
             continue;
-         if (other->maxPosition->x > item->minPosition->x)
+         if (other->maxPosition->x >= item->minPosition->x)
             sublist->insert(other);
          else break;
       }
@@ -181,16 +181,19 @@ std::set<Drawable*, compareByDistance>* Custodian::findCollisions(Drawable* item
       other = objectsByMinX[i];
       if (other == NULL)
          continue;
-      if (other->minPosition->x < item->maxPosition->x)
+
+      if (other->minPosition->x <= item->maxPosition->x) {
          sublist->insert(other);
-      else break;
+      } else {
+         break;
+      }
    }
 
    /* Now check the y direction. From now on, we only 
     * remove elements.
     */
    iter = sublist->begin();
-   std::set<Drawable*, compareByDistance >::iterator current;
+   std::set<Drawable*, compareByDistance>::iterator current;
    while (iter != sublist->end()) {
       current = iter++;
       other = *current;

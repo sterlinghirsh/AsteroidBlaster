@@ -37,7 +37,6 @@ class Object3D : public Drawable {
       virtual void drawBoundingBox();
       virtual void drawBoundingSphere();
       virtual void handleCollision(Drawable* other);
-      virtual void debug();
       virtual void setTargeted(bool a);
       virtual bool isTargeted();
 

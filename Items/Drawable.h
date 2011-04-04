@@ -64,6 +64,7 @@ class Drawable {
       virtual void handleCollision(Drawable* other);
       virtual void drawInMinimap();
       virtual void hitWall(BoundingWall* wall);
+      virtual void debug();
    protected:
       Custodian* custodian;
 };

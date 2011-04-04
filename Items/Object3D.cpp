@@ -203,16 +203,6 @@ void Object3D::updateBoundingBox() {
 }
 
 /**
- * This debug function can be overridden with more specific debug info.
- * This one does not print velocity, since Object3D may have null velocity.
- */
-void Object3D::debug() {
-   printf("Object3D::debug(): (min/max)\n");
-   minPosition->print();
-   maxPosition->print();
-}
-
-/**
  * This will apply a rotation to move the current up/forward/right vectors
  * so that the item can be drawn with the right orientation.
  * doTranspose defaults to true.

@@ -129,3 +129,14 @@ void Drawable::drawGlow() {}
 void Drawable::hitWall(BoundingWall* wall) {
    // Do nothing.
 }
+
+/**
+ * This debug function can be overridden with more specific debug info.
+ * This one does not print velocity, since Object3D may have null velocity.
+ */
+void Drawable::debug() {
+   printf("Drawable::debug(): (min/max)\n");
+   minPosition->print();
+   maxPosition->print();
+}
+

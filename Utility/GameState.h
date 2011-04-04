@@ -139,6 +139,7 @@ class GameState : public InputReceiver {
 
       std::list<Object3D*> objects;
       void addLevelMessage();
+      void debugPosition();
 };
 
 #endif
