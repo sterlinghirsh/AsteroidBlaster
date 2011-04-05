@@ -1,6 +1,6 @@
 uniform sampler2D RTScene; // the texture with the scene you want to blur
  
-const float blurSize = 1.0/1024.0;
+const float blurSize = 1.0/2048.0;
 
 const float sigma = 5.0;
 

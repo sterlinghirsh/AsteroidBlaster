@@ -22,7 +22,7 @@ void Skybox::draw(Camera* camera) {
    glEnable(GL_TEXTURE_2D);
    glDisable(GL_CULL_FACE);
    camera->setCamera(false);
-   const bool rotateSkybox = true;
+   const bool rotateSkybox = false;
    if (rotateSkybox) {
       const double period = 60; // seconds
       glRotatef( (GLfloat)(fmod(doubleTime(), period) * (360/ period)), 1, 1, 1);

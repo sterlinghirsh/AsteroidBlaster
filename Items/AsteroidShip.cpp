@@ -746,6 +746,15 @@ void AsteroidShip::drawInMinimap() {
 
 
 void AsteroidShip::draw() {
+   /*
+   GLUquadricObj *quadratic;
+   float ballx, bally, ballz;
+   ballx = 0.0;
+   bally = 0.0;
+   ballz = 2.0;
+   quadratic=gluNewQuadric();
+   gluQuadricNormals(quadratic, GLU_SMOOTH);
+   */
    glPushMatrix();
    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    // Translate to the position.
@@ -757,7 +766,17 @@ void AsteroidShip::draw() {
    glColor4d(0, 0, 0, 0.4);
 
    draw_ship();
+   /*
+   glBegin(GL_POINTS);
+   glVertex3f(0.0, 0.0, 0.0);
+   glEnd();
+   */
    glPopMatrix();
+   /*
+   Ball ball = Ball();
+   ball.attach(this);
+   ball.draw();
+   */
 }
 
 /**

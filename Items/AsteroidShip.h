@@ -12,6 +12,7 @@
 #include "Shots/Shot.h"
 #include "Utility/GlobalUtility.h"
 #include "Items/Object3D.h"
+#include "Items/Ball.h"
 #include "Utility/Radar.h"
 #include "AI/ShootingAI.h"
 #include "AI/FlyingAI.h"
