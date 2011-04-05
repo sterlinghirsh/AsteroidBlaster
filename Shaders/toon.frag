@@ -2,7 +2,10 @@
 ////////////////////////////////////////////////////////////////
 // simple fragment shader
 
+varying float fade;
+
 void main()
 	{	
-		gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);	
+	   float fader = fade;
+		gl_FragColor = vec4(0.0, 1.0, 1.0, fader);	
 	}

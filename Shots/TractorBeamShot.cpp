@@ -81,7 +81,8 @@ void TractorBeamShot::draw() {
       //floats used in loop iteration
       float j;
       float k;
-      
+      glDisable(GL_CULL_FACE);
+      glDisable(GL_POLYGON_OFFSET_LINE);
       //rotation for the Y value of the vertex using cosine
       float rot;
       
@@ -109,8 +110,8 @@ void TractorBeamShot::draw() {
       if (spin >= 360 ) {
          spin = 0;
       }
-      setMaterial(GreenShiny);
-      glLineWidth(1.0);
+      //setMaterial(GreenShiny);
+      glLineWidth(3.0);
       glBegin(GL_LINES);
       //Creates the twisted lines whose vertices are sent to the shader to modify
       for(k = -numCurves/2; k < numCurves/2; k = k+1){
@@ -126,66 +127,34 @@ void TractorBeamShot::draw() {
             }
       }
    glEnd();
-   glEnable(GL_CULL_FACE);
+
    glLineWidth(1.0);
+   
+   
    glUseProgram(tractorFade);
    
-   
-
-   glLineWidth(1.0);
-   
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   //glUseProgram(0);
-      glDisable(GL_CULL_FACE);
+      
       glDisable(GL_LIGHTING);
       glBegin(GL_TRIANGLE_FAN);
-      //flashiness = flashiness + flash;
-      //if (flashiness >= 360 ) {
-        // flashiness = 0;
-      //}
-      //loc2 = glGetUniformLocation(ramShader,"poop");
-      //glUniform1f(loc2,flashiness);
 
-    // Center of fan is at the origin
     glColor4d(0, 1, 0, .2);
     glVertex3d(0.0f, 0.0f, length);
-    //int iPivot = 2;
-    //float x, y, z, 
     float angle;
     double x, y, z;
     for(angle = 0.0f; angle < (2.0f*M_PI); angle += (float) (M_PI/16.0f))
 
         {
 
-        // Calculate x and y position of the next vertex
+           // Calculate x and y position of the next vertex
 
-        x = (farRadius * sin(angle));
+           x = (farRadius * sin(angle));
 
-        y = (farRadius * cos(angle));
+           y = (farRadius * cos(angle));
 
-        z = 0;
+           z = 0;
 
-        // Alternate color between red and green
-
-        /*if((iPivot %2) == 0)
-            //setMaterial(GreenShiny);
-            glColor4f(0.0f, 1.0f, 0.0f, 1.0);
-
-        else
-            //setMaterial(RedShiny);
-            glColor4f(1.0f, 1.0f, 0.0f, 1.0);
-
-         */
-
-        // Increment pivot to change color next time
-
-        //iPivot++;
-
-
-
-        // Specify the next vertex for the triangle fan
-
-        glVertex3d(x, y, z);
+           glVertex3d(x, y, z);
 
         }
         
@@ -197,18 +166,15 @@ void TractorBeamShot::draw() {
         
         glVertex3d(x, y, z);
 
-
-    // Done drawing the fan that covers the bottom
-
-    glEnd();
+   glEnd();
    glEnable(GL_LIGHTING);
    glEnable(GL_CULL_FACE);
    glLineWidth(1.0);
    glUseProgram(0);
+   glEnable(GL_POLYGON_OFFSET_LINE);
    glPopMatrix();
 
    glLineWidth(1.0);
-   //glUseProgram(0);
 }
 
 /**
