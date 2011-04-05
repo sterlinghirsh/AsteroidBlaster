@@ -380,12 +380,6 @@ void AsteroidShip::update(double timeDiff) {
          z2Change = .3;
       }
       
-      /*if (x2Change > .15) {
-         x2Change = .15;
-         y2Change = .15;
-         z2Change = .15;
-      }*/
-      
    } else {
       backChange -= zMove * timeDiff;
       if (backChange < 0) {
@@ -513,7 +507,7 @@ void AsteroidShip::draw_ship() {
    glVertex3d(-.2, .2, 1.3);
    
    if (curForwardAccel == 10.0) {
-      glColor4d(1, .4, 0, .4);
+      glColor4d(1, .4, 0, .5);
       
       //glNormal3d(0.09,0.09,0.0225);
       glVertex3d(.15, 0, 1);
@@ -545,7 +539,7 @@ void AsteroidShip::draw_ship() {
       glVertex3d(.15, 0, 1);
       glVertex3d(0, -.15, 1);
    } else {
-      glColor4d(1, .4, 0, .4);
+      glColor4d(1, .4, 0, .5);
 
       //glNormal3d(0.09,0.09,0.0225);
       glVertex3d(.15, 0, 1);

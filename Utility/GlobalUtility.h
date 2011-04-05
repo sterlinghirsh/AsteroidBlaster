@@ -55,6 +55,7 @@ extern GLuint lawnShader;
 extern GLuint hBlurShader;
 extern GLuint vBlurShader;
 extern GLuint ramShader;
+extern GLuint tractorFade;
 extern GLuint billboardShader;
 extern GLuint fbo;
 extern GLuint depthbuffer;

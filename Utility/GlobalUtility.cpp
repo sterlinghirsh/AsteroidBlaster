@@ -42,6 +42,7 @@ GLuint ramShader = 0;
 GLuint hBlurShader = 0;
 GLuint vBlurShader = 0;
 GLuint lawnShader = 0;
+GLuint tractorFade = 0;
 GLuint billboardShader = 0;
 GLuint fbo = 0;
 GLuint depthbuffer = 0;
