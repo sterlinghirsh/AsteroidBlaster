@@ -12,26 +12,29 @@ materialStruct beamMaterial = {
    {1, 1, 0, .8f},
    {1, 1, 0, .8f},
    {1, 1, 0, .8f},
-   {0}
+   {0},
+   {1, 1, 0, 1.0f}
 };
 
 materialStruct hitBeamMaterial = {
-   {1, .5f, 1, .8f},
-   {1, .5f, 1, .8f},
-   {1, .5f, 1, .8f},
-   {0}
+   {1, .5f, 1, .6f},
+   {1, .5f, 1, .6f},
+   {1, .5f, 1, .6f},
+   {0},
+   {1, .5f, 1, .6f}
 };
 
 materialStruct ballMaterial = {
    {0.3f, 0.3f, 0.3f, 0.8f},
    {0.8f, 0.8f, 0.8f, 0.8f},
    {0, 0,   0.8f, 0.8f},
-   {8}
+   {8},
+   {0.3f, 0.3f, 0.3f, 0.8f}
 };
 
 BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn) :
    Shot(posIn, dirIn, ownerIn) {
-      lifetime = 0.5;
+      lifetime = 1.0;
       // In this context, velocity means direction.
       hitYet = false;
       hitItem = NULL; // We use this to make sure it hits only one thing.
@@ -40,8 +43,9 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn) 
       firstFrame = curFrame;
       Point3D endPoint1(*position);
       Point3D endPoint2(*position);
-      // Set endPoint2 100 units away.
-      velocity->setLength(100);
+      // Set endPoint2 140 units away.
+      length = 140;
+      velocity->setLength(length);
       velocity->movePoint(endPoint2);
       velocity->normalize();
       // Correct for position when calculating endpoint1 and 2.
@@ -62,6 +66,12 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn) 
       */
       shouldBeCulled = false;
       updateBoundingBox();
+
+      forward = new Vector3D(*velocity);
+      up = new Vector3D(*ownerIn->up);
+
+      // This is how long the beam is drawn. It is shortened when hit.
+      drawLength = length;
    }
 
 /**
@@ -81,31 +91,36 @@ void BeamShot::update(double timeDiff) {
 }
 
 void BeamShot::drawBeam(bool drawDots) {
-   const double length = 100;
    const double distanceDifference = 0.3; // :)
-   const double ballOffset = 0.2;
+   const double ballOffset = 0.4;
    const double angleDiff = 40; // Degrees per unit of ball helix.
+   double beamRadius = 0.2;
    double curTime = doubleTime();
    double timeLeft;
+   const double sphereRadius = 0.05;
+   
+   glEnable(GL_LIGHTING);
+   glDisable(GL_COLOR_MATERIAL);
+
    if (!gameState->godMode) {
       timeLeft = lifetime - (curTime - timeFired);
    } else {
       timeLeft = 1.4 - (curTime - timeFired);
    }
-   Vector3D zVector(0, 0, -1);
-   Vector3D axis = zVector.cross(*velocity);
+
+   beamRadius *= clamp(timeLeft * timeLeft, 0.1, 1);
+
    glPushMatrix();
-   glColor3f(1, 0, 0);
-   setMaterial(hitYet ? hitBeamMaterial : beamMaterial);
+   setMaterial(beamMaterial);
    position->glTranslate();
    glPushMatrix();
-   glRotated(180 + zVector.getAngleInDegrees(*velocity),
-         axis.x, axis.y, axis.z);
+   glRotate();
+   glScalef(-1.0f, -1.0f, -1.0f);
    // It shrinks, probably should fade out.
    if (!gameState->godMode) {
-      drawCylinder(timeLeft * 0.04 , length);
+      drawCylinder(beamRadius, drawLength);
    } else {
-      drawCylinder(0.1 , length);
+      drawCylinder(beamRadius, drawLength);
    }
    glPopMatrix();
    if (drawDots) {
@@ -113,15 +128,15 @@ void BeamShot::drawBeam(bool drawDots) {
          // Dots
          Vector3D normal(velocity->getNormalVector());
          setMaterial(ballMaterial);
-         for (double distance = 0; distance < length;
+         for (double distance = 0; distance < drawLength;
                distance += distanceDifference) {
             glPushMatrix();
             velocity->glTranslate(distance);
-            glRotated(fmod(curTime, 4) * 90 + (distance*angleDiff), velocity->x,
+            glRotated(fmod(curTime, 4) * 90 + (distance * (angleDiff + (timeLeft * timeLeft * 40))), velocity->x,
                   velocity->y, velocity->z);
-            normal.glTranslate((1 - timeLeft) + ballOffset);
+            normal.glTranslate(ballOffset);
             //glutSolidSphere(0.05 * (1 - timeLeft), 10, 10);
-            gluSphere(quadric, 0.05 * (1 - timeLeft), 5,5);
+            gluSphere(quadric, sphereRadius, 5,5);
             glPopMatrix();
          }
       }
@@ -192,12 +207,11 @@ void BeamShot::handleCollision(Drawable* other) {
       return;
    hitYet = true;
    hitItem = other;
-   lifetime = 0.4;
-   timeFired = doubleTime();
    lastHitFrame = curFrame;
    if (dynamic_cast<Asteroid3D*>(other) != NULL) {
       owner->score += (int)other->radius * 10;
    }
+   drawLength = position->distanceFrom(*other->position);
 }
 
 void BeamShot::debug() {

@@ -430,6 +430,8 @@ void AsteroidShip::draw_ship() {
    glTranslated(0, 0, -4);
    glScaled(1.5, .5, .8);
    glScaled(5, 5, 5);
+
+   setMaterial(WhiteSolid);
    
    double frontx = 0, fronty = 0, frontz = 0;
    double cornerx = .2, cornery = .2, cornerz = .5;
@@ -784,7 +786,7 @@ void AsteroidShip::handleCollision(Drawable* other) {
       if(health < 0) {
          health = 0;
       }
-      shakeAmount = 1;
+      shakeAmount = 8;
       SoundEffect::playSoundEffect("ShipHit.wav");
    }
 }

@@ -25,6 +25,9 @@ class BeamShot : public Shot {
       virtual void update(double timeDiff);
       virtual void handleCollision(Drawable* other);
       virtual void debug();
+   private:
+      double drawLength;
+      double length;
 };
 
 
