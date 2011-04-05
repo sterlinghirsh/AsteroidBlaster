@@ -884,7 +884,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
       return;
    }
    // The coords of the boxes.
-   Point3D drawPoint = *position;
+   Point3D drawPoint = shotOrigin;
    double boxSize = 1.0;
    const double boxDecrement = 0.2;
 
