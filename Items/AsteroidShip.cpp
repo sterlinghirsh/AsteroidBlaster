@@ -342,6 +342,9 @@ void AsteroidShip::update(double timeDiff) {
       }
    }
 
+   shotOrigin = *position;
+   forward->movePoint(shotOrigin, shotOriginScale);
+   
    // Actually fire the weapons.
    keepFiring();
 
@@ -351,9 +354,6 @@ void AsteroidShip::update(double timeDiff) {
          shakeAmount = 0;
       }
    }
-   
-   shotOrigin = *position;
-   forward->movePoint(shotOrigin, shotOriginScale);
    
    if (curForwardAccel == 10) {
       backChange += (zMove * timeDiff);
@@ -826,7 +826,7 @@ void AsteroidShip::updateShotDirection(Point3D dir) {
  * This is the crosshair for first person.
  */
 void AsteroidShip::drawCrosshair() {
-   
+   // If we should be drawing the boxes, do that instead.
    if (currentView != VIEW_FIRSTPERSON_SHIP &&
     currentView != VIEW_FIRSTPERSON_GUN) {
       return drawShotDirectionIndicators();
@@ -1026,12 +1026,17 @@ Vector3D* AsteroidShip::getViewVector() {
 }
 
 Vector3D* AsteroidShip::getCameraOffset() {
-   if (currentView != VIEW_FIRSTPERSON_SHIP && currentView != VIEW_FIRSTPERSON_GUN) {
-      cameraOffset->updateMagnitude(getViewVector()->scalarMultiply(-12));
-      cameraOffset->addUpdate(up->scalarMultiply(2));
+   const double thirdPersonForwardOffset = -12;
+   const double thirdPersonUpOffset = 2;
+   const double firstPersonForwardOffset = 0.9 * shotOriginScale;
+   const double firstPersonUpOffset = 0.15;
+   if (currentView == VIEW_THIRDPERSON_SHIP || currentView == VIEW_THIRDPERSON_GUN) {
+      cameraOffset->updateMagnitude(getViewVector()->scalarMultiply(thirdPersonForwardOffset));
+      cameraOffset->addUpdate(up->scalarMultiply(thirdPersonUpOffset));
       cameraOffset->scalarMultiplyUpdate(zoomFactor);
    } else {
-      cameraOffset->updateMagnitude(0, 0, 0);
+      cameraOffset->updateMagnitude(forward->scalarMultiply(firstPersonForwardOffset));
+      cameraOffset->addUpdate(up->scalarMultiply(firstPersonUpOffset));
    }
    return cameraOffset;
 }
