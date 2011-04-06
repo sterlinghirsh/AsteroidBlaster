@@ -78,6 +78,7 @@ void TractorBeamShot::draw() {
    
    glPushMatrix();
       glUseProgram(tractorBeamShader);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       //floats used in loop iteration
       float j;
       float k;
@@ -130,12 +131,12 @@ void TractorBeamShot::draw() {
 
    glLineWidth(1.0);
    
-   
+   glUseProgram(0);
    glUseProgram(tractorFade);
    
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      
-      glDisable(GL_LIGHTING);
+   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+      //glDisable(GL_LIGHTING);
       glBegin(GL_TRIANGLE_FAN);
 
     glColor4d(0, 1, 0, .2);

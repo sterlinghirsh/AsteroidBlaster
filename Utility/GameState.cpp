@@ -448,6 +448,7 @@ void GameState::drawBloom() {
    glEnd();
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_LIGHTING);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glPopMatrix();
    
    glBindTexture(GL_TEXTURE_2D, 0);

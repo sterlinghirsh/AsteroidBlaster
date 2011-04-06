@@ -177,6 +177,7 @@ void RamShot::draw() {
       start.glTranslate();
       //glRotatef(180, 1, 0, 0);
       glRotate();
+      glScaled(5, 5, 5);
 
       //flashiness = flashiness + flash;
       //int rando;

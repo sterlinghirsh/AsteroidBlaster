@@ -418,115 +418,95 @@ void AsteroidShip::keepFiring() {
    weapons[currentWeapon]->fire();
 }
 
-void AsteroidShip::draw_ship() {
-   glPolygonOffset(1.0f, 1.0f);
-   glEnable(GL_POLYGON_OFFSET_FILL);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-   glDisable(GL_CULL_FACE);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   glEnable(GL_LIGHTING);
-   glEnable(GL_COLOR_MATERIAL);
-   glTranslated(0, 0, -4);
-   glScaled(1.5, .5, .8);
-   glScaled(5, 5, 5);
-
-   setMaterial(WhiteSolid);
-   
+void AsteroidShip::draw_frontpanels() {
    double frontx = 0, fronty = 0, frontz = 0;
-   double cornerx = .2, cornery = .2, cornerz = .5;
-   double middleXY = .15, middleZ = .2;
-   double backx = 0, backy = 0, backz = .8; 
-
+   double cornerx = .2, cornery = .2, cornerz = 1.3;
+   double middleXY = .15, middleZ = 1;
+   double backx = 0, backy = 0, backz = 1.6; 
    glBegin(GL_TRIANGLES);
-   glEnable(GL_NORMALIZE);
-   
-   /*glNormal3d(.2, -.005, -.03);
-   glVertex3d(0, 0, frontz);
+   //glNormal3d(.2, -.005, -.03);
+   glVertex3d(frontx, fronty, frontz);
    glVertex3d(cornerx, cornery, cornerz);
-   glVertex3d(middlexy, 0, middlez);*/
+   glVertex3d(middleXY, 0, middleZ);
 
-   glNormal3d(.2, -.005, -.03);
-   glVertex3d(0, 0, 0);
-   glVertex3d(.2, .2, 1.3);
-   glVertex3d(.15, 0, 1);
+   //glNormal3d(-.005, .2, -.03);
+   glVertex3d(frontx, fronty, frontz);
+   glVertex3d(0, middleXY, middleZ);
+   glVertex3d(cornerx, cornery, cornerz);
 
-   glNormal3d(-.005, .2, -.03);
-   glVertex3d(0, 0, 0);
-   glVertex3d(0, .15, 1);
-   glVertex3d(.2, .2, 1.3);
+   //glNormal3d(.005, .2, -.03);
+   glVertex3d(frontx, fronty, frontz);
+   glVertex3d(-cornerx, cornery, cornerz);
+   glVertex3d(0, middleXY, middleZ);
 
-   glNormal3d(.005, .2, -.03);
-   glVertex3d(0, 0, 0);
-   glVertex3d(-.2, .2, 1.3);
-   glVertex3d(0, .15, 1);
+   //glNormal3d(-.2, -.005, -.03);
+   glVertex3d(frontx, fronty, frontz);
+   glVertex3d(-middleXY, 0, middleZ);
+   glVertex3d(-cornerx, cornery, cornerz);
 
-   glNormal3d(-.2, -.005, -.03);
-   glVertex3d(0, 0, 0);
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(-.2, .2, 1.3);
+   //glNormal3d(-.2, .005, -.03);
+   glVertex3d(frontx, fronty, frontz);
+   glVertex3d(-cornerx, -cornery, cornerz);
+   glVertex3d(-middleXY, 0, middleZ);
 
-   glNormal3d(-.2, .005, -.03);
-   glVertex3d(0, 0, 0);
-   glVertex3d(-.2, -.2, 1.3);
-   glVertex3d(-.15, 0, 1);
+   //glNormal3d(0.005,-0.2,-0.03);
+   glVertex3d(frontx, fronty, frontz);
+   glVertex3d(0, -middleXY, middleZ);
+   glVertex3d(-cornerx, -cornery, cornerz);
 
-   glNormal3d(0.005,-0.2,-0.03);
-   glVertex3d(0, 0, 0);
-   glVertex3d(0, -.15, 1);
-   glVertex3d(-.2, -.2, 1.3);
+   //glNormal3d(-.005,-0.2,-0.03);
+   glVertex3d(frontx, fronty, frontz);
+   glVertex3d(cornerx, -cornery, cornerz);
+   glVertex3d(0, -middleXY, middleZ);
 
-   glNormal3d(-.005,-0.2,-0.03);
-   glVertex3d(0, 0, 0);
-   glVertex3d(.2, -.2, 1.3);
-   glVertex3d(0, -.15, 1);
+   //glNormal3d(0.2,0.005,-0.03) ;
+   glVertex3d(frontx, fronty, frontz);
+   glVertex3d(middleXY, 0, middleZ);
+   glVertex3d(cornerx, -cornery, cornerz);
+   glEnd();
+}
 
-   glNormal3d(0.2,0.005,-0.03) ;
-   glVertex3d(0, 0, 0);
-   glVertex3d(.15, 0, 1);
-   glVertex3d(.2, -.2, 1.3);
-   
-
-   /* Back of Ship */
-   glNormal3d(-0.045,-0.045,0.0375);
+void AsteroidShip::draw_backpanels() {
+   glBegin(GL_TRIANGLES);
+   //glNormal3d(-0.045,-0.045,0.0375);
    glVertex3d(.15, 0, 1);
    glVertex3d(.2, .2, 1.3);
    glVertex3d(0, .15, 1);
 
-   glNormal3d(-0.045,0.045,0.0375);
+   //glNormal3d(-0.045,0.045,0.0375);
    glVertex3d(.15, 0, 1);
    glVertex3d(0, -.15, 1);
    glVertex3d(.2, -.2, 1.3);
 
-   glNormal3d(0.045,0.045,0.0375);
+   //glNormal3d(0.045,0.045,0.0375);
    glVertex3d(-.15, 0, 1);
    glVertex3d(-.2, -.2, 1.3);
    glVertex3d(0, -.15, 1);
 
-   glNormal3d(0.045,-0.045,0.0375);
+   //glNormal3d(0.045,-0.045,0.0375);
    glVertex3d(-.15, 0, 1);
    glVertex3d(0, .15, 1);
    glVertex3d(-.2, .2, 1.3);
-   
+   glEnd();
+}
+
+void AsteroidShip::draw_spaceboner() {
+   glBegin(GL_TRIANGLES);
    if (curForwardAccel == 10.0) {
       glColor4d(1, .4, 0, .5);
       
-      //glNormal3d(0.09,0.09,0.0225);
       glVertex3d(.15, 0, 1);
       glVertex3d(0, .15, 1);
       glVertex3d(0, 0, 1 + backChange);
 
-      //glNormal3d(0.09,-0.09,0.0225);
       glVertex3d(.15, 0, 1);
       glVertex3d(0, 0, 1 + backChange);
       glVertex3d(0, -.15, 1);
 
-      //glNormal3d(-0.09,-0.09,0.0225);
       glVertex3d(-.15, 0, 1);
       glVertex3d(0, -.15, 1);
       glVertex3d(0, 0, 1 + backChange);
 
-      //glNormal3d(-0.09,0.09,0.0225);
       glVertex3d(-.15, 0, 1);
       glVertex3d(-0, 0, 1 + backChange);
       glVertex3d(0, .15, 1);
@@ -543,38 +523,26 @@ void AsteroidShip::draw_ship() {
    } else {
       glColor4d(1, .4, 0, .5);
 
-      //glNormal3d(0.09,0.09,0.0225);
       glVertex3d(.15, 0, 1);
       glVertex3d(0, .15, 1);
       glVertex3d(0, 0, 1 + backChange);
 
-      //glNormal3d(0.09,-0.09,0.0225);
       glVertex3d(.15, 0, 1);
       glVertex3d(0, 0, 1 + backChange);
       glVertex3d(0, -.15, 1);
 
-      //glNormal3d(-0.09,-0.09,0.0225);
       glVertex3d(-.15, 0, 1);
       glVertex3d(0, -.15, 1);
       glVertex3d(0, 0, 1 + backChange);
 
-      //glNormal3d(-0.09,0.09,0.0225);
       glVertex3d(-.15, 0, 1);
       glVertex3d(-0, 0, 1 + backChange);
       glVertex3d(0, .15, 1);
-   }
-   
+   }   
    glEnd();
-   glDisable(GL_POLYGON_OFFSET_LINE);
+}
 
-   /* Outline of Ship */
-   glEnable(GL_POLYGON_OFFSET_LINE);
-   glPolygonOffset(-1.0f, -1.0f);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   
-   glLineWidth(1.5);
-   glDisable(GL_LIGHTING);
-   
+void AsteroidShip::draw_bonerlines() {
    if (curForwardAccel == 10.0) {
       
       if (backChange == .6) {
@@ -675,7 +643,9 @@ void AsteroidShip::draw_ship() {
       glVertex3d(.15, 0, 1);
       glEnd();
    }
+}
 
+void AsteroidShip::draw_frontlines() {
    glBegin(GL_LINES);
    glColor3d(0, 1, 1);
    glVertex3d(0, 0, 0);
@@ -690,7 +660,9 @@ void AsteroidShip::draw_ship() {
    glVertex3d(0, 0, 0);
    glVertex3d(.2, -.2, 1.3);
    glEnd(); 
-   
+}
+
+void AsteroidShip::draw_backlines() {
    glBegin(GL_LINE_LOOP);
    glVertex3d(.15, 0, 1);
    glVertex3d(.2, .2, 1.3);
@@ -702,6 +674,44 @@ void AsteroidShip::draw_ship() {
    glVertex3d(.2, -.2, 1.3);
    glVertex3d(.15, 0, 1);
    glEnd();
+}
+
+void AsteroidShip::draw_ship() {
+   glPolygonOffset(1.0f, 1.0f);
+   glEnable(GL_POLYGON_OFFSET_FILL);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+   glDisable(GL_CULL_FACE);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glEnable(GL_LIGHTING);
+   glEnable(GL_COLOR_MATERIAL);
+   glTranslated(0, 0, -4);
+   glScaled(1.5, .5, .8);
+   glScaled(5, 5, 5);
+
+   setMaterial(BlackSolid);
+
+   glEnable(GL_NORMALIZE);
+
+   draw_frontpanels();
+   
+   draw_backpanels();
+   
+   draw_spaceboner();
+
+   /* Outline of Ship */
+   glEnable(GL_POLYGON_OFFSET_LINE);
+   glPolygonOffset(-1.0f, -1.0f);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+   
+   glLineWidth(1.5);
+   glDisable(GL_LIGHTING);
+   
+   draw_bonerlines();
+   
+   draw_frontlines();
+   
+   draw_backlines();
 
    glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);

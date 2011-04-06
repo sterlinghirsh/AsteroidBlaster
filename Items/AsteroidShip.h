@@ -205,6 +205,12 @@ class AsteroidShip : public Object3D {
       void rightAcceleration(double newAcc);
       void upAcceleration(double newAcc);
       void draw_ship();
+      void draw_frontpanels();
+      void draw_backpanels();
+      void draw_spaceboner();
+      void draw_bonerlines();
+      void draw_frontlines();
+      void draw_backlines();
 
       double aimX, aimY;
       
