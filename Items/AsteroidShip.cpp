@@ -116,6 +116,8 @@ AsteroidShip::AsteroidShip() :
       zoomSpeed = 0.0;
 
       shouldDrawInMinimap = true;
+      accelerationStartTime = doubleTime();
+      particlesEmitted = 0;
    }
 
 /**
@@ -195,16 +197,22 @@ void AsteroidShip::setBoost(bool doBoost) {
 void AsteroidShip::accelerateForward(int dir) {
    curForwardAccel = dir * maxForwardAccel;
    updatePlayerAcceleration();
+   accelerationStartTime = doubleTime();
+   particlesEmitted = 0;
 }
 
 void AsteroidShip::accelerateUp(int dir) {
    curUpAccel = dir * maxUpAccel;
    updatePlayerAcceleration();
+   accelerationStartTime = doubleTime();
+   particlesEmitted = 0;
 }
 
 void AsteroidShip::accelerateRight(int dir) {
    curRightAccel = dir * maxRightAccel;
    updatePlayerAcceleration();
+   accelerationStartTime = doubleTime();
+   particlesEmitted = 0;
 }
 
 void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
@@ -243,48 +251,42 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    static Vector3D baseParticleAcceleration;
    static Point3D emitter;
 
-   // First do up Acceleration.
-   if (curUpAccel != 0) {
-      baseParticleAcceleration = up->scalarMultiply(-curUpAccel * 0.2);
-      emitter = *position;
-      forward->movePoint(emitter, -0.5);
-      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
+   double accelerationTime = doubleTime() - accelerationStartTime;
+   while ((double) particlesEmitted / accelerationTime < newParticlesPerSecond) {
+      // First do up Acceleration.
+      if (curUpAccel != 0) {
+         baseParticleAcceleration = up->scalarMultiply(-curUpAccel * 0.2);
+         emitter = *position;
+         forward->movePoint(emitter, -0.5);
          addNewParticle(emitter, baseParticleAcceleration, *forward, *right);
       }
-   }
 
-   // Next do right Acceleration.
-   if (curRightAccel != 0) {
-      baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
-      emitter = *position;
-      forward->movePoint(emitter, -0.7);
-      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
+      // Next do right Acceleration.
+      if (curRightAccel != 0) {
+         baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
+         emitter = *position;
+         forward->movePoint(emitter, -0.7);
          addNewParticle(emitter, baseParticleAcceleration, *forward, *up);
       }
-   }
 
-   // Next do forward Acceleration.
-   if (curForwardAccel != 0) {
-      // We want to do two streams.
-      baseParticleAcceleration = forward->scalarMultiply(-curForwardAccel * 0.05);
-      Point3D initialPoint(*position);
-      forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
+      // Next do forward Acceleration.
+      if (curForwardAccel != 0) {
+         // We want to do two streams.
+         baseParticleAcceleration = forward->scalarMultiply(-curForwardAccel * 0.05);
+         Point3D initialPoint(*position);
+         forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
 
-      // First do the right side.
-      right->movePoint(initialPoint, 1);
-      //baseParticleAcceleration.addUpdate(right->scalarMultiply(0.5));
-      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
+         // First do the right side.
+         right->movePoint(initialPoint, 1);
          addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 2);
-      }
 
-      // Next do the left side.
-      right->movePoint(initialPoint, -2);
-      //baseParticleAcceleration.addUpdate(right->scalarMultiply(-1));
-      for (int i = 0; i <= newParticlesPerSecond * timeDiff; ++i){
+         // Next do the left side.
+         right->movePoint(initialPoint, -2);
          addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 3);
       }
-   }
 
+      ++particlesEmitted;
+   }
 }
 
 void AsteroidShip::update(double timeDiff) {

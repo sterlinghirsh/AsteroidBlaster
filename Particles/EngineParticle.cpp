@@ -4,8 +4,8 @@
 
 #include "Particles/EngineParticle.h"
 
-const float startingSize = 0.4f;
-const float minLife = 60; // Seconds
+const float startingSize = 0.15f;
+const float minLife = 10; // Seconds
 
 EngineParticle::EngineParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b) : Particle(p, v, life, r, g, b) {
    // Nothing special :/

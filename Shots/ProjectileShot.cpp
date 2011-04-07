@@ -67,7 +67,6 @@ void ProjectileShot::update(double timeDiff) {
       particleDirection.randomMagnitude();
       particleDirection.setLength(0.1);
       
-      // And this is the helix way.
       BlasterShotParticle::AddRainbow(new Point3D(*position), 
        new Vector3D(particleDirection), particleNum, particleCycle);
       // Reflect and Duplicate the above for a double helix.

@@ -217,6 +217,8 @@ class AsteroidShip : public Object3D {
       void createEngineParticles(double timeDiff);
       void addNewParticle(Point3D& emitter, Vector3D& initialOffset, Vector3D& offsetDirectionX,
        Vector3D& offsetDirectionY, int color = 1);
+      double accelerationStartTime;
+      int particlesEmitted;
 };
 
 #endif
