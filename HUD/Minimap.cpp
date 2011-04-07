@@ -24,7 +24,7 @@ Minimap::Minimap(AsteroidShip* _ship) :
    targetZoomLevel = DEFAULT_ZOOMLEVEL;
    oldDisplaySize = DEFAULT_DISPLAYSIZE;
    hidden = false;
-   autoZoom = false;
+   autoZoom = true;
    itemsDisplayed = 1;
    totalItems = 1;
    furthestItemDistance = 0;
@@ -178,7 +178,7 @@ void Minimap::draw() {
 
                // Keep track of the furthest item we're actually drawing.
                if (radius3D > furthestItemDistance) {
-                  furthestItemDistance = 0;
+                  furthestItemDistance = radius3D;
                }
 
                if (radius3D < 0.5 * zoomLevel) {
@@ -254,14 +254,20 @@ void Minimap::update(double timeDiff) {
 
    const int minItemsToDisplay = 5;
    const int maxItemsToDisplay = 8;
-   const float extraSpaceAfterFurthestItem = 5;
+   const float extraSpaceAfterFurthestItem = 8;
+   printf("ZoomLevel: %f, furthestItemDistance: %f, extraSpace: %f\n", zoomLevel, furthestItemDistance, extraSpaceAfterFurthestItem);
    if (autoZoom) {
-      if (itemsDisplayed < minItemsToDisplay && totalItems >= itemsDisplayed) {
-         // If too few items are shown, zoom out.
+      if ((totalItems > itemsDisplayed && itemsDisplayed < minItemsToDisplay) ||
+       (totalItems < maxItemsToDisplay && (zoomLevel - furthestItemDistance) < extraSpaceAfterFurthestItem)) {
+         // If there are at least as many items out there as are displayed on the map AND
+         // (If there are fewer items than minItemsToDisplay OR
+         //  If the extra space after the last item is less than extraSpaceAfterFurthestItem)
+         // Then
+         // Zoom out.
          adjustZoomDirection = 1;
       } else if (itemsDisplayed > maxItemsToDisplay ||
        (itemsDisplayed == totalItems &&
-        zoomLevel - furthestItemDistance > minItemsToDisplay)) {
+        (zoomLevel - furthestItemDistance) > 1.5 * extraSpaceAfterFurthestItem)) {
          // If too many items are shown, zoom in.
          adjustZoomDirection = -1;
       } else {
