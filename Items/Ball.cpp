@@ -1,11 +1,11 @@
 #include "Items/Ball.h"
 
 Ball::Ball() :
-   Object3D(0.0, 0.0, 0.0, 0.0) {
+   Object3D(0.0, 0.0, 0.0, 0) {
    }
 
 Ball::Ball(double x, double y, double z) :
-   Object3D(x, y, z, 0.0) {
+   Object3D(x, y, z, 0) {
    }
 
 void Ball::attach(Object3D* anchorIn) {

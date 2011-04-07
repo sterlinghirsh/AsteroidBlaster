@@ -255,15 +255,11 @@ void Minimap::update(double timeDiff) {
    const int minItemsToDisplay = 5;
    const int maxItemsToDisplay = 8;
    const float extraSpaceAfterFurthestItem = 8;
-   printf("ZoomLevel: %f, furthestItemDistance: %f, extraSpace: %f\n", zoomLevel, furthestItemDistance, extraSpaceAfterFurthestItem);
+   
    if (autoZoom) {
       if ((totalItems > itemsDisplayed && itemsDisplayed < minItemsToDisplay) ||
        (totalItems < maxItemsToDisplay && (zoomLevel - furthestItemDistance) < extraSpaceAfterFurthestItem)) {
-         // If there are at least as many items out there as are displayed on the map AND
-         // (If there are fewer items than minItemsToDisplay OR
-         //  If the extra space after the last item is less than extraSpaceAfterFurthestItem)
-         // Then
-         // Zoom out.
+         // If there are too many items or we are too zoomed in, zoom out.
          adjustZoomDirection = 1;
       } else if (itemsDisplayed > maxItemsToDisplay ||
        (itemsDisplayed == totalItems &&
