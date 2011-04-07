@@ -397,8 +397,8 @@ void draw() {
       Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
       Texture::Add("Images/particle.png", "Particle");
       Texture::Add("Images/starsdark.bmp", "starsdark.png");
-      //Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
-      Texture::Add("Images/zoe2.png", "AsteroidSurface");
+      Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
+      Texture::Add("Images/zoe2.png", "ZoeRedEyes");
       //Texture::Add("Images/fade.png", "Fade");
       //Texture::Add("Images/fade2.png", "Fade");
       Texture::Add("Images/Shield.png", "ShieldIcon");
