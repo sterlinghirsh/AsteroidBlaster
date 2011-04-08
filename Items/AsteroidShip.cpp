@@ -20,6 +20,7 @@
 using namespace std;
 extern Custodian* custodian;
 const double rotationFactor = 3;
+const float shipScale = 5;
 
 AsteroidShip::AsteroidShip() :
    Object3D(0, 0, 0, 0),     // Initialize superclass
@@ -32,7 +33,7 @@ AsteroidShip::AsteroidShip() :
       /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
       curForwardAccel = curRightAccel = curUpAccel = 0;
       
-      cullRadius = 4;
+      cullRadius = 12;
       
       yawSpeed = rollSpeed = pitchSpeed = 0;
       maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
@@ -40,8 +41,8 @@ AsteroidShip::AsteroidShip() :
 
       // Bounding box stuff.
       //shipRadius = 1; NOT USED
-      maxX = maxY = maxZ = 0.5;
-      minX = minY = minZ = -0.5;
+      maxX = maxY = maxZ = 4;
+      minX = minY = minZ = -4;
       updateBoundingBox();
       
       spin = 90;
@@ -689,7 +690,7 @@ void AsteroidShip::draw_ship() {
    glEnable(GL_COLOR_MATERIAL);
    glTranslated(0, 0, -4);
    glScaled(1.5, .5, .8);
-   glScaled(5, 5, 5);
+   glScaled(shipScale, shipScale, shipScale);
 
    setMaterial(BlackSolid);
 
@@ -748,7 +749,6 @@ void AsteroidShip::drawInMinimap() {
    //shotOrigin->glTranslate();
    // Counteract the rotation done in GameState::drawInMinimap();
    glRotate();
-   const float shipScale = 5;
    glScalef(shipScale, shipScale, shipScale);
    //glTranslatef(0, 0, -3);
    glColor4d(0, 0, 0, 0.2);
