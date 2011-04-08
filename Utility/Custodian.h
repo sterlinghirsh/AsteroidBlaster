@@ -18,6 +18,7 @@
 // Incomplete class declaration so we can use pointers.
 class Object3D;
 class Drawable;
+class GameState;
 
 struct compareByDistance {
    static Drawable* curObject;
@@ -38,12 +39,13 @@ class Custodian {
       int asteroidCount;
       int shardCount;
       
-      Custodian();
+      Custodian(const GameState* _gameState);
 
    private:
       std::vector<Drawable*> objectsByMinX;
       std::vector<Drawable*> objectsByMaxX;
       std::list<Drawable*> objectsToAdd;
+      const GameState* gameState;
 };
 
 #endif

@@ -11,8 +11,8 @@
 
 class TractorAttractionParticle : public Particle  {
    public :
-      TractorAttractionParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b, Point3D* _target);
-      static void Add(Point3D* pos, Vector3D* vec, Point3D* _target);
+      TractorAttractionParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b, Point3D* _target, const GameState* _gameState);
+      static void Add(Point3D* pos, Vector3D* vec, Point3D* _target, const GameState* _gameState);
       virtual void update(double timeDifference);
       Point3D* target;
 };

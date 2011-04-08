@@ -11,8 +11,8 @@ const float startingSize = 0.3f;
 const float minLife = 0.8f; // Seconds
 
 ElectricityImpactParticle::ElectricityImpactParticle(Point3D* _position,
-      Vector3D* _velocity, float _life, float _r, float _g, float _b) :
-   Particle(_position, _velocity, _life, _r, _g, _b) {
+      Vector3D* _velocity, float _life, float _r, float _g, float _b, const GameState* _gameState) :
+   Particle(_position, _velocity, _life, _r, _g, _b, _gameState) {
       size = startingSize;
    }
 
@@ -27,12 +27,12 @@ void ElectricityImpactParticle::update(double timeDifference) {
    Particle::update(timeDifference);
 }
 
-void ElectricityImpactParticle::Add(Point3D* pos, Vector3D* vec) {
+void ElectricityImpactParticle::Add(Point3D* pos, Vector3D* vec, const GameState* _gameState) {
    float _fade = (float) ((0.5 * randdouble()) + minLife);
    float _r = 1;
    float _g = 1;
    float _b = (float) (0.8 + (randdouble() * 0.2));
 
-   Particle::Add(new ElectricityImpactParticle(pos, vec, _fade, _r, _g, _b));
+   Particle::Add(new ElectricityImpactParticle(pos, vec, _fade, _r, _g, _b, _gameState));
 }
 

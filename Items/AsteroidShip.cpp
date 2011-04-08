@@ -18,12 +18,11 @@
 #define BOOST_SCALE 2.0
 
 using namespace std;
-extern Custodian* custodian;
 const double rotationFactor = 3;
 const float shipScale = 5;
 
-AsteroidShip::AsteroidShip() :
-   Object3D(0, 0, 0, 0),     // Initialize superclass
+AsteroidShip::AsteroidShip(const GameState* _gameState) :
+   Object3D(_gameState),     // Initialize superclass
    shotDirection(0, 0, 1) {  // Initialize shot direction to forward
       /* Currently not braking or acceleration. */
       isBraking = false;
@@ -239,7 +238,7 @@ void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
    initialOffset.movePoint(curPoint);
    randomOffset.movePoint(curPoint);
    EngineParticle::Add(new Point3D(curPoint),
-         new Vector3D(baseDirection.add(particleVariation)), color);
+         new Vector3D(baseDirection.add(particleVariation)), color, gameState);
 }
 
 void AsteroidShip::createEngineParticles(double timeDiff) {
@@ -1100,4 +1099,47 @@ void AsteroidShip::setCameraDirectly() {
 
 void AsteroidShip::setZoomSpeed(float speed) {
    zoomSpeed = speed;
+}
+
+/**
+ * This is used to set up ships initially.
+ * Do not use this for moving ships in the game.
+ * The vectors should come out as orthogonal. 
+ * This sets right to be forward x up.
+ * Then up is set to right x forward.
+ */
+void AsteroidShip::setOrientation(double forwardX, double forwardY, double forwardZ,
+ double upX, double upY, double upZ) {
+   // Set forward and 
+   forward->updateMagnitude(forwardX, forwardY, forwardZ);
+   up->updateMagnitude(upX, upY, upZ);
+
+   forward->normalize();
+   up->normalize();
+
+   right->updateMagnitude(forward->cross(*up));
+   up->updateMagnitude(right->cross(*forward));
+}
+
+/**
+ * Same as the other setOrientation.
+ */
+void AsteroidShip::setOrientation(Vector3D& forward, Vector3D& up) {
+   setOrientation(forward.x, forward.y, forward.z,
+ up.x, up.y, up.z);
+}
+
+/**
+ * Look at some point with an arbitrary up vector.
+ * This is used by the menu, and should not be used in the game. 
+ */
+void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
+ double upX, double upY, double upZ) {
+   Vector3D _forward(lookAtX - position->x,
+    lookAtY - position->y,
+    lookAtZ - position->z);
+   
+   Vector3D _up(upX, upY, upZ);
+
+   setOrientation(_forward, _up);
 }

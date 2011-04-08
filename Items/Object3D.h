@@ -12,11 +12,7 @@
 #include "Utility/Point3D.h"
 #include "Utility/Vector3D.h"
 #include "Utility/GlobalUtility.h"
-#include "Utility/Custodian.h"
 #include <queue>
-
-//class Drawable;
-class Custodian;
 
 class Object3D : public Drawable {
    public:
@@ -26,11 +22,9 @@ class Object3D : public Drawable {
       bool lockUpVector;
       double angle;
 
-      Object3D(double x, double y, double z, GLuint displayListIn);
+      Object3D(const GameState* _gameState);
       virtual ~Object3D();
       virtual void update(double timeDifference);
-      virtual void draw();
-      virtual void drawGlow();
       virtual void setYawSpeed(double radiansPerSecond);
       virtual void setPitchSpeed(double radiansPerSecond);
       virtual void setRollSpeed(double radiansPerSecond);
@@ -39,6 +33,9 @@ class Object3D : public Drawable {
       virtual void handleCollision(Drawable* other);
       virtual void setTargeted(bool a);
       virtual bool isTargeted();
+
+      virtual void draw();
+      virtual void drawGlow();
 
       void glRotate(bool doTranspose = true);
       virtual void addAcceleration(Vector3D* newAccel);

@@ -15,7 +15,7 @@
 
 class Particle : public Drawable {
    public:
-      Particle(Point3D* p, Vector3D* v, float life, float r, float g, float b);
+      Particle(Point3D* p, Vector3D* v, float life, float r, float g, float b, const GameState* _gameState);
       virtual ~Particle();
       
       static std::list<Particle*> particles;

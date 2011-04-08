@@ -5,8 +5,8 @@
 
 class Ball : public Object3D {
    public:
-      Ball();
-      Ball(double x, double y, double z);
+      Ball(const GameState* _gameState);
+      Ball(double x, double y, double z, const GameState* _gameState);
       ~Ball() {};
       void attach(Object3D* anchorIn);
       void draw();

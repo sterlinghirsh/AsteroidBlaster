@@ -26,8 +26,8 @@ using namespace std;
 /*
  * Basic constructor.
  */
-Shard::Shard(double r, double worldSizeIn) :
-   Object3D(0, 0, 0, 0) {
+Shard::Shard(double r, double worldSizeIn, const GameState* _gameState) :
+   Object3D(_gameState) {
       shouldDrawInMinimap = true;
       worldSize = worldSizeIn;
 
@@ -173,7 +173,7 @@ void Shard::drawOtherOrbiters() {
          Point3D* particlePoint = new Point3D(*position);
          rotationOffset.movePoint(*particlePoint);
          Vector3D* particleVel = new Vector3D(0, 0, 0);
-         ShardParticle::Add(particlePoint, particleVel);
+         ShardParticle::Add(particlePoint, particleVel, gameState);
       }
    }
 }
@@ -388,7 +388,7 @@ void Shard::handleCollision(Drawable* other) {
             particleVelocity->setLength(10); // Speed of the particle.
             particleVelocity->addUpdate(*velocity);
             // Make this go toward the ship.
-            TractorAttractionParticle::Add(particlePosition, particleVelocity, TBshot->owner->position); 
+            TractorAttractionParticle::Add(particlePosition, particleVelocity, TBshot->owner->position, gameState); 
          }
       } else if(dynamic_cast<AntiInertiaShot*>(other) != NULL) {
          Vector3D* newVelocity = new Vector3D(*velocity);

@@ -1,12 +1,13 @@
 #include "Items/Ball.h"
 
-Ball::Ball() :
-   Object3D(0.0, 0.0, 0.0, 0) {
-   }
+Ball::Ball(const GameState* _gameState) :
+   Object3D(_gameState) {
+}
 
-Ball::Ball(double x, double y, double z) :
-   Object3D(x, y, z, 0) {
-   }
+Ball::Ball(double x, double y, double z, const GameState* _gameState) :
+ Object3D(_gameState) {
+   position->update(x, y, z);
+}
 
 void Ball::attach(Object3D* anchorIn) {
    anchor = anchorIn;

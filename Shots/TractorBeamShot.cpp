@@ -18,7 +18,7 @@
 static float spin = 0;
 
 TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, 
- AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
+ AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState) {
    persist = true;
    angle = M_PI / 20; // Radians from the center
    length = 40;

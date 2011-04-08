@@ -12,7 +12,7 @@
 #include "Utility/WindowsMathLib.h"
 #endif
 
-BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z) {
+BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z, const GameState* _gameState) {
    extent = extentIn;
    xMax = x + extent;
    yMax = y + extent;
@@ -33,7 +33,7 @@ BoundingSpace::BoundingSpace(double extentIn, double x, double y, double z) {
    
    // Initialize walls.
    for (int i = 0; i < 6; ++i) {
-      walls[i] = new BoundingWall((int) squareSize, (int) extent, wallColors[i], i);
+      walls[i] = new BoundingWall((int) squareSize, (int) extent, wallColors[i], i, _gameState);
    }
 }
 

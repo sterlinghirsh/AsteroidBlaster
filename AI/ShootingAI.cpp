@@ -25,10 +25,6 @@
 #include "Utility/WindowsMathLib.h"
 #endif
 
-
-// Tell c++ that gameState was declared elsewhere (in main.cpp)
-extern GameState* gameState;
-
 // Radians/sec
 const double ShootingAI::gunRotSpeed = M_PI / 2.0;
 
@@ -110,12 +106,8 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 }
 
 Object3D* ShootingAI::chooseTarget() {
-   // if gameState not yet initialized.
-   if (gameState == NULL)
-      return NULL;
-
    // Make the AI choose from a list of Targetable objects instead of Drawable objects, which are inside the view frustum.
-   std::list<Drawable*>* targets;// = gameState->targetableViewFrustumObjects;
+   std::list<Drawable*>* targets;
    targets = ship->getRadar()->getTargetableViewFrustumReading();
    std::list<Drawable*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;

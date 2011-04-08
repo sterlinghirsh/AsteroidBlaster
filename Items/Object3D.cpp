@@ -10,11 +10,10 @@
 #include <algorithm>
 #include "Utility/Matrix4.h"
 
-Object3D::Object3D(double x, double y, double z, GLuint displayListIn) : Drawable(0, 0, 0, 0) {
+Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState) {
    minX = minY = minZ = -0.5;
    maxX = maxY = maxZ =  0.5;
    updateBoundingBox();
-   displayList = displayListIn;
    /* Initialize velocity and acceleration to 0. */
    velocity = new Vector3D(0, 0, 0);
    acceleration = new Vector3D(0, 0, 0);
@@ -80,34 +79,6 @@ void Object3D::update(double timeDifference) {
    pitch(pitchSpeed * timeDifference);
    updateBoundingBox();
 }
-
-/**
- * Subclasses can extend this, but this by default does nothing.
- * This should draw anything that needs to glow in the color it should
- * glow, and everything else in black.
- */
-void Object3D::drawGlow() {
-  glPushMatrix();
-  glPopMatrix();
-}
-
-/**
- * Subclasses can extend this, but this does some basic movement and will
- * draw a displaylist if one exists.
- */
-void Object3D::draw() {
-   /*
-   glPushMatrix();
-   if (position != NULL)
-      position->glTranslate();
-   if (axis != NULL)
-      glRotatef(angle, axis->x, axis->y, axis->z);
-   //glCallList(displayList);
-   glPopMatrix();
-   */
-}
-
-
 
 /**
  * These three are setters for pitch, roll, yaw.
@@ -251,4 +222,12 @@ void Object3D::updateAcceleration(double timeDiff) {
       delete tempAccel;
       accelerations.pop();
    }
+}
+
+void Object3D::draw() {
+   // Do nothing;
+}
+
+void Object3D::drawGlow() {
+   // Also do nothing;
 }

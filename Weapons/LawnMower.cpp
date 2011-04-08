@@ -41,7 +41,7 @@ void LawnMower::update(double timeDiff) {
 }
 
 void LawnMower::fire() {
-   if(!gameState->godMode && curAmmo <= 0)
+   if(!ship->gameState->godMode && curAmmo <= 0)
       return;
 
    const double swingAmount = 0.5; // Radians from center.
@@ -51,10 +51,10 @@ void LawnMower::fire() {
    Vector3D shotDirection(*ship->forward);
    //shotDirection.rotate(swingAmount * sin(M_PI * doubleTime() / swingPeriod), 
    // *ship->up);
-   gameState->custodian.add(new LawnMowerShot(start, shotDirection, ship));
+   ship->custodian->add(new LawnMowerShot(start, shotDirection, ship, ship->gameState));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new LawnMowerShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;
-   if(!gameState->godMode) {
+   if(!ship->gameState->godMode) {
       // Take away some ammo
       curAmmo--;
    }

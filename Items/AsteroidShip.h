@@ -41,7 +41,7 @@ class FlyingAI;
 
 class AsteroidShip : public Object3D {
    public:
-      AsteroidShip();
+      AsteroidShip(const GameState* _gameState);
       int getHealth();
       int getScore();
       int getShards();
@@ -151,6 +151,11 @@ class AsteroidShip : public Object3D {
 
       void setCameraDirectly();
       void setZoomSpeed(float speed);
+      
+      void setOrientation(double forwardX, double forwardY, double forwardZ,
+ double upX, double upY, double upZ);
+      void setOrientation(Vector3D& _forward, Vector3D& _up);
+      void lookAt(double lookAtX, double lookAtY, double lookAtZ, double upX, double upY, double upZ);
 
    protected:
       int soundHandle;

@@ -6,10 +6,14 @@
 #include "Menus/Menu.h"
 #include "Utility/InputManager.h"
 
+class GameState;
+
 class StoreMenu : public Menu {
    public:
-   StoreMenu();
+   StoreMenu(GameState*& _gameState);
    ~StoreMenu();
+
+   GameState*& gameState;
 
    void draw();
    

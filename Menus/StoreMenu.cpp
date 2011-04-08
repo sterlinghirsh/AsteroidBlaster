@@ -60,7 +60,12 @@
 #define PIKACHUSWRATH_AMMO_PRICE 1
 #define ANTIINERTIA_AMMO_PRICE 1
 
-StoreMenu::StoreMenu() {
+/**
+ * We pass in a reference to a pointer to a gameState, 
+ * so that if main() ever makes a new GameState, 
+ * the pointer should still be valid.
+ */
+StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    menuActive = false;
    menuSelection = WEAPONS;
    

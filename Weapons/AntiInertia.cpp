@@ -38,13 +38,13 @@ void AntiInertia::update(double timeDiff) {
 }
 
 void AntiInertia::fire() {
-   if(!gameState->godMode && curAmmo <= 0)
+   if(!ship->gameState->godMode && curAmmo <= 0)
       return;
 
    Point3D start = ship->shotOrigin;
-   gameState->custodian.add(new AntiInertiaShot(start, ship->shotDirection, ship));
+   ship->custodian->add(new AntiInertiaShot(start, ship->shotDirection, ship, ship->gameState));
    lastFiredFrame = currentFrame;
-   if(!gameState->godMode) {
+   if(!ship->gameState->godMode) {
       // Take away some ammo
       curAmmo--;
    }

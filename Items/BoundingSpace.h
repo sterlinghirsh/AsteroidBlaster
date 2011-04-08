@@ -14,12 +14,14 @@
 #include <list>
 #include <vector>
 
+class GameState;
+
 class BoundingSpace {
    public:
       double extent; // Only one var instead of min/max x, y, z
       double xMax, xMin, yMax, yMin, zMax, zMin;
 
-      BoundingSpace(double extentIn, double x, double y, double z);
+      BoundingSpace(double extentIn, double x, double y, double z, const GameState* _gameState);
       ~BoundingSpace();
       virtual void constrain(Drawable* item);
       void draw();

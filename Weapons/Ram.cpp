@@ -38,16 +38,16 @@ void Ram::update(double timeDiff) {
 }
 
 void Ram::fire() {
-   if(!gameState->godMode && curAmmo <= 0)
+   if(!ship->gameState->godMode && curAmmo <= 0)
       return;
 
    Point3D start = ship->shotOrigin;
    //ship->forward->movePoint(start, 4);
    ship->setShakeAmount(0.0);
-   gameState->custodian.add(new RamShot(start, *(ship->forward), ship));
+   ship->custodian->add(new RamShot(start, *(ship->forward), ship, ship->gameState));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new RamShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;
-   if(!gameState->godMode) {
+   if(!ship->gameState->godMode) {
       // Take away some ammo
       curAmmo--;
    }

@@ -11,9 +11,9 @@
 
 class ShardParticle : public Particle  {
    public :
-      ShardParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b);
+      ShardParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b, const GameState*);
       virtual void update(double timeDifference);
-      static void Add(Point3D* pos, Vector3D* vec);
+      static void Add(Point3D* pos, Vector3D* vec, const GameState*);
 };
 
 #endif

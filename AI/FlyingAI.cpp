@@ -28,11 +28,6 @@
 using namespace std;
 using std::vector;
 
-
-
-// Tell c++ that gameState was declared elsewhere (in main.cpp)
-extern GameState* gameState;
-
 FlyingAI::FlyingAI(AsteroidShip* owner) {
    ship = owner;
    radar = new Radar(ship);
@@ -66,7 +61,6 @@ FlyingAI::FlyingAI(AsteroidShip* owner) {
  */
 std::list<Asteroid3D*>* FlyingAI :: getAsteroidList() {
    std::list<Drawable*>* targets = radar->getFullReading();
-   //std::list<Object3D*>* targets = gameState->viewFrustumObjects;
    if (targets == NULL) {
       return NULL;
    }
@@ -153,34 +147,34 @@ Vector3D* FlyingAI :: getFlyDirection() {
    
    // X walls   
    v = Vector3D(Point3D(0,0,0), Point3D(1,0,0));
-   dist = gameState->getWallxMax() - ship->position->x;
+   dist = ship->gameState->getWallxMax() - ship->position->x;
    v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
    v = Vector3D(Point3D(0,0,0), Point3D(-1,0,0));
-   dist = ship->position->x - gameState->getWallxMin();
+   dist = ship->position->x - ship->gameState->getWallxMin();
    v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
 
    // Y walls
    v = Vector3D(Point3D(0,0,0), Point3D(0,1,0));
-   dist = gameState->getWallyMax() - ship->position->y;
+   dist = ship->gameState->getWallyMax() - ship->position->y;
    v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
    v = Vector3D(Point3D(0,0,0), Point3D(0,-1,0));
-   dist = ship->position->y - gameState->getWallyMin();
+   dist = ship->position->y - ship->gameState->getWallyMin();
    v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);   
    
    // Z Walls   
    v = Vector3D(Point3D(0,0,0), Point3D(0,0,1));
-   dist = gameState->getWallzMax() - ship->position->z;
+   dist = ship->gameState->getWallzMax() - ship->position->z;
    v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
    v = Vector3D(Point3D(0,0,0), Point3D(0,0,-1));
-   dist = ship->position->z - gameState->getWallzMin();
+   dist = ship->position->z - ship->gameState->getWallzMin();
    v.scalarMultiplyUpdate(-0.25 * fmin(Max_Dist, Max_Dist / dist));
    sum->addUpdate(v);
    
@@ -352,7 +346,7 @@ FlyMode FlyingAI :: chooseMode(void) {
  * Preform flying AI operations
  */
 int FlyingAI :: think(double dt) {
-   if (gameState == NULL)
+   if (ship->gameState == NULL)
       return 0;
    
    Vector3D* desiredForward;

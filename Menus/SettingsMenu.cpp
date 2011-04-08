@@ -24,7 +24,7 @@
 #define LEFT_TYPE 2
 #define RIGHT_TYPE 3
 
-SettingsMenu::SettingsMenu() {
+SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
    menuActive = false;
    x = y = -1;
 

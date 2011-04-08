@@ -10,8 +10,8 @@
 const float startingSize = 0.3f;
 const float minLife = 0.5f; // Seconds
 ShardParticle::ShardParticle(Point3D* _position,
-      Vector3D* _velocity, float _life, float _r, float _g, float _b) :
-   Particle(_position, _velocity, _life, _r, _g, _b) {
+      Vector3D* _velocity, float _life, float _r, float _g, float _b, const GameState* _gameState) :
+   Particle(_position, _velocity, _life, _r, _g, _b, _gameState) {
       size = startingSize;
    }
 
@@ -21,12 +21,12 @@ void ShardParticle::update(double timeDifference) {
    Particle::update(timeDifference);
 }
 
-void ShardParticle::Add(Point3D* pos, Vector3D* vec) {
+void ShardParticle::Add(Point3D* pos, Vector3D* vec, const GameState* _gameState) {
    float _fade = minLife;
    float _r = (float) (0.9 + (randdouble() * 0.1));
    float _g = (float) (0.9 + (randdouble() * 0.1));
    float _b = (float) (0.9 + (randdouble() * 0.1));
 
-   particles.push_back(new ShardParticle(pos, vec, _fade, _r, _g, _b));
+   particles.push_back(new ShardParticle(pos, vec, _fade, _r, _g, _b, _gameState));
 }
 

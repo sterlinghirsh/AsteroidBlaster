@@ -8,7 +8,6 @@
 
 #include "Graphics/Sprite.h"
 #include "Utility/Texture.h"
-#include "Utility/Vector3D.h"
 #include <math.h>
 #include "Utility/GameState.h"
 
@@ -17,7 +16,7 @@ using namespace std;
 list<Sprite*> Sprite::sprites;
 
 Sprite::Sprite(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
- Point3D posIn, double drawWidth, double drawHeight) : Drawable(0, 0, 0, 0) {
+ Point3D posIn, double drawWidth, double drawHeight, const GameState* _gameState) : Drawable(_gameState) {
    position->clone(&posIn);
    framesX = framesXIn;
    framesY = framesYIn;
@@ -35,10 +34,10 @@ Sprite::Sprite(unsigned int texID, int framesXIn, int framesYIn, double fpsIn,
 }
 
 void Sprite::Add(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
- Point3D posIn, double drawWidth, double drawHeight) {
+ Point3D posIn, double drawWidth, double drawHeight, const GameState* _gameState) {
  
    sprites.push_back(new Sprite(texID, framesXIn, framesYIn, fpsIn,
-               posIn, drawWidth, drawHeight));
+               posIn, drawWidth, drawHeight, _gameState));
 }
  
 void Sprite::draw() {

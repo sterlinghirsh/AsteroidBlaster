@@ -11,9 +11,9 @@
 
 class ElectricityImpactParticle : public Particle  {
    public :
-      ElectricityImpactParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b);
+      ElectricityImpactParticle(Point3D* p, Vector3D* v, float life, float r, float g, float b, const GameState* _gameState);
       virtual void update(double timeDifference);
-      static void Add(Point3D* pos, Vector3D* vec);
+      static void Add(Point3D* pos, Vector3D* vec, const GameState* _gameState);
 };
 
 #endif

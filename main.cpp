@@ -8,6 +8,9 @@
 #include <list>
 #include <sstream>
 
+// Constant value used in other files.
+#define WORLD_SIZE 80.00
+
 #include "Utility/GlobalUtility.h"
 #include "Utility/Point3D.h"
 #include "Items/Asteroid3D.h"
@@ -31,9 +34,6 @@
 #include "SDL_mixer.h"
 
 using namespace std;
-
-// Constant value
-const double WORLD_SIZE = 80.00;
 
 // True while the game is in play.
 bool running = true;
@@ -62,19 +62,6 @@ GLfloat ambientlight_amb[4] = {1, 1, 1, 0.5};
 GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
 GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
 
-void cleanup() {
-   Music::FreeAll();
-   SoundEffect::FreeAll();
-   delete gameState;
-   delete mainMenu;
-   delete storeMenu;
-   delete settingsMenu;
-   delete helpMenu;
-   delete creditsMenu;
-   delete inputManager;
-
-}
-
 void init() {
    /* Flags to pass to SDL_SetVideoMode */
    int videoFlags;
@@ -87,8 +74,8 @@ void init() {
 
    // Tell system which functions to process when exit() call is made
    // THIS IS COMMENTED OUT BECAUSE THE EXIT TIME INCREASES BY 3-4 SECONDS
-   atexit(cleanup);
-   atexit(SDL_Quit);
+   // But it should be on when testing with valgrind to bring down the still reachable count.
+   //atexit(SDL_Quit);
 
    // Get optimal video settings
    vidinfo = SDL_GetVideoInfo();
@@ -295,31 +282,17 @@ void initFbo() {
 
 }
 
-void update() {
-   // get the current absolute time
-   double curTime = doubleTime();
-
-   if (lastUpdateTime == 0) {
-      lastUpdateTime = curTime;
-      return;
-   }
-
-   // the time difference since last update call
-   double timeDiff = curTime - lastUpdateTime;
-
+void update(GameState* gameState, double timeDiff) {
    gameState->update(timeDiff);
    GameMessage::updateAllMessages(timeDiff);
 
-   lastUpdateTime = curTime;
+   lastUpdateTime = doubleTime();
    ++curFrame;
 }
 
-void draw() {
-   // get the current absolute time
-   double curTime = doubleTime();
-
+void draw(GameState* gameState) {
    // the time difference since last update call
-   double timeDiff = curTime - lastDrawTime;
+   double timeDiff = doubleTime() - lastDrawTime;
 
    gameState->setCurFPS(1 / timeDiff);
 
@@ -375,7 +348,7 @@ void draw() {
    gameState->drawScreens();
 
    SDL_GL_SwapBuffers();
-   lastDrawTime = curTime;
+   lastDrawTime = doubleTime();
    }
 
    int main(int argc, char* argv[]) {
@@ -383,6 +356,11 @@ void draw() {
       GW = 800;
       GH = 600;
       updateDoubleTime();
+
+      lastUpdateTime = doubleTime();
+
+      // the time difference since last update call
+      double timeDiff;
 
       // Initialize GL/SDL/glew/GLSL related things
       init();
@@ -455,12 +433,14 @@ void draw() {
 
 
       // Initialize the gameState
-      gameState = new GameState(WORLD_SIZE);
+      GameState* gameState;
+      gameState = new GameState(WORLD_SIZE, false);
 
       // Initialize the menus
       mainMenu = new MainMenu();
-      storeMenu = new StoreMenu();
-      settingsMenu = new SettingsMenu();
+      storeMenu = new StoreMenu(gameState);
+      // We should change this to pass in gameSettings when something like that exists.
+      settingsMenu = new SettingsMenu(gameState);
       helpMenu = new HelpMenu();
       creditsMenu = new CreditsMenu();
       //turn the menu on for the inial menu display
@@ -483,37 +463,33 @@ void draw() {
 
       while (running) {
          updateDoubleTime();
+         timeDiff = doubleTime() - lastUpdateTime;
+         lastUpdateTime = doubleTime();
+
          if (mainMenu->menuActive) {
-            //printf("main active\n");
             SDL_ShowCursor(SDL_ENABLE);
+            mainMenu->update(timeDiff);
             mainMenu->draw();
-            //update();
-            lastUpdateTime = doubleTime();
+
          } else if (storeMenu->menuActive) {
             SDL_ShowCursor(SDL_ENABLE);
             storeMenu->draw();
-            //update();
-            lastUpdateTime = doubleTime();
+
          } else if (settingsMenu->menuActive) {
             SDL_ShowCursor(SDL_ENABLE);
             settingsMenu->draw();
-            //update();
-            lastUpdateTime = doubleTime();
+
          } else if (helpMenu->menuActive) {
             SDL_ShowCursor(SDL_ENABLE);
             helpMenu->draw();
-            //update();
-            lastUpdateTime = doubleTime();
+
          } else if (creditsMenu->menuActive) {
-            //printf("credits menu active\n");
             SDL_ShowCursor(SDL_ENABLE);
-            //creditsMenu->update(doubleTime() - lastUpdateTime);
             creditsMenu->update(lastUpdateTime);
-            //update();
-            lastUpdateTime = doubleTime();
+
          } else {
-            update();
-            draw();
+            update(gameState, timeDiff);
+            draw(gameState);
          }
 
          while (SDL_PollEvent(event)) {
@@ -523,5 +499,17 @@ void draw() {
 
       glDeleteFramebuffersEXT(1, &fbo);
       glDeleteRenderbuffersEXT(1, &depthbuffer);
+   
+      // Clean up
+      delete gameState;
+      delete mainMenu;
+      delete storeMenu;
+      delete settingsMenu;
+      delete helpMenu;
+      delete creditsMenu;
+      delete inputManager;
+      Music::FreeAll();
+      SoundEffect::FreeAll();
+
       return 0;
    }

@@ -57,7 +57,7 @@ class GameState : public InputReceiver {
       std::list<Drawable*>* viewFrustumObjects;
       std::list<Drawable*>* targetableViewFrustumObjects;
 
-      GameState(double worldSize);
+      GameState(double worldSize, bool _inMenu);
       virtual ~GameState();
       void draw();
       void hBlur();
@@ -79,12 +79,12 @@ class GameState : public InputReceiver {
       void setCurFPS(double fpsIn);
       bool getMenuMode();
       
-      double getWallxMin();
-      double getWallxMax();
-      double getWallyMin();
-      double getWallyMax();
-      double getWallzMin();
-      double getWallzMax();
+      double getWallxMin() const;
+      double getWallxMax() const;
+      double getWallyMin() const;
+      double getWallyMax() const;
+      double getWallzMin() const;
+      double getWallzMax() const;
       
       double getMouseX();
       double getMouseY();
@@ -112,6 +112,7 @@ class GameState : public InputReceiver {
 
       bool godMode;
       bool gameIsRunning;
+      bool inMenu;
    
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;

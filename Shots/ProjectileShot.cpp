@@ -16,7 +16,7 @@
 const int particleCycle = 100;
 
 ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn,
- AsteroidShip* const ownerIn ) : Shot(posIn, dirIn, ownerIn) {
+ AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState) {
    persist = false;
    minX = minY = minZ = -0.1;
    maxX = maxY = maxZ = 0.1;
@@ -68,7 +68,7 @@ void ProjectileShot::update(double timeDiff) {
       particleDirection.setLength(0.1);
       
       BlasterShotParticle::AddRainbow(new Point3D(*position), 
-       new Vector3D(particleDirection), particleNum, particleCycle);
+       new Vector3D(particleDirection), particleNum, particleCycle, gameState);
       // Reflect and Duplicate the above for a double helix.
    }
 }
@@ -93,7 +93,7 @@ void ProjectileShot::handleCollision(Drawable* other) {
          particleVariation.setLength(particleSpeed);
          particleVariation.addUpdate(positionDifference);
          BlasterImpactParticle::Add(new Point3D(*position), 
-          new Vector3D(particleVariation));
+          new Vector3D(particleVariation), gameState);
       }
    }
    Shot::handleCollision(other);

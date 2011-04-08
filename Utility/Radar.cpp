@@ -8,14 +8,13 @@
 #include "Radar.h"
 #include "Items/AsteroidShip.h"
 
-// Tell c++ that gameState was declared elsewhere (in main.cpp)
-extern GameState* gameState;
 Point3D* Radar::cameraPosition;
 Vector3D* Radar::viewVector;
 
 Radar :: Radar(AsteroidShip* const ship) {
    owner = ship;
    curFrustum = new ViewFrustum();
+   custodian = owner->custodian;
    cameraPosition = NULL;
    viewVector = NULL;
 }
@@ -37,9 +36,9 @@ std::list<Drawable*>* Radar :: getFullReading() {
    /* Get the custodian out of gameState, and get its vector of Objects.
     * Use this vector to construct a new copied vector (to be safe), and return that one.
     */
-   std::vector<Drawable*>* all (gameState->custodian.getListOfObjects());
+   std::vector<Drawable*>* all (custodian->getListOfObjects());
 
-   if (gameState == NULL || all == NULL)
+   if (NULL)
       return NULL;
    
    // The new list, which will be returned
@@ -74,7 +73,7 @@ std::list<Drawable*>* Radar :: getMinimapReading(float radius, int& totalItems) 
    /* Get the custodian out of gameState, and get its vector of Objects.
     * Use this vector to construct a new copied vector (to be safe), and return that one.
     */
-   std::vector<Drawable*>* all (gameState->custodian.getListOfObjects());
+   std::vector<Drawable*>* all (custodian->getListOfObjects());
    
    std::list<Drawable*>* nearList = new std::list<Drawable*>();
    
@@ -107,7 +106,7 @@ std::list<Drawable*>* Radar :: getMinimapReading(float radius, int& totalItems) 
  */
 std::list<Drawable*>* Radar :: getTargetableViewFrustumReading() {
    // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
-   std::vector<Drawable*> allObjects (*gameState->custodian.getListOfObjects());
+   std::vector<Drawable*> allObjects (*custodian->getListOfObjects());
 
    // Set the camera temporarily.
 
@@ -125,7 +124,7 @@ std::list<Drawable*>* Radar :: getTargetableViewFrustumReading() {
  */
 std::list<Drawable*>* Radar :: getViewFrustumReading() {
    // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
-   std::vector<Drawable*> allObjects (*gameState->custodian.getListOfObjects());
+   std::vector<Drawable*> allObjects (*custodian->getListOfObjects());
 // TODO: Reverse this: get the list of particles first, and append objects to that, rather than getting the list of objects, and appending particles to it.
    Drawable* curParticle;
    // Add all of the particles to allObjects.

@@ -6,10 +6,14 @@
 #include "Menus/Menu.h"
 #include "Utility/InputManager.h"
 
+class GameState;
+
 class SettingsMenu : public Menu {
    public:
-   SettingsMenu();
+   SettingsMenu(GameState*& _gameState);
    ~SettingsMenu();
+   
+   GameState*& gameState;
 
    std::string getStatus(bool status);
    std::string getViewStatus(int status);

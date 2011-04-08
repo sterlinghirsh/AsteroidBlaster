@@ -14,7 +14,7 @@
 
 class TractorBeamShot : public Shot {
    public:
-      TractorBeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
+      TractorBeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState);
       virtual void draw();
       virtual void update(double timeDiff);
       int framesAlive;

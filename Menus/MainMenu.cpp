@@ -8,6 +8,7 @@
 #include "Utility/Texture.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
+#include "Items/AsteroidShip.h"
 
 #define NEWGAME_STRING_INDEX 0
 #define CONTINUE_STRING_INDEX 1
@@ -16,6 +17,9 @@
 #define HELP_STRING_INDEX 4
 #define CREDITS_STRING_INDEX 5
 #define QUIT_STRING_INDEX 6
+
+// Also defined in main.cpp
+#define WORLD_SIZE 80.00
 
 MainMenu::MainMenu() {
    menuActive = false;
@@ -50,6 +54,21 @@ MainMenu::MainMenu() {
 
    // grey out the option to show that it is disabled
    menuTexts[SAVELOAD_STRING_INDEX]->setColor(SDL_GREY);
+
+   // Initialize the ship(s) in the background.
+   menuGameState = new GameState(WORLD_SIZE, true);
+   
+   ship1 = new AsteroidShip(menuGameState);
+   ship2 = new AsteroidShip(menuGameState);
+   ship3 = new AsteroidShip(menuGameState);
+   ship4 = new AsteroidShip(menuGameState);
+
+   setupShips();
+   
+   menuGameState->custodian.add(ship1);
+   menuGameState->custodian.add(ship2);
+   menuGameState->custodian.add(ship3);
+   menuGameState->custodian.add(ship4);
 }
 
 
@@ -57,6 +76,7 @@ MainMenu::~MainMenu() {
    for(unsigned i = 0; i < menuTexts.size(); i++) {
       delete menuTexts[i];
    }
+   delete menuGameState;
 }
 
 void MainMenu::draw() {
@@ -73,8 +93,25 @@ void MainMenu::draw() {
       menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_GREY);
    }
    
-   // Clear the screen
+   // Clear the screen.
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   
+   glPushMatrix();
+      // Draw menu background stuff.
+      usePerspective();
+
+      gluLookAt(0, 0, 20, // Eye at origin.
+       0, 0, -1, // X goes right, Z goes away.
+       0, 1, 0); // Y goes up.
+
+      // Draw background.
+      menuGameState->draw();
+
+   glPopMatrix();
+
+   // Clear the depth buffer to draw on top of the ship.
+   glClear(GL_DEPTH_BUFFER_BIT);
    
    //draw the text
    glPushMatrix();
@@ -233,6 +270,10 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
    menuTexts[HELP_STRING_INDEX]->mouseHighlight(x,y);
    menuTexts[CREDITS_STRING_INDEX]->mouseHighlight(x,y);
    menuTexts[QUIT_STRING_INDEX]->mouseHighlight(x,y);
+
+   // -20 is the near plane. 3 units in front is a good target point for the ships.
+   ship3->lookAt(p2wx(x), p2wy(y), 17, 0, 1, 0);
+   ship4->lookAt(p2wx(x), p2wy(y), 17, 0, 1, 0);
    
 }
 
@@ -242,6 +283,8 @@ void MainMenu::activate() {
    SoundEffect::stopAllSoundEffect();
    Music::stopMusic();
    Music::playMusic("8-bit3.ogg");
+   
+   setupShips();
 }
 
 void MainMenu::deactivate() {
@@ -254,8 +297,38 @@ void MainMenu::deactivate() {
 void MainMenu::newGameDeactivate() {
       deactivate();
       firstTime = false;
-      gameState->reset();
+      menuGameState->reset();
       menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
 }
 
    
+void MainMenu::update(double timeDiff) {
+   Menu::update(timeDiff);
+   
+   ship1->setYawSpeed(0.1);
+
+   if (ship2->position->y > 25) {
+      ship2->setOrientation(0, -1, 0,
+       -1, 0, 0);
+   } else if (ship2->position->y < -25) {
+      ship2->setOrientation(0, 1, 0,
+       -1, 0, 0);
+   }
+   menuGameState->update(timeDiff);
+}
+
+void MainMenu::setupShips() {
+   ship1->position->update(-15, 2, 5);
+   ship1->setOrientation(1, 0, 0, 0, 1, 0);
+   ship1->accelerateForward(1);
+   
+   ship2->position->update(15, -20, -20);
+   ship2->setOrientation(0, 1, 0,
+    -1, 0, 0);
+   ship2->accelerateForward(1);
+   ship2->setRollSpeed(0.2);
+
+   ship3->position->update(8, -4, 0);
+   
+   ship4->position->update(-2, -3, 10);
+}

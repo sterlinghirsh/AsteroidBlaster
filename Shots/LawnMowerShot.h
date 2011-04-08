@@ -14,7 +14,7 @@
 
 class LawnMowerShot : public Shot {
    public:
-      LawnMowerShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
+      LawnMowerShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState);
       virtual void draw();
       virtual void update(double timeDiff);
       int framesAlive;

@@ -29,15 +29,16 @@ using namespace std;
 
 static double timediff = clock();;
 
-Asteroid3D::Asteroid3D(double r, double worldSizeIn) :
-   Object3D(0, 0, 0, 0) {
+Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState) :
+   Object3D(_gameState),
+   worldSize(worldSizeIn) {
       shouldDrawInMinimap = true;
-      worldSize = worldSizeIn;
-      //health = initH;
+
       initH = (int)(r * r * 1.0 / 5.0);
       if (initH < 2.0) {
          initH = 2.0;
       }
+
       health = initH;
       newRandomPosition();
       InitAsteroid(r, worldSizeIn);
@@ -168,8 +169,6 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 }
 
 void Asteroid3D::drawGlow() {
-   extern GameState* gameState;
-
    glColor3f(1, 1, 1);
    glDisable(GL_LIGHTING);
    // Call the display list if it has one.
@@ -421,7 +420,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
                particleDirection->randomMagnitude();
                particleDirection->setLength(3);
                particleDirection->addUpdate(centerToImpactPoint);
-               ElectricityImpactParticle::Add(particleStartPoint, particleDirection);
+               ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
             }
          } else if (dynamic_cast<RamShot*>(other) != NULL) {
             health = 0;
@@ -453,7 +452,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
          Sprite::sprites.push_back(
                new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20,
                   *position, radius * explosionFactor,
-                  radius * explosionFactor));
+                  radius * explosionFactor, gameState));
          if (radius > 2) {
             shot->owner->score += (int) radius * 10;
             int dimension = rand() % 3;
@@ -467,7 +466,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
 
 Shard* Asteroid3D::makeShard(int num) {
    Shard* shard;
-   shard = new Shard(0.5, worldSize);
+   shard = new Shard(0.5, worldSize, gameState);
    shard->velocity->updateMagnitude(0.0, 0.0, 0.0);
    shard->position->clone(position);
    shard->position->x += num == 0 ? radius/2 : -radius/2;
@@ -481,7 +480,7 @@ Shard* Asteroid3D::makeShard(int num) {
  */
 Asteroid3D* Asteroid3D::makeChild(int num, int dimension) {
    Asteroid3D* asteroid;
-   asteroid = new Asteroid3D(radius/2, worldSize);
+   asteroid = new Asteroid3D(radius/2, worldSize, gameState);
    asteroid->velocity->scalarMultiplyUpdate(4);
    asteroid->velocity->addUpdate(*velocity);
    asteroid->position->clone(position);

@@ -57,6 +57,7 @@ class Radar {
    private:
       // The ship that owns this Radar
       AsteroidShip* owner;
+      Custodian* custodian;
       ViewFrustum* curFrustum;
       // Set up a list iterator to go over a list.
       std::list<Drawable*> :: iterator listIter;

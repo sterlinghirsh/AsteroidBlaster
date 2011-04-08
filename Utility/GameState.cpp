@@ -21,16 +21,19 @@ extern double minimapSizeFactor;
 std::ostringstream GameState :: sstream2;
 
 void GameState::addAIPlayer() {
-   AsteroidShip* otherShip = new AsteroidShip();
+   AsteroidShip* otherShip = new AsteroidShip(this);
    otherShip->position->update(3, 0, 0);
    otherShip->flyingAI->enable();
    otherShip->shooter->enable();
    custodian.add(otherShip);
 }
 
-GameState::GameState(double worldSizeIn) {
+GameState::GameState(double worldSizeIn, bool _inMenu) :
+ custodian(this) {
    godMode = false;
    gameIsRunning = true;
+
+   inMenu = _inMenu;
    
    /* A view frustum culled list of objects to be used for drawing and by
       the shooting AI.
@@ -40,14 +43,14 @@ GameState::GameState(double worldSizeIn) {
 
    worldSize = worldSizeIn;
    skybox = new Skybox();
-   ship = new AsteroidShip();
+   ship = new AsteroidShip(this);
    minimap = new Minimap(ship);
    //bloomScreen = new Display((int)(GW * 0.8), (int)(GH * 0.8), Texture::getTexture("bloomTex"));
    rawScreen = new Display(0, 0, Texture::getTexture("hblurTex"));
    bloomScreen = new Display(0, 1, Texture::getTexture("bloomTex"));
    fboScreen = new Display(1, 0, Texture::getTexture("fboTex"));
    camera = new Camera(ship);
-   cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
+   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    //sphere = new BoundingSphere(worldSize, 0, 0, 0);
    // Set up our text objects to be displayed on screen.
    curFPS = 0;
@@ -133,7 +136,7 @@ void GameState::update(double timeDiff) {
       ship->accelerateForward(0);
       ship->setYawSpeed(0.0);
       countDown = 5;
-   } else if(gameIsRunning && custodian.asteroidCount == 0) {
+   } else if(!inMenu && gameIsRunning && custodian.asteroidCount == 0) {
       //check if it is done waiting until going to the next level
       if(countDown <= 0) {
          nextLevel();
@@ -144,19 +147,17 @@ void GameState::update(double timeDiff) {
          gameMsg << "Next Level In " << (int)(countDown + 0.5);
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
-   } else if (!gameIsRunning){
+   } else if (!inMenu && !gameIsRunning){
       countDown -= timeDiff;
       if(countDown <= 0) {
          mainMenu->menuActive = true;
          SoundEffect::stopAllSoundEffect();
          Music::stopMusic();
          Music::playMusic("8-bit3.ogg");
-         gameState->reset();
+         reset();
          mainMenu->firstTime = true;
       }
    }
-   
-
 
    std::vector<Drawable*>* objects = custodian.getListOfObjects();
    std::set<Drawable*, compareByDistance>* collisions;
@@ -250,9 +251,11 @@ void GameState::draw() {
    camera->setOffset(*ship->getCameraOffset());
 
    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   camera->setCamera(true);
-   camera->shake(ship->getShakeAmount());
-   skybox->draw(camera);
+   if (!inMenu) {
+      camera->setCamera(true);
+      camera->shake(ship->getShakeAmount());
+      skybox->draw(camera);
+   }
    cube->draw();
 
    // Get a list of all of the objects after culling them down to the view frustum.
@@ -262,13 +265,15 @@ void GameState::draw() {
    
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
-   ship->drawCrosshair();
+   if (!inMenu)
+      ship->drawCrosshair();
 
    for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
       if (*listIter == NULL) {
          continue;
       } else if (*listIter == ship && 
-       (ship->getCurrentView() == VIEW_FIRSTPERSON_SHIP ||
+       (inMenu ||
+       ship->getCurrentView() == VIEW_FIRSTPERSON_SHIP ||
        ship->getCurrentView() == VIEW_FIRSTPERSON_GUN)) {
          // Don't draw the ship in first Person mode.
       } else {      
@@ -559,13 +564,20 @@ void GameState::updateText() {
 
 
 void GameState::initAsteroids() {
+   /**
+    * Don't init asteroids in the menu.
+    */
+   if (inMenu) {
+      return;
+   }
+
    Asteroid3D* tempAsteroid;
    std::set<Drawable*, compareByDistance>* collisions;
 
    /* We want this spaceHolder because we don't want to spawn asteroids
     * too close to the ship.
     */
-   Object3D* spaceHolder = new Object3D(0, 0, 0, 0);
+   Object3D* spaceHolder = new Object3D(this);
    spaceHolder->minX = spaceHolder->minY = spaceHolder->minZ = -10;
    spaceHolder->maxX = spaceHolder->maxY = spaceHolder->maxZ = 10;
    custodian.add(spaceHolder);
@@ -578,7 +590,7 @@ void GameState::initAsteroids() {
    // Spawn the initial asteroids for the game.
    for (int i = 0; i < numAsteroidsToSpawn; ++i) {
       asteroidSize = (minAsteroidSize + asteroidSizeVariation * randdouble()) / sqrt((double)numAsteroidsToSpawn);
-      tempAsteroid = new Asteroid3D(minAsteroidSize + asteroidSizeVariation * randdouble(), worldSize);
+      tempAsteroid = new Asteroid3D(minAsteroidSize + asteroidSizeVariation * randdouble(), worldSize, this);
       // Add each asteroid to the custodian so we know of its existence.
       custodian.add(tempAsteroid);
       do {
@@ -614,8 +626,8 @@ void GameState::reset() {
 
    curLevel = 1;
    
-   cube = new BoundingSpace(worldSize / 2, 0, 0, 0);
-   ship = new AsteroidShip();
+   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
+   ship = new AsteroidShip(this);
    cube->constrain(ship);
    minimap = new Minimap(ship);
    camera = new Camera(ship);
@@ -783,7 +795,7 @@ void GameState::keyDown(int key) {
    //switch weapons
    case SDLK_v:
       // If we're in godMode, ignore whether or not a weapon is purchased
-      if(gameState->godMode)
+      if(godMode)
          ship->prevWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
@@ -795,7 +807,7 @@ void GameState::keyDown(int key) {
       
    case SDLK_z:
       // If we're in godMode, ignore whether or not a weapon is purchased
-      if(gameState->godMode)
+      if(godMode)
          ship->prevWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
@@ -854,7 +866,7 @@ void GameState::keyDown(int key) {
       break;
 
    case SDLK_F10:
-      gameState->ship->nShards += 10;
+      ship->nShards += 10;
       break;
    // If the user presses F11, give them all of the weapons.
    case SDLK_F11:
@@ -1000,7 +1012,7 @@ void GameState::mouseDown(int button) {
 
    case 4:
       // If we're in godMode, ignore whether or not a weapon is purchased
-      if(gameState->godMode)
+      if(godMode)
          ship->prevWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
@@ -1011,7 +1023,7 @@ void GameState::mouseDown(int button) {
       break;
    case 5:
       // If we're in godMode, ignore whether or not a weapon is purchased
-      if(gameState->godMode)
+      if(godMode)
          ship->nextWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
@@ -1075,12 +1087,12 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 
 }
 
-double GameState::getWallxMin() { return cube->xMin; }
-double GameState::getWallxMax() { return cube->xMax; }
-double GameState::getWallyMin() { return cube->yMin; }
-double GameState::getWallyMax() { return cube->yMax; }
-double GameState::getWallzMin() { return cube->zMin; }
-double GameState::getWallzMax() { return cube->zMax; }
+double GameState::getWallxMin() const { return cube->xMin; }
+double GameState::getWallxMax() const { return cube->xMax; }
+double GameState::getWallyMin() const { return cube->yMin; }
+double GameState::getWallyMax() const { return cube->yMax; }
+double GameState::getWallzMin() const { return cube->zMin; }
+double GameState::getWallzMax() const { return cube->zMax; }
 
 double GameState::getMouseX() { return mouseX; }
 double GameState::getMouseY() { return mouseY; }

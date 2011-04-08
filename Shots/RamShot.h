@@ -14,7 +14,7 @@
 
 class RamShot : public Shot {
    public:
-      RamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
+      RamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState);
       virtual void draw();
       virtual void update(double timeDiff);
       int framesAlive;

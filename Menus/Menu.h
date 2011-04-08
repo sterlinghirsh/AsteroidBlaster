@@ -11,6 +11,8 @@ class Menu : public InputReceiver {
    Menu();
    virtual ~Menu();
 
+   virtual void update(double timeDiff);
+
    virtual void draw() = 0;
    
    virtual void keyUp(int key) = 0;

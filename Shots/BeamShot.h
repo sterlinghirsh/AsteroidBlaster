@@ -16,7 +16,7 @@ class BeamShot : public Shot {
       unsigned long lastHitFrame;
       Drawable* hitItem;
 
-      BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
+      BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState);
       void drawBeam(bool drawDots);
       virtual void draw();
       virtual void drawGlow();

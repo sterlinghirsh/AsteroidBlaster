@@ -67,7 +67,6 @@ extern StoreMenu* storeMenu;
 extern HelpMenu* helpMenu;
 extern SettingsMenu* settingsMenu;
 extern CreditsMenu* creditsMenu;
-extern GameState* gameState;
 extern TTF_Font* hudFont;
 extern TTF_Font* menuFont;
 

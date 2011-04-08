@@ -11,7 +11,8 @@
 #include <algorithm>
 #include <assert.h>
 
-Custodian::Custodian() {
+Custodian::Custodian(const GameState* _gameState) :
+ gameState(_gameState) {
    shardCount = asteroidCount = 0;
 }
 
@@ -121,7 +122,6 @@ void Custodian::update() {
  */
 void Custodian::add(Drawable* objectIn) {
    objectsToAdd.push_back(objectIn);
-   objectIn->setCustodian(this);
    if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
       asteroidCount++;
    } else if (dynamic_cast<Shard*>(objectIn) != NULL) {

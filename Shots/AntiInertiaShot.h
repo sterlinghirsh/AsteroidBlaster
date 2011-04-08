@@ -12,7 +12,7 @@
 
 class AntiInertiaShot : public Shot {
    public:
-      AntiInertiaShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn);
+      AntiInertiaShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState);
       virtual void draw();
       virtual void drawGlow();
       virtual void drawShot(bool isGlow);

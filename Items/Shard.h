@@ -35,7 +35,7 @@ class Shard : public Object3D {
       double worldSize;
       double sizeX, sizeY, sizeZ, collisionRadius;
 
-      Shard(double r, double worldSizeIn);
+      Shard(double r, double worldSizeIn, const GameState* _gameState);
       virtual ~Shard();
       void InitShard(double r, double worldSizeIn);
       void draw();

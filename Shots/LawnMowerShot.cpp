@@ -26,7 +26,7 @@ static float poop = 2.5f;
 static float bladder = .05f;
 
 LawnMowerShot::LawnMowerShot(Point3D& posIn, Vector3D dirIn, 
- AsteroidShip* const ownerIn) : Shot(posIn, dirIn, ownerIn) {
+ AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState) {
    persist = true;
    angle = M_PI / 40; // Radians from the center
    length = 10;

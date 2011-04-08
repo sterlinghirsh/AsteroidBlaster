@@ -22,6 +22,7 @@
 
 class Object3D;
 class GlowSquare;
+class GameState;
 
 class BoundingWall {
    public:
@@ -34,7 +35,7 @@ class BoundingWall {
       int squareSize;
       int squaresPerSide;
 
-      BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID);
+      BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID, const GameState* _gameState);
       virtual ~BoundingWall();
       void draw();
       void drawGlow();
@@ -49,6 +50,7 @@ class BoundingWall {
       Vector3D normal;
    private:
       int linesDisplayList;
+      const GameState* gameState;
 };
 
 #endif

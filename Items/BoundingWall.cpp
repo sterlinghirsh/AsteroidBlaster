@@ -14,8 +14,8 @@
 #include "Utility/WindowsMathLib.h"
 #endif
 
-BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID) :
- squareSize(_squareSize), wallSize(_wallSize), wallColor(_wallColor), wallID(_wallID) {
+BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID, const GameState* _gameState) :
+ squareSize(_squareSize), wallSize(_wallSize), wallColor(_wallColor), wallID(_wallID), gameState(_gameState) {
    // Initialize Wall Squares
    squaresPerSide = (int) round(2 * wallSize / squareSize);
    numSquares = squaresPerSide * squaresPerSide;

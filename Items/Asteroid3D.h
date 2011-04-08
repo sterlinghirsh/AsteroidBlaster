@@ -28,7 +28,7 @@ class Asteroid3D : public Object3D {
       double health;
       double sizeX, sizeY, sizeZ, collisionRadius;
       
-      Asteroid3D(double r, double worldSizeIn);
+      Asteroid3D(double r, double worldSizeIn, const GameState* _gameState);
       virtual ~Asteroid3D();
       void InitAsteroid(double r, double worldSizeIn);
       void draw();

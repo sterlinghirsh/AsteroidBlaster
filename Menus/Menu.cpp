@@ -19,4 +19,8 @@ Menu::~Menu() {
    }
 }
 
+void Menu::update(double timeDiff) {
+   // Sleep by default to avoid wasting CPU.
+   SDL_Delay(1);
+}
 

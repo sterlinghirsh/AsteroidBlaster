@@ -31,9 +31,9 @@ class Sprite : public Drawable {
       bool oneShot;
 
       Sprite(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
-       Point3D posIn, double drawWidth, double drawHeight);
+       Point3D posIn, double drawWidth, double drawHeight, const GameState* _gameState);
       static void Add(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
-       Point3D posIn, double drawWidth, double drawHeight);
+       Point3D posIn, double drawWidth, double drawHeight, const GameState* _gameState);
       virtual void draw();
 };
 

@@ -13,6 +13,7 @@
 // Incomplete class declaration so we can have the pointer to it.
 class Custodian;
 class BoundingWall;
+class GameState;
 
 class Drawable {
    public:
@@ -31,7 +32,7 @@ class Drawable {
       double minX, minY, minZ, maxX, maxY, maxZ;
       Vector3D* velocity;
 
-      Drawable(double x, double y, double z, GLuint displayListIn);
+      Drawable(const GameState* _gameState);
       virtual ~Drawable();
       //virtual void init();
       /*
@@ -59,13 +60,13 @@ class Drawable {
        * To be overwritten by all subclasses. This is an empty stub only.
        */
       virtual void update(double timeDifference);
-      void setCustodian(Custodian* cust);
+      
       virtual bool detectCollision(Drawable* other, bool checkOther = true);
       virtual void handleCollision(Drawable* other);
       virtual void drawInMinimap();
       virtual void hitWall(BoundingWall* wall);
       virtual void debug();
-   protected:
+      const GameState* gameState;
       Custodian* custodian;
 };
 

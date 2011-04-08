@@ -7,14 +7,20 @@
 
 #include "Items/Drawable.h"
 #include "Items/BoundingWall.h"
+#include "Utility/GameState.h"
 
 /**
  * We should get rid of the displayListIn thing, I think.
  * -Sterling
  */
-Drawable :: Drawable(double x, double y, double z, GLuint displayListIn) : position(new Point3D(x, y, z)) {
+Drawable :: Drawable(const GameState* _gameState) :
+ gameState(_gameState) {
+ 
+   position = new Point3D(0, 0, 0);
    minPosition = new Point3D(0, 0, 0);
    maxPosition = new Point3D(0, 0, 0);
+
+   custodian = (Custodian*) &gameState->custodian;
 
    velocity = NULL;
    shouldRemove = false; // True when custodian should remove this.
@@ -76,11 +82,6 @@ double Drawable::getCullRadius() {
  */
 void Drawable::update(double timeDifference) {
 }
-
-void Drawable::setCustodian(Custodian *cust) {
-   custodian = cust;
-}
-
 
 /**
  * checkOther is set to true by default in Drawable.h.

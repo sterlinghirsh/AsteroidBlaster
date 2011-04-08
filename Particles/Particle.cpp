@@ -21,8 +21,8 @@ using namespace std;
 list<Particle*> Particle::particles;
 int Particle::particleDisplayList;
 
-Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _r, float _g, float _b) :
-   Drawable(0,0,0,0)
+Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _r, float _g, float _b, const GameState* _gameState) :
+   Drawable(_gameState)
 {
    position = _position;
    velocity = _velocity;

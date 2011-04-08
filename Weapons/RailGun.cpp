@@ -35,15 +35,15 @@ void RailGun::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void RailGun::fire() {
-   if (!isCooledDown() || (!gameState->godMode && curAmmo <= 0))
+   if (!isCooledDown() || (!ship->gameState->godMode && curAmmo <= 0))
       return;
    timeLastFired = doubleTime();
    Point3D start = ship->shotOrigin;
    // Move start point by the shotDirection vector, multiplied by a scalar
    ship->setShakeAmount(5.5);
-   gameState->custodian.add(new BeamShot(start,
-            ship->shotDirection, ship));
-   if (!gameState->godMode) {
+   ship->custodian->add(new BeamShot(start,
+            ship->shotDirection, ship, ship->gameState));
+   if (!ship->gameState->godMode) {
       SoundEffect::playSoundEffect("Rail2.wav");
       // Only take away some ammo if we're not in godMode
       curAmmo--;
