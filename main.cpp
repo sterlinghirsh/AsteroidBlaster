@@ -437,7 +437,7 @@ void draw(GameState* gameState) {
       gameState = new GameState(WORLD_SIZE, false);
 
       // Initialize the menus
-      mainMenu = new MainMenu();
+      mainMenu = new MainMenu(gameState);
       storeMenu = new StoreMenu(gameState);
       // We should change this to pass in gameSettings when something like that exists.
       settingsMenu = new SettingsMenu(gameState);

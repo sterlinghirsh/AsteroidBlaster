@@ -11,7 +11,7 @@ class GameState;
 
 class MainMenu : public Menu {
    public:
-   MainMenu();
+   MainMenu(GameState* _mainGameState);
    ~MainMenu();
 
    void draw();
@@ -44,6 +44,7 @@ class MainMenu : public Menu {
    AsteroidShip* ship4;
    
    GameState* menuGameState;
+   GameState* mainGameState;
 };
 
 

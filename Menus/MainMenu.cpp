@@ -21,7 +21,7 @@
 // Also defined in main.cpp
 #define WORLD_SIZE 80.00
 
-MainMenu::MainMenu() {
+MainMenu::MainMenu(GameState* _mainGameState) {
    menuActive = false;
    firstTime = true;
    x = y = -1;
@@ -69,6 +69,8 @@ MainMenu::MainMenu() {
    menuGameState->custodian.add(ship2);
    menuGameState->custodian.add(ship3);
    menuGameState->custodian.add(ship4);
+
+   mainGameState = _mainGameState;
 }
 
 
@@ -297,7 +299,7 @@ void MainMenu::deactivate() {
 void MainMenu::newGameDeactivate() {
       deactivate();
       firstTime = false;
-      menuGameState->reset();
+      mainGameState->reset();
       menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
 }
 

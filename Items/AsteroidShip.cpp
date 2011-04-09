@@ -334,7 +334,8 @@ void AsteroidShip::update(double timeDiff) {
       (*iter)->update(timeDiff);
    }
 
-   if (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0) {
+   if (!gameState->inMenu &&
+    (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
       if (soundHandle == -1)
          soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav", true);
    } else {
