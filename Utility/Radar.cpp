@@ -38,7 +38,7 @@ std::list<Drawable*>* Radar :: getFullReading() {
     */
    std::vector<Drawable*>* all (custodian->getListOfObjects());
 
-   if (NULL)
+   if (all == NULL)
       return NULL;
    
    // The new list, which will be returned
