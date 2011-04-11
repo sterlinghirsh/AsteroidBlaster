@@ -106,7 +106,6 @@ void Sprite::updateSprites(double timeDiff) {
       if ((*sprite)->shouldRemove) {
          delete *sprite;
          sprite = Sprite::sprites.erase(sprite);
-         std::cout << "removed sprite" << std::endl;
       } else {
          sprite++;
       }
