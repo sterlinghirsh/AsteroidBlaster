@@ -189,6 +189,18 @@ class AsteroidShip : public Object3D {
       double rollSpeed;
       double maxSpeed; // Units per second
       double maxBoostSpeed; // Units per second
+      double frontX;
+      double frontY;
+      double frontZ;
+      double cornerX;
+      double cornerY;
+      double cornerZ;
+      double middleXY;
+      double middleZ;
+      double backX;
+      double backY;
+      double backZ;
+      double skew;
 
       bool isBraking;
       bool isBoosting;

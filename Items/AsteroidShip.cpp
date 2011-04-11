@@ -48,15 +48,31 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       flashiness = 0;
       tracker = 0;
       rando = 1;
-      x2Change = 0.075;
-      y2Change = 0.075;
-      z2Change = 0.3;
+      
+      zMove = 2;
+      lineMove = zMove / 4;
+      frontX = 0;
+      frontY = 0;
+      frontZ = 0;
+      cornerX = .2;
+      cornerY = .2;
+      cornerZ = 1.3;
+      middleXY = .15;
+      middleZ = 1;
+      backX = 0;
+      backY = 0;
+      backZ = 1.6;
+      
+      //skew must be set to 0 til I figure out a better way to do shit
+      skew = 0;
+      
+      x2Change = middleXY / 2;
+      y2Change = middleXY / 2;
+      z2Change = (backZ - middleZ) / 2;
       xChange = 0;
       yChange = 0;
       zChange = 0;
       backChange = 0;
-      zMove = 2;
-      lineMove = zMove / 4;
       
       shotOriginScale = 4;
       shotOrigin = *position;
@@ -357,15 +373,14 @@ void AsteroidShip::update(double timeDiff) {
          shakeAmount = 0;
       }
    }
-   
+
    if (curForwardAccel == 10) {
       backChange += (zMove * timeDiff);
-      if (backChange > .6) {
-         backChange = .6;
+      if (backChange > (backZ - middleZ)) {
+         backChange = (backZ - middleZ);
       }
       
-      if (backChange == .6) {
-
+      if (backChange == (backZ - middleZ)) {
          xChange += lineMove * timeDiff;
          yChange += lineMove * timeDiff;
          zChange += zMove * timeDiff;
@@ -374,13 +389,13 @@ void AsteroidShip::update(double timeDiff) {
          z2Change += zMove * timeDiff;
       }
       
-      if (x2Change > .15) {
+      if (x2Change > middleXY) {
          xChange = 0;
          yChange = 0;
          zChange = 0;
-         x2Change = .075;
-         y2Change = .075;
-         z2Change = .3;
+         x2Change = middleXY / 2;
+         y2Change = middleXY / 2;
+         z2Change = (backZ - middleZ) / 2;
       }
       
    } else {
@@ -422,74 +437,60 @@ void AsteroidShip::keepFiring() {
 }
 
 void AsteroidShip::draw_frontpanels() {
-   double frontx = 0, fronty = 0, frontz = 0;
-   double cornerx = .2, cornery = .2, cornerz = 1.3;
-   double middleXY = .15, middleZ = 1;
-   double backx = 0, backy = 0, backz = 1.6; 
    glBegin(GL_TRIANGLES);
-   //glNormal3d(.2, -.005, -.03);
-   glVertex3d(frontx, fronty, frontz);
-   glVertex3d(cornerx, cornery, cornerz);
-   glVertex3d(middleXY, 0, middleZ);
 
-   //glNormal3d(-.005, .2, -.03);
-   glVertex3d(frontx, fronty, frontz);
-   glVertex3d(0, middleXY, middleZ);
-   glVertex3d(cornerx, cornery, cornerz);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(cornerX, cornerY, cornerZ);
+   glVertex3d(middleXY, skew, middleZ);
 
-   //glNormal3d(.005, .2, -.03);
-   glVertex3d(frontx, fronty, frontz);
-   glVertex3d(-cornerx, cornery, cornerz);
-   glVertex3d(0, middleXY, middleZ);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(skew, middleXY, middleZ);
+   glVertex3d(cornerX, cornerY, cornerZ);
 
-   //glNormal3d(-.2, -.005, -.03);
-   glVertex3d(frontx, fronty, frontz);
-   glVertex3d(-middleXY, 0, middleZ);
-   glVertex3d(-cornerx, cornery, cornerz);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(-cornerX, cornerY, cornerZ);
+   glVertex3d(skew, middleXY, middleZ);
 
-   //glNormal3d(-.2, .005, -.03);
-   glVertex3d(frontx, fronty, frontz);
-   glVertex3d(-cornerx, -cornery, cornerz);
-   glVertex3d(-middleXY, 0, middleZ);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(-middleXY, skew, middleZ);
+   glVertex3d(-cornerX, cornerY, cornerZ);
 
-   //glNormal3d(0.005,-0.2,-0.03);
-   glVertex3d(frontx, fronty, frontz);
-   glVertex3d(0, -middleXY, middleZ);
-   glVertex3d(-cornerx, -cornery, cornerz);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(-cornerX, -cornerY, cornerZ);
+   glVertex3d(-middleXY, skew, middleZ);
 
-   //glNormal3d(-.005,-0.2,-0.03);
-   glVertex3d(frontx, fronty, frontz);
-   glVertex3d(cornerx, -cornery, cornerz);
-   glVertex3d(0, -middleXY, middleZ);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(skew, -middleXY, middleZ);
+   glVertex3d(-cornerX, -cornerY, cornerZ);
 
-   //glNormal3d(0.2,0.005,-0.03) ;
-   glVertex3d(frontx, fronty, frontz);
-   glVertex3d(middleXY, 0, middleZ);
-   glVertex3d(cornerx, -cornery, cornerz);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(cornerX, -cornerY, cornerZ);
+   glVertex3d(skew, -middleXY, middleZ);
+
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(middleXY, skew, middleZ);
+   glVertex3d(cornerX, -cornerY, cornerZ);
    glEnd();
 }
 
 void AsteroidShip::draw_backpanels() {
    glBegin(GL_TRIANGLES);
-   //glNormal3d(-0.045,-0.045,0.0375);
-   glVertex3d(.15, 0, 1);
-   glVertex3d(.2, .2, 1.3);
-   glVertex3d(0, .15, 1);
+   
+   glVertex3d(middleXY, skew, middleZ);
+   glVertex3d(cornerX, cornerY, cornerZ);
+   glVertex3d(skew, middleXY, middleZ);
 
-   //glNormal3d(-0.045,0.045,0.0375);
-   glVertex3d(.15, 0, 1);
-   glVertex3d(0, -.15, 1);
-   glVertex3d(.2, -.2, 1.3);
+   glVertex3d(middleXY, skew, middleZ);
+   glVertex3d(skew, -middleXY, middleZ);
+   glVertex3d(cornerX, -cornerY, cornerZ);
 
-   //glNormal3d(0.045,0.045,0.0375);
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(-.2, -.2, 1.3);
-   glVertex3d(0, -.15, 1);
+   glVertex3d(-middleXY, skew, middleZ);
+   glVertex3d(-cornerX, -cornerY, cornerZ);
+   glVertex3d(skew, -middleXY, middleZ);
 
-   //glNormal3d(0.045,-0.045,0.0375);
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(0, .15, 1);
-   glVertex3d(-.2, .2, 1.3);
+   glVertex3d(-middleXY, skew, middleZ);
+   glVertex3d(skew, middleXY, middleZ);
+   glVertex3d(-cornerX, cornerY, cornerZ);
    glEnd();
 }
 
@@ -498,74 +499,71 @@ void AsteroidShip::draw_spaceboner() {
    if (curForwardAccel == 10.0) {
       glColor4d(1, .4, 0, .5);
       
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, .15, 1);
-      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(skew, middleXY, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
 
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, 0, 1 + backChange);
-      glVertex3d(0, -.15, 1);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, -middleXY, middleZ);
 
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(0, -.15, 1);
-      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(skew, -middleXY, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
 
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(-0, 0, 1 + backChange);
-      glVertex3d(0, .15, 1);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, middleXY, middleZ);
    } else if (backChange == 0) {
       glColor4d(0, 0, 0, .4);
 
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, .15, 1);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(skew, middleXY, middleZ);
       
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, -.15, 1);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(skew, -middleXY, middleZ);
    } else {
       glColor4d(1, .4, 0, .5);
 
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, .15, 1);
-      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(skew, middleXY, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
 
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, 0, 1 + backChange);
-      glVertex3d(0, -.15, 1);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, -middleXY, middleZ);
 
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(0, -.15, 1);
-      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(skew, -middleXY, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
 
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(-0, 0, 1 + backChange);
-      glVertex3d(0, .15, 1);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, middleXY, middleZ);
    }   
    glEnd();
 }
 
 void AsteroidShip::draw_bonerlines() {
    if (curForwardAccel == 10.0) {
-      
-      if (backChange == .6) {
+      if (backChange == (backZ - middleZ)) {
          glBegin(GL_LINE_LOOP);
          glColor3d(1, .4, 0);
-         
-         glVertex3d(.15 - xChange, 0, 1 + zChange);
-         glVertex3d(0, .15 - yChange, 1 + zChange);
-         glVertex3d(-.15 + xChange, 0, 1 + zChange);
-         glVertex3d(0, -.15 + yChange, 1 + zChange);
-         glVertex3d(.15 - xChange, 0, 1 + zChange);
-         
+         glVertex3d(middleXY - xChange, skew, middleZ + zChange);
+         glVertex3d(skew, middleXY - yChange, middleZ + zChange);
+         glVertex3d(-middleXY + xChange, skew, middleZ + zChange);
+         glVertex3d(skew, -middleXY + yChange, middleZ + zChange);
+         glVertex3d(middleXY - xChange, skew, middleZ + zChange);  
          glEnd();
          
          glBegin(GL_LINE_LOOP);
-         glVertex3d(.15 - x2Change, 0, 1 + z2Change);
-         glVertex3d(0, .15 - y2Change, 1 + z2Change);
-         glVertex3d(-.15 + x2Change, 0, 1 + z2Change);
-         glVertex3d(0, -.15 + y2Change, 1 + z2Change);
-         glVertex3d(.15 - x2Change, 0, 1 + z2Change);
+         glVertex3d(middleXY - x2Change, skew, middleZ + z2Change);
+         glVertex3d(skew, middleXY - y2Change, middleZ + z2Change);
+         glVertex3d(-middleXY + x2Change, skew, middleZ + z2Change);
+         glVertex3d(skew, -middleXY + y2Change, middleZ + z2Change);
+         glVertex3d(middleXY - x2Change, skew, middleZ + z2Change);
          glEnd();
 
       }
@@ -573,77 +571,77 @@ void AsteroidShip::draw_bonerlines() {
       glBegin(GL_LINE_LOOP);
       glColor3d(1, .4, 0);
       
-      glVertex3d(.15, 0, 1);
-      glVertex3d(.2, .2, 1.3);
-      glVertex3d(0, .15, 1);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(cornerX, cornerY, cornerZ);
+      glVertex3d(skew, middleXY, middleZ);
 
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, 0, 1 + backChange);
-      glVertex3d(0, .15, 1);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, middleXY, middleZ);
 
-      glVertex3d(.15, 0, 1);
-      glVertex3d(.2, -.2, 1.3);
-      glVertex3d(0, -.15, 1);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(cornerX, -cornerY, cornerZ);
+      glVertex3d(skew, -middleXY, middleZ);
 
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, 0, 1 + backChange);
-      glVertex3d(0, -.15, 1);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, -middleXY, middleZ);
 
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(-.2, -.2, 1.3);
-      glVertex3d(0, -.15, 1);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(-cornerX, -cornerY, cornerZ);
+      glVertex3d(skew, -middleXY, middleZ);
 
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(0, 0, 1 + backChange);
-      glVertex3d(0, -.15, 1);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, -middleXY, middleZ);
 
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(-.2, .2, 1.3);
-      glVertex3d(0, .15, 1);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(-cornerX, cornerY, cornerZ);
+      glVertex3d(skew, middleXY, middleZ);
 
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(-0, 0, 1 + backChange);
-      glVertex3d(0, .15, 1);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, middleXY, middleZ);
 
       glEnd();
    } else if (backChange == 0) {
       glBegin(GL_LINE_LOOP);
       glColor3d(1, .4, 0);
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, .15, 1);
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(0, -.15, 1);
-      glVertex3d(.15, 0, 1);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(skew, middleXY, middleZ);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(skew, -middleXY, middleZ);
+      glVertex3d(middleXY, skew, middleZ);
       glEnd();
    } else {
       glBegin(GL_LINE_LOOP);
       glColor3d(1, .4, 0);
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, 0, 1 + backChange);
-      glVertex3d(0, .15, 1);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, middleXY, middleZ);
       
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, -.15, 1);
-      glVertex3d(0, 0, 1 + backChange);
-      
-      
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(0, -.15, 1);
-      glVertex3d(0, 0, 1 + backChange);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(skew, -middleXY, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
       
       
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(-0, 0, 1 + backChange);
-      glVertex3d(0, .15, 1);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(skew, -middleXY, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      
+      
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+      glVertex3d(skew, middleXY, middleZ);
       glEnd();
       
       glBegin(GL_LINE_LOOP);
       glColor3d(1, .4, 0);
-      glVertex3d(.15, 0, 1);
-      glVertex3d(0, .15, 1);
-      glVertex3d(-.15, 0, 1);
-      glVertex3d(0, -.15, 1);
-      glVertex3d(.15, 0, 1);
+      glVertex3d(middleXY, skew, middleZ);
+      glVertex3d(skew, middleXY, middleZ);
+      glVertex3d(-middleXY, skew, middleZ);
+      glVertex3d(skew, -middleXY, middleZ);
+      glVertex3d(middleXY, skew, middleZ);
       glEnd();
    }
 }
@@ -651,31 +649,31 @@ void AsteroidShip::draw_bonerlines() {
 void AsteroidShip::draw_frontlines() {
    glBegin(GL_LINES);
    glColor3d(0, 1, 1);
-   glVertex3d(0, 0, 0);
-   glVertex3d(.2, .2, 1.3);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(cornerX, cornerY, cornerZ);
    
-   glVertex3d(0, 0, 0);
-   glVertex3d(-.2, .2, 1.3);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(-cornerX, cornerY, cornerZ);
    
-   glVertex3d(0, 0, 0);
-   glVertex3d(-.2, -.2, 1.3);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(-cornerX, -cornerY, cornerZ);
    
-   glVertex3d(0, 0, 0);
-   glVertex3d(.2, -.2, 1.3);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(cornerX, -cornerY, cornerZ);
    glEnd(); 
 }
 
 void AsteroidShip::draw_backlines() {
    glBegin(GL_LINE_LOOP);
-   glVertex3d(.15, 0, 1);
-   glVertex3d(.2, .2, 1.3);
-   glVertex3d(0, .15, 1);
-   glVertex3d(-.2, .2, 1.3);
-   glVertex3d(-.15, 0, 1);
-   glVertex3d(-.2, -.2, 1.3);
-   glVertex3d(0, -.15, 1);
-   glVertex3d(.2, -.2, 1.3);
-   glVertex3d(.15, 0, 1);
+   glVertex3d(middleXY, skew, middleZ);
+   glVertex3d(cornerX, cornerY, cornerZ);
+   glVertex3d(skew, middleXY, middleZ);
+   glVertex3d(-cornerX, cornerY, cornerZ);
+   glVertex3d(-middleXY, skew, middleZ);
+   glVertex3d(-cornerX, -cornerY, cornerZ);
+   glVertex3d(skew, -middleXY, middleZ);
+   glVertex3d(cornerX, -cornerY, cornerZ);
+   glVertex3d(middleXY, skew, middleZ);
    glEnd();
 }
 
