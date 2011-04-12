@@ -510,5 +510,7 @@ void draw(GameState* gameState) {
       Music::FreeAll();
       SoundEffect::FreeAll();
 
+      //SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
+
       return 0;
    }
