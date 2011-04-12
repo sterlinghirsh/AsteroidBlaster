@@ -75,7 +75,7 @@ void init() {
    // Tell system which functions to process when exit() call is made
    // THIS IS COMMENTED OUT BECAUSE THE EXIT TIME INCREASES BY 3-4 SECONDS
    // But it should be on when testing with valgrind to bring down the still reachable count.
-   //atexit(SDL_Quit);
+   atexit(SDL_Quit);
 
    // Get optimal video settings
    vidinfo = SDL_GetVideoInfo();
@@ -498,6 +498,11 @@ void draw(GameState* gameState) {
 
       glDeleteFramebuffersEXT(1, &fbo);
       glDeleteRenderbuffersEXT(1, &depthbuffer);
+
+      if (gameSettings->fullscreen) {
+         SDL_WM_ToggleFullScreen(gDrawSurface);
+         //SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
+      }
    
       // Clean up
       delete gameState;
@@ -509,8 +514,6 @@ void draw(GameState* gameState) {
       delete inputManager;
       Music::FreeAll();
       SoundEffect::FreeAll();
-
-      //SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
 
       return 0;
    }
