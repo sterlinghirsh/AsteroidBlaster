@@ -22,14 +22,14 @@ void Display::draw() {
    // Draw the minimap
    glPushMatrix();
 
-   //glViewport ((GLint) ((float) GW * (1.0f - displaySize)), 0, (GLsizei) ((float) GW * displaySize), (GLsizei) ((float) GH * displaySize));
-   //glViewport ((GLint) ((float) GW - (float) _x), 0, (GLsizei) ((float) GW / 4), (GLsizei) ((float) GH / 4));
-   glViewport ((GLint) ((float) GW * (0.7) - _x * (GW / 3)), (GH - (_y + 1) * (GH / 3)), (GLsizei) ((float) GW / 3), (GLsizei) ((float) GW / 3));
+   //glViewport ((GLint) ((float) gameSettings->GW * (1.0f - displaySize)), 0, (GLsizei) ((float) gameSettings->GW * displaySize), (GLsizei) ((float) gameSettings->GH * displaySize));
+   //glViewport ((GLint) ((float) gameSettings->GW - (float) _x), 0, (GLsizei) ((float) gameSettings->GW / 4), (GLsizei) ((float) gameSettings->GH / 4));
+   glViewport ((GLint) ((float) gameSettings->GW * (0.7) - _x * (gameSettings->GW / 3)), (gameSettings->GH - (_y + 1) * (gameSettings->GH / 3)), (GLsizei) ((float) gameSettings->GW / 3), (GLsizei) ((float) gameSettings->GW / 3));
    glMatrixMode (GL_PROJECTION);      /* Select The Projection Matrix */
    glLoadIdentity ();                     /* Reset The Projection Matrix */
 
    // Keep our aspect ratio relative to the global width and height
-   gluPerspective(VERT_FOV, (double)GW/GH, 0.5, 20);
+   gluPerspective(VERT_FOV, (double)gameSettings->GW/gameSettings->GH, 0.5, 20);
 
    glMatrixMode (GL_MODELVIEW);      /* Select The Projection Matrix */
    glLoadIdentity ();                        /* Reset The Modelview Matrix */
@@ -49,13 +49,13 @@ void Display::draw() {
    //glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
    glEnable(GL_COLOR_MATERIAL);
    glColor3f(1, 1, 1);
-   float aspect = (float) GH / (float) GW;
+   float aspect = (float) gameSettings->GH / (float) gameSettings->GW;
    float screenX = 2.0;
    float screenY = screenX * aspect;
-   //float maxTexX = (float)texSize / (float)GW;
-   //float maxTexY = (float)texSize / (float)GH;
-   float maxTexX = (float)GW / (float)texSize;
-   float maxTexY = (float)GH / (float)texSize;
+   //float maxTexX = (float)texSize / (float)gameSettings->GW;
+   //float maxTexY = (float)texSize / (float)gameSettings->GH;
+   float maxTexX = (float)gameSettings->GW / (float)texSize;
+   float maxTexY = (float)gameSettings->GH / (float)texSize;
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-screenX, -screenY, 0.0);

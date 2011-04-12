@@ -342,8 +342,8 @@ void GameState::hBlur() {
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
    glDrawBuffer(GL_COLOR_ATTACHMENT1_EXT);
 
-   float texMaxX = (float) GW / (float) texSize;
-   float texMaxY = (float) GH / (float) texSize;
+   float texMaxX = (float) gameSettings->GW / (float) texSize;
+   float texMaxY = (float) gameSettings->GH / (float) texSize;
    glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -394,8 +394,8 @@ void GameState::vBlur() {
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
    glDrawBuffer(GL_COLOR_ATTACHMENT2_EXT);
 
-   float texMaxX = (float) GW / (float) texSize;
-   float texMaxY = (float) GH / (float) texSize;
+   float texMaxX = (float) gameSettings->GW / (float) texSize;
+   float texMaxY = (float) gameSettings->GH / (float) texSize;
    glColor4f(1.0, 1.0, 1.0, 0.5);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -438,8 +438,8 @@ void GameState::drawBloom() {
    //glBindTexture(GL_TEXTURE_2D, blurTex);
    glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
 
-   float texMaxX = (float) GW / (float) texSize;
-   float texMaxY = (float) GH / (float) texSize;
+   float texMaxX = (float) gameSettings->GW / (float) texSize;
+   float texMaxY = (float) gameSettings->GH / (float) texSize;
    glColor4f(1.0, 1.0, 1.0, 0.5);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -852,7 +852,7 @@ void GameState::keyDown(int key) {
    
    // DEBUG KEYS
    case SDLK_F2:
-      bloom = !bloom;
+      gameSettings->bloom = !gameSettings->bloom;
       break;
    case SDLK_F3:
       showBloomScreen = !showBloomScreen;
@@ -1069,7 +1069,7 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 
    ship->updateShotDirection(shipControlX, shipControlY);
 
-   shipControlX = shipControlX / p2wx(GW);
+   shipControlX = shipControlX / p2wx(gameSettings->GW);
    shipControlY = shipControlY / p2wy(0);
 
    shipControlX = clamp(shipControlX * fabs(shipControlX), -1, 1);

@@ -35,7 +35,7 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
    types.push_back(TITLE_TYPE);
    menuTexts.push_back(new Text("Bloom Lighting:",  menuFont, position));
    types.push_back(LEFT_TYPE);
-   menuTexts.push_back(new Text(getStatus(bloom), menuFont, position));
+   menuTexts.push_back(new Text(getStatus(gameSettings->bloom), menuFont, position));
    types.push_back(RIGHT_TYPE);
    menuTexts.push_back(new Text("Mouse Capture:",  menuFont, position));
    types.push_back(LEFT_TYPE);
@@ -43,7 +43,7 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
    types.push_back(RIGHT_TYPE);
    menuTexts.push_back(new Text("Fullscreen:",  menuFont, position));
    types.push_back(LEFT_TYPE);
-   menuTexts.push_back(new Text(getStatus(fullscreen), menuFont, position));
+   menuTexts.push_back(new Text(getStatus(gameSettings->fullscreen), menuFont, position));
    types.push_back(RIGHT_TYPE);
    menuTexts.push_back(new Text("Minimap:",  menuFont, position));
    types.push_back(LEFT_TYPE);
@@ -117,36 +117,36 @@ std::string SettingsMenu::getViewStatus(int status) {
 }
 
 void SettingsMenu::draw() {
-   menuTexts[BLOOM_INDEX]->textToDisplay = getStatus(bloom);
+   menuTexts[BLOOM_INDEX]->textToDisplay = getStatus(gameSettings->bloom);
    menuTexts[MOUSE_CAPTURE_INDEX]->textToDisplay = getStatus(SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON);
-   menuTexts[FULLSCREEN_INDEX]->textToDisplay = getStatus(fullscreen);
+   menuTexts[FULLSCREEN_INDEX]->textToDisplay = getStatus(gameSettings->fullscreen);
    menuTexts[MINIMAP_INDEX]->textToDisplay = getStatus(gameState->minimapOn());
    menuTexts[CAMERA_VIEW_INDEX]->textToDisplay = getViewStatus(gameState->ship->getCurrentView());
-   menuTexts[MUSIC_INDEX]->textToDisplay = getStatus(musicOn);
-   menuTexts[SFX_INDEX]->textToDisplay = getStatus(soundOn);
+   menuTexts[MUSIC_INDEX]->textToDisplay = getStatus(gameSettings->musicOn);
+   menuTexts[SFX_INDEX]->textToDisplay = getStatus(gameSettings->soundOn);
    SDL_Rect position;
-   position.y = (Sint16) (GH/20);
+   position.y = (Sint16) (gameSettings->GH/20);
    for(unsigned i = 0; i < menuTexts.size(); i++) {
       switch (types[i]) {
       case TITLE_TYPE:
-         position.y = (Sint16) (position.y + (GH/10));
-         position.x = (Sint16) (GW/2);
+         position.y = (Sint16) (position.y + (gameSettings->GH/10));
+         position.x = (Sint16) (gameSettings->GW/2);
          menuTexts[i]->setPosition(position);
-         position.y = (Sint16) (position.y + (GH/10));
+         position.y = (Sint16) (position.y + (gameSettings->GH/10));
          break;
       case LEFT_TYPE:
-         position.x = (Sint16) (GW/8);
+         position.x = (Sint16) (gameSettings->GW/8);
          menuTexts[i]->setPosition(position);
          break;
       case RIGHT_TYPE:
-         position.x = (Sint16) (GW * 7/8);
+         position.x = (Sint16) (gameSettings->GW * 7/8);
          menuTexts[i]->setPosition(position);
-         position.y = (Sint16) (position.y + (GH/10));
+         position.y = (Sint16) (position.y + (gameSettings->GH/10));
          break;
       case SINGLE_SELECTABLE_TYPE:
-         position.x = (Sint16) (GW/2);
+         position.x = (Sint16) (gameSettings->GW/2);
          menuTexts[i]->setPosition(position);
-         position.y = (Sint16) (position.y + (GH/10));
+         position.y = (Sint16) (position.y + (gameSettings->GH/10));
          break;
       }
    }
@@ -195,7 +195,7 @@ void SettingsMenu::mouseDown(int button) {
    if (!menuActive) { return; }
 
    if(menuTexts[BLOOM_INDEX]->mouseSelect(x,y)) {
-      bloom = !bloom;
+      gameSettings->bloom = !gameSettings->bloom;
    } else if(menuTexts[MOUSE_CAPTURE_INDEX]->mouseSelect(x,y)) {
       toggleGrabMode();
    } else if(menuTexts[FULLSCREEN_INDEX]->mouseSelect(x,y)) {
@@ -205,14 +205,14 @@ void SettingsMenu::mouseDown(int button) {
    } else if(menuTexts[CAMERA_VIEW_INDEX]->mouseSelect(x,y)) {
       gameState->ship->nextView();
    } else if(menuTexts[SFX_INDEX]->mouseSelect(x,y)) {
-      soundOn = !soundOn;
+      gameSettings->soundOn = !gameSettings->soundOn;
    } else if(menuTexts[MUSIC_INDEX]->mouseSelect(x,y)) {
-      if (!musicOn && Mix_PausedMusic()) {
+      if (!gameSettings->musicOn && Mix_PausedMusic()) {
          Music::resumeMusic();
-      } else if (musicOn && !Mix_PausedMusic()) {
+      } else if (gameSettings->musicOn && !Mix_PausedMusic()) {
          Music::pauseMusic();
       }
-      musicOn = !musicOn;
+      gameSettings->musicOn = !gameSettings->musicOn;
    } else if(menuTexts[RETURN_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       mainMenu->menuActive = true;

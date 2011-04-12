@@ -54,19 +54,19 @@ void Music::playMusic(std::string filename) {
    currPlay = filename;
    Mix_VolumeMusic(volume);
    
-   if (!musicOn) {
+   if (!gameSettings->musicOn) {
       Mix_PauseMusic();
    }
 }
 
 void Music::pauseMusic() {
-   if (musicOn) {
+   if (gameSettings->musicOn) {
       Mix_PauseMusic();
    }
 }
 
 void Music::resumeMusic() {
-   if (!musicOn) {
+   if (!gameSettings->musicOn) {
       Mix_ResumeMusic();
    }
 }

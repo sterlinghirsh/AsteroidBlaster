@@ -50,7 +50,7 @@ int SoundEffect::playSoundEffect(std::string file, bool loop) {
 
    Mix_Volume(handle, volume);
 
-   if (!soundOn) {
+   if (!gameSettings->soundOn) {
       Mix_Pause(handle);
    }
    
@@ -58,13 +58,13 @@ int SoundEffect::playSoundEffect(std::string file, bool loop) {
 }
 
 void SoundEffect::pauseSoundEffect(int handle) {
-   if (soundOn) {
+   if (gameSettings->soundOn) {
       Mix_Pause(handle);
    }
 }
 
 void SoundEffect::resumeSoundEffect(int handle) {
-   if (!soundOn) {
+   if (!gameSettings->soundOn) {
       Mix_Resume(handle);
    }
 }

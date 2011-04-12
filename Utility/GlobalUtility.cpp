@@ -20,20 +20,14 @@
 #include <sys/time.h>
 #endif
 
+#include "Utility/GameSettings.h"
+
 //global variables
-int GW = -1;
-int GH = -1;
-int prevGW = -1;
-int prevGH = -1;
+GameSettings* gameSettings;
 int texSize = 2048;
 unsigned long curFrame = 0;
 bool drawPerspective = true;
-bool bloom = false;
 bool showBloomScreen = false;
-bool mouseCapture = false;
-bool fullscreen = false;
-bool soundOn = true;
-bool musicOn = true;
 GLUquadricObj *quadric = NULL;
 GLuint tractorBeamShader = 0;
 GLuint fadeShader = 0;
@@ -62,17 +56,17 @@ using namespace std;
 
 
 int flopY(int yIn) {
-   return (GH - 1) - yIn;
+   return (gameSettings->GH - 1) - yIn;
 }
 
 double p2wx(int xp) {
-   double d = ((GW - 1.0) / 2.0);
-   double c = ((1 - GW) * GH) / (-2.0 * GW);
+   double d = ((gameSettings->GW - 1.0) / 2.0);
+   double c = ((1 - gameSettings->GW) * gameSettings->GH) / (-2.0 * gameSettings->GW);
    return (xp - d) / c;
 }
 
 double p2wy(int yp) {
-   double e = ((GH - 1) / 2.0);
+   double e = ((gameSettings->GH - 1) / 2.0);
    double f = e;
    return (flopY(yp) - f) / e;
 }
@@ -86,7 +80,7 @@ double p2wWidth(int widthPixels) {
 }
 
 double p2ix(int xp) {
-   return p2wx(xp) * GH / (double) GW;
+   return p2wx(xp) * gameSettings->GH / (double) gameSettings->GW;
 }
 
 double p2iy(int yp) {
@@ -95,8 +89,8 @@ double p2iy(int yp) {
 
 int w2px(double xw) {
    int answer = 0;
-   double d = ((GW - 1.0) / 2.0);
-   double c = ((1 - GW) * GH) / (-2.0 * GW);
+   double d = ((gameSettings->GW - 1.0) / 2.0);
+   double c = ((1 - gameSettings->GW) * gameSettings->GH) / (-2.0 * gameSettings->GW);
 #ifdef WIN32
    answer = (int)floor(((xw * c) + d+0.5));
 #else
@@ -108,7 +102,7 @@ int w2px(double xw) {
 
 int w2py(double yw) {
    int answer = 0;
-   double e = ((GH - 1) / 2.0);
+   double e = ((gameSettings->GH - 1) / 2.0);
    double f = e;
 
 #ifdef WIN32
@@ -122,8 +116,8 @@ int w2py(double yw) {
 
 /* Maintain Aspect Ratio */
 void reshape (GLsizei w, GLsizei h) {
-   GW = w;
-   GH = h;
+   gameSettings->GW = w;
+   gameSettings->GH = h;
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
    if (drawPerspective) {
@@ -137,12 +131,12 @@ void reshape (GLsizei w, GLsizei h) {
 
 void usePerspective() {
    drawPerspective = true;
-   reshape(GW, GH);
+   reshape(gameSettings->GW, gameSettings->GH);
 }
 
 void useOrtho() {
    drawPerspective = false;
-   reshape(GW, GH);
+   reshape(gameSettings->GW, gameSettings->GH);
 }
 
 double distance3D(double x1, double y1, double z1, double x2,
@@ -570,21 +564,9 @@ void getBrightColor(double hue, float& r, float& g, float& b) {
 }
 
 void toggleFullScreen() {
-   if(!fullscreen) {
-      prevGW = GW;
-      prevGH = GH;
-      GW = 1280;
-      GH = 1024;
-      gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
-      SDL_WM_ToggleFullScreen( gDrawSurface );
-      fullscreen = !fullscreen;
-   } else {
-      GW = prevGW;
-      GH = prevGH;
-      SDL_WM_ToggleFullScreen( gDrawSurface );
-      gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
-      fullscreen = !fullscreen;
-   }
+   gameSettings->toggleFullScreen();
+   SDL_WM_ToggleFullScreen( gDrawSurface );
+   gDrawSurface = SDL_SetVideoMode(gameSettings->GW, gameSettings->GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
 }
 
 void toggleGrabMode() {

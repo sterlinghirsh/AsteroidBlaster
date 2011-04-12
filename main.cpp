@@ -133,7 +133,7 @@ void init() {
    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
    // Get a surface
-   gDrawSurface = SDL_SetVideoMode(GW, GH, vidinfo->vfmt->BitsPerPixel, videoFlags);
+   gDrawSurface = SDL_SetVideoMode(gameSettings->GW, gameSettings->GH, vidinfo->vfmt->BitsPerPixel, videoFlags);
 
    if (!gDrawSurface) {
       fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
@@ -208,11 +208,11 @@ void init() {
    //glEnable(GL_POLYGON_SMOOTH);
 
    //initialize light
-   //glEnable(GL_LIGHT0);
-   //glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
-   //glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
-   //glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
-   //glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
+   //glEnable(GL_LIgameSettings->GHT0);
+   //glLightfv(GL_LIgameSettings->GHT0, GL_AMBIENT, headlight_amb);
+   //glLightfv(GL_LIgameSettings->GHT0, GL_DIFFUSE, headlight_diff);
+   //glLightfv(GL_LIgameSettings->GHT0, GL_SPECULAR, headlight_spec);
+   //glLightfv(GL_LIgameSettings->GHT0, GL_POSITION, headlight_pos);
 
 
    glEnable(GL_LIGHT1);
@@ -221,11 +221,11 @@ void init() {
    glLightfv(GL_LIGHT1, GL_SPECULAR, minimaplight_spec);
    glLightfv(GL_LIGHT1, GL_POSITION, minimaplight_pos);
 
-   //glEnable(GL_LIGHT2);
-   //glLightfv(GL_LIGHT2, GL_AMBIENT, ambientlight_amb);
-   //glLightfv(GL_LIGHT2, GL_DIFFUSE, ambientlight_diff);
-   //glLightfv(GL_LIGHT2, GL_SPECULAR, ambientlight_spec);
-   //glLightfv(GL_LIGHT2, GL_POSITION, ambientlight_pos);
+   //glEnable(GL_LIgameSettings->GHT2);
+   //glLightfv(GL_LIgameSettings->GHT2, GL_AMBIENT, ambientlight_amb);
+   //glLightfv(GL_LIgameSettings->GHT2, GL_DIFFUSE, ambientlight_diff);
+   //glLightfv(GL_LIgameSettings->GHT2, GL_SPECULAR, ambientlight_spec);
+   //glLightfv(GL_LIgameSettings->GHT2, GL_POSITION, ambientlight_pos);
    //glShadeModel(GL_SMOOTH);
    //glEnable(GL_NORMALIZE);
 
@@ -255,9 +255,9 @@ void initFbo() {
       glGenTextures(1, &img);
       glBindTexture(GL_TEXTURE_2D, img);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
-      GW, GH, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+      gameSettings->GW, gameSettings->GH, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
       */
-   //Texture::Add(GW, GH, "fboTex");
+   //Texture::Add(gameSettings->GW, gameSettings->GH, "fboTex");
 
    //int maxbuffers;
    //glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxbuffers);
@@ -305,9 +305,8 @@ void draw(GameState* gameState) {
 
 
    // Draw glowing objects to a texture for the bloom effect.
-   gameState->aspect = (float)GW/(float)GH;
-   //if (gameState->bloom) {
-   if (bloom) {
+   gameState->aspect = (float)gameSettings->GW/(float)gameSettings->GH;
+   if (gameSettings->bloom) {
       glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
       glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
 
@@ -318,10 +317,9 @@ void draw(GameState* gameState) {
       glPopMatrix();
       glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-      if (bloom) {
-         gameState->hBlur();
-         gameState->vBlur();
-      }
+      gameState->hBlur();
+      gameState->vBlur();
+
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    }
 
@@ -338,7 +336,7 @@ void draw(GameState* gameState) {
    // Draw the hud
    glClear(GL_DEPTH_BUFFER_BIT);
    gameState->drawHud();
-   if (bloom) {
+   if (gameSettings->bloom) {
       gameState->drawBloom();
    }
 
@@ -353,8 +351,9 @@ void draw(GameState* gameState) {
 
    int main(int argc, char* argv[]) {
       srand((unsigned)time(NULL));
-      GW = 800;
-      GH = 600;
+
+      gameSettings = new GameSettings();
+
       updateDoubleTime();
 
       lastUpdateTime = doubleTime();

@@ -145,7 +145,7 @@ void Text::draw() {
    
    //SO let's translate it back to standard SDL (normal coordinate)
    
-   SDL_Rect temp = {pos.x, (Sint16) (GH - pos.y - TEXT_INVERT_VALUE)};
+   SDL_Rect temp = {pos.x, (Sint16) (gameSettings->GH - pos.y - TEXT_INVERT_VALUE)};
 
    if(!selectable) { selected = false;}
 

@@ -132,12 +132,12 @@ void Minimap::draw() {
        * It should take up the bottom right corner of the screen.
        */
 
-      glViewport ((GLint) ((float) GW * (1.0f - displaySize)), 0, (GLsizei) ((float) GW * displaySize), (GLsizei) ((float) GH * displaySize));
+      glViewport ((GLint) ((float) gameSettings->GW * (1.0f - displaySize)), 0, (GLsizei) ((float) gameSettings->GW * displaySize), (GLsizei) ((float) gameSettings->GH * displaySize));
       glMatrixMode (GL_PROJECTION);      /* Select The Projection Matrix */
       glLoadIdentity ();                     /* Reset The Projection Matrix */
 
       // Keep our aspect ratio relative to the global width and height
-      gluPerspective(VERT_FOV, (double)GW/GH, 0.5, 20);
+      gluPerspective(VERT_FOV, (double)gameSettings->GW/gameSettings->GH, 0.5, 20);
 
       glMatrixMode (GL_MODELVIEW);      /* Select The Projection Matrix */
       glLoadIdentity ();                        /* Reset The Modelview Matrix */

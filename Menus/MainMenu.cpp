@@ -83,11 +83,11 @@ MainMenu::~MainMenu() {
 
 void MainMenu::draw() {
    SDL_Rect position;
-   position.x = (Sint16) (GW/2);
-   position.y = (Sint16) (GH/2.3);
+   position.x = (Sint16) (gameSettings->GW/2);
+   position.y = (Sint16) (gameSettings->GH/2.3);
    for(unsigned i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
-      position.y = (Sint16) (position.y + (GH/12));
+      position.y = (Sint16) (position.y + (gameSettings->GH/12));
    }
    
    

@@ -30,23 +30,19 @@
 #include "Menus/HelpMenu.h"
 #include "Menus/CreditsMenu.h"
 
+#include "Utility/GameSettings.h"
+
 
 
 class GameState;
 
-// the window width and window height
-extern int GW, GH;
-extern int prevGW, prevGH;
+extern GameSettings* gameSettings;
+
 extern int flopY(int);
 extern int texSize;
 extern unsigned long curFrame;
 extern bool drawPerspective;
-extern bool bloom;
 extern bool showBloomScreen;
-extern bool mouseCapture;
-extern bool fullscreen;
-extern bool soundOn;
-extern bool musicOn;
 extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
 extern GLuint fadeShader;

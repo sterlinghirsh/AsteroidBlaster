@@ -107,15 +107,15 @@ void CreditsMenu::draw() {
    SDL_Rect position;
    position.x = 0;
    position.y = (Sint16) (yPos + yOffset);
-   //position.y = GH/5;
+   //position.y = gameSettings->GH/5;
    //menuTexts[TITLE_STRING_INDEX]->setPosition(position);
    for(unsigned i = 0; i < menuTexts.size() - 1; i++) {
       unsigned j = 0;
 	  //TODO
       while (i + j < menuTexts.size() - 1 && types[i + j] == 0)
       {
-         yPos += GH/5;
-         position.x = (Sint16) (GW/2);
+         yPos += gameSettings->GH/5;
+         position.x = (Sint16) (gameSettings->GW/2);
          position.y = (Sint16) (yPos + yOffset);
          menuTexts[i + j]->setPosition(position);
          j++;
@@ -127,13 +127,13 @@ void CreditsMenu::draw() {
       {
          if (types[i + j] == DUAL_NAME_TYPE)
          {
-            position.x = (Sint16) (GW/4 + (GW/2 * ((j - k) % 2)));
-            yPos += GH / 10 * (j % 2);
+            position.x = (Sint16) (gameSettings->GW/4 + (gameSettings->GW/2 * ((j - k) % 2)));
+            yPos += gameSettings->GH / 10 * (j % 2);
          }
          else
          {
-            position.x = (Sint16) (GW/2);
-            yPos += GH / 10 * 1.5;
+            position.x = (Sint16) (gameSettings->GW/2);
+            yPos += gameSettings->GH / 10 * 1.5;
          }
          position.y = (Sint16) (yPos + yOffset);
          menuTexts[i + j]->setPosition(position);
@@ -141,8 +141,8 @@ void CreditsMenu::draw() {
       }
       i += j - 1;
    }
-   position.x = (Sint16) GW;
-   yPos = GH;
+   position.x = (Sint16) gameSettings->GW;
+   yPos = gameSettings->GH;
    position.y = (Sint16) yPos;
    menuTexts[QUIT_STRING_INDEX]->setPosition(position);
 
@@ -167,13 +167,13 @@ void CreditsMenu::draw() {
 
    for(unsigned i = 0; i < menuTexts.size(); i++) {
       int loc = (int) (menuTexts[i]->getPosition().y + yOffset);
-      if (loc < GH * 1.3 + menuTexts[i]->size && loc > GH * -3.0)
+      if (loc < gameSettings->GH * 1.3 + menuTexts[i]->size && loc > gameSettings->GH * -3.0)
       {
          menuTexts[i]->draw();
       }
    }
    /*
-   if (menuTexts[QUIT_STRING_INDEX - 1]->getPosition().y + yOffset < GH / 2)
+   if (menuTexts[QUIT_STRING_INDEX - 1]->getPosition().y + yOffset < gameSettings->GH / 2)
    {
       printf("last item at halfway point.\n");
    }
