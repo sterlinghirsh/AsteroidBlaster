@@ -565,8 +565,8 @@ void getBrightColor(double hue, float& r, float& g, float& b) {
 
 void toggleFullScreen() {
    gameSettings->toggleFullScreen();
-   SDL_WM_ToggleFullScreen( gDrawSurface );
    gDrawSurface = SDL_SetVideoMode(gameSettings->GW, gameSettings->GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+   SDL_WM_ToggleFullScreen( gDrawSurface );
 }
 
 void toggleGrabMode() {
