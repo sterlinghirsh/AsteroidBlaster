@@ -63,7 +63,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       backY = 0;
       backZ = 1.6;
       
-      //skew must be set to 0 til I figure out a better way to do shit
+      //skew must be set to 0 til I figure out a better way to do things
       skew = 0;
       
       x2Change = middleXY / 2;
@@ -121,6 +121,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       weapons.push_back(new LawnMower(this));
       weapons.push_back(new Ram(this));
       weapons.push_back(new AntiInertia(this));
+      weapons.push_back(new Bomber(this));
 
       // The ship's currently selected weapon.
       currentWeapon = 0;

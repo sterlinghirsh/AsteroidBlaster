@@ -1,28 +1,26 @@
 /**
- * Blaster! The original Asteroids Weapon.
- * @author Sterling Hirsh (shirsh@calpoly.edu)
- * @date 2/14/2011
- * <3
+ * Bomber. Used as a base for all other bombs.
+ * @author Taylor Arnicar
+ * @date 4/10/2011
  */
 
-#include "Weapons/Blaster.h"
+#include "Weapons/Bomber.h"
 #include "Utility/GlobalUtility.h"
 #include "Shots/ProjectileShot.h"
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
 
-Blaster::Blaster(AsteroidShip* owner)
-: Weapon(owner) {
-   shotSpeed = 40; // Units per second
-   coolDown = 0.15; // Seconds
-   randomVariationAmount = 1.5; // Units
-   name = "Blaster";
+Bomber::Bomber(AsteroidShip* owner) : Weapon(owner) {
+   shotSpeed = 5; // Units per second
+   coolDown = 1.5; // Seconds
+   randomVariationAmount = 0.25; // Units
+   name = "Bomber";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
-   purchased = true; // Start off owning the blaster
+   purchased = true; // Start off owning the bomber
 }
 
-Blaster::~Blaster() {
+Bomber::~Bomber() {
    delete lastShotPos;
 }
 
@@ -30,14 +28,14 @@ Blaster::~Blaster() {
  * Called every frame.
  * We'll probably keep track of something or other here.
  */
-void Blaster::update(double timeDiff) {
+void Bomber::update(double timeDiff) {
    // Do nothing, yet
 }
 
 /**
  * This is what actually shoots. Finally!
  */
-void Blaster::fire() {
+void Bomber::fire() {
    static Vector3D randomVariation;
    if (!isCooledDown())
       return;
@@ -52,7 +50,7 @@ void Blaster::fire() {
    randomVariation.scalarMultiplyUpdate(randomVariationAmount);
    shotDirection.addUpdate(randomVariation);
    ship->shotDirection.movePoint(start);
-   ship->setShakeAmount(0.05f);
+   ship->setShakeAmount(0.1f);
    ship->custodian->add(new ProjectileShot(start,
             shotDirection, ship, ship->gameState));
    // Don't play sound effects in godMode b/c there would be too many.
@@ -64,8 +62,8 @@ void Blaster::fire() {
 /**
  * Basic debug function. Just in case!
  */
-void Blaster::debug() {
-   printf("Blaster!\n");
+void Bomber::debug() {
+   printf("Bomber!\n");
 }
 
 /**
@@ -74,7 +72,7 @@ void Blaster::debug() {
  * AI should aim at in order to hit the target with this
  * weapon.
  */
-Point3D Blaster::project(Object3D* target) {
+Point3D Bomber::project(Object3D* target) {
    Point3D wouldHit;
    double speed = 40;
    double time = 0, dist = 0;
@@ -87,11 +85,11 @@ Point3D Blaster::project(Object3D* target) {
    // This loop will choose the spot that we want to be shooting at.
    do {
       // time is the distance from the ship to the target according to the
-      // speed of the bullet.
+      // speed of the bomb.
       time = ship->position->distanceFrom(curTarget) / speed;
 
       // dp is the distance the asteroid traveled in the time it took for our
-      // bullet to get to the point we are considering (curTarget).
+      // bomb to get to the point we are considering (curTarget).
       dp = target->velocity->scalarMultiply(time);
 
       // Move our target to the point where the asteroid would be
@@ -100,9 +98,9 @@ Point3D Blaster::project(Object3D* target) {
       // Get the vector that points to that point.
       wouldHit = curTarget - *ship->position;
 
-      // Normalize, scale by speed of the bullet multiplied by the time that
-      // passed (for the bullet to get to the previous point) This vector
-      // now points to where our bullet will be when the asteroid is at
+      // Normalize, scale by speed of the bomb multiplied by the time that
+      // passed (for the bomb to get to the previous point) This vector
+      // now points to where our bomb will be when the asteroid is at
       // its position
 
       wouldHit = wouldHit.normalize() * speed * time + *ship->position;
@@ -118,6 +116,7 @@ Point3D Blaster::project(Object3D* target) {
    return curTarget;
 }
 
-bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
+bool Bomber::shouldFire(Point3D* target, Point3D* aim) {
    return ((*target - *ship->position).normalize() - *aim).magnitude() < 0.5;
 }
+

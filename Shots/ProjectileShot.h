@@ -7,7 +7,6 @@
 
 #include "Shots/Shot.h"
 
-
 class ProjectileShot : public Shot {
    public:
       ProjectileShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState);
