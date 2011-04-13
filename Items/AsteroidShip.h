@@ -25,6 +25,7 @@
 #include "Weapons/Ram.h"
 #include "Weapons/AntiInertia.h"
 #include "Weapons/Bomber.h"
+#include "Weapons/Missile.h"
 #include <list>
 
 // Later we'll put in a model for the ship.
