@@ -231,3 +231,14 @@ void Object3D::draw() {
 void Object3D::drawGlow() {
    // Also do nothing;
 }
+
+/**
+ * Treats the current object3D as a sphere with radius getCollisionRadius().
+ * Calculates collision with some ray (like a railgun shot or electricity shot).
+ */
+Point3D* Object3D::sphereCollideWithRay(const Point3D& origin, Vector3D direction) {
+   direction.normalize();
+   Point3D* collisionPoint = NULL;
+
+   return collisionPoint;
+}

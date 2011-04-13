@@ -405,8 +405,10 @@ void Asteroid3D::handleCollision(Drawable* other) {
             Vector3D shotToAsteroid(*shot->position, *position);
             double shotToAsteroidDistance = shotToAsteroid.dot(shotDirection);
             shotDirection.setLength(shotToAsteroidDistance);
+
             Point3D closestPoint(*shot->position);
             shotDirection.movePoint(closestPoint);
+
             double distanceFromCenter = closestPoint.distanceFrom(*position);
             double halfThickness = sqrt((radius * radius) - (distanceFromCenter * distanceFromCenter));
             shotDirection.setLength(halfThickness);
