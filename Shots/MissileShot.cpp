@@ -107,15 +107,15 @@ void MissileShot::draw() {
             glPopMatrix();
          
       glColor4d(0, 1, 1, .3);
-      gluSphere(quadric,.2f,20.0f,20.0f);
-      gluSphere(quadric,.3f,20.0f,20.0f);
-      gluSphere(quadric,.4f,20.0f,20.0f);
-      gluSphere(quadric,.5f,20.0f,20.0f);
-      gluSphere(quadric,.6f,20.0f,20.0f);
-      gluSphere(quadric,.7f,20.0f,20.0f);
-      gluSphere(quadric,.8f,20.0f,20.0f);
-      gluSphere(quadric,.9f,20.0f,20.0f);
-      gluSphere(quadric,1.0f,20.0f,20.0f);
+      gluSphere(quadric, .2, 20, 20);
+      gluSphere(quadric, .3, 20, 20);
+      gluSphere(quadric, .4, 20, 20);
+      gluSphere(quadric, .5, 20, 20);
+      gluSphere(quadric, .6, 20, 20);
+      gluSphere(quadric, .7, 20, 20);
+      gluSphere(quadric, .8, 20, 20);
+      gluSphere(quadric, .9, 20, 20);
+      gluSphere(quadric, 1, 20, 20);
       
       glEnable(GL_LIGHTING);
 

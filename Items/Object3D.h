@@ -56,7 +56,7 @@ class Object3D : public Drawable {
 
       virtual void updateAcceleration(double timeDiff);
 
-      virtual Point3D* sphereCollideWithRay(const Point3D& origin, Vector3D direction);
+      virtual Point3D* sphereCollideWithRay(const Point3D& origin, Vector3D direction, double* hitDistance = NULL);
 };
 
 #endif

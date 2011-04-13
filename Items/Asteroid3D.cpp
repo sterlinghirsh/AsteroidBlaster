@@ -396,33 +396,30 @@ void Asteroid3D::handleCollision(Drawable* other) {
             health -= fabs((health / 8) + 0.05); // Fabsulous!!
             velocity->updateMagnitude(*lawnMowerShot->position, *position);
          } else if ((elecShot = dynamic_cast<ElectricityShot*>(other)) != NULL) {
-            printf("Shot strength: %f\n", elecShot->strength);
-            health -= elecShot->strength * .05;
             const int numElecParticles = 1;
-            // First calculate hit point.
-            Vector3D shotDirection(*shot->velocity);
-            shotDirection.normalize();
-            Vector3D shotToAsteroid(*shot->position, *position);
-            double shotToAsteroidDistance = shotToAsteroid.dot(shotDirection);
-            shotDirection.setLength(shotToAsteroidDistance);
+            
+            double hitDistance = 0;
+            // TODO: Refactor this so we do all collision detection elsewhere.
+            Point3D* closestPoint = sphereCollideWithRay(*shot->position, *shot->velocity, &hitDistance);
 
-            Point3D closestPoint(*shot->position);
-            shotDirection.movePoint(closestPoint);
+            // Sometimes, we decide that it's not a real hit. No big deal.
+            if (closestPoint != NULL) {
+               elecShot->length = hitDistance;
+               elecShot->velocity->setLength(hitDistance);
+               health -= elecShot->strength * .05;
+               Vector3D centerToImpactPoint(*position, *closestPoint);
+               centerToImpactPoint.setLength(5);
 
-            double distanceFromCenter = closestPoint.distanceFrom(*position);
-            double halfThickness = sqrt((radius * radius) - (distanceFromCenter * distanceFromCenter));
-            shotDirection.setLength(halfThickness);
-            shotDirection.movePoint(closestPoint, -halfThickness);
-            Vector3D centerToImpactPoint(*position, closestPoint);
-            centerToImpactPoint.setLength(5);
+               for (int i = 0; i < numElecParticles; ++i) {
+                  Point3D* particleStartPoint = new Point3D(*closestPoint);
+                  Vector3D* particleDirection = new Vector3D();
+                  particleDirection->randomMagnitude();
+                  particleDirection->setLength(3);
+                  particleDirection->addUpdate(centerToImpactPoint);
+                  ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
+               }
 
-            for (int i = 0; i < numElecParticles; ++i) {
-               Point3D* particleStartPoint = new Point3D(closestPoint);
-               Vector3D* particleDirection = new Vector3D();
-               particleDirection->randomMagnitude();
-               particleDirection->setLength(3);
-               particleDirection->addUpdate(centerToImpactPoint);
-               ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
+               delete closestPoint;
             }
          } else if (dynamic_cast<RamShot*>(other) != NULL) {
             health = 0;

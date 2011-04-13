@@ -233,12 +233,49 @@ void Object3D::drawGlow() {
 }
 
 /**
- * Treats the current object3D as a sphere with radius getCollisionRadius().
+ * Treats the current object3D as a sphere. 
  * Calculates collision with some ray (like a railgun shot or electricity shot).
+ * If you pass in a pointer to a double, this sets that to the distance from
+ *  origin to collision point.
  */
-Point3D* Object3D::sphereCollideWithRay(const Point3D& origin, Vector3D direction) {
+Point3D* Object3D::sphereCollideWithRay(const Point3D& origin, Vector3D direction, double* hitDistance) {
    direction.normalize();
    Point3D* collisionPoint = NULL;
+   
+   // Use the quadratic formula with magic.
+   Vector3D rayOriginToObjectLocation(*position, origin);
+   double quadratic_a = direction.dot(direction);
+   double quadratic_b = 2 * direction.dot(rayOriginToObjectLocation);
+   double quadratic_c = rayOriginToObjectLocation.dot(rayOriginToObjectLocation) - (radius * radius);
+
+   double discriminant = (quadratic_b * quadratic_b) - (4 * quadratic_a * quadratic_c);
+   
+   // We don't want to continue if we're going to deal with imaginary numbers.
+   if (discriminant < 0) {
+      return NULL;
+   }
+
+   double root1 = ((-quadratic_b) + sqrt(discriminant)) / (2 * quadratic_a);
+   double root2 = ((-quadratic_b) - sqrt(discriminant)) / (2 * quadratic_a);
+
+   // We don't want any points that are behind the origin.
+   if (root1 < 0) {
+      if (root2 < 0) {
+         return NULL;
+      }
+      root1 = root2;
+   } else if (root2 < 0) {
+      root2 = root1;
+   }
+
+   double minRoot = root1 < root2 ? root1 : root2;
+
+   collisionPoint = new Point3D(origin);
+   direction.movePoint(*collisionPoint, minRoot);
+
+   if (hitDistance != NULL) {
+      *hitDistance = minRoot;
+   }
 
    return collisionPoint;
 }
