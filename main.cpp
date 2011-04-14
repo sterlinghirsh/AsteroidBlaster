@@ -362,15 +362,15 @@ int main(int argc, char* argv[]) {
    gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
 
 
+   // Load the textures, sounds, and music.
+   load();
+
    // Initialize the gameState
    GameState* gameState;
    gameState = new GameState(WORLD_SIZE, false);
 
    // Initialize the screens
    gameState->addScreens();
-
-   // Load the textures, sounds, and music.
-   load();
    
    // Initialize the menus
    mainMenu = new MainMenu(gameState);
