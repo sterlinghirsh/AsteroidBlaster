@@ -7,7 +7,6 @@
 #define __VECTOR3D_H__
 
 #include <stdio.h>
-#include "Utility/Point3D.h"
 
 class Vector3D {
    public:
@@ -15,26 +14,27 @@ class Vector3D {
       //const static double drawScale = 0.01;
 
       Vector3D(double _x = 0, double _y = 0, double _z = 0);
-      Vector3D(Point3D);
-      Vector3D(Point3D, Point3D);
+      Vector3D(Vector3D, Vector3D);
+
       double dot(Vector3D&);
       Vector3D cross(Vector3D&);
       Vector3D add(Vector3D);
       Vector3D subtract(Vector3D&);
       void subtractUpdate(const Vector3D);
-      void movePoint(Point3D&, double scale = 1);
+      void movePoint(Vector3D&, double scale = 1);
       void addUpdate(Vector3D);
       void addNormal();
       double getLength();
+      const double magnitude() const;
       double getComparisonLength();
       double getAngleInRadians(Vector3D&);
       double getAngleInDegrees(Vector3D&);
       void draw();
       void normalize();
+      const Vector3D getNormalized() const;
       void updateMagnitude(double, double, double);
-      void updateMagnitude(Point3D, Point3D);
-      void updateMagnitude(Point3D*, Point3D*);
-      void updateMagnitude(Point3D);
+      void updateMagnitude(Vector3D, Vector3D);
+      void updateMagnitude(Vector3D*, Vector3D*);
       void updateMagnitude(Vector3D);
       void updateMagnitude(Vector3D*);
       void updateFromVirtualTrackball(double, double);
@@ -46,7 +46,7 @@ class Vector3D {
       Vector3D scalarMultiply(double);
       void scalarMultiplyUpdate(double);
       void setLength(double);
-      void glTranslate(double length);
+      void glTranslate(double length = 1);
       void reflect(Vector3D& axis);
       Vector3D getNormalVector();
       void negativeX();
@@ -55,11 +55,25 @@ class Vector3D {
       void positiveX();
       void positiveY();
       void positiveZ();
+      void clone(Vector3D* other);
+      void update(double x2, double y2, double z2);
+      double distanceFrom(Vector3D& rhs);
+      void offsetBy(double x2, double y2, double z2);
+      void midpoint(const Vector3D& p1, const Vector3D& p2);
+
       void print() {
          printf("Vector: (%f, %f, %f)\n", x, y, z);
       }
 
-      Vector3D &operator=(const Vector3D& rhs);
+      const Vector3D operator+(const Vector3D& rhs) const;
+      const Vector3D operator-(const Vector3D& rhs) const;
+      const double operator*(const Vector3D& rhs) const;
+      bool operator==(const Vector3D& rhs) const;
+      Vector3D &operator=(const Vector3D &src);
+      Vector3D& operator/=(double scalar); 
+      const Vector3D operator*(double scalar) const;
+      const Vector3D operator^(const Vector3D& rhs) const;
+
 };
 
 #endif

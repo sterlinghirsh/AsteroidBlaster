@@ -119,5 +119,7 @@ Point3D Blaster::project(Object3D* target) {
 }
 
 bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
-   return ((*target - *ship->position).normalize() - *aim).magnitude() < 0.5;
+   Vector3D targetToShip = *target - *ship->position;
+   targetToShip.normalize();
+   return (targetToShip - *aim).magnitude() < 0.5;
 }

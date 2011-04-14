@@ -67,11 +67,12 @@ void GameSettings::writeOut() {
  * Read game settings from a file.
  */
 void GameSettings::readIn() {
+   int readInt;
    FILE* configFile = fopen(CONFIG_FILE, "r");
+
    if (configFile == NULL)
       return;
 
-   int readInt;
    if (fscanf(configFile, "bloom %d ", &readInt) > 0) {
       bloom = (bool) readInt;
    }

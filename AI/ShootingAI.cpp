@@ -59,14 +59,16 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
   
    Point3D aim = lastShotPos;
    Point3D targetPos = chosenWeapon->project(target);
-   Point3D targetDir = (targetPos - *ship->position).normalize(); 
+   Point3D targetDir = (targetPos - *ship->position);
+   targetDir.normalize(); 
    
    // This section of code does angle interpolation.
    // Find the angle between our vector and where we want to be.
    ang = acos(aim * targetDir);
 
    // Get our axis of rotation.
-   wouldHit = (aim ^ targetDir).normalize();
+   wouldHit = (aim ^ targetDir);
+   wouldHit.normalize();
 
    if (ang > (gunRotSpeed * dt)) {
       Quaternion q;

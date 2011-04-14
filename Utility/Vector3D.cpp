@@ -5,27 +5,24 @@
 
 #include "Utility/GlobalUtility.h"
 
+/** Doubles have a lot of precision.
+ * We want to cut that down a bit.
+ */
+#define EPSILON 0.001
+
 using namespace std;
 
 // Default, magnitude-only, and magnitude-and-position constructors all in one.
 Vector3D::Vector3D(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
 
-Vector3D::Vector3D(Point3D point) {
-   updateMagnitude(point);
-}
-
-Vector3D::Vector3D(Point3D p1, Point3D p2) {
+Vector3D::Vector3D(Vector3D p1, Vector3D p2) {
    updateMagnitude(p1, p2);
 }
 
-void Vector3D::movePoint(Point3D& point, double scale) {
+void Vector3D::movePoint(Vector3D& point, double scale) {
    point.x += x * scale;
    point.y += y * scale;
    point.z += z * scale;
-}
-
-void Vector3D::updateMagnitude(Point3D point) {
-   updateMagnitude(point.x, point.y, point.z);
 }
 
 void Vector3D::updateMagnitude(Vector3D inVector) {
@@ -36,11 +33,11 @@ void Vector3D::updateMagnitude(Vector3D* inVector) {
    updateMagnitude(inVector->x, inVector->y, inVector->z);
 }
 
-void Vector3D::updateMagnitude(Point3D p1, Point3D p2) {
+void Vector3D::updateMagnitude(Vector3D p1, Vector3D p2) {
    updateMagnitude(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
 }
 
-void Vector3D::updateMagnitude(Point3D* p1, Point3D* p2) {
+void Vector3D::updateMagnitude(Vector3D* p1, Vector3D* p2) {
    updateMagnitude(p2->x - p1->x, p2->y - p1->y, p2->z - p1->z);
 }
 
@@ -82,6 +79,12 @@ void Vector3D::randomMagnitude() {
 double Vector3D::getLength() {
    return distance3D(x, y, z);
 }
+
+const double Vector3D::magnitude() const
+{
+   return sqrt(x * x + y * y + z * z);
+}
+
 
 /**
  * Returns a double that represents the 
@@ -223,9 +226,8 @@ void Vector3D::rotateByDegrees(double angle, const Vector3D& axis) {
    rotate(angle / (180 / 3.14159265), axis);
 }
 
-void Vector3D::glTranslate(double length = 1) {
-   glTranslatef((GLfloat) (length * x), (GLfloat) (length * y), 
-    (GLfloat) (length * z));
+void Vector3D::glTranslate(double length) {
+   glTranslated(length * x, length * y, length * z);
 }
 
 void Vector3D::reflect(Vector3D& axis) {
@@ -289,9 +291,87 @@ void Vector3D::positiveZ() {
       z = 0 - z;
 }
 
-Vector3D &Vector3D::operator=(const Vector3D& rhs) {
-   x = rhs.x;
-   y = rhs.y;
-   z = rhs.z;
+void Vector3D::clone(Vector3D* other) {
+   x = other->x;
+   y = other->y;
+   z = other->z;
+}
+
+void Vector3D::update(double x2, double y2, double z2) {
+   x = x2;
+   y = y2;
+   z = z2;
+}
+   
+double Vector3D::distanceFrom(Vector3D& rhs) {
+   return distance3D(rhs.x - x, rhs.y - y, rhs.z - z);
+}
+
+void Vector3D::offsetBy(double x2, double y2, double z2) {
+   x += x2;
+   y += y2;
+   z += z2;
+}
+
+void Vector3D::midpoint(const Vector3D& p1, const Vector3D& p2) {
+   x = (p1.x + p2.x) / 2;
+   y = (p1.y + p2.y) / 2;
+   z = (p1.z + p2.z) / 2;
+}
+
+const Vector3D Vector3D::operator^(const Vector3D &rhs) const {
+  return Vector3D(
+   (y * rhs.z) - (z * rhs.y),
+   (z * rhs.x) - (x * rhs.z),
+   (x * rhs.y) - (y * rhs.x));
+}
+
+
+const Vector3D Vector3D::operator+(const Vector3D &rhs) const {
+   return Vector3D(x + rhs.x, y + rhs.y, z + rhs.z);
+}
+
+const Vector3D Vector3D::operator-(const Vector3D &rhs) const {
+   return Vector3D(x - rhs.x, y - rhs.y, z - rhs.z);
+}
+
+const double Vector3D::operator*(const Vector3D &rhs) const {
+   return x * rhs.x + y * rhs.y + z * rhs.z;
+}
+
+Vector3D& Vector3D::operator/=(double scalar) {
+   x /= scalar;
+   y /= scalar;
+   z /= scalar;
+
    return *this;
+}
+
+bool Vector3D::operator==(const Vector3D &rhs) const {
+   if (fabs(x - rhs.x) < EPSILON)
+      if (fabs(y - rhs.y) < EPSILON)
+         if (fabs(z - rhs.z) < EPSILON)
+            return true;
+   return false;
+}
+
+Vector3D& Vector3D::operator=(const Vector3D &src) {
+   if (&src == this)
+      return *this;
+
+   x = src.x;
+   y = src.y;
+   z = src.z;
+
+   return *this;
+}
+
+const Vector3D Vector3D::operator*(double scalar) const {
+   return Vector3D(x * scalar, y * scalar, z * scalar);
+}
+
+const Vector3D Vector3D::getNormalized() const {
+   Vector3D normalized(*this);
+   normalized.normalize();
+   return normalized;
 }

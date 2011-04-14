@@ -11,41 +11,22 @@
 
 #include <stdio.h>
 #include "Utility/GlobalUtility.h"
+#include "Utility/Vector3D.h"
 
 struct Matrix4;
-class Vector3D;
 
-struct Point3D {
-   double x, y, z;
-   Point3D(double xIn = 0, double yIn = 0, double zIn = 0) :
-    x(xIn), y(yIn), z(zIn) {}
-   
-   Point3D(const Point3D& copy);
-   Point3D(const Vector3D& copy);
+class Point3D : public Vector3D {
+   public:
+      Point3D(double xIn = 0, double yIn = 0, double zIn = 0) :
+       Vector3D(xIn, yIn, zIn) {}
+      
+      Point3D(const Vector3D& copy);
 
-   void clone(Point3D* other);
-   void update(double x2, double y2, double z2);
-   double distanceFrom(Point3D& rhs);
+      virtual void draw();
+      void print();
 
-   virtual void draw();
-   void print();
-   void glTranslate();
-   void offsetBy(double x2, double y2, double z2);
-   Point3D add(Point3D other);
-   void midpoint(const Point3D& p1, const Point3D& p2);
-
-   const Point3D operator+(const Point3D& rhs) const;
-   const Point3D operator-(const Point3D& rhs) const;
-   const double operator*(const Point3D& rhs) const;
-   bool operator==(const Point3D& rhs) const;
-   Point3D &operator=(const Point3D &src);
-   Point3D& operator/=(double scalar); 
-   const Point3D operator*(double scalar) const;
-   const Point3D operator^(const Point3D& rhs) const;
-
-   const Point3D normalize() const;
-   const double magnitude() const;
-   static const Point3D Zero;
+      const Point3D normalize() const;
+      static const Point3D Zero;
 };
 
 #endif

@@ -103,7 +103,7 @@ Point3D Bomber::project(Object3D* target) {
       // now points to where our bomb will be when the asteroid is at
       // its position
 
-      wouldHit = wouldHit.normalize() * speed * time + *ship->position;
+      wouldHit = wouldHit.getNormalized() * speed * time + *ship->position;
 
       // Dist is the distance from where our bullet will be to where
       // the asteroid will be.
@@ -117,6 +117,6 @@ Point3D Bomber::project(Object3D* target) {
 }
 
 bool Bomber::shouldFire(Point3D* target, Point3D* aim) {
-   return ((*target - *ship->position).normalize() - *aim).magnitude() < 0.5;
+   return ((*target - *ship->position).getNormalized() - *aim).magnitude() < 0.5;
 }
 
