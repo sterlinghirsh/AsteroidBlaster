@@ -211,7 +211,7 @@ void init() {
 
 }
 
-void load(GameState* gameState) {
+void load() {
    //loading textures
    Texture::Add(texSize, texSize, "bloomTex");
    Texture::Add(texSize, texSize, "fboTex");
@@ -229,9 +229,6 @@ void load(GameState* gameState) {
    Texture::Add("Images/ShotIcon.png", "ShotIcon");
 
    Particle::initDisplayList();
-
-   // Initialize the screens
-   gameState->addScreens();
 
    // Initialize the framebuffer objects
    initFbo();
@@ -369,6 +366,12 @@ int main(int argc, char* argv[]) {
    GameState* gameState;
    gameState = new GameState(WORLD_SIZE, false);
 
+   // Initialize the screens
+   gameState->addScreens();
+
+   // Load the textures, sounds, and music.
+   load();
+   
    // Initialize the menus
    mainMenu = new MainMenu(gameState);
    storeMenu = new StoreMenu(gameState);
@@ -378,9 +381,6 @@ int main(int argc, char* argv[]) {
    creditsMenu = new CreditsMenu();
    //turn the menu on for the inial menu display
    mainMenu->menuActive = true;
-
-   // Load the textures, sounds, and music.
-   load(gameState);
 
    //Initialize the input manager
    inputManager = new InputManager();

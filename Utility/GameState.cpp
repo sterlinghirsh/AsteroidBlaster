@@ -111,6 +111,7 @@ GameState::~GameState() {
  * Initialize the displays once the textures have been loaded.
  */
 void GameState::addScreens() {
+   printf("screens added\n");
    rawScreen = new Screen(0, 0, Texture::getTexture("hblurTex"));
    bloomScreen = new Screen(0, 1, Texture::getTexture("bloomTex"));
    fboScreen = new Screen(1, 0, Texture::getTexture("fboTex"));
@@ -291,25 +292,31 @@ void GameState::draw() {
  * Draw the glowing objects.
  */
 void GameState::drawGlow() {
-   if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
-    ship->getCurrentView() == VIEW_THIRDPERSON_GUN) {
-      Vector3D newOffset(ship->forward->scalarMultiply(-3));
-      newOffset.addUpdate(ship->up->scalarMultiply(0.5));
-      camera->setOffset(newOffset);
-   } else {
-      camera->setOffset(0, 0, 0);
-   }
-   camera->setViewVector(ship->getViewVector());
-   camera->setOffset(*ship->getCameraOffset());
+   if (!inMenu) {
+      if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
+       ship->getCurrentView() == VIEW_THIRDPERSON_GUN) {
+         Vector3D newOffset(ship->forward->scalarMultiply(-3));
+         newOffset.addUpdate(ship->up->scalarMultiply(0.5));
+         camera->setOffset(newOffset);
+      } else {
+         camera->setOffset(0, 0, 0);
+      }
+      camera->setViewVector(ship->getViewVector());
+      camera->setOffset(*ship->getCameraOffset());
 
-   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   camera->setCamera(true);
+      //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+      camera->setCamera(true);
+   }
    //skybox->draw(camera);
    cube->draw();
 
    // Get a list of all of the objects after culling them down to the view frustum.
    //std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
-   viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
+   if (!inMenu) {
+      viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
+   } else {
+      viewFrustumObjects = ship->getRadar()->getFullReading();
+   }
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
    for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
@@ -319,9 +326,11 @@ void GameState::drawGlow() {
    }
 
    // Don't draw the ship in first Person mode.
-   if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
-    ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
-      ship->draw();
+   if (!inMenu) {
+      if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
+       ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
+         ship->draw();
+   }
 }
 
 void GameState::hBlur() {

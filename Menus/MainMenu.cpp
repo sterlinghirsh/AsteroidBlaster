@@ -71,6 +71,7 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    menuGameState->custodian.add(ship4);
 
    mainGameState = _mainGameState;
+   mainGameState->addScreens();
 }
 
 
@@ -100,8 +101,33 @@ void MainMenu::draw() {
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    
    glPushMatrix();
-      // Draw menu background stuff.
+      // Draw glowing objects to a texture for the bloom effect.
+      menuGameState->aspect = (float) (gameSettings->GW / gameSettings->GH);
+      if (gameSettings->bloom) {
+         glPushMatrix();
+         gluLookAt(0, 0, 20, // Eye at origin.
+          0, 0, -1, // X goes right, Z goes away.
+          0, 1, 0); // Y goes up.
+
+         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+         glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+
+         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+         glPushMatrix();
+         menuGameState->drawGlow();
+
+         glPopMatrix();
+         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+         menuGameState->hBlur();
+         menuGameState->vBlur();
+
+         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+         glPopMatrix();
+      }
       usePerspective();
+
+      // Draw menu background stuff.
 
       gluLookAt(0, 0, 20, // Eye at origin.
        0, 0, -1, // X goes right, Z goes away.
@@ -109,6 +135,11 @@ void MainMenu::draw() {
 
       // Draw background.
       menuGameState->draw();
+      glClear(GL_DEPTH_BUFFER_BIT);
+      if (gameSettings->bloom) {
+         menuGameState->drawBloom();
+      }
+      menuGameState->drawScreens();
 
    glPopMatrix();
 
