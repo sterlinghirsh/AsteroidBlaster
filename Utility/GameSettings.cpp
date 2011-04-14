@@ -72,38 +72,40 @@ void GameSettings::readIn() {
       return;
 
    int readInt;
-   if (fscanf(configFile, "bloom %d ", &readInt)) {
+   if (fscanf(configFile, "bloom %d ", &readInt) > 0) {
       bloom = (bool) readInt;
    }
 
-   if (fscanf(configFile, "fullscreen %d ", &readInt)) {
+   if (fscanf(configFile, "fullscreen %d ", &readInt) > 0) {
       fullscreen = (bool) readInt;
    }
 
-   if (fscanf(configFile, "musicOn %d ", &readInt)) {
+   if (fscanf(configFile, "musicOn %d ", &readInt) > 0) {
       musicOn = (bool) readInt;
    }
 
-   if (fscanf(configFile, "soundOn %d ", &readInt)) {
+   if (fscanf(configFile, "soundOn %d ", &readInt) > 0) {
       soundOn = (bool) readInt;
    }
 
-   if (fscanf(configFile, "windowedGW %d ", &readInt)) {
+   if (fscanf(configFile, "windowedGW %d ", &readInt) > 0) {
       windowedGW = readInt;
    }
    
-   if (fscanf(configFile, "windowedGH %d ", &readInt)) {
+   if (fscanf(configFile, "windowedGH %d ", &readInt) > 0) {
       windowedGH = readInt;
    }
    
-   if (fscanf(configFile, "fullscreenGW %d ", &readInt)) {
+   if (fscanf(configFile, "fullscreenGW %d ", &readInt) > 0) {
       printf("read fullscreenGW %d\n", readInt);
       fullscreenGW = readInt;
    }
    
-   if (fscanf(configFile, "fullscreenGH %d ", &readInt)) {
+   if (fscanf(configFile, "fullscreenGH %d ", &readInt) > 0) {
       fullscreenGH = readInt;
    }
+
+   printf("fullscreenGW: %d, windowedGW: %d\n", fullscreenGW, windowedGW);
 
    fclose(configFile);
 }
