@@ -342,8 +342,8 @@ void draw(GameState* gameState) {
 int main(int argc, char* argv[]) {
    srand((unsigned)time(NULL));
 
+   // This sets up defaults and reads in any necessary settings.
    gameSettings = new GameSettings();
-   gameSettings->readIn();
 
    updateDoubleTime();
 
