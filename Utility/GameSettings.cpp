@@ -11,6 +11,7 @@
 #define CONFIG_FILE "config.cfg"
 
 #include <string>
+#include <stdio.h>
 
 GameSettings::GameSettings() {
    // Default Settings.
