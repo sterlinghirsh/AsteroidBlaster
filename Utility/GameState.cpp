@@ -610,7 +610,7 @@ void GameState::initAsteroids() {
       do {
          custodian.update();
          collisions = custodian.findCollisions(tempAsteroid, true);
-         numCollisions = collisions->size();
+         numCollisions = (int) collisions->size();
          if (numCollisions > 0) {
             tempAsteroid->newRandomPosition();
          }

@@ -83,7 +83,7 @@ void Custodian::update() {
    }
 
    // This lets us know where we can stop searching.
-   int firstNull = objectsByMinX.size();
+   size_t firstNull = objectsByMinX.size();
 
    // Remove items that should be removed.
    for (unsigned i = 0; i < objectsByMinX.size(); ++i) {
@@ -109,7 +109,7 @@ void Custodian::update() {
    }
 
    // Remove null pointers from the ends.
-   for (unsigned i = firstNull; i < objectsByMinX.size(); ++i) {
+   for (size_t i = firstNull; i < objectsByMinX.size(); ++i) {
       objectsByMinX.pop_back();
       objectsByMaxX.pop_back();
    }
@@ -157,7 +157,7 @@ std::set<Drawable*, compareByDistance>* Custodian::findCollisions(Drawable* item
       return sublist;
 
    std::set<Drawable*, compareByDistance >::iterator iter;
-   int numElements = objectsByMinX.size();
+   size_t numElements = objectsByMinX.size();
    Drawable* other;
 
    if (searchBackwards) {

@@ -125,7 +125,7 @@ void Shard::InitShard(double r, double worldSizeIn) {
    }
 
    // Connect the rings from the halfway point of _rList to the end.
-   for (unsigned i = _rList.size() / 2; i < _rList.size() - 1; i++) {
+   for (size_t i = _rList.size() / 2; i < _rList.size() - 1; i++) {
       makeStrip(_rList[i], _rList[i + 1]);
    }
 

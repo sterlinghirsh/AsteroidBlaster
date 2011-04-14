@@ -166,7 +166,7 @@ void Minimap::draw() {
          oppositeOfPosition.glTranslate(-1);
          glDisable(GL_COLOR_MATERIAL);
 
-         itemsDisplayed = objects->size();
+         itemsDisplayed = (int) objects->size();
          furthestItemDistance = 0;
          // For each item that needs to be drawn in the minimap
          for (listIter = objects->begin(); listIter != objects->end(); ++listIter) {

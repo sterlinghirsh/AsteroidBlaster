@@ -16,9 +16,9 @@ then
    rm SDL_ttf-2.0.10.tar
    cd SDL_ttf-2.0.10
    echo "Configuring.."
-   ./configure
+   ./configure || exit
    echo "Making.."
-   make
+   make || exit
    echo "Done!"
    cd ..
    
@@ -32,9 +32,9 @@ then
    rm SDL_mixer-1.2.11.tar
    cd SDL_mixer-1.2.11
    echo "Configuring.."
-   ./configure
+   ./configure || exit
    echo "Making.."
-   make
+   make || exit
    echo "Done!"
    cd ..
    
@@ -48,9 +48,9 @@ then
    rm SDL_image-1.2.10.tar
    cd SDL_image-1.2.10
    echo "Configuring.."
-   ./configure
+   ./configure || exit
    echo "Making.."
-   make
+   make || exit
    echo "Done!"
    cd ..
 
@@ -64,7 +64,7 @@ then
    rm glew-1.5.8.tar
    cd glew-1.5.8
    echo "Making.."
-   make
+   make || exit
    echo "Done!"
    cd ..
    

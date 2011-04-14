@@ -172,7 +172,7 @@ void updateDoubleTime() {
 #else
    static struct timeval tp;
    gettimeofday(&tp, NULL);
-   answer = (double)(tp.tv_sec) + ((tp.tv_usec) / 1000000.0);
+   answer = (double)(tp.tv_sec) + ((double)(tp.tv_usec) / 1000000.0);
 #endif
    currentTime = answer;
 
@@ -344,7 +344,7 @@ char *textFileRead(char *fn) {
    FILE *fp;
    char *content = NULL;
 
-   int count=0;
+   long int count=0;
 
    if (fn != NULL) {
       fp = fopen(fn,"rt");

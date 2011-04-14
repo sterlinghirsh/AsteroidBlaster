@@ -108,7 +108,7 @@ int Mesh3D::addPoint(double x, double y, double z, double texX, double texY) {
    if (y < xMin) yMin = y;
    if (z > xMax) zMax = z;
    if (z < xMin) zMin = z;
-   return points.size();
+   return (int) points.size();
 }
 
 /**
@@ -123,7 +123,7 @@ int Mesh3D::addPoint(double x, double y, double z) {
    if (y < xMin) yMin = y;
    if (z > xMax) zMax = z;
    if (z < xMin) zMin = z;
-   return points.size();
+   return (int) points.size();
 }
 
 int Mesh3D::addPoint(MeshPoint* p) {

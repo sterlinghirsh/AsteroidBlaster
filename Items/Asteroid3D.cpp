@@ -27,7 +27,7 @@
 
 using namespace std;
 
-static double timediff = clock();;
+static double timediff = (double) clock();
 
 Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState) :
    Object3D(_gameState),
@@ -136,7 +136,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
       makeStrip(_rList[i - 1], _rList[i]);
    }
 
-   for (unsigned i = _rList.size() / 2; i < _rList.size() - 1; i++) {
+   for (size_t i = _rList.size() / 2; i < _rList.size() - 1; i++) {
       makeStrip(_rList[i], _rList[i + 1]);
    }
 

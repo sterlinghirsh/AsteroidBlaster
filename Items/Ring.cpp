@@ -70,7 +70,7 @@ MeshPoint Ring::makePt(double angle) {
 }
 
 int Ring::size() {
-   return _pList.size();
+   return (int) _pList.size();
 }
 
 int Ring::upCur(Ring prev, int ndx) {
