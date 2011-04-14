@@ -29,6 +29,7 @@
 #include "Menus/SettingsMenu.h"
 #include "Menus/HelpMenu.h"
 #include "Menus/CreditsMenu.h"
+#include "Utility/Texture.h"
 
 #include "Utility/GameSettings.h"
 
@@ -92,6 +93,8 @@ void useOrtho();
 void usePerspective();
 void drawCylinder(double radius, double length);
 void getBrightColor(double hue, float& r, float& g, float& b);
+void setupVideo();
+void initFbo();
 
 // Used for defining a material
 typedef struct materialStruct {

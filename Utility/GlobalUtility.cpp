@@ -565,6 +565,74 @@ void getBrightColor(double hue, float& r, float& g, float& b) {
    }
 }
 
+void setupVideo() {
+   /* Flags to pass to SDL_SetVideoMode */
+   int videoFlags;
+
+   /* get the flags to pass to SDL_SetVideoMode */
+   videoFlags  = SDL_OPENGL;          /* Enable OpenGL in SDL */
+   videoFlags |= SDL_GL_DOUBLEBUFFER; /* Enable double buffering */
+   videoFlags |= SDL_HWPALETTE;       /* Store the palette in hardware */
+   videoFlags |= SDL_RESIZABLE;       /* Enable window resizing */
+
+   /* This checks to see if surfaces can be stored in memory */
+   if ( vidinfo->hw_available ) {
+      videoFlags |= SDL_HWSURFACE;
+   } else {
+      videoFlags |= SDL_SWSURFACE;
+   }
+
+   /* This checks if hardware blits can be done */
+   if ( vidinfo->blit_hw ) {
+      videoFlags |= SDL_HWACCEL;
+   }
+
+   /* Sets up OpenGL double buffering */
+   SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+   // Get a surface
+   gDrawSurface = SDL_SetVideoMode(gameSettings->GW, gameSettings->GH, vidinfo->vfmt->BitsPerPixel, videoFlags);
+
+   if (!gDrawSurface) {
+      fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
+      exit(1);
+   }
+}
+
+void initFbo() {
+   glGenFramebuffersEXT(1, &fbo);
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+
+   glGenRenderbuffersEXT(1, &depthbuffer);
+   glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthbuffer);
+   glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT,
+         texSize, texSize);
+   glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+         GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthbuffer);
+
+   //int maxbuffers;
+   //glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxbuffers);
+   //if (maxbuffers < 4) {
+   //printf("maxbuffers (%d) less than needed buffers (4)\n", maxbuffers);
+   //}
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+         GL_TEXTURE_2D, Texture::getTexture("fboTex"), 0);
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT,
+         GL_TEXTURE_2D, Texture::getTexture("hblurTex"), 0);
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT,
+      GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
+   
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT3_EXT,
+         GL_TEXTURE_2D, Texture::getTexture("trailTex"), 0);
+
+   GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+}
+
 void toggleFullScreen() {
    gameSettings->toggleFullScreen();
    Uint32 flags = SDL_OPENGL;

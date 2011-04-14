@@ -45,10 +45,6 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    skybox = new Skybox();
    ship = new AsteroidShip(this);
    minimap = new Minimap(ship);
-   //bloomScreen = new Display((int)(GW * 0.8), (int)(GH * 0.8), Texture::getTexture("bloomTex"));
-   rawScreen = new Display(0, 0, Texture::getTexture("hblurTex"));
-   bloomScreen = new Display(0, 1, Texture::getTexture("bloomTex"));
-   fboScreen = new Display(1, 0, Texture::getTexture("fboTex"));
    camera = new Camera(ship);
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    //sphere = new BoundingSphere(worldSize, 0, 0, 0);
@@ -109,6 +105,15 @@ GameState::~GameState() {
    delete camera;
    delete cube;
    delete weaponReadyBar;
+}
+
+/**
+ * Initialize the displays once the textures have been loaded.
+ */
+void GameState::addScreens() {
+   rawScreen = new Screen(0, 0, Texture::getTexture("hblurTex"));
+   bloomScreen = new Screen(0, 1, Texture::getTexture("bloomTex"));
+   fboScreen = new Screen(1, 0, Texture::getTexture("fboTex"));
 }
 
 /**

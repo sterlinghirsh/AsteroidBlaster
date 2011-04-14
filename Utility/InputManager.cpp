@@ -52,8 +52,17 @@ void InputManager::update(const SDL_Event& e) {
       for (it = receivers.begin(); it != receivers.end(); it++)
          (*it)->keyUp(e.key.keysym.sym);
       break;
+
+   case SDL_VIDEORESIZE:
+      gameSettings->GW = e.resize.w;
+      gameSettings->GH = e.resize.h;
+      if (gameSettings->GW > texSize || gameSettings->GH > texSize) {
+         initFbo();
+      }
+      gDrawSurface = SDL_SetVideoMode(gameSettings->GW, gameSettings->GH, vidinfo->vfmt->BitsPerPixel, SDL_OPENGL);
+      break;
    }
-   
+
    if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_F1) {
       toggleFullScreen();
    } else if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_BACKQUOTE) {

@@ -7,6 +7,7 @@
 #include <math.h>
 #include <list>
 #include <sstream>
+//#include <boost/thread.hpp>
 
 // Constant value used in other files.
 #define WORLD_SIZE 80.00
@@ -63,9 +64,6 @@ GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
 GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
 
 void init() {
-   /* Flags to pass to SDL_SetVideoMode */
-   int videoFlags;
-
    // Initialize the SDL video/audio system
    if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)<0) {
       std::cerr << "Failed to initialize SDL Video/Audio!" << std::endl;
@@ -110,35 +108,7 @@ void init() {
 #endif
    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,  1);
 
-
-   /* get the flags to pass to SDL_SetVideoMode */
-   videoFlags  = SDL_OPENGL;          /* Enable OpenGL in SDL */
-   videoFlags |= SDL_GL_DOUBLEBUFFER; /* Enable double buffering */
-   videoFlags |= SDL_HWPALETTE;       /* Store the palette in hardware */
-   videoFlags |= SDL_RESIZABLE;       /* Enable window resizing */
-
-   /* This checks to see if surfaces can be stored in memory */
-   if ( vidinfo->hw_available ) {
-      videoFlags |= SDL_HWSURFACE;
-   } else {
-      videoFlags |= SDL_SWSURFACE;
-   }
-
-   /* This checks if hardware blits can be done */
-   if ( vidinfo->blit_hw ) {
-      videoFlags |= SDL_HWACCEL;
-   }
-
-   /* Sets up OpenGL double buffering */
-   SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-
-   // Get a surface
-   gDrawSurface = SDL_SetVideoMode(gameSettings->GW, gameSettings->GH, vidinfo->vfmt->BitsPerPixel, videoFlags);
-
-   if (!gDrawSurface) {
-      fprintf(stderr, "Couldn't set video mode!\n%s\n", SDL_GetError());
-      exit(1);
-   }
+   setupVideo();
 
    // Set the timer
    SDL_Init(SDL_INIT_TIMER);
@@ -165,6 +135,8 @@ void init() {
       printf("Not enough GLSL support\n");
       exit(1);
    }
+   printf("GL multitexturing: %d\n", GL_ARB_multitexture);
+   printf("GLEW multitexturing: %d\n", GLEW_ARB_multitexture);
 
 #endif
 
@@ -239,47 +211,68 @@ void init() {
 
 }
 
-void initFbo() {
-   glGenFramebuffersEXT(1, &fbo);
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+void load(GameState* gameState) {
+   //loading textures
+   Texture::Add(texSize, texSize, "bloomTex");
+   Texture::Add(texSize, texSize, "fboTex");
+   Texture::Add(texSize, texSize, "hblurTex");
+   Texture::Add(texSize, texSize, "trailTex");
+   Texture::Add("Images/Logo.png", "Logo.png");
+   Texture::Add("Images/StoreLogo.png", "StoreLogo");
+   Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
+   Texture::Add("Images/particle.png", "Particle");
+   Texture::Add("Images/starsdark.bmp", "starsdark.png");
+   Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
+   //Texture::Add("Images/fade.png", "Fade");
+   //Texture::Add("Images/fade2.png", "Fade");
+   Texture::Add("Images/Shield.png", "ShieldIcon");
+   Texture::Add("Images/ShotIcon.png", "ShotIcon");
 
-   glGenRenderbuffersEXT(1, &depthbuffer);
-   glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthbuffer);
-   glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT,
-         texSize, texSize);
-   glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
-         GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthbuffer);
+   Particle::initDisplayList();
 
-   /*
-      GLuint img;
-      glGenTextures(1, &img);
-      glBindTexture(GL_TEXTURE_2D, img);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
-      gameSettings->GW, gameSettings->GH, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-      */
-   //Texture::Add(gameSettings->GW, gameSettings->GH, "fboTex");
+   // Initialize the screens
+   gameState->addScreens();
 
-   //int maxbuffers;
-   //glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxbuffers);
-   //if (maxbuffers < 4) {
-   //printf("maxbuffers (%d) less than needed buffers (4)\n", maxbuffers);
-   //}
+   // Initialize the framebuffer objects
+   initFbo();
 
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-         GL_TEXTURE_2D, Texture::getTexture("fboTex"), 0);
+   //load the shader files
+   elecShader = setShaders( (char *) "./Shaders/elec.vert", (char *) "./Shaders/elec.frag");
+   ramShader = setShaders( (char *) "./Shaders/ram.vert", (char *) "./Shaders/ram.frag");
+   tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag");
+   lawnShader = setShaders( (char *) "./Shaders/lawn.vert", (char *) "./Shaders/lawn.frag", (char *) "./Shaders/lawn.geom");
+   fadeShader = setShaders( (char *) "./Shaders/fade.vert", (char *) "./Shaders/fade.frag");
+   tractorFade = setShaders( (char *) "./Shaders/tractorFade.vert", (char *) "./Shaders/tractorFade.frag");
+   hBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/hblur.frag");
+   vBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/vblur.frag");
+   billboardShader = setShaders( (char *) "./Shaders/billboard.vert", (char *) "./Shaders/billboard.frag");
+   //hBlurShader = setShaders( (char *) "./Shaders/old/hblur.vert", (char *) "./Shaders/hblur.frag");
+   //vBlurShader = setShaders( (char *) "./Shaders/old/vblur.vert", (char *) "./Shaders/vblur.frag");
 
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT,
-         GL_TEXTURE_2D, Texture::getTexture("hblurTex"), 0);
+   //load and start BGM
+   Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
+   Music::Add("Sounds/Asteroids2.ogg", "Asteroids2.ogg");
+   Music::Add("Sounds/Careless_Whisper.ogg","Careless_Whisper.ogg");
+   Music::playMusic("8-bit3.ogg");
+   //Music::playMusic("Asteroids2.ogg");
 
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT,
-      GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
-   
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT3_EXT,
-         GL_TEXTURE_2D, Texture::getTexture("trailTex"), 0);
-
-   GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
+   //load sound effects
+   //SoundEffect::Add("Sounds/blaster1.wav");
+   SoundEffect::Add("Sounds/blaster2.wav", "blaster2.wav");
+   SoundEffect::Add("Sounds/BlasterShot2.wav", "BlasterShot2.wav");
+   //SoundEffect::Add("Sounds/railgun1.wav");
+   SoundEffect::Add("Sounds/Rail2.wav", "Rail2.wav");
+   SoundEffect::Add("Sounds/Explosion1.wav", "Explosion1.wav");
+   SoundEffect::Add("Sounds/CrystalCollect.wav", "CrystalCollect.wav");
+   SoundEffect::Add("Sounds/TractorBeam.wav", "TractorBeam.wav");
+   SoundEffect::Add("Sounds/Pikachu.wav", "Pikachu.wav");
+   SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
+   SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
+   SoundEffect::Add("Sounds/ShipHit.wav", "ShipHit.wav");
+   SoundEffect::Add("Sounds/BlasterHit.wav", "BlasterHit.wav");
+   SoundEffect::Add("Sounds/Pulse.ogg", "Pulse");
+   SoundEffect::Add("Sounds/CrystalRelease.wav", "CrystalRelease");
+   SoundEffect::Add("Sounds/DoubleCrystalRelease.wav", "DoubleCrystalRelease");
 }
 
 void update(GameState* gameState, double timeDiff) {
@@ -347,173 +340,114 @@ void draw(GameState* gameState) {
 
    SDL_GL_SwapBuffers();
    lastDrawTime = doubleTime();
-   }
+}
 
-   int main(int argc, char* argv[]) {
-      srand((unsigned)time(NULL));
+int main(int argc, char* argv[]) {
+   srand((unsigned)time(NULL));
 
-      gameSettings = new GameSettings();
+   gameSettings = new GameSettings();
 
+   updateDoubleTime();
+
+   lastUpdateTime = doubleTime();
+
+   // the time difference since last update call
+   double timeDiff;
+
+   // Initialize GL/SDL/glew/GLSL related things
+   init();
+
+   //get the quadradic up
+   quadric = gluNewQuadric();
+   //set the quadradic up
+   gluQuadricNormals(quadric, GLU_SMOOTH);
+   gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
+
+
+   // Initialize the gameState
+   GameState* gameState;
+   gameState = new GameState(WORLD_SIZE, false);
+
+   // Initialize the menus
+   mainMenu = new MainMenu(gameState);
+   storeMenu = new StoreMenu(gameState);
+   // We should change this to pass in gameSettings when something like that exists.
+   settingsMenu = new SettingsMenu(gameState);
+   helpMenu = new HelpMenu();
+   creditsMenu = new CreditsMenu();
+   //turn the menu on for the inial menu display
+   mainMenu->menuActive = true;
+
+   // Load the textures, sounds, and music.
+   load(gameState);
+
+   //Initialize the input manager
+   inputManager = new InputManager();
+   //Connect the input manager to the gameState
+   inputManager->addReceiver(gameState);
+   inputManager->addReceiver(mainMenu);
+   inputManager->addReceiver(storeMenu);
+   inputManager->addReceiver(settingsMenu);
+   inputManager->addReceiver(helpMenu);
+   inputManager->addReceiver(creditsMenu);
+
+   //declare the event that will be reused
+   SDL_Event* event = new SDL_Event();
+
+   while (running) {
       updateDoubleTime();
-
+      timeDiff = doubleTime() - lastUpdateTime;
       lastUpdateTime = doubleTime();
 
-      // the time difference since last update call
-      double timeDiff;
+      if (mainMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
+         mainMenu->update(timeDiff);
+         mainMenu->draw();
 
-      // Initialize GL/SDL/glew/GLSL related things
-      init();
+      } else if (storeMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
+         storeMenu->draw();
 
-      //loading textures
-      Texture::Add(texSize, texSize, "bloomTex");
-      Texture::Add(texSize, texSize, "fboTex");
-      Texture::Add(texSize, texSize, "hblurTex");
-      Texture::Add(texSize, texSize, "trailTex");
-      Texture::Add("Images/Logo.png", "Logo.png");
-      Texture::Add("Images/StoreLogo.png", "StoreLogo");
-      Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
-      Texture::Add("Images/particle.png", "Particle");
-      Texture::Add("Images/starsdark.bmp", "starsdark.png");
-      Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
-      Texture::Add("Images/zoe2.png", "ZoeRedEyes");
-      //Texture::Add("Images/fade.png", "Fade");
-      //Texture::Add("Images/fade2.png", "Fade");
-      Texture::Add("Images/Shield.png", "ShieldIcon");
-      Texture::Add("Images/ShotIcon.png", "ShotIcon");
+      } else if (settingsMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
+         settingsMenu->draw();
 
-      Particle::initDisplayList();
+      } else if (helpMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
+         helpMenu->draw();
 
-      // Initialize the framebuffer objects
-      initFbo();
+      } else if (creditsMenu->menuActive) {
+         SDL_ShowCursor(SDL_ENABLE);
+         creditsMenu->update(lastUpdateTime);
 
-      //load the shader files
-      elecShader = setShaders( (char *) "./Shaders/elec.vert", (char *) "./Shaders/elec.frag");
-      ramShader = setShaders( (char *) "./Shaders/ram.vert", (char *) "./Shaders/ram.frag");
-      tractorBeamShader = setShaders( (char *) "./Shaders/toon.vert", (char *) "./Shaders/toon.frag");
-      lawnShader = setShaders( (char *) "./Shaders/lawn.vert", (char *) "./Shaders/lawn.frag", (char *) "./Shaders/lawn.geom");
-      fadeShader = setShaders( (char *) "./Shaders/fade.vert", (char *) "./Shaders/fade.frag");
-      tractorFade = setShaders( (char *) "./Shaders/tractorFade.vert", (char *) "./Shaders/tractorFade.frag");
-      hBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/hblur.frag");
-      vBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/vblur.frag");
-      billboardShader = setShaders( (char *) "./Shaders/billboard.vert", (char *) "./Shaders/billboard.frag");
-      //hBlurShader = setShaders( (char *) "./Shaders/old/hblur.vert", (char *) "./Shaders/hblur.frag");
-      //vBlurShader = setShaders( (char *) "./Shaders/old/vblur.vert", (char *) "./Shaders/vblur.frag");
-
-      //load and start BGM
-      Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
-      Music::Add("Sounds/Asteroids2.ogg", "Asteroids2.ogg");
-      Music::Add("Sounds/Careless_Whisper.ogg","Careless_Whisper.ogg");
-      Music::playMusic("8-bit3.ogg");
-      //Music::playMusic("Asteroids2.ogg");
-
-      //load sound effects
-      //SoundEffect::Add("Sounds/blaster1.wav");
-      SoundEffect::Add("Sounds/blaster2.wav", "blaster2.wav");
-      SoundEffect::Add("Sounds/BlasterShot2.wav", "BlasterShot2.wav");
-      //SoundEffect::Add("Sounds/railgun1.wav");
-      SoundEffect::Add("Sounds/Rail2.wav", "Rail2.wav");
-      SoundEffect::Add("Sounds/Explosion1.wav", "Explosion1.wav");
-      SoundEffect::Add("Sounds/CrystalCollect.wav", "CrystalCollect.wav");
-      SoundEffect::Add("Sounds/TractorBeam.wav", "TractorBeam.wav");
-      SoundEffect::Add("Sounds/Pikachu.wav", "Pikachu.wav");
-      SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
-      SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
-      SoundEffect::Add("Sounds/ShipHit.wav", "ShipHit.wav");
-      SoundEffect::Add("Sounds/BlasterHit.wav", "BlasterHit.wav");
-      SoundEffect::Add("Sounds/Pulse.ogg", "Pulse");
-      SoundEffect::Add("Sounds/CrystalRelease.wav", "CrystalRelease");
-      SoundEffect::Add("Sounds/DoubleCrystalRelease.wav", "DoubleCrystalRelease");
-
-      //get the quadradic up
-      quadric = gluNewQuadric();
-      //set the quadradic up
-      gluQuadricNormals(quadric, GLU_SMOOTH);
-      gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
-
-
-      // Initialize the gameState
-      GameState* gameState;
-      gameState = new GameState(WORLD_SIZE, false);
-
-      // Initialize the menus
-      mainMenu = new MainMenu(gameState);
-      storeMenu = new StoreMenu(gameState);
-      // We should change this to pass in gameSettings when something like that exists.
-      settingsMenu = new SettingsMenu(gameState);
-      helpMenu = new HelpMenu();
-      creditsMenu = new CreditsMenu();
-      //turn the menu on for the inial menu display
-      mainMenu->menuActive = true;
-
-
-
-      //Initialize the input manager
-      inputManager = new InputManager();
-      //Connect the input manager to the gameState
-      inputManager->addReceiver(gameState);
-      inputManager->addReceiver(mainMenu);
-      inputManager->addReceiver(storeMenu);
-      inputManager->addReceiver(settingsMenu);
-      inputManager->addReceiver(helpMenu);
-      inputManager->addReceiver(creditsMenu);
-
-      //declare the event that will be reused
-      SDL_Event* event = new SDL_Event();
-
-      while (running) {
-         updateDoubleTime();
-         timeDiff = doubleTime() - lastUpdateTime;
-         lastUpdateTime = doubleTime();
-
-         if (mainMenu->menuActive) {
-            SDL_ShowCursor(SDL_ENABLE);
-            mainMenu->update(timeDiff);
-            mainMenu->draw();
-
-         } else if (storeMenu->menuActive) {
-            SDL_ShowCursor(SDL_ENABLE);
-            storeMenu->draw();
-
-         } else if (settingsMenu->menuActive) {
-            SDL_ShowCursor(SDL_ENABLE);
-            settingsMenu->draw();
-
-         } else if (helpMenu->menuActive) {
-            SDL_ShowCursor(SDL_ENABLE);
-            helpMenu->draw();
-
-         } else if (creditsMenu->menuActive) {
-            SDL_ShowCursor(SDL_ENABLE);
-            creditsMenu->update(lastUpdateTime);
-
-         } else {
-            update(gameState, timeDiff);
-            draw(gameState);
-         }
-
-         while (SDL_PollEvent(event)) {
-            inputManager->update(*event);
-         }
+      } else {
+         update(gameState, timeDiff);
+         draw(gameState);
       }
 
-      glDeleteFramebuffersEXT(1, &fbo);
-      glDeleteRenderbuffersEXT(1, &depthbuffer);
-
-      if (gameSettings->fullscreen) {
-         SDL_WM_ToggleFullScreen(gDrawSurface);
-         //SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
+      while (SDL_PollEvent(event)) {
+         inputManager->update(*event);
       }
-   
-      // Clean up
-      delete gameState;
-      delete mainMenu;
-      delete storeMenu;
-      delete settingsMenu;
-      delete helpMenu;
-      delete creditsMenu;
-      delete inputManager;
-      Music::FreeAll();
-      SoundEffect::FreeAll();
-
-      return 0;
    }
+
+   glDeleteFramebuffersEXT(1, &fbo);
+   glDeleteRenderbuffersEXT(1, &depthbuffer);
+
+   if (gameSettings->fullscreen) {
+      SDL_WM_ToggleFullScreen(gDrawSurface);
+      //SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
+   }
+
+   // Clean up
+   delete gameState;
+   delete mainMenu;
+   delete storeMenu;
+   delete settingsMenu;
+   delete helpMenu;
+   delete creditsMenu;
+   delete inputManager;
+   Music::FreeAll();
+   SoundEffect::FreeAll();
+
+   return 0;
+}

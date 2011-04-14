@@ -22,7 +22,7 @@
 #include "Utility/InputManager.h"
 #include "HUD/ProgressBar.h"
 #include "HUD/Minimap.h"
-#include "HUD/Display.h"
+#include "HUD/Screen.h"
 #include <list>
 #include <sstream>
 
@@ -67,6 +67,7 @@ class GameState : public InputReceiver {
       void drawGlow();
       void drawMinimap();
       void drawScreens();
+      void addScreens();
       
       bool minimapOn();
       void toggleMinimap();
@@ -134,9 +135,9 @@ class GameState : public InputReceiver {
       BoundingSpace* cube;
       BoundingSphere* sphere;
       Minimap* minimap;
-      Display* bloomScreen;
-      Display* rawScreen;
-      Display* fboScreen;
+      Screen* bloomScreen;
+      Screen* rawScreen;
+      Screen* fboScreen;
 
       std::list<Object3D*> objects;
       void addLevelMessage();

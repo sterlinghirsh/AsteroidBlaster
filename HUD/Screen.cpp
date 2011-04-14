@@ -1,15 +1,15 @@
 /**
- * Display.h
+ * Screen.h
  * A minimap that displays in the corner of the screen.
  * @author Sterling Hirsh
  * @date 2/23/2011
  */
 
-#include "HUD/Display.h"
+#include "HUD/Screen.h"
 #include "Utility/GlobalUtility.h"
 #include "Utility/Texture.h"
 
-Display::Display(int x, int y, GLuint tex):
+Screen::Screen(int x, int y, GLuint tex):
    _x(x), _y(y) {
       _tex = tex;
       hidden = false;
@@ -18,7 +18,7 @@ Display::Display(int x, int y, GLuint tex):
 /**
  * This draws the display.
  */
-void Display::draw() {
+void Screen::draw() {
    // Draw the minimap
    glPushMatrix();
 
@@ -81,10 +81,10 @@ void Display::draw() {
 /**
  * Update aspects of the minimap.
  */
-void Display::update(double timeDiff) {
+void Screen::update(double timeDiff) {
 }
 
-void Display::toggle() {
+void Screen::toggle() {
    if (hidden) {
       hidden = false;
    } else {
@@ -92,6 +92,6 @@ void Display::toggle() {
    }
 }
 
-bool Display::isEnabled() {
+bool Screen::isEnabled() {
    return (!hidden);
 }
