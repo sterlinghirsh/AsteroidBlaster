@@ -568,12 +568,14 @@ void getBrightColor(double hue, float& r, float& g, float& b) {
 void setupVideo() {
    /* Flags to pass to SDL_SetVideoMode */
    int videoFlags;
+   
+   SDL_FreeSurface(gDrawSurface);
 
    /* get the flags to pass to SDL_SetVideoMode */
    videoFlags  = SDL_OPENGL;          /* Enable OpenGL in SDL */
    videoFlags |= SDL_GL_DOUBLEBUFFER; /* Enable double buffering */
    videoFlags |= SDL_HWPALETTE;       /* Store the palette in hardware */
-   videoFlags |= SDL_RESIZABLE;       /* Enable window resizing */
+   //videoFlags |= SDL_RESIZABLE;       /* Enable window resizing */
 
    /* This checks to see if surfaces can be stored in memory */
    if ( vidinfo->hw_available ) {
@@ -589,6 +591,10 @@ void setupVideo() {
 
    /* Sets up OpenGL double buffering */
    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+   if ( gameSettings->fullscreen ) {
+      videoFlags |= SDL_FULLSCREEN;
+   }
 
    // Get a surface
    gDrawSurface = SDL_SetVideoMode(gameSettings->GW, gameSettings->GH, vidinfo->vfmt->BitsPerPixel, videoFlags);
@@ -635,48 +641,7 @@ void initFbo() {
 
 void toggleFullScreen() {
    gameSettings->toggleFullScreen();
-   Uint32 flags = SDL_OPENGL;
-
-   // Looks like this only works with SDL 1.3 :/
-   /*
-   SDL_DisplayMode requestedDisplayMode();
-
-   requestedDisplayMode.w = gameSettings->GW;
-   requestedDisplayMode.h = gameSettings->GH;
-
-   SDL_DisplayMode realDisplayMode();
-
-   SDL_GetClosestDisplayMode(&requestedDisplayMode, &realDisplayMode);
-   gameSettings->GW = realDisplayMode.w;
-   gameSettings->GH = realDisplayMode.h;
-
-   if (realDisplayMode.w != requestedDisplayMode.w ||
-    realDisplayMode.h != requestedDisplayMode.h) {
-      printf("Requested %d x %d, giving %d x %d\n",
-       requestedDisplayMode.w, requestedDisplayMode.h,
-       realDisplayMode.w, realDisplayMode.h);
-   }
-   */
-
-   if (gameSettings->fullscreen) {
-      // If switching from fullscreen, toggle fullscreen first.
-      //SDL_WM_ToggleFullScreen( gDrawSurface );
-      flags |= SDL_FULLSCREEN;
-   }
-
-   SDL_FreeSurface(gDrawSurface);
-
-   gDrawSurface = SDL_SetVideoMode(gameSettings->GW, gameSettings->GH, 
-    vidinfo->vfmt->BitsPerPixel, flags);
-   if (gameSettings->fullscreen) {
-      // If switching to fullscreen, toggle fullscreen second.
-      //SDL_WM_ToggleFullScreen( gDrawSurface );
-   }
-
-   if (gDrawSurface == NULL) {
-      printf("Toggling fulscreen failed!\n");
-      gDrawSurface = SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
-   }
+   setupVideo();
 }
 
 void toggleGrabMode() {
