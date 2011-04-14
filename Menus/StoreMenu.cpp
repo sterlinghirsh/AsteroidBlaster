@@ -529,7 +529,6 @@ void StoreMenu::keyDown(int key) {
    if (!menuActive) { return; }
    
    switch(key) {
-    case SDLK_ESCAPE: exit(0);
     case SDLK_n:
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;

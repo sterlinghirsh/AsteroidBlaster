@@ -68,7 +68,7 @@ void InputManager::update(const SDL_Event& e) {
    } else if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_BACKQUOTE) {
       toggleGrabMode();
    } else if (e.type == SDL_KEYDOWN &&  e.key.keysym.sym == SDLK_ESCAPE) {
-      exit(0);
+      running = false;
    }
 }
 

@@ -23,7 +23,7 @@ void Music::Add(std::string file, std::string keyName) {
 
    if(!(temp=Mix_LoadMUS(file.c_str()))) {
       std::cerr << "could not load the music file: " << file << ", exiting!" << std::endl;
-      exit(0);
+      exit(1);
    }
 
    musics.insert( std::pair<std::string, Mix_Music*>(keyName,temp) );
@@ -48,7 +48,7 @@ void Music::playMusic(std::string filename) {
 
    if(Mix_PlayMusic(iter->second, -1)==-1) {
       std::cerr << "could not play music " << filename << ", exiting!" << std::endl;
-      exit(0);
+      exit(1);
    }
 
    currPlay = filename;

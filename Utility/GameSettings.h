@@ -25,6 +25,9 @@ class GameSettings {
       bool mouseCapture;
 
       void toggleFullScreen();
+
+      void writeOut();
+      void readIn();
 };
 
 #endif

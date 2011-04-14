@@ -23,7 +23,7 @@ void SoundEffect::Add(std::string file, std::string keyName) {
    
 	if(!(temp=Mix_LoadWAV(file.c_str()))) {
 	   std::cerr << "Mix_LoadWAV: " << Mix_GetError() << std::endl;
-		exit(0);
+		exit(1);
    }
    
    soundEffects.insert( std::pair<std::string, Mix_Chunk*>(keyName,temp) );

@@ -128,6 +128,8 @@ void updateDoubleTime();
 void toggleGrabMode();
 void toggleFullScreen();
 
+extern bool running;
+
 struct Color {
    GLfloat r, g, b, a;
    Color(GLfloat _r, GLfloat _g, GLfloat _b, GLfloat _a = 1) :

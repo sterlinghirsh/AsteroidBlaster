@@ -210,9 +210,6 @@ void MainMenu::keyDown(int key) {
          deactivate();
       }
       break;
-    case SDLK_ESCAPE: 
-      exit(0);
-      break;
    }
 }
 
@@ -246,7 +243,7 @@ void MainMenu::mouseDown(int button) {
       Music::stopMusic();
       Music::playMusic("Careless_Whisper.ogg");
    } else if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
-      exit(0);
+      running = false;
    }
 }
 

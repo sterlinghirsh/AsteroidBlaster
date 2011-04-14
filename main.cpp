@@ -180,11 +180,11 @@ void init() {
    //glEnable(GL_POLYGON_SMOOTH);
 
    //initialize light
-   //glEnable(GL_LIgameSettings->GHT0);
-   //glLightfv(GL_LIgameSettings->GHT0, GL_AMBIENT, headlight_amb);
-   //glLightfv(GL_LIgameSettings->GHT0, GL_DIFFUSE, headlight_diff);
-   //glLightfv(GL_LIgameSettings->GHT0, GL_SPECULAR, headlight_spec);
-   //glLightfv(GL_LIgameSettings->GHT0, GL_POSITION, headlight_pos);
+   //glEnable(GL_LIGHT0);
+   //glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
+   //glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
+   //glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
+   //glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
 
 
    glEnable(GL_LIGHT1);
@@ -193,11 +193,11 @@ void init() {
    glLightfv(GL_LIGHT1, GL_SPECULAR, minimaplight_spec);
    glLightfv(GL_LIGHT1, GL_POSITION, minimaplight_pos);
 
-   //glEnable(GL_LIgameSettings->GHT2);
-   //glLightfv(GL_LIgameSettings->GHT2, GL_AMBIENT, ambientlight_amb);
-   //glLightfv(GL_LIgameSettings->GHT2, GL_DIFFUSE, ambientlight_diff);
-   //glLightfv(GL_LIgameSettings->GHT2, GL_SPECULAR, ambientlight_spec);
-   //glLightfv(GL_LIgameSettings->GHT2, GL_POSITION, ambientlight_pos);
+   //glEnable(GL_LIGHT2);
+   //glLightfv(GL_LIGHT2, GL_AMBIENT, ambientlight_amb);
+   //glLightfv(GL_LIGHT2, GL_DIFFUSE, ambientlight_diff);
+   //glLightfv(GL_LIGHT2, GL_SPECULAR, ambientlight_spec);
+   //glLightfv(GL_LIGHT2, GL_POSITION, ambientlight_pos);
    //glShadeModel(GL_SMOOTH);
    //glEnable(GL_NORMALIZE);
 
@@ -346,6 +346,7 @@ int main(int argc, char* argv[]) {
    srand((unsigned)time(NULL));
 
    gameSettings = new GameSettings();
+   gameSettings->readIn();
 
    updateDoubleTime();
 
@@ -437,6 +438,8 @@ int main(int argc, char* argv[]) {
       SDL_WM_ToggleFullScreen(gDrawSurface);
       //SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
    }
+
+   gameSettings->writeOut();
 
    // Clean up
    delete gameState;
