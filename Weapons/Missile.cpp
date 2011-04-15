@@ -19,7 +19,7 @@ Missile::Missile(AsteroidShip* owner)
    name = "Missile";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
-   purchased = true; // Start off owning the blaster
+   purchased = false; // Start off owning the blaster
 }
 
 Missile::~Missile() {
