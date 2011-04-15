@@ -18,6 +18,7 @@ class GameState;
 class Drawable {
    public:
       Point3D* position;
+      Vector3D* velocity;
       Point3D* minPosition;
       Point3D* maxPosition;
       double cullRadius;
@@ -30,7 +31,6 @@ class Drawable {
       bool shouldDrawInMinimap;
       // This might not belong here.
       double minX, minY, minZ, maxX, maxY, maxZ;
-      Vector3D* velocity;
 
       Drawable(const GameState* _gameState);
       virtual ~Drawable();

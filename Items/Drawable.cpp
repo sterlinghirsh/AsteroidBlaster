@@ -39,8 +39,12 @@ Drawable :: Drawable(const GameState* _gameState) :
 Drawable :: ~Drawable() {
    if (position != NULL)
       delete position;
-   //if (velocity != NULL)
-      //delete velocity;
+   if (velocity != NULL)
+      delete velocity;
+   if (minPosition != NULL)
+      delete minPosition;
+   if (maxPosition != NULL)
+      delete maxPosition;
 }
 
 /**

@@ -35,12 +35,6 @@ Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState) {
 }
 
 Object3D::~Object3D() {
-   if (minPosition != NULL)
-      delete minPosition;
-   if (maxPosition != NULL)
-      delete maxPosition;
-   if (velocity != NULL)
-      delete velocity;
    if (acceleration != NULL)
       delete acceleration;
    if (up != NULL)

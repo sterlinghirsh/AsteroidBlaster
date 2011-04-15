@@ -63,14 +63,13 @@ void Bomber::fire() {
  * Basic debug function. Just in case!
  */
 void Bomber::debug() {
-   printf("Bomber!\n");
+   printf("%s\n", name.c_str());
 }
 
 /**
  * The job of the weapon is to project the position of
  * the targeted object, and return the point that the
- * AI should aim at in order to hit the target with this
- * weapon.
+ * AI should aim at in order to hit the target with this weapon.
  */
 Point3D Bomber::project(Object3D* target) {
    Point3D wouldHit;

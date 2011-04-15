@@ -27,7 +27,6 @@ Shot::Shot(Point3D& posIn, Vector3D dirIn,
 Shot::~Shot() {
    // Do nothing.
 }
-      
 
 void Shot::update(double timeDiff) {
    Object3D::update(timeDiff);
