@@ -657,6 +657,8 @@ void GameState::reset() {
    Particle::particles.clear();
 
    curLevel = 1;
+   numAsteroidsToSpawn = curLevel;
+   curLevelText->updateBody(curLevel);
    
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    ship = new AsteroidShip(this);
