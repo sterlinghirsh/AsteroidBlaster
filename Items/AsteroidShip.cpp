@@ -22,121 +22,143 @@ const double rotationFactor = 3;
 const float shipScale = 5;
 
 AsteroidShip::AsteroidShip(const GameState* _gameState) :
-   Object3D(_gameState),     // Initialize superclass
-   shotDirection(0, 0, 1) {  // Initialize shot direction to forward
-      /* Currently not braking or acceleration. */
-      isBraking = false;
-      isBoosting = false;
-      shakeAmount = 0;
-      brakeFactor = 2;
-      /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
-      curForwardAccel = curRightAccel = curUpAccel = 0;
-      
-      cullRadius = 12;
-      
-      yawSpeed = rollSpeed = pitchSpeed = 0;
-      maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
-      maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
+ Object3D(_gameState) {  // Initialize shot direction to forward
+   cullRadius = 12;
+   
+   // Bounding box stuff.
+   maxX = maxY = maxZ = 4;
+   minX = minY = minZ = -4;
+   updateBoundingBox();
+   
+   // Todo: comment these.
+   spin = 90;
+   flashiness = 0;
+   tracker = 0;
+   rando = 1;
+   
+   zMove = 2;
+   lineMove = zMove / 4;
+   frontX = 0;
+   frontY = 0;
+   frontZ = 0;
+   cornerX = .2;
+   cornerY = .2;
+   cornerZ = 1.3;
+   middleXY = .15;
+   middleZ = 1;
+   backX = 0;
+   backY = 0;
+   backZ = 1.6;
+   
+   //skew must be set to 0 til I figure out a better way to do things
+   skew = 0;
+   
+   // TODO: Comment these.
+   x2Change = middleXY / 2;
+   y2Change = middleXY / 2;
+   z2Change = (backZ - middleZ) / 2;
+   xChange = 0;
+   yChange = 0;
+   zChange = 0;
+   backChange = 0;
+   
+   shotOriginScale = 4;
+   
+   upstart = NULL;
 
-      // Bounding box stuff.
-      //shipRadius = 1; NOT USED
-      maxX = maxY = maxZ = 4;
-      minX = minY = minZ = -4;
-      updateBoundingBox();
-      
-      spin = 90;
-      flashiness = 0;
-      tracker = 0;
-      rando = 1;
-      
-      zMove = 2;
-      lineMove = zMove / 4;
-      frontX = 0;
-      frontY = 0;
-      frontZ = 0;
-      cornerX = .2;
-      cornerY = .2;
-      cornerZ = 1.3;
-      middleXY = .15;
-      middleZ = 1;
-      backX = 0;
-      backY = 0;
-      backZ = 1.6;
-      
-      //skew must be set to 0 til I figure out a better way to do things
-      skew = 0;
-      
-      x2Change = middleXY / 2;
-      y2Change = middleXY / 2;
-      z2Change = (backZ - middleZ) / 2;
-      xChange = 0;
-      yChange = 0;
-      zChange = 0;
-      backChange = 0;
-      
-      shotOriginScale = 4;
-      shotOrigin = *position;
-      forward->movePoint(shotOrigin, shotOriginScale);
-      
+   // The ship's score. This number is displayed to the screen.
+   score = 0;
+  
+   // The number of shard collected. This number is displayed to the screen.
+   nShards = 0;
+   
+   // The ship's max motion parameters.
+   maxForwardAccel = 10;
+   maxRightAccel = 5;
+   maxUpAccel = 5;
+   maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
 
-      // Orientation vectors.
-      upstart = new Vector3D(0, 1, 0);
-      upstart->updateMagnitude(0, 1, 0);
-      forward->updateMagnitude(0, 0, 1);
-      up->updateMagnitude(0, 1, 0);
-      right->updateMagnitude(-1, 0, 0);
+   // TODO: create all of the shooters that this ship will have.
+   shooter = new ShootingAI(this);
+   flyingAI = new FlyingAI(this);
 
-      // Is the ship firing? Not when it's instantiated.
-      isFiring = false;
-      shotPhi = shotTheta = 0;
-      // The ship's score. This number is displayed to the screen.
-      score = 0;
-      // The ship's health. This number is displayed to the screen.
-      health = 100;
-      // The number of shard collected. This number is displayed to the screen.
-      nShards = 0;
-      // The ship's max motion parameters.
-      maxForwardAccel = 10;
-      maxRightAccel = 5;
-      maxUpAccel = 5;
-      maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
-      //engine upgrade, terminal speed is raised when leved up
-      engineUpgrade = 0;
+   // Create our Radar
+   radar = new Radar(this);
 
+   // Add weapons to the list!
+   weapons.push_back(new Blaster(this));
+   weapons.push_back(new RailGun(this));
+   /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
+    */
+   weapons.push_back(new TractorBeam(this));
+   weapons.push_back(new Electricity(this));
+   weapons.push_back(new LawnMower(this));
+   weapons.push_back(new Ram(this));
+   weapons.push_back(new AntiInertia(this));
+   weapons.push_back(new Bomber(this));
+   weapons.push_back(new Missile(this));
 
-      // TODO: create all of the shooters that this ship will have.
-      shooter = new ShootingAI(this);
-      flyingAI = new FlyingAI(this);
+   soundHandle = -1;
 
-      // Create our Radar
-      radar = new Radar(this);
+   cameraOffset = new Vector3D(0, 2, 5);
+   currentView = VIEW_THIRDPERSON_SHIP;
+   zoomFactor = 1.0;
+   zoomSpeed = 0.0;
 
-      // Add weapons to the list!
-      weapons.push_back(new Blaster(this));
-      weapons.push_back(new RailGun(this));
-      /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
-       */
-      weapons.push_back(new TractorBeam(this));
-      weapons.push_back(new Electricity(this));
-      weapons.push_back(new LawnMower(this));
-      weapons.push_back(new Ram(this));
-      weapons.push_back(new AntiInertia(this));
-      weapons.push_back(new Bomber(this));
-      weapons.push_back(new Missile(this));
+   shouldDrawInMinimap = true;
 
-      // The ship's currently selected weapon.
-      currentWeapon = 0;
-      soundHandle = -1;
+   reInitialize();
+}
 
-      cameraOffset = new Vector3D(0, 2, 5);
-      currentView = VIEW_THIRDPERSON_SHIP;
-      zoomFactor = 1.0;
-      zoomSpeed = 0.0;
-
-      shouldDrawInMinimap = true;
-      accelerationStartTime = doubleTime();
-      particlesEmitted = 0;
+/**
+ * Reset the ship as if it just spawned.
+ */
+void AsteroidShip::reInitialize() {
+   shotDirection.updateMagnitude(0, 0, 1);
+   /* Currently not braking or acceleration. */
+   isBraking = false;
+   isBoosting = false;
+   shakeAmount = 0;
+   brakeFactor = 2;
+   /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
+   curForwardAccel = curRightAccel = curUpAccel = 0;
+   yawSpeed = rollSpeed = pitchSpeed = 0;
+   maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
+   maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
+   shotOrigin = *position;
+   forward->movePoint(shotOrigin, shotOriginScale);
+   
+   // Orientation vectors.
+   if (upstart != NULL) {
+      delete upstart;
    }
+   upstart = new Vector3D(0, 1, 0);
+   upstart->updateMagnitude(0, 1, 0);
+   forward->updateMagnitude(0, 0, 1);
+   up->updateMagnitude(0, 1, 0);
+   right->updateMagnitude(-1, 0, 0);
+
+   // Is the ship firing? Not when it's instantiated.
+   isFiring = false;
+   shotPhi = shotTheta = 0;
+   
+   // The ship's health. This number is displayed to the screen.
+   health = 100;
+   
+   //engine upgrade, terminal speed is raised when leved up
+   engineUpgrade = 0;
+
+   // The ship's currently selected weapon.
+   currentWeapon = 0;
+   
+   accelerationStartTime = doubleTime();
+   particlesEmitted = 0;
+
+   timeDied = 0;
+
+   velocity->updateMagnitude(0, 0, 0);
+   position->updateMagnitude(0, 0, 0);
+}
 
 /**
  * Set the currently selected weapon to the weapon type specified.
@@ -758,6 +780,8 @@ void AsteroidShip::drawInMinimap() {
 
 
 void AsteroidShip::draw() {
+   if (getHealth() <= 0)
+      return;
    /*
    GLUquadricObj *quadratic;
    float ballx, bally, ballz;
@@ -859,6 +883,9 @@ void AsteroidShip::updateShotDirection(Point3D dir) {
  * This is the crosshair for first person.
  */
 void AsteroidShip::drawCrosshair() {
+   if (getHealth() <= 0)
+      return;
+
    // If we should be drawing the boxes, do that instead.
    if (currentView != VIEW_FIRSTPERSON_SHIP &&
     currentView != VIEW_FIRSTPERSON_GUN) {
@@ -911,6 +938,9 @@ void AsteroidShip::drawCrosshair() {
  * Draw the double crosshair, starfox style.
  */
 void AsteroidShip::drawShotDirectionIndicators() {
+   if (getHealth() <= 0)
+      return;
+
    // Don't draw this while firing the tractorbeam.
    // TODO: Make 2 not a magic number.
    if (currentWeapon == 2 && isFiring && weapons[2]->curAmmo > 0 || (gameState->godMode && isFiring)) {
@@ -1143,4 +1173,12 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
    Vector3D _up(upX, upY, upZ);
 
    setOrientation(_forward, _up);
+}
+
+bool AsteroidShip::detectCollision(Drawable* other, bool checkOther) {
+   if (getHealth() <= 0) {
+      return false;
+   }
+
+   return Object3D::detectCollision(other, checkOther);
 }

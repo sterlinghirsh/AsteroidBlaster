@@ -78,6 +78,10 @@ class AsteroidShip : public Object3D {
       Vector3D* getCameraOffset();
       void nextView();
 
+      double timeDied;
+
+      void reInitialize();
+
       /**
        * These are going to be the functions that either the local player
        * or the AI player or the networked player will call.
@@ -158,6 +162,8 @@ class AsteroidShip : public Object3D {
  double upX, double upY, double upZ);
       void setOrientation(Vector3D& _forward, Vector3D& _up);
       void lookAt(double lookAtX, double lookAtY, double lookAtZ, double upX, double upY, double upZ);
+
+      virtual bool detectCollision(Drawable* other, bool checkOther = true);
 
    protected:
       int soundHandle;
