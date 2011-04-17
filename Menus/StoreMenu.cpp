@@ -625,6 +625,7 @@ void StoreMenu::mouseDown(int button) {
    }
    
    if(menuTexts[DONE_STOREMENUINDEX]->mouseSelect(x,y)) {
+      timeLeft = timeLeft + DEFAULTTIME;
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
       Music::stopMusic();
