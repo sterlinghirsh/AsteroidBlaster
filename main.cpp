@@ -225,8 +225,6 @@ void load() {
    Texture::Add("Images/particle.png", "Particle");
    Texture::Add("Images/starsdark.bmp", "starsdark.png");
    Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
-   //Texture::Add("Images/fade.png", "Fade");
-   //Texture::Add("Images/fade2.png", "Fade");
    Texture::Add("Images/Shield.png", "ShieldIcon");
    Texture::Add("Images/ShotIcon.png", "ShotIcon");
 

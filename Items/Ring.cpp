@@ -11,7 +11,7 @@
 #define OFFSET_MIN 0.0
 #define OFFSET_MAX M_PI / 10
 #define TWEAK_MIN -(RADIUS / 30.0)
-#define TWEAK_MAX _rad / 5.0
+#define TWEAK_MAX _rad / 15.0
 #define LINE_W 5
 //ORANGE
 //#define LINE_CLR glColor3f(0.996, 0.612, 0.0)

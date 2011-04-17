@@ -178,6 +178,7 @@ void Asteroid3D::drawGlow() {
    // Call the display list if it has one.
    Object3D::draw();
    glEnable(GL_COLOR_MATERIAL);
+   glDisable(GL_CULL_FACE);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslated(position->x, position->y, position->z);
@@ -190,8 +191,10 @@ void Asteroid3D::drawGlow() {
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   mesh.draw(false);
+   //mesh.draw(false);
+   mesh.drawTextured(false, 0);
    glDisable(GL_POLYGON_OFFSET_FILL);
+   glEnable(GL_CULL_FACE);
 
    /*
    double step = (initH - health + 1);
@@ -329,7 +332,6 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
 void Asteroid3D::update(double timeDiff) {
    if (isExploding) {
       timeSinceExplode += timeDiff;
-      printf("time: %f\n", timeSinceExplode);
       for (int i = 0; i < mesh.faces.size(); i++) {
          mesh.faces[i].offsetBy(timeSinceExplode);
          // Offset normals.
