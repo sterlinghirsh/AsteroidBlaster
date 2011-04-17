@@ -6,7 +6,6 @@
 
 #include "Utility/GlobalUtility.h"
 #include "Utility/Texture.h"
-#include "Graphics/Sprite.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
 #include "Shots/Shot.h"
@@ -269,6 +268,9 @@ void Asteroid3D::draw() {
    double stepG = magenta * step;
    double stepB = yellow * step;
    glColor3d(1 - stepR, 1 - stepG, 1 - stepB);
+   mesh.setLineColor((float)(1 - stepR),
+         (float)(1 - stepG),
+         (float)(1 - stepB));
    //}
    //glColor3f(0.996, 0.612, 0.0);
 
@@ -477,10 +479,6 @@ void Asteroid3D::handleCollision(Drawable* other) {
          timeSinceExplode = 0.0;
          isExploding = true;
          const int explosionFactor = 3;
-         Sprite::sprites.push_back(
-               new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20,
-                  *position, radius * explosionFactor,
-                  radius * explosionFactor, gameState));
          if (radius > 2) {
             shot->owner->score += (int) radius * 10;
             int dimension = rand() % 3;

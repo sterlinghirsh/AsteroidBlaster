@@ -91,12 +91,12 @@ void Shard::InitShard(double r, double worldSizeIn) {
 
    // Connect the rings from the beginning of _rList to the halfway point.
    for (unsigned i = 1; i <= _rList.size() / 2; i++) {
-      //makeStrip(_rList[i - 1], _rList[i]);
+      makeStrip(_rList[i - 1], _rList[i]);
    }
 
    // Connect the rings from the halfway point of _rList to the end.
    for (size_t i = _rList.size() / 2; i < _rList.size() - 1; i++) {
-      //makeStrip(_rList[i], _rList[i + 1]);
+      makeStrip(_rList[i], _rList[i + 1]);
    }
 
    sizeX = maxX - minX;
@@ -106,6 +106,45 @@ void Shard::InitShard(double r, double worldSizeIn) {
    updateBoundingBox();
 
    orbiterOffset = randdouble() * 10;
+}
+
+void Shard::makeStrip(Ring r1, Ring r2) {
+   double count = 0.0;
+   int last = 0;
+   Ring t1, t2;
+   if (r1.size() < r2.size()) {
+      t1 = r1;
+      t2 = r2;
+   } else {
+      t1 = r2;
+      t2 = r1;
+   }
+   double step = (double)t1.size() / (double)t2.size();
+   //for (int i = 0; i < t2.size() - (t2.size() % 2); i++) {
+   for (int i = 0; i < t2.size(); i++) {
+      int p1, p2, p3, p4;
+      p1 = t2._nList[i];
+      p2 = t1._nList[(int)count % t1.size()];
+      p3 = t2._nList[(i + 1) % t2.size()];
+      if (r1.size() < r2.size()) {
+         mesh.addFace(p1, p3, p2);
+      } else {
+         mesh.addFace(p1, p2, p3);
+      }
+
+      p4 = t1._nList[((int)count - 1 + t1.size()) % t1.size()];
+      if (last != (int)count || i == 0) {
+      //if (last != (int)count) {
+         if (r1.size() < r2.size()) {
+            mesh.addFace(p1, p2, p4);
+         } else {
+            mesh.addFace(p1, p4, p2);
+         }
+      }
+
+      last = (int)count;
+      count += step;
+   }
 }
 
 void Shard::drawOtherOrbiters() {
@@ -188,9 +227,10 @@ void Shard::drawGlow() {
 void Shard::draw() {
    // Call the display list if it has one.
    Object3D::draw();
+   glColor3d(0.3, 0.3, 1.0);
    // Disable materials.
    glEnable(GL_COLOR_MATERIAL);
-   //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslated(position->x, position->y, position->z);
    // Push matrix and draw main shard.
@@ -198,15 +238,16 @@ void Shard::draw() {
    glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
 
-   glEnable(GL_LIGHTING);
+   glDisable(GL_LIGHTING);
    glEnable(GL_CULL_FACE);
    
    setMaterial(CrystalMaterial);
-   mesh.draw(false, false);
+   mesh.draw(false);
 
    glPopMatrix();
 
    glPopMatrix();
+   glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);
 }
 

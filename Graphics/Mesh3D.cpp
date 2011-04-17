@@ -19,11 +19,15 @@ void Mesh3D::tick(double ms) {
    tick_time += ms;
 }
 
+void Mesh3D::setLineColor(float r, float g, float b) {
+   for (int i = 0; i < faces.size(); i++) {
+      faces[i].setLineColor(r, g, b);
+   }
+}
+
 void Mesh3D::drawTextured(bool drawSmooth, GLuint tex) {
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, tex);
-   //draw(drawSmooth, true);
-   //for (int i = 0; i < faces.size(); i++) {
    int nFaces;
    if (drawAnim) {
       nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
@@ -62,42 +66,6 @@ void Mesh3D::drawPoints(bool drawSmooth, bool drawTex) {
    for (unsigned int i = 0; i < faces.size(); ++i) {
       if (!drawSmooth)
          faces[i].normal.addNormal();
-      /*
-      Vector3D v1 = Vector3D(points[faces[i].p1], points[faces[i].p2]);
-      Vector3D v2 = Vector3D(points[faces[i].p1], points[faces[i].p3]);
-      double x1 = 0.0;
-      double x2 = v1.getLength();
-      double x3 = v1.dot(v2) / (v1.getLength());
-      double y1 = 0.0;
-      double y2 = 0.0;
-      double y3 = 1.0;
-      double scale = std::max(std::max(x2, x3), 1.0);
-      printf("1: (%f, %f)\n", x1, y1);
-      printf("2: (%f, %f)\n", x2, y2);
-      printf("3: (%f, %f)\n", x3, y3);
-      */
-      /*
-      double x1 = 0.0;
-      double x2 = 0.5;
-      double x3 = 1.0;
-      double y1 = 0.0;
-      double y2 = 1.0;
-      double y3 = 0.0;
-      */
-      //points[faces[i].p1].draw(drawSmooth, drawTex);
-      /*
-      faces[i].p1.draw(drawSmooth);
-      if (drawTex)
-         glTexCoord2d(x1, y1);
-      //points[faces[i].p2].draw(drawSmooth, drawTex);
-      faces[i].p2.draw(drawSmooth);
-      if (drawTex)
-         glTexCoord2d(x2, y2);
-      //points[faces[i].p3].draw(drawSmooth, drawTex);
-      faces[i].p3.draw(drawSmooth);
-      if (drawTex)
-         glTexCoord2d(x3, y3);
-      */
       faces[i].draw(drawSmooth, drawTex);
    }
 }
@@ -122,7 +90,6 @@ int Mesh3D::addPoint(MeshPoint* p) {
 }
 
 void Mesh3D::addFace(int p1, int p2, int p3) {
-   //Face3D face(p1 - 1, p2 - 1, p3 - 1);
    MeshFace face;
    face = MeshFace(points[p1 - 1], points[p2 - 1], points[p3 - 1]);
    Vector3D v1(points[p2 - 1].x - points[p1 - 1].x,
@@ -133,6 +100,8 @@ void Mesh3D::addFace(int p1, int p2, int p3) {
          points[p3 - 1].z - points[p1 - 1].z);
    face.normal = v1.cross(v2);
    face.normal.normalize();
+   face.setFaceColor(0.3f, 0.3f, 1.0f);
+   face.setLineColor(1.0f, 1.0f, 1.0f);
 
    faces.push_back(face);
    points[p1 - 1].normal.addUpdate(face.normal);

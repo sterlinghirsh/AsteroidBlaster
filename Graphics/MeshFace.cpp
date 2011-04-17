@@ -8,8 +8,8 @@
 
 MeshFace::MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3) :
    p1(_p1), p2(_p2), p3(_p3) {
-      setFaceColor(0.0, 0.0, 0.0);
-      setLineColor(1.0, 1.0, 1.0);
+      setFaceColor(0.3f, 0.3f, 1.0f);
+      setLineColor(0.7f, 0.7f, 1.0f);
       alphaDiff = 0.0;
       offsetBy(0.0);
    }
@@ -43,7 +43,7 @@ void MeshFace::moveBy(Vector3D move) {
 
 void MeshFace::draw(bool drawSmooth, bool drawTex) {
    drawLines();
-   drawFace(drawSmooth, drawTex);
+   //drawFace(drawSmooth, drawTex);
 }
 
 void MeshFace::drawLines() {
@@ -71,19 +71,6 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    double y1 = 0.0;
    double y2 = 1.0;
    double y3 = 0.0;
-   //moveBy(normal.scalarMultiply(offsetBy));
-   /*
-   MeshPoint p1_tmp = MeshPoint(p1.x + normal.x + offset.x,
-         p1.y + 3 * normal.y + offset.y,
-         p1.z + normal.z + offset.z);
-   MeshPoint p2_tmp = MeshPoint(p2.x + normal.x + offset.x,
-         p2.y + normal.y + offset.y,
-         p2.z + normal.z + offset.z);
-   MeshPoint p3_tmp = MeshPoint(p3.x + normal.x + offset.x,
-         p3.y + normal.y + offset.y,
-         p3.z + normal.z + offset.z);
-   */
-   //printf("offset: %f, %f, %f\n", offset.x, offset.y, offset.z);
    MeshPoint p1_tmp = MeshPoint(p1.x + offset.x,
          p1.y + offset.y,
          p1.z + offset.z);
@@ -94,7 +81,7 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
          p3.y + offset.y,
          p3.z + offset.z);
    glBegin(GL_TRIANGLES);
-   glColor4f(faceR, faceG, faceB, 1.0f - alphaDiff / FADE_TIME);
+   //glColor4f(faceR, faceG, faceB, 1.0f - alphaDiff / FADE_TIME);
    p1_tmp.draw();
    if (drawTex)
       glTexCoord2d(x1, y1);
