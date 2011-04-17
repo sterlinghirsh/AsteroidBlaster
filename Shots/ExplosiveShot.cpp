@@ -96,14 +96,25 @@ void ExplosiveShot::update(double timeDiff) {
  * do more specific features.
  */
 void ExplosiveShot::explode() {
+   // Set the radius of the bomb to the explodeRadius so that collision detection can happen.
+   minX = minY = minZ = -1 * explodeRadius;
+   maxX = maxY = maxZ = explodeRadius;
+
+   isExploded = true;
+
+   // Record the frame when the bomb exploded.
+   frameExploded = doubleTime();
+   
+   shouldConstrain = false;
+
    // Generically, the explode() function should:
    // Set shouldConstrain to false, so the ExplosiveShot doesn't collide with walls any more.
-   // Check for collisions within explodeRadius.
-   // Apply damage to all targets hit.
-   // Apply a force to all targets hit.
 }
 
 void ExplosiveShot::handleCollision(Drawable* other) {
+   // Apply damage to all targets hit.
+   // Apply a force to all targets hit.
+    
    /*
    const int particlesToEmit = 10;
    
@@ -112,6 +123,7 @@ void ExplosiveShot::handleCollision(Drawable* other) {
    const double particleSpeed = 15;
    // This should probably be moved to the Asteroid's code.
    */
+    
 
    Asteroid3D* asteroid;
    // If we hit an asteroid.

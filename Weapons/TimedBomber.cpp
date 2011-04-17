@@ -1,16 +1,17 @@
 /**
- * Bomber. Used as a base for all other bombs.
+ * TimedBomber. Used as an example for other Explosive Weapon implementations.
  * @author Taylor Arnicar
  * @date 4/10/2011
  */
 
-#include "Weapons/Bomber.h"
+#include "Weapons/TimedBomber.h"
 #include "Utility/GlobalUtility.h"
 #include "Shots/ProjectileShot.h"
+#include "Shots/TimedBombShot.h"
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
 
-Bomber::Bomber(AsteroidShip* owner) : Weapon(owner) {
+TimedBomber::TimedBomber(AsteroidShip* owner) : Weapon(owner) {
    shotSpeed = 5; // Units per second
    coolDown = 1.5; // Seconds
    randomVariationAmount = 0.25; // Units
@@ -20,7 +21,7 @@ Bomber::Bomber(AsteroidShip* owner) : Weapon(owner) {
    purchased = false; // Start off owning the bomber
 }
 
-Bomber::~Bomber() {
+TimedBomber::~TimedBomber() {
    delete lastShotPos;
 }
 
@@ -28,14 +29,14 @@ Bomber::~Bomber() {
  * Called every frame.
  * We'll probably keep track of something or other here.
  */
-void Bomber::update(double timeDiff) {
+void TimedBomber::update(double timeDiff) {
    // Do nothing, yet
 }
 
 /**
  * This is what actually shoots. Finally!
  */
-void Bomber::fire() {
+void TimedBomber::fire() {
    static Vector3D randomVariation;
    if (!isCooledDown())
       return;
@@ -51,7 +52,7 @@ void Bomber::fire() {
    shotDirection.addUpdate(randomVariation);
    ship->shotDirection.movePoint(start);
    ship->setShakeAmount(0.1f);
-   ship->custodian->add(new ProjectileShot(start,
+   ship->custodian->add(new TimedBombShot(start,
             shotDirection, ship, ship->gameState));
    // Don't play sound effects in godMode b/c there would be too many.
    if (!ship->gameState->godMode) {
@@ -62,7 +63,7 @@ void Bomber::fire() {
 /**
  * Basic debug function. Just in case!
  */
-void Bomber::debug() {
+void TimedBomber::debug() {
    printf("%s\n", name.c_str());
 }
 
@@ -71,7 +72,7 @@ void Bomber::debug() {
  * the targeted object, and return the point that the
  * AI should aim at in order to hit the target with this weapon.
  */
-Point3D Bomber::project(Object3D* target) {
+Point3D TimedBomber::project(Object3D* target) {
    Point3D wouldHit;
    double speed = 40;
    double time = 0, dist = 0;
@@ -115,7 +116,7 @@ Point3D Bomber::project(Object3D* target) {
    return curTarget;
 }
 
-bool Bomber::shouldFire(Point3D* target, Point3D* aim) {
+bool TimedBomber::shouldFire(Point3D* target, Point3D* aim) {
    return ((*target - *ship->position).getNormalized() - *aim).magnitude() < 0.5;
 }
 

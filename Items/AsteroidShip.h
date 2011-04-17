@@ -24,7 +24,7 @@
 #include "Weapons/LawnMower.h"
 #include "Weapons/Ram.h"
 #include "Weapons/AntiInertia.h"
-#include "Weapons/Bomber.h"
+#include "Weapons/TimedBomber.h"
 #include "Weapons/Missile.h"
 #include <list>
 

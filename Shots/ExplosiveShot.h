@@ -20,8 +20,12 @@ class ExplosiveShot : public Shot {
       virtual void hitWall(BoundingWall* wall);
 
       //int particleNum;
-      float explodeRadius;
-      Vector3D particleDirection;
+      double explodeRadius;
+      // The frame that the bomb exploded on.
+      double frameExploded;
+
+
+      //Vector3D particleDirection;
       // Set to true whenever the ExplosiveShot should blow up.
       bool isExploded;
 };

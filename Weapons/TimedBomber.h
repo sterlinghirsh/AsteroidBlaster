@@ -1,20 +1,20 @@
 /**
- * Bomber. Used as a base for all other bombs.
+ * TimedBomber. Used as an example for other Explosive Weapon implementations.
  * @author Taylor Arnicar
  * @date 4/10/2011
  */
 
-#ifndef __BOMBER_H__
-#define __BOMBER_H__
+#ifndef __TIMEDBOMBER_H__
+#define __TIMEDBOMBER_H__
 
 #include "Weapons/Weapon.h"
 
 struct Point3D;
 
-class Bomber : public Weapon {
+class TimedBomber : public Weapon {
    public:
-      Bomber(AsteroidShip* owner);
-      virtual ~Bomber();
+      TimedBomber(AsteroidShip* owner);
+      virtual ~TimedBomber();
       virtual Point3D project(Object3D*);
       virtual void update(double timeDiff);
       virtual bool shouldFire(Point3D*, Point3D*);
