@@ -213,7 +213,7 @@ void init() {
 }
 
 void load() {
-   texSize = nextPowerOfTwo(std::max(gameSettings->GW, gameSettings->GH));
+   texSize = nextPowerOfTwo(std::max(gameSettings->fullscreenGW, gameSettings->fullscreenGH));
 
    //loading textures
    Texture::Add(texSize, texSize, "bloomTex");
