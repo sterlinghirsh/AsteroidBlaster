@@ -95,6 +95,7 @@ void drawCylinder(double radius, double length);
 void getBrightColor(double hue, float& r, float& g, float& b);
 void setupVideo();
 void initFbo();
+int nextPowerOfTwo(int num);
 
 // Used for defining a material
 typedef struct materialStruct {

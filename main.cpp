@@ -7,7 +7,8 @@
 #include <math.h>
 #include <list>
 #include <sstream>
-//#include <boost/thread.hpp>
+#include <boost/thread.hpp>
+#include <boost/date_time.hpp>
 
 // Constant value used in other files.
 #define WORLD_SIZE 80.00
@@ -35,6 +36,8 @@
 #include "SDL_mixer.h"
 
 using namespace std;
+
+GameState* gameState;
 
 // True while the game is in play.
 bool running = true;
@@ -212,11 +215,12 @@ void init() {
 }
 
 void load() {
+   texSize = nextPowerOfTwo(std::max(gameSettings->GW, gameSettings->GH));
+
    //loading textures
    Texture::Add(texSize, texSize, "bloomTex");
    Texture::Add(texSize, texSize, "fboTex");
    Texture::Add(texSize, texSize, "hblurTex");
-   Texture::Add(texSize, texSize, "trailTex");
    Texture::Add("Images/Logo.png", "Logo.png");
    Texture::Add("Images/StoreLogo.png", "StoreLogo");
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
@@ -270,6 +274,26 @@ void load() {
    SoundEffect::Add("Sounds/Pulse.ogg", "Pulse");
    SoundEffect::Add("Sounds/CrystalRelease.wav", "CrystalRelease");
    SoundEffect::Add("Sounds/DoubleCrystalRelease.wav", "DoubleCrystalRelease");
+   cout << "Load: finished" << endl;
+}
+
+void loadTest() {
+   boost::posix_time::seconds workTime(3);
+
+   cout << "Load: running" << endl;
+   boost::this_thread::sleep(workTime);
+
+   cout << "Load: finished" << endl;
+}
+
+void threadTest() {
+   //boost::posix_time::seconds workTime(3);
+
+   cout << "Worker: running" << endl;
+   //boost::this_thread::sleep(workTime);
+   gameState->drawHud();
+
+   cout << "Worker: finished" << endl;
 }
 
 void update(GameState* gameState, double timeDiff) {
@@ -366,7 +390,6 @@ int main(int argc, char* argv[]) {
    load();
 
    // Initialize the gameState
-   GameState* gameState;
    gameState = new GameState(WORLD_SIZE, false);
 
    // Initialize the screens

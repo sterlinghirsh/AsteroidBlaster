@@ -21,6 +21,7 @@ Screen::Screen(int x, int y, GLuint tex):
 void Screen::draw() {
    // Draw the minimap
    glPushMatrix();
+   printf("_x: %d, _y: %d\n", _x, _y);
 
    //glViewport ((GLint) ((float) gameSettings->GW * (1.0f - displaySize)), 0, (GLsizei) ((float) gameSettings->GW * displaySize), (GLsizei) ((float) gameSettings->GH * displaySize));
    //glViewport ((GLint) ((float) gameSettings->GW - (float) _x), 0, (GLsizei) ((float) gameSettings->GW / 4), (GLsizei) ((float) gameSettings->GH / 4));

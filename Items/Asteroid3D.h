@@ -27,8 +27,10 @@ class Asteroid3D : public Object3D {
       double initH;
       double health;
       double sizeX, sizeY, sizeZ, collisionRadius;
+      double timeSinceExplode;
+      bool isExploding;
       
-      Asteroid3D(double r, double worldSizeIn, const GameState* _gameState);
+      Asteroid3D(double r, double worldSizeIn, const GameState* _gameState, bool isFirst = false);
       virtual ~Asteroid3D();
       void InitAsteroid(double r, double worldSizeIn);
       void draw();

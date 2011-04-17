@@ -29,7 +29,7 @@ using namespace std;
 
 static double timediff = (double) clock();
 
-Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState) :
+Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState, bool isFirst) :
    Object3D(_gameState),
    worldSize(worldSizeIn) {
       shouldDrawInMinimap = true;
@@ -38,6 +38,10 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState
       if (initH < 2.0) {
          initH = 2.0;
       }
+
+      mesh.drawAnim = isFirst;
+
+      isExploding = false;
 
       health = initH;
       newRandomPosition();
@@ -225,6 +229,7 @@ void Asteroid3D::drawGlow() {
 
 void Asteroid3D::draw() {
    glColor3f(1, 1, 1);
+   glDisable(GL_CULL_FACE);
    setMaterial(Rock);
    // Call the display list if it has one.
    Object3D::draw();
@@ -279,6 +284,7 @@ void Asteroid3D::draw() {
    glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();
    setTargeted(false);
+   glEnable(GL_CULL_FACE);
 }
 
 void Asteroid3D::makeStrip(Ring r1, Ring r2) {
@@ -293,6 +299,7 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
       t2 = r1;
    }
    double step = (double)t1.size() / (double)t2.size();
+   //for (int i = 0; i < t2.size() - (t2.size() % 2); i++) {
    for (int i = 0; i < t2.size(); i++) {
       int p1, p2, p3, p4;
       p1 = t2._nList[i];
@@ -306,6 +313,7 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
 
       p4 = t1._nList[((int)count - 1 + t1.size()) % t1.size()];
       if (last != (int)count || i == 0) {
+      //if (last != (int)count) {
          if (r1.size() < r2.size()) {
             mesh.addFace(p1, p2, p4);
          } else {
@@ -319,7 +327,19 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
 }
 
 void Asteroid3D::update(double timeDiff) {
+   if (isExploding) {
+      timeSinceExplode += timeDiff;
+      printf("time: %f\n", timeSinceExplode);
+      for (int i = 0; i < mesh.faces.size(); i++) {
+         mesh.faces[i].offsetBy(timeSinceExplode);
+         // Offset normals.
+      }
+      if (timeSinceExplode >= 1.0) {
+         shouldRemove = true;
+      }
+   }
    Object3D::update(timeDiff);
+   mesh.tick(timeDiff);
    if (velocity->getComparisonLength() > 40 * 40) {
       // Set a speed limit of 40 u/s.
       velocity->setLength(40);
@@ -336,6 +356,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
    ElectricityShot* elecShot;
    TractorBeamShot* TBshot; // Not tuberculosis
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+      if (isExploding || otherAsteroid->isExploding) { return; }
       double d = (*(otherAsteroid->position)).distanceFrom(*position);
       double combinedRad = otherAsteroid->radius + radius;
       double maxR = max(radius, otherAsteroid->radius);
@@ -375,13 +396,17 @@ void Asteroid3D::handleCollision(Drawable* other) {
       addInstantAcceleration(reverseVelocity);
 
    } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
-      shouldRemove = true;
+      if (isExploding) { return; }
+      //shouldRemove = true;
+      timeSinceExplode = 0.0;
+      isExploding = true;
       if (radius > 4) {
          int dimension = rand() % 3;
          custodian->add(makeChild(0, dimension));
          custodian->add(makeChild(1, dimension));
       }
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
+      if (isExploding) { return; }
       if (health > 0) {
          if ((beamShot = dynamic_cast<BeamShot*>(other)) != NULL) {
             if (((!beamShot->hitYet) || this == beamShot->hitItem) && (curFrame - 1) <= beamShot->firstFrame) {
@@ -446,7 +471,9 @@ void Asteroid3D::handleCollision(Drawable* other) {
       }
       if (health <= 0) {
          SoundEffect::playSoundEffect("Explosion1.wav");
-         shouldRemove = true;
+         //shouldRemove = true;
+         timeSinceExplode = 0.0;
+         isExploding = true;
          const int explosionFactor = 3;
          Sprite::sprites.push_back(
                new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20,

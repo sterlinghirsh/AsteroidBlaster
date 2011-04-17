@@ -86,47 +86,17 @@ void Shard::InitShard(double r, double worldSizeIn) {
       last = thisRing;
    }
 
-   /*
-   minX = _rList[0].minX();
-   maxX = _rList[0].maxX();
-   minY = _rList[0].minY();
-   maxY = _rList[0].maxY();
-   minZ = _rList[0].minZ();
-   maxZ = _rList[0].maxZ();
-
-   // Determine the max and min x, y, and z of this shard.
-   for (unsigned i = 0; i < _rList.size(); i++) {
-      if (_rList[i].minX() < minX) {
-         minX = _rList[i].minX();
-      }
-      if (_rList[i].maxX() > maxX) {
-         maxX = _rList[i].maxX();
-      }
-      if (_rList[i].minY() < minY) {
-         minY = _rList[i].minY();
-      }
-      if (_rList[i].maxY() > maxY) {
-         maxY = _rList[i].maxY();
-      }
-      if (_rList[i].minZ() < minZ) {
-         minZ = _rList[i].minZ();
-      }
-      if (_rList[i].maxZ() > maxZ) {
-         maxZ = _rList[i].maxZ();
-      }
-   }
-   */
    minX = minY = minZ = -1;
    maxX = maxY = maxZ = 1;
 
    // Connect the rings from the beginning of _rList to the halfway point.
    for (unsigned i = 1; i <= _rList.size() / 2; i++) {
-      makeStrip(_rList[i - 1], _rList[i]);
+      //makeStrip(_rList[i - 1], _rList[i]);
    }
 
    // Connect the rings from the halfway point of _rList to the end.
    for (size_t i = _rList.size() / 2; i < _rList.size() - 1; i++) {
-      makeStrip(_rList[i], _rList[i + 1]);
+      //makeStrip(_rList[i], _rList[i + 1]);
    }
 
    sizeX = maxX - minX;
@@ -147,8 +117,6 @@ void Shard::drawOtherOrbiters() {
    double t; // parameter for parametric function.
    double dx, dy, dz;
    int j;
-   //glScalef(3, 3, 3);
-   //setMaterial(BlackSolid);
    for (int i = 0; i < numBalls; ++i) {
       t = 5 * curTime + increment * i + orbiterOffset;
 
@@ -179,7 +147,8 @@ void Shard::drawOtherOrbiters() {
 }
 
 void Shard::drawGlow() {
-   glColor4d(0.3, 0.3, 1.0, 0.8);
+   //glColor4d(0.3, 0.3, 1.0, 0.8);
+   glColor3d(0.3, 0.3, 1.0);
    // Call the display list if it has one.
    Object3D::draw();
    // Disable materials.
@@ -211,26 +180,16 @@ void Shard::drawGlow() {
    glPopMatrix();
 
 
-   //glDisable(GL_COLOR_MATERIAL);
+   glDisable(GL_COLOR_MATERIAL);
    glEnable(GL_LIGHTING);
    glPopMatrix();
 }
 
 void Shard::draw() {
-   /*
-   GLfloat mat_specular[] = { 0.1, 0.1, 0.3, 0.75 };
-   GLfloat mat_shininess[] = { 100.0 };
-
-   GLfloat mat_transparent[] = { 0.2, 0.2, 0.5, 0.9 };
-   GLfloat mat_emission[] = { 0.0, 0.1, 0.3, 0.2 };
-   */
-   setMaterial(CrystalMaterial);
-   GLfloat mat_no_emission[] = { 0.0, 0.0, 0.0, 0.0 };
-
    // Call the display list if it has one.
    Object3D::draw();
    // Disable materials.
-   //glEnable(GL_COLOR_MATERIAL);
+   glEnable(GL_COLOR_MATERIAL);
    //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
    glTranslated(position->x, position->y, position->z);
@@ -239,105 +198,18 @@ void Shard::draw() {
    glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
 
-   //setMaterial(Rock);
    glEnable(GL_LIGHTING);
    glEnable(GL_CULL_FACE);
    
-   /*glColor3f(0.325, 0.71, 0.808);
-   // Set polygon offset to be in front of the faces.
-   glPolygonOffset(-0.1f, -0.1f);
-   glEnable(GL_POLYGON_OFFSET_LINE);
-   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   // Draw the lines that border the mesh's triangles.
-   mesh.drawLines(false);
-   glDisable(GL_POLYGON_OFFSET_LINE);
-   //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   */
-
-   //glDepthMask(GL_FALSE);
-   //glColor4f(0.4, 0.5, 0.7, 0.7);
-   //glColor3f(1, 1, 1);
-   // Set polygon offset to be behind the lines.
-   //glColor3f(1, 1, 1);
-   //glPolygonOffset(0.1f, 0.1f);
-   //glEnable(GL_POLYGON_OFFSET_FILL);
-   //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-   // GL_ALWAYS it draws the crystal wrong. 
-   // GL_LEQUAL draws the orbiters wrong. 
-   //glDepthFunc(GL_LEQUAL);
-
-
-   // Draw all triangles in the mesh with smoothing turned off.
-   //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   mesh.draw(false);
-   //glDisable(GL_POLYGON_OFFSET_FILL);
-   //glMaterialfv(GL_FRONT, GL_EMISSION, mat_no_emission);
-   //glDepthMask(GL_TRUE);
+   setMaterial(CrystalMaterial);
+   mesh.draw(false, false);
 
    glPopMatrix();
 
    glPopMatrix();
    glDisable(GL_COLOR_MATERIAL);
-
-   /*
-   drawBoundingBox();
-   glPushMatrix();
-   position->glTranslate();
-   glBegin(GL_TRIANGLES);
-   glVertex3f(0, 0, 0);
-   glVertex3f(-1.0, -1.0, -1.0);
-   glVertex3f(-1.0, 1.0,  1.0);
-
-   glVertex3f(0, 0, 0);
-   glVertex3f(1.0, -1.0, -1.0);
-   glVertex3f(1.0, 1.0,  1.0);
-   glEnd();
-
-   glPopMatrix();
-   */
 }
 
-/*
- * Connect two Ring objects by making triangles from the points and adding them to
- * this shard's mesh.
- */
-void Shard::makeStrip(Ring r1, Ring r2) {
-   double count = 0.0;
-   int last = 0;
-   Ring t1, t2;
-   if (r1.size() < r2.size()) {
-      t1 = r1;
-      t2 = r2;
-   } else {
-      t1 = r2;
-      t2 = r1;
-   }
-   double step = (double)t1.size() / (double)t2.size();
-   for (int i = 0; i < t2.size(); i++) {
-      int p1, p2, p3, p4;
-      p1 = t2._nList[i];
-      p2 = t1._nList[(int)count % t1.size()];
-      p3 = t2._nList[(i + 1) % t2.size()];
-      if (r1.size() < r2.size()) {
-         mesh.addFace(p1, p3, p2);
-      } else {
-         mesh.addFace(p1, p2, p3);
-      }
-
-      p4 = t1._nList[((int)count - 1 + t1.size()) % t1.size()];
-      if (last != (int)count || i == 0) {
-         if (r1.size() < r2.size()) {
-            mesh.addFace(p1, p2, p4);
-         } else {
-            mesh.addFace(p1, p4, p2);
-         }
-      }
-
-      last = (int)count;
-      count += step;
-   }
-}
 
 /*
  * Update the shard's rotation and position based on elapsed time.

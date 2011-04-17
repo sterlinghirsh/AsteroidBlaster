@@ -65,7 +65,6 @@ MeshPoint Ring::makePt(double angle) {
    printf("u: %f, v: %f\n", u, v);
    */
    MeshPoint tmpPt = MeshPoint(tmpx, tmpy, tmpz);
-   tmpPt.setTexPoint((float) u, (float) v);
    return tmpPt;
 }
 

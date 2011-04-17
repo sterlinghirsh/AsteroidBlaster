@@ -26,7 +26,8 @@
 
 //global variables
 GameSettings* gameSettings;
-int texSize = 2048;
+//int texSize = nextPowerOfTwo(std::max(gameSettings->GW, gameSettings->GH));
+int texSize = 512;
 unsigned long curFrame = 0;
 bool drawPerspective = true;
 bool showBloomScreen = false;
@@ -605,6 +606,15 @@ void setupVideo() {
    }
 }
 
+int nextPowerOfTwo(int num) {
+   int result = 1;
+   while (result < num) {
+      result *= 2;
+   }
+   printf("%d -> %d\n", num, result);
+   return result;
+}
+
 void initFbo() {
    glGenFramebuffersEXT(1, &fbo);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
@@ -631,9 +641,6 @@ void initFbo() {
    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT,
       GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
    
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT3_EXT,
-         GL_TEXTURE_2D, Texture::getTexture("trailTex"), 0);
-
    GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 

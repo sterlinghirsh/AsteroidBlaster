@@ -71,7 +71,7 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    menuGameState->custodian.add(ship4);
 
    mainGameState = _mainGameState;
-   mainGameState->addScreens();
+   menuGameState->addScreens();
 }
 
 
