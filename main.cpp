@@ -7,8 +7,6 @@
 #include <math.h>
 #include <list>
 #include <sstream>
-#include <boost/thread.hpp>
-#include <boost/date_time.hpp>
 
 // Constant value used in other files.
 #define WORLD_SIZE 80.00
@@ -275,25 +273,6 @@ void load() {
    SoundEffect::Add("Sounds/CrystalRelease.wav", "CrystalRelease");
    SoundEffect::Add("Sounds/DoubleCrystalRelease.wav", "DoubleCrystalRelease");
    cout << "Load: finished" << endl;
-}
-
-void loadTest() {
-   boost::posix_time::seconds workTime(3);
-
-   cout << "Load: running" << endl;
-   boost::this_thread::sleep(workTime);
-
-   cout << "Load: finished" << endl;
-}
-
-void threadTest() {
-   //boost::posix_time::seconds workTime(3);
-
-   cout << "Worker: running" << endl;
-   //boost::this_thread::sleep(workTime);
-   gameState->drawHud();
-
-   cout << "Worker: finished" << endl;
 }
 
 void update(GameState* gameState, double timeDiff) {
