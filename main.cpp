@@ -227,6 +227,7 @@ void load() {
    Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
    Texture::Add("Images/Shield.png", "ShieldIcon");
    Texture::Add("Images/ShotIcon.png", "ShotIcon");
+   Texture::Add("Images/zoe2.png", "ZoeRedEyes");
 
    Particle::initDisplayList();
 
