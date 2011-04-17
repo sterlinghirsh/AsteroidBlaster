@@ -6,13 +6,12 @@
 
 #include "Weapons/TimedBomber.h"
 #include "Utility/GlobalUtility.h"
-#include "Shots/ProjectileShot.h"
 #include "Shots/TimedBombShot.h"
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
 
 TimedBomber::TimedBomber(AsteroidShip* owner) : Weapon(owner) {
-   shotSpeed = 5; // Units per second
+   shotSpeed = 15; // Units per second
    coolDown = 1.5; // Seconds
    randomVariationAmount = 0.25; // Units
    name = "Bomber";

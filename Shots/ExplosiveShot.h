@@ -21,13 +21,15 @@ class ExplosiveShot : public Shot {
 
       //int particleNum;
       double explodeRadius;
-      // The frame that the bomb exploded on.
-      double frameExploded;
-
 
       //Vector3D particleDirection;
       // Set to true whenever the ExplosiveShot should blow up.
       bool isExploded;
+      /* Set to true if a bomb runs into an asteroid.
+       * This will cause the asteroid to explode in the next frame,
+       * if it has not already.
+       */
+      bool shouldExplode;
 };
 
 #endif

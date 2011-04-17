@@ -6,19 +6,17 @@
 #include "Shots/TimedBombShot.h"
 #include "Shots/ExplosiveShot.h"
 #include "Utility/SoundEffect.h"
+#include "Graphics/Sprite.h"
 
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"
 #endif
 
 TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, ownerIn, _gameState) {
-   persist = false;
    minX = minY = minZ = -1;
    maxX = maxY = maxZ = 1;
-   // The bomb should not be blowing up yet.
-   isExploded = false;
    // Blow up 3 seconds after it's fired.
-   timeToExplode = 3;
+   timeToExplode = 4;
 
    updateBoundingBox();
 }
@@ -28,10 +26,15 @@ TimedBombShot::~TimedBombShot() {
 }
 
 void TimedBombShot::draw() {
+   // Don't draw the bomb again if it already exploded.
+   if (isExploded) {
+      return;
+   }
+
    glPushMatrix();
       glDisable(GL_LIGHTING);
 
-      glColor3f(0, 1, 0);
+      glColor3d(0.4, 0.8, 0.4);
       setMaterial(ShotMaterial);
       position->glTranslate();
 
@@ -44,17 +47,30 @@ void TimedBombShot::draw() {
 
 void TimedBombShot::update(double timeDiff) {
    ExplosiveShot::update(timeDiff);
+
+   /* If the bomb has already blown up and we're back here again,
+    * then we've already gone through a cycle of hit detection, so it's time
+    * for the bomb to be removed.
+    */
+   if (isExploded) {
+      shouldRemove = true;
+   }
+
+   // If the bomb should explode this frame and has not already, then explode.
+   if (shouldExplode && !isExploded) {
+      explode();
+   }
    // If more time has passed than the bomb's timeToExplode, blow it up.
-   if (doubleTime() - timeFired > timeToExplode) {
+   if (!isExploded && (doubleTime() - timeFired > timeToExplode)) {
       explode();
    }
 
-      // Set a flag here to say that we exploded this frame, and come back on the next frame?
-      // Remove the bomb in the gameState's update if that flag is set?
       // Find out how projectileShot's are removed.
-   }
+}
 
-void TimedBombShot::handleCollision(Drawable* other) {  Shot::handleCollision(other); 
+void TimedBombShot::handleCollision(Drawable* other) {
+   printf("%d a timed bomb ran into something.\n", curFrame);
+   ExplosiveShot::handleCollision(other); 
 }
 
 void TimedBombShot::hitWall(BoundingWall* wall) {
@@ -67,13 +83,15 @@ void TimedBombShot::hitWall(BoundingWall* wall) {
  * everything it should, and auto-handle the collisions.
  */
 void TimedBombShot::explode() {
-   printf("Bomb exploded!\n");
+   printf("%d Bomb exploded!\n", curFrame);
    // Do all the generic exploding actions that every bomb should do.
    ExplosiveShot::explode();
 
    // Play a sound
    SoundEffect::playSoundEffect("Explosion1.wav");
 
-   // play an animation
    // set it as not collidable
 }
+
+// Override detectCollision function
+// if isExploded and 

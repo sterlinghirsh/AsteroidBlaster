@@ -16,6 +16,7 @@
 #include "Shots/LawnMowerShot.h"
 #include "Shots/RamShot.h"
 #include "Shots/AntiInertiaShot.h"
+#include "Shots/TimedBombShot.h"
 
 #include <time.h>
 #include "Utility/SoundEffect.h"
@@ -359,6 +360,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
    LawnMowerShot* lawnMowerShot;
    ElectricityShot* elecShot;
    TractorBeamShot* TBshot; // Not tuberculosis
+   TimedBombShot* TBshot2;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       if (isExploding || otherAsteroid->isExploding) { return; }
       double d = (*(otherAsteroid->position)).distanceFrom(*position);
@@ -471,6 +473,12 @@ void Asteroid3D::handleCollision(Drawable* other) {
             Vector3D* newAcceleration = new Vector3D(*(shot->position), *position);
             newAcceleration->setLength(speed);
             addInstantAcceleration(newAcceleration);
+         } else if ((TBshot2 = dynamic_cast<TimedBombShot*>(other)) != NULL) {
+            printf("%d asteroid3D is handling a collision!\n", curFrame);
+            if (TBshot2->isExploded)
+               health = 0;
+            // remove health from this asteroid based on its distance to the bomb.
+            // change this bomb's motion vector based on its distance to the bomb.
          }
       }
       if (health <= 0) {

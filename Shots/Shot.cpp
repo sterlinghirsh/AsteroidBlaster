@@ -41,7 +41,13 @@ void Shot::update(double timeDiff) {
 void Shot::handleCollision(Drawable* other) {
    if (other == owner)
       return;
-   shouldRemove = true;
+
+   printf("%d shot::handleCollision here.\n", curFrame);
+   // Don't remove persistent stuff.
+   if (!persist) {
+      printf("%d shouldRemove is set to true\n", curFrame);
+      shouldRemove = true;
+   }
 }
 
 void Shot::draw() {
