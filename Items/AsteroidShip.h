@@ -195,6 +195,11 @@ class AsteroidShip : public Object3D {
       double yawSpeed; // Rad/s
       double pitchSpeed;
       double rollSpeed;
+
+      double targetYawSpeed;
+      double targetPitchSpeed;
+      double targetRollSpeed;
+
       double maxSpeed; // Units per second
       double maxBoostSpeed; // Units per second
       double frontX;

@@ -20,6 +20,7 @@
 using namespace std;
 const double rotationFactor = 3;
 const float shipScale = 5;
+const double rotationalAcceleration = 10; // rad/sec^2
 
 AsteroidShip::AsteroidShip(const GameState* _gameState) :
  Object3D(_gameState) {  // Initialize shot direction to forward
@@ -123,6 +124,7 @@ void AsteroidShip::reInitialize() {
    /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
    curForwardAccel = curRightAccel = curUpAccel = 0;
    yawSpeed = rollSpeed = pitchSpeed = 0;
+   targetYawSpeed = targetRollSpeed = targetPitchSpeed = 0;
    maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
    maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
    shotOrigin = *position;
@@ -205,15 +207,15 @@ int AsteroidShip::getShards() {
 }
 
 void AsteroidShip::setYawSpeed(double yawAmountIn) {
-   yawSpeed = rotationFactor * yawAmountIn;
+   targetYawSpeed = rotationFactor * yawAmountIn;
 }
 
 void AsteroidShip::setPitchSpeed(double pitchAmountIn) {
-   pitchSpeed = rotationFactor * pitchAmountIn;
+   targetPitchSpeed = rotationFactor * pitchAmountIn;
 }
 
 void AsteroidShip::setRollSpeed(double rollAmountIn) {
-   rollSpeed = rotationFactor * rollAmountIn;
+   targetRollSpeed = rotationFactor * rollAmountIn;
 }
 
 void AsteroidShip::updatePlayerAcceleration() {
@@ -359,7 +361,31 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    Object3D::update(timeDiff);
-
+   
+   if (rollSpeed > targetRollSpeed) {
+      rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration), 
+       targetRollSpeed, rollSpeed);
+   } else if (rollSpeed < targetRollSpeed) {
+      rollSpeed = clamp(rollSpeed + (timeDiff * rotationalAcceleration), 
+       rollSpeed, targetRollSpeed);
+   }
+   
+   if (pitchSpeed > targetPitchSpeed) {
+      pitchSpeed = clamp(pitchSpeed - (timeDiff * rotationalAcceleration), 
+       targetPitchSpeed, pitchSpeed);
+   } else if (pitchSpeed < targetPitchSpeed) {
+      pitchSpeed = clamp(pitchSpeed + (timeDiff * rotationalAcceleration), 
+       pitchSpeed, targetPitchSpeed);
+   }
+   
+   if (yawSpeed > targetYawSpeed) {
+      yawSpeed = clamp(yawSpeed - (timeDiff * rotationalAcceleration), 
+       targetYawSpeed, yawSpeed);
+   } else if (yawSpeed < targetYawSpeed) {
+      yawSpeed = clamp(yawSpeed + (timeDiff * rotationalAcceleration), 
+       yawSpeed, targetYawSpeed);
+   }
+   
    roll(timeDiff * rollSpeed);
    pitch(timeDiff * pitchSpeed);
    yaw(timeDiff * yawSpeed);
