@@ -11,13 +11,16 @@
 
 // indexes
 
+#define DEFAULTTIME 10
+
 #define DONE_STOREMENUINDEX 0
 #define SHARDS_STOREMENUINDEX 1
 #define HEALTH_STOREMENUINDEX 2
-#define WEAPONS_STOREMENUINDEX 3
-#define UPGRADES_STOREMENUINDEX 4
-#define AMMO_STOREMENUINDEX 5
-#define SHIP_STOREMENUINDEX 6
+#define TIMER_STOREMENUINDEX 3
+#define WEAPONS_STOREMENUINDEX 4
+#define UPGRADES_STOREMENUINDEX 5
+#define AMMO_STOREMENUINDEX 6
+#define SHIP_STOREMENUINDEX 7
 
 #define RAILGUN_WEAPONSTEXTSINDEX 0
 #define PIKACHUSWRATH_WEAPONSTEXTSINDEX 1
@@ -71,6 +74,8 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    
    x = y = -1;
    
+   timeLeft = DEFAULTTIME;
+   
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT; 
    std::stringstream out;
@@ -81,6 +86,7 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    menuTexts[DONE_STOREMENUINDEX]->selectable = true;
    menuTexts.push_back(new Text("Shards: ", 0, "", menuFont, position));
    menuTexts.push_back(new Text("Health: ", 0, "", menuFont, position));
+   menuTexts.push_back(new Text("Timer: ", 0, "", menuFont, position));
    
    menuTexts.push_back(new Text("Weapons", menuFont, position));
    menuTexts[WEAPONS_STOREMENUINDEX]->selectable = true;
@@ -141,7 +147,7 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    out.str(""); 
    out << "Upgrade Engine $" <<ENGINEUPGRADE_PRICE;
    shipTexts.push_back(new Text(out.str(), menuFont, position));
-    
+   
     
    for(unsigned i = 0; i < weaponsTexts.size(); i++) {
       weaponsTexts[i]->selectable = true;
@@ -187,6 +193,12 @@ void StoreMenu::draw() {
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+   //timer
+   position.x = (Sint16) (gameSettings->GW*(1.0/10.0));
+   position.y = (Sint16) (gameSettings->GH*(1.0/10.0));
+   menuTexts[TIMER_STOREMENUINDEX]->updateBody((int)timeLeft);
+   menuTexts[TIMER_STOREMENUINDEX]->setPosition(position);
+   
 
    //Done
    position.x = (Sint16) (gameSettings->GW*(8.0/10.0));
@@ -204,6 +216,8 @@ void StoreMenu::draw() {
    position.y = (Sint16) (gameSettings->GH*(9.5/10.0));
    menuTexts[HEALTH_STOREMENUINDEX]->updateBody(gameState->ship->health);
    menuTexts[HEALTH_STOREMENUINDEX]->setPosition(position);
+   
+
    
    //weapons
    position.x = (Sint16) (gameSettings->GW*(1.0/10.0));
@@ -429,7 +443,6 @@ void StoreMenu::draw() {
    }
    
    drawLogo();
-   
    SDL_GL_SwapBuffers();
 
 }
@@ -672,5 +685,19 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
       menuTexts[i]->mouseHighlight(x,y);
    }
 }
+
+
+
+void StoreMenu::update(double timeDiff) {
+   timeLeft -= timeDiff;
+   if(timeLeft <= 0) {
+      timeLeft = DEFAULTTIME;
+      SDL_ShowCursor(SDL_DISABLE);
+      menuActive = false;
+      Music::stopMusic();
+      Music::playMusic("Asteroids2.ogg");
+   }
+}
+
 
 

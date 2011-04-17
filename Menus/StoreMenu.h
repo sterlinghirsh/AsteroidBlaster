@@ -17,6 +17,8 @@ class StoreMenu : public Menu {
 
    void draw();
    
+   void update(double dt);
+   
    void keyUp(int key);
    void keyDown(int key);
    void mouseDown(int button);
@@ -41,7 +43,7 @@ class StoreMenu : public Menu {
    enum StoreMenuEnum { WEAPONS, UPGRADES, AMMO, SHIP };
 
    int menuSelection;
-   
+   double timeLeft;
    
 };
 

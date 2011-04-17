@@ -367,7 +367,6 @@ int FlyingAI :: think(double dt) {
       if( goalDist < 3 ) {
          // pick a random point
          int index = (int)(rand() % waypoints->size());
-         fprintf(stderr, "Index: %d \n", index); 
          *goalPoint = (*waypoints)[index];
       }
    

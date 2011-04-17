@@ -408,6 +408,7 @@ int main(int argc, char* argv[]) {
 
       } else if (storeMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
+         storeMenu->update(timeDiff);
          storeMenu->draw();
 
       } else if (settingsMenu->menuActive) {
