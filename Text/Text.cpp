@@ -168,7 +168,7 @@ void Text::draw() {
    else if (alignment == RIGHT_ALIGN)
    {
       // Right Aligned.
-      pos.x = (Sint16) (pos.x - temp.w);
+      pos.x = (Sint16) (pos.x - temp.w * 1.5);
    }
 
    /* Come out of HUD mode */

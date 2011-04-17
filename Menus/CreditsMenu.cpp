@@ -10,7 +10,6 @@
 #include "Utility/SoundEffect.h"
 
 #define TITLE_STRING_INDEX 0
-//#define QUIT_STRING_INDEX 6
 #define QUIT_STRING_INDEX (menuTexts.size() - 1)
 #define TITLE_TYPE 0
 #define DUAL_NAME_TYPE 1
@@ -167,7 +166,7 @@ void CreditsMenu::draw() {
 
    for(unsigned i = 0; i < menuTexts.size(); i++) {
       int loc = (int) (menuTexts[i]->getPosition().y + yOffset);
-      if (loc < gameSettings->GH * 1.3 + menuTexts[i]->size && loc > gameSettings->GH * -3.0)
+      if ((loc < gameSettings->GH * 1.3 + menuTexts[i]->size && loc > gameSettings->GH * -3.0) || i == QUIT_STRING_INDEX)
       {
          menuTexts[i]->draw();
       }
