@@ -1117,8 +1117,8 @@ Vector3D* AsteroidShip::getViewVector() {
 Vector3D* AsteroidShip::getCameraOffset() {
    const double thirdPersonForwardOffset = -12;
    const double thirdPersonUpOffset = 2;
-   const double firstPersonForwardOffset = 0.8 * shotOriginScale;
-   const double firstPersonUpOffset = 0.15;
+   const double firstPersonForwardOffset = 0.5 * shotOriginScale;
+   const double firstPersonUpOffset = 0.5;
    if (currentView == VIEW_THIRDPERSON_SHIP || currentView == VIEW_THIRDPERSON_GUN) {
       cameraOffset->updateMagnitude(getViewVector()->scalarMultiply(thirdPersonForwardOffset));
       cameraOffset->addUpdate(up->scalarMultiply(thirdPersonUpOffset));

@@ -295,10 +295,7 @@ void GameState::draw() {
    for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
       if (*listIter == NULL) {
          continue;
-      } else if (*listIter == ship && 
-       (inMenu ||
-       ship->getCurrentView() == VIEW_FIRSTPERSON_SHIP ||
-       ship->getCurrentView() == VIEW_FIRSTPERSON_GUN)) {
+      } else if (*listIter == ship && inMenu) { 
          // Don't draw the ship in first Person mode.
       } else {      
          (*listIter)->draw();
