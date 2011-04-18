@@ -34,6 +34,7 @@ class Mesh3D {
       int addPoint(MeshPoint* p);
       void addFace(int p1, int p2, int p3);
       bool drawAnim;
+      void setFaceColor(float r, float g, float b);
       void setLineColor(float r, float g, float b);
 };
 

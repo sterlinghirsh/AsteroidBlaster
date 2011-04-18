@@ -82,7 +82,6 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
          p3.z + offset.z);
    glBegin(GL_TRIANGLES);
    glColor4f(faceR, faceG, faceB, 1.0f - alphaDiff / FADE_TIME);
-   //glColor4f(0.0, 0.0, 0.0, 1.0f - alphaDiff / FADE_TIME);
    p1_tmp.draw();
    if (drawTex)
       glTexCoord2d(x1, y1);

@@ -44,9 +44,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    worldSize = worldSizeIn;
    skybox = new Skybox();
    ship = new AsteroidShip(this);
-   ball = new Ball(this);
    spring = new Spring(this);
-   //spring->attach(ship, ball);
    minimap = new Minimap(ship);
    camera = new Camera(ship);
    spring->attach(ship, camera);
@@ -107,6 +105,7 @@ GameState::~GameState() {
    delete skybox;
    delete ship;
    delete camera;
+   delete spring;
    delete cube;
    delete weaponReadyBar;
 }
@@ -229,7 +228,6 @@ void GameState::update(double timeDiff) {
    healthBar->setAmount((float) (ship->getHealth() / 100.0));
    cube->update(timeDiff);
    minimap->update(timeDiff);
-
    spring->update(timeDiff);
 }
 
@@ -651,10 +649,10 @@ void GameState::setCurFPS(double fpsIn) {
  * Reset everything in the game to play again
  */
 void GameState::reset() {
-   //delete ship;
    delete camera;
    delete cube;
    delete ship;
+   delete spring;
    delete minimap;
    
    custodian.clear();
@@ -666,9 +664,7 @@ void GameState::reset() {
    
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    ship = new AsteroidShip(this);
-   ball = new Ball(this);
    spring = new Spring(this);
-   //spring->attach(ship, ball);
    cube->constrain(ship);
    minimap = new Minimap(ship);
    camera = new Camera(ship);

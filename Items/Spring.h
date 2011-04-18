@@ -13,10 +13,10 @@ class Spring : public Object3D {
    public:
       Spring(const GameState* _gameState);
       ~Spring() {};
-      void attach(Object3D* anchorIn, Camera* itemIn);
+      void attach(AsteroidShip* anchorIn, Camera* itemIn);
       void update(double ms);
       void draw();
-      Object3D* anchor;
+      AsteroidShip* anchor;
       Camera* item;
       bool isAttached;
 };

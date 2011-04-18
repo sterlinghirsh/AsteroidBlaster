@@ -1,11 +1,12 @@
 #include "Items/Spring.h"
+#include "Items/AsteroidShip.h"
 
 Spring::Spring(const GameState* _gameState) :
    Object3D(_gameState) {
       isAttached = false;
    }
 
-void Spring::attach(Object3D* anchorIn, Camera* itemIn) {
+void Spring::attach(AsteroidShip* anchorIn, Camera* itemIn) {
    anchor = anchorIn;
    item = itemIn;
    isAttached = true;
@@ -13,11 +14,7 @@ void Spring::attach(Object3D* anchorIn, Camera* itemIn) {
 
 void Spring::update(double ms) {
    if (isAttached) {
-      Vector3D displace = *anchor->position;
-      Vector3D dBack = anchor->forward->scalarMultiply(3.0);
-      Vector3D dUp = anchor->up->scalarMultiply(2.0);
-      displace.subtractUpdate(dBack);
-      displace.addUpdate(dUp);
+      Vector3D displace = (anchor->position)->add(*anchor->getCameraOffset());
       Vector3D springVector = displace.subtract(*item->position);
       double length = springVector.getLength();
       if (length == 0.0) { return; }
@@ -41,7 +38,8 @@ void Spring::draw() {
    glVertex3f((float)item->position->x, (float)item->position->y, (float)item->position->z);
    glEnd();
    */
-   glTranslatef((float)item->position->x, (float)item->position->y, (float)item->position->z);
+   //glTranslatef((float)item->position->x, (float)item->position->y, (float)item->position->z);
+   position->glTranslate();
    //item->draw();
    glPopMatrix();
 }

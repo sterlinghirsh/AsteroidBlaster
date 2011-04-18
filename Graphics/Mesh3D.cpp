@@ -19,6 +19,12 @@ void Mesh3D::tick(double ms) {
    tick_time += ms;
 }
 
+void Mesh3D::setFaceColor(float r, float g, float b) {
+   for (int i = 0; i < faces.size(); i++) {
+      faces[i].setFaceColor(r, g, b);
+   }
+}
+
 void Mesh3D::setLineColor(float r, float g, float b) {
    for (int i = 0; i < faces.size(); i++) {
       faces[i].setLineColor(r, g, b);
@@ -100,7 +106,7 @@ void Mesh3D::addFace(int p1, int p2, int p3) {
          points[p3 - 1].z - points[p1 - 1].z);
    face.normal = v1.cross(v2);
    face.normal.normalize();
-   //face.setFaceColor(0.3f, 0.3f, 1.0f);
+   //face.setFaceColor(1.0f, 0.0f, 0.0f);
    face.setLineColor(1.0f, 1.0f, 1.0f);
 
    faces.push_back(face);

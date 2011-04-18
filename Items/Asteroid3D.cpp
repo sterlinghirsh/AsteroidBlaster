@@ -175,7 +175,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 }
 
 void Asteroid3D::drawGlow() {
-   glColor3f(1, 1, 1);
+   //glColor3f(1, 1, 1);
    glDisable(GL_LIGHTING);
    // Call the display list if it has one.
    Object3D::draw();
@@ -210,8 +210,10 @@ void Asteroid3D::drawGlow() {
    double stepR = cyan * step;
    double stepG = magenta * step;
    double stepB = yellow * step;
-   glColor3d(1 - stepR / 2.0, 1 - stepG / 2.0, 1 - stepB / 2.0);
-   //}
+   //glColor3d(1 - stepR / 2.0, 1 - stepG / 2.0, 1 - stepB / 2.0);
+   mesh.setLineColor((float)(1 - stepR / 2.0),
+         (float)(1 - stepG / 2.0),
+         (float)(1 - stepB / 2.0));
 
    double shipDist = position->distanceFrom(*gameState->ship->position);
    double lineW = (worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2;
@@ -270,7 +272,7 @@ void Asteroid3D::draw() {
    double stepR = cyan * step;
    double stepG = magenta * step;
    double stepB = yellow * step;
-   glColor3d(1 - stepR, 1 - stepG, 1 - stepB);
+   //glColor3d(1 - stepR, 1 - stepG, 1 - stepB);
    mesh.setLineColor((float)(1 - stepR),
          (float)(1 - stepG),
          (float)(1 - stepB));
