@@ -97,7 +97,8 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    weapons.push_back(new Ram(this));
    weapons.push_back(new AntiInertia(this));
    weapons.push_back(new TimedBomber(this));
-   weapons.push_back(new Missile(this));
+   weapons.push_back(new Energy(this));
+   
 
    soundHandle = -1;
 

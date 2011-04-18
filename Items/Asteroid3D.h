@@ -27,6 +27,9 @@ class Asteroid3D : public Object3D {
       double initH;
       double health;
       double sizeX, sizeY, sizeZ, collisionRadius;
+
+      bool hitAsteroid;
+      double timeHit;
       double timeSinceExplode;
       bool isExploding;
       
@@ -35,6 +38,7 @@ class Asteroid3D : public Object3D {
       void InitAsteroid(double r, double worldSizeIn);
       void draw();
       void drawGlow();
+      void drawEnergyEffect();
       void makeStrip(Ring r1, Ring r2);
       void update(double timeDiff);
       virtual void handleCollision(Drawable* other);

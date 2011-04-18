@@ -16,6 +16,7 @@
 #include "Shots/LawnMowerShot.h"
 #include "Shots/RamShot.h"
 #include "Shots/AntiInertiaShot.h"
+#include "Shots/EnergyShot.h"
 #include "Shots/TimedBombShot.h"
 
 #include <time.h>
@@ -46,6 +47,7 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState
       health = initH;
       newRandomPosition();
       InitAsteroid(r, worldSizeIn);
+      hitAsteroid = false;
    }
 
 Asteroid3D::~Asteroid3D() {
@@ -332,6 +334,17 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
    }
 }
 
+void Asteroid3D::drawEnergyEffect() {
+   glPushMatrix();
+   glEnable(GL_LIGHTING);
+   glEnable(GL_COLOR_MATERIAL);
+   glColor3d(1, 0, 0);
+   gluSphere(quadric, radius + 5, 20, 20);
+   printf("Got here: %f\n", doubleTime() - timeHit);
+   printf("Radius is: %f\n", radius);
+   glPopMatrix();
+}
+
 void Asteroid3D::update(double timeDiff) {
    if (isExploding) {
       timeSinceExplode += timeDiff;
@@ -350,6 +363,11 @@ void Asteroid3D::update(double timeDiff) {
       velocity->setLength(40);
    }
    angle += rotationSpeed * timeDiff;
+   if (hitAsteroid) {
+      if (doubleTime() - timeHit > 5) hitAsteroid = false;
+      
+      drawEnergyEffect();
+   }
 }
 
 void Asteroid3D::handleCollision(Drawable* other) {
@@ -460,6 +478,21 @@ void Asteroid3D::handleCollision(Drawable* other) {
             addInstantAcceleration(newVelocity);
             if (rotationSpeed >= 0.5) {
                rotationSpeed -= 0.5;
+            } else {
+               rotationSpeed = 0;
+            } 
+         } else if (dynamic_cast<EnergyShot*>(other) != NULL) {
+            if (!hitAsteroid) {
+               hitAsteroid = true;
+               timeHit = doubleTime();
+            }
+            Vector3D* newVelocity = new Vector3D(*velocity);
+            //newVelocity->setLength(-1.0);
+            //addInstantAcceleration(newVelocity);
+            velocity = new Vector3D(0, 0, 0);
+            acceleration = new Vector3D(0, 0, 0);
+            if (rotationSpeed >= 0.5) {
+               rotationSpeed = 0;
             } else {
                rotationSpeed = 0;
             }
