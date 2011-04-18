@@ -25,7 +25,6 @@ class Point3D : public Vector3D {
       virtual void draw();
       void print();
 
-      const Point3D normalize() const;
       static const Point3D Zero;
 };
 

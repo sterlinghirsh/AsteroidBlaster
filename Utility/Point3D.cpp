@@ -14,6 +14,11 @@
  */
 #define EPSILON 0.001
 
+void breakbreakbreak() {
+   // Do nothing;
+   printf("breakbreakbreak\n");
+}
+
 Point3D::Point3D(const Vector3D& copy) {
    x = copy.x;
    y = copy.y;
@@ -21,18 +26,6 @@ Point3D::Point3D(const Vector3D& copy) {
 }
 
 const Point3D Point3D::Zero(0, 0, 0);
-
-const Point3D Point3D::normalize() const {
-   double len = magnitude();
-
-   if (len < EPSILON)
-      return Point3D::Zero;
-
-   if (*this == Point3D::Zero)
-      return Point3D::Zero;
-
-   return Point3D(x / len, y / len, z / len);
-}
 
 void Point3D::draw() {
    glVertex3f((GLfloat)x, (GLfloat)y, (GLfloat)z);

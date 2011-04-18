@@ -54,12 +54,12 @@ double min(double a, double b) {
  * @return no idea, really. Just leaving this open in case I think of something
  */
 int ShootingAI::aimAt(double dt, Object3D* target) {
-   Point3D wouldHit;
+   Vector3D wouldHit;
    double ang = 0;
   
    Point3D aim = lastShotPos;
    Point3D targetPos = chosenWeapon->project(target);
-   Point3D targetDir = (targetPos - *ship->position).getNormalized();
+   Vector3D targetDir = (targetPos - *ship->position).getNormalized();
    
    // This section of code does angle interpolation.
    // Find the angle between our vector and where we want to be.
@@ -75,7 +75,7 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
 
       aim = q * aim;
       // Normalize the vector.
-      aim = aim.normalize();
+      aim.normalize();
    }
    else {
       aim = targetDir;
@@ -112,7 +112,7 @@ Object3D* ShootingAI::chooseTarget() {
    targets = ship->getRadar()->getTargetableViewFrustumReading();
    std::list<Drawable*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
-   Point3D vec;
+   Vector3D vec;
    double curWeight, maxWeight = -1;
    const double distWeight = 1000;
    const double radiusWeight = 1;
@@ -148,7 +148,7 @@ Object3D* ShootingAI::chooseTarget() {
       curWeight = radiusWeight / ((*targets_iterator)->radius);
       vec = (*(*targets_iterator)->position - *ship->position);
       curWeight += distWeight / (vec * vec);
-      vec = vec.normalize();
+      vec.normalize();
       curWeight += vec * lastShotPos * proximityWeight;
 
       if (dynamic_cast<Shard*>(*targets_iterator) != NULL)

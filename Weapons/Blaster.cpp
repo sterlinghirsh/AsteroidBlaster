@@ -104,8 +104,8 @@ Point3D Blaster::project(Object3D* target) {
       // passed (for the bullet to get to the previous point) This vector
       // now points to where our bullet will be when the asteroid is at
       // its position
-
-      wouldHit = wouldHit.normalize() * speed * time + *ship->position;
+      wouldHit.normalize();
+      wouldHit = wouldHit * speed * time + *ship->position;
 
       // Dist is the distance from where our bullet will be to where
       // the asteroid will be.

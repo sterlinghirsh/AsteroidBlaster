@@ -108,7 +108,7 @@ void Quaternion::FromAxis(const Point3D &v, double angle)
 	double sinAngle;
 	double otherAngle = angle * .5;
 	double cosAngle;
-   Point3D vn = v.normalize(); 
+   Point3D vn = v.getNormalized(); 
 
 	sinAngle = sin(otherAngle);
  	cosAngle = cos(otherAngle);
