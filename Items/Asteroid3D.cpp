@@ -474,7 +474,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
             newAcceleration->setLength(speed);
             addInstantAcceleration(newAcceleration);
          } else if ((TBshot2 = dynamic_cast<TimedBombShot*>(other)) != NULL) {
-            printf("%d asteroid3D is handling a collision!\n", curFrame);
+            printf("%ld asteroid3D is handling a collision!\n", curFrame);
             if (TBshot2->isExploded)
                health = 0;
             // remove health from this asteroid based on its distance to the bomb.

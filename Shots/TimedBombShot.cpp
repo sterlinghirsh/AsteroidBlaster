@@ -69,7 +69,7 @@ void TimedBombShot::update(double timeDiff) {
 }
 
 void TimedBombShot::handleCollision(Drawable* other) {
-   printf("%d a timed bomb ran into something.\n", curFrame);
+   printf("%ld a timed bomb ran into something.\n", curFrame);
    ExplosiveShot::handleCollision(other); 
 }
 
@@ -83,7 +83,7 @@ void TimedBombShot::hitWall(BoundingWall* wall) {
  * everything it should, and auto-handle the collisions.
  */
 void TimedBombShot::explode() {
-   printf("%d Bomb exploded!\n", curFrame);
+   printf("%ld Bomb exploded!\n", curFrame);
    // Do all the generic exploding actions that every bomb should do.
    ExplosiveShot::explode();
 

@@ -42,10 +42,10 @@ void Shot::handleCollision(Drawable* other) {
    if (other == owner)
       return;
 
-   printf("%d shot::handleCollision here.\n", curFrame);
+   printf("%ld shot::handleCollision here.\n", curFrame);
    // Don't remove persistent stuff.
    if (!persist) {
-      printf("%d shouldRemove is set to true\n", curFrame);
+      printf("%ld shouldRemove is set to true\n", curFrame);
       shouldRemove = true;
    }
 }
