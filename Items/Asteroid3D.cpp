@@ -175,7 +175,6 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 }
 
 void Asteroid3D::drawGlow() {
-   //glColor3f(1, 1, 1);
    glDisable(GL_LIGHTING);
    // Call the display list if it has one.
    Object3D::draw();
@@ -186,15 +185,14 @@ void Asteroid3D::drawGlow() {
    glTranslated(position->x, position->y, position->z);
    glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
-   //glDepthFunc(GL_ALWAYS);
    glDepthFunc(GL_LEQUAL);
 
    glColor3f(0.0, 0.0, 0.0);
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   //mesh.draw(false);
-   mesh.drawTextured(false, 0);
+   mesh.draw(false);
+   //mesh.drawTextured(false, 0);
    glDisable(GL_POLYGON_OFFSET_FILL);
    glEnable(GL_CULL_FACE);
 
