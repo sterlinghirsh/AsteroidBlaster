@@ -13,6 +13,8 @@
 #include "Items/BoundingSpace.h"
 #include "Items/BoundingSphere.h"
 #include "Items/Asteroid3D.h"
+#include "Items/Ball.h"
+#include "Items/Spring.h"
 #include "Graphics/Skybox.h"
 #include "Graphics/Sprite.h"
 #include "Particles/Particle.h"
@@ -34,6 +36,9 @@ class GameState : public InputReceiver {
 
    public:
       AsteroidShip* ship;
+      Ball* ball;
+      Spring* spring;
+      
       /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
        * update it in updateText(), and make it draw in drawAllText().
        */
@@ -68,7 +73,7 @@ class GameState : public InputReceiver {
       void drawMinimap();
       void drawScreens();
       void addScreens();
-      
+
       bool minimapOn();
       void toggleMinimap();
 

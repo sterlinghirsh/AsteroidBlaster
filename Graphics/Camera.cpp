@@ -40,21 +40,21 @@ void Camera::setCamera(bool setPosition) {
    random.setLength(shakeAmount / 50);
    if (setPosition) {
       gluLookAt(
-       position->x + offset->x, 
-       position->y + offset->y, 
-       position->z + offset->z,
-       position->x + offset->x + forward->x + random.x, 
-       position->y + offset->y + forward->y + random.y, 
-       position->z + offset->z + forward->z + random.z,
-       up->x, up->y, up->z);
+            position->x + offset->x,
+            position->y + offset->y,
+            position->z + offset->z,
+            position->x + offset->x + forward->x + random.x,
+            position->y + offset->y + forward->y + random.y,
+            position->z + offset->z + forward->z + random.z,
+            up->x, up->y, up->z);
    } else {
       gluLookAt(0, 0, 0, forward->x, forward->y, forward->z,
             up->x, up->y, up->z);
    }
 }
 
-void Camera::setCamera(Point3D* newPosition, Vector3D* upIn, 
- Vector3D* rightIn, Vector3D* forwardIn) {
+void Camera::setCamera(Point3D* newPosition, Vector3D* upIn,
+      Vector3D* rightIn, Vector3D* forwardIn) {
    position->x = newPosition->x;
    position->y = newPosition->y;
    position->z = newPosition->z;
@@ -69,7 +69,9 @@ void Camera::setCamera(Point3D* newPosition, Vector3D* upIn,
  * Bind the camera to some Object3D.
  */
 void Camera::viewFrom(Object3D* object) {
-   position = object->position;
+   if (!cameraFollow) {
+      position = object->position;
+   }
    up = object->up;
    forward = object->forward;
    right = object->right;

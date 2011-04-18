@@ -31,6 +31,7 @@ int texSize = 512;
 unsigned long curFrame = 0;
 bool drawPerspective = true;
 bool showBloomScreen = false;
+bool cameraFollow = true;
 GLUquadricObj *quadric = NULL;
 GLuint tractorBeamShader = 0;
 GLuint fadeShader = 0;

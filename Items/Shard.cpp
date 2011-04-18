@@ -144,6 +144,10 @@ void Shard::makeStrip(Ring r1, Ring r2) {
 
       last = (int)count;
       count += step;
+
+      for (int i = 0; i < mesh.faces.size(); i++) {
+         mesh.faces[i].setFaceColor(0.3f, 0.3f, 1.0f);
+      }
    }
 }
 

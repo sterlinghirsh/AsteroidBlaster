@@ -100,7 +100,7 @@ void Mesh3D::addFace(int p1, int p2, int p3) {
          points[p3 - 1].z - points[p1 - 1].z);
    face.normal = v1.cross(v2);
    face.normal.normalize();
-   face.setFaceColor(0.3f, 0.3f, 1.0f);
+   //face.setFaceColor(0.3f, 0.3f, 1.0f);
    face.setLineColor(1.0f, 1.0f, 1.0f);
 
    faces.push_back(face);

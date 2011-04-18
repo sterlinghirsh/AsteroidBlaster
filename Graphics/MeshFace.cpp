@@ -8,8 +8,8 @@
 
 MeshFace::MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3) :
    p1(_p1), p2(_p2), p3(_p3) {
-      setFaceColor(0.3f, 0.3f, 1.0f);
-      setLineColor(0.7f, 0.7f, 1.0f);
+      setFaceColor(0.0f, 0.0f, 0.0f);
+      setLineColor(1.0f, 1.0f, 1.0f);
       alphaDiff = 0.0;
       offsetBy(0.0);
    }
@@ -81,7 +81,8 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
          p3.y + offset.y,
          p3.z + offset.z);
    glBegin(GL_TRIANGLES);
-   //glColor4f(faceR, faceG, faceB, 1.0f - alphaDiff / FADE_TIME);
+   glColor4f(faceR, faceG, faceB, 1.0f - alphaDiff / FADE_TIME);
+   //glColor4f(0.0, 0.0, 0.0, 1.0f - alphaDiff / FADE_TIME);
    p1_tmp.draw();
    if (drawTex)
       glTexCoord2d(x1, y1);

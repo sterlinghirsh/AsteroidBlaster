@@ -44,8 +44,12 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    worldSize = worldSizeIn;
    skybox = new Skybox();
    ship = new AsteroidShip(this);
+   ball = new Ball(this);
+   spring = new Spring(this);
+   //spring->attach(ship, ball);
    minimap = new Minimap(ship);
    camera = new Camera(ship);
+   spring->attach(ship, camera);
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    //sphere = new BoundingSphere(worldSize, 0, 0, 0);
    // Set up our text objects to be displayed on screen.
@@ -225,6 +229,8 @@ void GameState::update(double timeDiff) {
    healthBar->setAmount((float) (ship->getHealth() / 100.0));
    cube->update(timeDiff);
    minimap->update(timeDiff);
+
+   spring->update(timeDiff);
 }
 
 /**
@@ -301,6 +307,7 @@ void GameState::draw() {
          (*listIter)->draw();
       }
    }
+   spring->draw();
 }
 
 /**
@@ -659,9 +666,13 @@ void GameState::reset() {
    
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    ship = new AsteroidShip(this);
+   ball = new Ball(this);
+   spring = new Spring(this);
+   //spring->attach(ship, ball);
    cube->constrain(ship);
    minimap = new Minimap(ship);
    camera = new Camera(ship);
+   spring->attach(ship, camera);
    gameIsRunning = true;
 
    custodian.add(ship);

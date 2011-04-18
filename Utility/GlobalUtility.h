@@ -44,6 +44,7 @@ extern int texSize;
 extern unsigned long curFrame;
 extern bool drawPerspective;
 extern bool showBloomScreen;
+extern bool cameraFollow;
 extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
 extern GLuint fadeShader;
