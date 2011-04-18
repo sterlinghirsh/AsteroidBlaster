@@ -29,7 +29,7 @@ bool Weapon::isCooledDown() {
    if (!ship->gameState->godMode) {
       return doubleTime() > timeLastFired + (coolDown/((double)level));
    }
-   //return doubleTime() > timeLastFired + 0.05;
+   return doubleTime() > timeLastFired + 0.05;
 }
 
 /**
