@@ -284,18 +284,24 @@ void Shard::handleCollision(Drawable* other) {
       shouldRemove = true;
       SoundEffect::playSoundEffect("CrystalCollect.wav");
    } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
-      // Set speed to the speed of the asteroid.
       double speed = asteroid->velocity->getLength();
       velocity->updateMagnitude(*(asteroid->position), *position);
       velocity->setLength(speed);
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
-      double speed = 80;
+      double speed = 40;
       if (dynamic_cast<BeamShot*>(other) != NULL) {
          speed = 80; // High speed from hard-hitting railgun.
+         velocity->updateMagnitude(*(shot->position), *position);
+         velocity->setLength(speed);
       } else if((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {
          // Pull the shot in.
          const int numParticles = 1;
-         speed = position->distanceFrom(*TBshot->position) - TBshot->length;
+         // Set the new speed.
+         //speed = position->distanceFrom(*TBshot->position) - TBshot->length;
+         Vector3D* TBshotToShip = new Vector3D(*position, *TBshot->owner->position);
+         TBshotToShip->setLength(1000 / sqrt((1 + TBshotToShip->getLength())));
+         addAcceleration(TBshotToShip);
+         
          Vector3D random;
          for (int i = 0; i < numParticles; ++i) {
             Point3D* particlePosition = new Point3D(*position);
@@ -311,19 +317,18 @@ void Shard::handleCollision(Drawable* other) {
          Vector3D* newVelocity = new Vector3D(*velocity);
          newVelocity->scalarMultiplyUpdate(-0.1);
          addInstantAcceleration(newVelocity);
-         if (rotationSpeed >= 0.5) {
-            rotationSpeed -= 0.5;
-         } else {
-            rotationSpeed = 0;
+         if (rotationSpeed > 0) {
+            // TODO: Make this time based.
+            rotationSpeed = max(rotationSpeed - 0.5, 0.0);
          }
       } else {
          // Set speed to between the speed of the shot and the current speed.
          speed = shot->velocity->getLength();
          speed += velocity->getLength() * 2;
          speed /= 3;
+         velocity->updateMagnitude(*(shot->position), *position);
+         velocity->setLength(speed);
       }
-      velocity->updateMagnitude(*(shot->position), *position);
-      velocity->setLength(speed);
    } else if ((otherShard = dynamic_cast<Shard*>(other)) != NULL) {
       Vector3D* push = new Vector3D(*other->position, *position);
       if (push->getComparisonLength() == 0) {
