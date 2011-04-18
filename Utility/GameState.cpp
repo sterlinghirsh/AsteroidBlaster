@@ -345,8 +345,8 @@ void GameState::drawGlow() {
 
    // Don't draw the ship in first Person mode.
    if (!inMenu) {
-      if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
-       ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
+      // if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
+      // ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
          ship->draw();
    }
 }

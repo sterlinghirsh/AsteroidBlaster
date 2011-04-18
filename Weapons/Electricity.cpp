@@ -12,7 +12,7 @@
 
 Electricity::Electricity(AsteroidShip* owner) : Weapon(owner) {
    shotsFired = 0;
-   shotsPerSec = 100;
+   shotsPerSec = 30;
    coolDown = 0;
    name = "Pikachu's Wrath";
    currentFrame = 1; // Start this 1 ahead of lastFiredFame.
