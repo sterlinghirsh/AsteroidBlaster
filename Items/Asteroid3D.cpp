@@ -339,6 +339,11 @@ void Asteroid3D::drawEnergyEffect() {
    glEnable(GL_LIGHTING);
    glEnable(GL_COLOR_MATERIAL);
    glColor3d(1, 0, 0);
+   glLineWidth(5);
+   glBegin(GL_LINES);
+   glVertex3d(0, 0, -10);
+   glVertex3d(0, 0, 10);
+   glEnd();
    gluSphere(quadric, radius + 5, 20, 20);
    printf("Got here: %f\n", doubleTime() - timeHit);
    printf("Radius is: %f\n", radius);
