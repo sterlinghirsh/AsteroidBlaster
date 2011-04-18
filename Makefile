@@ -27,12 +27,16 @@ PROGNAME=AsteroidBlaster
 
 UTILITYFILES=Utility/Vector3D.cpp Utility/GameState.cpp Utility/Custodian.cpp Utility/InputManager.cpp Utility/Point3D.cpp Utility/Radar.cpp Utility/Quaternion.cpp Utility/ViewFrustum.cpp Utility/Matrix4.cpp Utility/GlobalUtility.cpp Utility/Music.cpp Utility/SoundEffect.cpp Utility/Texture.cpp Utility/GameSettings.cpp
 MENUFILES=Menus/Menu.cpp Menus/MainMenu.cpp Menus/StoreMenu.cpp Menus/CreditsMenu.cpp Menus/SettingsMenu.cpp Menus/HelpMenu.cpp
-GRAPHICSFILES=Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Sprite.cpp Graphics/Camera.cpp
-ITEMSFILES=Items/Drawable.cpp Items/Object3D.cpp Items/Asteroid3D.cpp Items/AsteroidShip.cpp Items/BoundingSpace.cpp Items/Ring.cpp Items/Shard.cpp Items/GlowSquare.cpp Items/BoundingWall.cpp Items/Ball.cpp Items/Spring.cpp
-SHOTSFILES=Shots/Shot.cpp Shots/BeamShot.cpp Shots/ProjectileShot.cpp Shots/TractorBeamShot.cpp Shots/ElectricityShot.cpp Shots/LawnMowerShot.cpp Shots/RamShot.cpp Shots/AntiInertiaShot.cpp Shots/ExplosiveShot.cpp Shots/EnergyShot.cpp
+GRAPHICSFILES=Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Sprite.cpp Graphics/Camera.cpp Graphics/MeshFace.cpp
+ITEMSFILES=Items/Drawable.cpp Items/Object3D.cpp Items/Asteroid3D.cpp Items/AsteroidShip.cpp Items/BoundingSpace.cpp Items/Ring.cpp Items/Shard.cpp Items/GlowSquare.cpp Items/BoundingWall.cpp Items/Ball.cpp
+
+SHOTSFILES=Shots/Shot.cpp Shots/BeamShot.cpp Shots/ProjectileShot.cpp Shots/TractorBeamShot.cpp Shots/ElectricityShot.cpp Shots/LawnMowerShot.cpp Shots/RamShot.cpp Shots/AntiInertiaShot.cpp Shots/ExplosiveShot.cpp Shots/EnergyShot.cpp Shots/TimedBombShot.cpp
+
 AIFILES=AI/FlyingAI.cpp AI/ShootingAI.cpp 
 NETWORKFILES=
-WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/TractorBeam.cpp Weapons/Electricity.cpp Weapons/LawnMower.cpp Weapons/Ram.cpp Weapons/AntiInertia.cpp Weapons/Bomber.cpp Weapons/Energy.cpp
+
+WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/TractorBeam.cpp Weapons/Electricity.cpp Weapons/LawnMower.cpp Weapons/Ram.cpp Weapons/AntiInertia.cpp Weapons/TimedBomber.cpp Weapons/Energy.cpp
+
 HUDFILES=HUD/ProgressBar.cpp HUD/Minimap.cpp HUD/Screen.cpp
 PARTICLEFILES=Particles/Particle.cpp Particles/BlasterShotParticle.cpp Particles/EngineParticle.cpp Particles/BlasterImpactParticle.cpp Particles/TractorAttractionParticle.cpp Particles/ElectricityImpactParticle.cpp Particles/ShardParticle.cpp
 TEXTFILES=Text/Text.cpp Text/GameMessage.cpp
