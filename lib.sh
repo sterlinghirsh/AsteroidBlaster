@@ -18,7 +18,7 @@ then
    echo "Configuring.."
    ./configure || exit
    echo "Making.."
-   make -j || exit
+   make -j 3 || exit
    echo "Done!"
    cd ..
    
@@ -34,7 +34,7 @@ then
    echo "Configuring.."
    ./configure || exit
    echo "Making.."
-   make -j || exit
+   make -j 3 || exit
    echo "Done!"
    cd ..
    
@@ -50,7 +50,7 @@ then
    echo "Configuring.."
    ./configure || exit
    echo "Making.."
-   make -j || exit
+   make -j 3 || exit
    echo "Done!"
    cd ..
 
@@ -64,7 +64,7 @@ then
    rm glew-1.5.8.tar
    cd glew-1.5.8
    echo "Making.."
-   make -j || exit
+   make -j 3 || exit
    echo "Done!"
    cd ..
    
