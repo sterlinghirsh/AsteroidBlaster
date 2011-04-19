@@ -45,8 +45,6 @@ void Energy::update(double timeDiff) {
    
    // If user has stopped charging a shot.
    if (chargingShot != NULL && lastFiredFrame == curFrame - 2) {
-      // Update timeLastFired with new current time.
-      timeLastFired = doubleTime();
       // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
       Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed / (1 + std::min(doubleTime() - chargeStartTime, 3.0))));
       // Add a random variation to each of the shots.
@@ -60,9 +58,15 @@ void Energy::update(double timeDiff) {
       }
       
       ship->setShakeAmount((float) std::min((doubleTime() - chargeStartTime) * 0.3, 0.5));
-      chargeStartTime = 0;
-      chargingShot = NULL;
+      resetChargingShot();
    }
+}
+
+void Energy::resetChargingShot() {
+   chargeStartTime = 0;
+   chargingShot = NULL;
+   // Update timeLastFired with new current time.
+   timeLastFired = doubleTime();
 }
 
 /**
@@ -77,7 +81,7 @@ void Energy::fire() {
    if (chargeStartTime == 0 && chargingShot == NULL) {
       chargeStartTime = doubleTime();  
       Vector3D zeroVelocity(0, 0, 0);
-      chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, ship, ship->gameState);
+      chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, ship, this, ship->gameState);
       gameState->custodian.add(chargingShot);
    }
 

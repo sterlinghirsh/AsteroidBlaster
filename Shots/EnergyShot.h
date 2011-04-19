@@ -7,9 +7,11 @@
 
 #include "Shots/Shot.h"
 
+class Energy;
+
 class EnergyShot : public Shot {
    public:
-      EnergyShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState);
+      EnergyShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn, Energy* const weaponIn, const GameState* _gameState);
       virtual void draw();
       virtual void update(double timeDiff);
       virtual void handleCollision(Drawable* other);
@@ -19,6 +21,7 @@ class EnergyShot : public Shot {
       virtual void hitWall(BoundingWall* wall);
       virtual void updateChargeTime(double newChargeTime);
       double damagePerSecond;
+      Energy* weapon;
 };
 
 #endif

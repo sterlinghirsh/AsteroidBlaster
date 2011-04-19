@@ -19,10 +19,11 @@ const int particleCycle = 100;
 static float spinCycle = 0;
 
 const double baseRadius = 0.2;
-const double baseDamagePerSecond = 2.5;
+const double baseDamagePerSecond = 1;
 
 EnergyShot::EnergyShot(Point3D& posIn, Vector3D dirIn,
- AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState) {
+ AsteroidShip* const ownerIn, Energy* const weaponIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState),
+weapon(weaponIn) {
    persist = false;
    radius = baseRadius;
    minX = minY = minZ = -radius;
@@ -157,6 +158,11 @@ void EnergyShot::update(double timeDiff) {
        new Vector3D(particleDirection), particleNum, particleCycle, gameState);*/
       // Reflect and Duplicate the above for a double helix.
    }
+   
+   if (shouldRemove) {
+      if (weapon->chargingShot == this)
+         weapon->resetChargingShot();
+   }
 }
 
 void EnergyShot::handleCollision(Drawable* other) {
@@ -183,10 +189,17 @@ void EnergyShot::handleCollision(Drawable* other) {
       }
    }
    Shot::handleCollision(other);
+   // We want to make sure that we don't leave the weapon hanging.
+   if (shouldRemove) {
+      if (weapon->chargingShot == this)
+         weapon->resetChargingShot();
+   }
 }
 
 void EnergyShot::hitWall(BoundingWall* wall) {
    shouldRemove = true;
+   if (weapon->chargingShot == this)
+      weapon->resetChargingShot();
 }
 
 void EnergyShot::updateChargeTime(double newChargeTime) {

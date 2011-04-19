@@ -16,6 +16,8 @@
 
 #define ASTEROID3D_LINE_W 0.5
 
+class AsteroidShip;
+
 class Asteroid3D : public Object3D {
    public:
       Mesh3D mesh;
@@ -31,10 +33,12 @@ class Asteroid3D : public Object3D {
       Vector3D* newAcceleration;
       Vector3D* newVelocity;
 
-      bool hitAsteroid;
-      double timeHit;
-      double timeSinceExplode;
+      bool energyHitAsteroid;
+      double timeLastHitByEnergy;
+      double damagePerSecond;
+
       bool isExploding;
+      double timeSinceExplode;
       
       Asteroid3D(double r, double worldSizeIn, const GameState* _gameState, bool isFirst = false);
       virtual ~Asteroid3D();
@@ -59,6 +63,7 @@ class Asteroid3D : public Object3D {
       // Holds a random color.
       float cyan, magenta, yellow;
       void dropRandomItem();
+      AsteroidShip* lastHitShotOwner;
 };
 
 #endif

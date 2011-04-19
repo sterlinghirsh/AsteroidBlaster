@@ -33,6 +33,7 @@ static double spinTime = 0;
 double randomR = 0;
 double randomG = 0;
 double randomB = 0;
+double energyDamageTime = 5.0;
 
 Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState, bool isFirst) :
    Object3D(_gameState),
@@ -48,10 +49,11 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState
 
       isExploding = false;
 
+      lastHitShotOwner = NULL;
+
       health = initH;
       newRandomPosition();
       InitAsteroid(r, worldSizeIn);
-      hitAsteroid = false;
    }
 
 Asteroid3D::~Asteroid3D() {
@@ -176,6 +178,11 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 
    collisionRadius = radius;
    updateBoundingBox();
+
+   damagePerSecond = 0;
+   energyHitAsteroid = false;
+   timeLastHitByEnergy = 0;
+
 }
 
 void Asteroid3D::drawGlow() {
@@ -292,17 +299,12 @@ void Asteroid3D::draw() {
    glDisable(GL_POLYGON_OFFSET_LINE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glLineWidth(1);
-
-   glDisable(GL_COLOR_MATERIAL);
-   if (hitAsteroid) {
-      if (doubleTime() - timeHit > 5) {
-         hitAsteroid = false;
-         velocity = new Vector3D(*newVelocity);
-         acceleration = new Vector3D(*newAcceleration);         
-      }
-      
+   
+   if (energyHitAsteroid) {
       drawEnergyEffect();
    }
+
+   glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();
    setTargeted(false);
    glEnable(GL_CULL_FACE);
@@ -453,7 +455,37 @@ void Asteroid3D::update(double timeDiff) {
       velocity->setLength(40);
    }
    angle += rotationSpeed * timeDiff;
-   if(hitAsteroid) health -= timeDiff;
+   
+   if (energyHitAsteroid) {
+      if (doubleTime() - timeLastHitByEnergy > 5) {
+         energyHitAsteroid = false;
+         velocity = new Vector3D(*newVelocity);
+         acceleration = new Vector3D(*newAcceleration);         
+         damagePerSecond = 0;
+      }
+
+      const double rotationSpeedIncreasePerSecond = 20 * damagePerSecond; // deg/sec
+      rotationSpeed += timeDiff * rotationSpeedIncreasePerSecond;
+      
+      health -= timeDiff * damagePerSecond;
+   }
+   
+   if (health <= 0 && !isExploding) {
+      SoundEffect::playSoundEffect("Explosion1.wav");
+      //shouldRemove = true;
+      timeSinceExplode = 0.0;
+      isExploding = true;
+      const int explosionFactor = 3;
+      if (radius > 2) {
+         int dimension = rand() % 3;
+         custodian->add(makeChild(0, dimension));
+         custodian->add(makeChild(1, dimension));
+      }
+      if (lastHitShotOwner != NULL) {
+         lastHitShotOwner->score += (int) radius * 10;
+      }
+      dropRandomItem();
+   }
 }
 
 void Asteroid3D::handleCollision(Drawable* other) {
@@ -464,7 +496,8 @@ void Asteroid3D::handleCollision(Drawable* other) {
    LawnMowerShot* lawnMowerShot;
    ElectricityShot* elecShot;
    TractorBeamShot* TBshot; // Not tuberculosis
-   TimedBombShot* TBshot2;
+   TimedBombShot* TBshot2; // This is an awful name.
+   EnergyShot* energyShot;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       if (isExploding || otherAsteroid->isExploding) { return; }
       double d = (*(otherAsteroid->position)).distanceFrom(*position);
@@ -517,6 +550,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
       }
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
       if (isExploding) { return; }
+      lastHitShotOwner = shot->owner;
       if (health > 0) {
          if ((beamShot = dynamic_cast<BeamShot*>(other)) != NULL) {
             if (((!beamShot->hitYet) || this == beamShot->hitItem) && (curFrame - 1) <= beamShot->firstFrame) {
@@ -567,13 +601,16 @@ void Asteroid3D::handleCollision(Drawable* other) {
             } else {
                rotationSpeed = 0;
             } 
-         } else if (dynamic_cast<EnergyShot*>(other) != NULL) {
-            if (!hitAsteroid) {
-               hitAsteroid = true;
-               timeHit = doubleTime();
-               newVelocity = new Vector3D(*velocity);
-               newAcceleration = new Vector3D(*acceleration);
-            }
+         } else if ((energyShot = dynamic_cast<EnergyShot*>(other)) != NULL) {
+            energyHitAsteroid = true;
+            // Calculate any remaining damage to be done, and factor it in to the new damage per second.
+            // TODO: 5.0 is the time damage is dealt. We may want to put this in energyshot.
+            double damageTimeLeft = clamp(doubleTime() - timeLastHitByEnergy, 0.0, energyDamageTime);
+            double damageLeft = damagePerSecond * damageTimeLeft;
+            damagePerSecond = (damageLeft / energyDamageTime) + energyShot->damagePerSecond;
+            timeLastHitByEnergy = doubleTime();
+            newVelocity = new Vector3D(*velocity);
+            newAcceleration = new Vector3D(*acceleration);
             
             velocity = new Vector3D(0, 0, 0);
             acceleration = new Vector3D(0, 0, 0);
@@ -593,20 +630,6 @@ void Asteroid3D::handleCollision(Drawable* other) {
             // remove health from this asteroid based on its distance to the bomb.
             // change this bomb's motion vector based on its distance to the bomb.
          }
-      }
-      if (health <= 0) {
-         SoundEffect::playSoundEffect("Explosion1.wav");
-         //shouldRemove = true;
-         timeSinceExplode = 0.0;
-         isExploding = true;
-         const int explosionFactor = 3;
-         if (radius > 2) {
-            shot->owner->score += (int) radius * 10;
-            int dimension = rand() % 3;
-            custodian->add(makeChild(0, dimension));
-            custodian->add(makeChild(1, dimension));
-         }
-         dropRandomItem();
       }
    }
 }

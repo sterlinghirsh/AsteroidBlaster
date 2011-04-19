@@ -23,6 +23,8 @@ class Energy : public Weapon {
       void godMode(bool enabled);
       virtual void debug();
       virtual void fire();
+      virtual void resetChargingShot();
+      EnergyShot* chargingShot;
 
    protected:
       double shotSpeed;
@@ -31,7 +33,6 @@ class Energy : public Weapon {
       Point3D* lastShotPos;
       unsigned long lastFiredFrame;
       double chargeStartTime;
-      EnergyShot* chargingShot;
 };
 
 #endif
