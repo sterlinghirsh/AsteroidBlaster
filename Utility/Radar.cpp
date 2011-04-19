@@ -22,10 +22,7 @@ Radar :: Radar(AsteroidShip* const ship) {
 /* Deconstructor shouldn't need to do anything
  */
 Radar :: ~Radar() {
-   delete owner;
    delete curFrustum;
-   if (cameraPosition != NULL)
-      delete cameraPosition;
 }
 
 /**

@@ -55,6 +55,7 @@ extern GLuint vBlurShader;
 extern GLuint ramShader;
 extern GLuint tractorFade;
 extern GLuint billboardShader;
+extern GLuint bombShader;
 extern GLuint fbo;
 extern GLuint depthbuffer;
 extern SDL_Surface* gDrawSurface;

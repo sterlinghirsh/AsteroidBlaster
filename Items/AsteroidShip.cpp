@@ -112,12 +112,12 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
 }
 
 AsteroidShip::~AsteroidShip() {
-   delete radar;
    for (unsigned int i = 0; i < weapons.size(); ++i) {
       delete weapons[i];
    }
    delete shooter;
    delete flyingAI;
+   delete radar;
    delete cameraOffset;
 }
 

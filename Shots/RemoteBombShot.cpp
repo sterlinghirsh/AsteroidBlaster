@@ -12,6 +12,8 @@
 #include "Utility/WindowsMathLib.h"
 #endif
 
+double pulseSize = 0;
+
 RemoteBombShot::RemoteBombShot(Point3D& posIn, Vector3D dirIn,
  AsteroidShip* const ownerIn, RemoteBomber* const _weapon, const GameState* _gameState) : 
  ExplosiveShot(posIn, dirIn, ownerIn, _gameState),
@@ -35,15 +37,20 @@ void RemoteBombShot::draw() {
    }
 
    glPushMatrix();
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);
-
-      glColor3d(0.8, 0.4, 0.4);
-      setMaterial(ShotMaterial);
       position->glTranslate();
-
+      glColor4d(0.4, 0.8, .4, 1);
+      gluSphere(quadric, pulseSize, 10, 10);
+      glColor4d(0.4, 0.8, 1, 1);
+      gluSphere(quadric, .3, 10, 10);
+      glUseProgram(bombShader);
+      glColor4d(0.4, 0.8, 0.4, .4);
+      gluSphere(quadric, 1, 10, 10);
+      glUseProgram(0);
+      
       // Radius 0.5, 5 slices, 5 stacks.
-      gluSphere(quadric, 0.5, 5, 5);
-
+      
       glEnable(GL_LIGHTING);
    glPopMatrix();
 }
@@ -67,6 +74,9 @@ void RemoteBombShot::update(double timeDiff) {
    if (!isExploded && (doubleTime() - timeFired > timeToExplode)) {
       explode();
    }
+   
+   pulseSize += timeDiff * 2;
+   if (pulseSize > 1) pulseSize = 0;
 
       // Find out how projectileShot's are removed.
 }

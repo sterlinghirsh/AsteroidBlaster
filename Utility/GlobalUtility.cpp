@@ -42,6 +42,7 @@ GLuint vBlurShader = 0;
 GLuint lawnShader = 0;
 GLuint tractorFade = 0;
 GLuint billboardShader = 0;
+GLuint bombShader = 0;
 GLuint fbo = 0;
 GLuint depthbuffer = 0;
 SDL_Surface* gDrawSurface = NULL;
