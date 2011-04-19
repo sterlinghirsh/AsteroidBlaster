@@ -62,8 +62,14 @@ void Mesh3D::drawLines(bool drawSmooth) {
 
 void Mesh3D::draw(bool drawSmooth, bool drawTex) {
    glDisable(GL_LIGHTING);
-   for (int i = 0; i < faces.size(); i++) {
-      faces[i].drawFace(drawSmooth);
+   int nFaces;
+   if (drawAnim) {
+      nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
+   } else {
+      nFaces = (int)faces.size();
+   }
+   for (int i = 0; i < nFaces; i++) {
+      faces[i].drawFace(drawSmooth, true);
    }
    glEnable(GL_LIGHTING);
 }
