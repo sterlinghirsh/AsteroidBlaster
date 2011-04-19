@@ -305,7 +305,6 @@ void GameState::draw() {
          (*listIter)->draw();
       }
    }
-   spring->draw();
 }
 
 /**

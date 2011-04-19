@@ -18,28 +18,24 @@ void Spring::update(double ms) {
       Vector3D springVector = displace.subtract(*item->position);
       double length = springVector.getLength();
       if (length == 0.0) { return; }
-      double normalLength = SPRING_LEN;
+      double normalLength = POS_SPRING_LEN;
       double forceScalar = (length - normalLength) / normalLength;
       springVector.scalarMultiplyUpdate(1.0 / length);
       Vector3D forceVector = springVector.scalarMultiply(forceScalar);
-      forceVector.scalarMultiplyUpdate(ms * FORCE_SCALE);
+      forceVector.scalarMultiplyUpdate(ms * POS_FORCE_SCALE);
       item->position->addUpdate(forceVector);
    }
-}
-
-void Spring::draw() {
-   glPushMatrix();
-   glDisable(GL_LIGHTING);
-   glDisable(GL_COLOR_MATERIAL);
-   /*
-   glBegin(GL_LINES);
-   glColor3f(1.0, 1.0, 1.0);
-   glVertex3f((float)anchor->position->x, (float)anchor->position->y, (float)anchor->position->z);
-   glVertex3f((float)item->position->x, (float)item->position->y, (float)item->position->z);
-   glEnd();
-   */
-   //glTranslatef((float)item->position->x, (float)item->position->y, (float)item->position->z);
-   position->glTranslate();
-   //item->draw();
-   glPopMatrix();
+   // Up vector
+   if (isAttached) {
+      Vector3D displace = *anchor->up;
+      Vector3D springVector = displace.subtract(*item->up);
+      double length = springVector.getLength();
+      if (length == 0.0) { return; }
+      double normalLength = UP_SPRING_LEN;
+      double forceScalar = (length - normalLength) / normalLength;
+      springVector.scalarMultiplyUpdate(1.0 / length);
+      Vector3D forceVector = springVector.scalarMultiply(forceScalar);
+      forceVector.scalarMultiplyUpdate(ms * UP_FORCE_SCALE);
+      item->up->addUpdate(forceVector);
+   }
 }

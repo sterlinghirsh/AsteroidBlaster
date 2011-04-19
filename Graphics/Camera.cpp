@@ -72,8 +72,8 @@ void Camera::setCamera(Point3D* newPosition, Vector3D* upIn,
 void Camera::viewFrom(Object3D* object) {
    if (!cameraFollow) {
       position = object->position;
+      up = object->up;
    }
-   up = object->up;
    forward = object->forward;
    right = object->right;
 }

@@ -213,6 +213,7 @@ void Shard::drawGlow() {
    mesh.draw(false);
    glDisable(GL_POLYGON_OFFSET_FILL);
 
+   /*
    // Set polygon offset to be in front of the faces.
    glPolygonOffset(-1.0f, -1.0f);
    glEnable(GL_POLYGON_OFFSET_LINE);
@@ -221,6 +222,7 @@ void Shard::drawGlow() {
    mesh.drawLines(false);
    glDisable(GL_POLYGON_OFFSET_LINE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   */
    glPopMatrix();
 
 
@@ -244,9 +246,9 @@ void Shard::draw() {
    glScaled(scalex, scaley, scalez);
 
    glDisable(GL_LIGHTING);
-   glEnable(GL_CULL_FACE);
+   //glEnable(GL_CULL_FACE);
    
-   setMaterial(CrystalMaterial);
+   //setMaterial(CrystalMaterial);
    mesh.draw(false);
 
    glPopMatrix();
