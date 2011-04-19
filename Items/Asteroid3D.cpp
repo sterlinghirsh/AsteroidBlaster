@@ -575,15 +575,8 @@ void Asteroid3D::handleCollision(Drawable* other) {
                newAcceleration = new Vector3D(*acceleration);
             }
             
-            //newVelocity->setLength(-1.0);
-            //addInstantAcceleration(newVelocity);
             velocity = new Vector3D(0, 0, 0);
             acceleration = new Vector3D(0, 0, 0);
-            /*if (rotationSpeed >= 0.5) {
-               rotationSpeed = 0;
-            } else {
-               rotationSpeed = 0;
-            }*/
          } else if (dynamic_cast<ProjectileShot*>(other) != NULL) {
             if (gameState->godMode) {
                health = 0;

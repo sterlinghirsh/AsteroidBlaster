@@ -15,7 +15,10 @@ class EnergyShot : public Shot {
       virtual void handleCollision(Drawable* other);
       int particleNum;
       Vector3D particleDirection;
+      double chargeTime;
       virtual void hitWall(BoundingWall* wall);
+      virtual void updateChargeTime(double newChargeTime);
+      double damagePerSecond;
 };
 
 #endif

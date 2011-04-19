@@ -10,6 +10,7 @@
 
 #include "Weapons/Weapon.h"
 
+class EnergyShot;
 struct Point3D;
 /* Classter Energy */
 class Energy : public Weapon {
@@ -28,6 +29,9 @@ class Energy : public Weapon {
       double turnSpeed;
       double randomVariationAmount;
       Point3D* lastShotPos;
+      unsigned long lastFiredFrame;
+      double chargeStartTime;
+      EnergyShot* chargingShot;
 };
 
 #endif

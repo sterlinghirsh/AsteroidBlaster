@@ -9,6 +9,8 @@
 #include "Particles/BlasterImpactParticle.h"
 #include "Utility/SoundEffect.h"
 
+#include <algorithm>
+
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"
 #endif
@@ -16,13 +18,19 @@
 const int particleCycle = 100;
 static float spinCycle = 0;
 
+const double baseRadius = 0.2;
+const double baseDamagePerSecond = 2.5;
+
 EnergyShot::EnergyShot(Point3D& posIn, Vector3D dirIn,
  AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState) {
    persist = false;
-   minX = minY = minZ = -0.1;
-   maxX = maxY = maxZ = 0.1;
-   lifetime = 20;
+   radius = baseRadius;
+   minX = minY = minZ = -radius;
+   maxX = maxY = maxZ = radius;
    updateBoundingBox();
+   lifetime = 20;
+   damagePerSecond = baseDamagePerSecond;
+
    static int currentStartingParticleCycle = 0;
    particleNum = currentStartingParticleCycle;
    currentStartingParticleCycle = (currentStartingParticleCycle + 7) % particleCycle;
@@ -32,6 +40,8 @@ EnergyShot::EnergyShot(Point3D& posIn, Vector3D dirIn,
    normalizedVelocity.normalize();
 
    particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
+
+   chargeTime = 0;
 }
 
 void EnergyShot::draw() {
@@ -42,11 +52,14 @@ void EnergyShot::draw() {
    glPushMatrix();
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);
-      
+
       setMaterial(WhiteSolid);
       position->glTranslate();
       glRotated(zVector.getAngleInDegrees(*velocity), 
          axis.x, axis.y, axis.z);
+      
+      glScaled(radius, radius, radius);
+      
          glPushMatrix();
          random = (double) (rand() % 4);
          random /= 10;
@@ -173,5 +186,16 @@ void EnergyShot::handleCollision(Drawable* other) {
 }
 
 void EnergyShot::hitWall(BoundingWall* wall) {
-   //particleDirection.reflect(wall->normal);
+   shouldRemove = true;
+}
+
+void EnergyShot::updateChargeTime(double newChargeTime) {
+   // Charge time limit of 5 seconds.
+   chargeTime = newChargeTime;
+   double cappedSquaredChargeTime = std::min(chargeTime * chargeTime, 5.0);
+   radius = baseRadius + baseRadius * cappedSquaredChargeTime;
+   minX = minY = minZ = -radius;
+   maxX = maxY = maxZ = radius;
+   updateBoundingBox();
+   damagePerSecond = baseDamagePerSecond + baseDamagePerSecond * cappedSquaredChargeTime;
 }

@@ -7,19 +7,22 @@
 
 #include "Weapons/Energy.h"
 #include "Utility/GlobalUtility.h"
-#include "Shots/EnergyShot.h"
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
+#include "Shots/EnergyShot.h"
 
 Energy::Energy(AsteroidShip* owner)
 : Weapon(owner) {
-   shotSpeed = 40; // Units per second
-   coolDown = 0.15; // Seconds
-   randomVariationAmount = 1.5; // Units
+   shotSpeed = 80; // Units per second
+   coolDown = 0.3; // Seconds
+   randomVariationAmount = 1.0; // Units
    name = "Energy";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
    purchased = true; // Start off owning the blaster
+   lastFiredFrame = 0;
+   chargeStartTime = 0;
+   chargingShot = NULL;
 }
 
 Energy::~Energy() {
@@ -31,34 +34,53 @@ Energy::~Energy() {
  * We'll probably keep track of something or other here.
  */
 void Energy::update(double timeDiff) {
-   // Do nothing, yet
+   // Fire when the trigger is released.
+   static Vector3D randomVariation;
+
+   // Update the position of the charging shot.
+   if (chargingShot != NULL) {
+      chargingShot->position->updateMagnitude(ship->shotOrigin);
+      chargingShot->updateChargeTime(doubleTime() - chargeStartTime);
+   }
+   
+   // If user has stopped charging a shot.
+   if (chargingShot != NULL && lastFiredFrame == curFrame - 2) {
+      // Update timeLastFired with new current time.
+      timeLastFired = doubleTime();
+      // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
+      Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed / (1 + std::min(doubleTime() - chargeStartTime, 3.0))));
+      // Add a random variation to each of the shots.
+      randomVariation.randomMagnitude();
+      randomVariation.scalarMultiplyUpdate(randomVariationAmount);
+      shotDirection.addUpdate(randomVariation);
+      chargingShot->velocity->updateMagnitude(shotDirection);
+      // Don't play sound effects in godMode b/c there would be too many.
+      if (!ship->gameState->godMode) {
+         SoundEffect::playSoundEffect("EnergyShot2.wav");
+      }
+      
+      ship->setShakeAmount((float) std::min((doubleTime() - chargeStartTime) * 0.3, 0.5));
+      chargeStartTime = 0;
+      chargingShot = NULL;
+   }
 }
 
 /**
  * This is what actually shoots. Finally!
  */
 void Energy::fire() {
-   static Vector3D randomVariation;
    if (!isCooledDown())
       return;
-   // Update timeLastFired with new current time.
-   timeLastFired = doubleTime();
-   // Copy the ship's position for the start point.
-   Point3D start = ship->shotOrigin;
-   // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
-   Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed));
-   // Add a random variation to each of the shots.
-   randomVariation.randomMagnitude();
-   randomVariation.scalarMultiplyUpdate(randomVariationAmount);
-   shotDirection.addUpdate(randomVariation);
-   ship->shotDirection.movePoint(start);
-   ship->setShakeAmount(0.05f);
-   ship->custodian->add(new EnergyShot(start,
-            shotDirection, ship, ship->gameState));
-   // Don't play sound effects in godMode b/c there would be too many.
-   if (!ship->gameState->godMode) {
-      SoundEffect::playSoundEffect("EnergyShot2.wav");
+
+   lastFiredFrame = curFrame;
+
+   if (chargeStartTime == 0 && chargingShot == NULL) {
+      chargeStartTime = doubleTime();  
+      Vector3D zeroVelocity(0, 0, 0);
+      chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, ship, ship->gameState);
+      gameState->custodian.add(chargingShot);
    }
+
 }
 
 /**
@@ -76,7 +98,7 @@ void Energy::debug() {
  */
 Point3D Energy::project(Object3D* target) {
    Point3D wouldHit;
-   double speed = 40;
+   double speed = 80;
    double time = 0, dist = 0;
    int iterations = 0;
 
