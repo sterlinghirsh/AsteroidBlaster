@@ -864,13 +864,18 @@ void AsteroidShip::handleCollision(Drawable* other) {
       // Decrease the player's health by an appropriate amount.
       addInstantAcceleration(new Vector3D(*(asteroid->velocity)));
       if (!gameState->godMode) {
-         health -= (int) (4 * ceil(asteroid->radius));
+      // TODO: Make 5 not a magic number.
+         if (currentWeapon == 5 && isFiring && weapons[5]->curAmmo > 0) {}
+         else if((doubleTime() - justGotHit) > 1) {
+            shakeAmount = 8;
+            SoundEffect::playSoundEffect("ShipHit.wav");
+            health -= (int) (4 * ceil(asteroid->radius));
+            justGotHit = doubleTime();
+         }
       }
       if(health < 0) {
          health = 0;
       }
-      shakeAmount = 8;
-      SoundEffect::playSoundEffect("ShipHit.wav");
    }
 }
 

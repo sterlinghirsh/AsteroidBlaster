@@ -137,6 +137,7 @@ class AsteroidShip : public Object3D {
       double backChange;
       double lineMove;
       double zMove;
+      double justGotHit;
       
       Point3D shotOrigin;
       
