@@ -26,6 +26,7 @@
 #include "Weapons/AntiInertia.h"
 #include "Weapons/TimedBomber.h"
 #include "Weapons/Energy.h"
+#include "Weapons/RemoteBomber.h"
 #include <list>
 
 // Later we'll put in a model for the ship.

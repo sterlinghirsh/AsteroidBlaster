@@ -18,6 +18,7 @@
 #include "Shots/AntiInertiaShot.h"
 #include "Shots/EnergyShot.h"
 #include "Shots/TimedBombShot.h"
+#include "Shots/RemoteBombShot.h"
 
 #include <time.h>
 #include "Utility/SoundEffect.h"
@@ -497,6 +498,7 @@ void Asteroid3D::handleCollision(Drawable* other) {
    ElectricityShot* elecShot;
    TractorBeamShot* TBshot; // Not tuberculosis
    TimedBombShot* TBshot2; // This is an awful name.
+   RemoteBombShot* RBshot; // This is an awful name.
    EnergyShot* energyShot;
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       if (isExploding || otherAsteroid->isExploding) { return; }
@@ -626,6 +628,11 @@ void Asteroid3D::handleCollision(Drawable* other) {
             addInstantAcceleration(newAcceleration);
          } else if ((TBshot2 = dynamic_cast<TimedBombShot*>(other)) != NULL) {
             if (TBshot2->isExploded)
+               health = 0;
+            // remove health from this asteroid based on its distance to the bomb.
+            // change this bomb's motion vector based on its distance to the bomb.
+         } else if ((RBshot = dynamic_cast<RemoteBombShot*>(other)) != NULL) {
+            if (RBshot->isExploded)
                health = 0;
             // remove health from this asteroid based on its distance to the bomb.
             // change this bomb's motion vector based on its distance to the bomb.
