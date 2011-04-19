@@ -6,7 +6,7 @@
 
 // The length of the springs when fully contracted (MUST BE NON-ZERO).
 #define POS_SPRING_LEN 0.2
-#define UP_SPRING_LEN 0.01
+#define UP_SPRING_LEN 0.1
 // The scaling factor of the forces (higher is stronger).
 #define POS_FORCE_SCALE 1.0
 #define UP_FORCE_SCALE 3.0
