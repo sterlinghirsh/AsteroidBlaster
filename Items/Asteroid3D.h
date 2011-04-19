@@ -27,6 +27,9 @@ class Asteroid3D : public Object3D {
       double initH;
       double health;
       double sizeX, sizeY, sizeZ, collisionRadius;
+      
+      Vector3D* newAcceleration;
+      Vector3D* newVelocity;
 
       bool hitAsteroid;
       double timeHit;

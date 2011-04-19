@@ -29,6 +29,10 @@
 using namespace std;
 
 static double timediff = (double) clock();
+static double spinTime = 0;
+double randomR = 0;
+double randomG = 0;
+double randomB = 0;
 
 Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState, bool isFirst) :
    Object3D(_gameState),
@@ -290,6 +294,15 @@ void Asteroid3D::draw() {
    glLineWidth(1);
 
    glDisable(GL_COLOR_MATERIAL);
+   if (hitAsteroid) {
+      if (doubleTime() - timeHit > 5) {
+         hitAsteroid = false;
+         velocity = new Vector3D(*newVelocity);
+         acceleration = new Vector3D(*newAcceleration);         
+      }
+      
+      drawEnergyEffect();
+   }
    glPopMatrix();
    setTargeted(false);
    glEnable(GL_CULL_FACE);
@@ -335,18 +348,90 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
 }
 
 void Asteroid3D::drawEnergyEffect() {
+   double random, posOrNeg;
+   double x, y, z;
+   double div = 2;
+   //double randomR = 0, randomG = 0, randomB = 0;
+   
+   if (randomR > 1) randomR = .2;
+   if (randomG > 1) randomG = .2;
+   if (randomB > 1) randomB = .2;
+   
+   random = (double) (rand() % 4);
+   random /= 10;
+   randomR += (double) (rand() % 50) / 1000;
+   //randomR /= 10;
+   randomG += (double) (rand() % 30) / 1000;
+   //randomG /= 10;
+   randomB += (double) (rand() % 20) / 200;
+   //randomB /= 10;
    glPushMatrix();
-   glEnable(GL_LIGHTING);
-   glEnable(GL_COLOR_MATERIAL);
-   glColor3d(1, 0, 0);
+   glDisable(GL_LIGHTING);
+
+   glColor4d(randomR, randomG, 1, 1);
    glLineWidth(5);
-   glBegin(GL_LINES);
-   glVertex3d(0, 0, -10);
-   glVertex3d(0, 0, 10);
-   glEnd();
-   gluSphere(quadric, radius + 5, 20, 20);
-   printf("Got here: %f\n", doubleTime() - timeHit);
-   printf("Radius is: %f\n", radius);
+
+   glRotated(-angle, axis->x, axis->y, axis->z);
+   for(double rad = -radius + radius/2; rad < radius; rad += (radius) / 2) {
+      glBegin(GL_LINE_LOOP);
+      for(double j = 0; j < 2; j += .1) {
+            random = (double) (rand() % 4);
+            posOrNeg = (double) (rand() % 2);
+            posOrNeg = 1 - (posOrNeg * 2);
+            random /= 10 * posOrNeg;
+            z = ((radius - fabs(rad) + 1 + fabs(rad/div)) * cos(j * M_PI) + random);
+            random = (double) (rand() % 4);
+            posOrNeg = (double) (rand() % 2);
+            posOrNeg = 1 - (posOrNeg * 2);
+            random /= 10 * posOrNeg;
+            y = ((radius - fabs(rad) + 1 + fabs(rad/div)) * sin(j * M_PI) + random);
+            x = rad + random;
+            glVertex3d(x, y, z);
+      }
+      glEnd();
+   }
+   
+   for(double rad = -radius + radius/2; rad < radius; rad += (radius) / 2) {
+      glBegin(GL_LINE_LOOP);
+      for(double j = 0; j < 2; j += .1) {
+            random = (double) (rand() % 4);
+            posOrNeg = (double) (rand() % 2);
+            posOrNeg = 1 - (posOrNeg * 2);
+            random /= 10 * posOrNeg;
+            x = ((radius - fabs(rad) + 1 + fabs(rad/div)) * cos(j * M_PI) + random);
+            random = (double) (rand() % 4);
+            posOrNeg = (double) (rand() % 2);
+            posOrNeg = 1 - (posOrNeg * 2);
+            random /= 10 * posOrNeg;
+            y = ((radius - fabs(rad) + 1 + fabs(rad/div)) * sin(j * M_PI) + random);
+            z = rad + random;
+            glVertex3d(x, y, z);
+      }
+      glEnd();
+   }
+   //for(double rad = -radius; rad <= radius + 1; rad += (radius) / 2) {
+   for(double rad = -radius + radius/2; rad < radius; rad += (radius) / 2) {
+      glBegin(GL_LINE_LOOP);
+      for(double j = 0; j < 2; j += .1) {
+            random = (double) (rand() % 4);
+            posOrNeg = (double) (rand() % 2);
+            posOrNeg = 1 - (posOrNeg * 2);
+            random /= 10 * posOrNeg;
+            x = ((radius - fabs(rad) + 1 + fabs(rad/div)) * cos(j * M_PI) + random);
+            random = (double) (rand() % 4);
+            posOrNeg = (double) (rand() % 2);
+            posOrNeg = 1 - (posOrNeg * 2);
+            random /= 10 * posOrNeg;
+            z = ((radius - fabs(rad) + 1 + fabs(rad/div)) * sin(j * M_PI) + random);
+            y = rad + random;
+            glVertex3d(x, y, z);
+      }
+      glEnd();
+   }
+   
+   glLineWidth(1);
+
+   glEnable(GL_LIGHTING);
    glPopMatrix();
 }
 
@@ -368,11 +453,7 @@ void Asteroid3D::update(double timeDiff) {
       velocity->setLength(40);
    }
    angle += rotationSpeed * timeDiff;
-   if (hitAsteroid) {
-      if (doubleTime() - timeHit > 5) hitAsteroid = false;
-      
-      drawEnergyEffect();
-   }
+   if(hitAsteroid) health -= timeDiff;
 }
 
 void Asteroid3D::handleCollision(Drawable* other) {
@@ -490,17 +571,19 @@ void Asteroid3D::handleCollision(Drawable* other) {
             if (!hitAsteroid) {
                hitAsteroid = true;
                timeHit = doubleTime();
+               newVelocity = new Vector3D(*velocity);
+               newAcceleration = new Vector3D(*acceleration);
             }
-            Vector3D* newVelocity = new Vector3D(*velocity);
+            
             //newVelocity->setLength(-1.0);
             //addInstantAcceleration(newVelocity);
             velocity = new Vector3D(0, 0, 0);
             acceleration = new Vector3D(0, 0, 0);
-            if (rotationSpeed >= 0.5) {
+            /*if (rotationSpeed >= 0.5) {
                rotationSpeed = 0;
             } else {
                rotationSpeed = 0;
-            }
+            }*/
          } else if (dynamic_cast<ProjectileShot*>(other) != NULL) {
             if (gameState->godMode) {
                health = 0;
