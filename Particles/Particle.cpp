@@ -55,6 +55,7 @@ void Particle::updateParticles(double timeDifference)
             ++particle;
          }
       } else {
+         delete *particle;
          particle = Particle::particles.erase(particle);
       }
    }
