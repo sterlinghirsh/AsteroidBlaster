@@ -13,7 +13,7 @@ else
    SDL_LIBS=$(shell "/sw/bin/sdl-config" "--libs")
    SDL_CFLAGS=$(shell "/sw/bin/sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=
-   PLATFORMSPECIFICLDFLAGS=-framework GLUT -framework OpenGL -Wl,-framework,Cocoa
+   PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa
 endif
 
 LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g $(SDL_LIBS) -lSDL_mixer -lSDL_image -lSDL_ttf

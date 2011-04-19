@@ -31,13 +31,9 @@ RemoteBomber::~RemoteBomber() {
  * We'll probably keep track of something or other here.
  */
 void RemoteBomber::update(double timeDiff) {
-   if (firedShot != NULL) {
-      printf("fiedshot not null\n");
-   }
    if (firedShot != NULL && lastFiredFrame <= curFrame - 2) {
       firedShot->shouldExplode = true;
       firedShot = NULL;
-      printf("exploding bomb.\n");
    }
 }
 
