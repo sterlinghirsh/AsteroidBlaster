@@ -55,10 +55,13 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState
       health = initH;
       newRandomPosition();
       InitAsteroid(r, worldSizeIn);
+      newVelocity = new Vector3D();
+      newAcceleration = new Vector3D();
    }
 
 Asteroid3D::~Asteroid3D() {
-
+   delete newVelocity;
+   delete newAcceleration;
 }
 
 /**
@@ -460,8 +463,8 @@ void Asteroid3D::update(double timeDiff) {
    if (energyHitAsteroid) {
       if (doubleTime() - timeLastHitByEnergy > 5) {
          energyHitAsteroid = false;
-         velocity = new Vector3D(*newVelocity);
-         acceleration = new Vector3D(*newAcceleration);         
+         velocity->updateMagnitude(newVelocity);
+         acceleration->updateMagnitude(newAcceleration);         
          damagePerSecond = 0;
       }
 
@@ -611,11 +614,11 @@ void Asteroid3D::handleCollision(Drawable* other) {
             double damageLeft = damagePerSecond * damageTimeLeft;
             damagePerSecond = (damageLeft / energyDamageTime) + energyShot->damagePerSecond;
             timeLastHitByEnergy = doubleTime();
-            newVelocity = new Vector3D(*velocity);
-            newAcceleration = new Vector3D(*acceleration);
+            newVelocity->updateMagnitude(velocity);
+            newAcceleration->updateMagnitude(acceleration);
             
-            velocity = new Vector3D(0, 0, 0);
-            acceleration = new Vector3D(0, 0, 0);
+            velocity->updateMagnitude(0, 0, 0);
+            acceleration->updateMagnitude(0, 0, 0);
          } else if (dynamic_cast<ProjectileShot*>(other) != NULL) {
             if (gameState->godMode) {
                health = 0;

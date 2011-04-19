@@ -45,6 +45,7 @@ class FlyingAI;
 class AsteroidShip : public Object3D {
    public:
       AsteroidShip(const GameState* _gameState);
+      virtual ~AsteroidShip();
       int getHealth();
       int getScore();
       int getShards();
@@ -221,7 +222,6 @@ class AsteroidShip : public Object3D {
       bool isBoosting;
       bool isFiring;
       int currentWeapon;
-      Vector3D *upstart;
 
       float zoomFactor;
       float zoomSpeed;

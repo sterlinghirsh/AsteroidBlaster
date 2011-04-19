@@ -54,6 +54,10 @@ GlowSquare::GlowSquare(Color* _color,
    initDisplayList();
 }
 
+GlowSquare::~GlowSquare() {
+   // Don't delete color, since it's a shared pointer.
+}
+
 void GlowSquare::drawLines() {
    /*
    // This draws the empty box. Let's do something more interesting.

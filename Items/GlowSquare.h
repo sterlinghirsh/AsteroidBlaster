@@ -41,6 +41,7 @@ class GlowSquare {
       void update(double timeDiff);
       GlowSquare(Color* _color, 
        float size, float _x, float _y, float _z, BoundingWall* _wall, int _xIndex, int _yIndex);
+      virtual ~GlowSquare();
       void hit(int distanceLimit, double delay);
       void drawLines();
    private:

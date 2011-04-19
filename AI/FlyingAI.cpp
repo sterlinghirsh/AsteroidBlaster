@@ -52,8 +52,13 @@ FlyingAI::FlyingAI(AsteroidShip* owner) {
    waypoints->push_back(Point3D(-34, 34,-34));
    waypoints->push_back(Point3D(-34,-34, 34));
    waypoints->push_back(Point3D(-34,-34,-34));
-   
+}
 
+FlyingAI::~FlyingAI() {
+   delete radar;
+   delete waypoints;
+   delete goalPoint;
+   
 }
 
 /**

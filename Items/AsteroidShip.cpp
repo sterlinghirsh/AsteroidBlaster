@@ -65,8 +65,6 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    
    shotOriginScale = 4;
    
-   upstart = NULL;
-
    // The ship's score. This number is displayed to the screen.
    score = 0;
   
@@ -113,6 +111,16 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    reInitialize();
 }
 
+AsteroidShip::~AsteroidShip() {
+   delete radar;
+   for (unsigned int i = 0; i < weapons.size(); ++i) {
+      delete weapons[i];
+   }
+   delete shooter;
+   delete flyingAI;
+   delete cameraOffset;
+}
+
 /**
  * Reset the ship as if it just spawned.
  */
@@ -132,12 +140,6 @@ void AsteroidShip::reInitialize() {
    shotOrigin = *position;
    forward->movePoint(shotOrigin, shotOriginScale);
    
-   // Orientation vectors.
-   if (upstart != NULL) {
-      delete upstart;
-   }
-   upstart = new Vector3D(0, 1, 0);
-   upstart->updateMagnitude(0, 1, 0);
    forward->updateMagnitude(0, 0, 1);
    up->updateMagnitude(0, 1, 0);
    right->updateMagnitude(-1, 0, 0);

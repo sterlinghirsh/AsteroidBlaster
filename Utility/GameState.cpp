@@ -108,6 +108,9 @@ GameState::~GameState() {
    delete spring;
    delete cube;
    delete weaponReadyBar;
+   delete rawScreen;
+   delete bloomScreen;
+   delete fboScreen;
 }
 
 /**
@@ -305,6 +308,8 @@ void GameState::draw() {
          (*listIter)->draw();
       }
    }
+
+   delete viewFrustumObjects;
 }
 
 /**

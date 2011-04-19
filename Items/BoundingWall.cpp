@@ -69,7 +69,6 @@ BoundingWall::~BoundingWall() {
    for (int i = 0; i < squares.size(); ++i) {
       delete squares[i];
    }
-   
 }
 
 int BoundingWall::getSquareX(int squareID) {
