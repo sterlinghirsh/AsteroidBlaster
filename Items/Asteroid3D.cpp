@@ -553,9 +553,6 @@ void Asteroid3D::update(double timeDiff) {
 
          newFace->velocity->addUpdate(newDirection);
 
-         debug();
-         newFace->debug();
-
          custodian->add(newFace);
       }
 
