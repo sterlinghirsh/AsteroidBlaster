@@ -1,26 +1,29 @@
 
-#include "Utility/Image.h"
+#include "Graphics/Image.h"
 #include <iostream>
 #include <map>
 #include <string>
 #include "SDL_image.h"
 
-std::map<std::string, SDL_Surface*> Image::images;
+std::map<std::string, Image*> Image::images;
 int Image::numOfImages = 0;
 
 
-Image::Image() {
-
+Image::Image(){
 }
 
 Image::~Image() {
-   std::map<std::string, SDL_Surface*>::iterator it = Image::images.begin();
+   std::map<std::string, Image*>::iterator it = Image::images.begin();
    for (; it != Image::images.end(); ++it ) {
       SDL_FreeSurface(it->second);
    }
 }
 
-void Image::Add(std::string file, std::string keyName) {
+void Image::Add(int _x, int _y, unsigned int texture, std::string keyName) {
+   int x = _x;
+   int y = _y;
+   unsigned int texture = _texture;
+
    SDL_Surface *image;
    
    

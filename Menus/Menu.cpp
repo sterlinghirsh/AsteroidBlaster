@@ -3,7 +3,6 @@
 #include "SDL.h"
 #include "Utility/GlobalUtility.h"
 #include "Menus/Menu.h"
-#include "Utility/Image.h"
 #include "Graphics/Texture.h"
 
 Menu::Menu() {

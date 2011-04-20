@@ -12,8 +12,9 @@ class Image {
       Image();
       ~Image();
       
-      static void Add(std::string file, std::string keyName);
+      static void Add(int _x, int _y, unsigned int texture, std::string keyName);
       static SDL_Surface* getImage(std::string keyName);
+      static void drawImage(std::string keyName);
 
    private:
       static std::map<std::string, SDL_Surface*> images;
