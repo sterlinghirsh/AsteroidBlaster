@@ -16,7 +16,7 @@ void main()
 	wallColor = gl_Color;
 
       //pixelAlpha gets a higher value further from the center
-      pixelAlpha = (1.0 - sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
+      pixelAlpha = (1.5 - sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
       
       //This makes the lowest alpha possible .1
       //pixelAlpha *= pixelAlpha;
