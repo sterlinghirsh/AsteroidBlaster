@@ -7,7 +7,7 @@
 
 #include "HUD/ProgressBar.h"
 #include "Utility/GlobalUtility.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 
 ProgressBar::ProgressBar(float _height, float _width, float _x, float _y) :
  height(_height), width(_width), x(_x), y(_y), amount(0), outerBoxThickness(0.01f), hasIcon(false) {

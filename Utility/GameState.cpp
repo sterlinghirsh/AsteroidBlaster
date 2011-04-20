@@ -12,7 +12,7 @@
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 #include "Particles/Particle.h"
 #include "Text/GameMessage.h"
 

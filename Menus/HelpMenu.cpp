@@ -5,7 +5,7 @@
 #include "Utility/GameState.h"
 #include "Menus/HelpMenu.h"
 #include "Utility/Image.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 

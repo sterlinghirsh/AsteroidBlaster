@@ -2,7 +2,7 @@
 #define __PARTICLE_H__
 
 #include "Items/Drawable.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 #include "Utility/Vector3D.h"
 #include "Utility/Point3D.h"
 #include "Utility/GlobalUtility.h"

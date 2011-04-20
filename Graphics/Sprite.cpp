@@ -7,7 +7,7 @@
 
 
 #include "Graphics/Sprite.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 #include <math.h>
 #include "Utility/GameState.h"
 

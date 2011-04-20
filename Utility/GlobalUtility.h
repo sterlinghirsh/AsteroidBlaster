@@ -29,7 +29,7 @@
 #include "Menus/SettingsMenu.h"
 #include "Menus/HelpMenu.h"
 #include "Menus/CreditsMenu.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 
 #include "Utility/GameSettings.h"
 

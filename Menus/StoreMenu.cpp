@@ -4,7 +4,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Menus/StoreMenu.h"
 #include "Utility/Image.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 #include "Items/AsteroidShip.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"

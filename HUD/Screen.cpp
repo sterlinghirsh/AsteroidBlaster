@@ -7,7 +7,7 @@
 
 #include "HUD/Screen.h"
 #include "Utility/GlobalUtility.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 
 Screen::Screen(int x, int y, GLuint tex):
    _x(x), _y(y) {

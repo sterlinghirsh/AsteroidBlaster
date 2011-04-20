@@ -5,7 +5,7 @@
  */
 
 #include "Utility/GlobalUtility.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
 #include "Shots/Shot.h"

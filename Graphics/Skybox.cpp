@@ -7,7 +7,7 @@
 
 #include "Graphics/Skybox.h"
 #include "Utility/GlobalUtility.h"
-#include "Utility/Texture.h"
+#include "Graphics/Texture.h"
 #include <math.h>
 
 Skybox::Skybox() {
