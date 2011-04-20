@@ -114,7 +114,7 @@ void MeshFace::drawLines() {
          p3.z + offset.z);
    glBegin(GL_LINE_LOOP);
    glColor4f(lineR, lineG, lineB, 
-    timeExploded == 0 ? 1 : (lifetime - (doubleTime() - timeExploded)));
+    timeExploded == 0 ? 1.0f : (GLfloat) (lifetime - (doubleTime() - timeExploded)));
    p1_tmp.draw();
    p2_tmp.draw();
    p3_tmp.draw();
@@ -139,7 +139,7 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
          p3.z + offset.z);
    glBegin(GL_TRIANGLES);
    glColor4f(faceR, faceG, faceB, 
-    timeExploded == 0 ? 1 : (lifetime - (doubleTime() - timeExploded)));
+    timeExploded == 0 ? 1.0f : (GLfloat) (lifetime - (doubleTime() - timeExploded)));
    p1_tmp.draw();
    if (drawTex)
       glTexCoord2d(x1, y1);
