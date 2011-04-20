@@ -538,7 +538,7 @@ void Asteroid3D::update(double timeDiff) {
 
          // Set the new face's velocity.
          newFace->velocity->updateMagnitude(position, newFace->position);
-         newFace->velocity->setLength(10);
+         newFace->velocity->setLength(2);
          newFace->velocity->addUpdate(*velocity);
 
          // Calculate linear velocity from angular velocity.
@@ -628,15 +628,8 @@ void Asteroid3D::handleCollision(Drawable* other) {
       addInstantAcceleration(reverseVelocity);
 
    } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
-      if (isExploding) { return; }
-      //shouldRemove = true;
-      timeSinceExplode = 0.0;
-      isExploding = true;
-      if (radius > 4) {
-         int dimension = rand() % 3;
-         custodian->add(makeChild(0, dimension));
-         custodian->add(makeChild(1, dimension));
-      }
+      if (health < 0) { return; }
+      health = 0;
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
       if (isExploding) { return; }
       lastHitShotOwner = shot->owner;

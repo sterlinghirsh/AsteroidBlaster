@@ -50,7 +50,7 @@ void MeshFace::moveBy(Vector3D move) {
 
 void MeshFace::draw() {
    double shipDist = position->distanceFrom(*gameState->ship->position);
-   GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
+   GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 1);
    
    glEnable(GL_COLOR_MATERIAL);
    glDisable(GL_CULL_FACE);
@@ -113,8 +113,7 @@ void MeshFace::drawLines() {
          p3.y + offset.y,
          p3.z + offset.z);
    glBegin(GL_LINE_LOOP);
-   glColor4f(lineR, lineG, lineB, 
-    timeExploded == 0 ? 1.0f : (GLfloat) (lifetime - (doubleTime() - timeExploded)));
+   glColor4f(lineR, lineG, lineB, 1);
    p1_tmp.draw();
    p2_tmp.draw();
    p3_tmp.draw();
@@ -138,8 +137,10 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
          p3.y + offset.y,
          p3.z + offset.z);
    glBegin(GL_TRIANGLES);
-   glColor4f(faceR, faceG, faceB, 
-    timeExploded == 0 ? 1.0f : (GLfloat) (lifetime - (doubleTime() - timeExploded)));
+   float curAlpha = timeExploded == 0 ? 1.0f : 
+    (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
+
+   glColor4f(faceR, faceG, faceB, curAlpha);
    p1_tmp.draw();
    if (drawTex)
       glTexCoord2d(x1, y1);
