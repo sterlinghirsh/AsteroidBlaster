@@ -15,19 +15,28 @@ Mesh3D::Mesh3D() : drawNormals(false) {
    tick_time = 0.0;
 }
 
+Mesh3D::~Mesh3D() {
+   printf("deleting faces.\n");
+   for (int i = 0; i < faces.size(); ++i) {
+      delete faces[i];
+   }
+   faces.empty();
+   printf("finished deleting faces.\n");
+}
+
 void Mesh3D::tick(double ms) {
    tick_time += ms;
 }
 
 void Mesh3D::setFaceColor(float r, float g, float b) {
    for (int i = 0; i < faces.size(); i++) {
-      faces[i].setFaceColor(r, g, b);
+      faces[i]->setFaceColor(r, g, b);
    }
 }
 
 void Mesh3D::setLineColor(float r, float g, float b) {
    for (int i = 0; i < faces.size(); i++) {
-      faces[i].setLineColor(r, g, b);
+      faces[i]->setLineColor(r, g, b);
    }
 }
 
@@ -41,7 +50,7 @@ void Mesh3D::drawTextured(bool drawSmooth, GLuint tex) {
       nFaces = (int)faces.size();
    }
    for (int i = 0; i < nFaces; i++) {
-      faces[i].drawFace(drawSmooth, true);
+      faces[i]->drawFace(drawSmooth, true);
    }
    glBindTexture(GL_TEXTURE_2D, 0);
 }
@@ -55,7 +64,7 @@ void Mesh3D::drawLines(bool drawSmooth) {
       nFaces = (int)faces.size();
    }
    for (int i = 0; i < nFaces; i++) {
-      faces[i].drawLines();
+      faces[i]->drawLines();
    }
    glEnable(GL_LIGHTING);
 }
@@ -69,7 +78,7 @@ void Mesh3D::draw(bool drawSmooth, bool drawTex) {
       nFaces = (int)faces.size();
    }
    for (int i = 0; i < nFaces; i++) {
-      faces[i].drawFace(drawSmooth, true);
+      faces[i]->drawFace(drawSmooth, true);
    }
    glEnable(GL_LIGHTING);
 }
@@ -77,8 +86,8 @@ void Mesh3D::draw(bool drawSmooth, bool drawTex) {
 void Mesh3D::drawPoints(bool drawSmooth, bool drawTex) {
    for (unsigned int i = 0; i < faces.size(); ++i) {
       if (!drawSmooth)
-         faces[i].normal.addNormal();
-      faces[i].draw(drawSmooth, drawTex);
+         faces[i]->normal.addNormal();
+      faces[i]->draw(drawSmooth, drawTex);
    }
 }
 
@@ -101,25 +110,25 @@ int Mesh3D::addPoint(MeshPoint* p) {
    return addPoint(p->x, p->y, p->z);
 }
 
-void Mesh3D::addFace(int p1, int p2, int p3) {
-   MeshFace face;
-   face = MeshFace(points[p1 - 1], points[p2 - 1], points[p3 - 1]);
+void Mesh3D::addFace(int p1, int p2, int p3, const GameState* _gameState) {
+   MeshFace* face = new MeshFace(points[p1 - 1], points[p2 - 1], points[p3 - 1], _gameState);
    Vector3D v1(points[p2 - 1].x - points[p1 - 1].x,
          points[p2 - 1].y - points[p1 - 1].y,
          points[p2 - 1].z - points[p1 - 1].z);
    Vector3D v2(points[p3 - 1].x - points[p1 - 1].x,
          points[p3 - 1].y - points[p1 - 1].y,
          points[p3 - 1].z - points[p1 - 1].z);
-   face.normal = v1.cross(v2);
-   face.normal.normalize();
+   face->normal = v1.cross(v2);
+   face->normal.normalize();
    //face.setFaceColor(1.0f, 0.0f, 0.0f);
-   face.setLineColor(1.0f, 1.0f, 1.0f);
+   face->setLineColor(1.0f, 1.0f, 1.0f);
 
-   faces.push_back(face);
-   points[p1 - 1].normal.addUpdate(face.normal);
-   points[p2 - 1].normal.addUpdate(face.normal);
-   points[p3 - 1].normal.addUpdate(face.normal);
+   points[p1 - 1].normal.addUpdate(face->normal);
+   points[p2 - 1].normal.addUpdate(face->normal);
+   points[p3 - 1].normal.addUpdate(face->normal);
    points[p1 - 1].normal.normalize();
    points[p2 - 1].normal.normalize();
    points[p3 - 1].normal.normalize();
+   
+   faces.push_back(face);
 }

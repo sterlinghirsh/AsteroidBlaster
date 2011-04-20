@@ -21,9 +21,6 @@ class AsteroidShip;
 class Asteroid3D : public Object3D {
    public:
       Mesh3D mesh;
-      Vector3D rotationVector;
-      double rotationSpeed;
-      double rotationAmount;
       double scalex, scaley, scalez;
       double worldSize;
       double initH;

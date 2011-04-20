@@ -40,6 +40,9 @@ class Object3D : public Drawable {
       void glRotate(bool doTranspose = true);
       virtual void addAcceleration(Vector3D* newAccel);
       virtual void addInstantAcceleration(Vector3D* newAccel);
+
+      virtual void nullPointers();
+      double rotationSpeed;
    private:
 
    protected:

@@ -5,14 +5,26 @@
  */
 
 #include "Graphics/MeshFace.h"
+#include "Items/Drawable.h"
+#include "Utility/GameState.h"
 
-MeshFace::MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3) :
-   p1(_p1), p2(_p2), p3(_p3) {
-      setFaceColor(0.0f, 0.0f, 0.0f);
-      setLineColor(1.0f, 1.0f, 1.0f);
-      alphaDiff = 0.0;
-      offsetBy(0.0);
-   }
+#define ASTEROID3D_LINE_W 0.5
+
+MeshFace::MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3, const GameState* _gameState) :
+ Object3D(_gameState),
+ p1(_p1), p2(_p2), p3(_p3) {
+   setFaceColor(0.0f, 0.0f, 0.0f);
+   setLineColor(1.0f, 1.0f, 1.0f);
+   offsetBy(0.0);
+   texture = 0;
+   textured = false;
+   timeExploded = 0;
+   lifetime = 1;
+}
+
+MeshFace::~MeshFace() {
+   // Do nothing.
+}
 
 void MeshFace::setFaceColor(float _r, float _g, float _b) {
    faceR = _r;
@@ -28,17 +40,61 @@ void MeshFace::setLineColor(float _r, float _g, float _b) {
 
 void MeshFace::offsetBy(double scale) {
    moveBy(normal.scalarMultiply(scale * EXPLOSION_SCALE));
-   float tmp = alphaDiff;
-   alphaDiff = (float)scale;
-   if (tmp < alphaDiff) {
-      //printf("BIG trouble in little asteroid town\n");
-   }
 }
 
 void MeshFace::moveBy(Vector3D move) {
    offset.x = move.x;
    offset.y = move.y;
    offset.z = move.z;
+}
+
+void MeshFace::draw() {
+   double shipDist = position->distanceFrom(*gameState->ship->position);
+   GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
+   
+   glEnable(GL_COLOR_MATERIAL);
+   glDisable(GL_CULL_FACE);
+   glDisable(GL_LIGHTING);
+   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   setMaterial(Rock);
+   glLineWidth(lineW);
+   glPolygonOffset(1.0f, 1.0f);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+   glPushMatrix();
+   position->glTranslate();
+   glRotated(angle, axis->x, axis->y, axis->z);
+
+   double scaleAmount = sqrt((lifetime - (doubleTime() - timeExploded)) / lifetime);
+   glScaled(scaleAmount, scaleAmount, scaleAmount);
+
+   // Draw lines
+   glEnable(GL_POLYGON_OFFSET_LINE);
+      drawLines();
+   glDisable(GL_POLYGON_OFFSET_LINE);
+
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glPolygonOffset(-1.0f, -1.0f);
+
+   glEnable(GL_TEXTURE_2D);
+   if (textured) {
+      glBindTexture(GL_TEXTURE_2D, texture);
+   }
+
+   // Draw fill
+   glEnable(GL_POLYGON_OFFSET_FILL);
+
+      // rotate, scale?
+      // Probably more goes here.
+      drawFace(false, true);
+
+   glPopMatrix();
+   
+   glDisable(GL_TEXTURE_2D);
+   glDisable(GL_POLYGON_OFFSET_FILL);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glLineWidth(1);
+   glDisable(GL_COLOR_MATERIAL);
 }
 
 void MeshFace::draw(bool drawSmooth, bool drawTex) {
@@ -57,7 +113,8 @@ void MeshFace::drawLines() {
          p3.y + offset.y,
          p3.z + offset.z);
    glBegin(GL_LINE_LOOP);
-   glColor4f(lineR, lineG, lineB, 1.0f - alphaDiff / FADE_TIME);
+   glColor4f(lineR, lineG, lineB, 
+    timeExploded == 0 ? 1 : (lifetime - (doubleTime() - timeExploded)));
    p1_tmp.draw();
    p2_tmp.draw();
    p3_tmp.draw();
@@ -81,7 +138,8 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
          p3.y + offset.y,
          p3.z + offset.z);
    glBegin(GL_TRIANGLES);
-   glColor4f(faceR, faceG, faceB, 1.0f - alphaDiff / FADE_TIME);
+   glColor4f(faceR, faceG, faceB, 
+    timeExploded == 0 ? 1 : (lifetime - (doubleTime() - timeExploded)));
    p1_tmp.draw();
    if (drawTex)
       glTexCoord2d(x1, y1);
@@ -92,4 +150,34 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    if (drawTex)
       glTexCoord2d(x3, y3);
    glEnd();
+}
+
+void MeshFace::nullPointers() {
+   Object3D::nullPointers();
+   // Nothing here.
+}
+
+void MeshFace::debug() {
+   printf("MeshFace: (pos, p1, p2, p3, velocity)\n");
+   position->print();
+   p1.print();
+   p2.print();
+   p3.print();
+   velocity->print();
+}
+
+/**
+ * This only applies to the draw() method. Not if it's in a mesh.
+ */
+void MeshFace::setTexture(GLuint _tex) {
+   texture = _tex;
+   textured = true;
+}
+
+void MeshFace::update(double timeDiff) {
+   Object3D::update(timeDiff);
+   // Something?
+   if (doubleTime() - timeExploded > lifetime) {
+      shouldRemove = true;
+   }
 }

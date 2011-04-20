@@ -4,23 +4,24 @@
  * 4/12/11
  */
 
-#ifndef __MESHPOINT_H
-#define __MESHPOINT_H
+#ifndef __MESHFACE_H__
+#define __MESHFACE_H__
 
-#define FADE_TIME 1.0f
 #define EXPLOSION_SCALE 10.0
 
 #include "Graphics/MeshPoint.h"
 #include "Utility/Vector3D.h"
+#include "Items/Object3D.h"
 
-class MeshFace {
+class MeshFace : public Object3D {
    public:
-      MeshFace() {};
-      MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3);
-      ~MeshFace() {};
+      MeshFace() : Object3D(NULL) {};
+      MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3, const GameState* _gameState);
+      virtual ~MeshFace();
       void offsetBy(double scale);
       void moveBy(Vector3D move);
-      void draw(bool drawSmooth = false, bool drawTex = false);
+      virtual void draw(bool drawSmooth, bool drawTex = false);
+      virtual void draw();
       void drawLines();
       void drawFace(bool drawSmooth = false, bool drawTex = false);
       void setFaceColor(float _r, float _g, float _b);
@@ -30,7 +31,14 @@ class MeshFace {
       Point3D offset;
       float faceR, faceG, faceB;
       float lineR, lineG, lineB;
-      float alphaDiff;
+      virtual void nullPointers();
+      virtual void debug();
+      GLuint texture;
+      bool textured;
+      double timeExploded;
+      virtual void setTexture(GLuint _tex);
+      virtual void update(double timeDiff);
+      double lifetime;
 };
 
 #endif

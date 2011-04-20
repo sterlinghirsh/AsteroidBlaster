@@ -122,9 +122,9 @@ class GameState : public InputReceiver {
    
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
+      double curFPS, worldSize;
    private:
       //void reset();
-      double curFPS, worldSize;
       
       bool doYaw;
       double mouseX, mouseY;

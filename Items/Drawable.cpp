@@ -10,8 +10,18 @@
 #include "Utility/GameState.h"
 
 /**
- * We should get rid of the displayListIn thing, I think.
- * -Sterling
+ * Default constructor. Shouldn't be used.
+ */
+Drawable::Drawable() {
+   position = NULL;
+   minPosition = NULL;
+   maxPosition = NULL;
+   gameState = NULL;
+   std::cerr << "Default constructor called." << std::endl;
+}
+
+/**
+ * Base class main constructor.
  */
 Drawable :: Drawable(const GameState* _gameState) :
  gameState(_gameState) {
@@ -20,7 +30,11 @@ Drawable :: Drawable(const GameState* _gameState) :
    minPosition = new Point3D(0, 0, 0);
    maxPosition = new Point3D(0, 0, 0);
 
-   custodian = (Custodian*) &gameState->custodian;
+   if (gameState != NULL) {
+      custodian = (Custodian*) &gameState->custodian;
+   } else {
+      std::cerr << "GameState is null!" << std::endl;
+   }
 
    velocity = NULL;
    shouldRemove = false; // True when custodian should remove this.
@@ -145,3 +159,9 @@ void Drawable::debug() {
    maxPosition->print();
 }
 
+void Drawable::nullPointers() {
+   position = NULL;
+   velocity = NULL;
+   minPosition = NULL;
+   maxPosition = NULL;
+}

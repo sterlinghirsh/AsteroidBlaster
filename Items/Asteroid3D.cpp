@@ -197,7 +197,7 @@ void Asteroid3D::drawGlow() {
    glDisable(GL_CULL_FACE);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
-   glTranslated(position->x, position->y, position->z);
+   position->glTranslate();
    glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
    glDepthFunc(GL_LEQUAL);
@@ -224,6 +224,7 @@ void Asteroid3D::drawGlow() {
    double stepG = magenta * step;
    double stepB = yellow * step;
    //glColor3d(1 - stepR / 2.0, 1 - stepG / 2.0, 1 - stepB / 2.0);
+   // When this explodes, the last values will stick.
    mesh.setLineColor((float)(1 - stepR / 2.0),
          (float)(1 - stepG / 2.0),
          (float)(1 - stepB / 2.0));
@@ -251,12 +252,13 @@ void Asteroid3D::draw() {
    glColor3f(1, 1, 1);
    glDisable(GL_CULL_FACE);
    setMaterial(Rock);
-   // Call the display list if it has one.
-   Object3D::draw();
+   
+   Object3D::draw(); // This doesn't really do anything.
+   
    glEnable(GL_COLOR_MATERIAL);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glPushMatrix();
-   glTranslated(position->x, position->y, position->z);
+   position->glTranslate();
    glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
 
@@ -266,8 +268,12 @@ void Asteroid3D::draw() {
       //glColor3f(0.0, 0.0, 0.0);
       glColor3f(1.0, 1.0, 1.0);
    }
+   
+   // Draw lines
 
    glPolygonOffset(1.0f, 1.0f);
+
+   // Draw fill
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    //mesh.draw(false);
@@ -333,18 +339,18 @@ void Asteroid3D::makeStrip(Ring r1, Ring r2) {
       p2 = t1._nList[(int)count % t1.size()];
       p3 = t2._nList[(i + 1) % t2.size()];
       if (r1.size() < r2.size()) {
-         mesh.addFace(p1, p3, p2);
+         mesh.addFace(p1, p3, p2, gameState);
       } else {
-         mesh.addFace(p1, p2, p3);
+         mesh.addFace(p1, p2, p3, gameState);
       }
 
       p4 = t1._nList[((int)count - 1 + t1.size()) % t1.size()];
       if (last != (int)count || i == 0) {
       //if (last != (int)count) {
          if (r1.size() < r2.size()) {
-            mesh.addFace(p1, p2, p4);
+            mesh.addFace(p1, p2, p4, gameState);
          } else {
-            mesh.addFace(p1, p4, p2);
+            mesh.addFace(p1, p4, p2, gameState);
          }
       }
 
@@ -444,6 +450,7 @@ void Asteroid3D::drawEnergyEffect() {
 void Asteroid3D::update(double timeDiff) {
    if (isExploding) {
       timeSinceExplode += timeDiff;
+      /*
       for (int i = 0; i < mesh.faces.size(); i++) {
          mesh.faces[i].offsetBy(timeSinceExplode);
          // Offset normals.
@@ -451,6 +458,7 @@ void Asteroid3D::update(double timeDiff) {
       if (timeSinceExplode >= 1.0) {
          shouldRemove = true;
       }
+      */
    }
    Object3D::update(timeDiff);
    mesh.tick(timeDiff);
@@ -458,7 +466,6 @@ void Asteroid3D::update(double timeDiff) {
       // Set a speed limit of 40 u/s.
       velocity->setLength(40);
    }
-   angle += rotationSpeed * timeDiff;
    
    if (energyHitAsteroid) {
       if (doubleTime() - timeLastHitByEnergy > 5) {
@@ -475,11 +482,75 @@ void Asteroid3D::update(double timeDiff) {
    }
    
    if (health <= 0 && !isExploding) {
+      // Get the modelview matrix.
+      Matrix4 modelView;
+      glPushMatrix();
+      // Copy the draw() method's transforms.
+      glLoadIdentity();
+      position->glTranslate();
+      glRotated(angle, axis->x, axis->y, axis->z);
+      glScaled(scalex, scaley, scalez);
+      modelView.loadModelviewMatrix();
+      glPopMatrix();
+
+      MeshFace* newFace;
+      MeshFace* oldFace;
+      for (int i = 0; i < mesh.faces.size(); i++) {
+         //mesh.faces[i].position->updateMagnitude();
+         // Copy them all.
+         oldFace = (mesh.faces[i]);
+         newFace = new MeshFace(*oldFace);
+
+         newFace->rotationSpeed = randdouble() * 360;
+         newFace->axis = new Vector3D();
+         newFace->axis->randomMagnitude();
+
+         newFace->setTexture(gameState->godMode ? 
+          Texture::getTexture("ZoeRedEyes") :
+          Texture::getTexture("AsteroidSurface"));
+         newFace->timeExploded = doubleTime();
+
+         // NULL out the pointers that will get copied.
+         oldFace->nullPointers();
+
+         // Transform each of the points.
+         // We can't use = because p1 - p3 are MeshPoints, not Point3Ds.
+         newFace->p1.updateMagnitude(modelView * newFace->p1);
+         newFace->p2.updateMagnitude(modelView * newFace->p2);
+         newFace->p3.updateMagnitude(modelView * newFace->p3);
+
+         // The new position is the average of the three points.
+         newFace->position->updateMagnitude(newFace->p1);
+         newFace->position->addUpdate(newFace->p2);
+         newFace->position->addUpdate(newFace->p3);
+
+         newFace->position->scalarMultiplyUpdate(1.0 / 3.0);
+
+         // Make each of the points be relative to the position.
+         newFace->p1.subtractUpdate(*newFace->position);
+         newFace->p2.subtractUpdate(*newFace->position);
+         newFace->p3.subtractUpdate(*newFace->position);
+
+         // Add the original asteroid's position.
+         newFace->position->addUpdate(*position);
+
+         // Set the new face's velocity.
+         newFace->velocity->updateMagnitude(position, newFace->position);
+         newFace->velocity->setLength(10);
+
+         debug();
+         newFace->debug();
+         
+         // TODO: Add spin and stuff.
+
+         custodian->add(newFace);
+      }
+
       SoundEffect::playSoundEffect("Explosion1.wav");
-      //shouldRemove = true;
-      timeSinceExplode = 0.0;
+      shouldRemove = true;
+      //timeSinceExplode = 0.0;
       isExploding = true;
-      const int explosionFactor = 3;
+      
       if (radius > 2) {
          int dimension = rand() % 3;
          custodian->add(makeChild(0, dimension));
@@ -689,7 +760,8 @@ void Asteroid3D::drawInMinimap() {
 }
 
 void Asteroid3D::debug() {
-   printf("Asteroid3D::debug(): \n");
+   printf("Asteroid3D::debug(): (pos, minPosition, maxPosition, velocity)\n");
+   position->print();
    minPosition->print();
    maxPosition->print();
    velocity->print();

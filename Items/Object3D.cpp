@@ -32,6 +32,7 @@ Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState) {
    radius = std::max(radius, fabs(maxZ));
    radius = std::max(radius, fabs(minZ));
    targeted = false;
+   rotationSpeed = 0;
 }
 
 Object3D::~Object3D() {
@@ -48,6 +49,8 @@ Object3D::~Object3D() {
 }
 
 void Object3D::update(double timeDifference) {
+   angle += rotationSpeed * timeDifference;
+
    // Do the parent's update.
    Drawable::update(timeDifference);
 
@@ -272,4 +275,13 @@ Point3D* Object3D::sphereCollideWithRay(const Point3D& origin, Vector3D directio
    }
 
    return collisionPoint;
+}
+
+void Object3D::nullPointers() {
+   Drawable::nullPointers();
+   acceleration = NULL;
+   up = NULL;
+   right = NULL;
+   forward = NULL;
+   axis = NULL;
 }

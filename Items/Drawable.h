@@ -33,6 +33,7 @@ class Drawable {
       double minX, minY, minZ, maxX, maxY, maxZ;
 
       Drawable(const GameState* _gameState);
+      Drawable();
       virtual ~Drawable();
       //virtual void init();
       /*
@@ -68,6 +69,8 @@ class Drawable {
       virtual void debug();
       const GameState* gameState;
       Custodian* custodian;
+
+      virtual void nullPointers();
 };
 
 #endif

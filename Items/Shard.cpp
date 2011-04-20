@@ -127,18 +127,18 @@ void Shard::makeStrip(Ring r1, Ring r2) {
       p2 = t1._nList[(int)count % t1.size()];
       p3 = t2._nList[(i + 1) % t2.size()];
       if (r1.size() < r2.size()) {
-         mesh.addFace(p1, p3, p2);
+         mesh.addFace(p1, p3, p2, gameState);
       } else {
-         mesh.addFace(p1, p2, p3);
+         mesh.addFace(p1, p2, p3, gameState);
       }
 
       p4 = t1._nList[((int)count - 1 + t1.size()) % t1.size()];
       if (last != (int)count || i == 0) {
       //if (last != (int)count) {
          if (r1.size() < r2.size()) {
-            mesh.addFace(p1, p2, p4);
+            mesh.addFace(p1, p2, p4, gameState);
          } else {
-            mesh.addFace(p1, p4, p2);
+            mesh.addFace(p1, p4, p2, gameState);
          }
       }
 
