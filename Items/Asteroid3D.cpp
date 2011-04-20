@@ -85,6 +85,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    rotationSpeed = randdouble() * 100; // Degrees per sec.
    axis = new Vector3D(0, 1, 0);
    axis->randomMagnitude();
+   axis->normalize();
 
    velocity = new Vector3D(0, 0, 0);
    velocity->randomMagnitude();
@@ -504,6 +505,7 @@ void Asteroid3D::update(double timeDiff) {
          newFace->rotationSpeed = randdouble() * 360;
          newFace->axis = new Vector3D();
          newFace->axis->randomMagnitude();
+         newFace->axis->normalize();
 
          newFace->setTexture(gameState->godMode ? 
           Texture::getTexture("ZoeRedEyes") :
@@ -537,11 +539,22 @@ void Asteroid3D::update(double timeDiff) {
          // Set the new face's velocity.
          newFace->velocity->updateMagnitude(position, newFace->position);
          newFace->velocity->setLength(10);
+         newFace->velocity->addUpdate(*velocity);
+
+         // Calculate linear velocity from angular velocity.
+         Vector3D positionToFace(*position, *newFace->position);
+         Vector3D tmpAxis(*axis); // Normalized.
+         double distanceAlongAxis = tmpAxis.dot(*newFace->position);
+         tmpAxis.setLength(distanceAlongAxis);
+         Vector3D spinRadius = positionToFace - tmpAxis;
+         Vector3D newDirection = spinRadius.cross(*axis); // This might be backwards.
+         newDirection.setLength(std::min(rotationSpeed * (M_PI / 180.0)
+          * spinRadius.getLength(), 30.0));
+
+         newFace->velocity->addUpdate(newDirection);
 
          debug();
          newFace->debug();
-         
-         // TODO: Add spin and stuff.
 
          custodian->add(newFace);
       }
