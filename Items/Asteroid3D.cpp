@@ -192,8 +192,6 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
 
 void Asteroid3D::drawGlow() {
    glDisable(GL_LIGHTING);
-   // Call the display list if it has one.
-   Object3D::draw();
    glEnable(GL_COLOR_MATERIAL);
    glDisable(GL_CULL_FACE);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);

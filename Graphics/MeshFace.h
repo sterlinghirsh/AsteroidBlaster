@@ -22,6 +22,7 @@ class MeshFace : public Object3D {
       void moveBy(Vector3D move);
       virtual void draw(bool drawSmooth, bool drawTex = false);
       virtual void draw();
+      virtual void drawGlow();
       void drawLines();
       void drawFace(bool drawSmooth = false, bool drawTex = false);
       void setFaceColor(float _r, float _g, float _b);

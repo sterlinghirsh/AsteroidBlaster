@@ -182,3 +182,54 @@ void MeshFace::update(double timeDiff) {
       shouldRemove = true;
    }
 }
+
+void MeshFace::drawGlow() {
+   double shipDist = position->distanceFrom(*gameState->ship->position);
+   GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
+   
+   glEnable(GL_COLOR_MATERIAL);
+   glDisable(GL_CULL_FACE);
+   glDisable(GL_LIGHTING);
+   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   setMaterial(Rock);
+   glLineWidth(lineW);
+   glPolygonOffset(1.0f, 1.0f);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+   glPushMatrix();
+   position->glTranslate();
+   glRotated(angle, axis->x, axis->y, axis->z);
+
+   double scaleAmount = sqrt((lifetime - (doubleTime() - timeExploded)) / lifetime);
+   glScaled(scaleAmount, scaleAmount, scaleAmount);
+
+   // Draw lines
+   glEnable(GL_POLYGON_OFFSET_LINE);
+      drawLines();
+   glDisable(GL_POLYGON_OFFSET_LINE);
+
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glPolygonOffset(-1.0f, -1.0f);
+
+   glEnable(GL_TEXTURE_2D);
+   if (textured) {
+      glBindTexture(GL_TEXTURE_2D, texture);
+   }
+
+   /*
+   // Draw fill
+   glEnable(GL_POLYGON_OFFSET_FILL);
+
+      // rotate, scale?
+      // Probably more goes here.
+      drawFace(false, true);
+
+   */
+   glPopMatrix();
+   
+   glDisable(GL_TEXTURE_2D);
+   glDisable(GL_POLYGON_OFFSET_FILL);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glLineWidth(1);
+   glDisable(GL_COLOR_MATERIAL);
+}
