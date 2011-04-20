@@ -1,7 +1,20 @@
-Sterling Hirsh
-Roid Rage: 3D!
+Sterling Hirsh, Taylor Arnicar, Chris Brenton, Jake Juszak, Ryuho Kudo
+AsteroidBlaster
 
-Compile with `make`. Run with `make run`.
-This should work on Linux or OSX. I have not tested it on windows, and I would be surprised if it ran properly.
+Requirements:
+Linux or Mac OS X
+OpenGL 3.0 or above
+SDL 1.2 or above
+GNU make
+gcc/g++
 
-Detailed information and commentary about the program and its code can be found in the accompanying website.
+The first time you run this on any machine, compile libraries with 'make lib'. This should only be necessary once per hardware configuration.
+Compile with 'make'. If your machine supports multithreading, use 'make -j'.
+Run with 'make run'.
+
+After the first time you run the game, you can change your configuration settings by editing 'config.cfg' in the main AsteroidBlaster folder.
+
+This should work on Linux or OSX. It may compile on windows, but it currently does not run correctly.
+
+Detailed information and commentary about the program and its code can be found in the accompanying website:
+http://users.csc.calpoly.edu/~zwood/teaching/csc476/final11/Asteroids/
