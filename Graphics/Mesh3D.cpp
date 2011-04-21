@@ -16,12 +16,12 @@ Mesh3D::Mesh3D() : drawNormals(false) {
 }
 
 Mesh3D::~Mesh3D() {
-   printf("deleting faces.\n");
+   //printf("deleting faces.\n");
    for (int i = 0; i < faces.size(); ++i) {
       delete faces[i];
    }
    faces.empty();
-   printf("finished deleting faces.\n");
+   //printf("finished deleting faces.\n");
 }
 
 void Mesh3D::tick(double ms) {

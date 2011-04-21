@@ -548,7 +548,7 @@ void Asteroid3D::update(double timeDiff) {
          Vector3D newDirection = spinRadius.cross(*axis); // This might be backwards.
          newDirection.setLength(-1 * std::min(rotationSpeed * (M_PI / 180.0)
           * spinRadius.getLength(), 30.0));
-         printf("spinRadiusLength: %f, radius: %f\n", spinRadius.getLength(), radius);
+         //printf("spinRadiusLength: %f, radius: %f\n", spinRadius.getLength(), radius);
 
          newFace->velocity->addUpdate(newDirection);
 
