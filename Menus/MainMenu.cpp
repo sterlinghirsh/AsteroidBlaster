@@ -4,7 +4,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Utility/GameState.h"
 #include "Menus/MainMenu.h"
-#include "Graphics/Texture.h"
+#include "Graphics/Image.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Items/AsteroidShip.h"
@@ -161,58 +161,7 @@ void MainMenu::draw() {
    usePerspective();
    glPopMatrix();
 
-   glEnable(GL_TEXTURE_2D);
-
-   /* Enable smooth shading */
-   glShadeModel( GL_SMOOTH );
-
-   /* Depth buffer setup */
-   glClearDepth( 1.0f );
-
-   /* Enables Depth Testing */
-   glEnable( GL_DEPTH_TEST );
-
-   /* The Type Of Depth Test To Do */
-   glDepthFunc( GL_LEQUAL );
-
-   /* Really Nice Perspective Calculations */
-   glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
-
-   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-         GL_CLAMP );
-   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-         GL_CLAMP );
-
-   glPushMatrix();
-   glLoadIdentity( );
-   glTranslatef( 0.0f, 0.2f, -1.0f );
-   glScaled( 0.3625, 0.1, 1.0 );
-   glColor3f(1.0, 1.0, 1.0);
-
-   /* Select Our Texture */
-   glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Logo.png") );
-
-   /* NOTE:
-    *   The x coordinates of the glTexCoord2f function need to inverted
-    * for SDL because of the way SDL_LoadBmp loads the data. So where
-    * in the tutorial it has glTexCoord2f( 1.0f, 0.0f ); it should
-    * now read glTexCoord2f( 0.0f, 1.0f );
-    */
-   glBegin(GL_QUADS);
-   /* Front Face */
-   /* Bottom Left Of The Texture and Quad */
-   glTexCoord2f( 0.0f, 1.0f ); glVertex2f( -1.0f, -1.0f);
-   /* Bottom Right Of The Texture and Quad */
-   glTexCoord2f( 1.0f, 1.0f ); glVertex2f(  1.0f, -1.0f);
-   /* Top Right Of The Texture and Quad */
-   glTexCoord2f( 1.0f, 0.0f ); glVertex2f(  1.0f,  1.0f);
-   /* Top Left Of The Texture and Quad */
-   glTexCoord2f( 0.0f, 0.0f ); glVertex2f( -1.0f,  1.0f);
-   glEnd();
-   glEnable(GL_CULL_FACE);
-   glPopMatrix();
-   glDisable(GL_TEXTURE_2D);
-   glEnable(GL_LIGHTING);
+   Image::getImage("MainMenuLogo")->drawImage();
 
    SDL_GL_SwapBuffers();
 

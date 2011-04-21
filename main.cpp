@@ -29,6 +29,7 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Graphics/Texture.h"
+#include "Graphics/Image.h"
 
 #include "SDL.h"
 #include "SDL_mixer.h"
@@ -219,7 +220,7 @@ void load() {
    Texture::Add(texSize, texSize, "bloomTex");
    Texture::Add(texSize, texSize, "fboTex");
    Texture::Add(texSize, texSize, "hblurTex");
-   Texture::Add("Images/Logo.png", "Logo.png");
+   Texture::Add("Images/Logo.png", "MainLogo");
    Texture::Add("Images/StoreLogo.png", "StoreLogo");
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
    Texture::Add("Images/particle.png", "Particle");
@@ -228,6 +229,9 @@ void load() {
    Texture::Add("Images/Shield.png", "ShieldIcon");
    Texture::Add("Images/ShotIcon.png", "ShotIcon");
    Texture::Add("Images/zoe2.png", "ZoeRedEyes");
+   
+   Image::Add(Point3D(0.0, 0.2, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("StoreLogo"), "StoreMenuLogo");
+   Image::Add(Point3D(0.0, 0.2, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("MainLogo"), "MainMenuLogo");
 
    Particle::initDisplayList();
 

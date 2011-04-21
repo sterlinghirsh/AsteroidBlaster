@@ -30,28 +30,28 @@ void Music::Add(std::string file, std::string keyName) {
 }
 
 
-void Music::playMusic(std::string filename) {
-   if (currPlay == filename) {
-      std::cout << filename << " is already playing!" << std::endl;
+void Music::playMusic(std::string keyName) {
+   if (currPlay == keyName) {
+      std::cout << keyName << " is already playing!" << std::endl;
    } else if (currPlay != "\0") {
       Mix_HaltMusic();
    }
 
 
-   std::map<std::string, Mix_Music*>::iterator iter = musics.find(filename);
+   std::map<std::string, Mix_Music*>::iterator iter = musics.find(keyName);
 
 
    if (iter == musics.end()) {
-      std::cerr << "failed to find: " << filename << " in Music::musics." << std::endl;
+      std::cerr << "failed to find: " << keyName << " in Music::musics." << std::endl;
       return;
    }
 
    if(Mix_PlayMusic(iter->second, -1)==-1) {
-      std::cerr << "could not play music " << filename << ", exiting!" << std::endl;
+      std::cerr << "could not play music " << keyName << ", exiting!" << std::endl;
       exit(1);
    }
 
-   currPlay = filename;
+   currPlay = keyName;
    Mix_VolumeMusic(volume);
    
    if (!gameSettings->musicOn) {
