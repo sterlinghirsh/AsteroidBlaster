@@ -855,7 +855,7 @@ void AsteroidShip::handleCollision(Drawable* other) {
 
    // Try converting other into a Shard
    if ((shard = dynamic_cast<Shard*>(other)) != NULL) {
-      health += 3;
+      health += 10;
       if (health > 100) {
          health = 100;
       }

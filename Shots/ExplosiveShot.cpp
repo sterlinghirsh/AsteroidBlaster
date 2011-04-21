@@ -108,7 +108,7 @@ void ExplosiveShot::explode() {
 
    // Play an explosion animation.
    Sprite::sprites.push_back(
-         new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20, *position, explodeRadius * 2, explodeRadius * 2, gameState));
+         new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20, *position, explodeRadius * 4, explodeRadius * 4, gameState));
 }
 
 void ExplosiveShot::handleCollision(Drawable* other) {
