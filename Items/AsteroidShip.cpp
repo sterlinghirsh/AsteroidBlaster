@@ -416,8 +416,13 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    shotOrigin = *position;
+   if (getCurrentWeapon()->fireBackwards) {
+      shotOriginScale = -4;
+   } else {
+      shotOriginScale = 4;
+   }
    forward->movePoint(shotOrigin, shotOriginScale);
-   
+
    // Actually fire the weapons.
    keepFiring();
 
@@ -983,11 +988,12 @@ void AsteroidShip::drawShotDirectionIndicators() {
    }
    // The coords of the boxes.
    Point3D drawPoint = shotOrigin;
-   double boxSize = 1.0;
+   double boxSize = shotOriginScale > 0 ? 1.0 : 0.6;
    const double boxDecrement = 0.2;
+   const double distanceIncrement = shotOriginScale > 0 ? 5 : 1;
 
    glPushMatrix();
-   shotDirection.movePoint(drawPoint, 5);
+   shotDirection.movePoint(drawPoint, distanceIncrement);
    // Start at top right.
    up->movePoint(drawPoint, boxSize / 2);
    right->movePoint(drawPoint, boxSize / 2);
@@ -1009,9 +1015,10 @@ void AsteroidShip::drawShotDirectionIndicators() {
    drawPoint.draw();
 
    boxSize -= boxDecrement;
+   right->movePoint(drawPoint, boxDecrement / 2.0);
 
    // Move again
-   shotDirection.movePoint(drawPoint, 5);
+   shotDirection.movePoint(drawPoint, distanceIncrement);
    // top right
    glColor3d(1, 0.2, 0.0);
    right->movePoint(drawPoint, boxSize);
@@ -1024,9 +1031,10 @@ void AsteroidShip::drawShotDirectionIndicators() {
    drawPoint.draw();
    
    boxSize -= boxDecrement;
+   right->movePoint(drawPoint, boxDecrement / 2.0);
 
    // Move again
-   shotDirection.movePoint(drawPoint, 5);
+   shotDirection.movePoint(drawPoint, distanceIncrement);
    // top right
    glColor3d(0, 0.2, 1);
    right->movePoint(drawPoint, boxSize);

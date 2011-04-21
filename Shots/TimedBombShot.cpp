@@ -12,11 +12,15 @@
 #include "Utility/WindowsMathLib.h"
 #endif
 
+const double slowDownPerSecond = 50.0;
+
 TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, ownerIn, _gameState) {
    minX = minY = minZ = -1;
    maxX = maxY = maxZ = 1;
-   // Blow up 3 seconds after it's fired.
-   timeToExplode = 4;
+   // Blow up 15 seconds after it's fired.
+   timeToExplode = 15;
+   
+   explodeRadius = 8;
 
    updateBoundingBox();
 }
@@ -34,7 +38,11 @@ void TimedBombShot::draw() {
    glPushMatrix();
       glDisable(GL_LIGHTING);
 
-      glColor3d(0.4, 0.8, 0.4);
+      if (fmod(doubleTime() * 6, 2) < 1) {
+         glColor3d(0.4, 0.8, 0.4);
+      } else {
+         glColor3d(1.0, 0.4, 0.4);
+      }
       setMaterial(ShotMaterial);
       position->glTranslate();
 
@@ -46,6 +54,11 @@ void TimedBombShot::draw() {
 }
 
 void TimedBombShot::update(double timeDiff) {
+   double newSpeed = velocity->getLength();
+   newSpeed -= timeDiff * slowDownPerSecond;
+   newSpeed = std::max(0.0, newSpeed);
+   velocity->setLength(newSpeed);
+
    ExplosiveShot::update(timeDiff);
 
    /* If the bomb has already blown up and we're back here again,
@@ -69,7 +82,6 @@ void TimedBombShot::update(double timeDiff) {
 }
 
 void TimedBombShot::handleCollision(Drawable* other) {
-   printf("%ld a timed bomb ran into something.\n", curFrame);
    ExplosiveShot::handleCollision(other); 
 }
 
@@ -83,7 +95,6 @@ void TimedBombShot::hitWall(BoundingWall* wall) {
  * everything it should, and auto-handle the collisions.
  */
 void TimedBombShot::explode() {
-   printf("%ld Bomb exploded!\n", curFrame);
    // Do all the generic exploding actions that every bomb should do.
    ExplosiveShot::explode();
 

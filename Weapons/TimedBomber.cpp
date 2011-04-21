@@ -11,13 +11,15 @@
 #include "Utility/SoundEffect.h"
 
 TimedBomber::TimedBomber(AsteroidShip* owner) : Weapon(owner) {
-   shotSpeed = 15; // Units per second
-   coolDown = 1.5; // Seconds
+   shotSpeed = 50; // Units per second
+   coolDown = 1.2; // Seconds
    randomVariationAmount = 0.25; // Units
-   name = "Bomber";
+   name = "Mine Layer";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
-   purchased = false; // Start off owning the bomber
+   purchased = true; // Start off owning the bomber
+
+   fireBackwards = true;
 }
 
 TimedBomber::~TimedBomber() {
@@ -30,6 +32,9 @@ TimedBomber::~TimedBomber() {
  */
 void TimedBomber::update(double timeDiff) {
    // Do nothing, yet
+   if (ship->getCurrentWeapon() == this) {
+      ship->shotDirection.updateMagnitude(ship->forward->scalarMultiply(-1));
+   }
 }
 
 /**

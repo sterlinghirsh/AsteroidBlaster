@@ -10,6 +10,8 @@
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
 
+double minExplodeTime = 0.5;
+
 RemoteBomber::RemoteBomber(AsteroidShip* owner) : Weapon(owner) {
    shotSpeed = 30.0; // Units per second
    coolDown = 5; // Seconds
@@ -34,7 +36,8 @@ void RemoteBomber::update(double timeDiff) {
    if (firedShot != NULL) {
       timeLastFired = doubleTime();
    }
-   if (firedShot != NULL && lastFiredFrame <= curFrame - 2) {
+   if (firedShot != NULL && lastFiredFrame <= curFrame - 2 &&
+    doubleTime() - firedShot->timeFired > minExplodeTime) {
       firedShot->shouldExplode = true;
       firedShot = NULL;
    }

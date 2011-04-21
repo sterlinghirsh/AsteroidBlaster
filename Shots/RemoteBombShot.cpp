@@ -20,8 +20,8 @@ RemoteBombShot::RemoteBombShot(Point3D& posIn, Vector3D dirIn,
  weapon(_weapon) {
    minX = minY = minZ = -1;
    maxX = maxY = maxZ = 1;
-   // Blow up 3 seconds after it's fired.
-   timeToExplode = 4;
+   // Blow up 8 seconds after it's fired.
+   timeToExplode = 8;
 
    updateBoundingBox();
 }
@@ -37,10 +37,15 @@ void RemoteBombShot::draw() {
    }
 
    glPushMatrix();
+      // This is not very efficient.
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);
       position->glTranslate();
-      glColor4d(0.4, 0.8, .4, 1);
+      if (fmod(doubleTime() * 6, 2) < 1) {
+         glColor3d(0.4, 0.8, 0.4);
+      } else {
+         glColor3d(1.0, 0.4, 0.4);
+      }
       gluSphere(quadric, pulseSize, 10, 10);
       glColor4d(0.4, 0.8, 1, 1);
       gluSphere(quadric, .3, 10, 10);

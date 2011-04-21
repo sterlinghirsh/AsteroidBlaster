@@ -59,6 +59,8 @@ class Weapon {
        */
       bool purchased;
       int level;
+
+      bool fireBackwards;
       
       protected:
          WeaponType type; // Do we need this?
