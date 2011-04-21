@@ -27,7 +27,7 @@ Text::Text(std::string text, TTF_Font* _font, SDL_Rect _pos) {
    textToDisplay = sstream.str();
    pos = _pos;
    color = SDL_WHITE;
-   selectable = selected = false;
+   selectable = selected = disabled = false;
 
    alignment = LEFT_ALIGN;
    
@@ -44,7 +44,7 @@ Text::Text(std::string preText, std::string body, std::string postText, TTF_Font
    post = postText;
    pos = _pos;
    color = SDL_WHITE;
-   selectable = selected = false;
+   selectable = selected = disabled = false;
    
    alignment = LEFT_ALIGN;
    
@@ -63,7 +63,7 @@ Text::Text(std::string preText, int body, std::string postText, TTF_Font* _font,
    post = postText;
    pos = _pos;
    color = SDL_WHITE;
-   selectable = selected = false;
+   selectable = selected = disabled = false;
    alignment = LEFT_ALIGN;
 }
 
@@ -80,7 +80,7 @@ Text::Text(std::string preText, double body, std::string postText, TTF_Font* _fo
    post = postText;
    pos = _pos;
    color = SDL_WHITE;
-   selectable = selected = false;
+   selectable = selected = disabled = false;
    alignment = LEFT_ALIGN;
 }
 

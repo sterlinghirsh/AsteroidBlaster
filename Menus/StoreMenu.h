@@ -30,7 +30,8 @@ class StoreMenu : public Menu {
    //the current mouse location
    double x, y;
    
-   int scroll;
+   int scrollWeapon;
+   int scrollAmmo;
    
    bool menuActive;
    

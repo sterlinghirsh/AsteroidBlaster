@@ -84,7 +84,7 @@ class Text {
       std::ostringstream sstream;
       std::string textToDisplay, pre, post;
       GLuint textTexture;
-      bool selectable, selected;
+      bool selectable, selected, disabled;
       //bool centered;
       int alignment;
 };

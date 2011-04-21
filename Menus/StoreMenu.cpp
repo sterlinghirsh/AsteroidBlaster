@@ -40,7 +40,7 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    
    x = y = -1;
    
-   scroll = 0;
+   scrollWeapon = scrollAmmo = 0;
    
    timeLeft = DEFAULTTIME;
    
@@ -184,13 +184,16 @@ void StoreMenu::draw() {
       //make the weapons selection blue
       menuTexts[WEAPONS_STOREMENUINDEX]->setColor(SDL_BLUE);
       //add scroll value to the y position
-      position.y = (Sint16) (position.y + (scroll/1));
+      position.y = (Sint16) (position.y + (scrollWeapon/1));
       //for each weapon, display the appropriate menu, set the selectability
       for(unsigned int i = 0; i < weaponList.size(); i++) {
          if(weaponList[i]->purchased && weaponList[i]->level == weaponList[i]->levelMax) {
             weaponsTexts[i]->selectable = false;
+            weaponsTexts[i]->disabled = true;
+            continue; //continue so that this weapon is not included in the y++ calculation
          } else {
             weaponsTexts[i]->selectable = true;
+            weaponsTexts[i]->disabled = false;
          }
          weaponsTexts[i]->setPosition(position);
          weaponsTexts[i]->updateBody(weaponList[i]->weaponString());
@@ -203,13 +206,16 @@ void StoreMenu::draw() {
       //set menu color
       menuTexts[AMMO_STOREMENUINDEX]->setColor(SDL_BLUE);
       //add scroll value to the y position
-      position.y = (Sint16) (position.y + (scroll/1));
+      position.y = (Sint16) (position.y + (scrollAmmo/1));
       //for each weapon, display the appropriate menu, set the selectability
       for(unsigned int i = 0; i < weaponList.size(); i++) {
-         if(weaponList[i]->curAmmo != -1 && weaponList[i]->purchased) {
-            ammoTexts[i]->selectable = true;
-         } else {
+         if(weaponList[i]->curAmmo == -1 || !weaponList[i]->purchased) {
             ammoTexts[i]->selectable = false;
+            ammoTexts[i]->disabled = true;
+            continue; //continue so that this weapon is not included in the y++ calculation
+         } else {
+            ammoTexts[i]->selectable = true;
+            ammoTexts[i]->disabled = false;
          }
          ammoTexts[i]->setPosition(position);
          ammoTexts[i]->updateBody(weaponList[i]->ammoString());
@@ -268,7 +274,9 @@ void StoreMenu::drawTexts(std::vector<Text*> texts) {
       glDisable(GL_LIGHTING);
       
       for(unsigned i = 0; i < texts.size(); i++) {
-         texts[i]->draw();
+         if(!texts[i]->disabled) {
+            texts[i]->draw();
+         }
       }
 
       glEnable(GL_LIGHTING);
@@ -368,7 +376,7 @@ void StoreMenu::mouseDown(int button) {
                      weaponList[i]->curAmmo += weaponList[i]->ammoAmount;
                      gameState->ship->nShards -= weaponList[i]->ammoAmount;
                   } else {
-                     std::cout << "not enough money to buy ammo for " << weaponList[i]->getName() << "!" << std::cout;
+                     std::cout << "not enough money to buy ammo for " << weaponList[i]->getName() << "!" << std::endl;
                   }
                }
             }
@@ -413,9 +421,17 @@ void StoreMenu::mouseDown(int button) {
          menuSelection = SHIP;
       }
    } else if(button == 4) {
-      scroll += 7;
+      if(menuSelection == WEAPONS) {
+         scrollWeapon += 7;
+      } else if(menuSelection == AMMO) {
+         scrollAmmo += 7;
+      }
    } else if(button == 5) {
-      scroll -= 7;
+      if(menuSelection == WEAPONS) {
+         scrollWeapon -= 7;
+      } else if(menuSelection == AMMO) {
+         scrollAmmo -= 7;
+      }
    }
 }
 
