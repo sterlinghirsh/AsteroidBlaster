@@ -21,7 +21,7 @@ Shot::Shot(Point3D& posIn, Vector3D dirIn,
    velocity = new Vector3D(dirIn);
    //velocity->setLength(40.0);
    timeFired = doubleTime();
-   
+   isBeam = false;
 }
 
 Shot::~Shot() {
@@ -67,4 +67,27 @@ void Shot::debug() {
    position->print();
    velocity->print();
    printf("--\n");
+}
+
+Point3D Shot::getWallIntersectionPoint(BoundingWall* wall) {
+   if (!isBeam) {
+      return Object3D::getWallIntersectionPoint(wall);
+   }
+
+   Point3D toReturn(*position);
+   Point3D pointOnPlane = wall->normal.scalarMultiply(-wall->wallSize);
+
+   // Calculate intersection between beam and wall.
+   Vector3D normalizedDirection = velocity->getNormalized();
+   double rayDotNormal = -normalizedDirection.dot(wall->normal);
+   if (rayDotNormal == 0) {
+      wall->actuallyHit = false;
+   }
+
+   Vector3D rayOriginToPointOnPlane(*position, pointOnPlane);
+   double distance = rayOriginToPointOnPlane.dot(*position) / rayDotNormal;
+
+   printf("Distance: %f\n", distance);
+   toReturn.addUpdate(normalizedDirection.scalarMultiply(distance));
+   return toReturn;
 }

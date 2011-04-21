@@ -43,7 +43,7 @@ class BoundingWall {
       int getSquareX(int squareID);
       int getSquareY(int squareID);
       int getSquareID(int squareX, int squareY);
-      void getSquareCoordsFromObject(Drawable* item, int& squareXIndex, int& squareYIndex);
+      void getSquareCoordsFromPoint(Point3D& item, int& squareXIndex, int& squareYIndex);
       GlowSquare* getSquareByID(unsigned index);
       GlowSquare* getSquareByCoords(int x, int y);
       virtual void initDisplayList(); // Set up the displayList.

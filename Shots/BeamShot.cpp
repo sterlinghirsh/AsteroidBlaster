@@ -61,7 +61,7 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, 
       minZ = std::min(endPoint1.z, endPoint2.z);
       maxZ = std::max(endPoint1.z, endPoint2.z);
       timeFired = doubleTime();
-      shouldConstrain = false;
+      //shouldConstrain = true;
       /* Make sure beam shots aren't culled from the view frustum (necessary to make them appear)
       */
       shouldBeCulled = false;
@@ -72,6 +72,7 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, 
 
       // This is how long the beam is drawn. It is shortened when hit.
       drawLength = length;
+      isBeam = true;
    }
 
 /**
@@ -162,18 +163,11 @@ bool BeamShot::detectCollision(Drawable* other, bool checkOther) {
    }
       
    if (hitYet) {
-      printf("Already hit when checking ");
       Object3D* someObject = dynamic_cast<Object3D*>(other);
-      if (someObject != NULL)
-         someObject->debug();
       return false;
    }
-   debug();
 
-   printf("Phase 0 worked for ");
    Object3D* someObject = dynamic_cast<Object3D*>(other);
-      if (someObject != NULL)
-         someObject->debug();
    
    Vector3D positionVector(*position);
    Vector3D shipToItem(*position, *other->position);
@@ -190,12 +184,10 @@ bool BeamShot::detectCollision(Drawable* other, bool checkOther) {
    velocity->movePoint(closestPoint, distance);
    
    distance = closestPoint.distanceFrom(*other->position);
-   printf("Real Distance: %f, Radius: %f\n", distance, other->radius);
    return fabs(distance) <= other->radius;
 }
 
 void BeamShot::handleCollision(Drawable* other) {
-   printf("Time: %f Distance: %f\n", doubleTime(), position->distanceFrom(*other->position));
 
    if (other == owner || hitYet || (curFrame - 1) > firstFrame)
       return;
@@ -226,5 +218,9 @@ void BeamShot::debug() {
  * Don't draw shots in minimap (for now)
  */
 void BeamShot::drawInMinimap() {
+   return;
+}
+
+void BeamShot::hitWall(BoundingWall* wall) {
    return;
 }

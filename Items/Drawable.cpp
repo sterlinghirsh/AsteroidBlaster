@@ -196,3 +196,7 @@ void Drawable::nullPointers() {
    minPosition = NULL;
    maxPosition = NULL;
 }
+
+Point3D Drawable::getWallIntersectionPoint(BoundingWall* wall) {
+   return *position;
+}

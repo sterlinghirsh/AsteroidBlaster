@@ -71,6 +71,7 @@ class Drawable {
       Custodian* custodian;
 
       virtual void nullPointers();
+      virtual Point3D getWallIntersectionPoint(BoundingWall* wall);
 };
 
 #endif

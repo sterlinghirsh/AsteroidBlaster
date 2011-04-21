@@ -87,17 +87,17 @@ GlowSquare* BoundingWall::getSquareByCoords(int x, int y) {
    return getSquareByID(getSquareID(x, y));
 }
 
-void BoundingWall::getSquareCoordsFromObject(Drawable* item, int& squareXIndex, int& squareYIndex) {
+void BoundingWall::getSquareCoordsFromPoint(Point3D& item, int& squareXIndex, int& squareYIndex) {
    double squareX, squareY;
    if (wallID == WALL_TOP || wallID == WALL_BOTTOM) {
-      squareX = item->position->x;
-      squareY = item->position->z;
+      squareX = item.x;
+      squareY = item.z;
    } else if (wallID == WALL_FRONT || wallID == WALL_BACK) {
-      squareX = item->position->x;
-      squareY = item->position->y;
+      squareX = item.x;
+      squareY = item.y;
    } else {
-      squareX = item->position->y;
-      squareY = item->position->z;
+      squareX = item.y;
+      squareY = item.z;
    }
 
    squareXIndex = (int) floor((squareX + wallSize) / squareSize);
@@ -112,17 +112,23 @@ GlowSquare* BoundingWall::getSquareByID(unsigned index) {
 
 void BoundingWall::constrain(Drawable* item) {
    int x, y;
-   getSquareCoordsFromObject(item, x, y);
-   GlowSquare* square = getSquareByCoords(x, y);
-   if (square == NULL) {
-      return;
-   }
-
    actuallyHit = true;
    item->hitWall(this);
 
    if (!actuallyHit)
       return;
+   
+   Point3D intersectionPoint = item->getWallIntersectionPoint(this);
+   
+   // Test again for intersectionPoint.
+   if (!actuallyHit)
+      return;
+
+   getSquareCoordsFromPoint(intersectionPoint, x, y);
+   GlowSquare* square = getSquareByCoords(x, y);
+   if (square == NULL) {
+      return;
+   }
 
    double speed = item->velocity->getLength();
    // How far out will the ripple effect go?

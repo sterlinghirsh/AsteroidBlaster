@@ -34,6 +34,9 @@ class Shot : public Object3D {
       virtual void handleCollision(Drawable* other);
       virtual void drawInMinimap();
       virtual void debug();
+      bool isBeam;
+
+      Point3D getWallIntersectionPoint(BoundingWall* wall);
 };
 
 #endif
