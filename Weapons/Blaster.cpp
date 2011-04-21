@@ -123,3 +123,6 @@ bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
    targetToShip.normalize();
    return (targetToShip - *aim).magnitude() < 0.5;
 }
+
+
+

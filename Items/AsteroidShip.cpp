@@ -150,10 +150,19 @@ void AsteroidShip::reInitialize() {
    
    // The ship's health. This number is displayed to the screen.
    health = 100;
+   healthMax = 100;
+   healthUpgradeAmount = 5;
+   healthUpgradePrice = 5;
+   healthPrice = 2;
+   healthAmount = 10;
+   
+
    
    //engine upgrade, terminal speed is raised when leved up
    engineUpgrade = 0;
-
+   engineMax = 5;
+   enginePrice = 10;
+   
    // The ship's currently selected weapon.
    currentWeapon = 0;
    

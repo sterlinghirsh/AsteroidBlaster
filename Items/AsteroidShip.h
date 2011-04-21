@@ -124,7 +124,14 @@ class AsteroidShip : public Object3D {
       int score;
       int nShards;
       int engineUpgrade;
+      int engineMax;
+      int enginePrice;
       int health;
+      int healthMax;
+      int healthUpgradePrice;
+      int healthPrice;
+      int healthAmount;
+      int healthUpgradeAmount;
       double shotOriginScale;
       double spin;
       double flashiness;
@@ -156,6 +163,8 @@ class AsteroidShip : public Object3D {
       float getCurrentWeaponCoolDown();
       Vector3D* getShotDirection();
       Weapon* getWeapon(int wep);
+      
+      std::vector<Weapon*> getWeapons(){ return weapons; }
       
       int getCurrentView();
 

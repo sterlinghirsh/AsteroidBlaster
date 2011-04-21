@@ -30,17 +30,18 @@ class StoreMenu : public Menu {
    //the current mouse location
    double x, y;
    
+   int scroll;
+   
    bool menuActive;
    
    
    std::vector<Text*> menuTexts;
    
    std::vector<Text*> weaponsTexts;
-   std::vector<Text*> upgradesTexts;
    std::vector<Text*> ammoTexts;
    std::vector<Text*> shipTexts;
    
-   enum StoreMenuEnum { WEAPONS, UPGRADES, AMMO, SHIP };
+   enum StoreMenuEnum { WEAPONS, AMMO, SHIP };
 
    int menuSelection;
    double timeLeft;

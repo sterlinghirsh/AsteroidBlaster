@@ -47,9 +47,14 @@ class Weapon {
        * Called every frame.
        */
       virtual void update(double timeDiff)=0;
+      
+      // owner of this weapon
       AsteroidShip* ship;
       virtual std::string getName();
-
+      virtual int buyPrice() { return level*weaponPrice; };
+      virtual std::string weaponString();
+      virtual std::string ammoString();
+      
       /* 
        * The current amount of ammo available to use. -1 is infinite.
        */
@@ -58,7 +63,11 @@ class Weapon {
        * True if the ship owns it, false if it doesn't.
        */
       bool purchased;
+      int weaponPrice;
       int level;
+      int levelMax;
+      int ammoPrice;
+      int ammoAmount;
 
       bool fireBackwards;
       

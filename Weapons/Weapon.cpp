@@ -15,6 +15,11 @@
 Weapon::Weapon(AsteroidShip* owner)
  : ship(owner), timeLastFired(0) {
    level = 1;
+   levelMax = 5;
+   purchased = false;
+   ammoPrice = 1;
+   ammoAmount = 1;
+   weaponPrice = 2;
    fireBackwards = false;
 }
 
@@ -47,5 +52,33 @@ double Weapon::getCoolDownAmount() {
    if (coolDown == 0)
       return 1;
    return clamp((doubleTime() - timeLastFired) / (coolDown/((double)level)), 0, 1);
+}
+
+std::string Weapon::weaponString() {
+   std::stringstream ss;
+
+   if(!purchased) {
+      ss << "Buy " << name << " for $" << buyPrice();
+   } else if(level < levelMax){
+      ss << "Upgrade " << name << " to level " << (level+1) << " for $" << buyPrice();
+   } else {
+      ss << name << " upgrade level max!(" << level << ")";
+   }
+   
+   return ss.str();
+}
+
+std::string Weapon::ammoString() {
+   std::stringstream ss;
+   
+   if(!purchased) {
+      ss << "Buy " << name << " first!";
+   } else if(curAmmo == -1){
+      ss << name << " has no ammo!";
+   } else {
+      ss << "Buy " << ammoAmount << " " << name << " ammo for $" << ammoPrice << "(" << curAmmo << ")";
+   }
+   
+   return ss.str();
 }
 
