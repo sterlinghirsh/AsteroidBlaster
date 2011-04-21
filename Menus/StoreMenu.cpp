@@ -196,7 +196,6 @@ void StoreMenu::draw() {
             weaponsTexts[i]->disabled = false;
          }
          weaponsTexts[i]->setPosition(position);
-         std::cout << "position.y=" << position.y << std::endl;
          if((position.y >= (gameSettings->GH/2) + (gameSettings->GH/4) + (gameSettings->GH/8) ) || 
             (position.y <= (gameSettings->GH/2) - (gameSettings->GH/4) + (gameSettings->GH/8) )) {
             weaponsTexts[i]->disabled = true;
@@ -223,6 +222,10 @@ void StoreMenu::draw() {
             ammoTexts[i]->disabled = false;
          }
          ammoTexts[i]->setPosition(position);
+         if((position.y >= (gameSettings->GH/2) + (gameSettings->GH/4) + (gameSettings->GH/8) ) || 
+            (position.y <= (gameSettings->GH/2) - (gameSettings->GH/4) + (gameSettings->GH/8) )) {
+            ammoTexts[i]->disabled = true;
+         }
          ammoTexts[i]->updateBody(weaponList[i]->ammoString());
          position.y = (Sint16) (position.y + (gameSettings->GH/10));
       }
