@@ -26,6 +26,9 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
  Object3D(_gameState) {  // Initialize shot direction to forward
    cullRadius = 12;
    
+   health = 100;
+   healthMax = 100;
+   
    // Bounding box stuff.
    maxX = maxY = maxZ = 4;
    minX = minY = minZ = -4;
@@ -886,6 +889,7 @@ void AsteroidShip::handleCollision(Drawable* other) {
             shakeAmount = 8;
             SoundEffect::playSoundEffect("ShipHit.wav");
             health -= (int) (4 * ceil(asteroid->radius));
+            std::cout << "health = " << health << std::endl;
             justGotHit = doubleTime();
          }
       }
