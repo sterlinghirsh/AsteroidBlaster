@@ -889,7 +889,6 @@ void AsteroidShip::handleCollision(Drawable* other) {
             shakeAmount = 8;
             SoundEffect::playSoundEffect("ShipHit.wav");
             health -= (int) (4 * ceil(asteroid->radius));
-            std::cout << "health = " << health << std::endl;
             justGotHit = doubleTime();
          }
       }

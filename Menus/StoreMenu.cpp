@@ -344,15 +344,15 @@ void StoreMenu::mouseDown(int button) {
                      gameState->ship->nShards -= weaponList[i]->buyPrice();
                   // not enough money
                   } else {
-                     std::cout << "not enough money to buy " << weaponList[i]->getName() << "!" << std::cout;
+                     std::cout << "not enough money to buy " << weaponList[i]->getName() << "!" << std::endl;
                   }
                // if it is purchased, and you have enough money, upgrade
-               } else if(weaponList[i]->level < weaponList[i]->levelMax) {
+               } else if(shardsOwned >= weaponList[i]->buyPrice()) {
                      weaponList[i]->level++;
                      gameState->ship->nShards -= weaponList[i]->buyPrice();
                //not enough money
                } else {
-                  std::cout << "not enough money to upgrade " << weaponList[i]->getName() << "!" << std::cout;
+                  std::cout << "not enough money to upgrade " << weaponList[i]->getName() << "!" << std::endl;
                }
             }
          }
@@ -413,9 +413,9 @@ void StoreMenu::mouseDown(int button) {
          menuSelection = SHIP;
       }
    } else if(button == 4) {
-      scroll -= 7;
-   } else if(button == 5) {
       scroll += 7;
+   } else if(button == 5) {
+      scroll -= 7;
    }
 }
 
