@@ -231,17 +231,14 @@ void Vector3D::glTranslate(double length) {
 }
 
 void Vector3D::reflect(Vector3D& axis) {
-   double x = x;
-   double y = y;
-   double z = z;
    double u = axis.x;
    double v = axis.y;
    double w = axis.z;
    double l_dot_n = dot(axis);
 
-   x = -x + (2 * l_dot_n * u);
-   y = -y + (2 * l_dot_n * v);
-   z = -z + (2 * l_dot_n * w);
+   x = x - (2 * l_dot_n * u);
+   y = y - (2 * l_dot_n * v);
+   z = z - (2 * l_dot_n * w);
 }
 
 Vector3D Vector3D::getNormalVector() {

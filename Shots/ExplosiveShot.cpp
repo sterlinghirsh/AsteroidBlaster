@@ -156,6 +156,6 @@ void ExplosiveShot::handleCollision(Drawable* other) {
 }
 
 void ExplosiveShot::hitWall(BoundingWall* wall) {
-   //particleDirection.reflect(wall->normal);
+   Shot::hitWall(wall);
 }
 

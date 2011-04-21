@@ -12,17 +12,21 @@
 #include "Utility/WindowsMathLib.h"
 #endif
 
-const double slowDownPerSecond = 50.0;
+const double slowDownPerSecond = 5.0;
+const double seekRadius = 20.0;
+const double collisionRadius = 1.0;
 
 TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, ownerIn, _gameState) {
-   minX = minY = minZ = -1;
-   maxX = maxY = maxZ = 1;
+   radius = seekRadius;
+   minX = minY = minZ = -radius;
+   maxX = maxY = maxZ = radius;
+   updateBoundingBox();
+
    // Blow up 15 seconds after it's fired.
    timeToExplode = 15;
    
    explodeRadius = 8;
 
-   updateBoundingBox();
 }
 
 // Needed to avoid obscure vtable compiler error.
@@ -81,12 +85,48 @@ void TimedBombShot::update(double timeDiff) {
       // Find out how projectileShot's are removed.
 }
 
+/**
+ * Make it only hit asteroids.
+ * Later we'll want to hit ships, too.
+ * Also shards, for pushin'.
+ */
+bool TimedBombShot::detectCollision(Drawable* other, bool checkOther) {
+   Asteroid3D* asteroid;
+   if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+      return ExplosiveShot::detectCollision(other, checkOther);
+   } else {
+      return false;
+   }
+}
+
 void TimedBombShot::handleCollision(Drawable* other) {
-   ExplosiveShot::handleCollision(other); 
+   Asteroid3D* asteroid;
+   if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+      Vector3D positionToAsteroid(*position, *asteroid->position);
+      double distance = positionToAsteroid.getLength();
+      if (distance < seekRadius + asteroid->radius) {
+         if (distance > collisionRadius + asteroid->radius) {
+            Vector3D* attraction = new Vector3D(positionToAsteroid);
+            attraction->setLength(20.0);
+            addAcceleration(attraction);
+         } else {
+            ExplosiveShot::handleCollision(other); 
+         }
+      }
+   }
 }
 
 void TimedBombShot::hitWall(BoundingWall* wall) {
-   //particleDirection.reflect(wall->normal);
+   // Check to see if we're actually within exploderadius.
+   minX = minY = minZ = -collisionRadius;
+   maxX = maxY = maxZ = collisionRadius;
+   updateBoundingBox();
+
+   ExplosiveShot::hitWall(wall);
+
+   minX = minY = minZ = -seekRadius;
+   maxX = maxY = maxZ = seekRadius;
+   updateBoundingBox();
 }
 
 /**

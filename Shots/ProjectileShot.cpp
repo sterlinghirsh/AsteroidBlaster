@@ -100,5 +100,5 @@ void ProjectileShot::handleCollision(Drawable* other) {
 }
 
 void ProjectileShot::hitWall(BoundingWall* wall) {
-   //particleDirection.reflect(wall->normal);
+   Shot::hitWall(wall);
 }

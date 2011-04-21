@@ -173,5 +173,5 @@ void MissileShot::handleCollision(Drawable* other) {
 }
 
 void MissileShot::hitWall(BoundingWall* wall) {
-   //particleDirection.reflect(wall->normal);
+   ExplosiveShot::hitWall(wall);
 }

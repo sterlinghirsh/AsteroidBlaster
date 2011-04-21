@@ -16,6 +16,7 @@ class TimedBombShot : public ExplosiveShot {
       virtual void draw();
       virtual void update(double timeDiff);
       virtual void handleCollision(Drawable* other);
+      virtual bool detectCollision(Drawable* other, bool checkOther);
       virtual void hitWall(BoundingWall* wall);
       // Called when the shot's isExploded becomes true.
       virtual void explode();

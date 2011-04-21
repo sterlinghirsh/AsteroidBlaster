@@ -54,39 +54,27 @@ void BoundingSpace::constrain(Drawable* item) {
 
    if (item->maxPosition->x > xMax) {
       // Right
-      item->position->x = xMax - item->maxX;
-      item->velocity->negativeX();
       walls[WALL_RIGHT]->constrain(item);
    }
    if (item->maxPosition->y > yMax) {
       // Top
-      item->position->y = yMax - item->maxY;
-      item->velocity->negativeY();
       walls[WALL_TOP]->constrain(item);
    }
    if (item->maxPosition->z > zMax) {
       // Front
-      item->position->z = zMax - item->maxZ;
-      item->velocity->negativeZ();
       walls[WALL_FRONT]->constrain(item);
    }
 
    if (item->minPosition->x < xMin) {
       // Left
-      item->position->x = xMin - item->minX;
-      item->velocity->positiveX();
       walls[WALL_LEFT]->constrain(item);
    }
    if (item->minPosition->y < yMin) {
       // Bottom
-      item->position->y = yMin - item->minY;
-      item->velocity->positiveY();
       walls[WALL_BOTTOM]->constrain(item);
    }
    if (item->minPosition->z < zMin) {
       // Back
-      item->position->z = zMin - item->minZ;
-      item->velocity->positiveZ();
       walls[WALL_BACK]->constrain(item);
    }
 }

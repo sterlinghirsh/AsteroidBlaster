@@ -103,7 +103,7 @@ void RemoteBombShot::handleCollision(Drawable* other) {
 }
 
 void RemoteBombShot::hitWall(BoundingWall* wall) {
-   //particleDirection.reflect(wall->normal);
+   ExplosiveShot::hitWall(wall);
 }
 
 /**

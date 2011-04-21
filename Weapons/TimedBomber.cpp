@@ -11,8 +11,8 @@
 #include "Utility/SoundEffect.h"
 
 TimedBomber::TimedBomber(AsteroidShip* owner) : Weapon(owner) {
-   shotSpeed = 50; // Units per second
-   coolDown = 1.2; // Seconds
+   shotSpeed = 20; // Units per second
+   coolDown = 5.0; // Seconds
    randomVariationAmount = 0.25; // Units
    name = "Mine Layer";
    lastShotPos = new Point3D(0, 1, 0);

@@ -118,7 +118,11 @@ void BoundingWall::constrain(Drawable* item) {
       return;
    }
 
+   actuallyHit = true;
    item->hitWall(this);
+
+   if (!actuallyHit)
+      return;
 
    double speed = item->velocity->getLength();
    // How far out will the ripple effect go?
@@ -127,7 +131,6 @@ void BoundingWall::constrain(Drawable* item) {
    double delay = 1 / (4 * speed);
 
    square->hit(distanceLimit, delay);
-
 }
 
 void BoundingWall::draw() {

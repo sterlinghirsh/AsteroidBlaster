@@ -48,6 +48,7 @@ class BoundingWall {
       GlowSquare* getSquareByCoords(int x, int y);
       virtual void initDisplayList(); // Set up the displayList.
       Vector3D normal;
+      bool actuallyHit;
    private:
       int linesDisplayList;
       const GameState* gameState;

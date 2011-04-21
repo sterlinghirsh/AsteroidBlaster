@@ -146,7 +146,38 @@ void Drawable::drawGlow() {}
  * hitWall is here to be overriden. Called when the wall reflects it.
  */
 void Drawable::hitWall(BoundingWall* wall) {
+      Vector3D relevantExtent(0, 0, 0);
+      
+      switch (wall->wallID) {
+         case WALL_TOP:
+            relevantExtent.y = maxPosition->y;
+            break;
+         case WALL_BOTTOM:
+            relevantExtent.y = minPosition->y;
+            break;
+         case WALL_RIGHT:
+            relevantExtent.x = maxPosition->x;
+            break;
+         case WALL_LEFT:
+            relevantExtent.x = minPosition->x;
+            break;
+         case WALL_FRONT:
+            relevantExtent.z = maxPosition->z;
+            break;
+         case WALL_BACK:
+            relevantExtent.z = minPosition->z;
+            break;
+      }
+
+      Vector3D positionDifference(relevantExtent, wall->normal.scalarMultiply(-wall->wallSize));
    // Do nothing.
+   if (velocity->dot(wall->normal) < 0 && positionDifference.dot(wall->normal) >= 0) {
+      velocity->reflect(wall->normal);
+
+      position->addUpdate(positionDifference);
+   } else {
+      wall->actuallyHit = false;
+   }
 }
 
 /**
