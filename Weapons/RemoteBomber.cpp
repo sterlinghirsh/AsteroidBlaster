@@ -16,7 +16,7 @@ RemoteBomber::RemoteBomber(AsteroidShip* owner) : Weapon(owner) {
    shotSpeed = 30.0; // Units per second
    coolDown = 5; // Seconds
    randomVariationAmount = 0.25; // Units
-   name = "Remote Bomber";
+   name = "Remote Bombs";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
    purchased = true; // Start off owning the bomber

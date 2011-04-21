@@ -16,7 +16,7 @@ Energy::Energy(AsteroidShip* owner)
    shotSpeed = 80; // Units per second
    coolDown = 0.3; // Seconds
    randomVariationAmount = 1.0; // Units
-   name = "Energy";
+   name = "Charge Cannon";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
    purchased = true; // Start off owning the blaster

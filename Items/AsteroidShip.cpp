@@ -94,7 +94,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
     */
    weapons.push_back(new TractorBeam(this));
    weapons.push_back(new Electricity(this));
-   weapons.push_back(new LawnMower(this));
+   //weapons.push_back(new LawnMower(this));
    weapons.push_back(new Ram(this));
    weapons.push_back(new AntiInertia(this));
    weapons.push_back(new TimedBomber(this));
