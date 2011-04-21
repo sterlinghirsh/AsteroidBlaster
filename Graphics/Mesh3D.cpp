@@ -79,6 +79,7 @@ void Mesh3D::draw(bool drawSmooth, bool drawTex) {
    }
    for (int i = 0; i < nFaces; i++) {
       faces[i]->drawFace(drawSmooth, true);
+      faces[i]->drawLines();
    }
    glEnable(GL_LIGHTING);
 }

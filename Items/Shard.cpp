@@ -60,44 +60,8 @@ void Shard::InitShard(double r, double worldSizeIn) {
 
    velocity = new Vector3D(0, 0, 0);
 
-   Ring last;
-   double a = randdouble() * 0.5 + 0.75;
-   double b = randdouble() * 0.5 + 0.75;
-
-   int npts = 4;
-
-   // Make essentially an asteroid with three levels, containing one, four,
-   // and one points around the radius, respectively.
-   for (int j = npts / 2; j >= 0; j--) {
-      double tmpangle = (M_PI * 2 / (double)npts * (double)j);
-      double tmpRad = r * sin(tmpangle);
-      double tmpH = r * cos(tmpangle) * 2.0;
-      int tmpPts = (int) (npts * (tmpRad / r));
-      if (tmpPts < 0) {
-         tmpPts *= -1;
-      } else if (tmpPts == 0) {
-         tmpPts = 1;
-      }
-
-      Ring thisRing;
-      thisRing = Ring(tmpPts, a * tmpRad, b * tmpH, &mesh);
-      _rList.push_back(thisRing);
-
-      last = thisRing;
-   }
-
    minX = minY = minZ = -1;
    maxX = maxY = maxZ = 1;
-
-   // Connect the rings from the beginning of _rList to the halfway point.
-   for (unsigned i = 1; i <= _rList.size() / 2; i++) {
-      makeStrip(_rList[i - 1], _rList[i]);
-   }
-
-   // Connect the rings from the halfway point of _rList to the end.
-   for (size_t i = _rList.size() / 2; i < _rList.size() - 1; i++) {
-      makeStrip(_rList[i], _rList[i + 1]);
-   }
 
    sizeX = maxX - minX;
    sizeY = maxY - minY;
@@ -106,50 +70,6 @@ void Shard::InitShard(double r, double worldSizeIn) {
    updateBoundingBox();
 
    orbiterOffset = randdouble() * 10;
-}
-
-void Shard::makeStrip(Ring r1, Ring r2) {
-   double count = 0.0;
-   int last = 0;
-   Ring t1, t2;
-   if (r1.size() < r2.size()) {
-      t1 = r1;
-      t2 = r2;
-   } else {
-      t1 = r2;
-      t2 = r1;
-   }
-   double step = (double)t1.size() / (double)t2.size();
-   //for (int i = 0; i < t2.size() - (t2.size() % 2); i++) {
-   for (int i = 0; i < t2.size(); i++) {
-      int p1, p2, p3, p4;
-      p1 = t2._nList[i];
-      p2 = t1._nList[(int)count % t1.size()];
-      p3 = t2._nList[(i + 1) % t2.size()];
-      if (r1.size() < r2.size()) {
-         mesh.addFace(p1, p3, p2, gameState);
-      } else {
-         mesh.addFace(p1, p2, p3, gameState);
-      }
-
-      p4 = t1._nList[((int)count - 1 + t1.size()) % t1.size()];
-      if (last != (int)count || i == 0) {
-      //if (last != (int)count) {
-         if (r1.size() < r2.size()) {
-            mesh.addFace(p1, p2, p4, gameState);
-         } else {
-            mesh.addFace(p1, p4, p2, gameState);
-         }
-      }
-
-      last = (int)count;
-      count += step;
-
-      mesh.setFaceColor(0.3f, 0.3f, 0.3f);
-      //for (int i = 0; i < mesh.faces.size(); i++) {
-         //mesh.faces[i].setFaceColor(0.3f, 0.3f, 1.0f);
-      //}
-   }
 }
 
 void Shard::drawOtherOrbiters() {
@@ -191,10 +111,6 @@ void Shard::drawOtherOrbiters() {
 }
 
 void Shard::drawGlow() {
-   //glColor4d(0.3, 0.3, 1.0, 0.8);
-   glColor3d(0.3, 0.3, 1.0);
-   // Call the display list if it has one.
-   Object3D::draw();
    // Disable materials.
    glEnable(GL_COLOR_MATERIAL);
    glPushMatrix();
@@ -205,36 +121,37 @@ void Shard::drawGlow() {
    glScaled(scalex, scaley, scalez);
    glDisable(GL_LIGHTING);
 
-   // Set polygon offset to be behind the lines.
-   glPolygonOffset(1.0f, 1.0f);
-   glEnable(GL_POLYGON_OFFSET_FILL);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   // Draw all triangles in the mesh with smoothing turned off.
-   mesh.draw(false);
-   glDisable(GL_POLYGON_OFFSET_FILL);
+   glColor4d(0.3, 0.3, 0.7, 1.0);
+   drawShard();
 
-   /*
-   // Set polygon offset to be in front of the faces.
-   glPolygonOffset(-1.0f, -1.0f);
-   glEnable(GL_POLYGON_OFFSET_LINE);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   // Draw the lines that border the mesh's triangles.
-   mesh.drawLines(false);
-   glDisable(GL_POLYGON_OFFSET_LINE);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   */
    glPopMatrix();
-
 
    glDisable(GL_COLOR_MATERIAL);
    glEnable(GL_LIGHTING);
    glPopMatrix();
 }
 
+void Shard::drawShard() {
+   double w = 0.5;
+   double h = 2.0;
+   glBegin(GL_TRIANGLE_STRIP);
+   for (int i = 0; i < 2; i++) {
+      glVertex3d(0.0, h / 2.0, 0.0);
+      glVertex3d(-w / 2.0, 0.0, -w / 2.0);
+      glVertex3d(0.0, h / 2.0, 0.0);
+      glVertex3d(w / 2.0, 0.0, -w / 2.0);
+      glVertex3d(0.0, h / 2.0, 0.0);
+      glVertex3d(w / 2.0, 0.0, w / 2.0);
+      glVertex3d(0.0, h / 2.0, 0.0);
+      glVertex3d(-w / 2.0, 0.0, w / 2.0);
+      glVertex3d(0.0, h / 2.0, 0.0);
+      glVertex3d(-w / 2.0, 0.0, -w / 2.0);
+      h *= -1.0;
+   }
+   glEnd();
+}
+
 void Shard::draw() {
-   // Call the display list if it has one.
-   Object3D::draw();
-   glColor3d(0.3, 0.3, 1.0);
    // Disable materials.
    glEnable(GL_COLOR_MATERIAL);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
@@ -245,16 +162,18 @@ void Shard::draw() {
    glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
 
-   glDisable(GL_LIGHTING);
+   //glDisable(GL_LIGHTING);
    //glEnable(GL_CULL_FACE);
-   
+
    //setMaterial(CrystalMaterial);
-   mesh.draw(false);
+   //mesh.draw(false);
+   glColor4d(0.8, 0.8, 1.0, 1.0);
+   drawShard();
 
    glPopMatrix();
 
    glPopMatrix();
-   glEnable(GL_LIGHTING);
+   //glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);
 }
 
@@ -304,7 +223,7 @@ void Shard::handleCollision(Drawable* other) {
          Vector3D* TBshotToShip = new Vector3D(*position, *TBshot->owner->position);
          TBshotToShip->setLength(1000 / sqrt((1 + TBshotToShip->getLength())));
          addAcceleration(TBshotToShip);
-         
+
          Vector3D random;
          for (int i = 0; i < numParticles; ++i) {
             Point3D* particlePosition = new Point3D(*position);
@@ -314,7 +233,7 @@ void Shard::handleCollision(Drawable* other) {
             particleVelocity->setLength(10); // Speed of the particle.
             particleVelocity->addUpdate(*velocity);
             // Make this go toward the ship.
-            TractorAttractionParticle::Add(particlePosition, particleVelocity, TBshot->owner->position, gameState); 
+            TractorAttractionParticle::Add(particlePosition, particleVelocity, TBshot->owner->position, gameState);
          }
       } else if(dynamic_cast<AntiInertiaShot*>(other) != NULL) {
          Vector3D* newVelocity = new Vector3D(*velocity);

@@ -11,6 +11,7 @@
 #include "Utility/Point3D.h"
 #include "Items/Object3D.h"
 #include "Items/Shard.h"
+#include "Items/Ring.h"
 #include <list>
 #include <vector>
 

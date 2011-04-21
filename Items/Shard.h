@@ -7,11 +7,9 @@
 #ifndef __SHARD_H__
 #define __SHARD_H__
 
-#include "Graphics/Mesh3D.h"
 #include "Utility/GlobalUtility.h"
 #include "Utility/Point3D.h"
 #include "Items/Object3D.h"
-#include "Items/Ring.h"
 #include <list>
 #include <vector>
 
@@ -27,7 +25,6 @@
 
 class Shard : public Object3D {
    public:
-      Mesh3D mesh;
       Vector3D rotationVector;
       double rotationSpeed;
       double rotationAmount;
@@ -40,7 +37,7 @@ class Shard : public Object3D {
       void InitShard(double r, double worldSizeIn);
       void draw();
       void drawGlow();
-      void makeStrip(Ring r1, Ring r2);
+      void drawShard();
       void update(double timeDiff);
       virtual void handleCollision(Drawable* other);
       bool handleHit(std::list<Shard*>& asteroids);
@@ -51,7 +48,6 @@ class Shard : public Object3D {
 
    private:
       double randRadius(double r);
-      std::vector<Ring> _rList;
       int _nPoints;
       void drawOtherOrbiters();
       double orbiterOffset;

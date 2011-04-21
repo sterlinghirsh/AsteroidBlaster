@@ -112,8 +112,11 @@ void MeshFace::drawLines() {
    MeshPoint p3_tmp = MeshPoint(p3.x + offset.x,
          p3.y + offset.y,
          p3.z + offset.z);
+   float curAlpha = timeExploded == 0 ? 1.0f : 
+    (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
+
+   glColor4f(lineR, lineG, lineB, curAlpha);
    glBegin(GL_LINE_LOOP);
-   glColor4f(lineR, lineG, lineB, 1);
    p1_tmp.draw();
    p2_tmp.draw();
    p3_tmp.draw();
@@ -136,11 +139,11 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    MeshPoint p3_tmp = MeshPoint(p3.x + offset.x,
          p3.y + offset.y,
          p3.z + offset.z);
-   glBegin(GL_TRIANGLES);
    float curAlpha = timeExploded == 0 ? 1.0f : 
     (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
 
    glColor4f(faceR, faceG, faceB, curAlpha);
+   glBegin(GL_TRIANGLES);
    p1_tmp.draw();
    if (drawTex)
       glTexCoord2d(x1, y1);

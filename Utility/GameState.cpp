@@ -142,7 +142,7 @@ void GameState::update(double timeDiff) {
       GameMessage::Add(gameMsg.str(), 30, 0);
 
       if (gameIsRunning && ship->getHealth() <= 0 && timeLeftToRespawn <= 0) {
-         // Repawn Ship.
+         // Respawn Ship.
          ship->reInitialize();
       }
 
@@ -269,19 +269,9 @@ void GameState::toggleMinimap() {
  * Draw the main view.
  */
 void GameState::draw() {
-   /*
-   if (thirdPerson) {
-      Vector3D newOffset(ship->forward->scalarMultiply(-3));
-      newOffset.addUpdate(ship->up->scalarMultiply(0.5));
-      camera->setOffset(ship->getOffset);
-   } else {
-      camera->setOffset(0, 0, 0);
-   }
-   */
    camera->setViewVector(ship->getViewVector());
    camera->setOffset(*ship->getCameraOffset());
 
-   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    if (!inMenu) {
       camera->setCamera(true);
       camera->shake(ship->getShakeAmount());
@@ -290,11 +280,9 @@ void GameState::draw() {
    cube->draw();
 
    // Get a list of all of the objects after culling them down to the view frustum.
-   //std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
    // Get targetable view frustum objects in the shooting ai.
    
-   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
    if (!inMenu)
       ship->drawCrosshair();
@@ -316,60 +304,47 @@ void GameState::draw() {
  * Draw the glowing objects.
  */
 void GameState::drawGlow() {
-   if (!inMenu) {
-      if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
-       ship->getCurrentView() == VIEW_THIRDPERSON_GUN) {
-         Vector3D newOffset(ship->forward->scalarMultiply(-3));
-         newOffset.addUpdate(ship->up->scalarMultiply(0.5));
-         camera->setOffset(newOffset);
-      } else {
-         camera->setOffset(0, 0, 0);
-      }
-      camera->setViewVector(ship->getViewVector());
-      camera->setOffset(*ship->getCameraOffset());
+   camera->setViewVector(ship->getViewVector());
+   camera->setOffset(*ship->getCameraOffset());
 
-      //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   if (!inMenu) {
       camera->setCamera(true);
+      camera->shake(ship->getShakeAmount());
    }
-   //skybox->draw(camera);
    cube->draw();
 
    // Get a list of all of the objects after culling them down to the view frustum.
-   //std::list<Object3D*>* objects = ship->getRadar()->getViewFrustumReading();
-   if (!inMenu) {
-      viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
-   } else {
-      viewFrustumObjects = ship->getRadar()->getFullReading();
-   }
+   viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
+   // Get targetable view frustum objects in the shooting ai.
+   
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
    for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
-      if (*listIter == NULL || *listIter == ship)
+      if (*listIter == NULL || *listIter == ship) {
          continue;
-      (*listIter)->drawGlow();
+      } else {      
+         (*listIter)->drawGlow();
+      }
    }
 
-   // Don't draw the ship in first Person mode.
    if (!inMenu) {
       // if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
       // ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
          ship->draw();
    }
+
+   delete viewFrustumObjects;
 }
 
 void GameState::hBlur() {
-   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glClear(GL_COLOR_BUFFER_BIT);
    useOrtho();
    glPushMatrix();
-   //glBlendFunc(GL_ONE, GL_ONE);
    glDisable(GL_LIGHTING);
    float minY = -1.0;
    float maxY = 1.0;
    float minX = -1.0f * aspect;
    float maxX = 1.0f * aspect;
-   //int tex = hTexture;
-   //int tex = Texture::getTexture("rawTex");
    int tex = Texture::getTexture("fboTex");
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, tex);
@@ -399,29 +374,20 @@ void GameState::hBlur() {
 
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-   //glBindTexture(GL_TEXTURE_2D, gameState->vTexture);
-
-   //glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-         //0,0, GW, GH, 0);
-
-   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glPopMatrix();
    glBindTexture(GL_TEXTURE_2D, 0);
-   //printf("h\n");
+   //printf("hblur\n");
 }
 
 void GameState::vBlur() {
-   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glClear(GL_COLOR_BUFFER_BIT);
    useOrtho();
    glPushMatrix();
-   //glBlendFunc(GL_ONE, GL_ONE);
    glDisable(GL_LIGHTING);
    float minY = -1.0;
    float maxY = 1.0;
    float minX = -1.0f * aspect;
    float maxX = 1.0f * aspect;
-   //int tex = vTexture;
    int tex = Texture::getTexture("hblurTex");
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, tex);
@@ -451,15 +417,6 @@ void GameState::vBlur() {
    glUseProgram(0);
    
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-   
-   //glBindTexture(GL_TEXTURE_2D, gameState->blurTex);
-   //glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
-
-   //glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-         //0,0, GW, GH, 0);
-
-   //glBindTexture(GL_TEXTURE_2D, 0);
-   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    //printf("v\n");
 }
 
@@ -473,7 +430,6 @@ void GameState::drawBloom() {
    float minX = -1.0f * aspect;
    float maxX = 1.0f * aspect;
    glEnable(GL_TEXTURE_2D);
-   //glBindTexture(GL_TEXTURE_2D, blurTex);
    glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
 
    float texMaxX = (float) gameSettings->GW / (float) texSize;
