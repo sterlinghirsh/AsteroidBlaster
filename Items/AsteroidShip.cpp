@@ -508,43 +508,52 @@ void AsteroidShip::keepFiring() {
 }
 
 void AsteroidShip::draw_frontpanels() {
+   glPushMatrix();
+   glUseProgram(shipYShader);
    glBegin(GL_TRIANGLES);
-
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, cornerY, cornerZ);
    glVertex3d(middleXY, skew, middleZ);
-
-   glVertex3d(frontX, frontY, frontZ);
-   glVertex3d(skew, middleXY, middleZ);
-   glVertex3d(cornerX, cornerY, cornerZ);
-
-   glVertex3d(frontX, frontY, frontZ);
-   glVertex3d(-cornerX, cornerY, cornerZ);
-   glVertex3d(skew, middleXY, middleZ);
-
+   
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-middleXY, skew, middleZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
-
+   
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
    glVertex3d(-middleXY, skew, middleZ);
-
-   glVertex3d(frontX, frontY, frontZ);
-   glVertex3d(skew, -middleXY, middleZ);
-   glVertex3d(-cornerX, -cornerY, cornerZ);
-
-   glVertex3d(frontX, frontY, frontZ);
-   glVertex3d(cornerX, -cornerY, cornerZ);
-   glVertex3d(skew, -middleXY, middleZ);
 
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(middleXY, skew, middleZ);
    glVertex3d(cornerX, -cornerY, cornerZ);
    glEnd();
+   glUseProgram(0);
+   
+   glUseProgram(shipXShader);
+   glBegin(GL_TRIANGLES);
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(skew, middleXY, middleZ);
+   glVertex3d(cornerX, cornerY, cornerZ);
+
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(-cornerX, cornerY, cornerZ);
+   glVertex3d(skew, middleXY, middleZ);
+   
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(skew, -middleXY, middleZ);
+   glVertex3d(-cornerX, -cornerY, cornerZ);
+
+   glVertex3d(frontX, frontY, frontZ);
+   glVertex3d(cornerX, -cornerY, cornerZ);
+   glVertex3d(skew, -middleXY, middleZ);
+   glEnd();
+   glUseProgram(0);
+   
+   glPopMatrix();
 }
 
 void AsteroidShip::draw_backpanels() {
+   glUseProgram(backShader);
    glBegin(GL_TRIANGLES);
    
    glVertex3d(middleXY, skew, middleZ);
@@ -563,12 +572,13 @@ void AsteroidShip::draw_backpanels() {
    glVertex3d(skew, middleXY, middleZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
    glEnd();
+   glUseProgram(0);
 }
 
 void AsteroidShip::draw_spaceboner() {
    glBegin(GL_TRIANGLES);
    if (curForwardAccel == 10.0) {
-      glColor4d(1, .4, 0, .5);
+      glColor4d(1, .4, 0, 1);
       
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(skew, middleXY, middleZ);
@@ -586,7 +596,7 @@ void AsteroidShip::draw_spaceboner() {
       glVertex3d(backX, backY, middleZ + backChange);
       glVertex3d(skew, middleXY, middleZ);
    } else if (backChange == 0) {
-      glColor4d(0, 0, 0, .4);
+      glColor4d(0, 0, 0, 1);
 
       glVertex3d(-middleXY, skew, middleZ);
       glVertex3d(middleXY, skew, middleZ);
@@ -596,7 +606,7 @@ void AsteroidShip::draw_spaceboner() {
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(skew, -middleXY, middleZ);
    } else {
-      glColor4d(1, .4, 0, .5);
+      glColor4d(1, .4, 0, 1);
 
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(skew, middleXY, middleZ);
@@ -846,8 +856,9 @@ void AsteroidShip::draw() {
    // Rotate to the current up/right/forward vectors.
    
    glRotate();
-   glColor4d(0, 0, 0, 0.4);
-
+   //spin+=.5;
+   glColor4d(0, 0, 0, .8);
+   //glRotated(spin, 1, 0, 0);
    draw_ship();
    /*
    glBegin(GL_POINTS);
@@ -884,7 +895,7 @@ void AsteroidShip::handleCollision(Drawable* other) {
       addInstantAcceleration(new Vector3D(*(asteroid->velocity)));
       if (!gameState->godMode) {
       // TODO: Make 5 not a magic number.
-         if (currentWeapon == 5 && isFiring && weapons[5]->curAmmo > 0) {}
+         if (currentWeapon == 4 && isFiring && weapons[4]->curAmmo > 0) {}
          else if((doubleTime() - justGotHit) > 1) {
             shakeAmount = 8;
             SoundEffect::playSoundEffect("ShipHit.wav");

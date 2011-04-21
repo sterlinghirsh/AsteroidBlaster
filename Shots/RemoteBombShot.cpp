@@ -49,7 +49,6 @@ void RemoteBombShot::draw() {
       gluSphere(quadric, pulseSize, 10, 10);
       glColor4d(0.4, 0.8, 1, 1);
       gluSphere(quadric, .3, 10, 10);
-      //glUseProgram(bombShader);
       glColor4d(0.4, 0.8, 0.4, .1);
       gluSphere(quadric, .4, 10, 10);
       glColor4d(0.4, 0.8, 0.4, .1);
@@ -64,7 +63,6 @@ void RemoteBombShot::draw() {
       gluSphere(quadric, .9, 10, 10);
       glColor4d(0.4, 0.8, 0.4, .1);
       gluSphere(quadric, 1, 10, 10);
-      //glUseProgram(0);
       
       // Radius 0.5, 5 slices, 5 stacks.
       

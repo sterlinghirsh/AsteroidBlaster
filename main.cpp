@@ -250,7 +250,9 @@ void load() {
    billboardShader = setShaders( (char *) "./Shaders/billboard.vert", (char *) "./Shaders/billboard.frag");
    //hBlurShader = setShaders( (char *) "./Shaders/old/hblur.vert", (char *) "./Shaders/hblur.frag");
    //vBlurShader = setShaders( (char *) "./Shaders/old/vblur.vert", (char *) "./Shaders/vblur.frag");
-   bombShader = setShaders( (char *) "./Shaders/bombFade.vert", (char *) "./Shaders/bombFade.frag");
+   shipXShader = setShaders( (char *) "./Shaders/ship.vert", (char *) "./Shaders/ship.frag");
+   shipYShader = setShaders( (char *) "./Shaders/ship.vert", (char *) "./Shaders/shipY.frag");
+   backShader = setShaders( (char *) "./Shaders/ship.vert", (char *) "./Shaders/backship.frag");
 
    //load and start BGM
    Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
