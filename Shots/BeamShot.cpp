@@ -222,5 +222,19 @@ void BeamShot::drawInMinimap() {
 }
 
 void BeamShot::hitWall(BoundingWall* wall) {
+   shouldConstrain = false;
    return;
+}
+
+Point3D BeamShot::getWallIntersectionPoint(BoundingWall* wall) {
+   Point3D toReturn = Shot::getWallIntersectionPoint(wall);
+   if (hitYet) {
+      wall->actuallyHit = false;
+   }
+   if (wall->actuallyHit) {
+      drawLength = position->distanceFrom(toReturn);
+      printf("drawLength: %f\n", drawLength);
+      toReturn.print();
+   }
+   return toReturn;
 }

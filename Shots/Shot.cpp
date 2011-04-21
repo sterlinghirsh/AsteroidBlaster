@@ -79,15 +79,21 @@ Point3D Shot::getWallIntersectionPoint(BoundingWall* wall) {
 
    // Calculate intersection between beam and wall.
    Vector3D normalizedDirection = velocity->getNormalized();
-   double rayDotNormal = -normalizedDirection.dot(wall->normal);
-   if (rayDotNormal == 0) {
+   Vector3D wallNormal = wall->normal.scalarMultiply(-1); // To make it face away from the center.
+   double rayDotNormal = normalizedDirection.dot(wallNormal);
+   if (rayDotNormal <= 0) {
       wall->actuallyHit = false;
+      return toReturn;
    }
 
    Vector3D rayOriginToPointOnPlane(*position, pointOnPlane);
-   double distance = rayOriginToPointOnPlane.dot(*position) / rayDotNormal;
 
-   printf("Distance: %f\n", distance);
+   double distance = rayOriginToPointOnPlane.dot(wallNormal) / rayDotNormal;
+   if (distance < 0) {
+      wall->actuallyHit = false;
+      return toReturn;
+   }
+
    toReturn.addUpdate(normalizedDirection.scalarMultiply(distance));
    return toReturn;
 }

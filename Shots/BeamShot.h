@@ -26,6 +26,7 @@ class BeamShot : public Shot {
       virtual void handleCollision(Drawable* other);
       virtual void debug();
       virtual void hitWall(BoundingWall* wall);
+      virtual Point3D getWallIntersectionPoint(BoundingWall* wall);
 
    private:
       double drawLength;
