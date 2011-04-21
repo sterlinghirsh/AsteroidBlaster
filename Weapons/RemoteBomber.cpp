@@ -12,7 +12,7 @@
 
 RemoteBomber::RemoteBomber(AsteroidShip* owner) : Weapon(owner) {
    shotSpeed = 30.0; // Units per second
-   coolDown = 1.5; // Seconds
+   coolDown = 5; // Seconds
    randomVariationAmount = 0.25; // Units
    name = "Remote Bomber";
    lastShotPos = new Point3D(0, 1, 0);
@@ -31,6 +31,9 @@ RemoteBomber::~RemoteBomber() {
  * We'll probably keep track of something or other here.
  */
 void RemoteBomber::update(double timeDiff) {
+   if (firedShot != NULL) {
+      timeLastFired = doubleTime();
+   }
    if (firedShot != NULL && lastFiredFrame <= curFrame - 2) {
       firedShot->shouldExplode = true;
       firedShot = NULL;

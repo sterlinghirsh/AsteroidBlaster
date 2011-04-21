@@ -116,8 +116,9 @@ void RemoteBombShot::explode() {
 
    // set it as not collidable (elsewhere)
    // Remove reference in weapon.
-   if (weapon->firedShot == this)
+   if (weapon->firedShot == this) {
       weapon->firedShot = NULL;
+   }
 }
 
 // Override detectCollision function
