@@ -19,7 +19,7 @@ MeshFace::MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3, const GameSta
    texture = 0;
    textured = false;
    timeExploded = 0;
-   lifetime = 1;
+   lifetime = 2;
 }
 
 MeshFace::~MeshFace() {
@@ -65,7 +65,8 @@ void MeshFace::draw() {
    position->glTranslate();
    glRotated(angle, axis->x, axis->y, axis->z);
 
-   double scaleAmount = sqrt((lifetime - (doubleTime() - timeExploded)) / lifetime);
+   //double scaleAmount = sqrt((lifetime - (doubleTime() - timeExploded)) / lifetime);
+   double scaleAmount = clamp(2.0 * (lifetime - (doubleTime() - timeExploded)) / lifetime, 0, 1);
    glScaled(scaleAmount, scaleAmount, scaleAmount);
 
    // Draw lines
@@ -203,7 +204,7 @@ void MeshFace::drawGlow() {
    position->glTranslate();
    glRotated(angle, axis->x, axis->y, axis->z);
 
-   double scaleAmount = sqrt((lifetime - (doubleTime() - timeExploded)) / lifetime);
+   double scaleAmount = clamp(2.0 * (lifetime - (doubleTime() - timeExploded)) / lifetime, 0, 1);
    glScaled(scaleAmount, scaleAmount, scaleAmount);
 
    // Draw lines
