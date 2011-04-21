@@ -123,6 +123,8 @@ class GameState : public InputReceiver {
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
       double curFPS, worldSize;
+      
+      Camera* camera;
    private:
       //void reset();
       
@@ -136,7 +138,7 @@ class GameState : public InputReceiver {
       double countDown;
 
       Skybox* skybox;
-      Camera* camera;
+      //Camera* camera;
       BoundingSpace* cube;
       BoundingSphere* sphere;
       Minimap* minimap;
