@@ -228,7 +228,7 @@ void GameState::update(double timeDiff) {
    updateText();
    
    weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
-   healthBar->setAmount((float) (ship->getHealth() / 100.0));
+   healthBar->setAmount((float) (ship->health / ship->healthMax));
    cube->update(timeDiff);
    minimap->update(timeDiff);
    spring->update(timeDiff);

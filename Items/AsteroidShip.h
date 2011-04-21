@@ -84,6 +84,8 @@ class AsteroidShip : public Object3D {
       double timeDied;
 
       void reInitialize();
+      
+      int healthMaxUpgradePrice() { return (healthMax/100)*healthUpgradePrice;}
 
       /**
        * These are going to be the functions that either the local player

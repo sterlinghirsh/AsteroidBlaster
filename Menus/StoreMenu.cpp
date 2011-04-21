@@ -68,7 +68,6 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    //get weapon purchase text in weaponsTexts
    std::vector<Weapon*> weaponList = gameState->ship->getWeapons();
    for(unsigned int i = 0; i < weaponList.size(); i++) {
-      std::cout << "i= " << i << "| " << weaponList.at(i)->getName() << std::endl;
       weaponsTexts.push_back(new Text(weaponList.at(i)->weaponString(), menuFont, position));
    }
    
@@ -195,7 +194,6 @@ void StoreMenu::draw() {
          }
          weaponsTexts[i]->setPosition(position);
          weaponsTexts[i]->updateBody(weaponList[i]->weaponString());
-         std::cout << "i= " << i << "|| " << weaponList[i]->getName() << std::endl;
          position.y = (Sint16) (position.y + (gameSettings->GH/10));
       }
    
@@ -215,7 +213,6 @@ void StoreMenu::draw() {
          }
          ammoTexts[i]->setPosition(position);
          ammoTexts[i]->updateBody(weaponList[i]->ammoString());
-         std::cout << "i= " << i << "|| " << weaponList[i]->getName() << std::endl;
          position.y = (Sint16) (position.y + (gameSettings->GH/10));
       }
       
@@ -247,7 +244,7 @@ void StoreMenu::draw() {
       shipTexts[ENGINEUPGRADE_SHIPTEXTSINDEX]->updateBody(out.str());
       
       out.str(""); 
-      out << "Upgrade Max Health to " << gameState->ship->healthMax + gameState->ship->healthUpgradeAmount << " $" << (gameState->ship->healthMax/100)*gameState->ship->healthUpgradePrice << " (" << gameState->ship->healthMax << ")";
+      out << "Upgrade Max Health to " << gameState->ship->healthMax + gameState->ship->healthUpgradeAmount << " $" << gameState->ship->healthMaxUpgradePrice() << " (" << gameState->ship->healthMax << ")";
       
       shipTexts[BUYMAXHEALTH_SHIPTEXTSINDEX]->updateBody(out.str());
       
@@ -389,8 +386,8 @@ void StoreMenu::mouseDown(int button) {
          } else if(shipTexts[ENGINEUPGRADE_SHIPTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= gameState->ship->enginePrice*nextEngineLevel) {
             gameState->ship->nShards -= gameState->ship->enginePrice*nextEngineLevel;
             gameState->ship->engineUpgrade += 1;
-         } else if(shipTexts[BUYMAXHEALTH_SHIPTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= (gameState->ship->healthMax/100)*gameState->ship->healthUpgradePrice) {
-            gameState->ship->nShards -= (gameState->ship->healthMax/100)*gameState->ship->healthUpgradePrice;
+         } else if(shipTexts[BUYMAXHEALTH_SHIPTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= gameState->ship->healthMaxUpgradePrice()) {
+            gameState->ship->nShards -= gameState->ship->healthMaxUpgradePrice();
             gameState->ship->healthMax += gameState->ship->healthUpgradeAmount;
          }
       } else {
