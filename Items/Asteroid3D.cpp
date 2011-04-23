@@ -13,12 +13,8 @@
 #include "Shots/BeamShot.h"
 #include "Shots/TractorBeamShot.h"
 #include "Shots/ElectricityShot.h"
-#include "Shots/LawnMowerShot.h"
-#include "Shots/RamShot.h"
 #include "Shots/AntiInertiaShot.h"
 #include "Shots/EnergyShot.h"
-#include "Shots/TimedBombShot.h"
-#include "Shots/RemoteBombShot.h"
 
 #include <time.h>
 #include "Utility/SoundEffect.h"
@@ -577,12 +573,13 @@ void Asteroid3D::handleCollision(Drawable* other) {
    AsteroidShip* ship;
    Shot* shot;
    BeamShot* beamShot;
-   LawnMowerShot* lawnMowerShot;
    ElectricityShot* elecShot;
    TractorBeamShot* TBshot; // Not tuberculosis
-   TimedBombShot* TBshot2; // This is an awful name.
-   RemoteBombShot* RBshot; // This is an awful name.
    EnergyShot* energyShot;
+   
+   if (health < 0)
+      return;
+   
    if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       if (isExploding || otherAsteroid->isExploding) { return; }
       double d = (*(otherAsteroid->position)).distanceFrom(*position);
@@ -624,95 +621,70 @@ void Asteroid3D::handleCollision(Drawable* other) {
       addInstantAcceleration(reverseVelocity);
 
    } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
-      if (health < 0) { return; }
       health = 0;
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
-      if (isExploding) { return; }
       lastHitShotOwner = shot->owner;
-      if (health > 0) {
-         if ((beamShot = dynamic_cast<BeamShot*>(other)) != NULL) {
-            if (((!beamShot->hitYet) || this == beamShot->hitItem) && (curFrame - 1) <= beamShot->firstFrame) {
-               health = 0;
-               velocity->addUpdate(shot->velocity->scalarMultiply(10));
-            }
-         } else if ((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {
-            velocity->updateMagnitude(TBshot->owner->velocity);
-            
-            // Do nothing.
-         } else if ((lawnMowerShot = dynamic_cast<LawnMowerShot*>(other)) != NULL) {
-            health -= fabs((health / 8) + 0.05); // Fabsulous!!
-            velocity->updateMagnitude(*lawnMowerShot->position, *position);
-         } else if ((elecShot = dynamic_cast<ElectricityShot*>(other)) != NULL) {
-            const int numElecParticles = 1;
-            
-            double hitDistance = 0;
-            // TODO: Refactor this so we do all collision detection elsewhere.
-            Point3D* closestPoint = sphereCollideWithRay(*shot->position, *shot->velocity, &hitDistance);
+      health -= shot->getDamage(this);
+      // Maybe do this for force too.
 
-            // Sometimes, we decide that it's not a real hit. No big deal.
-            if (closestPoint != NULL) {
-               elecShot->length = hitDistance;
-               elecShot->velocity->setLength(hitDistance);
-               health -= elecShot->strength * .05;
-               Vector3D centerToImpactPoint(*position, *closestPoint);
-               centerToImpactPoint.setLength(5);
-
-               for (int i = 0; i < numElecParticles; ++i) {
-                  Point3D* particleStartPoint = new Point3D(*closestPoint);
-                  Vector3D* particleDirection = new Vector3D();
-                  particleDirection->randomMagnitude();
-                  particleDirection->setLength(3);
-                  particleDirection->addUpdate(centerToImpactPoint);
-                  ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
-               }
-
-               delete closestPoint;
-            }
-         } else if (dynamic_cast<RamShot*>(other) != NULL) {
-            health = 0;
-         } else if (dynamic_cast<AntiInertiaShot*>(other) != NULL) {
-            Vector3D* newVelocity = new Vector3D(*velocity);
-            newVelocity->scalarMultiplyUpdate(-0.1);
-            addInstantAcceleration(newVelocity);
-            if (rotationSpeed >= 0.5) {
-               rotationSpeed -= 0.5;
-            } else {
-               rotationSpeed = 0;
-            } 
-         } else if ((energyShot = dynamic_cast<EnergyShot*>(other)) != NULL) {
-            energyHitAsteroid = true;
-            // Calculate any remaining damage to be done, and factor it in to the new damage per second.
-            // TODO: 5.0 is the time damage is dealt. We may want to put this in energyshot.
-            double damageTimeLeft = clamp(doubleTime() - timeLastHitByEnergy, 0.0, energyDamageTime);
-            double damageLeft = damagePerSecond * damageTimeLeft;
-            damagePerSecond = (damageLeft / energyDamageTime) + energyShot->damagePerSecond;
-            timeLastHitByEnergy = doubleTime();
-            newVelocity->updateMagnitude(velocity);
-            newAcceleration->updateMagnitude(acceleration);
-            
-            velocity->updateMagnitude(0, 0, 0);
-            acceleration->updateMagnitude(0, 0, 0);
-         } else if (dynamic_cast<ProjectileShot*>(other) != NULL) {
-            if (gameState->godMode) {
-               health = 0;
-            } else {
-               health--;
-            }
-            double speed = 10 / sqrt(radius);
-            Vector3D* newAcceleration = new Vector3D(*(shot->position), *position);
-            newAcceleration->setLength(speed);
-            addInstantAcceleration(newAcceleration);
-         } else if ((TBshot2 = dynamic_cast<TimedBombShot*>(other)) != NULL) {
-            if (TBshot2->isExploded)
-               health = 0;
-            // remove health from this asteroid based on its distance to the bomb.
-            // change this bomb's motion vector based on its distance to the bomb.
-         } else if ((RBshot = dynamic_cast<RemoteBombShot*>(other)) != NULL) {
-            if (RBshot->isExploded)
-               health = 0;
-            // remove health from this asteroid based on its distance to the bomb.
-            // change this bomb's motion vector based on its distance to the bomb.
+      if ((beamShot = dynamic_cast<BeamShot*>(other)) != NULL) {
+         if (((!beamShot->hitYet) || this == beamShot->hitItem) && (curFrame - 1) <= beamShot->firstFrame) {
+            velocity->addUpdate(shot->velocity->scalarMultiply(10));
          }
+      } else if ((TBshot = dynamic_cast<TractorBeamShot*>(other)) != NULL) {
+         velocity->updateMagnitude(TBshot->owner->velocity);
+      } else if ((elecShot = dynamic_cast<ElectricityShot*>(other)) != NULL) {
+         const int numElecParticles = 1;
+         
+         double hitDistance = 0;
+         // TODO: Refactor this so we do all collision detection elsewhere.
+         Point3D* closestPoint = sphereCollideWithRay(*shot->position, *shot->velocity, &hitDistance);
+
+         // Sometimes, we decide that it's not a real hit. No big deal.
+         if (closestPoint != NULL) {
+            elecShot->length = hitDistance;
+            elecShot->velocity->setLength(hitDistance);
+            Vector3D centerToImpactPoint(*position, *closestPoint);
+            centerToImpactPoint.setLength(5);
+
+            for (int i = 0; i < numElecParticles; ++i) {
+               Point3D* particleStartPoint = new Point3D(*closestPoint);
+               Vector3D* particleDirection = new Vector3D();
+               particleDirection->randomMagnitude();
+               particleDirection->setLength(3);
+               particleDirection->addUpdate(centerToImpactPoint);
+               ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
+            }
+
+            delete closestPoint;
+         }
+      } else if (dynamic_cast<AntiInertiaShot*>(other) != NULL) {
+         Vector3D* newVelocity = new Vector3D(*velocity);
+         newVelocity->scalarMultiplyUpdate(-0.1);
+         addInstantAcceleration(newVelocity);
+         if (rotationSpeed >= 0.5) {
+            rotationSpeed -= 0.5;
+         } else {
+            rotationSpeed = 0;
+         } 
+      } else if ((energyShot = dynamic_cast<EnergyShot*>(other)) != NULL) {
+         energyHitAsteroid = true;
+         // Calculate any remaining damage to be done, and factor it in to the new damage per second.
+         // TODO: 5.0 is the time damage is dealt. We may want to put this in energyshot.
+         double damageTimeLeft = clamp(doubleTime() - timeLastHitByEnergy, 0.0, energyDamageTime);
+         double damageLeft = damagePerSecond * damageTimeLeft;
+         damagePerSecond = (damageLeft / energyDamageTime) + energyShot->damagePerSecond;
+         timeLastHitByEnergy = doubleTime();
+         newVelocity->updateMagnitude(velocity);
+         newAcceleration->updateMagnitude(acceleration);
+         
+         velocity->updateMagnitude(0, 0, 0);
+         acceleration->updateMagnitude(0, 0, 0);
+      } else if (dynamic_cast<ProjectileShot*>(other) != NULL) {
+         double speed = 10 / sqrt(radius);
+         Vector3D* newAcceleration = new Vector3D(*(shot->position), *position);
+         newAcceleration->setLength(speed);
+         addInstantAcceleration(newAcceleration);
       }
    }
 }

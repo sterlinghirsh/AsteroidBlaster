@@ -24,7 +24,6 @@ ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn,
    persist = true;
    angle = M_PI / 360; // Radians from the center
    length = 80;
-   strength = strengthOfShot;
    farRadius = length * tan(angle);
    framesAlive = 0;
    forward = new Vector3D(*velocity); // Goofy.
@@ -61,6 +60,8 @@ ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn,
    */
    shouldBeCulled = false;
    updateBoundingBox();
+   const double damageBase = 0.5;
+   damage = damageBase * strengthOfShot; // We might want to change this.
 }
 
 /**

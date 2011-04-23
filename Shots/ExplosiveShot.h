@@ -11,7 +11,6 @@
 class ExplosiveShot : public Shot {
    public:
       ExplosiveShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState);
-      virtual void draw();
       // update should probably check isExploded to see if it's time to blow up.
       virtual void update(double timeDiff);
       // Called when the ExplosiveShot realizes it has been exploded.
@@ -30,6 +29,7 @@ class ExplosiveShot : public Shot {
        * if it has not already.
        */
       bool shouldExplode;
+      virtual double getDamage(Object3D* other);
 };
 
 #endif

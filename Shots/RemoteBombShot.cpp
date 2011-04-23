@@ -24,6 +24,7 @@ RemoteBombShot::RemoteBombShot(Point3D& posIn, Vector3D dirIn,
    timeToExplode = 8;
 
    updateBoundingBox();
+   damage = 50;
 }
 
 // Needed to avoid obscure vtable compiler error.

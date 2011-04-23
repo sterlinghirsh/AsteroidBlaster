@@ -22,12 +22,12 @@ class ElectricityShot : public Shot {
       virtual void drawShot(bool isGlow);
       virtual void update(double timeDiff);
       int framesAlive;
-      double strength;
       double angle;
       double length;
       double farRadius;
       bool detectCollision(Drawable* other, bool checkOther);
       void handleCollision(Drawable* other);
+
 };
 
 #endif

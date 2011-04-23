@@ -36,7 +36,10 @@ class Shot : public Object3D {
       virtual void debug();
       bool isBeam;
 
+      double damage;
+
       Point3D getWallIntersectionPoint(BoundingWall* wall);
+      virtual double getDamage(Object3D* collidedObject);
 };
 
 #endif

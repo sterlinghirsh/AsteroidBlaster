@@ -43,6 +43,7 @@ weapon(weaponIn) {
    particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
 
    chargeTime = 0;
+   damage = 1; // Base damage. But we really use damagePerSecond.
 }
 
 void EnergyShot::draw() {

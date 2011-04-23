@@ -31,6 +31,7 @@ ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn,
    normalizedVelocity.normalize();
 
    particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
+   damage = 3;
 }
 
 void ProjectileShot::draw() {

@@ -58,6 +58,7 @@ AntiInertiaShot::AntiInertiaShot(Point3D& posIn, Vector3D dirIn,
    */
    shouldBeCulled = false;
    updateBoundingBox();
+   damage = 0;
 }
 
 /**

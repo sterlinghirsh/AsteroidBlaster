@@ -97,3 +97,7 @@ Point3D Shot::getWallIntersectionPoint(BoundingWall* wall) {
    toReturn.addUpdate(normalizedDirection.scalarMultiply(distance));
    return toReturn;
 }
+
+double Shot::getDamage(Object3D* collidedObject) {
+   return damage;
+}

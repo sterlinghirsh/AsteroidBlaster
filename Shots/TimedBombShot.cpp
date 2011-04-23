@@ -26,7 +26,8 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const
    timeToExplode = 15;
    
    explodeRadius = 8;
-
+   
+   damage = 40;
 }
 
 // Needed to avoid obscure vtable compiler error.
