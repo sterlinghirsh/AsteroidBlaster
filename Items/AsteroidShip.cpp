@@ -10,6 +10,7 @@
 #include "Utility/Quaternion.h"
 #include "Utility/SoundEffect.h"
 #include "Particles/EngineParticle.h"
+#include "Text/GameMessage.h"
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
@@ -197,7 +198,7 @@ void AsteroidShip::selectWeapon(int weaponType) {
 /**
  * Retrieve the ship's health.
  */
-int AsteroidShip::getHealth() {
+double AsteroidShip::getHealth() {
    return health;
 }
 
@@ -348,6 +349,37 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 }
 
 void AsteroidShip::update(double timeDiff) {
+   if (health <= 0) {
+      const double respawnTime = 3;
+      // Handle respawning.
+      if (timeDied == 0) {
+         timeDied = doubleTime();
+      } 
+
+      double timeLeftToRespawn = (timeDied + respawnTime) - doubleTime();
+      if (this == gameState->ship) {
+         std::ostringstream gameMsg;
+         gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
+
+         GameMessage::Add(gameMsg.str(), 30, 0);
+      }
+
+      if (gameState->gameIsRunning && timeLeftToRespawn <= 0) {
+         reInitialize();
+      } else {
+         fire(false);
+         setRollSpeed(0);
+         accelerateForward(0);
+         accelerateUp(0);
+         accelerateRight(0);
+         setYawSpeed(0.0);
+         setPitchSpeed(0.0);
+         setRollSpeed(0.0);
+         return;
+      }
+   }
+
+
    if (shooter->isEnabled()) {
       shooter->think(timeDiff);
    }
@@ -880,6 +912,7 @@ void AsteroidShip::draw() {
 void AsteroidShip::handleCollision(Drawable* other) {
    Asteroid3D* asteroid;
    Shard* shard;
+   Shot* shot;
 
    // Try converting other into a Shard
    if ((shard = dynamic_cast<Shard*>(other)) != NULL) {
@@ -903,9 +936,8 @@ void AsteroidShip::handleCollision(Drawable* other) {
             justGotHit = doubleTime();
          }
       }
-      if(health < 0) {
-         health = 0;
-      }
+   } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
+      health -= shot->getDamage(this);
    }
 }
 

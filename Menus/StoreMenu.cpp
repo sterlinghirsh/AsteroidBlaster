@@ -390,7 +390,7 @@ void StoreMenu::mouseDown(int button) {
             }
          }
       } else if(menuSelection == SHIP) {
-         int health = gameState->ship->health;
+         double health = gameState->ship->health;
          int nextEngineLevel = gameState->ship->engineUpgrade + 1;
          if(shipTexts[BUYHEALTH_SHIPTEXTSINDEX]->mouseSelect(x,y) && shardsOwned >= gameState->ship->healthPrice) {
             if(gameState->ship->healthMax <= (health + gameState->ship->healthAmount)) {

@@ -129,25 +129,11 @@ void GameState::addScreens() {
 void GameState::update(double timeDiff) {
    const double respawnTime = 3;
    // Determine whether or not the game should continue running
-   if (gameIsRunning && ship->getHealth() <= 0) {
-      if (ship->timeDied == 0) {
-         ship->timeDied = doubleTime();
-      }
-
-      double timeLeftToRespawn = (ship->timeDied + respawnTime) - doubleTime();
-      
-      std::ostringstream gameMsg;
-      gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
-
-      GameMessage::Add(gameMsg.str(), 30, 0);
-
-      if (gameIsRunning && ship->getHealth() <= 0 && timeLeftToRespawn <= 0) {
-         // Respawn Ship.
-         ship->reInitialize();
-      }
+   //if (gameIsRunning && ship->getHealth() <= 0) {
 
       //gameIsRunning = false;
       // Draw the win or lose text
+      /*
       if (!gameIsRunning && ship->getHealth() <= 0) {
          std::ostringstream msg;
          msg << "Game Over!";
@@ -158,15 +144,8 @@ void GameState::update(double timeDiff) {
          GameMessage::Add(msg.str(), 30, 5);
       }
       SoundEffect::stopAllSoundEffect();
-      //SoundEffect::playSoundEffect("GameOver.wav");
-      ship->fire(false);
-      ship->setRollSpeed(0);
-      ship->accelerateForward(0);
-      ship->accelerateForward(0);
-      ship->setYawSpeed(0.0);
-      ship->setPitchSpeed(0.0);
-      // countDown = 5;
-   } else if(!inMenu && gameIsRunning && custodian.asteroidCount == 0) {
+      */
+   if (!inMenu && gameIsRunning && custodian.asteroidCount == 0) {
       //check if it is done waiting until going to the next level
       if(countDown <= 0) {
          nextLevel();

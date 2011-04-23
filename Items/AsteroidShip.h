@@ -46,7 +46,7 @@ class AsteroidShip : public Object3D {
    public:
       AsteroidShip(const GameState* _gameState);
       virtual ~AsteroidShip();
-      int getHealth();
+      double getHealth();
       int getScore();
       int getShards();
       double getAimX();
@@ -85,7 +85,7 @@ class AsteroidShip : public Object3D {
 
       void reInitialize();
       
-      int healthMaxUpgradePrice() { return (healthMax/100)*healthUpgradePrice;}
+      int healthMaxUpgradePrice() { return ((int) healthMax/100)*healthUpgradePrice;}
 
       /**
        * These are going to be the functions that either the local player
@@ -128,8 +128,8 @@ class AsteroidShip : public Object3D {
       int engineUpgrade;
       int engineMax;
       int enginePrice;
-      int health;
-      int healthMax;
+      double health;
+      double healthMax;
       int healthUpgradePrice;
       int healthPrice;
       int healthAmount;
