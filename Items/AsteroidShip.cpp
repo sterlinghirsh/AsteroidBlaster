@@ -33,6 +33,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    // Bounding box stuff.
    maxX = maxY = maxZ = 4;
    minX = minY = minZ = -4;
+   radius = 4;
    updateBoundingBox();
    
    // Todo: comment these.

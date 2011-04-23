@@ -51,7 +51,7 @@ void Blaster::fire() {
    randomVariation.randomMagnitude();
    randomVariation.scalarMultiplyUpdate(randomVariationAmount);
    shotDirection.addUpdate(randomVariation);
-   ship->shotDirection.movePoint(start);
+   ship->shotDirection.movePoint(start, 3);
    ship->setShakeAmount(0.05f);
    ship->custodian->add(new ProjectileShot(start,
             shotDirection, ship, ship->gameState));

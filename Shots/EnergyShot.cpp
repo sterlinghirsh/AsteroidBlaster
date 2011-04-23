@@ -43,7 +43,7 @@ weapon(weaponIn) {
    particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
 
    chargeTime = 0;
-   damage = 1; // Base damage. But we really use damagePerSecond.
+   damage = 0; // Base damage. But we really use damagePerSecond.
 }
 
 void EnergyShot::draw() {
@@ -167,6 +167,9 @@ void EnergyShot::update(double timeDiff) {
 }
 
 void EnergyShot::handleCollision(Drawable* other) {
+   if (other == owner) {
+      return;
+   }
    const int particlesToEmit = 10;
    
    static Vector3D particleVariation;

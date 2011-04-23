@@ -164,7 +164,6 @@ bool BeamShot::detectCollision(Drawable* other, bool checkOther) {
    }
       
    if (hitYet) {
-      Object3D* someObject = dynamic_cast<Object3D*>(other);
       return false;
    }
 
@@ -234,8 +233,6 @@ Point3D BeamShot::getWallIntersectionPoint(BoundingWall* wall) {
    }
    if (wall->actuallyHit) {
       drawLength = position->distanceFrom(toReturn);
-      printf("drawLength: %f\n", drawLength);
-      toReturn.print();
    }
    return toReturn;
 }
