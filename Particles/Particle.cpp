@@ -55,12 +55,13 @@ void Particle::updateParticles(double timeDifference)
       if (*particle != NULL) {
          (*particle)->update(timeDifference);
          if ((*particle)->shouldRemove) {
+            delete *particle;
             particle = Particle::particles.erase(particle);
          } else {
             ++particle;
          }
       } else {
-         delete *particle;
+         // Don't delete a NULL pointer...
          particle = Particle::particles.erase(particle);
       }
    }
