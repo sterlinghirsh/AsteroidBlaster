@@ -22,6 +22,7 @@ class Particle : public Drawable {
       static void updateParticles(double timeDifference);
 
       static void Add(Particle* newParticle);
+      static void Clear();
       
       virtual void draw();
       virtual void update(double timeDifference);

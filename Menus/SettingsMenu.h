@@ -11,7 +11,7 @@ class GameState;
 class SettingsMenu : public Menu {
    public:
    SettingsMenu(GameState*& _gameState);
-   ~SettingsMenu();
+   virtual ~SettingsMenu();
    
    GameState*& gameState;
 

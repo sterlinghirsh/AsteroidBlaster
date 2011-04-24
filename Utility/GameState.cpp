@@ -550,6 +550,7 @@ void GameState::initAsteroids() {
    /* We want this spaceHolder because we don't want to spawn asteroids
     * too close to the ship.
     */
+   /* TODO: One of these should go around each ship. */
    Object3D* spaceHolder = new Object3D(this);
    spaceHolder->minX = spaceHolder->minY = spaceHolder->minZ = -10;
    spaceHolder->maxX = spaceHolder->maxY = spaceHolder->maxZ = 10;
@@ -595,7 +596,7 @@ void GameState::reset() {
    delete minimap;
    
    custodian.clear();
-   Particle::particles.clear();
+   Particle::Clear();
 
    curLevel = 1;
    numAsteroidsToSpawn = curLevel;

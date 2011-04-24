@@ -396,7 +396,8 @@ GLuint setShaders(char * vert, char * frag, char * geom) {
    glShaderSource(f, 1, &ff, NULL);
    glShaderSource(g, 1, &gg, NULL);
 
-   free(vs); free(fs); //free(gs);
+   // We had free(gs) commented, but I don't know why.
+   free(vs); free(fs); free(gs);
 
    glCompileShader(v);
    glCompileShader(f);

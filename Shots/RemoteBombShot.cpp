@@ -24,7 +24,7 @@ RemoteBombShot::RemoteBombShot(Point3D& posIn, Vector3D dirIn,
    timeToExplode = 8;
 
    updateBoundingBox();
-   damage = 50;
+   damage = 60;
 }
 
 // Needed to avoid obscure vtable compiler error.
@@ -42,11 +42,18 @@ void RemoteBombShot::draw() {
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);
       position->glTranslate();
-      if (fmod(doubleTime() * 6, 2) < 1) {
-         glColor3d(0.4, 0.8, 0.4);
+      
+      double amountDone = (doubleTime() - timeFired) / timeToExplode;
+      
+      double animationPoint = fmod(pow(10, 0.4 + amountDone), 2);
+      pulseSize = (sin(animationPoint * M_PI) * 0.25) + 0.5 ;
+
+      if (animationPoint < 1) {
+         glColor3d(0.4, 0.4, 0.8);
       } else {
-         glColor3d(1.0, 0.4, 0.4);
+         glColor3d(1.0, 1.0, 0.4);
       }
+      
       gluSphere(quadric, pulseSize, 10, 10);
       glColor4d(0.4, 0.8, 1, 1);
       gluSphere(quadric, .3, 10, 10);
@@ -91,9 +98,6 @@ void RemoteBombShot::update(double timeDiff) {
       explode();
    }
    
-   pulseSize += timeDiff * 2;
-   if (pulseSize > 1) pulseSize = 0;
-
       // Find out how projectileShot's are removed.
 }
 

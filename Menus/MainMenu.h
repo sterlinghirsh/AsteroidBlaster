@@ -12,7 +12,7 @@ class GameState;
 class MainMenu : public Menu {
    public:
    MainMenu(GameState* _mainGameState);
-   ~MainMenu();
+   virtual ~MainMenu();
 
    void draw();
    

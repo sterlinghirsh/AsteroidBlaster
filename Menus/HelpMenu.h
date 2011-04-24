@@ -9,7 +9,7 @@
 class HelpMenu : public Menu {
    public:
    HelpMenu();
-   ~HelpMenu();
+   virtual ~HelpMenu();
 
    std::string getStatus(bool status);
    std::string getViewStatus(int status);

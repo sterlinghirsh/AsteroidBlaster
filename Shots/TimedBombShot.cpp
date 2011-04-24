@@ -43,7 +43,8 @@ void TimedBombShot::draw() {
    glPushMatrix();
       glDisable(GL_LIGHTING);
 
-      if (fmod(doubleTime() * 6, 2) < 1) {
+      double amountDone = (doubleTime() - timeFired) / timeToExplode;
+      if (fmod(amountDone * amountDone * 80, 2) < 1) {
          glColor3d(0.4, 0.8, 0.4);
       } else {
          glColor3d(1.0, 0.4, 0.4);

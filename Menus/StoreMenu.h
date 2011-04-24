@@ -11,7 +11,7 @@ class GameState;
 class StoreMenu : public Menu {
    public:
    StoreMenu(GameState*& _gameState);
-   ~StoreMenu();
+   virtual ~StoreMenu();
 
    GameState*& gameState;
 

@@ -105,7 +105,7 @@ double ExplosiveShot::getDamage(Object3D* other) {
       return 0;
    } else {
       double distance = position->distanceFrom(*other->position) - other->radius;
-      double actualDamage = damage / (1 + (distance * distance));
+      double actualDamage = damage / (1 + ((distance * distance) / explodeRadius));
       return actualDamage;
    }
 }

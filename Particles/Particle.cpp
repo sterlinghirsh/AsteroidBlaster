@@ -24,6 +24,11 @@ int Particle::particleDisplayList;
 Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _r, float _g, float _b, const GameState* _gameState) :
    Drawable(_gameState)
 {
+   /* We have to delete these since they're
+    * allocated in Drawable. */
+   delete position;
+   delete velocity;
+
    position = _position;
    velocity = _velocity;
    
@@ -145,4 +150,13 @@ void Particle::Add(Particle* newParticle) {
       particles.pop_front();
    }
    particles.push_back(newParticle);
+}
+
+void Particle::Clear() {
+   list<Particle*>::iterator particle = Particle::particles.begin();
+
+   while(particle != Particle::particles.end()) {
+      delete *particle;
+      particle = Particle::particles.erase(particle);
+   }
 }

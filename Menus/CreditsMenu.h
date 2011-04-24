@@ -11,7 +11,7 @@
 class CreditsMenu : public Menu {
    public:
    CreditsMenu();
-   ~CreditsMenu();
+   virtual ~CreditsMenu();
 
    void addSingleColName(std::string name);
    void addDualColName(std::string name);
