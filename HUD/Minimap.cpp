@@ -15,7 +15,7 @@
 
 #define DEFAULT_ZOOMLEVEL 80
 #define MAX_ZOOMLEVEL 140
-#define MIN_ZOOMLEVEL 30
+#define MIN_ZOOMLEVEL 15
 
 Minimap::Minimap(AsteroidShip* _ship) :
  ship(_ship), displaySize(DEFAULT_DISPLAYSIZE), zoomLevel(DEFAULT_ZOOMLEVEL) {
@@ -75,17 +75,13 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
             positionVector.movePoint(objectPosition, -1); // Center on the ship
             objectPosition = modelViewMatrix * (objectPosition); // Rotate about the ship
             radius2D = distance2D(objectPosition.x, objectPosition.z);
-            radius3D = distance3D(objectPosition.x, objectPosition.y, objectPosition.z);
 
-            if (radius3D < 0.5 * zoomLevel) {
+            if (NULL != dynamic_cast<Asteroid3D*>(*listIter)) {
                glColor3f(1, 0, 0);
-               setMaterial(RedFlat);
-            } else if (radius3D < 0.75 * zoomLevel) {
-               glColor3f(1, 1, 0);
-               setMaterial(YellowFlat);
-            } else {
+            } else if (NULL != dynamic_cast<Shard*>(*listIter)) {
                glColor3f(0, 1, 0);
-               setMaterial(GreenTransparent);
+            } else if (NULL != dynamic_cast<AsteroidShip*>(*listIter)) {
+               glColor3f(0, 0, 1);
             }
 
             glDisable(GL_LIGHTING);
@@ -181,35 +177,12 @@ void Minimap::draw() {
                   furthestItemDistance = radius3D;
                }
 
-               if (radius3D < 0.5 * zoomLevel) {
-                  glColor3f(1, 0, 0);
-                  setMaterial(RedFlat);
-               } else if (radius3D < 0.75 * zoomLevel) {
-                  glColor3f(1, 1, 0);
-                  setMaterial(YellowFlat);
-               } else {
-                  glColor3f(0, 1, 0);
-                  setMaterial(GreenTransparent);
-               }
                (*listIter)->drawInMinimap();
             }
          }
       glPopMatrix();
       drawLines(objects);
 
-      // Draw the sphere around it.
-      glEnable(GL_LIGHTING);
-      glDisable(GL_LIGHT1); // Reenable the normal light.
-      glEnable(GL_LIGHT0);
-      setMaterial(GrayTransparent);
-      //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-      glDisable(GL_CULL_FACE);
-      ship->glRotate(false);
-      glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-      glDisable(GL_COLOR_MATERIAL);
-
-      gluSphere(quadric, 1, 10, 10);
-      glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
       glEnable(GL_CULL_FACE);
    glPopMatrix();
 }
@@ -252,8 +225,8 @@ void Minimap::update(double timeDiff) {
    const double zoomScale = 80;
    const double changeScale = 0.5;
 
-   const int minItemsToDisplay = 5;
-   const int maxItemsToDisplay = 8;
+   const int minItemsToDisplay = 4;
+   const int maxItemsToDisplay = 5;
    const float extraSpaceAfterFurthestItem = 8;
    
    if (autoZoom) {
@@ -297,4 +270,8 @@ bool Minimap::isEnabled() {
 
 void Minimap::toggleAutoZoom() {
    autoZoom = !autoZoom;
+}
+
+void Minimap::disableAutoZoom() {
+   autoZoom = false;
 }

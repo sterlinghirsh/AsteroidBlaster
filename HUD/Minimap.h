@@ -38,6 +38,7 @@ class Minimap {
       void toggle();
       bool isEnabled();
       void toggleAutoZoom();
+      void disableAutoZoom();
    private:
       bool hidden;
       bool autoZoom;

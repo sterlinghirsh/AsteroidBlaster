@@ -810,9 +810,11 @@ void GameState::keyDown(int key) {
       break;
       // Minimap Zoom
    case SDLK_3:
+      minimap->disableAutoZoom();
       minimap->adjustZoomDirection = 1;
       break;
    case SDLK_4:
+      minimap->disableAutoZoom();
       minimap->adjustZoomDirection = -1;
       break;
    case SDLK_5:
