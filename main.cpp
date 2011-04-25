@@ -45,7 +45,7 @@ bool fullScreen = false;
 // the absolute time update was last called
 static double lastUpdateTime = 0;
 // the absolute time update was last called
-static double lastDrawTime = 0;
+//static double lastDrawTime = 0;
 
 // This double contains the FPS to be printed to the screen each frame.
 
@@ -289,65 +289,6 @@ void update(GameState* gameState, double timeDiff) {
    ++curFrame;
 }
 
-void draw(GameState* gameState) {
-   // the time difference since last update call
-   double timeDiff = doubleTime() - lastDrawTime;
-
-   gameState->setCurFPS(1 / timeDiff);
-
-   // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   usePerspective();
-
-   glMatrixMode(GL_MODELVIEW);
-
-
-   // Draw glowing objects to a texture for the bloom effect.
-   gameState->aspect = (float)gameSettings->GW/(float)gameSettings->GH;
-   if (gameSettings->bloom) {
-      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-      glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glPushMatrix();
-      gameState->drawGlow();
-
-      glPopMatrix();
-      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-      gameState->hBlur();
-      gameState->vBlur();
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   }
-
-   usePerspective();
-   // Draw the main screen
-   glPushMatrix();
-   gameState->draw();
-
-   //Particle::drawParticles();
-   //drawCrosshair();
-   glPopMatrix();
-
-   glPushMatrix();
-   // Draw the hud
-   glClear(GL_DEPTH_BUFFER_BIT);
-   gameState->drawHud();
-   if (gameSettings->bloom) {
-      gameState->drawBloom();
-   }
-
-   glPopMatrix();
-   // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
-   gameState->drawMinimap();
-   gameState->drawScreens();
-
-   SDL_GL_SwapBuffers();
-   lastDrawTime = doubleTime();
-}
-
 int main(int argc, char* argv[]) {
    srand((unsigned)time(NULL));
 
@@ -417,6 +358,7 @@ int main(int argc, char* argv[]) {
          SDL_ShowCursor(SDL_ENABLE);
          storeMenu->update(timeDiff);
          storeMenu->draw();
+         //draw(gameState);
 
       } else if (settingsMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
@@ -432,7 +374,7 @@ int main(int argc, char* argv[]) {
 
       } else {
          update(gameState, timeDiff);
-         draw(gameState);
+         drawGameState(gameState, false);
       }
 
       while (SDL_PollEvent(event)) {

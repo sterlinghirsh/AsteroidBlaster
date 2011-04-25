@@ -10,15 +10,28 @@
 #include "Graphics/Texture.h"
 
 ProgressBar::ProgressBar(float _height, float _width, float _x, float _y) :
- height(_height), width(_width), x(_x), y(_y), amount(0), outerBoxThickness(0.01f), hasIcon(false) {
+ height(_height), width(_width), x(_x), y(_y), amount(0), outerBoxThickness(0.01f), hasIcon(false), isVertical(false) {
 }
 
 void ProgressBar::setAmount(float _amount) {
    amount = (float) clamp(_amount, 0, 1);
 }
 
+void ProgressBar::setVertical(bool vert) {
+   isVertical = vert;
+}
+
 void ProgressBar::draw() {
-   float drawHeight = amount * height;
+   //float drawHeight = amount * height;
+   float drawHeight;
+   float drawWidth;
+   if (isVertical) {
+      drawHeight = height;
+      drawWidth = amount * width;
+   } else {
+      drawHeight = amount * height;
+      drawWidth = width;
+   }
    const float backgroundZOffset = -0.01f; // Some small negative number.
    glPushMatrix();
       glTranslatef(x, y, 0);
@@ -35,8 +48,8 @@ void ProgressBar::draw() {
       glColor3f(2 * (1 - amount), 2 * amount, 0);
       
       glVertex3f(0, drawHeight, 0); // Top left
-      glVertex3f(width, drawHeight, 0); // top Right
-      glVertex3f(width, 0, 0); // bottom Right
+      glVertex3f(drawWidth, drawHeight, 0); // top Right
+      glVertex3f(drawWidth, 0, 0); // bottom Right
       glVertex3f(0, 0, 0); // Bottom left
       glEnd();
       if (hasIcon) {

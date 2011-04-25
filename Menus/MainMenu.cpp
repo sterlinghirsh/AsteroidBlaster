@@ -95,6 +95,10 @@ void MainMenu::draw() {
       menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_GREY);
    }
 
+   drawGameState(menuGameState, true, 0, 0, 20,
+         0, 0, -1,
+         0, 1, 0);
+/*
    // Clear the screen.
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -134,12 +138,14 @@ void MainMenu::draw() {
 
    // Draw background.
    menuGameState->draw();
+   //drawGameState(menuGameState);
 
    glClear(GL_DEPTH_BUFFER_BIT);
    //menuGameState->drawScreens();
    if (gameSettings->bloom) {
       menuGameState->drawBloom();
    }
+   */
    mainGameState->drawScreens();
    //menuGameState->drawScreens();
 
@@ -166,6 +172,51 @@ void MainMenu::draw() {
    SDL_GL_SwapBuffers();
 
 }
+
+/*
+void MainMenu::draw(GameState* gameState) {
+   // the time difference since last update call
+   //double timeDiff = doubleTime() - lastDrawTime;
+
+   //gameState->setCurFPS(1 / timeDiff);
+
+   // Clear the screen
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   usePerspective();
+
+   glMatrixMode(GL_MODELVIEW);
+
+
+   // Draw glowing objects to a texture for the bloom effect.
+   gameState->aspect = (float)gameSettings->GW/(float)gameSettings->GH;
+   if (gameSettings->bloom) {
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+      glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glPushMatrix();
+      gameState->drawGlow();
+
+      glPopMatrix();
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+      gameState->hBlur();
+      gameState->vBlur();
+
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   }
+
+   usePerspective();
+   // Draw the main screen
+   glPushMatrix();
+   gameState->draw();
+
+   //Particle::drawParticles();
+   //drawCrosshair();
+   glPopMatrix();
+}
+*/
 
 /**
  * Handles the player pressing down a key

@@ -123,6 +123,7 @@ class GameState : public InputReceiver {
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
       double curFPS, worldSize;
+      double lastDrawTime;
       
       Camera* camera;
    private:

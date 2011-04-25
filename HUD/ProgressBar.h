@@ -14,9 +14,11 @@ class ProgressBar {
    public:
       ProgressBar(float _height, float _width, float _x, float _y);
       void setAmount(float _amount);
+      void setVertical(bool vert);
       void draw();
       void setIcon(std::string _texture);
    private:
+      bool isVertical;
       float outerBoxThickness;
       float amount; // The amount full the progress bar is, from 0 to 1.
       // Height, width, x, and y are in world coords.

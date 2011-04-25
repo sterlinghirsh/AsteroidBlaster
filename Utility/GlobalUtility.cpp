@@ -21,6 +21,7 @@
 #endif
 
 #include "Utility/GameSettings.h"
+#include "Utility/GameState.h"
 
 //#include "SDL_video.h"
 
@@ -574,7 +575,7 @@ void getBrightColor(double hue, float& r, float& g, float& b) {
 void setupVideo() {
    /* Flags to pass to SDL_SetVideoMode */
    int videoFlags;
-   
+
    SDL_FreeSurface(gDrawSurface);
 
    /* get the flags to pass to SDL_SetVideoMode */
@@ -611,6 +612,87 @@ void setupVideo() {
    }
 }
 
+void drawGameState(GameState* gameStateIn,
+      bool lookAt, float eX, float eY, float eZ,
+      float lX, float lY, float lZ,
+      float uX, float uY, float uZ) {
+   // the time difference since last update call
+   double timeDiff = doubleTime() - gameStateIn->lastDrawTime;
+
+   gameStateIn->setCurFPS(1 / timeDiff);
+
+   // Clear the screen
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   usePerspective();
+
+   glMatrixMode(GL_MODELVIEW);
+
+
+   // Draw glowing objects to a texture for the bloom effect.
+   gameStateIn->aspect = (float)gameSettings->GW/(float)gameSettings->GH;
+   if (gameSettings->bloom) {
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+      glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glPushMatrix();
+
+      if (lookAt) {
+         gluLookAt(0, 0, 20, // Eye at origin.
+               0, 0, -1, // X goes right, Z goes away.
+               0, 1, 0); // Y goes up.
+      }
+
+      gameStateIn->drawGlow();
+
+      glPopMatrix();
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+      gameStateIn->hBlur();
+      gameStateIn->vBlur();
+
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   }
+
+   usePerspective();
+
+   // Draw the main screen
+   glPushMatrix();
+
+   if (lookAt) {
+      gluLookAt(eX, eY, eZ, // Eye at origin.
+            lX, lY, lZ, // X goes right, Z goes away.
+            uX, uY, uZ); // Y goes up.
+   }
+   gameStateIn->draw();
+
+   //Particle::drawParticles();
+   //drawCrosshair();
+   glPopMatrix();
+
+   glPushMatrix();
+   // Draw the hud
+   glClear(GL_DEPTH_BUFFER_BIT);
+   if (!gameStateIn->inMenu) {
+      gameStateIn->drawHud();
+   }
+   if (gameSettings->bloom) {
+      gameStateIn->drawBloom();
+   }
+
+   glPopMatrix();
+   // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
+   gameStateIn->drawMinimap();
+   gameStateIn->drawScreens();
+
+   if (!lookAt) {
+      SDL_GL_SwapBuffers();
+   }
+   gameStateIn->lastDrawTime = doubleTime();
+}
+
+
 int nextPowerOfTwo(int num) {
    int result = 1;
    while (result < num) {
@@ -644,8 +726,8 @@ void initFbo() {
          GL_TEXTURE_2D, Texture::getTexture("hblurTex"), 0);
 
    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT,
-      GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
-   
+         GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
+
    GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 

@@ -74,8 +74,13 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    
    // Improve the positioning code.
    weaponReadyBar = new ProgressBar(0.75f, 0.05f, -1.2f, -0.3f);
-   healthBar = new ProgressBar(0.75f, 0.05f, -1.0f, -0.3f);
-   healthBar->setIcon("ShieldIcon");
+   float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH *
+      2.0f * 0.9f;
+   float healthHeight = 0.1f;
+   //healthBar = new ProgressBar(0.1f, 2.0f, -1.0f, 0.8f);
+   healthBar = new ProgressBar(healthHeight, healthSpan, -healthSpan / 2.0f, 1.0f - (healthHeight * 1.5f));
+   healthBar->setVertical(true);
+   //healthBar->setIcon("ShieldIcon");
    weaponReadyBar->setIcon("ShotIcon");
 
    // Set up objects.
@@ -496,9 +501,9 @@ void GameState::drawAllText() {
    shardText->setPosition(position);
    shardText->draw();
    
-   position.y = (Sint16) (position.y + positionDifferenceY);
-   healthText->setPosition(position);
-   healthText->draw();
+   //position.y = (Sint16) (position.y + positionDifferenceY);
+   //healthText->setPosition(position);
+   //healthText->draw();
    
    position.y = (Sint16) (position.y + positionDifferenceY);
    weaponText->setPosition(position);

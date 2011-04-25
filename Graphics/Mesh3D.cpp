@@ -44,11 +44,11 @@ void Mesh3D::drawTextured(bool drawSmooth, GLuint tex) {
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, tex);
    int nFaces;
-   if (drawAnim) {
-      nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
-   } else {
+   //if (drawAnim) {
+      //nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
+   //} else {
       nFaces = (int)faces.size();
-   }
+   //}
    for (int i = 0; i < nFaces; i++) {
       faces[i]->drawFace(drawSmooth, true);
    }
@@ -72,24 +72,16 @@ void Mesh3D::drawLines(bool drawSmooth) {
 void Mesh3D::draw(bool drawSmooth, bool drawTex) {
    glDisable(GL_LIGHTING);
    int nFaces;
-   if (drawAnim) {
-      nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
-   } else {
+   //if (drawAnim) {
+      //nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
+   //} else {
       nFaces = (int)faces.size();
-   }
+   //}
    for (int i = 0; i < nFaces; i++) {
       faces[i]->drawFace(drawSmooth, true);
       faces[i]->drawLines();
    }
    glEnable(GL_LIGHTING);
-}
-
-void Mesh3D::drawPoints(bool drawSmooth, bool drawTex) {
-   for (unsigned int i = 0; i < faces.size(); ++i) {
-      if (!drawSmooth)
-         faces[i]->normal.addNormal();
-      faces[i]->draw(drawSmooth, drawTex);
-   }
 }
 
 /**

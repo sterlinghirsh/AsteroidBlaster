@@ -15,6 +15,7 @@ class MainMenu : public Menu {
    virtual ~MainMenu();
 
    void draw();
+   //void draw(GameState* gameState);
    
    void keyUp(int key);
    void keyDown(int key);
