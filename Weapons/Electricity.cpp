@@ -18,7 +18,7 @@ Electricity::Electricity(AsteroidShip* owner) : Weapon(owner) {
    currentFrame = 1; // Start this 1 ahead of lastFiredFame.
    lastFiredFrame = 0; // We use these three to handle the audio.
    soundPlaying = false;
-   curAmmo = 2000;
+   curAmmo = -1;
    purchased = false;
 }
 
@@ -54,13 +54,16 @@ void Electricity::fire() {
       shotsToFire = 1;
    }
    else {
-      while (((shotsFired + shotsToFire) / timeFired) <= shotsPerSec && ((curAmmo - shotsToFire) > 0)) {
+      while (((shotsFired + shotsToFire) / timeFired) <= shotsPerSec
+            /* && ((curAmmo - shotsToFire) > 0)*/) {
          shotsToFire++;
       }
    }
    
+   /*
    if(!ship->gameState->godMode && curAmmo <= 0)
       return;
+      */
 
    Point3D start = ship->shotOrigin;
    ship->setShakeAmount(0.1f);
@@ -70,7 +73,7 @@ void Electricity::fire() {
    shotsFired += shotsToFire;
    if(!ship->gameState->godMode) {
       // Take away some ammo
-      curAmmo -= shotsToFire; 
+      /*curAmmo -= shotsToFire; */
    }
 
 }
