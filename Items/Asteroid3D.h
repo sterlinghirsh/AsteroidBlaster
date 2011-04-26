@@ -19,7 +19,7 @@
 
 class AsteroidShip;
 
-class Asteroid3D : public Object3D {
+class Asteroid3D : public Object3D, public CollisionSphere {
    public:
       Mesh3D mesh;
       double scalex, scaley, scalez;
@@ -53,6 +53,8 @@ class Asteroid3D : public Object3D {
       void newRandomPosition();
       void drawInMinimap();
       void debug();
+      virtual double getRadius();
+      virtual Point3D& getCenter() const;
 
    private:
       double randRadius(double r);

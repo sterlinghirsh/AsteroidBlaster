@@ -200,3 +200,12 @@ void Drawable::nullPointers() {
 Point3D Drawable::getWallIntersectionPoint(BoundingWall* wall) {
    return *position;
 }
+
+// Overrides stuff from collisionbox.
+Point3D& Drawable::getMinPosition() const {
+   return *minPosition;
+}
+
+Point3D& Drawable::getMaxPosition() const {
+   return *maxPosition;
+}

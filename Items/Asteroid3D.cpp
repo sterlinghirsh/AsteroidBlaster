@@ -758,3 +758,12 @@ void Asteroid3D::dropRandomItem() {
       custodian->add(makeShard(0));
    }
 }
+
+// Overriding from collisiontypes.h
+double Asteroid3D::getRadius() {
+   return collisionRadius;
+}
+
+Point3D& Asteroid3D::getCenter() const {
+   return *position;
+}

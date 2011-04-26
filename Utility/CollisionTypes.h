@@ -7,14 +7,17 @@
 #ifndef __COLLISIONTYPES_H__
 #define __COLLISIONTYPES_H__
 
+#include "Utility/Point3D.h"
+
 class CollisionType {
+};
+
+class CollisionBox : public CollisionType {
    // Axis-aligned bounding box.
    public:
       virtual Point3D& getMinPosition() const = 0;
       virtual Point3D& getMaxPosition() const = 0;
 };
-
-class CollisionBox : public CollisionType {};
 
 class CollisionSphere : public CollisionType {
    public:
@@ -43,7 +46,11 @@ class CollisionCone : public CollisionType {
 // Default case
 template<class A, class B>
 bool detectCollision(A* a, B* b) {
+   printf("in default detectCollision\n");
    return false;
 }
+
+template<>
+bool detectCollision<CollisionBox, CollisionBox>(CollisionBox* obj1, CollisionBox* obj2);
 
 #endif

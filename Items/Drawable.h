@@ -8,6 +8,7 @@
 #ifndef __DRAWABLE_H__
 #define __DRAWABLE_H__
 
+#include "Utility/CollisionTypes.h"
 #include "Utility/Point3D.h"
 
 // Incomplete class declaration so we can have the pointer to it.
@@ -15,7 +16,7 @@ class Custodian;
 class BoundingWall;
 class GameState;
 
-class Drawable {
+class Drawable : CollisionBox {
    public:
       Point3D* position;
       Vector3D* velocity;
@@ -72,6 +73,8 @@ class Drawable {
 
       virtual void nullPointers();
       virtual Point3D getWallIntersectionPoint(BoundingWall* wall);
+      virtual Point3D& getMinPosition() const;
+      virtual Point3D& getMaxPosition() const;
 };
 
 #endif
