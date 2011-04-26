@@ -906,27 +906,6 @@ void AsteroidShip::draw() {
    */
 }
 
-/**
- * This handles our collisions. Duh.
- * We use a series of dynamic_casts to figure out what we've hit.
- */
-void AsteroidShip::handleCollision(Drawable* other) {
-   Shard* shard;
-   Shot* shot;
-
-   // Try converting other into a Shard
-   if ((shard = dynamic_cast<Shard*>(other)) != NULL) {
-      health += 10;
-      if (health > healthMax) {
-         health = healthMax;
-      }
-      nShards++;
-      score += 69;
-   } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
-      health -= shot->getDamage(this);
-   }
-}
-
 void AsteroidShip::updateShotDirectionVector() {
    shotDirection.updateMagnitude(forward);
    shotDirection.rotate(shotPhi, *right);

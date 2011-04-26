@@ -197,15 +197,11 @@ void Shard::update(double timeDiff) {
  * Handle a collision with another Object3D.
  */
 void Shard::handleCollision(Drawable* other) {
-   AsteroidShip* ship;
    Asteroid3D* asteroid;
    Shot* shot;
    Shard* otherShard;
    TractorBeamShot* TBshot; // Not tuberculosis
-   if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
-      shouldRemove = true;
-      SoundEffect::playSoundEffect("CrystalCollect.wav");
-   } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
+   if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
       double speed = asteroid->velocity->getLength();
       velocity->updateMagnitude(*(asteroid->position), *position);
       velocity->setLength(speed);

@@ -31,6 +31,24 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
    b->health = 0;
 }
 
+template<>
+void Collision<AsteroidShip, Shard>::handleCollision() {
+   a->health += 10;
+   if (a->health > a->healthMax)
+      a->health = a->healthMax;
+
+   a->nShards++;
+   a->score += 69;
+   b->shouldRemove = true;
+   SoundEffect::playSoundEffect("CrystalCollect.wav");
+}
+
+template<>
+void Collision<AsteroidShip, Shot>::handleCollision() {
+   a->health -= b->getDamage(a);
+   b->shouldRemove = true;
+}
+
 // Specialization for sphere sphere.
 template<>
 bool detectCollision<CollisionSphere, CollisionSphere>(CollisionSphere* obj1, CollisionSphere* obj2) {
@@ -81,6 +99,8 @@ Custodian::Custodian(const GameState* _gameState) :
       collisionHandlers = new std::vector<CollisionBase*>();
       // Initialize collision handlers.
       collisionHandlers->push_back(new Collision<AsteroidShip, Asteroid3D>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, Shard>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, Shot>);
    }
 }
 

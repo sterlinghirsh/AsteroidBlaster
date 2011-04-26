@@ -69,7 +69,6 @@ class AsteroidShip : public Object3D {
       virtual void draw();
       virtual void drawGlow() { draw(); };
       virtual void drawInMinimap();
-      virtual void handleCollision(Drawable* other);
       virtual void debug();
 
       float getShakeAmount();
