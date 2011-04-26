@@ -570,7 +570,6 @@ void Asteroid3D::update(double timeDiff) {
 
 void Asteroid3D::handleCollision(Drawable* other) {
    Asteroid3D* otherAsteroid;
-   AsteroidShip* ship;
    Shot* shot;
    BeamShot* beamShot;
    ElectricityShot* elecShot;
@@ -620,8 +619,6 @@ void Asteroid3D::handleCollision(Drawable* other) {
       reverseVelocity->scalarMultiplyUpdate(-1);
       addInstantAcceleration(reverseVelocity);
 
-   } else if ((ship = dynamic_cast<AsteroidShip*>(other)) != NULL) {
-      health = 0;
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
       lastHitShotOwner = shot->owner;
       health -= shot->getDamage(this);

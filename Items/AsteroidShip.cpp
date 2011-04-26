@@ -911,7 +911,6 @@ void AsteroidShip::draw() {
  * We use a series of dynamic_casts to figure out what we've hit.
  */
 void AsteroidShip::handleCollision(Drawable* other) {
-   Asteroid3D* asteroid;
    Shard* shard;
    Shot* shot;
 
@@ -923,20 +922,6 @@ void AsteroidShip::handleCollision(Drawable* other) {
       }
       nShards++;
       score += 69;
-      // Try converting other into an Asteroid3D
-   } else if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
-      // Decrease the player's health by an appropriate amount.
-      addInstantAcceleration(new Vector3D(*(asteroid->velocity)));
-      if (!gameState->godMode) {
-      // TODO: Make 5 not a magic number.
-         if (currentWeapon == 4 && isFiring && weapons[4]->curAmmo > 0) {}
-         else if((doubleTime() - justGotHit) > 1) {
-            shakeAmount = 8;
-            SoundEffect::playSoundEffect("ShipHit.wav");
-            health -= (int) (4 * ceil(asteroid->radius));
-            justGotHit = doubleTime();
-         }
-      }
    } else if ((shot = dynamic_cast<Shot*>(other)) != NULL) {
       health -= shot->getDamage(this);
    }

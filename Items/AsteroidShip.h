@@ -179,10 +179,14 @@ class AsteroidShip : public Object3D {
       void lookAt(double lookAtX, double lookAtY, double lookAtZ, double upX, double upY, double upZ);
 
       virtual bool detectCollision(Drawable* other, bool checkOther = true);
+      std::vector<Weapon*> weapons;
 
+      // Maybe these shouldn't be here?
+      bool isFiring;
+      int currentWeapon;
+      float shakeAmount;
    protected:
       int soundHandle;
-      std::vector<Weapon*> weapons;
       Radar* radar; // This is the ship's radar that it should query for information about its surroundings
 
       double brakeFactor;
@@ -232,15 +236,12 @@ class AsteroidShip : public Object3D {
 
       bool isBraking;
       bool isBoosting;
-      bool isFiring;
-      int currentWeapon;
 
       float zoomFactor;
       float zoomSpeed;
 
       Vector3D *cameraOffset;
 
-      float shakeAmount;
       int currentView; // Defined by view names above.
 
       void updateShotDirectionVector();

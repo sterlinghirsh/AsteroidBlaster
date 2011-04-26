@@ -8,6 +8,8 @@
 #include "Utility/Custodian.h"
 #include "Items/Asteroid3D.h"
 #include "Items/Shard.h"
+#include "Utility/SoundEffect.h"
+
 #include <algorithm>
 #include <assert.h>
 
@@ -17,7 +19,16 @@
 
 template<>
 void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
-   printf("ship hit asteroid.\n");
+   if ((doubleTime() - a->justGotHit > 1) && 
+    !(a->currentWeapon == 4 && a->isFiring && a->weapons[4]->curAmmo > 0)) {
+      a->health -= b->health;
+      a->shakeAmount = 8;
+      SoundEffect::playSoundEffect("ShipHit.wav");
+      a->justGotHit = doubleTime();
+      a->addInstantAcceleration(new Vector3D(*(b->velocity)));
+   }
+
+   b->health = 0;
 }
 
 // Specialization for sphere sphere.
