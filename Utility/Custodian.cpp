@@ -31,7 +31,7 @@ bool detectCollision<CollisionSphere, CollisionSphere>(CollisionSphere* obj1, Co
 // Specialization for box box.
 template<>
 bool detectCollision<CollisionBox, CollisionBox>(CollisionBox* obj1, CollisionBox* obj2) {
-   printf("in specialized detectCollision.");
+   printf("in specialized detectCollision.\n");
    return !(obj1->getMinPosition().y > obj2->getMaxPosition().y ||
     obj1->getMaxPosition().y < obj2->getMinPosition().y ||
     obj1->getMinPosition().z > obj2->getMaxPosition().z ||

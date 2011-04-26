@@ -47,6 +47,19 @@ class CollisionCone : public CollisionType {
 template<class A, class B>
 bool detectCollision(A* a, B* b) {
    printf("in default detectCollision\n");
+   CollisionBox* box1; 
+   CollisionBox* box2; 
+   CollisionSphere* sphere1; 
+   CollisionSphere* sphere2; 
+
+   box1 = dynamic_cast<CollisionBox*>(a);
+   box2 = dynamic_cast<CollisionBox*>(b);
+   if (box1 != NULL && box2 != NULL) {
+      return detectCollision(box1, box2);
+   } else {
+      printf("not boxes.\n");
+   }
+
    return false;
 }
 
