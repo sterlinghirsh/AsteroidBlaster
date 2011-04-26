@@ -6,26 +6,37 @@
 
 #include "Items/Drawable.h"
 #include "Utility/CollisionTypes.h"
+#include "Items/AsteroidShip.h"
+#include "Items/Asteroid3D.h"
+
+#ifndef __COLLISION_H__
+#define __COLLISION_H__
 
 // Include all collideable objects.
+struct CollisionBase {
+   double squaredDistance;
+   CollisionBase() : squaredDistance(0) {}
+   CollisionBase(double _squaredDistance) : squaredDistance(_squaredDistance) {}
+   virtual CollisionBase* tryExecute(Drawable* _a, Drawable* _b) =0;
+   virtual void handleCollision() = 0;
+};
 
 template <class A, class B>
-struct Collision {
+struct Collision : public CollisionBase {
    A* a;
    B* b;
-   double squaredDistance;
    
    // Default constructor.
-   Collision() : a(NULL), b(NULL), squaredDistance(0) {}
+   Collision() : CollisionBase(0), a(NULL), b(NULL)  {}
 
    // Constructor when a collision is found.
-   Collision(A* _a, B* _b) {
-    a(_a), b(_b), relationship(_relationship) {
+   Collision(A* _a, B* _b) :
+    a(_a), b(_b) {
       Vector3D tmp(*a->position, *b->position);
-      squaredDistance = a->getComparisonLength();
+      squaredDistance = tmp.getComparisonLength();
    }
 
-   Collision* tryExcecute(Drawable* _a, Drawable* _b) {
+   virtual Collision<A, B>* tryExecute(Drawable* _a, Drawable* _b) {
       Collision* toReturn = NULL;;
       A *aResult = dynamic_cast<A *>(_a);
       B *bResult = dynamic_cast<B *>(_b);
@@ -42,21 +53,16 @@ struct Collision {
       }
 
       if (canExecute && detectCollision(aResult, bResult)) {
-         toReturn = new Collision<A, B>(aResult, bResult, this);
+         toReturn = new Collision<A, B>(aResult, bResult);
       }
 
       return toReturn;
    }
 
-   virtual void handleCollision(A *_a, B *_b) = 0;
+   virtual void handleCollision();
 };
-
-struct ShipAsteroidRelationship : public CollisionRelationship<AsteroidShip, Asteroid3D> {
-   void handleCollision(AsteroidShip* ship, Asteroid3D* asteroid) {
-      // Handle asteroid-ship collision.
-      printf("ship hit asteroid.");
-   }
-}
 
 // Instantiate elsewhere in a .cpp file.
 //CollisionRelationship<Asteroid3D, AsteroidShip> asteroidToShipCollision;
+
+#endif

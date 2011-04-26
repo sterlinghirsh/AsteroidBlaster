@@ -15,6 +15,7 @@
 #include "Graphics/Texture.h"
 #include "Particles/Particle.h"
 #include "Text/GameMessage.h"
+#include "Utility/Collision.h"
 
 extern double minimapSizeFactor;
 
@@ -174,8 +175,8 @@ void GameState::update(double timeDiff) {
    }
 
    std::vector<Drawable*>* objects = custodian.getListOfObjects();
-   std::set<Drawable*, compareByDistance>* collisions;
-   std::set<Drawable*, compareByDistance>::iterator otherObject;
+   std::set<CollisionBase*, compareByDistance>* collisions;
+   std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
    // Keep items in the box.
    cube->constrain(ship);
@@ -201,11 +202,11 @@ void GameState::update(double timeDiff) {
    // Check every object for collisions.
    for (item = objects->begin(); item != objects->end(); ++item) {
       collisions = custodian.findCollisions(*item, false);
-      for (otherObject = collisions->begin(); otherObject != collisions->end(); ++otherObject) {
-         (*item)->handleCollision(*otherObject);
-         (*otherObject)->handleCollision(*item);
+      for (curCollision = collisions->begin(); curCollision != collisions->end(); ++curCollision) {
+         (*curCollision)->handleCollision();
       }
       delete collisions;
+      // TODO: fix memory leak.
    }
    
    // Update all of the text seen on screen.
@@ -550,7 +551,9 @@ void GameState::initAsteroids() {
    }
 
    Asteroid3D* tempAsteroid;
-   std::set<Drawable*, compareByDistance>* collisions;
+   
+   std::set<CollisionBase*, compareByDistance>* collisions;
+   std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
    /* We want this spaceHolder because we don't want to spawn asteroids
     * too close to the ship.
@@ -579,6 +582,7 @@ void GameState::initAsteroids() {
          if (numCollisions > 0) {
             tempAsteroid->newRandomPosition();
          }
+         // TODO: Fix memory leak.
          delete collisions;
       } while (numCollisions > 0);
    }

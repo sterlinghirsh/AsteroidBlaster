@@ -20,11 +20,13 @@ class Object3D;
 class Drawable;
 class GameState;
 
+struct CollisionBase;
+
 struct compareByDistance {
    static Drawable* curObject;
    static Vector3D d1;
    static Vector3D d2;
-   bool operator() (Drawable* const& lhs, Drawable* const& rhs) const;
+   bool operator() (CollisionBase* const& lhs, CollisionBase* const& rhs) const;
 };
 
 class Custodian {
@@ -32,7 +34,7 @@ class Custodian {
       void update();
       void add(Drawable* objectIn);
       void remove(Drawable* objectIn);
-      std::set<Drawable*, compareByDistance>* findCollisions(Drawable* item, bool searchBackwards = false);
+      std::set<CollisionBase*, compareByDistance>* findCollisions(Drawable* item, bool searchBackwards = false);
       void findAllCollisions();
       std::vector<Drawable*>* getListOfObjects();
       void clear();

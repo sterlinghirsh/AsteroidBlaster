@@ -11,9 +11,65 @@
 #include <algorithm>
 #include <assert.h>
 
+#include "Utility/Collision.h"
+
+#include <vector>
+
+template<>
+void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
+   printf("ship hit asteroid.\n");
+}
+
+// Specialization for sphere sphere.
+template<>
+bool detectCollision<CollisionSphere, CollisionSphere>(CollisionSphere* obj1, CollisionSphere* obj2) {
+   Vector3D tmp(obj1->getCenter(), obj2->getCenter());
+   double radiusSum = obj1->getRadius() + obj2->getRadius();
+   return tmp.getComparisonLength() <= radiusSum * radiusSum;
+}
+
+// Specialization for box box.
+template<>
+bool detectCollision<CollisionBox, CollisionBox>(CollisionBox* obj1, CollisionBox* obj2) {
+   return !(obj1->getMinPosition().y > obj2->getMaxPosition().y ||
+    obj1->getMaxPosition().y < obj2->getMinPosition().y ||
+    obj1->getMinPosition().z > obj2->getMaxPosition().z ||
+    obj1->getMaxPosition().z < obj2->getMinPosition().z);
+}
+
+// Specialization for sphere box.
+template<>
+bool detectCollision<CollisionSphere, CollisionBox>(CollisionSphere* sphere, CollisionBox* box) {
+   Point3D& center = sphere->getCenter();
+   Point3D centerToClosestPoint(sphere->getCenter());
+   // Set centerToClosestPoint to the closest point on the box.
+   centerToClosestPoint.x = clamp(center.x, box->getMinPosition().x, box->getMaxPosition().x);
+   centerToClosestPoint.y = clamp(center.y, box->getMinPosition().y, box->getMaxPosition().y);
+   centerToClosestPoint.z = clamp(center.z, box->getMinPosition().z, box->getMaxPosition().z);
+
+   // Get the vector from the closest point to the center.
+   centerToClosestPoint.subtractUpdate(center);
+
+   // Make sure its distance is less than radius.
+   return centerToClosestPoint.getComparisonLength() < (sphere->getRadius() * sphere->getRadius());
+}
+
+template<>
+bool detectCollision<CollisionBox, CollisionSphere>(CollisionBox* obj1, CollisionSphere* obj2) {
+   return detectCollision<CollisionSphere, CollisionBox>(obj2, obj1);
+}
+
+static std::vector<CollisionBase*>* collisionHandlers = NULL;
+
 Custodian::Custodian(const GameState* _gameState) :
  gameState(_gameState) {
    shardCount = asteroidCount = 0;
+   
+   if (collisionHandlers == NULL) {
+      collisionHandlers = new std::vector<CollisionBase*>();
+      // Initialize collision handlers.
+      collisionHandlers->push_back(new Collision<AsteroidShip, Asteroid3D>);
+   }
 }
 
 /**
@@ -44,16 +100,10 @@ static bool compareByMaxX (Drawable* item1, Drawable* item2) {
    return item1->maxPosition->x < item2->maxPosition->x;
 }
 
-bool compareByDistance::operator() (Drawable* const& lhs, Drawable* const& rhs) const {
-   d1.updateMagnitude(curObject->position, lhs->position);
-   d2.updateMagnitude(curObject->position, rhs->position);
-   return d1.getComparisonLength() < 
-    d2.getComparisonLength();
+bool compareByDistance::operator() (CollisionBase* const& lhs, CollisionBase* const& rhs) const {
+   return lhs->squaredDistance < rhs->squaredDistance;
 }
 Drawable* compareByDistance::curObject;
-Vector3D compareByDistance::d1;
-Vector3D compareByDistance::d2;
-
 
 /**
  * Run this after all objects have moved.
@@ -147,11 +197,15 @@ void Custodian::remove(Drawable* objectIn) {
  * This returns a pointer to a new std::list. You must delete
  * if after you use it.
  */
-std::set<Drawable*, compareByDistance>* Custodian::findCollisions(Drawable* item, bool searchBackwards) {
+std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Drawable* item, bool searchBackwards) {
 
    compareByDistance::curObject = item;
    // TODO: Order this by distance.
-   std::set<Drawable*, compareByDistance >* sublist = new std::set<Drawable*, compareByDistance>();
+   std::set<CollisionBase*, compareByDistance >* sublist = new std::set<CollisionBase*, compareByDistance>();
+   
+   CollisionBase* curCollision;
+   std::vector<CollisionBase*>::iterator curCollisionHandler;
+
    // If we were passed a null pointer, don't worry about it, just return an empty list.
    if (item == NULL)
       return sublist;
@@ -168,8 +222,19 @@ std::set<Drawable*, compareByDistance>* Custodian::findCollisions(Drawable* item
          other = objectsByMaxX[i];
          if (other == NULL)
             continue;
-         if (other->maxPosition->x >= item->minPosition->x)
-            sublist->insert(other);
+         if (other->maxPosition->x >= item->minPosition->x) {
+            curCollision = NULL;
+
+            for (curCollisionHandler = collisionHandlers->begin(); 
+             curCollisionHandler != collisionHandlers->end();
+             ++curCollisionHandler) {
+               curCollision = (*curCollisionHandler)->tryExecute(item, other);
+               if (curCollision != NULL) {
+                  sublist->insert(curCollision);
+                  break;
+               }
+            }
+         }
          else break;
       }
    }
@@ -183,28 +248,22 @@ std::set<Drawable*, compareByDistance>* Custodian::findCollisions(Drawable* item
          continue;
 
       if (other->minPosition->x <= item->maxPosition->x) {
-         sublist->insert(other);
+         curCollision = NULL;
+
+         for (curCollisionHandler = collisionHandlers->begin(); 
+          curCollisionHandler != collisionHandlers->end();
+          ++curCollisionHandler) {
+            curCollision = (*curCollisionHandler)->tryExecute(item, other);
+            if (curCollision != NULL) {
+               sublist->insert(curCollision);
+               break;
+            }
+         }
       } else {
          break;
       }
    }
 
-   /* Now check the y direction. From now on, we only 
-    * remove elements.
-    */
-   iter = sublist->begin();
-   std::set<Drawable*, compareByDistance>::iterator current;
-   while (iter != sublist->end()) {
-      current = iter++;
-      other = *current;
-
-      /* If the item does not collide, remove it from the sublist.
-       * Note: detectCollision may be overridden, as in AsteroidShotBeam.
-       */
-      if (!item->detectCollision(other, true)) {
-         sublist->erase(current);
-      }
-   }
    return sublist;
 }
 
