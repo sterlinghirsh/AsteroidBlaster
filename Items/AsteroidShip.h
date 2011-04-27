@@ -44,6 +44,7 @@ class FlyingAI;
 
 class AsteroidShip : public Object3D {
    public:
+      CollisionSphere* collisionSphere;
       AsteroidShip(const GameState* _gameState);
       virtual ~AsteroidShip();
       double getHealth();

@@ -184,6 +184,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    energyHitAsteroid = false;
    timeLastHitByEnergy = 0;
 
+   collisionType = collisionSphere = new CollisionSphere(radius, *position);
 }
 
 void Asteroid3D::drawGlow() {
@@ -636,13 +637,4 @@ void Asteroid3D::dropRandomItem() {
       custodian->add(makeShard(0));
       custodian->add(makeShard(0));
    }
-}
-
-// Overriding from collisiontypes.h
-double Asteroid3D::getRadius() {
-   return collisionRadius;
-}
-
-Point3D& Asteroid3D::getCenter() const {
-   return *position;
 }

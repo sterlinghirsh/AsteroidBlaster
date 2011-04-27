@@ -16,8 +16,10 @@ class Custodian;
 class BoundingWall;
 class GameState;
 
-class Drawable : public CollisionBox {
+class Drawable {
    public:
+      CollisionType* collisionType;
+
       Point3D* position;
       Vector3D* velocity;
       Point3D* minPosition;

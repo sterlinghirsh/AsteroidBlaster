@@ -18,6 +18,7 @@ Drawable::Drawable() {
    maxPosition = NULL;
    gameState = NULL;
    std::cerr << "Default constructor called." << std::endl;
+   collisionType = NULL;
 }
 
 /**
@@ -45,6 +46,7 @@ Drawable :: Drawable(const GameState* _gameState) :
    shouldBeCulled = true;
    minX = minY = minZ = maxX = maxY = maxZ = 0;
    shouldDrawInMinimap = false;
+   collisionType = NULL;
 }
 
 /**
@@ -59,6 +61,8 @@ Drawable :: ~Drawable() {
       delete minPosition;
    if (maxPosition != NULL)
       delete maxPosition;
+   if (collisionType != NULL)
+      delete collisionType;
 }
 
 /**

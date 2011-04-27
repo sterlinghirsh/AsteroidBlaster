@@ -360,46 +360,6 @@ void Collision<Shard, Shot>::handleCollision() {
    a->velocity->setLength(speed);
 }
 
-
-// Specialization for sphere sphere.
-template<>
-bool detectCollision<CollisionSphere, CollisionSphere>(CollisionSphere* obj1, CollisionSphere* obj2) {
-   Vector3D tmp(obj1->getCenter(), obj2->getCenter());
-   double radiusSum = obj1->getRadius() + obj2->getRadius();
-   return tmp.getComparisonLength() <= radiusSum * radiusSum;
-}
-
-// Specialization for box box.
-template<>
-bool detectCollision<CollisionBox, CollisionBox>(CollisionBox* obj1, CollisionBox* obj2) {
-   return !(obj1->getMinPosition().y > obj2->getMaxPosition().y ||
-    obj1->getMaxPosition().y < obj2->getMinPosition().y ||
-    obj1->getMinPosition().z > obj2->getMaxPosition().z ||
-    obj1->getMaxPosition().z < obj2->getMinPosition().z);
-}
-
-// Specialization for sphere box.
-template<>
-bool detectCollision<CollisionSphere, CollisionBox>(CollisionSphere* sphere, CollisionBox* box) {
-   Point3D& center = sphere->getCenter();
-   Point3D centerToClosestPoint(sphere->getCenter());
-   // Set centerToClosestPoint to the closest point on the box.
-   centerToClosestPoint.x = clamp(center.x, box->getMinPosition().x, box->getMaxPosition().x);
-   centerToClosestPoint.y = clamp(center.y, box->getMinPosition().y, box->getMaxPosition().y);
-   centerToClosestPoint.z = clamp(center.z, box->getMinPosition().z, box->getMaxPosition().z);
-
-   // Get the vector from the closest point to the center.
-   centerToClosestPoint.subtractUpdate(center);
-
-   // Make sure its distance is less than radius.
-   return centerToClosestPoint.getComparisonLength() < (sphere->getRadius() * sphere->getRadius());
-}
-
-template<>
-bool detectCollision<CollisionBox, CollisionSphere>(CollisionBox* obj1, CollisionSphere* obj2) {
-   return detectCollision<CollisionSphere, CollisionBox>(obj2, obj1);
-}
-
 static std::vector<CollisionBase*>* collisionHandlers = NULL;
 
 Custodian::Custodian(const GameState* _gameState) :

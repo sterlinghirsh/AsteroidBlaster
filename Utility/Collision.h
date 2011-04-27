@@ -38,6 +38,12 @@ struct Collision : public CollisionBase {
 
    virtual Collision<A, B>* tryExecute(Drawable* _a, Drawable* _b) {
       Collision* toReturn = NULL;;
+
+      if (_a->collisionType == NULL || _b->collisionType == NULL) {
+         return NULL;
+      }
+
+
       A *aResult = dynamic_cast<A *>(_a);
       B *bResult = dynamic_cast<B *>(_b);
 
@@ -52,7 +58,7 @@ struct Collision : public CollisionBase {
          canExecute = aResult != NULL && bResult != NULL;
       }
 
-      if (canExecute && detectCollision(aResult, bResult)) {
+      if (canExecute && _a->collisionType->collides(_b->collisionType)) {
          toReturn = new Collision<A, B>(aResult, bResult);
       }
 

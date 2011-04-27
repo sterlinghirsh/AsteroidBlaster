@@ -55,7 +55,7 @@ class Object3D : public Drawable {
       void yaw(double angle);
       void roll(double angle);
       void pitch(double angle);
-      void updateBoundingBox();
+      virtual void updateBoundingBox();
 
       virtual void updateAcceleration(double timeDiff);
 

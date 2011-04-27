@@ -113,6 +113,8 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
 
    shouldDrawInMinimap = true;
 
+   collisionType = collisionSphere = new CollisionSphere(4, *position);
+
    reInitialize();
 }
 
