@@ -16,8 +16,6 @@
 
 ExplosiveShot::ExplosiveShot(Point3D& posIn, Vector3D dirIn,
  AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState) {
-   // Make this shot persist so it isn't removed by Shot::handleCollision()
-   persist = true;
    /* When isExploded becomes true, we check for collisions within the
       explodeRadius. */
    explodeRadius = 15;
@@ -71,29 +69,6 @@ void ExplosiveShot::explode() {
    // Play an explosion animation.
    Sprite::sprites.push_back(
          new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20, *position, explodeRadius * 4, explodeRadius * 4, gameState));
-}
-
-void ExplosiveShot::handleCollision(Drawable* other) {
-   /* If the bomb has already exploded, we shouldn't be checking for collisions.
-    * Just wait for it to be removed.
-    */
-   if (isExploded) {
-      return;
-   }
-
-   // Apply damage to all targets hit.
-   // Apply a force to all targets hit.
-    
-   Asteroid3D* asteroid;
-   /* If the bomb collided with an asteroid before it got a chance to 
-    * blow up from its timer, then it should explode during the next frame,
-    * but not right now b/c collision detection would not work.
-    */
-   if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
-      SoundEffect::playSoundEffect("BlasterHit.wav");
-      shouldExplode = true;
-   }
-   Shot::handleCollision(other);
 }
 
 void ExplosiveShot::hitWall(BoundingWall* wall) {

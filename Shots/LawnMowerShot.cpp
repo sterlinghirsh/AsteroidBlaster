@@ -268,8 +268,3 @@ bool LawnMowerShot::detectCollision(Drawable* other, bool checkOther) {
     (other->radius + requiredDistance));
 }
 
-void LawnMowerShot::handleCollision(Drawable* other) {
-   if (other == owner)
-      return;
-}
-

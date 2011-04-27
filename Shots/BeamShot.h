@@ -23,7 +23,6 @@ class BeamShot : public Shot {
       virtual void drawInMinimap();
       virtual bool detectCollision(Drawable* other, bool checkOther);
       virtual void update(double timeDiff);
-      virtual void handleCollision(Drawable* other);
       virtual void debug();
       virtual void hitWall(BoundingWall* wall);
       virtual Point3D getWallIntersectionPoint(BoundingWall* wall);

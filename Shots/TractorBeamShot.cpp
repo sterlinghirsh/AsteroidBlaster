@@ -212,8 +212,3 @@ bool TractorBeamShot::detectCollision(Drawable* other, bool checkOther) {
    return (other->position->distanceFrom(closestPoint) <=
     (other->radius + requiredDistance));
 }
-
-void TractorBeamShot::handleCollision(Drawable* other) {
-   if (other == owner)
-      return;
-}

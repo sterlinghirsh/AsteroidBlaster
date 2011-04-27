@@ -30,7 +30,6 @@ class Object3D : public Drawable {
       virtual void setRollSpeed(double radiansPerSecond);
       virtual void drawBoundingBox();
       virtual void drawBoundingSphere();
-      virtual void handleCollision(Drawable* other);
       virtual void setTargeted(bool a);
       virtual bool isTargeted();
 

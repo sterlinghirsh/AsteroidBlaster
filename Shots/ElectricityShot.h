@@ -26,8 +26,6 @@ class ElectricityShot : public Shot {
       double length;
       double farRadius;
       bool detectCollision(Drawable* other, bool checkOther);
-      void handleCollision(Drawable* other);
-
 };
 
 #endif

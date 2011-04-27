@@ -187,25 +187,6 @@ bool BeamShot::detectCollision(Drawable* other, bool checkOther) {
    return fabs(distance) <= other->radius;
 }
 
-void BeamShot::handleCollision(Drawable* other) {
-
-   if (other == owner || hitYet || (curFrame - 1) > firstFrame)
-      return;
-   
-   // Only count hits on Asteroids and Shards.
-   if (dynamic_cast<Asteroid3D*>(other) == NULL && 
-    dynamic_cast<Shard*>(other) == NULL &&
-    dynamic_cast<AsteroidShip*>(other) == NULL)
-      return;
-   hitYet = true;
-   hitItem = other;
-   lastHitFrame = curFrame;
-   if (dynamic_cast<Asteroid3D*>(other) != NULL) {
-      owner->score += (int)other->radius * 10;
-   }
-   drawLength = position->distanceFrom(*other->position);
-}
-
 void BeamShot::debug() {
    printf("BeamShot::debug(): (min/max/position/direction)\n");
    minPosition->print();

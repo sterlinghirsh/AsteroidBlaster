@@ -64,7 +64,6 @@ class Drawable : public CollisionBox {
       virtual void update(double timeDifference);
       
       virtual bool detectCollision(Drawable* other, bool checkOther = true);
-      virtual void handleCollision(Drawable* other);
       virtual void drawInMinimap();
       virtual void hitWall(BoundingWall* wall);
       virtual void debug();

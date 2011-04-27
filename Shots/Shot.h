@@ -31,7 +31,6 @@ class Shot : public Object3D {
 
       virtual void draw();
       virtual void update(double timeDiff);
-      virtual void handleCollision(Drawable* other);
       virtual void drawInMinimap();
       virtual void debug();
       bool isBeam;

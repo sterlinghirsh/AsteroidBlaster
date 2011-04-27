@@ -199,8 +199,3 @@ bool ElectricityShot::detectCollision(Drawable* other, bool checkOther) {
    return (other->position->distanceFrom(closestPoint) <=
          (other->radius + requiredDistance));
 }
-
-void ElectricityShot::handleCollision(Drawable* other) {
-   if (other == owner)
-      return;
-}

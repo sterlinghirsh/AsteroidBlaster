@@ -35,16 +35,6 @@ void Shot::update(double timeDiff) {
    }
 }
 
-/**
- * Ignore collisions with the owner's ship.
- */
-void Shot::handleCollision(Drawable* other) {
-   // Don't remove persistent stuff.
-   if (!persist) {
-      shouldRemove = true;
-   }
-}
-
 void Shot::draw() {
    Object3D::draw();
 }

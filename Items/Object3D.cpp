@@ -125,11 +125,6 @@ void Object3D::pitch(double angle) {
       up->rotate(-angle, *right);
 }
 
-
-void Object3D::handleCollision(Drawable* other) {
-   // Handle stuff in subclasses.
-}
-
 void Object3D::drawBoundingBox() {
    glDisable(GL_LIGHTING);
    glPushMatrix();

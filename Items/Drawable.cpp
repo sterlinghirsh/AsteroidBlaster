@@ -122,10 +122,6 @@ bool Drawable :: detectCollision(Drawable* other, bool checkOther) {
        other->minPosition->z > maxPosition->z);
 }
 
-void Drawable :: handleCollision(Drawable* other) {
-   // Handle stuff in subclasses.
-}
-
 /**
  * Subclasses can extend this, but this draws a sphere on the minimap.
  */

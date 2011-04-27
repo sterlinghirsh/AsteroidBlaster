@@ -17,7 +17,6 @@ class RemoteBombShot : public ExplosiveShot {
       virtual ~RemoteBombShot();
       virtual void draw();
       virtual void update(double timeDiff);
-      virtual void handleCollision(Drawable* other);
       virtual void hitWall(BoundingWall* wall);
       // Called when the shot's isExploded becomes true.
       virtual void explode();

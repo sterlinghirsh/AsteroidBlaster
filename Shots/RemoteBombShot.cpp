@@ -101,10 +101,6 @@ void RemoteBombShot::update(double timeDiff) {
       // Find out how projectileShot's are removed.
 }
 
-void RemoteBombShot::handleCollision(Drawable* other) {
-   ExplosiveShot::handleCollision(other); 
-}
-
 void RemoteBombShot::hitWall(BoundingWall* wall) {
    ExplosiveShot::hitWall(wall);
 }

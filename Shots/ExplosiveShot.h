@@ -15,7 +15,6 @@ class ExplosiveShot : public Shot {
       virtual void update(double timeDiff);
       // Called when the ExplosiveShot realizes it has been exploded.
       virtual void explode();
-      virtual void handleCollision(Drawable* other);
       virtual void hitWall(BoundingWall* wall);
 
       //int particleNum;

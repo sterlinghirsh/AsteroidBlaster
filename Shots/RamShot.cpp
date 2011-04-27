@@ -304,8 +304,3 @@ bool RamShot::detectCollision(Drawable* other, bool checkOther) {
    return (other->position->distanceFrom(closestPoint) <=
     (other->radius + requiredDistance));
 }
-
-void RamShot::handleCollision(Drawable* other) {
-   if (other == owner)
-      return;
-}
