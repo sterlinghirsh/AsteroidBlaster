@@ -55,6 +55,7 @@ class Asteroid3D : public Object3D, public CollisionSphere {
       void debug();
       virtual double getRadius();
       virtual Point3D& getCenter() const;
+      AsteroidShip* lastHitShotOwner;
 
    private:
       double randRadius(double r);
@@ -63,7 +64,6 @@ class Asteroid3D : public Object3D, public CollisionSphere {
       // Holds a random color.
       float cyan, magenta, yellow;
       void dropRandomItem();
-      AsteroidShip* lastHitShotOwner;
 };
 
 #endif

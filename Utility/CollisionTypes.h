@@ -46,7 +46,6 @@ class CollisionCone : public CollisionType {
 // Default case
 template<class A, class B>
 bool detectCollision(A* a, B* b) {
-   printf("in default detectCollision\n");
    CollisionBox* box1; 
    CollisionBox* box2; 
    CollisionSphere* sphere1; 

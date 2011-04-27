@@ -74,32 +74,6 @@ void ProjectileShot::update(double timeDiff) {
    }
 }
 
-void ProjectileShot::handleCollision(Drawable* other) {
-   const int particlesToEmit = 10;
-   
-   static Vector3D particleVariation;
-   static Vector3D positionDifference;
-   const double particleSpeed = 15;
-   // This should probably be moved to the Asteroid's code.
-
-   Asteroid3D* asteroid;
-   // If we hit an asteroid.
-   if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
-      SoundEffect::playSoundEffect("BlasterHit.wav");
-      // Make some particles!
-      positionDifference.updateMagnitude(*asteroid->position, *position);
-      positionDifference.setLength(particleSpeed);
-      for (int i = 0; i <= particlesToEmit; ++i) {
-         particleVariation.randomMagnitude();
-         particleVariation.setLength(particleSpeed);
-         particleVariation.addUpdate(positionDifference);
-         BlasterImpactParticle::Add(new Point3D(*position), 
-          new Vector3D(particleVariation), gameState);
-      }
-   }
-   Shot::handleCollision(other);
-}
-
 void ProjectileShot::hitWall(BoundingWall* wall) {
    Shot::hitWall(wall);
 }

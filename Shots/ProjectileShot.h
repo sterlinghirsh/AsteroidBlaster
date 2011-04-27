@@ -12,7 +12,6 @@ class ProjectileShot : public Shot {
       ProjectileShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState);
       virtual void draw();
       virtual void update(double timeDiff);
-      virtual void handleCollision(Drawable* other);
       int particleNum;
       Vector3D particleDirection;
       virtual void hitWall(BoundingWall* wall);
