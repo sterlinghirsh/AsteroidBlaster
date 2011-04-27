@@ -22,9 +22,12 @@
 #include "Shots/ElectricityShot.h"
 #include "Shots/AntiInertiaShot.h"
 #include "Shots/EnergyShot.h"
+#include "Shots/ExplosiveShot.h"
+#include "Shots/TimedBombShot.h"
 
 #include "Particles/ElectricityImpactParticle.h"
 #include "Particles/BlasterImpactParticle.h"
+#include "Particles/TractorAttractionParticle.h"
 
 template<>
 void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
@@ -155,6 +158,8 @@ void Collision<Asteroid3D, ProjectileShot>::handleCollision() {
    static Vector3D positionDifference;
    const double particleSpeed = 15;
    double speed = 10 / sqrt(a->radius);
+
+   b->shouldRemove = true;
    
    a->lastHitShotOwner = b->owner;
    a->health -= b->getDamage(a);
@@ -183,6 +188,40 @@ void Collision<Asteroid3D, Shot>::handleCollision() {
    a->lastHitShotOwner = b->owner;
    a->health -= b->getDamage(a);
    b->shouldRemove = true;
+}
+
+template<>
+void Collision<Asteroid3D, ExplosiveShot>::handleCollision() {
+   a->lastHitShotOwner = b->owner;
+   if (!b->isExploded) {
+      b->shouldExplode = true;
+      SoundEffect::playSoundEffect("BlasterHit.wav");
+      return;
+   }
+
+   a->health -= b->getDamage(a);
+}
+
+template<>
+void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
+   a->lastHitShotOwner = b->owner;
+   if (!b->isExploded) {
+      Vector3D positionToAsteroid(*b->position, *a->position);
+      double distance = positionToAsteroid.getLength();
+      if (distance < b->seekRadius + a->radius) {
+         if (distance > b->collisionRadius + a->radius) {
+            Vector3D* attraction = new Vector3D(positionToAsteroid);
+            attraction->setLength(20.0);
+            b->addAcceleration(attraction);
+         } else {
+            b->shouldExplode = true;
+            SoundEffect::playSoundEffect("BlasterHit.wav");
+         }
+      }
+      return;
+   }
+
+   a->health -= b->getDamage(a);
 }
 
 template<>
@@ -248,6 +287,79 @@ void Collision<Asteroid3D, Asteroid3D>::handleCollision() {
    b->addInstantAcceleration(reverseVelocity);
 }
 
+template<>
+void Collision<Shard, TractorBeamShot>::handleCollision() {
+   const int numParticles = 1;
+
+   // Set the new speed.
+   Vector3D* TBshotToShip = new Vector3D(*a->position, *b->owner->position);
+   TBshotToShip->setLength(1000 / sqrt((1 + TBshotToShip->getLength())));
+   
+   // Pull the shard in.
+   a->addAcceleration(TBshotToShip);
+
+   // Now do particles.
+   Vector3D random;
+   for (int i = 0; i < numParticles; ++i) {
+      Point3D* particlePosition = new Point3D(*a->position);
+      random.randomMagnitude();
+      random.movePoint(*particlePosition);
+      Vector3D* particleVelocity = new Vector3D(*particlePosition, *b->position);
+      particleVelocity->setLength(10); // Speed of the particle.
+      particleVelocity->addUpdate(*a->velocity);
+      // Make this go toward the ship.
+      TractorAttractionParticle::Add(particlePosition, particleVelocity, b->owner->position, a->gameState);
+   }
+}
+
+template<>
+void Collision<Shard, BeamShot>::handleCollision() {
+   if (!b->hitYet && curFrame - 1 <= b->firstFrame) {
+      double speed = 80; // High speed from hard-hitting railgun.
+      a->velocity->updateMagnitude(*b->position, *a->position);
+      a->velocity->setLength(speed);
+      b->hitYet = true;
+      b->hitItem = a;
+      b->lastHitFrame = curFrame;
+      b->drawLength = a->position->distanceFrom(*b->position);
+   }
+}
+
+template<>
+void Collision<Shard, AntiInertiaShot>::handleCollision() {
+   Vector3D* newVelocity = new Vector3D(*a->velocity);
+   newVelocity->scalarMultiplyUpdate(-0.1);
+   a->addInstantAcceleration(newVelocity);
+}
+
+template<>
+void Collision<Asteroid3D, Shard>::handleCollision() {
+   double speed = a->velocity->getLength();
+   b->velocity->updateMagnitude(*a->position, *b->position);
+   b->velocity->setLength(speed);
+}
+
+template<>
+void Collision<Shard, Shard>::handleCollision() {
+   Vector3D* pushOnA = new Vector3D(*b->position, *a->position);
+   if (pushOnA->getComparisonLength() == 0) {
+      pushOnA->randomMagnitude();
+   }
+   pushOnA->setLength(5);
+   a->addAcceleration(pushOnA);
+   b->addAcceleration(new Vector3D(pushOnA->scalarMultiply(-1)));
+}
+
+template<>
+void Collision<Shard, Shot>::handleCollision() {
+   // Set speed to between the speed of the shot and the current speed.
+   double speed = b->velocity->getLength();
+   speed += a->velocity->getLength() * 2;
+   speed = speed / 3;
+   a->velocity->updateMagnitude(*b->position, *a->position);
+   a->velocity->setLength(speed);
+}
+
 
 // Specialization for sphere sphere.
 template<>
@@ -301,15 +413,24 @@ Custodian::Custodian(const GameState* _gameState) :
       collisionHandlers->push_back(new Collision<AsteroidShip, Shard>);
       collisionHandlers->push_back(new Collision<AsteroidShip, Shot>);
 
-      collisionHandlers->push_back(new Collision<Asteroid3D, Shot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, ProjectileShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, BeamShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, TractorBeamShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, ElectricityShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, AntiInertiaShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, EnergyShot>);
+      collisionHandlers->push_back(new Collision<Asteroid3D, TimedBombShot>);
+      collisionHandlers->push_back(new Collision<Asteroid3D, ExplosiveShot>);
+      collisionHandlers->push_back(new Collision<Asteroid3D, Shot>);
       
       collisionHandlers->push_back(new Collision<Asteroid3D, Asteroid3D>);
+      collisionHandlers->push_back(new Collision<Asteroid3D, Shard>);
+
+      collisionHandlers->push_back(new Collision<Shard, TractorBeamShot>);
+      collisionHandlers->push_back(new Collision<Shard, BeamShot>);
+      collisionHandlers->push_back(new Collision<Shard, AntiInertiaShot>);
+      collisionHandlers->push_back(new Collision<Shard, Shot>);
+      collisionHandlers->push_back(new Collision<Shard, Shard>);
    }
 }
 

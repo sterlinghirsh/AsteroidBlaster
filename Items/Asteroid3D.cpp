@@ -568,54 +568,6 @@ void Asteroid3D::update(double timeDiff) {
    }
 }
 
-void Asteroid3D::handleCollision(Drawable* other) {
-   Asteroid3D* otherAsteroid;
-   
-   if (health < 0)
-      return;
-   
-   if ((otherAsteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
-      double d = (*(otherAsteroid->position)).distanceFrom(*position);
-      double combinedRad = otherAsteroid->radius + radius;
-      double maxR = max(radius, otherAsteroid->radius);
-      Vector3D* push = new Vector3D(*otherAsteroid->position, *position);
-
-      if (d <=  maxR) {
-         if (d == 0) {
-            //printf("stroid is stuck\n");
-            push->randomMagnitude();
-         }
-         push->setLength(0.1); // Units per sec per sec.
-         addAcceleration(push);
-      }
-
-      double speed = velocity->getLength();
-
-      Vector3D reflectionAxis(*otherAsteroid->position, *position);
-      reflectionAxis.normalize();
-
-      double m1 = radius; // This Asteroid's Mass.
-      double m2 = otherAsteroid->radius; // Other Asteroid's Mass.
-
-      Vector3D* newVelocity = new Vector3D(*velocity);
-      newVelocity->scalarMultiplyUpdate(m1 - m2);
-      newVelocity->addUpdate(otherAsteroid->velocity->scalarMultiply(2 * m2));
-      newVelocity->scalarMultiplyUpdate(1 / (m1 + m2 + 0.2)); // Added the 0.2 to make stuff lose some energy.
-      
-      // We want to only add acceleration away from the other item.
-      if (newVelocity->dot(*push) < 0) {
-         newVelocity->scalarMultiplyUpdate(-1);
-      }
-      
-      addInstantAcceleration(newVelocity);
-
-      Vector3D* reverseVelocity = new Vector3D(*velocity);
-      reverseVelocity->scalarMultiplyUpdate(-1);
-      addInstantAcceleration(reverseVelocity);
-   }
-
-}
-
 Shard* Asteroid3D::makeShard(int num) {
    Shard* shard;
    shard = new Shard(0.5, worldSize, gameState);

@@ -46,8 +46,6 @@ class Asteroid3D : public Object3D, public CollisionSphere {
       void drawEnergyEffect();
       void makeStrip(Ring r1, Ring r2);
       void update(double timeDiff);
-      virtual void handleCollision(Drawable* other);
-      bool handleHit(std::list<Asteroid3D*>& asteroids);
       Shard* makeShard(int num);
       Asteroid3D* makeChild(int num, int dimension);
       void newRandomPosition();

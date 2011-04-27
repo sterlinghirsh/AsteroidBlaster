@@ -12,9 +12,6 @@
 #include "Utility/WindowsMathLib.h"
 #endif
 
-const double slowDownPerSecond = 5.0;
-const double seekRadius = 20.0;
-const double collisionRadius = 1.0;
 
 TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, ownerIn, _gameState) {
    radius = seekRadius;
@@ -28,6 +25,9 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const
    explodeRadius = 8;
    
    damage = 40;
+   slowDownPerSecond = 5.0;
+   seekRadius = 20.0;
+   collisionRadius = 1.0;
 }
 
 // Needed to avoid obscure vtable compiler error.
@@ -98,23 +98,6 @@ bool TimedBombShot::detectCollision(Drawable* other, bool checkOther) {
       return ExplosiveShot::detectCollision(other, checkOther);
    } else {
       return false;
-   }
-}
-
-void TimedBombShot::handleCollision(Drawable* other) {
-   Asteroid3D* asteroid;
-   if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
-      Vector3D positionToAsteroid(*position, *asteroid->position);
-      double distance = positionToAsteroid.getLength();
-      if (distance < seekRadius + asteroid->radius) {
-         if (distance > collisionRadius + asteroid->radius) {
-            Vector3D* attraction = new Vector3D(positionToAsteroid);
-            attraction->setLength(20.0);
-            addAcceleration(attraction);
-         } else {
-            ExplosiveShot::handleCollision(other); 
-         }
-      }
    }
 }
 
