@@ -22,6 +22,7 @@
 #include "Text/Text.h"
 #include "Utility/Custodian.h"
 #include "Utility/InputManager.h"
+#include "Utility/GlobalUtility.h"
 #include "HUD/ProgressBar.h"
 #include "HUD/Minimap.h"
 #include "HUD/Screen.h"
@@ -52,7 +53,8 @@ class GameState : public InputReceiver {
                         *winText,
                         *weaponText,
                         *ammoText,
-                        *curLevelText;
+                        *curLevelText,
+                        *timerText;
       // Used when looping over Drawable objects
       std::vector<Drawable*>::iterator item;
       // Used when looping over Drawable objects in drawMinimap
@@ -80,6 +82,9 @@ class GameState : public InputReceiver {
       void drawAllText();
       void drawHud();
       void updateText();
+      int minutesRemaining(double secondsRemaining);
+      int secondsRemainder(double secondsRemaining);
+
       void update(double timeDiff);
       void initAsteroids();
       void setCurFPS(double fpsIn);
@@ -136,7 +141,15 @@ class GameState : public InputReceiver {
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;
       int curLevel;
+      // Used for a countdown at the end of each level.
       double countDown;
+
+
+      // Timer to control how long the level lasts.
+      Timer levelTimer;
+
+      // The number of seconds this level will last.
+      double levelDuration;
 
       Skybox* skybox;
       //Camera* camera;

@@ -70,6 +70,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    // Get the ammo into a stream to turn it into a string.
    sstream2 << ship->getCurrentWeapon()->curAmmo;
    ammoText = new Text("Ammo: ", sstream2.str(), "",  hudFont, position);
+   timerText = new Text("Time: ", sstream2.str(), "", hudFont, position);
    // Clear the sstream2
    sstream2.str("");
    
@@ -87,13 +88,26 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    // Set up objects.
    custodian.add(ship);
 
+   // Start off at level 1.
    curLevel = 1;
+   // Spawn one more asteroid for each level.
    numAsteroidsToSpawn = curLevel;
    initAsteroids();
    doYaw = 0;
    mouseX = 0;
    mouseY = 0;
+   // The length of the countdown at the end of the level.
    countDown = 5;
+
+   // Make a good formula here for how many seconds a level should last.
+   levelDuration = curLevel * 60;
+
+   // Give the player 3 minutes on the first level.
+   if(curLevel = 1)
+      levelDuration = 180;
+
+   // The game should run for levelDuration # of seconds.
+   levelTimer.setCountDown(levelDuration);
 
    scoreToWin = 15000;
    godMode = false;
@@ -134,6 +148,14 @@ void GameState::addScreens() {
  */
 void GameState::update(double timeDiff) {
    const double respawnTime = 3;
+
+   // If the level should be over, let's go to the store menu.
+   if(levelTimer.getTimeLeft() <= 0) {
+         storeMenu->menuActive = true;
+         SoundEffect::stopAllSoundEffect();
+         Music::stopMusic();
+         Music::playMusic("8-bit3.ogg");
+   }
    // Determine whether or not the game should continue running
    //if (gameIsRunning && ship->getHealth() <= 0) {
 
@@ -517,6 +539,10 @@ void GameState::drawAllText() {
    position.y = (Sint16) (position.y + positionDifferenceY);
    curLevelText->setPosition(position);
    curLevelText->draw();
+
+   position.y = (Sint16) (position.y + positionDifferenceY);
+   timerText->setPosition(position);
+   timerText->draw();
    GameMessage::drawAllMessages();
 }
 
@@ -539,8 +565,36 @@ void GameState::updateText() {
       ammoText->updateBody(sstream2.str());
       sstream2.str("");
    }
+
+   // Update the timer on screen to show the minutes & seconds remaining.
+   std::string minutes;
+   sstream2 << minutesRemaining(levelTimer.getTimeLeft());
+   //sstream2 << minutesRemaining(levelDuration - (doubleTime() - timeStarted));
+   minutes = sstream2.str();
+   sstream2.str("");
+   std::string seconds;
+   sstream2 << secondsRemainder(levelTimer.getTimeLeft());
+   seconds = sstream2.str();
+   sstream2.str("");
+   timerText->updateBody(minutes + ":" + seconds);
+   //timerText->updateBody(seconds);
 }
 
+/**
+ * Return how many minutes are left from this number of seconds.
+ * If secondsRemaining is < 60, this will return 0.
+ */
+int GameState::minutesRemaining(double secondsRemaining) {
+   return (int)secondsRemaining/60;
+}
+
+/**
+ * The complementary function for minutesRemaining. This tells the remainder seconds
+ * left, after the minutes remaining has been calculated.
+ */
+int GameState::secondsRemainder(double secondsRemaining) {
+   return (int)((int)secondsRemaining)%60;
+}
 
 void GameState::initAsteroids() {
    /**
@@ -625,6 +679,9 @@ void GameState::reset() {
 
    GameMessage::Clear();
    addLevelMessage();
+   
+   // The game should run for levelDuration # of seconds.
+   levelTimer.setCountDown(levelDuration);
 }
 
 void GameState::addLevelMessage() {
