@@ -34,6 +34,8 @@ Shard::Shard(double r, double worldSizeIn, const GameState* _gameState) :
       transparentZ = -8.0;
 
       InitShard(r, worldSizeIn);
+
+      collisionType = new CollisionSphere(r, *position);
    }
 
 /*
