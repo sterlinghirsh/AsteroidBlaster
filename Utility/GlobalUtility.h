@@ -152,5 +152,54 @@ struct Color {
    }
 };
 
+struct Timer {
+   double timeStarted;
+   double countDownTime;
+
+   Timer() : timeStarted(0), countDownTime(0) {}
+   
+   inline void reset() {
+      timeStarted = 0;
+   }
+
+   inline void setCountDown(double _countDownTime) {
+      timeStarted = doubleTime();
+      countDownTime = _countDownTime;
+   }
+
+   /**
+    * Set the count down to its last value.
+    */
+   inline void restartCountDown() {
+      timeStarted = doubleTime();
+   }
+
+   inline double getTimeLeft() {
+      return timeStarted + countDownTime - doubleTime();
+   }
+
+   inline double getTimeRunning() {
+      return doubleTime() - timeStarted;
+   }
+
+   /**
+    * Return a number representing how long the timer has
+    * been counting in units of countDownTime.
+    * After just starting, this will return 0.
+    * After countDownTime seconds, this will return 1.
+    * After 2 * countDownTime seconds, this will return 2.
+    */
+   inline double getAmountComplete() {
+      if (countDownTime == 0)
+         return 0;
+
+      return 1 - (getTimeLeft() / countDownTime);
+   }
+
+   inline bool isRunning() {
+      return timeStarted != 0;
+   }
+};
+
 
 #endif

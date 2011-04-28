@@ -81,8 +81,6 @@ class AsteroidShip : public Object3D {
       Vector3D* getCameraOffset();
       void nextView();
 
-      double timeDied;
-
       void reInitialize();
       
       int healthMaxUpgradePrice() { return ((int) healthMax/100)*healthUpgradePrice;}
@@ -270,6 +268,8 @@ class AsteroidShip : public Object3D {
        Vector3D& offsetDirectionY, int color = 1);
       double accelerationStartTime;
       int particlesEmitted;
+
+      Timer respawnTimer;
 };
 
 #endif

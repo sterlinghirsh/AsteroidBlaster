@@ -82,7 +82,7 @@ void Energy::fire() {
       chargeStartTime = doubleTime();  
       Vector3D zeroVelocity(0, 0, 0);
       chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, ship, this, ship->gameState);
-      gameState->custodian.add(chargingShot);
+      ship->custodian->add(chargingShot);
    }
 
 }

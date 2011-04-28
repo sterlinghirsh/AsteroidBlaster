@@ -17,7 +17,6 @@ class AsteroidShip;
 class Custodian;
 class GameState;
 struct Point3D;
-extern GameState* gameState;
 
 enum WeaponType {
    PROJECTILE,

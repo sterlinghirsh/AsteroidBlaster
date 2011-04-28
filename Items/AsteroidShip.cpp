@@ -182,10 +182,9 @@ void AsteroidShip::reInitialize() {
    accelerationStartTime = doubleTime();
    particlesEmitted = 0;
 
-   timeDied = 0;
-
    velocity->updateMagnitude(0, 0, 0);
    position->updateMagnitude(0, 0, 0);
+   respawnTimer.reset();
 }
 
 /**
@@ -361,11 +360,12 @@ void AsteroidShip::update(double timeDiff) {
    if (health <= 0) {
       const double respawnTime = 3;
       // Handle respawning.
-      if (timeDied == 0) {
-         timeDied = doubleTime();
-      } 
+      if (!respawnTimer.isRunning()) {
+         respawnTimer.setCountDown(respawnTime);
+      }
 
-      double timeLeftToRespawn = (timeDied + respawnTime) - doubleTime();
+      double timeLeftToRespawn = respawnTimer.getTimeLeft();;
+
       if (this == gameState->ship) {
          std::ostringstream gameMsg;
          gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
