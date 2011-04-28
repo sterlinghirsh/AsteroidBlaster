@@ -189,8 +189,8 @@ class CollisionCone : public CollisionType {
       Vector3D direction;
       Point3D origin;
 
-      CollisionCone(double _angle, double _length, Vector3D& _direction) :
-       angle(_angle), length(_length), direction(_direction) {
+      CollisionCone(double _angle, double _length, Vector3D& _direction, Point3D& _origin) :
+       angle(_angle), length(_length), direction(_direction), origin(_origin) {
          sinAngle = sin(angle);
          cosAngle = cos(angle);
          sinReciprocal = 1 / sinAngle;
@@ -198,7 +198,7 @@ class CollisionCone : public CollisionType {
          sinSquared = sinAngle * sinAngle;
       }
 
-      virtual bool collides(CollisionType* obj) {
+      inline virtual bool collides(CollisionType* obj) {
          return obj->collidesWithCone(this);
       }
 
@@ -206,6 +206,51 @@ class CollisionCone : public CollisionType {
        * http://www.geometrictools.com/LibMathematics/Intersection/Intersection.html
        */
       virtual bool collidesWithSphere(CollisionSphere* sphere) {
+         Vector3D diff(origin, sphere->center);
+         double lenSqr = diff.getComparisonLength();
+
+         // Too damn far away.
+         if (lenSqr > length * length)
+            return false;
+
+         // Is the cone vertex inside the sphere?
+         if (lenSqr < sphere->radiusSquared)
+            return true;
+
+         double dotProduct = diff.dot(direction);
+         double dotSqr = dotProduct * dotProduct;
+
+         // Is sphere center inside the cone?
+         if (dotSqr > diff.getComparisonLength() * cosAngle * cosAngle && 
+          dotProduct > 0.0 && dotProduct < length)
+            return true;
+
+         // Sphere center is outside cone.  Problem now reduces to looking for
+         // an intersection between circle and ray in the plane containing
+         // cone vertex and spanned by cone axis and vector from vertex to
+         // sphere center.
+
+         // Ray is t*D+V (t >= 0) where |D| = 1 and dot(A,D) = cos(angle).
+         // Also, D = e*A+f*(C-V).  Plugging ray equation into sphere equation
+         // yields R^2 = |t*D+V-C|^2, so the quadratic for intersections is
+         // t^2 - 2*dot(D,C-V)*t + |C-V|^2 - R^2 = 0.  An intersection occurs
+         // if and only if the discriminant is nonnegative.  This test becomes
+         //
+         //     dot(D,C-V)^2 >= dot(C-V,C-V) - R^2
+         //
+         // Note that if the right-hand side is nonpositive, then the inequality
+         // is true (the sphere contains V).  I have already ruled this out in
+         // the first block of code in this function.
+
+         double uLen = sqrt(fabs(lenSqr - dotSqr));
+         double test = cosAngle * dotProduct + sinAngle * uLen;
+         double discr = test * test - lenSqr + sphere->radiusSquared;
+
+         return discr >= 0.0 && test >= 0.0;
+   
+
+
+         /*
          Vector3D U = origin - 
           direction.scalarMultiply(sphere->radius * sinReciprocal);
 
@@ -226,6 +271,7 @@ class CollisionCone : public CollisionType {
             }
          }
          return false;
+         */
       }
 };
 
