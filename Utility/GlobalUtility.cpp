@@ -640,7 +640,7 @@ void drawGameState(GameState* gameStateIn,
       glPushMatrix();
 
       if (lookAt) {
-         gluLookAt(0, 0, 20, // Eye at origin.
+         gluLookAt(0, 0, 20, // Eye at origin + 20.
                0, 0, -1, // X goes right, Z goes away.
                0, 1, 0); // Y goes up.
       }
