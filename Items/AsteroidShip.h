@@ -150,6 +150,8 @@ class AsteroidShip : public Object3D {
       double zMove;
       double justGotHit;
       
+      bool drawHit;
+      
       Point3D shotOrigin;
       
       Vector3D shotDirection; // If we shoot a shot, where will it go?
@@ -233,6 +235,10 @@ class AsteroidShip : public Object3D {
       double backY;
       double backZ;
       double skew;
+      
+      double hitX;
+      double hitY;
+      double hitZ;
 
       bool isBraking;
       bool isBoosting;
@@ -256,6 +262,7 @@ class AsteroidShip : public Object3D {
       void draw_bonerlines();
       void draw_frontlines();
       void draw_backlines();
+      void draw_hitEffect();
 
       double aimX, aimY;
       

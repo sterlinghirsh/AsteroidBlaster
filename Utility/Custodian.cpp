@@ -33,6 +33,7 @@ template<>
 void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
    if ((doubleTime() - a->justGotHit > 1) && 
     !(a->currentWeapon == 4 && a->isFiring && a->weapons[4]->curAmmo > 0)) {
+      //a->justGotHit = 1;
       a->health -= b->health;
       a->shakeAmount = 8;
       SoundEffect::playSoundEffect("ShipHit.wav");

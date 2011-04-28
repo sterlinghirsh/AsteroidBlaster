@@ -56,6 +56,12 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    backY = 0;
    backZ = 1.6;
    
+   hitX = 0;
+   hitY = 0;
+   hitZ = 0;
+   
+   justGotHit = 0;
+   
    //skew must be set to 0 til I figure out a better way to do things
    skew = 0;
    
@@ -511,6 +517,14 @@ void AsteroidShip::update(double timeDiff) {
       }
    }
    
+   if (doubleTime() - justGotHit < 2) {
+      //justGotHit -= timeDiff;
+      drawHit = true;
+   } else {
+      drawHit = false;
+   }
+   
+   //printf("Just got hit variable: %d\n", drawHit);
 
    createEngineParticles(timeDiff);
 
@@ -543,8 +557,8 @@ void AsteroidShip::keepFiring() {
 }
 
 void AsteroidShip::draw_frontpanels() {
-   glPushMatrix();
    glUseProgram(shipYShader);
+   glPushMatrix();
    glBegin(GL_TRIANGLES);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, cornerY, cornerZ);
@@ -628,8 +642,9 @@ void AsteroidShip::draw_spaceboner() {
       glVertex3d(backX, backY, middleZ + backChange);
 
       glVertex3d(-middleXY, skew, middleZ);
-      glVertex3d(backX, backY, middleZ + backChange);
       glVertex3d(skew, middleXY, middleZ);
+      glVertex3d(backX, backY, middleZ + backChange);
+
    } else if (backChange == 0) {
       glColor4d(0, 0, 0, 1);
 
@@ -664,9 +679,10 @@ void AsteroidShip::draw_spaceboner() {
 
 void AsteroidShip::draw_bonerlines() {
    if (curForwardAccel == 10.0) {
+      glLineWidth(3.0);
       if (backChange == (backZ - middleZ)) {
          glBegin(GL_LINE_LOOP);
-         glColor3d(1, .4, 0);
+         glColor3d(1, 0, 0);
          glVertex3d(middleXY - xChange, skew, middleZ + zChange);
          glVertex3d(skew, middleXY - yChange, middleZ + zChange);
          glVertex3d(-middleXY + xChange, skew, middleZ + zChange);
@@ -730,6 +746,7 @@ void AsteroidShip::draw_bonerlines() {
       glVertex3d(middleXY, skew, middleZ);
       glEnd();
    } else {
+      glLineWidth(3.0);
       glBegin(GL_LINE_LOOP);
       glColor3d(1, .4, 0);
       glVertex3d(middleXY, skew, middleZ);
@@ -760,6 +777,7 @@ void AsteroidShip::draw_bonerlines() {
       glVertex3d(middleXY, skew, middleZ);
       glEnd();
    }
+   glLineWidth(1.0);
 }
 
 void AsteroidShip::draw_frontlines() {
@@ -829,6 +847,12 @@ void AsteroidShip::draw_ship() {
    draw_frontlines();
    
    draw_backlines();
+   
+   if(drawHit) {
+      //glPushMatrix();
+      draw_hitEffect();
+      //glPopMatrix();
+   }
 
    glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);
@@ -870,10 +894,41 @@ void AsteroidShip::drawInMinimap() {
    glPopMatrix();
 }
 
+void AsteroidShip::draw_hitEffect() {
+   hitX += (double) (rand() % 10);
+   hitY += (double) (rand() % 20);
+   hitZ += (double) (rand() % 30);
+   
+   if (hitX > 100) {
+      hitX = 0;
+   }
+   if (hitY > 100) {
+      hitY = 0;
+   }
+   if (hitZ > 100) {
+      hitZ = 0;
+   }
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glUseProgram(hitShader);
+   glPushMatrix();
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glDisable(GL_LIGHTING);
+   //printf("I got into draw hit effect\n");
+   glScaled(.5, .7, 1.4);
+   glTranslated(0, 0, .6);
+   glRotated(spin, hitX, hitY, hitZ);
+   glColor4d(0, 1, 0, .1);
+   gluSphere(quadric, .6, 20, 20);
+   glEnable(GL_LIGHTING);
+   glPopMatrix();
+   glUseProgram(0);
+}
+
 
 void AsteroidShip::draw() {
    if (getHealth() <= 0)
       return;
+      
    /*
    GLUquadricObj *quadratic;
    float ballx, bally, ballz;
@@ -884,17 +939,18 @@ void AsteroidShip::draw() {
    gluQuadricNormals(quadratic, GLU_SMOOTH);
    */
    glPushMatrix();
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    // Translate to the position.
    position->glTranslate();
    //shotOrigin->glTranslate();
    // Rotate to the current up/right/forward vectors.
    
    glRotate();
-   //spin+=.5;
+   spin+=2;
    glColor4d(0, 0, 0, .8);
-   //glRotated(spin, 1, 0, 0);
+   //glRotated(90, 1, 0, 0);
    draw_ship();
+
    /*
    glBegin(GL_POINTS);
    glVertex3f(0.0, 0.0, 0.0);

@@ -55,7 +55,7 @@ void EnergyShot::draw() {
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);
 
-      setMaterial(WhiteSolid);
+      //setMaterial(WhiteSolid);
       position->glTranslate();
       glRotated(zVector.getAngleInDegrees(*velocity), 
          axis.x, axis.y, axis.z);

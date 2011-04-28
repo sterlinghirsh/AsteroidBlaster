@@ -253,6 +253,7 @@ void load() {
    shipXShader = setShaders( (char *) "./Shaders/ship.vert", (char *) "./Shaders/ship.frag");
    shipYShader = setShaders( (char *) "./Shaders/ship.vert", (char *) "./Shaders/shipY.frag");
    backShader = setShaders( (char *) "./Shaders/ship.vert", (char *) "./Shaders/backship.frag");
+   hitShader = setShaders( (char *) "./Shaders/shipHit.vert", (char *) "./Shaders/shipHit.frag");
 
    //load and start BGM
    Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
