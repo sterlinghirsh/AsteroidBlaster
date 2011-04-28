@@ -29,6 +29,8 @@ class ExplosiveShot : public Shot {
        */
       bool shouldExplode;
       virtual double getDamage(Object3D* other);
+      
+      CollisionSphere* collisionSphere;
 };
 
 #endif

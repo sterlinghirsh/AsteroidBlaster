@@ -44,6 +44,7 @@ weapon(weaponIn) {
 
    chargeTime = 0;
    damage = 0; // Base damage. But we really use damagePerSecond.
+   collisionType = collisionSphere = new CollisionSphere(radius, *position);
 }
 
 void EnergyShot::draw() {
@@ -177,8 +178,12 @@ void EnergyShot::updateChargeTime(double newChargeTime) {
    chargeTime = newChargeTime;
    double cappedSquaredChargeTime = std::min(chargeTime * chargeTime, 5.0);
    radius = baseRadius + baseRadius * cappedSquaredChargeTime;
+
+   collisionSphere->updateRadius(radius);
+
    minX = minY = minZ = -radius;
    maxX = maxY = maxZ = radius;
    updateBoundingBox();
+
    damagePerSecond = baseDamagePerSecond + baseDamagePerSecond * cappedSquaredChargeTime;
 }

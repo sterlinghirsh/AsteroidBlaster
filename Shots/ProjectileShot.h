@@ -15,6 +15,7 @@ class ProjectileShot : public Shot {
       int particleNum;
       Vector3D particleDirection;
       virtual void hitWall(BoundingWall* wall);
+      CollisionPoint* collisionPoint;
 };
 
 #endif

@@ -20,6 +20,9 @@ RemoteBombShot::RemoteBombShot(Point3D& posIn, Vector3D dirIn,
  weapon(_weapon) {
    minX = minY = minZ = -1;
    maxX = maxY = maxZ = 1;
+   radius = 1;
+   collisionSphere->updateRadius(radius);
+
    // Blow up 8 seconds after it's fired.
    timeToExplode = 8;
 

@@ -32,6 +32,7 @@ ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn,
 
    particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
    damage = 3;
+   collisionType = collisionPoint = new CollisionPoint(*position);
 }
 
 void ProjectileShot::draw() {

@@ -77,22 +77,27 @@ class CollisionSphere : public CollisionType {
       double radiusSquared;
       Point3D& center;
 
+      inline void updateRadius(double _radius) {
+         radius = _radius;
+         radiusSquared = _radius * _radius;
+      }
+
       CollisionSphere(double _radius, Point3D& _center) :
        radius(_radius), radiusSquared(_radius * _radius), center(_center) {
 
       }
       
-      virtual bool collides(CollisionType* obj) {
+      inline virtual bool collides(CollisionType* obj) {
          return obj->collidesWithSphere(this);
       }
 
-      virtual bool collidesWithSphere(CollisionSphere* other) {
+      inline virtual bool collidesWithSphere(CollisionSphere* other) {
          Vector3D tmp(center, other->center);
          double radiusSum = radius + other->radius;
          return tmp.getComparisonLength() <= radiusSum * radiusSum;
       }
 
-      virtual bool collidesWithBox(CollisionBox* box) {
+      inline virtual bool collidesWithBox(CollisionBox* box) {
          Point3D centerToClosestPoint(center);
          // Set centerToClosestPoint to the closest point on the box.
          centerToClosestPoint.x = clamp(center.x, box->minPosition.x, box->maxPosition.x);
@@ -112,7 +117,10 @@ class CollisionSphere : public CollisionType {
 
 class CollisionPoint : public CollisionType {
    public:
-      Point3D position;
+      Point3D& position;
+
+      CollisionPoint(Point3D& _position) : position(_position) {}
+
       virtual bool collides(CollisionType* obj) {
          return obj->collidesWithPoint(this);
       }

@@ -24,23 +24,8 @@ ExplosiveShot::ExplosiveShot(Point3D& posIn, Vector3D dirIn,
    isExploded = false;
    shouldExplode = false;
 
-   /*
-   static int currentStartingParticleCycle = 0;
-   particleNum = currentStartingParticleCycle;
-   currentStartingParticleCycle = (currentStartingParticleCycle + 7) % particleCycle;
-   particleDirection = velocity->getNormalVector();
-   
-   Vector3D normalizedVelocity(*velocity);
-   normalizedVelocity.normalize();
-
-   particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
-   */
+   collisionType = collisionSphere = new CollisionSphere(0, *position);
 }
-
-/**
- * This should be overridden by the shot subclasses that extend 
- * ExplosiveShot, since an ExplosiveShot itself will never be drawn.
- */
 
 /**
  * update should do all generic shot updating, but then should be
@@ -61,6 +46,7 @@ void ExplosiveShot::explode() {
    maxX = maxY = maxZ = explodeRadius;
    // Update bounding box's world coords w/ these new sizes.
    updateBoundingBox();
+   collisionSphere->updateRadius(explodeRadius);
 
    isExploded = true;
 
@@ -68,7 +54,7 @@ void ExplosiveShot::explode() {
 
    // Play an explosion animation.
    Sprite::sprites.push_back(
-         new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20, *position, explodeRadius * 4, explodeRadius * 4, gameState));
+         new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20, *position, explodeRadius * 3, explodeRadius * 3, gameState));
 }
 
 void ExplosiveShot::hitWall(BoundingWall* wall) {

@@ -21,6 +21,7 @@ class EnergyShot : public Shot {
       virtual void updateChargeTime(double newChargeTime);
       double damagePerSecond;
       Energy* weapon;
+      CollisionSphere* collisionSphere;
 };
 
 #endif

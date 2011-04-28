@@ -28,6 +28,7 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const
    slowDownPerSecond = 5.0;
    seekRadius = 20.0;
    collisionRadius = 1.0;
+   collisionSphere->updateRadius(seekRadius);
 }
 
 // Needed to avoid obscure vtable compiler error.
