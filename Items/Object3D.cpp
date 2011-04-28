@@ -236,19 +236,18 @@ Point3D* Object3D::sphereCollideWithRay(const Point3D& origin, Vector3D directio
    
    // Use the quadratic formula with magic.
    Vector3D rayOriginToObjectLocation(*position, origin);
-   double quadratic_a = direction.dot(direction);
    double quadratic_b = 2 * direction.dot(rayOriginToObjectLocation);
    double quadratic_c = rayOriginToObjectLocation.dot(rayOriginToObjectLocation) - (radius * radius);
 
-   double discriminant = (quadratic_b * quadratic_b) - (4 * quadratic_a * quadratic_c);
+   double discriminant = (quadratic_b * quadratic_b) - (4 * quadratic_c);
    
    // We don't want to continue if we're going to deal with imaginary numbers.
    if (discriminant < 0) {
       return NULL;
    }
 
-   double root1 = ((-quadratic_b) + sqrt(discriminant)) / (2 * quadratic_a);
-   double root2 = ((-quadratic_b) - sqrt(discriminant)) / (2 * quadratic_a);
+   double root1 = ((-quadratic_b) + sqrt(discriminant)) / 2;
+   double root2 = ((-quadratic_b) - sqrt(discriminant)) / 2;
 
    // We don't want any points that are behind the origin.
    if (root1 < 0) {

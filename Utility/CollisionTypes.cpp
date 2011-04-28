@@ -16,3 +16,6 @@ bool CollisionSphere::collidesWithCone(CollisionCone* cone) {
    return cone->collidesWithSphere(this);
 }
 
+bool CollisionSphere::collidesWithRay(CollisionRay* ray) {
+   return ray->collidesWithSphere(this);
+}

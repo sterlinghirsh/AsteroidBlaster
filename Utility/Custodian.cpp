@@ -92,13 +92,15 @@ void Collision<Asteroid3D, ElectricityShot>::handleCollision() {
    a->lastHitShotOwner = b->owner;
    a->health -= b->getDamage(a);
    
-   // TODO: Refactor this so we do all collision detection elsewhere.
+   /* Normal collision detection gets done in CollisionTypes.h. 
+    * I can't think of an efficient way to do this, so I'm leaving it here
+    * to avoid creating a hack.
+    */
    Point3D* closestPoint = a->sphereCollideWithRay(*b->position, *b->velocity, &hitDistance);
 
    // Sometimes, we decide that it's not a real hit. No big deal.
    if (closestPoint != NULL) {
       b->length = hitDistance;
-      b->velocity->setLength(hitDistance);
       Vector3D centerToImpactPoint(*a->position, *closestPoint);
       centerToImpactPoint.setLength(5);
 

@@ -31,6 +31,7 @@ AntiInertiaShot::AntiInertiaShot(Point3D& posIn, Vector3D dirIn,
    // Set endPoint2 100 units away.
    velocity->setLength(length);
    velocity->movePoint(endPoint2);
+   velocity->normalize();
    // Correct for position when calculating endpoint1 and 2.
    Vector3D positionVector(*position);
    positionVector = positionVector.scalarMultiply(-1);
@@ -59,6 +60,8 @@ AntiInertiaShot::AntiInertiaShot(Point3D& posIn, Vector3D dirIn,
    shouldBeCulled = false;
    updateBoundingBox();
    damage = 0;
+
+   collisionType = new CollisionRay(length, *velocity, *position);
 }
 
 /**
@@ -115,7 +118,7 @@ void AntiInertiaShot::drawShot(bool isGlow) {
    float lpos[4] = {1.0, 0.5, 1.0, 0.0};   // light postion
    //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
    Point3D start(*position);
-   velocity->movePoint(start);
+   velocity->movePoint(start, length);
    start.glTranslate();
 
    glRotate();

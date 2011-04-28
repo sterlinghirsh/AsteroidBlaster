@@ -74,6 +74,8 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, 
    drawLength = length;
    isBeam = true;
    damage = 50;
+
+   collisionType = new CollisionRay(length, *velocity, *position);
 }
 
 /**

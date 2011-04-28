@@ -111,6 +111,7 @@ class CollisionSphere : public CollisionType {
          return centerToClosestPoint.getComparisonLength() < radiusSquared;
       }
 
+      virtual bool collidesWithRay(CollisionRay* ray);
       virtual bool collidesWithPoint(CollisionPoint* point);
       virtual bool collidesWithCone(CollisionCone* cone);
 };
@@ -141,10 +142,37 @@ class CollisionPoint : public CollisionType {
 
 class CollisionRay : public CollisionType {
    public:
-      virtual Point3D& getOrigin() const = 0;
-      virtual Vector3D& getNormalizedDirection() const = 0;
+      Point3D& origin;
+      Vector3D& direction;
+      double length;
+
+      CollisionRay(double _length, Vector3D& _direction, Point3D& _origin) :
+       length(_length), direction(_direction), origin(_origin) {
+
+      }
+
       virtual bool collides(CollisionType* obj) {
          return obj->collidesWithRay(this);
+      }
+
+      virtual inline bool collidesWithSphere(CollisionSphere* sphere) {
+         // Use the quadratic formula with magic.
+         Vector3D objectLocationToRayOrigin(sphere->center, origin);
+         double quadratic_b = 2 * direction.dot(objectLocationToRayOrigin);
+         double quadratic_c = objectLocationToRayOrigin.dot(objectLocationToRayOrigin) - (sphere->radiusSquared);
+
+         double discriminant = (quadratic_b * quadratic_b) - (4 * quadratic_c);
+         
+         // We don't want to continue if we're going to deal with imaginary numbers.
+         if (discriminant < 0) {
+            return false;
+         }
+
+         double root1 = ((-quadratic_b) + sqrt(discriminant)) / 2;
+         double root2 = ((-quadratic_b) - sqrt(discriminant)) / 2;
+
+         // We don't want any points that are behind the origin or further than length.
+         return !((root1 < 0 || root1 > length) && (root2 < 0 || root2 > length));
       }
 };
 //class CollisionMesh : public CollisionType {};
