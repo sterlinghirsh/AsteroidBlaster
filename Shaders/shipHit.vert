@@ -1,7 +1,7 @@
 //Varying variables pass between vertex and fragment shaders
 //These are the alpha we assign to each pixel and the initial color of the wall
 varying float pixelAlpha;
-varying vec4 wallColor;
+varying vec4 screenPosition;
 varying vec4 vecta;
 
 void main()
@@ -14,6 +14,7 @@ void main()
 	
 	//necessary to have this in .vert files
 	gl_Position = gl_ModelViewProjectionMatrix * v;
+	screenPosition = gl_Position;
 
       //assign the initial color of the wall to our varying vec4
 	/*wallColor = gl_Color;

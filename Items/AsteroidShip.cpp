@@ -899,6 +899,12 @@ void AsteroidShip::draw_hitEffect() {
    hitY += (double) (rand() % 20);
    hitZ += (double) (rand() % 30);
    
+   double sx, sy, sz;
+   
+   sx = 5 / (1.5 * 5);
+   sy = 5 / (.5 * 5);
+   sz = 5 / (.8 * 5);
+   
    if (hitX > 100) {
       hitX = 0;
    }
@@ -914,7 +920,8 @@ void AsteroidShip::draw_hitEffect() {
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glDisable(GL_LIGHTING);
    //printf("I got into draw hit effect\n");
-   glScaled(.5, .7, 1.4);
+   //glScaled(.5, .7, 1.4);
+   glScaled(sx, sy, sz);
    glTranslated(0, 0, .6);
    glRotated(spin, hitX, hitY, hitZ);
    glColor4d(0, 1, 0, .1);
