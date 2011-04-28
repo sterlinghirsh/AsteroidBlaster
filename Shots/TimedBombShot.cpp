@@ -88,20 +88,6 @@ void TimedBombShot::update(double timeDiff) {
       // Find out how projectileShot's are removed.
 }
 
-/**
- * Make it only hit asteroids.
- * Later we'll want to hit ships, too.
- * Also shards, for pushin'.
- */
-bool TimedBombShot::detectCollision(Drawable* other, bool checkOther) {
-   Asteroid3D* asteroid;
-   if ((asteroid = dynamic_cast<Asteroid3D*>(other)) != NULL) {
-      return ExplosiveShot::detectCollision(other, checkOther);
-   } else {
-      return false;
-   }
-}
-
 void TimedBombShot::hitWall(BoundingWall* wall) {
    // Check to see if we're actually within exploderadius.
    minX = minY = minZ = -collisionRadius;
@@ -129,6 +115,3 @@ void TimedBombShot::explode() {
 
    // set it as not collidable
 }
-
-// Override detectCollision function
-// if isExploded and 

@@ -21,7 +21,6 @@ class AntiInertiaShot : public Shot {
       double angle;
       double length;
       double farRadius;
-      bool detectCollision(Drawable* other, bool checkOther);
 };
 
 #endif

@@ -172,32 +172,3 @@ void ElectricityShot::drawShot(bool isGlow) {
 
 }
 
-/**
- * Is the object in the cone?
- */
-bool ElectricityShot::detectCollision(Drawable* other, bool checkOther) {
-   if (other == owner)
-      return false;
-
-   // This is how far it is for position to other->position.
-   Vector3D shotToTarget(*position, *other->position);
-
-   Vector3D tempDirection(*velocity);
-   tempDirection.normalize();
-
-   double forwardDistance = tempDirection.dot(shotToTarget);
-   // Is it behind me?
-   if (forwardDistance < 0) {
-      return false;
-   }
-
-   if (forwardDistance > length) {
-      return false;
-   }
-
-   double requiredDistance = forwardDistance * tan(angle);
-   Point3D closestPoint(*position);
-   tempDirection.movePoint(closestPoint, forwardDistance);
-   return (other->position->distanceFrom(closestPoint) <=
-         (other->radius + requiredDistance));
-}

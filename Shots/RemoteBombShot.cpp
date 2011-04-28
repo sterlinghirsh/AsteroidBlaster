@@ -127,6 +127,3 @@ void RemoteBombShot::explode() {
       weapon->firedShot = NULL;
    }
 }
-
-// Override detectCollision function
-// if isExploded and 

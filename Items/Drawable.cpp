@@ -106,27 +106,6 @@ void Drawable::update(double timeDifference) {
 }
 
 /**
- * checkOther is set to true by default in Drawable.h.
- * If this doesn't detect a collision, then checkOther specifies if we should use other's 
- * collision detection function.
- * We use this as a last check so we can do other types of hit detection in the custodian.
- * If this is called first and another unoverrided detectCollision is called with
- * other->detectCollision(), this trusts the custodian's judgement.
- */
-bool Drawable :: detectCollision(Drawable* other, bool checkOther) {
-   if (this == other) {
-      printf("detected collision with self!\n");
-   }
-   if (checkOther) {
-      return other->detectCollision(this, false);
-   }
-   return !(other->maxPosition->y < minPosition->y || 
-       other->minPosition->y > maxPosition->y ||
-       other->maxPosition->z < minPosition->z ||
-       other->minPosition->z > maxPosition->z);
-}
-
-/**
  * Subclasses can extend this, but this draws a sphere on the minimap.
  */
 void Drawable::drawInMinimap() {

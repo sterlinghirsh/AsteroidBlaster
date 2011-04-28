@@ -65,7 +65,6 @@ class Drawable {
        */
       virtual void update(double timeDifference);
       
-      virtual bool detectCollision(Drawable* other, bool checkOther = true);
       virtual void drawInMinimap();
       virtual void hitWall(BoundingWall* wall);
       virtual void debug();

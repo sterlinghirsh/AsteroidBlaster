@@ -1296,11 +1296,3 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
 
    setOrientation(_forward, _up);
 }
-
-bool AsteroidShip::detectCollision(Drawable* other, bool checkOther) {
-   if (getHealth() <= 0) {
-      return false;
-   }
-
-   return Object3D::detectCollision(other, checkOther);
-}

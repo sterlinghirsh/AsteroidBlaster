@@ -156,39 +156,6 @@ void BeamShot::drawGlow() {
    drawBeam(false);
 }
 
-/**
- * This does the actual beam-weapon hit detection.
- * This ignores checkOther, since the beam will be the final say on what gets hit.
- */
-bool BeamShot::detectCollision(Drawable* other, bool checkOther) {
-   if (curFrame != firstFrame) {
-      return false;
-   }
-      
-   if (hitYet) {
-      return false;
-   }
-
-   Object3D* someObject = dynamic_cast<Object3D*>(other);
-   
-   Vector3D positionVector(*position);
-   Vector3D shipToItem(*position, *other->position);
-
-   // Velocity is really shot direction normalized.
-   double distance = velocity->dot(shipToItem);
-
-   // Is it behind me?
-   if (distance < 0)
-      return false;
-
-   // Is it too far to one side?
-   Point3D closestPoint(*position);
-   velocity->movePoint(closestPoint, distance);
-   
-   distance = closestPoint.distanceFrom(*other->position);
-   return fabs(distance) <= other->radius;
-}
-
 void BeamShot::debug() {
    printf("BeamShot::debug(): (min/max/position/direction)\n");
    minPosition->print();

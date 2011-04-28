@@ -180,7 +180,6 @@ class AsteroidShip : public Object3D {
       void setOrientation(Vector3D& _forward, Vector3D& _up);
       void lookAt(double lookAtX, double lookAtY, double lookAtZ, double upX, double upY, double upZ);
 
-      virtual bool detectCollision(Drawable* other, bool checkOther = true);
       std::vector<Weapon*> weapons;
 
       // Maybe these shouldn't be here?
