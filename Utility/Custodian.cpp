@@ -199,10 +199,15 @@ void Collision<Asteroid3D, ExplosiveShot>::handleCollision() {
    if (!b->isExploded) {
       b->shouldExplode = true;
       SoundEffect::playSoundEffect("BlasterHit.wav");
-      return;
+   } else {
+      Vector3D* shotToAsteroid;
+      shotToAsteroid = new Vector3D(*b->position, *a->position);
+      double distance = shotToAsteroid->getLength();
+      double newSpeed = 1000 / (((distance * distance) / b->explodeRadius + 1) * a->radius);
+      shotToAsteroid->setLength(newSpeed);
+      a->addInstantAcceleration(shotToAsteroid);
+      a->health -= b->getDamage(a);
    }
-
-   a->health -= b->getDamage(a);
 }
 
 template<>
@@ -354,6 +359,20 @@ void Collision<Shard, Shard>::handleCollision() {
 }
 
 template<>
+void Collision<Shard, ExplosiveShot>::handleCollision() {
+   Vector3D* shotToShard;
+   if (!b->isExploded) {
+      b->shouldExplode = true;
+   } else {
+      shotToShard = new Vector3D(*b->position, *a->position);
+      double distance = shotToShard->getLength();
+      double newSpeed = 100 / ((distance * distance) / b->explodeRadius + 1);
+      shotToShard->setLength(newSpeed);
+      a->addInstantAcceleration(shotToShard);
+   }
+}
+
+template<>
 void Collision<Shard, Shot>::handleCollision() {
    // Set speed to between the speed of the shot and the current speed.
    double speed = b->velocity->getLength();
@@ -361,6 +380,7 @@ void Collision<Shard, Shot>::handleCollision() {
    speed = speed / 3;
    a->velocity->updateMagnitude(*b->position, *a->position);
    a->velocity->setLength(speed);
+   b->shouldRemove = true;
 }
 
 static std::vector<CollisionBase*>* collisionHandlers = NULL;
@@ -392,6 +412,7 @@ Custodian::Custodian(const GameState* _gameState) :
       collisionHandlers->push_back(new Collision<Shard, TractorBeamShot>);
       collisionHandlers->push_back(new Collision<Shard, BeamShot>);
       collisionHandlers->push_back(new Collision<Shard, AntiInertiaShot>);
+      collisionHandlers->push_back(new Collision<Shard, ExplosiveShot>);
       collisionHandlers->push_back(new Collision<Shard, Shot>);
       collisionHandlers->push_back(new Collision<Shard, Shard>);
    }

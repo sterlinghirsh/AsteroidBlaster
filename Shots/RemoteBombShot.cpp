@@ -114,7 +114,6 @@ void RemoteBombShot::hitWall(BoundingWall* wall) {
  * everything it should, and auto-handle the collisions.
  */
 void RemoteBombShot::explode() {
-   printf("%ld Bomb exploded!\n", curFrame);
    // Do all the generic exploding actions that every bomb should do.
    ExplosiveShot::explode();
 
