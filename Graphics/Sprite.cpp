@@ -112,3 +112,8 @@ void Sprite::updateSprites(double timeDiff) {
    }
 }
 
+// serialize function
+std::string Sprite::serialize() {
+   return "Sprite\n";
+}
+

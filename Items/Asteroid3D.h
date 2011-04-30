@@ -20,6 +20,7 @@
 class AsteroidShip;
 
 class Asteroid3D : public Object3D {
+   //public variables------------------------------
    public:
       Mesh3D mesh;
       double scalex, scaley, scalez;
@@ -27,7 +28,6 @@ class Asteroid3D : public Object3D {
       double initH;
       double health;
       double sizeX, sizeY, sizeZ, collisionRadius;
-      
       Vector3D* newAcceleration;
       Vector3D* newVelocity;
 
@@ -38,8 +38,25 @@ class Asteroid3D : public Object3D {
       bool isExploding;
       double timeSinceExplode;
       
+      AsteroidShip* lastHitShotOwner;
+
+      CollisionSphere* collisionSphere;
+      
+      
+   //private variables------------------------------
+   private:   
+      std::vector<Ring> _rList;
+      int _nPoints;
+      // Holds a random color.
+      float cyan, magenta, yellow;
+   
+   //public functions------------------------------
+   public:
+      // Constructor
       Asteroid3D(double r, double worldSizeIn, const GameState* _gameState, bool isFirst = false);
+      // Destructor
       virtual ~Asteroid3D();
+      
       void InitAsteroid(double r, double worldSizeIn);
       void draw();
       void drawGlow();
@@ -51,16 +68,10 @@ class Asteroid3D : public Object3D {
       void newRandomPosition();
       void drawInMinimap();
       void debug();
-      AsteroidShip* lastHitShotOwner;
-
-      CollisionSphere* collisionSphere;
-
+      
+   //private functions------------------------------
    private:
       double randRadius(double r);
-      std::vector<Ring> _rList;
-      int _nPoints;
-      // Holds a random color.
-      float cyan, magenta, yellow;
       void dropRandomItem();
 };
 

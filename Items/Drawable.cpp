@@ -99,13 +99,6 @@ double Drawable::getCullRadius() {
 }
 
 /**
- * To be overwritten by all subclasses. This is an empty stub only for now.
- * Anything done here will happen to all Object3D's and Particles.
- */
-void Drawable::update(double timeDifference) {
-}
-
-/**
  * Subclasses can extend this, but this draws a sphere on the minimap.
  */
 void Drawable::drawInMinimap() {
@@ -115,11 +108,6 @@ void Drawable::drawInMinimap() {
       gluSphere(quadric, 5, 8, 8);
    glPopMatrix();
 }
-
-/*
- * drawGlow() is here to be overwritten by all subclasses.
- */
-void Drawable::drawGlow() {}
 
 /**
  * hitWall is here to be overriden. Called when the wall reflects it.
@@ -188,3 +176,10 @@ Point3D& Drawable::getMinPosition() const {
 Point3D& Drawable::getMaxPosition() const {
    return *maxPosition;
 }
+
+// serialize 
+std::string Drawable::serialize() {
+   return "Drawable\n";
+}
+
+

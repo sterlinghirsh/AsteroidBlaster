@@ -14,6 +14,7 @@
 #include <list>
 
 class Sprite : public Drawable {
+   //public variables------------------------------
    public:
       unsigned int textureID;
       int framesX;
@@ -26,15 +27,31 @@ class Sprite : public Drawable {
       double frameHeight;
       double startTime;
       materialStruct curMaterial;
-      static std::list<Sprite*> sprites;
-      static void updateSprites(double timeDiff);
       bool oneShot;
-
+      static std::list<Sprite*> sprites;
+      
+   //private variables------------------------------
+   private:
+   
+   
+   //public functions------------------------------
+   public:
+      //constructor
       Sprite(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
        Point3D posIn, double drawWidth, double drawHeight, const GameState* _gameState);
+      
+      //virtual functions 
+      virtual void draw();
+      virtual std::string serialize();
+            
+      //add function, adds to the sprite list
       static void Add(unsigned int texID, int framesXIn, int framesYIn, double fpsIn, 
        Point3D posIn, double drawWidth, double drawHeight, const GameState* _gameState);
-      virtual void draw();
+      
+      static void updateSprites(double timeDiff);
+      
+   //private functions------------------------------
+   private:
 };
 
 #endif

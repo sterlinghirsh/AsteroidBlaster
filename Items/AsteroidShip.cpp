@@ -1303,3 +1303,9 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
 
    setOrientation(_forward, _up);
 }
+
+// serialize 
+std::string AsteroidShip::serialize() {
+   return "";
+}
+

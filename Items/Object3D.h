@@ -15,16 +15,34 @@
 #include <queue>
 
 class Object3D : public Drawable {
+   //public variables------------------------------
    public:
       Vector3D* acceleration;
       Vector3D* axis;
       Vector3D *up, *right, *forward;
       bool lockUpVector;
       double angle;
-
+      double rotationSpeed;
+      
+      
+   //private variables------------------------------
+   private:
+   
+   
+   //public functions------------------------------
+   public:
+      //constructor
       Object3D(const GameState* _gameState);
+      //destructor
       virtual ~Object3D();
+      
+      // Virtual functions required by Drawable class
       virtual void update(double timeDifference);
+      virtual void draw();
+      virtual void drawGlow();
+      virtual std::string serialize();
+      
+      // Virtual functions for classes that inherit Object3D
       virtual void setYawSpeed(double radiansPerSecond);
       virtual void setPitchSpeed(double radiansPerSecond);
       virtual void setRollSpeed(double radiansPerSecond);
@@ -32,31 +50,32 @@ class Object3D : public Drawable {
       virtual void drawBoundingSphere();
       virtual void setTargeted(bool a);
       virtual bool isTargeted();
-
-      virtual void draw();
-      virtual void drawGlow();
-
-      void glRotate(bool doTranspose = true);
       virtual void addAcceleration(Vector3D* newAccel);
       virtual void addInstantAcceleration(Vector3D* newAccel);
-
       virtual void nullPointers();
-      double rotationSpeed;
       virtual Point3D* sphereCollideWithRay(const Point3D& origin, Vector3D direction, double* hitDistance = NULL);
+      
+      void glRotate(bool doTranspose = true);
+      
+   //private functions------------------------------
    private:
-
+   
+   
+   //protected variables------------------------------
    protected:
       double yawSpeed, pitchSpeed, rollSpeed;
       GLuint displayList;
       std::queue<Vector3D*> accelerations;
       std::queue<Vector3D*> instantAccelerations;
       bool targeted;
-
+      
+      
+   //protected functions------------------------------
+   protected:
       void yaw(double angle);
       void roll(double angle);
       void pitch(double angle);
       virtual void updateBoundingBox();
-
       virtual void updateAcceleration(double timeDiff);
 
 };

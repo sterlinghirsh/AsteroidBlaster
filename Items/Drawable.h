@@ -17,64 +17,76 @@ class BoundingWall;
 class GameState;
 
 class Drawable {
+   //public variables------------------------------
    public:
-      CollisionType* collisionType;
-
+      //pointer to things owned by this class
       Point3D* position;
       Vector3D* velocity;
       Point3D* minPosition;
       Point3D* maxPosition;
-      double cullRadius;
+      CollisionType* collisionType;
+      
+      //pointer to things not owned by this class
+      const GameState* gameState;
+      Custodian* custodian;
+      
+      double radius; // TODO
       bool shouldRemove; // True when custodian should remove this.
-      unsigned int minXRank, maxXRank;
-      // Specifies whether or not this Object should be culled by VFC.
-      bool shouldBeCulled;
-      double radius;
-      bool shouldConstrain;
-      bool shouldDrawInMinimap;
+      double cullRadius; // TODO
+      bool shouldBeCulled; // Specifies whether or not this Object should be culled by VFC.
+      unsigned int minXRank, maxXRank; // TODO
+      bool shouldConstrain; // TODO
+      bool shouldDrawInMinimap; // TODO
       // This might not belong here.
       double minX, minY, minZ, maxX, maxY, maxZ;
+      
 
-      Drawable(const GameState* _gameState);
+      
+      
+   //private variables------------------------------
+   private:
+   
+   
+   //public functions------------------------------
+   public:
+      //constructors
       Drawable();
+      Drawable(const GameState* _gameState);
+      
+      //destructor
       virtual ~Drawable();
-      //virtual void init();
-      /*
-       * draw() is here to be overwritten by all subclasses.
-       */
+      
+      //draw() is here to be overwritten by all subclasses.
       virtual void draw() = 0;
-
-      /*
-       * drawGlow() is here to be overwritten by all subclasses.
-       */
-      virtual void drawGlow();
-
-      /**
-       * Comparator used for sorting by the z axis.
-       */
-      double unrootedDist(Point3D *other);
-      double unrootedDist(Drawable *other);
-
-      /**
-       * Returns the radius of the object which should be used for View Frustum Culling.
-       */
-      double getCullRadius();
-
-      /**
-       * To be overwritten by all subclasses. This is an empty stub only.
-       */
-      virtual void update(double timeDifference);
+      
+      //drawGlow() is here to be overwritten by all subclasses.
+      virtual void drawGlow() {return;}
+      
+      //To be overwritten by all subclasses. This is an empty stub only.
+      virtual void update(double timeDifference) {return;}
       
       virtual void drawInMinimap();
       virtual void hitWall(BoundingWall* wall);
       virtual void debug();
-      const GameState* gameState;
-      Custodian* custodian;
-
       virtual void nullPointers();
       virtual Point3D getWallIntersectionPoint(BoundingWall* wall);
       virtual Point3D& getMinPosition() const;
       virtual Point3D& getMaxPosition() const;
+      
+      // serialize 
+      virtual std::string serialize();
+      
+      double unrootedDist(Point3D *other); //Comparator used for sorting by the z axis.
+      double unrootedDist(Drawable *other);
+      
+      //Returns the radius of the object which should be used for View Frustum Culling.
+      double getCullRadius();
+      
+      
+   //private functions------------------------------
+   private:
+
+
 };
 
 #endif

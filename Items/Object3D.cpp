@@ -279,3 +279,9 @@ void Object3D::nullPointers() {
    forward = NULL;
    axis = NULL;
 }
+
+// serialize 
+std::string Object3D::serialize() {
+   return "Object3D\n";
+}
+
