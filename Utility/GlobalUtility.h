@@ -94,6 +94,8 @@ char *textFileRead(char *fn);
 void printShaderLog(GLuint obj);
 void printProgramLog(GLuint obj);
 double doubleTime();
+int minutesRemaining(double secondsRemaining);
+int secondsRemainder(double secondsRemaining);
 void useOrtho();
 void usePerspective();
 void drawCylinder(double radius, double length);

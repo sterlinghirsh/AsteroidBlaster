@@ -16,6 +16,7 @@
 #include "Particles/Particle.h"
 #include "Text/GameMessage.h"
 #include "Utility/Collision.h"
+#include "Utility/GlobalUtility.h"
 
 extern double minimapSizeFactor;
 
@@ -103,11 +104,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    countDown = 5;
 
    // Make a good formula here for how many seconds a level should last.
-   levelDuration = curLevel * 60;
-
-   // Give the player 3 minutes on the first level.
-   if(curLevel = 1)
-      levelDuration = 180;
+   levelDuration = 20;
 
    // The game should run for levelDuration # of seconds.
    levelTimer.setCountDown(levelDuration);
@@ -576,27 +573,20 @@ void GameState::updateText() {
    minutes = sstream2.str();
    sstream2.str("");
    std::string seconds;
+   int secsRemaining = secondsRemainder(levelTimer.getTimeLeft());
    sstream2 << secondsRemainder(levelTimer.getTimeLeft());
-   seconds = sstream2.str();
+
+   // Throw a 0 in front, so that it comes out 2:09 instead of 2:9.
+   if (secsRemaining < 10) {
+      seconds = "0" + sstream2.str();
+   }
+   else {
+      seconds = sstream2.str();
+   }
+
    sstream2.str("");
    timerText->updateBody(minutes + ":" + seconds);
    //timerText->updateBody(seconds);
-}
-
-/**
- * Return how many minutes are left from this number of seconds.
- * If secondsRemaining is < 60, this will return 0.
- */
-int GameState::minutesRemaining(double secondsRemaining) {
-   return (int)secondsRemaining/60;
-}
-
-/**
- * The complementary function for minutesRemaining. This tells the remainder seconds
- * left, after the minutes remaining has been calculated.
- */
-int GameState::secondsRemainder(double secondsRemaining) {
-   return (int)((int)secondsRemaining)%60;
 }
 
 void GameState::initAsteroids() {

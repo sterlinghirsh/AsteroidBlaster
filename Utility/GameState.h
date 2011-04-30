@@ -82,8 +82,6 @@ class GameState : public InputReceiver {
       void drawAllText();
       void drawHud();
       void updateText();
-      int minutesRemaining(double secondsRemaining);
-      int secondsRemainder(double secondsRemaining);
 
       void update(double timeDiff);
       void initAsteroids();

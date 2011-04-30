@@ -190,6 +190,22 @@ double doubleTime() {
    return currentTime;
 }
 
+/**
+ * Return how many minutes are left from this number of seconds.
+ * If secondsRemaining is < 60, this will return 0.
+ */
+int minutesRemaining(double secondsRemaining) {
+   return (int)secondsRemaining/60;
+}
+
+/**
+ * The complementary function for minutesRemaining. This tells the remainder seconds
+ * left, after the minutes remaining has been calculated.
+ */
+int secondsRemainder(double secondsRemaining) {
+   return (int)((int)secondsRemaining)%60;
+}
+
 void drawCylinder(double radius, double length) {
    glPushMatrix();
    gluDisk(quadric, 0, radius, 32, 1);
