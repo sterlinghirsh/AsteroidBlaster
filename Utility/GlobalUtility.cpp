@@ -29,6 +29,7 @@
 GameSettings* gameSettings;
 //int texSize = nextPowerOfTwo(std::max(gameSettings->GW, gameSettings->GH));
 int texSize = 512;
+int shipId = 0;
 unsigned long curFrame = 0;
 bool drawPerspective = true;
 bool showBloomScreen = false;

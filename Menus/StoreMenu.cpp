@@ -342,6 +342,31 @@ void StoreMenu::mouseDown(int button) {
    
    //left
    if(button == 1) {
+      //if done was pushed, quit out of the menu
+      if(menuTexts[DONE_STOREMENUINDEX]->mouseSelect(x,y)) {
+         timeLeft = timeLeft + DEFAULTTIME;
+         SDL_ShowCursor(SDL_DISABLE);
+         menuActive = false;
+         Music::stopMusic();
+         Music::playMusic("Asteroids2.ogg");
+         return;
+      }
+      // select weapons menu
+      if(menuTexts[WEAPONS_STOREMENUINDEX]->mouseSelect(x,y)) {
+         menuSelection = WEAPONS;
+         return;
+      } 
+      // select ammo menu
+      if(menuTexts[AMMO_STOREMENUINDEX]->mouseSelect(x,y)) {
+         menuSelection = AMMO;
+         return;
+      }
+      // select shipupgrade menu
+      if(menuTexts[SHIP_STOREMENUINDEX]->mouseSelect(x,y)) {
+         menuSelection = SHIP;
+         return;
+      }
+   
       //get the list of weapons from ship
       std::vector<Weapon*> weaponList = gameState->ship->getWeapons();
       int shardsOwned = gameState->ship->nShards;
@@ -410,36 +435,20 @@ void StoreMenu::mouseDown(int button) {
          std::cerr << "Menu selection error! Quitting..." << std::endl;
          exit(1);
       }
-      
-      if(menuTexts[DONE_STOREMENUINDEX]->mouseSelect(x,y)) {
-         timeLeft = timeLeft + DEFAULTTIME;
-         SDL_ShowCursor(SDL_DISABLE);
-         menuActive = false;
-         Music::stopMusic();
-         Music::playMusic("Asteroids2.ogg");
-      }
-      
-      if(menuTexts[WEAPONS_STOREMENUINDEX]->mouseSelect(x,y)) {
-         menuSelection = WEAPONS;
-      } 
-      if(menuTexts[AMMO_STOREMENUINDEX]->mouseSelect(x,y)) {
-         menuSelection = AMMO;
-      }
-      if(menuTexts[SHIP_STOREMENUINDEX]->mouseSelect(x,y)) {
-         menuSelection = SHIP;
-      }
    } else if(button == 4) {
       if(menuSelection == WEAPONS) {
          scrollWeapon += 7;
       } else if(menuSelection == AMMO) {
          scrollAmmo += 7;
       }
+      return;
    } else if(button == 5) {
       if(menuSelection == WEAPONS) {
          scrollWeapon -= 7;
       } else if(menuSelection == AMMO) {
          scrollAmmo -= 7;
       }
+      return;
    }
 }
 

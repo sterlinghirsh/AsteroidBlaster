@@ -22,7 +22,7 @@ extern double minimapSizeFactor;
 std::ostringstream GameState :: sstream2;
 
 void GameState::addAIPlayer() {
-   AsteroidShip* otherShip = new AsteroidShip(this);
+   AsteroidShip* otherShip = new AsteroidShip(this, shipId++);
    otherShip->position->update(3, 0, 0);
    otherShip->flyingAI->enable();
    otherShip->shooter->enable();
@@ -44,7 +44,10 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
 
    worldSize = worldSizeIn;
    skybox = new Skybox();
-   ship = new AsteroidShip(this);
+   ship = new AsteroidShip(this, -1);
+   if(!inMenu) {
+      ship = new AsteroidShip(this, shipId++);
+   }
    spring = new Spring(this);
    minimap = new Minimap(ship);
    camera = new Camera(ship);
@@ -652,6 +655,7 @@ void GameState::setCurFPS(double fpsIn) {
  * Reset everything in the game to play again
  */
 void GameState::reset() {
+   shipId = 0;
    delete camera;
    delete cube;
    delete ship;
@@ -666,7 +670,7 @@ void GameState::reset() {
    curLevelText->updateBody(curLevel);
    
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
-   ship = new AsteroidShip(this);
+   ship = new AsteroidShip(this, shipId++);
    spring = new Spring(this);
    cube->constrain(ship);
    minimap = new Minimap(ship);

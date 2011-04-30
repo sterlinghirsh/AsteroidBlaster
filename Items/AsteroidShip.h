@@ -45,7 +45,7 @@ class FlyingAI;
 class AsteroidShip : public Object3D {
    public:
       CollisionSphere* collisionSphere;
-      AsteroidShip(const GameState* _gameState);
+      AsteroidShip(const GameState* _gameState, int _id);
       virtual ~AsteroidShip();
       double getHealth();
       int getScore();
@@ -121,6 +121,7 @@ class AsteroidShip : public Object3D {
       
       void setView(int _view);
       
+      int id;
       int score;
       int nShards;
       int engineUpgrade;

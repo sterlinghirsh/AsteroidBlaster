@@ -73,6 +73,12 @@ void Collision<AsteroidShip, Shot>::handleCollision() {
    if (a != b->owner) {
       a->health -= b->getDamage(a);
       b->shouldRemove = true;
+      if(a->health <= 0) {
+         if(a->id != 0) {
+            std::cerr << "AsteroidShip ID: " << a->id << " removed..." << std::endl;
+            a->shouldRemove = true;
+         } 
+      }
    }
 }
 

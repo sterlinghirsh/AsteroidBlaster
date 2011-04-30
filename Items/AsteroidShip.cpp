@@ -23,10 +23,10 @@ const double rotationFactor = 3;
 const float shipScale = 5;
 const double rotationalAcceleration = 10; // rad/sec^2
 
-AsteroidShip::AsteroidShip(const GameState* _gameState) :
+AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
  Object3D(_gameState) {  // Initialize shot direction to forward
    cullRadius = 12;
-   
+   id = _id;
    health = 100;
    healthMax = 100;
    
