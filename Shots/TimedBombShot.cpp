@@ -27,7 +27,7 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const
    damage = 40;
    slowDownPerSecond = 5.0;
    seekRadius = 20.0;
-   collisionRadius = 1.0;
+   collisionRadius = 0.25;
    collisionSphere->updateRadius(seekRadius);
 }
 

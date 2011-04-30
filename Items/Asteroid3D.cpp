@@ -37,9 +37,10 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState
    worldSize(worldSizeIn) {
       shouldDrawInMinimap = true;
 
-      initH = (int)(r * r * 1.0 / 5.0);
-      if (initH < 2.0) {
-         initH = 2.0;
+      initH = (int)(r * r);
+      const float minStartingHealth = 15;
+      if (initH < minStartingHealth) {
+         initH = minStartingHealth;
       }
 
       mesh.drawAnim = isFirst;
@@ -626,12 +627,10 @@ void Asteroid3D::debug() {
 void Asteroid3D::dropRandomItem() {
    double whichItem = randdouble();
    if (whichItem < 0.4) {
-      // Do nothing!
-   } else if (whichItem < 0.8) { 
       custodian->add(makeShard(0));
       SoundEffect::playSoundEffect("CrystalRelease");
       //printf("YOU JUST SHARDED\n");
-   } else {
+   } else if (whichItem < 0.5) {
       // Don't play the sound effect twice on top of itself.
       SoundEffect::playSoundEffect("DoubleCrystalRelease");
       custodian->add(makeShard(0));

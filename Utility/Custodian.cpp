@@ -33,15 +33,27 @@ template<>
 void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
    if ((doubleTime() - a->justGotHit > 1) && 
     !(a->currentWeapon == 4 && a->isFiring && a->weapons[4]->curAmmo > 0)) {
-      //a->justGotHit = 1;
-      a->health -= b->health * 10;
+      /* Remove health from both equal to minHealthDeduction + randomHealthDeduction 
+       * or b->health or a->health, whichever is smallest.
+       */
+      const double minHealthDeduction = 50;
+      const double randomHealthDeduction = randdouble() * 40;
+
+      double healthToRemove = std::min(std::min(a->health, b->health), 
+       minHealthDeduction + randomHealthDeduction);
+
+      a->health -= healthToRemove;
+      b->health -= healthToRemove;
+
       a->shakeAmount = 8;
       SoundEffect::playSoundEffect("ShipHit.wav");
+
       a->justGotHit = doubleTime();
       a->addInstantAcceleration(new Vector3D(*(b->velocity)));
+      a->addInstantAcceleration(new Vector3D(*b->position, *a->position));
+      b->addInstantAcceleration(new Vector3D(*(a->velocity)));
+      b->addInstantAcceleration(new Vector3D(*a->position, *b->position));
    }
-
-   b->health = 0;
 }
 
 template<>
@@ -160,7 +172,7 @@ void Collision<Asteroid3D, ProjectileShot>::handleCollision() {
    static Vector3D particleVariation;
    static Vector3D positionDifference;
    const double particleSpeed = 15;
-   double speed = 10 / sqrt(a->radius);
+   double speed = 10 / (a->radius);
 
    b->shouldRemove = true;
    
@@ -168,7 +180,7 @@ void Collision<Asteroid3D, ProjectileShot>::handleCollision() {
    a->health -= b->getDamage(a);
 
    Vector3D* newAcceleration = new Vector3D(*b->position, *a->position);
-   a->newAcceleration->setLength(speed);
+   newAcceleration->setLength(speed);
    a->addInstantAcceleration(newAcceleration);
    
    SoundEffect::playSoundEffect("BlasterHit.wav");
