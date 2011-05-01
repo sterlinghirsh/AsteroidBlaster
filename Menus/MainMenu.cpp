@@ -222,19 +222,15 @@ void MainMenu::draw(GameState* gameState) {
  * Handles the player pressing down a key
  */
 void MainMenu::keyDown(int key) {
-   if (key == SDLK_m )  {
-      if(menuActive && firstTime) {
-         newGameDeactivate();
-      } else if(menuActive && !firstTime) {
-         deactivate();
-      } else {
+   switch(key) {
+   case SDLK_m:
+      if(menuActive) {
+         // If we're in the menu already, don't do anything when the player presses m.
+      }
+      else {
          activate();
       }
-   }
-   if (!menuActive) { return; }
-
-
-   switch(key) {
+      break;
    case SDLK_n:
       newGameDeactivate();
       break;

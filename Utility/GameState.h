@@ -60,6 +60,8 @@ class GameState : public InputReceiver {
       // Used when looping over Drawable objects in drawMinimap
       std::list<Drawable*>::iterator listIter;
       Custodian custodian;
+      // Used to determine levelTimer pausing, resuming, reseting, etc.
+      bool levelOver;
 
       std::list<Drawable*>* viewFrustumObjects;
       std::list<Drawable*>* targetableViewFrustumObjects;
@@ -78,6 +80,7 @@ class GameState : public InputReceiver {
 
       bool minimapOn();
       void toggleMinimap();
+      void setLevelTimer();
 
       void drawAllText();
       void drawHud();
@@ -141,7 +144,6 @@ class GameState : public InputReceiver {
       int curLevel;
       // Used for a countdown at the end of each level.
       double countDown;
-
 
       // Timer to control how long the level lasts.
       Timer levelTimer;

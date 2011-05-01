@@ -34,6 +34,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
  custodian(this) {
    godMode = false;
    gameIsRunning = true;
+   levelOver = false;
 
    inMenu = _inMenu;
    
@@ -104,10 +105,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    countDown = 5;
 
    // Make a good formula here for how many seconds a level should last.
-   levelDuration = 20;
-
-   // The game should run for levelDuration # of seconds.
-   levelTimer.setCountDown(levelDuration);
+   levelDuration = 60;
 
    scoreToWin = 15000;
    godMode = false;
@@ -116,6 +114,14 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    isW = isA = isS = isD = false;
 
    curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
+}
+
+/**
+ * The game should run for levelDuration # of seconds.
+ */
+void GameState::setLevelTimer() {
+   levelTimer.setCountDown(levelDuration);
+   // levelTimer is implicltly now 'active'.
 }
 
 /**
@@ -150,11 +156,10 @@ void GameState::update(double timeDiff) {
    const double respawnTime = 3;
 
    // If the level should be over, let's go to the store menu.
-   if(levelTimer.getTimeLeft() <= 0) {
-         storeMenu->menuActive = true;
-         SoundEffect::stopAllSoundEffect();
-         Music::stopMusic();
-         Music::playMusic("8-bit3.ogg");
+   if(levelTimer.isRunning() && levelTimer.getTimeLeft() <= 0) {
+         levelTimer.reset();
+         nextLevel();
+         return;
    }
    // Determine whether or not the game should continue running
    //if (gameIsRunning && ship->getHealth() <= 0) {
@@ -667,6 +672,7 @@ void GameState::reset() {
    camera = new Camera(ship);
    spring->attach(ship, camera);
    gameIsRunning = true;
+   levelOver = false;
 
    custodian.add(ship);
    initAsteroids();
@@ -674,8 +680,7 @@ void GameState::reset() {
    GameMessage::Clear();
    addLevelMessage();
    
-   // The game should run for levelDuration # of seconds.
-   levelTimer.setCountDown(levelDuration);
+   setLevelTimer();
 }
 
 void GameState::addLevelMessage() {
@@ -688,6 +693,7 @@ void GameState::nextLevel() {
    SoundEffect::stopAllSoundEffect();
    Music::stopMusic();
    Music::playMusic("8-bit3.ogg");
+   
    if(!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
       storeMenu->menuActive = true;
    }
@@ -703,7 +709,6 @@ void GameState::nextLevel() {
    addLevelMessage();
    countDown = 5;
 }
-
 
 /**
  * Handles the player pressing down a key

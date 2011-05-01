@@ -320,6 +320,7 @@ void StoreMenu::keyDown(int key) {
     case SDLK_n:
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
+      gameState->setLevelTimer();
       Music::stopMusic();
       Music::playMusic("Asteroids2.ogg");
       break;
