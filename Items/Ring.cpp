@@ -27,7 +27,8 @@ Ring::Ring(int points, double radius, double h, Mesh3D *mesh) :
    _pts(points), _rad(radius), _h(h), _mesh(mesh) {
       //cout << "points (in ring) : " << points << endl;
       //srand(time(0));
-      _offset = (double)rand() / (double)RAND_MAX * (OFFSET_MAX - OFFSET_MIN) + OFFSET_MIN;
+      //_offset = (double)rand() / (double)RAND_MAX * (OFFSET_MAX - OFFSET_MIN) + OFFSET_MIN;
+      _offset = 0.0;
       generate();
    }
 

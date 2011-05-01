@@ -720,9 +720,7 @@ void GameState::nextLevel() {
    Music::stopMusic();
    Music::playMusic("8-bit3.ogg");
    
-   if(!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
-      storeMenu->menuActive = true;
-   }
+   storeMenu->menuActive = true;
 
    minimap = new Minimap(ship);
    gameIsRunning = true;
