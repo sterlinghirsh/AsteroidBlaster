@@ -359,19 +359,19 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 
 void AsteroidShip::update(double timeDiff) {
    if (health <= 0) {
-      //make some sparcles when you die!~~~~
-      for (int i = 0; i < 100; ++i) {
-         Point3D* particleStartPoint = new Point3D(*position);
-         Vector3D* particleDirection = new Vector3D();
-         particleDirection->randomMagnitude();
-         particleDirection->setLength(3);
-         ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
-      }
       const double respawnTime = 3;
       shakeAmount = 0;
       // Handle respawning.
       if (!respawnTimer.isRunning()) {
          respawnTimer.setCountDown(respawnTime);
+         //make some sparcles when you die!~~~~
+         for (int i = 0; i < 100; ++i) {
+            Point3D* particleStartPoint = new Point3D(*position);
+            Vector3D* particleDirection = new Vector3D();
+            particleDirection->randomMagnitude();
+            particleDirection->setLength(3);
+            ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
+         }
       }
 
       double timeLeftToRespawn = respawnTimer.getTimeLeft();;
