@@ -36,7 +36,6 @@ class StoreMenu : public Menu {
    
    bool menuActive;
    
-   
    std::vector<Text*> menuTexts;
    
    std::vector<Text*> weaponsTexts;

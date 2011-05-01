@@ -164,10 +164,14 @@ struct Timer {
    
    inline void reset() {
       timeStarted = 0;
+      countDownTime = 0;
       timePaused = 0;
+      isPaused = false;
    }
 
    inline void setCountDown(double _countDownTime) {
+      isPaused = false;
+      timePaused = 0;
       timeStarted = doubleTime();
       countDownTime = _countDownTime;
    }

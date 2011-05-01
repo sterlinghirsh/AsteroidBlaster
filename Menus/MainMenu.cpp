@@ -256,8 +256,14 @@ void MainMenu::keyDown(int key) {
       break;
    case SDLK_c:
       if(!firstTime) {
-         mainGameState->resumeLevelTimer();
          deactivate();
+         /* If there's no menu's left open after deactivating this one, then 
+          * we should resume the timer. Otherwise, the Store menu should be in 
+          * charge of resuming the timer when it is closed.
+          */
+         if (!storeMenu->menuActive) {
+            mainGameState->resumeLevelTimer();
+         }
       }
       break;
    }
@@ -348,7 +354,6 @@ void MainMenu::gameDeactivate(bool shouldLoad) {
    mainGameState->reset(shouldLoad);
    continueText->setColor(SDL_WHITE);
 }
-
 
 void MainMenu::update(double timeDiff) {
    Menu::update(timeDiff);

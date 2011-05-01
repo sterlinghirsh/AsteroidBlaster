@@ -101,7 +101,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    isCountingDown = false;
 
    // Make a good formula here for how many seconds a level should last.
-   levelDuration = 20;
+   levelDuration = 180;
 
    godMode = false;
 
