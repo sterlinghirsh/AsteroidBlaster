@@ -9,44 +9,62 @@
 class GameState;
 
 class StoreMenu : public Menu {
-   public:
-   StoreMenu(GameState*& _gameState);
-   virtual ~StoreMenu();
-
-   GameState*& gameState;
-
-   void draw();
-   
-   void update(double dt);
-   
-   void handleLevelTimer();
-   void keyUp(int key);
-   void keyDown(int key);
-   void mouseDown(int button);
-   void mouseMove(int dx, int dy, int x, int y);
-   void mouseUp(int button);
-   void drawLogo();
-   void drawTexts(std::vector<Text*> texts);
-   
-   //the current mouse location
-   double x, y;
-   
-   int scrollWeapon;
-   int scrollAmmo;
-   
-   bool menuActive;
-   
-   std::vector<Text*> menuTexts;
-   
-   std::vector<Text*> weaponsTexts;
-   std::vector<Text*> ammoTexts;
-   std::vector<Text*> shipTexts;
-   
    enum StoreMenuEnum { WEAPONS, AMMO, SHIP };
-
-   int menuSelection;
-   double timeLeft;
    
+   //public variables------------------------------
+   public:
+      bool menuActive;
+      
+   //private variables------------------------------
+   private:
+      GameState*& gameState;
+      //the current mouse location
+      double x, y;
+      int scrollWeapon;
+      int scrollAmmo;
+      int menuSelection;
+      double timeLeft;
+      
+      Text *doneText,
+           *shardsText,
+           *healthText,
+           *timerText,
+           *weaponsText,
+           *ammoText,
+           *shipText,
+           *healthShipText,
+           *engineShipText,
+           *maxHealthShipText;
+      
+      //list of strings...
+      std::vector<Text*> menuTexts;
+      std::vector<Text*> weaponsTexts;
+      std::vector<Text*> ammoTexts;
+      std::vector<Text*> shipTexts;
+   
+   //public functions------------------------------
+   public:
+      //Constructor
+      StoreMenu(GameState*& _gameState);
+      //Destructor
+      virtual ~StoreMenu();
+      
+      //called from the outside
+      void draw();
+      void update(double dt);
+      
+      //virtual functions required by InputReciever
+      virtual void keyUp(int key);
+      virtual void keyDown(int key);
+      virtual void mouseDown(int button);
+      virtual void mouseMove(int dx, int dy, int x, int y);
+      virtual void mouseUp(int button);
+      
+   //private functions------------------------------
+   private:
+      void handleLevelTimer();
+      void drawLogo();
+      void drawTexts(std::vector<Text*> texts);
 };
 
 
