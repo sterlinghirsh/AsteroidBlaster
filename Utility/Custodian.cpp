@@ -70,11 +70,20 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
 
 template<>
 void Collision<AsteroidShip, Shot>::handleCollision() {
+   int particlesToEmit = 10;
    if (a != b->owner) {
       a->health -= b->getDamage(a);
       b->shouldRemove = true;
-      a->shakeAmount = 2;
+      a->shakeAmount = 1;
       a->justGotHit = doubleTime();
+      SoundEffect::playSoundEffect("BlasterHit.wav");
+      for (int i = 0; i <= particlesToEmit; ++i) {
+         Point3D* particleStartPoint = new Point3D(*(b->position));
+         Vector3D* particleDirection = new Vector3D();
+         particleDirection->randomMagnitude();
+         particleDirection->setLength(3);
+         BlasterImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
+      }
       if(a->health <= 0) {
          if(a->id != 0) {
             std::cerr << "AsteroidShip ID: " << a->id << " removed..." << std::endl;
@@ -123,7 +132,6 @@ void Collision<Asteroid3D, ElectricityShot>::handleCollision() {
       b->length = hitDistance;
       Vector3D centerToImpactPoint(*a->position, *closestPoint);
       centerToImpactPoint.setLength(5);
-
       for (int i = 0; i < numElecParticles; ++i) {
          Point3D* particleStartPoint = new Point3D(*closestPoint);
          Vector3D* particleDirection = new Vector3D();

@@ -365,7 +365,7 @@ void AsteroidShip::update(double timeDiff) {
       if (!respawnTimer.isRunning()) {
          respawnTimer.setCountDown(respawnTime);
          //make some sparcles when you die!~~~~
-         for (int i = 0; i < 100; ++i) {
+         for (int i = 0; i < 500; ++i) {
             Point3D* particleStartPoint = new Point3D(*position);
             Vector3D* particleDirection = new Vector3D();
             particleDirection->randomMagnitude();
@@ -933,7 +933,6 @@ void AsteroidShip::draw_hitEffect() {
 
    glTranslated(0, 0, .6);
    glRotated(spin, hitX, hitY, hitZ);
-   glColor4d(0, 1, 0, .1);
    gluSphere(quadric, .6, 20, 20);
    glEnable(GL_LIGHTING);
    glPopMatrix();
