@@ -30,6 +30,76 @@
 #include "Particles/TractorAttractionParticle.h"
 
 template<>
+void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
+   if (a->isRespawning()) { return;}
+   if (b->isRespawning()) { return;}
+   double d = a->position->distanceFrom(*b->position);
+   double combinedRad = a->radius + b->radius;
+   if (combinedRad < d) {
+      return;
+   }
+   
+   double maxR = std::max(a->radius, b->radius);
+   Vector3D* pushOnA = new Vector3D(*b->position, *a->position);
+   Vector3D* pushOnB = new Vector3D(pushOnA->scalarMultiply(-1));
+
+   if (d <= maxR) {
+      printf("d <= maxR, d=%f|maxR=%f\n",d,maxR);
+      if (d == 0) {
+         printf("AsteroidShip is stuck\n");
+         pushOnA->randomMagnitude();
+      }
+      pushOnA->setLength(0.1); // Units per sec per sec.
+
+      *pushOnB = pushOnA->scalarMultiply(-1);
+
+      a->addAcceleration(pushOnA);
+      b->addAcceleration(pushOnB);
+   }
+
+   double speed_a = a->velocity->getLength();
+   double speed_b = b->velocity->getLength();
+
+   Vector3D reflectionAxis(*b->position, *a->position);
+   reflectionAxis.normalize();
+
+   double m1 = a->radius; // This Asteroid's Mass.
+   double m2 = b->radius; // Other Asteroid's Mass.
+
+   Vector3D* newVelocity_a = new Vector3D(*a->velocity);
+   Vector3D* newVelocity_b = new Vector3D(*b->velocity);
+
+   // Added the 0.2 to make stuff lose some energy.
+   newVelocity_a->scalarMultiplyUpdate(m1 - m2);
+   newVelocity_a->addUpdate(b->velocity->scalarMultiply(2 * m2));
+   newVelocity_a->scalarMultiplyUpdate(1 / (m1 + m2));
+   
+   newVelocity_b->scalarMultiplyUpdate(m2 - m1);
+   newVelocity_b->addUpdate(a->velocity->scalarMultiply(2 * m1));
+   newVelocity_b->scalarMultiplyUpdate(1 / (m1 + m2));
+   
+   // We want to only add acceleration away from the other item.
+   if (newVelocity_a->dot(*pushOnA) < 0) {
+      newVelocity_a->scalarMultiplyUpdate(-1);
+   }
+   
+   if (newVelocity_b->dot(*pushOnB) < 0) {
+      newVelocity_b->scalarMultiplyUpdate(-1);
+   }
+   
+   a->addInstantAcceleration(newVelocity_a);
+   b->addInstantAcceleration(newVelocity_b);
+
+   Vector3D* reverseVelocity = new Vector3D(*a->velocity);
+   reverseVelocity->scalarMultiplyUpdate(-1);
+   a->addInstantAcceleration(reverseVelocity);
+
+   reverseVelocity = new Vector3D(*b->velocity);
+   reverseVelocity->scalarMultiplyUpdate(-1);
+   b->addInstantAcceleration(reverseVelocity);
+}
+
+template<>
 void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
    if (a->isRespawning()) { return;}
    if ((doubleTime() - a->justGotHit > 1) && 
@@ -423,6 +493,7 @@ Custodian::Custodian(const GameState* _gameState) :
    if (collisionHandlers == NULL) {
       collisionHandlers = new std::vector<CollisionBase*>();
       // Initialize collision handlers.
+      collisionHandlers->push_back(new Collision<AsteroidShip, AsteroidShip>);
       collisionHandlers->push_back(new Collision<AsteroidShip, Asteroid3D>);
       collisionHandlers->push_back(new Collision<AsteroidShip, Shard>);
       collisionHandlers->push_back(new Collision<AsteroidShip, Shot>);

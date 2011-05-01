@@ -32,9 +32,9 @@ AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
    healthMax = 100;
    
    // Bounding box stuff.
-   maxX = maxY = maxZ = 4;
-   minX = minY = minZ = -4;
-   radius = 4;
+   maxX = maxY = maxZ = 3;
+   minX = minY = minZ = -3;
+   radius = 3;
    updateBoundingBox();
    
    // Todo: comment these.
@@ -372,7 +372,6 @@ void AsteroidShip::update(double timeDiff) {
             particleDirection->setLength(3);
             ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
          }
-         position = new Point3D(100,100,100);
       }
 
       double timeLeftToRespawn = respawnTimer.getTimeLeft();
