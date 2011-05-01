@@ -98,7 +98,6 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    for(unsigned i = 0; i < shipTexts.size(); i++) {
       shipTexts[i]->selectable = true;
    }
-   
 }
 
 
@@ -115,7 +114,6 @@ StoreMenu::~StoreMenu() {
    for(unsigned i = 0; i < shipTexts.size(); i++) {
       delete shipTexts[i];
    }
-   
 }
 
 void StoreMenu::draw() {
@@ -150,7 +148,6 @@ void StoreMenu::draw() {
    menuTexts[HEALTH_STOREMENUINDEX]->updateBody(gameState->ship->health);
    menuTexts[HEALTH_STOREMENUINDEX]->setPosition(position);
    
-
    
    //weapons
    position.x = (Sint16) (gameSettings->GW*(1.0/10.0));
@@ -264,7 +261,6 @@ void StoreMenu::draw() {
       
       
       drawTexts(shipTexts);
-      
       
    } else {
       std::cerr << "Menu selection error! Quitting..." << std::endl;

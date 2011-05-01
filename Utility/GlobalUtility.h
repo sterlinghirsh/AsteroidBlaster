@@ -73,8 +73,6 @@ extern TTF_Font* hudFont;
 extern TTF_Font* menuFont;
 
 
-
-
 double p2wx(int);
 double p2wy(int);
 double p2wHeight(int);

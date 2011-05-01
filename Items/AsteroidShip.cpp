@@ -110,7 +110,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
    weapons.push_back(new RemoteBomber(this));
    weapons.push_back(new Energy(this));
    
-
+   shouldBeCulled = false;
    soundHandle = -1;
 
    cameraOffset = new Vector3D(0, 2, 5);
