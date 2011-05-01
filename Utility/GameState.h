@@ -161,14 +161,17 @@ class GameState : public InputReceiver {
 
       void menuFunc();
       void nextLevel();
-      void reset();
+      void reset(bool shouldLoad = false);
       
       void setLevelTimer();
       
       void addAIPlayer();
       
-      std::string serialize();
-      void deserialize(std::string input);
+      void serialize(std::ostream &oss);
+      void deserialize(std::istream &iss);
+      
+      void save();
+      void load();
    
    //private functions------------------------------
    private:

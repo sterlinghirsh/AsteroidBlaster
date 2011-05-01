@@ -637,3 +637,11 @@ void Asteroid3D::dropRandomItem() {
       custodian->add(makeShard(0));
    }
 }
+
+void Asteroid3D::serialize(std::ostream &oss) {
+   oss << "Ast|" << radius;
+}
+
+void Asteroid3D::deserialize(std::istream &iss) {
+   iss >> radius;
+}

@@ -6,8 +6,6 @@
  * CPE 476
  */
 
-#include <math.h>
-#include <stdio.h>
 #include "Utility/GameState.h"
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
@@ -17,6 +15,11 @@
 #include "Text/GameMessage.h"
 #include "Utility/Collision.h"
 #include "Utility/GlobalUtility.h"
+#include <math.h>
+#include <stdio.h>
+#include <fstream>
+
+#define SAVEFILENAME "AsteroidBlaster.sav"
 
 extern double minimapSizeFactor;
 
@@ -665,7 +668,7 @@ void GameState::setCurFPS(double fpsIn) {
 /**
  * Reset everything in the game to play again
  */
-void GameState::reset() {
+void GameState::reset(bool shouldLoad) {
    shipId = 0;
    delete camera;
    delete cube;
@@ -677,6 +680,11 @@ void GameState::reset() {
    Particle::Clear();
 
    curLevel = 1;
+   //temp
+   if(shouldLoad) {
+      load();
+   }
+   
    numAsteroidsToSpawn = curLevel;
    curLevelText->updateBody(curLevel);
    
@@ -1200,11 +1208,28 @@ void GameState::debugPosition() {
 
 }
 
-std::string GameState::serialize() {
-   return "GameState ";
+void GameState::save() {
+   std::ofstream ofs(SAVEFILENAME);
+   serialize(ofs);
+   ofs.close();
+   std::cout << "Saved GameState" << std::endl;
 }
 
-void deserialize(std::string input) {
-   
+void GameState::load() {
+   std::ifstream ifs(SAVEFILENAME);
+   deserialize(ifs);
+   ifs.close();
+   std::cout << "Loaded GameState" << std::endl;
 }
+
+void GameState::serialize(std::ostream &oss) {
+   oss << "GameState: " << curLevel;
+}
+
+void GameState::deserialize(std::istream &iss) {
+   std::string temp;
+   iss >> temp;
+   iss >> curLevel;
+}
+
 

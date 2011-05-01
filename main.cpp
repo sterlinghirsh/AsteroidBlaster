@@ -318,7 +318,7 @@ int main(int argc, char* argv[]) {
 
    // Initialize the gameState
    gameState = new GameState(WORLD_SIZE, false);
-
+   
    // Initialize the screens
    gameState->addScreens();
    

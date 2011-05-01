@@ -69,6 +69,9 @@ class Asteroid3D : public Object3D {
       void drawInMinimap();
       void debug();
       
+      void serialize(std::ostream &os);
+      void deserialize(std::istream &is);   
+      
    //private functions------------------------------
    private:
       double randRadius(double r);

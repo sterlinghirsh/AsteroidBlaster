@@ -1,5 +1,5 @@
 
-#include <iostream>
+
 #include "SDL.h"
 #include "Utility/GlobalUtility.h"
 #include "Utility/GameState.h"
@@ -8,17 +8,13 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Items/AsteroidShip.h"
-
-#define NEWGAME_STRING_INDEX 0
-#define CONTINUE_STRING_INDEX 1
-#define SAVELOAD_STRING_INDEX 2
-#define SETTINGS_STRING_INDEX 3
-#define HELP_STRING_INDEX 4
-#define CREDITS_STRING_INDEX 5
-#define QUIT_STRING_INDEX 6
+#include <iostream>
+#include <fstream>
 
 // Also defined in main.cpp
 #define WORLD_SIZE 80.00
+
+#define SAVEFILENAME "AsteroidBlaster.sav"
 
 MainMenu::MainMenu(GameState* _mainGameState) {
    menuActive = false;
@@ -28,31 +24,44 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT;
 
-   menuTexts.push_back(new Text("New Game (n)",  menuFont, position));
-   menuTexts.push_back(new Text("Continue (c)",  menuFont, position));
-   menuTexts.push_back(new Text("Save/Load Game",  menuFont, position));
-   menuTexts.push_back(new Text("Settings",  menuFont, position));
-   menuTexts.push_back(new Text("Help",  menuFont, position));
-   menuTexts.push_back(new Text("Credits",  menuFont, position));
-   menuTexts.push_back(new Text("Quit (esc)", menuFont, position));
-
-
-   menuTexts[NEWGAME_STRING_INDEX]->selectable = true;
-   menuTexts[CONTINUE_STRING_INDEX]->selectable = true;
-   menuTexts[SETTINGS_STRING_INDEX]->selectable = true;
-   menuTexts[HELP_STRING_INDEX]->selectable = true;
-   menuTexts[CREDITS_STRING_INDEX]->selectable = true;
-   menuTexts[QUIT_STRING_INDEX]->selectable = true;
-
+   newGameText = new Text("New Game (n)",  menuFont, position);
+   menuTexts.push_back(newGameText);
+   
+   continueText = new Text("Continue (c)",  menuFont, position);
+   menuTexts.push_back(continueText);
+   
+   loadGameText = new Text("Load Game",  menuFont, position);
+   menuTexts.push_back(loadGameText);
+   
+   saveGameText = new Text("Save Game",  menuFont, position);
+   menuTexts.push_back(saveGameText);
+   
+   settingsText = new Text("Settings",  menuFont, position);
+   menuTexts.push_back(settingsText);
+   
+   helpText = new Text("Help",  menuFont, position);
+   menuTexts.push_back(helpText);
+   
+   creditsText = new Text("Credits",  menuFont, position);
+   menuTexts.push_back(creditsText);
+   
+   quitText = new Text("Quit (esc)", menuFont, position);
+   menuTexts.push_back(quitText);
 
    for (unsigned i = 0; i < menuTexts.size(); i++) {
-      //menuTexts[i]->centered = true;
+      menuTexts[i]->selectable = true;
       menuTexts[i]->alignment = CENTERED;
    }
-
-
-   // grey out the option to show that it is disabled
-   menuTexts[SAVELOAD_STRING_INDEX]->setColor(SDL_GREY);
+   
+   std::ifstream fin(SAVEFILENAME);
+   if(fin) {
+      loadGameText->setColor(SDL_WHITE);
+      loadGameText->selectable = true;
+   } else {
+      loadGameText->setColor(SDL_GREY);
+      loadGameText->selectable = true;
+   }
+   
 
    // Initialize the ship(s) in the background.
    menuGameState = new GameState(WORLD_SIZE, true);
@@ -87,13 +96,21 @@ void MainMenu::draw() {
    position.y = (Sint16) (gameSettings->GH/2.3);
    for(unsigned i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
-      position.y = (Sint16) (position.y + (gameSettings->GH/12));
+      position.y = (Sint16) (position.y + (gameSettings->GH/15));
    }
 
-
+   // make stuff selectable and greyed out depending on stuff
+   continueText->selectable = !firstTime;
+   saveGameText->selectable = !firstTime;
    if(firstTime) {
-      menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_GREY);
+      continueText->setColor(SDL_GREY);
+      saveGameText->setColor(SDL_GREY);
+   } else {
+      continueText->setColor(SDL_WHITE);
+      saveGameText->setColor(SDL_WHITE);
    }
+   
+   
 
    drawGameState(menuGameState, true, 0, 0, 20,
          0, 0, -1,
@@ -234,7 +251,7 @@ void MainMenu::keyDown(int key) {
       break;
    case SDLK_n:
       if(menuActive) {
-         newGameDeactivate();
+         gameDeactivate(false);
       }
       break;
    case SDLK_c:
@@ -260,22 +277,26 @@ void MainMenu::keyUp(int key) {
 void MainMenu::mouseDown(int button) {
    if (!menuActive) { return; }
 
-   if(menuTexts[NEWGAME_STRING_INDEX]->mouseSelect(x,y)) {
-      newGameDeactivate();
-   } else if(menuTexts[CONTINUE_STRING_INDEX]->mouseSelect(x,y) && !firstTime) {
+   if(newGameText->mouseSelect(x,y)) {
+      gameDeactivate(false);
+   } else if(continueText->mouseSelect(x,y) && !firstTime) {
       deactivate();
-   } else if(menuTexts[SETTINGS_STRING_INDEX]->mouseSelect(x,y)) {
+   } else if(settingsText->mouseSelect(x,y)) {
       menuActive = false;
       settingsMenu->menuActive = true;
-   } else if(menuTexts[HELP_STRING_INDEX]->mouseSelect(x,y)) {
+   } else if(loadGameText->mouseSelect(x,y)) {
+      gameDeactivate(true);
+   } else if(saveGameText->mouseSelect(x,y)) {
+      mainGameState->save();
+   } else if(helpText->mouseSelect(x,y)) {
       menuActive = false;
       helpMenu->menuActive = true;
-   } else if(menuTexts[CREDITS_STRING_INDEX]->mouseSelect(x,y)) {
+   } else if(creditsText->mouseSelect(x,y)) {
       menuActive = false;
       creditsMenu->menuActive = true;
       Music::stopMusic();
       Music::playMusic("Careless_Whisper.ogg");
-   } else if(menuTexts[QUIT_STRING_INDEX]->mouseSelect(x,y)) {
+   } else if(quitText->mouseSelect(x,y)) {
       running = false;
    }
 }
@@ -293,15 +314,10 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
    x = _x;
    y = _y;
    //decide the color for each menu text
-   menuTexts[NEWGAME_STRING_INDEX]->mouseHighlight(x,y);
-   menuTexts[CONTINUE_STRING_INDEX]->selectable = !firstTime;
-   if (!firstTime) {
-      menuTexts[CONTINUE_STRING_INDEX]->mouseHighlight(x,y);
+   
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
+      menuTexts[i]->mouseHighlight(x,y);
    }
-   menuTexts[SETTINGS_STRING_INDEX]->mouseHighlight(x,y);
-   menuTexts[HELP_STRING_INDEX]->mouseHighlight(x,y);
-   menuTexts[CREDITS_STRING_INDEX]->mouseHighlight(x,y);
-   menuTexts[QUIT_STRING_INDEX]->mouseHighlight(x,y);
 
    // -20 is the near plane. 3 units in front is a good target point for the ships.
    ship3->lookAt(p2wx(x), p2wy(y), 17, 0, 1, 0);
@@ -326,11 +342,11 @@ void MainMenu::deactivate() {
    Music::playMusic("Asteroids2.ogg");
 }
 
-void MainMenu::newGameDeactivate() {
+void MainMenu::gameDeactivate(bool shouldLoad) {
    deactivate();
    firstTime = false;
-   mainGameState->reset();
-   menuTexts[CONTINUE_STRING_INDEX]->setColor(SDL_WHITE);
+   mainGameState->reset(shouldLoad);
+   continueText->setColor(SDL_WHITE);
 }
 
 

@@ -14,6 +14,16 @@ class MainMenu : public Menu {
    MainMenu(GameState* _mainGameState);
    virtual ~MainMenu();
 
+   Text *newGameText,
+        *continueText,
+        *loadGameText,
+        *saveGameText,
+        *settingsText,
+        *helpText,
+        *creditsText,
+        *quitText;
+   
+   
    void draw();
    //void draw(GameState* gameState);
    
@@ -25,7 +35,7 @@ class MainMenu : public Menu {
    
    void activate();
    void deactivate();
-   void newGameDeactivate();
+   void gameDeactivate(bool shouldLoad = false);
 
    void setupShips();
 
