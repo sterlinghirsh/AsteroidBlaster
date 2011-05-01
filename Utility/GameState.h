@@ -24,6 +24,7 @@
 #include "Utility/InputManager.h"
 #include "Utility/GlobalUtility.h"
 #include "HUD/ProgressBar.h"
+#include "HUD/WeaponDisplay.h"
 #include "HUD/Minimap.h"
 #include "HUD/Screen.h"
 #include <list>
@@ -78,6 +79,7 @@ class GameState : public InputReceiver {
    
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
+      WeaponDisplay* weaponBar;
       double curFPS, worldSize;
       double lastDrawTime;
       

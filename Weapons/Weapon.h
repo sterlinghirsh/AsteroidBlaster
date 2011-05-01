@@ -41,20 +41,22 @@ class Weapon {
        */
       virtual Point3D project(Object3D*)=0;
       virtual bool shouldFire(Point3D*, Point3D*)=0;
-      
+
       /**
        * Called every frame.
        */
       virtual void update(double timeDiff)=0;
-      
+
       // owner of this weapon
       AsteroidShip* ship;
       virtual std::string getName();
       virtual int buyPrice() { return level*weaponPrice; };
       virtual std::string weaponString();
       virtual std::string ammoString();
-      
-      /* 
+      void setIcon(std::string iconName);
+      void drawIcon(bool isSelected);
+
+      /*
        * The current amount of ammo available to use. -1 is infinite.
        */
       int curAmmo;
@@ -69,13 +71,14 @@ class Weapon {
       int ammoAmount;
 
       bool fireBackwards;
-      
-      protected:
-         WeaponType type; // Do we need this?
-         double timeLastFired;
-         double coolDown;
-         double damage;
-         std::string name;
+
+   protected:
+      WeaponType type; // Do we need this?
+      double timeLastFired;
+      double coolDown;
+      double damage;
+      std::string name;
+      std::string icon;
 };
 
 #endif

@@ -58,11 +58,11 @@ void Mesh3D::drawTextured(bool drawSmooth, GLuint tex) {
 void Mesh3D::drawLines(bool drawSmooth) {
    glDisable(GL_LIGHTING);
    int nFaces;
-   if (drawAnim) {
-      nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
-   } else {
+   //if (drawAnim) {
+      //nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
+   //} else {
       nFaces = (int)faces.size();
-   }
+   //}
    for (int i = 0; i < nFaces; i++) {
       faces[i]->drawLines();
    }

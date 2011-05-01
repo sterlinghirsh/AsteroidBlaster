@@ -692,11 +692,11 @@ void drawGameState(GameState* gameStateIn,
    glPushMatrix();
    // Draw the hud
    glClear(GL_DEPTH_BUFFER_BIT);
-   if (!gameStateIn->inMenu) {
-      gameStateIn->drawHud();
-   }
    if (gameSettings->bloom) {
       gameStateIn->drawBloom();
+   }
+   if (!gameStateIn->inMenu) {
+      gameStateIn->drawHud();
    }
 
    glPopMatrix();

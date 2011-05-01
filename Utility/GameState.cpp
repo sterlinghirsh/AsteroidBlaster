@@ -78,10 +78,13 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    weaponReadyBar = new ProgressBar(0.75f, 0.05f, -1.2f, -0.3f);
    float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH *
       2.0f * 0.9f;
-   float healthHeight = 0.1f;
-   //healthBar = new ProgressBar(0.1f, 2.0f, -1.0f, 0.8f);
-   healthBar = new ProgressBar(healthHeight, healthSpan, -healthSpan / 2.0f, 1.0f - (healthHeight * 1.5f));
-   healthBar->setVertical(true);
+   const float healthHeight = 0.2f;
+   const float weaponBarHeight = 0.3f;
+   healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
+   healthBar->setHorizontal(true);
+   healthBar->setSkew(0.0, 0.05f);
+   //weaponBar = new WeaponDisplay(healthHeight * 1.5f, 1.0f, 0.0f, -0.9f + (healthHeight * 0.5f), this);
+   weaponBar = new WeaponDisplay(weaponBarHeight, weaponBarHeight, 0.0f, -0.9f + (weaponBarHeight * 0.5f), this);
    //healthBar->setIcon("ShieldIcon");
    weaponReadyBar->setIcon("ShotIcon");
 
@@ -481,7 +484,9 @@ void GameState::drawBloom() {
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glPopMatrix();
    
+   glColor4f(1.0, 1.0, 1.0, 1.0);
    glBindTexture(GL_TEXTURE_2D, 0);
+   glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void GameState::drawHud() {
@@ -492,6 +497,8 @@ void GameState::drawHud() {
     * The camera is set to be just 0.25 behind where you're looking at.
     */
    gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
+   
+   //glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
 
    /* Use orthonormal view so the text stays perpendicular
     * to the camera at all times.
@@ -505,11 +512,14 @@ void GameState::drawHud() {
    drawAllText();
    weaponReadyBar->draw();
    healthBar->draw();
+   weaponBar->draw();
    glEnable(GL_LIGHTING);
    //glEnable(GL_DEPTH_TEST);
    usePerspective();
    glPopMatrix();
    glEnable(GL_CULL_FACE);
+   
+   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 /**
