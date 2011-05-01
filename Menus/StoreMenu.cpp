@@ -292,6 +292,18 @@ void StoreMenu::drawTexts(std::vector<Text*> texts) {
    glPopMatrix();
 }
 
+void StoreMenu::handleLevelTimer() {
+   /* If the level is over and we're exiting the buying menu, then set 
+    * the timer again and mark that we're on a new level.
+    */
+   if (gameState->levelOver) {
+      gameState->setLevelTimer();
+      gameState->levelOver = false;
+   }
+
+   // Resume the level timer again since it was paused when we entered the menu.
+   gameState->resumeLevelTimer();
+}
 
 /**
  * Handles the player pressing down a key
@@ -307,16 +319,8 @@ void StoreMenu::keyDown(int key) {
          SoundEffect::stopAllSoundEffect();
          Music::stopMusic();
          Music::playMusic("Asteroids2.ogg");
-         /* If the level is over and we're exiting the buying menu, then set 
-          * the timer again and mark that we're on a new level.
-          */
-         if (gameState->levelOver) {
-            gameState->setLevelTimer();
-            gameState->levelOver = false;
-         }
-
-         // Resume the level timer again since it was paused when we entered the menu.
-         gameState->resumeLevelTimer();
+         // Take care of repeated logic with the level timer.
+         handleLevelTimer();
       } else {
          menuActive = true;
          SoundEffect::stopAllSoundEffect();
@@ -332,13 +336,8 @@ void StoreMenu::keyDown(int key) {
     case SDLK_n:
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
-      // If the level is over, set the level timer back to the level duration
-      if (gameState->levelOver) {
-         gameState->setLevelTimer();
-         gameState->levelOver = false;
-      }
-      // Whether or not the level is over, the level timer should be resumed.
-      gameState->resumeLevelTimer();
+      // Take care of repeated logic with the level timer.
+      handleLevelTimer();
 
       Music::stopMusic();
       Music::playMusic("Asteroids2.ogg");
@@ -367,6 +366,8 @@ void StoreMenu::mouseDown(int button) {
          timeLeft = timeLeft + DEFAULTTIME;
          SDL_ShowCursor(SDL_DISABLE);
          menuActive = false;
+         // Take care of repeated logic with the level timer.
+         handleLevelTimer();
          Music::stopMusic();
          Music::playMusic("Asteroids2.ogg");
          return;
@@ -502,7 +503,6 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
       std::cerr << "Menu selection error! Quitting..." << std::endl;
       exit(1);
    }
-   
    
    for(unsigned i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->mouseHighlight(x,y);

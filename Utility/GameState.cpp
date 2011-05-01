@@ -94,7 +94,8 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    mouseX = 0;
    mouseY = 0;
    // The length of the countdown at the end of the level.
-   countDown = 5;
+   countDown = 6;
+   isCountingDown = false;
 
    // Make a good formula here for how many seconds a level should last.
    levelDuration = 20;
@@ -192,20 +193,21 @@ void GameState::update(double timeDiff) {
       }
       SoundEffect::stopAllSoundEffect();
       */
-   if (!inMenu && gameIsRunning && custodian.asteroidCount == 0) {
-      //check if it is done waiting until going to the next level
-      if(countDown <= 0) {
+   if ((!inMenu && gameIsRunning && custodian.asteroidCount == 0) || levelTimer.getTimeLeft() <= 6) {
+      // Check if it is done waiting until going to the next level
+      if (countDown <= 0) {
+         levelTimer.reset();
          nextLevel();
          return;
       } else {
          countDown -= timeDiff;
          std::ostringstream gameMsg;
-         gameMsg << "Next Level In " << (int)(countDown + 0.5);
+         gameMsg << "Next Level In " << (int)countDown;
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
    } else if (!inMenu && !gameIsRunning){
       countDown -= timeDiff;
-      if(countDown <= 0) {
+      if (countDown <= 0) {
          mainMenu->menuActive = true;
          SoundEffect::stopAllSoundEffect();
          Music::stopMusic();
@@ -688,6 +690,7 @@ void GameState::reset() {
    gameIsRunning = true;
    // The level is not over when we're starting a new game.
    levelOver = false;
+   isCountingDown = false;
 
    custodian.add(ship);
    initAsteroids();
@@ -1204,12 +1207,4 @@ std::string GameState::serialize() {
 void deserialize(std::string input) {
    
 }
-
-
-
-
-
-
-
-
 

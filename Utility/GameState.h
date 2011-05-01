@@ -81,7 +81,6 @@ class GameState : public InputReceiver {
       double curFPS, worldSize;
       double lastDrawTime;
       
-      
    //private variables------------------------------
    private:
       bool doYaw;
@@ -92,7 +91,8 @@ class GameState : public InputReceiver {
       int curLevel;
       // Used for a countdown at the end of each level.
       double countDown;
-
+      // Used to tell whether or not we already have a countdown on screen.
+      bool isCountingDown;
 
       // Timer to control how long the level lasts.
       Timer levelTimer;

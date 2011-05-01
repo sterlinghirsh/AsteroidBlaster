@@ -19,6 +19,7 @@ class StoreMenu : public Menu {
    
    void update(double dt);
    
+   void handleLevelTimer();
    void keyUp(int key);
    void keyDown(int key);
    void mouseDown(int button);

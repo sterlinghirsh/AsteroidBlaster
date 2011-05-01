@@ -203,7 +203,7 @@ int minutesRemaining(double secondsRemaining) {
  * left, after the minutes remaining has been calculated.
  */
 int secondsRemainder(double secondsRemaining) {
-   return (int)((int)secondsRemaining)%60;
+   return ((int)secondsRemaining)%60;
 }
 
 void drawCylinder(double radius, double length) {
