@@ -10,6 +10,7 @@
 #include "Utility/Quaternion.h"
 #include "Utility/SoundEffect.h"
 #include "Particles/EngineParticle.h"
+#include "Particles/ElectricityImpactParticle.h"
 #include "Text/GameMessage.h"
 
 #ifndef M_PI
@@ -358,7 +359,16 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 
 void AsteroidShip::update(double timeDiff) {
    if (health <= 0) {
+      //make some sparcles when you die!~~~~
+      for (int i = 0; i < 100; ++i) {
+         Point3D* particleStartPoint = new Point3D(*position);
+         Vector3D* particleDirection = new Vector3D();
+         particleDirection->randomMagnitude();
+         particleDirection->setLength(3);
+         ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
+      }
       const double respawnTime = 3;
+      shakeAmount = 0;
       // Handle respawning.
       if (!respawnTimer.isRunning()) {
          respawnTimer.setCountDown(respawnTime);
@@ -900,11 +910,10 @@ void AsteroidShip::draw_hitEffect() {
    hitZ += (double) (rand() % 30);
    
    double sx, sy, sz;
-   
    sx = 5 / (1.5 * 5);
    sy = 5 / (.5 * 5);
    sz = 5 / (.8 * 5);
-   
+
    if (hitX > 100) {
       hitX = 0;
    }
@@ -920,8 +929,8 @@ void AsteroidShip::draw_hitEffect() {
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glDisable(GL_LIGHTING);
    //printf("I got into draw hit effect\n");
-   //glScaled(.5, .7, 1.4);
    glScaled(sx, sy, sz);
+
    glTranslated(0, 0, .6);
    glRotated(spin, hitX, hitY, hitZ);
    glColor4d(0, 1, 0, .1);

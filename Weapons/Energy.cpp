@@ -54,7 +54,7 @@ void Energy::update(double timeDiff) {
       chargingShot->velocity->updateMagnitude(shotDirection);
       // Don't play sound effects in godMode b/c there would be too many.
       if (!ship->gameState->godMode) {
-         SoundEffect::playSoundEffect("EnergyShot2.wav");
+         SoundEffect::playSoundEffect("blaster2.wav");
       }
       
       ship->setShakeAmount((float) std::min((doubleTime() - chargeStartTime) * 0.3, 0.5));
