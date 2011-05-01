@@ -27,11 +27,12 @@ std::ostringstream GameState :: sstream2;
 
 GameState::GameState(double worldSizeIn, bool _inMenu) :
  custodian(this) {
+   inMenu = _inMenu;
+   
    godMode = false;
    gameIsRunning = true;
-   levelOver = false;
-
-   inMenu = _inMenu;
+   levelOver = false;   
+   usingShipCamera = true;
    
    /* A view frustum culled list of objects to be used for drawing and by
       the shooting AI.
@@ -47,8 +48,13 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    }
    spring = new Spring(this);
    minimap = new Minimap(ship);
-   camera = new Camera(ship);
-   spring->attach(ship, camera);
+
+   shipCamera = new Camera(ship);
+   spring->attach(ship, shipCamera);   
+   spectatorCamera = new Camera(false);
+   spectatorSpeed = 0.5;
+   spectatorRadius = 120.0;
+   
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    //sphere = new BoundingSphere(worldSize, 0, 0, 0);
    // Set up our text objects to be displayed on screen.
@@ -77,8 +83,8 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    // Improve the positioning code.
    weaponReadyBar = new ProgressBar(0.75f, 0.05f, -1.2f, -0.3f);
    float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH *
-      2.0f * 0.9f;
-   const float healthHeight = 0.2f;
+      2.0f * 0.6f;
+   const float healthHeight = 0.18f;
    const float weaponBarHeight = 0.3f;
    healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
    healthBar->setHorizontal(true);
@@ -143,7 +149,8 @@ void GameState::resumeLevelTimer() {
 GameState::~GameState() {
    delete skybox;
    delete ship;
-   delete camera;
+   delete shipCamera;
+   delete spectatorCamera;
    delete spring;
    delete cube;
    delete weaponReadyBar;
@@ -154,7 +161,10 @@ GameState::~GameState() {
 
 void GameState::addAIPlayer() {
    AsteroidShip* otherShip = new AsteroidShip(this, shipId++);
-   otherShip->position->update(3, 0, 0);
+   double randX = (randdouble() - 0.5)*(worldSize / 2);
+   double randY = (randdouble() - 0.5)*(worldSize / 2);
+   double randZ = (randdouble() - 0.5)*(worldSize / 2);
+   otherShip->position->update(randX, randY, randZ);
    otherShip->flyingAI->enable();
    otherShip->shooter->enable();
    custodian.add(otherShip);
@@ -174,8 +184,6 @@ void GameState::addScreens() {
  * This is the step function.
  */
 void GameState::update(double timeDiff) {
-   const double respawnTime = 3;
-
    // If the level should be over, let's go to the store menu.
    if(levelTimer.isRunning() && levelTimer.getTimeLeft() <= 0) {
          levelTimer.reset();
@@ -266,6 +274,16 @@ void GameState::update(double timeDiff) {
    cube->update(timeDiff);
    minimap->update(timeDiff);
    spring->update(timeDiff);
+   spectatorCameraUpdate(timeDiff);
+}
+
+void GameState::spectatorCameraUpdate(double timeDiff) {
+   static double pieCounter = 0;
+   if (pieCounter >= 2*M_PI) { pieCounter = 0; }
+   Point3D *camPos = new Point3D(sin(pieCounter)*spectatorRadius,sin(pieCounter)*(spectatorRadius/3),-cos(pieCounter)*spectatorRadius);
+   spectatorCamera->position = camPos;
+   spectatorCamera->lookAt(new Point3D(0,0,0));
+   pieCounter += timeDiff*spectatorSpeed;
 }
 
 /**
@@ -302,14 +320,21 @@ void GameState::toggleMinimap() {
 /**
  * Draw the main view.
  */
-void GameState::draw() {
-   camera->setViewVector(ship->getViewVector());
-   camera->setOffset(*ship->getCameraOffset());
+void GameState::draw(bool drawGlow) {
+   Camera *currentCamera;
+   if (usingShipCamera) {
+      currentCamera = shipCamera;
+   } else {
+      currentCamera = spectatorCamera;
+   }
+   
+   shipCamera->setViewVector(ship->getViewVector());
+   shipCamera->setOffset(*ship->getCameraOffset());
 
    if (!inMenu) {
-      camera->setCamera(true);
-      camera->shake(ship->getShakeAmount());
-      skybox->draw(camera);
+      currentCamera->setCamera(true);
+      shipCamera->shake(ship->getShakeAmount());
+      skybox->draw(currentCamera);
    }
    cube->draw();
 
@@ -317,54 +342,36 @@ void GameState::draw() {
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
    // Get targetable view frustum objects in the shooting ai.
    
-   glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
-   if (!inMenu)
-      ship->drawCrosshair();
+   if (!drawGlow) {
+      glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
+      if (!inMenu && usingShipCamera)
+         ship->drawCrosshair();
 
-   for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
-      if (*listIter == NULL) {
-         continue;
-      } else if (*listIter == ship && inMenu) { 
-         // Don't draw the ship in first Person mode.
-      } else {      
-         (*listIter)->draw();
+      for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
+         if (*listIter == NULL) {
+            continue;
+         } else if (*listIter == ship && inMenu) { 
+            // Don't draw the ship in first Person mode.
+         } else {      
+            (*listIter)->draw();
+         }
       }
-   }
+   } else {
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-   delete viewFrustumObjects;
-}
-
-/**
- * Draw the glowing objects.
- */
-void GameState::drawGlow() {
-   camera->setViewVector(ship->getViewVector());
-   camera->setOffset(*ship->getCameraOffset());
-
-   if (!inMenu) {
-      camera->setCamera(true);
-      camera->shake(ship->getShakeAmount());
-   }
-   cube->draw();
-
-   // Get a list of all of the objects after culling them down to the view frustum.
-   viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
-   // Get targetable view frustum objects in the shooting ai.
-   
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-   for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
-      if (*listIter == NULL || *listIter == ship) {
-         continue;
-      } else {      
-         (*listIter)->drawGlow();
+      for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
+         if (*listIter == NULL || *listIter == ship) {
+            continue;
+         } else {      
+            (*listIter)->drawGlow();
+         }
       }
-   }
 
-   if (!inMenu) {
-      // if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
-      // ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
-         ship->draw();
+      if (!inMenu) {
+         // if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
+         // ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
+            ship->draw();
+      }
    }
 
    delete viewFrustumObjects;
@@ -492,17 +499,14 @@ void GameState::drawBloom() {
 void GameState::drawHud() {
    useOrtho();
 
-   /* Set the camera using the location of your eye,
+   /* Set the shipCamera using the location of your eye,
     * the location where you're looking at, and the up vector.
-    * The camera is set to be just 0.25 behind where you're looking at.
+    * The shipCamera is set to be just 0.25 behind where you're looking at.
     */
    gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
    
    //glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
 
-   /* Use orthonormal view so the text stays perpendicular
-    * to the camera at all times.
-    */
 
    /* We need to disable the lighting temporarily
     * in order to set the color properly.
@@ -510,9 +514,11 @@ void GameState::drawHud() {
    glDisable(GL_LIGHTING);
    glDisable(GL_CULL_FACE);
    drawAllText();
-   weaponReadyBar->draw();
-   healthBar->draw();
-   weaponBar->draw();
+   if(usingShipCamera){
+      weaponReadyBar->draw();
+      healthBar->draw();
+      weaponBar->draw();
+   }
    glEnable(GL_LIGHTING);
    //glEnable(GL_DEPTH_TEST);
    usePerspective();
@@ -680,7 +686,8 @@ void GameState::setCurFPS(double fpsIn) {
  */
 void GameState::reset(bool shouldLoad) {
    shipId = 0;
-   delete camera;
+   delete shipCamera;
+   delete spectatorCamera;
    delete cube;
    delete ship;
    delete spring;
@@ -703,8 +710,9 @@ void GameState::reset(bool shouldLoad) {
    spring = new Spring(this);
    cube->constrain(ship);
    minimap = new Minimap(ship);
-   camera = new Camera(ship);
-   spring->attach(ship, camera);
+   shipCamera = new Camera(ship);
+   spring->attach(ship, shipCamera);
+   spectatorCamera = new Camera(false);
    gameIsRunning = true;
    // The level is not over when we're starting a new game.
    levelOver = false;
@@ -838,7 +846,22 @@ void GameState::keyDown(int key) {
    case SDLK_t:
       ship->nextView();
       break;
-
+   case SDLK_y:
+      usingShipCamera = !usingShipCamera;
+      break;
+   case SDLK_KP_PLUS:
+      spectatorSpeed += 0.1;
+      break;
+   case SDLK_KP_MINUS:
+      spectatorSpeed -= 0.1;
+      break;
+   case SDLK_KP_MULTIPLY:
+      spectatorRadius += 10.0;
+      break;
+   case SDLK_KP_DIVIDE:
+      spectatorRadius -= 10.0;
+      break;
+      
 
    // AI controls
    case SDLK_g:
@@ -1179,7 +1202,15 @@ double GameState::getWallzMax() const { return cube->zMax; }
 
 double GameState::getMouseX() { return mouseX; }
 double GameState::getMouseY() { return mouseY; }
-Camera* GameState::getCamera() { return camera; }
+
+
+Camera* GameState::getCurrentCamera() const {
+   if (usingShipCamera) {
+      return shipCamera;
+   } else {
+      return spectatorCamera;
+   }
+}
 
 void GameState::debugPosition() {
    // First reset.

@@ -662,7 +662,7 @@ void drawGameState(GameState* gameStateIn,
                0, 1, 0); // Y goes up.
       }
 
-      gameStateIn->drawGlow();
+      gameStateIn->draw(true);
 
       glPopMatrix();
       glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);

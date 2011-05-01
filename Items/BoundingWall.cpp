@@ -142,7 +142,8 @@ void BoundingWall::constrain(Drawable* item) {
 void BoundingWall::draw() {
    //Point3D cameraPosition(*gameState->ship->position);
    //Point3D cameraPosition = *gameState->camera->position;
-   Point3D cameraPosition = gameState->camera->getEyePoint();
+   Camera *temp = gameState->getCurrentCamera();
+   Point3D cameraPosition = temp->getEyePoint();
    //cameraPosition.add(*gameState->camera->offset);
    //cameraPosition.subtract(*gameState->camera->forward);
    switch (wallID) {

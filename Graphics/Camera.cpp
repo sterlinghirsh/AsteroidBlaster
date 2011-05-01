@@ -102,3 +102,21 @@ Point3D Camera::getEyePoint(){
 void Camera::shake(float newShakeAmount) {
    shakeAmount = (float) clamp(newShakeAmount, 0, 1);
 }
+
+void Camera::lookAt(Point3D* point) {
+   forward->x = point->x - position->x;
+   forward->y = point->y - position->y;
+   forward->z = point->z - position->z;
+   forward->scalarMultiply(-1);
+   forward->normalize();
+   up->x = 0;
+   up->y = 1;
+   up->z = 0;
+   right->x = 1;
+   right->y = 0;
+   right->z = 0;
+}
+
+
+
+

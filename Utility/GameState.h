@@ -58,7 +58,6 @@ class GameState : public InputReceiver {
                         
       Custodian custodian;
       AsteroidShip* ship;
-      Camera* camera;
       Ball* ball;
       Spring* spring;
       // Used when looping over Drawable objects
@@ -85,6 +84,13 @@ class GameState : public InputReceiver {
       
    //private variables------------------------------
    private:
+   
+      bool usingShipCamera;
+      Camera* shipCamera;
+      Camera* spectatorCamera;
+      double spectatorSpeed;
+      double spectatorRadius;
+      
       bool doYaw;
       double mouseX, mouseY;
       double shipControlX, shipControlY;
@@ -126,12 +132,12 @@ class GameState : public InputReceiver {
       virtual void mouseMove(int dx, int dy, int x, int y);
       virtual void mouseUp(int button);
       
-      void draw();
+      void draw(bool drawGlow = false);
       void hBlur();
       void vBlur();
       void drawBlur();
       void drawBloom();
-      void drawGlow();
+      
       void drawMinimap();
       void drawScreens();
       void addScreens();
@@ -159,7 +165,7 @@ class GameState : public InputReceiver {
       
       double getMouseX();
       double getMouseY();
-      Camera* getCamera();
+      Camera* getCurrentCamera() const;
 
       void menuFunc();
       void nextLevel();
@@ -179,7 +185,7 @@ class GameState : public InputReceiver {
    private:
       void addLevelMessage();
       void debugPosition();
-      
+      void spectatorCameraUpdate(double timeDiff);
 };
 
 #endif

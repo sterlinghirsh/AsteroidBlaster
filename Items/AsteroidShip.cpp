@@ -374,7 +374,7 @@ void AsteroidShip::update(double timeDiff) {
          }
       }
 
-      double timeLeftToRespawn = respawnTimer.getTimeLeft();;
+      double timeLeftToRespawn = respawnTimer.getTimeLeft();
 
       if (this == gameState->ship) {
          std::ostringstream gameMsg;
