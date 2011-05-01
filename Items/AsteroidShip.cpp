@@ -372,6 +372,7 @@ void AsteroidShip::update(double timeDiff) {
             particleDirection->setLength(3);
             ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
          }
+         position = new Point3D(100,100,100);
       }
 
       double timeLeftToRespawn = respawnTimer.getTimeLeft();
@@ -1310,6 +1311,10 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
    Vector3D _up(upX, upY, upZ);
 
    setOrientation(_forward, _up);
+}
+
+bool AsteroidShip::isRespawning() {
+   return respawnTimer.isRunning();
 }
 
 // serialize 

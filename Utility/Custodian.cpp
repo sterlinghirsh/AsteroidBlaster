@@ -31,6 +31,7 @@
 
 template<>
 void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
+   if (a->isRespawning()) { return;}
    if ((doubleTime() - a->justGotHit > 1) && 
     !(a->currentWeapon == 4 && a->isFiring && a->weapons[4]->curAmmo > 0)) {
       /* Remove health from both equal to minHealthDeduction + randomHealthDeduction 
@@ -58,6 +59,7 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
 
 template<>
 void Collision<AsteroidShip, Shard>::handleCollision() {
+   if (a->isRespawning()) { return;}
    a->health += 10;
    if (a->health > a->healthMax)
       a->health = a->healthMax;
@@ -70,6 +72,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
 
 template<>
 void Collision<AsteroidShip, Shot>::handleCollision() {
+   if (a->isRespawning()) { return;}
    int particlesToEmit = 10;
    if (a != b->owner) {
       a->health -= b->getDamage(a);

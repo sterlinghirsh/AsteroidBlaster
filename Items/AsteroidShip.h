@@ -109,6 +109,7 @@ class AsteroidShip : public Object3D {
       virtual void debug();
       virtual std::string serialize();
       
+      bool isRespawning();
       
       double getHealth();
       int getScore();
@@ -117,20 +118,14 @@ class AsteroidShip : public Object3D {
       double getAimY();
       void updatePlayerAcceleration();
       void rotate();
-      void nextWeapon();
-      void prevWeapon();
-      
-      // Return a reference to the list of weapons that the ship has.
-      std::vector<Weapon*> getWeaponsList();
-      // Get the number of types of weapons the ship has. They're indexed 0 - (n-1)
-      int getNumWeapons();
       
       // We'll have to update this later so the AI can use it.
       void updateShotDirection(double xOffset, double yOffset);
       void updateShotDirection(Vector3D dir);
       void updateShotDirection(Point3D dir);
       void keepFiring();
-
+      // Change this to something reasonable once we have a radar.
+      Radar *getRadar();
 
       float getShakeAmount();
       void setShakeAmount(float shakeIn);
@@ -169,20 +164,23 @@ class AsteroidShip : public Object3D {
       void fire(bool startFiring);
       void selectWeapon(int weaponType);
       
-      // Change this to something reasonable once we have a radar.
-      Radar *getRadar();
-      
       // Camera and view related functions
       void setView(int _view);
       int getCurrentView();
       void setCameraDirectly();
       void setZoomSpeed(float speed);
-      
       void setOrientation(double forwardX, double forwardY, double forwardZ, double upX, double upY, double upZ);
       void setOrientation(Vector3D& _forward, Vector3D& _up);
       void lookAt(double lookAtX, double lookAtY, double lookAtZ, double upX, double upY, double upZ);
       
+      
       // Weapon related functions
+      void nextWeapon();
+      void prevWeapon();
+      // Return a reference to the list of weapons that the ship has.
+      std::vector<Weapon*> getWeaponsList();
+      // Get the number of types of weapons the ship has. They're indexed 0 - (n-1)
+      int getNumWeapons();
       Weapon* getCurrentWeapon();
       Weapon* getNextWeapon(); //Just tell us what the next weapon up would be, but don't switch to it.
       Weapon* getPreviousWeapon(); //Just tell us what the previous weapon would be, but don't switch to it.

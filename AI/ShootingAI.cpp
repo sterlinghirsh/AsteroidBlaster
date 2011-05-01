@@ -151,7 +151,7 @@ Object3D* ShootingAI::chooseTarget() {
       if (dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL) {
          consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
          // Don't shoot at myself.
-         if (consideredShip->id == ship->id)
+         if (consideredShip->id == ship->id || consideredShip->isRespawning())
             continue;
       }
 
