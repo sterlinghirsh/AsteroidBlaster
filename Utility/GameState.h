@@ -74,6 +74,7 @@ class GameState : public InputReceiver {
       bool godMode;
       bool gameIsRunning;
       bool inMenu;
+      bool levelOver;
    
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
@@ -89,7 +90,6 @@ class GameState : public InputReceiver {
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;
       int curLevel;
-      int levelOver;
       // Used for a countdown at the end of each level.
       double countDown;
 
@@ -136,6 +136,8 @@ class GameState : public InputReceiver {
 
       bool minimapOn();
       void toggleMinimap();
+      void pauseLevelTimer();
+      void resumeLevelTimer();
 
       void drawAllText();
       void drawHud();

@@ -97,7 +97,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    countDown = 5;
 
    // Make a good formula here for how many seconds a level should last.
-   levelDuration = 60;
+   levelDuration = 20;
 
    godMode = false;
 
@@ -113,6 +113,21 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
 void GameState::setLevelTimer() {
    levelTimer.setCountDown(levelDuration);
    // levelTimer is implicltly now 'active'.
+}
+
+/**
+ * Pause the levelTimer. It should remain at its current time left when it
+ * is resumed again in the future.
+ */
+void GameState::pauseLevelTimer() {
+   levelTimer.pause();
+}
+
+/**
+ * Resume the levelTimer.
+ */
+void GameState::resumeLevelTimer() {
+   levelTimer.resume();
 }
 
 /**
@@ -671,6 +686,7 @@ void GameState::reset() {
    camera = new Camera(ship);
    spring->attach(ship, camera);
    gameIsRunning = true;
+   // The level is not over when we're starting a new game.
    levelOver = false;
 
    custodian.add(ship);
@@ -699,6 +715,8 @@ void GameState::nextLevel() {
 
    minimap = new Minimap(ship);
    gameIsRunning = true;
+   // The current level is over when we're advancing to the next level.
+   levelOver = true;
    curLevel++;
    curLevelText->updateBody(curLevel);
    numAsteroidsToSpawn = curLevel;

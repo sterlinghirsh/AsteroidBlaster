@@ -228,14 +228,18 @@ void MainMenu::keyDown(int key) {
          // If we're in the menu already, don't do anything when the player presses m.
       }
       else {
+         mainGameState->pauseLevelTimer();
          activate();
       }
       break;
    case SDLK_n:
-      newGameDeactivate();
+      if(menuActive) {
+         newGameDeactivate();
+      }
       break;
    case SDLK_c:
       if(!firstTime) {
+         mainGameState->resumeLevelTimer();
          deactivate();
       }
       break;
