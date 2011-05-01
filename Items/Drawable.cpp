@@ -179,6 +179,7 @@ Point3D& Drawable::getMaxPosition() const {
 
 // serialize 
 std::string Drawable::serialize() {
+   // all of them except for stuff now owned by this class
    return "Drawable\n";
 }
 

@@ -22,14 +22,6 @@ extern double minimapSizeFactor;
 
 std::ostringstream GameState :: sstream2;
 
-void GameState::addAIPlayer() {
-   AsteroidShip* otherShip = new AsteroidShip(this, shipId++);
-   otherShip->position->update(3, 0, 0);
-   otherShip->flyingAI->enable();
-   otherShip->shooter->enable();
-   custodian.add(otherShip);
-}
-
 GameState::GameState(double worldSizeIn, bool _inMenu) :
  custodian(this) {
    godMode = false;
@@ -107,7 +99,6 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    // Make a good formula here for how many seconds a level should last.
    levelDuration = 60;
 
-   scoreToWin = 15000;
    godMode = false;
 
    // TODO: comment this or rename it.
@@ -137,6 +128,14 @@ GameState::~GameState() {
    delete rawScreen;
    delete bloomScreen;
    delete fboScreen;
+}
+
+void GameState::addAIPlayer() {
+   AsteroidShip* otherShip = new AsteroidShip(this, shipId++);
+   otherShip->position->update(3, 0, 0);
+   otherShip->flyingAI->enable();
+   otherShip->shooter->enable();
+   custodian.add(otherShip);
 }
 
 /**
@@ -1179,3 +1178,20 @@ void GameState::debugPosition() {
    }
 
 }
+
+std::string GameState::serialize() {
+   return "GameState ";
+}
+
+void deserialize(std::string input) {
+   
+}
+
+
+
+
+
+
+
+
+

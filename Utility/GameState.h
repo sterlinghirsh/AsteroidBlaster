@@ -33,12 +33,9 @@ class AsteroidShip;
 class Minimap;
 
 class GameState : public InputReceiver {
-   static std::ostringstream sstream2;
-
+   //public variables------------------------------
    public:
-      AsteroidShip* ship;
-      Ball* ball;
-      Spring* spring;
+      static std::ostringstream sstream2;
       
       /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
        * update it in updateText(), and make it draw in drawAllText().
@@ -55,19 +52,78 @@ class GameState : public InputReceiver {
                         *ammoText,
                         *curLevelText,
                         *timerText;
+                        
+                        
+                        
+      Custodian custodian;
+      AsteroidShip* ship;
+      Camera* camera;
+      Ball* ball;
+      Spring* spring;
       // Used when looping over Drawable objects
       std::vector<Drawable*>::iterator item;
       // Used when looping over Drawable objects in drawMinimap
       std::list<Drawable*>::iterator listIter;
-      Custodian custodian;
-      // Used to determine levelTimer pausing, resuming, reseting, etc.
-      bool levelOver;
 
       std::list<Drawable*>* viewFrustumObjects;
       std::list<Drawable*>* targetableViewFrustumObjects;
+      
+      // Bloom
+      float aspect;
+      
+      bool godMode;
+      bool gameIsRunning;
+      bool inMenu;
+   
+      ProgressBar* weaponReadyBar;
+      ProgressBar* healthBar;
+      double curFPS, worldSize;
+      double lastDrawTime;
+      
+      
+   //private variables------------------------------
+   private:
+      bool doYaw;
+      double mouseX, mouseY;
+      double shipControlX, shipControlY;
+      int numAsteroidsToSpawn;
+      bool isW, isA, isS, isD;
+      int curLevel;
+      int levelOver;
+      // Used for a countdown at the end of each level.
+      double countDown;
 
+
+      // Timer to control how long the level lasts.
+      Timer levelTimer;
+
+      // The number of seconds this level will last.
+      double levelDuration;
+
+      Skybox* skybox;
+      //Camera* camera;
+      BoundingSpace* cube;
+      BoundingSphere* sphere;
+      Minimap* minimap;
+      Screen* bloomScreen;
+      Screen* rawScreen;
+      Screen* fboScreen;
+
+      std::list<Object3D*> objects;
+   
+   
+   //public functions------------------------------
+   public:
       GameState(double worldSize, bool _inMenu);
       virtual ~GameState();
+      
+      // virtual functions required by InputReciever
+      virtual void keyUp(int key);
+      virtual void keyDown(int key);
+      virtual void mouseDown(int button);
+      virtual void mouseMove(int dx, int dy, int x, int y);
+      virtual void mouseUp(int button);
+      
       void draw();
       void hBlur();
       void vBlur();
@@ -80,7 +136,6 @@ class GameState : public InputReceiver {
 
       bool minimapOn();
       void toggleMinimap();
-      void setLevelTimer();
 
       void drawAllText();
       void drawHud();
@@ -105,64 +160,19 @@ class GameState : public InputReceiver {
       void menuFunc();
       void nextLevel();
       void reset();
-
+      
+      void setLevelTimer();
+      
       void addAIPlayer();
-
-      virtual void keyUp(int key);
-      virtual void keyDown(int key);
-      virtual void mouseDown(int button);
-      virtual void mouseMove(int dx, int dy, int x, int y);
-      virtual void mouseUp(int button);
-
-      // Bloom
-      int xSize, ySize;
-      GLuint hTexture;
-      GLuint vTexture;
-      GLuint blurTex;
-      char* colorBits;
-      float aspect;
-
-      bool godMode;
-      bool gameIsRunning;
-      bool inMenu;
+      
+      std::string serialize();
+      void deserialize(std::string input);
    
-      ProgressBar* weaponReadyBar;
-      ProgressBar* healthBar;
-      double curFPS, worldSize;
-      double lastDrawTime;
-      
-      Camera* camera;
+   //private functions------------------------------
    private:
-      //void reset();
-      
-      bool doYaw;
-      double mouseX, mouseY;
-      double shipControlX, shipControlY;
-      int scoreToWin;
-      int numAsteroidsToSpawn;
-      bool isW, isA, isS, isD;
-      int curLevel;
-      // Used for a countdown at the end of each level.
-      double countDown;
-
-      // Timer to control how long the level lasts.
-      Timer levelTimer;
-
-      // The number of seconds this level will last.
-      double levelDuration;
-
-      Skybox* skybox;
-      //Camera* camera;
-      BoundingSpace* cube;
-      BoundingSphere* sphere;
-      Minimap* minimap;
-      Screen* bloomScreen;
-      Screen* rawScreen;
-      Screen* fboScreen;
-
-      std::list<Object3D*> objects;
       void addLevelMessage();
       void debugPosition();
+      
 };
 
 #endif
