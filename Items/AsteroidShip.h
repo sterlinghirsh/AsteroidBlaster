@@ -57,6 +57,9 @@ class AsteroidShip : public Object3D {
       int healthPrice;
       int healthAmount;
       int healthUpgradeAmount;
+      int regenHealthLevel;
+      int regenHealthUpgradePrice;
+      int regenHealthLevelMax;
       double shotOriginScale;
       double spin;
       double flashiness;

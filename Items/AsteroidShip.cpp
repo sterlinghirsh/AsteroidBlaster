@@ -170,7 +170,9 @@ void AsteroidShip::reInitialize() {
    healthPrice = 2;
    healthAmount = 10;
    
-
+   regenHealthLevel = 0;
+   regenHealthUpgradePrice = 10;
+   regenHealthLevelMax = 5;
    
    //engine upgrade, terminal speed is raised when leved up
    engineUpgrade = 0;
@@ -398,6 +400,13 @@ void AsteroidShip::update(double timeDiff) {
       }
    }
 
+   //health regen
+   static double healthRegenTimer = 1.0;
+   if (healthRegenTimer <= 0) {
+      health += regenHealthLevel;
+      healthRegenTimer = 1.0;
+   }
+   healthRegenTimer -= timeDiff;
 
    if (shooter->isEnabled()) {
       shooter->think(timeDiff);

@@ -88,6 +88,13 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    maxHealthShipText = new Text(out.str(), menuFont, position);
    shipTexts.push_back(maxHealthShipText);
    
+   out.str(""); 
+   out << "Upgrade Regen Health $" << gameState->ship->regenHealthUpgradePrice;
+   regenHealthShipText = new Text(out.str(), menuFont, position);
+   shipTexts.push_back(regenHealthShipText);
+   
+   
+   
     
    for(unsigned i = 0; i < weaponsTexts.size(); i++) {
       weaponsTexts[i]->selectable = true;
@@ -232,6 +239,7 @@ void StoreMenu::draw() {
       
    }  else if(menuSelection == SHIP) {
       int nextEngineLevel = gameState->ship->engineUpgrade + 1;
+      int nextRegenHealthLevel = gameState->ship->regenHealthLevel + 1;
       //set menu colors
       shipText->setColor(SDL_BLUE);
       
@@ -242,6 +250,8 @@ void StoreMenu::draw() {
       engineShipText->setPosition(position);
       position.y = (Sint16) ((position.y + (gameSettings->GH/10)));
       maxHealthShipText->setPosition(position);
+      position.y = (Sint16) ((position.y + (gameSettings->GH/10)));
+      regenHealthShipText->setPosition(position);
       
       // buy engine upgrade
       out.str(""); 
@@ -253,6 +263,16 @@ void StoreMenu::draw() {
          engineShipText->selectable = false;
       }
       engineShipText->updateBody(out.str());
+      // buy regen health upgrade
+      out.str(""); 
+      if (nextRegenHealthLevel <= 5) {
+         out << "Upgrade Regen Health Level to " << nextRegenHealthLevel << " $" << nextRegenHealthLevel*gameState->ship->regenHealthUpgradePrice;
+         regenHealthShipText->selectable = true;
+      } else {
+         out << "Can't upgrade regen anymore!";
+         regenHealthShipText->selectable = false;
+      }
+      regenHealthShipText->updateBody(out.str());
       
       out.str(""); 
       out << "Upgrade Max Health to " << gameState->ship->healthMax + gameState->ship->healthUpgradeAmount << " $" << gameState->ship->healthMaxUpgradePrice() << " (" << gameState->ship->healthMax << ")";
@@ -434,6 +454,7 @@ void StoreMenu::mouseDown(int button) {
       } else if(menuSelection == SHIP) {
          double health = gameState->ship->health;
          int nextEngineLevel = gameState->ship->engineUpgrade + 1;
+         int nextRegenHealthLevel = gameState->ship->regenHealthLevel + 1;
          if(healthShipText->mouseSelect(x,y) && shardsOwned >= gameState->ship->healthPrice) {
             if(gameState->ship->healthMax <= (health + gameState->ship->healthAmount)) {
                gameState->ship->health = gameState->ship->healthMax;
@@ -447,6 +468,9 @@ void StoreMenu::mouseDown(int button) {
          } else if(maxHealthShipText->mouseSelect(x,y) && shardsOwned >= gameState->ship->healthMaxUpgradePrice()) {
             gameState->ship->nShards -= gameState->ship->healthMaxUpgradePrice();
             gameState->ship->healthMax += gameState->ship->healthUpgradeAmount;
+         } else if(regenHealthShipText->mouseSelect(x,y) && shardsOwned >= nextRegenHealthLevel*gameState->ship->regenHealthUpgradePrice) {
+            gameState->ship->nShards -= nextRegenHealthLevel*gameState->ship->regenHealthUpgradePrice;
+            gameState->ship->regenHealthLevel += 1;
          }
       } else {
          std::cerr << "Menu selection error! Quitting..." << std::endl;
