@@ -867,7 +867,7 @@ void AsteroidShip::draw_ship() {
    
    draw_backlines();
    
-   if(drawHit) {
+   if(true) {
       //glPushMatrix();
       draw_hitEffect();
       //glPopMatrix();
@@ -970,7 +970,7 @@ void AsteroidShip::draw() {
    // Rotate to the current up/right/forward vectors.
    
    glRotate();
-   spin+=2;
+   spin+= 2;
    glColor4d(0, 0, 0, .8);
    //glRotated(90, 1, 0, 0);
    draw_ship();
