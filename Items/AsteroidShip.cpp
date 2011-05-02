@@ -867,7 +867,7 @@ void AsteroidShip::draw_ship() {
    
    draw_backlines();
    
-   if(true) {
+   if(drawHit) {
       //glPushMatrix();
       draw_hitEffect();
       //glPopMatrix();
