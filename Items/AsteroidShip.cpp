@@ -23,6 +23,7 @@ using namespace std;
 const double rotationFactor = 3;
 const float shipScale = 5;
 const double rotationalAcceleration = 10; // rad/sec^2
+const double spawnRate = .5;
 
 AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
  Object3D(_gameState) {  // Initialize shot direction to forward
@@ -839,12 +840,12 @@ void AsteroidShip::draw_ship() {
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
    glEnable(GL_COLOR_MATERIAL);
-   if (respawnTimer.getTimeRunning() < .75) {
-      glScaled(respawnTimer.getTimeRunning() * 1.33, .01, .05);
-   } else if (respawnTimer.getTimeRunning() < 1.5) {
-      glScaled(1, (respawnTimer.getTimeRunning() - .75) * 1.33, .05);
-   } else if (respawnTimer.getTimeRunning() < 2.25) {
-      glScaled(1, 1, (respawnTimer.getTimeRunning() - 1.5) * 1.33);
+   if (respawnTimer.getTimeRunning() < spawnRate) {
+      glScaled(.05, .05, (respawnTimer.getTimeRunning()) / spawnRate);
+   } else if (respawnTimer.getTimeRunning() < 2 * spawnRate) {
+      glScaled((respawnTimer.getTimeRunning() - spawnRate) / spawnRate, .05, 1);
+   } else if (respawnTimer.getTimeRunning() < 3 * spawnRate) {
+      glScaled(1, (respawnTimer.getTimeRunning() - 2 * spawnRate) / spawnRate, 1);
    }
    glTranslated(0, 0, -4);
    //printf("Respawn Timer: %f\n", respawnTimer.getTimeRunning());
