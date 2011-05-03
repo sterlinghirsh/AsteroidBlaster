@@ -44,8 +44,7 @@ void Sprite::draw() {
    // Update the current frame.
    
    glDepthMask(false);
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_BLEND);
    //glDepthFunc(GL_ALWAYS);
    glDepthFunc(GL_LESS);

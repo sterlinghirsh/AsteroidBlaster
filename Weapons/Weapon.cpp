@@ -13,7 +13,7 @@
  * Initialize the ship and timeLastFired.
  */
 Weapon::Weapon(AsteroidShip* owner)
-: ship(owner), timeLastFired(0), icon("ShotIcon") {
+: ship(owner), timeLastFired(0), icon("ZoeRedEyes") {
    level = 1;
    levelMax = 5;
    purchased = false;
@@ -21,6 +21,8 @@ Weapon::Weapon(AsteroidShip* owner)
    ammoAmount = 1;
    weaponPrice = 2;
    fireBackwards = false;
+
+   r = g = b = 0;
 }
 
 Weapon::~Weapon() {
@@ -89,33 +91,62 @@ void Weapon::setIcon(std::string iconName) {
 void Weapon::drawIcon(bool selected) {
    if (!purchased) { return; }
    //glEnable(GL_TEXTURE_2D);
-   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-         GL_CLAMP );
-   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-         GL_CLAMP );
+   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
+   
    glBindTexture(GL_TEXTURE_2D, Texture::getTexture(icon));
    /* Really Nice Perspective Calculations */
    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   glBlendFunc(GL_ONE, GL_ONE);
    //glColor3f(1, 1, 1);
    //glColor3f(clr, clr, clr);
    float startX, startY, width, height;
-   //width = ;
-   if (!selected) {
-      glColor4f(0.1f, 0.1f, 0.1f, 0.4f);
-      glScalef(0.5f, 0.5f, 0.5f);
+   //glScaled(2, 2, 2);
+
+   // Draw box around weapons.
+   if (selected) {
+      glColor4d(r / 4, g / 4, b / 4, 0.2);
    } else {
-      glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+      glColor4d(0.2, 0.2, 0.2, 0.2);
+      glScalef(0.5f, 0.5f, 0.5f);
    }
+   glBegin(GL_QUADS);
+   glVertex3f(-1.0, -1.0, 0.0);
+   glVertex3f(-1.0, 1.0, 0.0);
+   glVertex3f(1.0, 1.0, 0.0);
+   glVertex3f(1.0, -1.0, 0.0);
+   glEnd();
+
+   if (selected) {
+      glColor4d(r, g, b, 1.0);
+      glLineWidth(2);
+      glDisable(GL_LINE_SMOOTH);
+      glBegin(GL_LINE_LOOP);
+      glVertex3f(-1.0, -1.0, 0.5);
+      glVertex3f(-1.0, 1.0, 0.5);
+      glVertex3f(1.0, 1.0, 0.5);
+      glVertex3f(1.0, -1.0, 0.5);
+      glEnd();
+      glEnable(GL_LINE_SMOOTH);
+   }
+
+   if (selected) {
+      glColor4d(r, g, b, 1.0f);
+   } else {
+      glColor4f(1.0f, 1.0f, 1.0f, 0.7f);
+   }
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glEnable(GL_TEXTURE_2D);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0f, 1.0f);
    glVertex3f(-1.0, -1.0, 1.0);
-   glTexCoord2f(1.0f, 1.0f);
+   glTexCoord2f(0.0f, 0.0f);
    glVertex3f(-1.0, 1.0, 1.0);
    glTexCoord2f(1.0f, 0.0f);
    glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(0.0f, 0.0f);
+   glTexCoord2f(1.0f, 1.0f);
    glVertex3f(1.0, -1.0, 1.0);
    glEnd();
    glDisable(GL_TEXTURE_2D);
+
 }

@@ -114,8 +114,9 @@ void Particle::initDisplayList() {
    
    glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Particle") );
    // TODO: The problem with this  is that particles don't fade out. They snap out.
-   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glDepthMask(false);
    glDisable(GL_LIGHTING);
    glEnable(GL_TEXTURE_2D);
@@ -138,7 +139,6 @@ void Particle::initDisplayList() {
    glEnd( );
    
    glDisable(GL_TEXTURE_2D);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glUseProgram(0);
    glDepthMask(true);
    glEndList();

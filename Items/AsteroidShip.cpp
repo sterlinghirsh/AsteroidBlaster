@@ -97,15 +97,15 @@ AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
    radar = new Radar(this);
 
    // Add weapons to the list!
-   weapons.push_back(new Blaster(this));
-   weapons.push_back(new RailGun(this));
    /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
     */
    weapons.push_back(new TractorBeam(this));
+   weapons.push_back(new Blaster(this));
+   weapons.push_back(new RailGun(this));
    weapons.push_back(new Electricity(this));
    //weapons.push_back(new LawnMower(this));
-   weapons.push_back(new Ram(this));
-   weapons.push_back(new AntiInertia(this));
+   //weapons.push_back(new Ram(this));
+   //weapons.push_back(new AntiInertia(this));
    weapons.push_back(new TimedBomber(this));
    weapons.push_back(new RemoteBomber(this));
    weapons.push_back(new Energy(this));
@@ -180,7 +180,7 @@ void AsteroidShip::reInitialize() {
    enginePrice = 10;
    
    // The ship's currently selected weapon.
-   currentWeapon = 0;
+   currentWeapon = 1; // Blaster
    
    accelerationStartTime = doubleTime();
    particlesEmitted = 0;
@@ -1085,7 +1085,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
 
    // Don't draw this while firing the tractorbeam.
    // TODO: Make 2 not a magic number.
-   if (currentWeapon == 2 && isFiring && weapons[2]->curAmmo > 0 || (gameState->godMode && isFiring)) {
+   if (currentWeapon == 0 && isFiring || (gameState->godMode && isFiring)) {
       return;
    }
    // The coords of the boxes.

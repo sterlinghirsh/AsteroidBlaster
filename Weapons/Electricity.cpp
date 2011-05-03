@@ -20,6 +20,11 @@ Electricity::Electricity(AsteroidShip* owner) : Weapon(owner) {
    soundPlaying = false;
    curAmmo = -1;
    purchased = false;
+
+   icon = "PikachusWrathIcon";
+   r = 1;
+   g = 1;
+   b = 1;
 }
 
 Electricity::~Electricity() {

@@ -22,6 +22,10 @@ RemoteBomber::RemoteBomber(AsteroidShip* owner) : Weapon(owner) {
    purchased = true; // Start off owning the bomber
    lastFiredFrame = 0;
    firedShot = NULL;
+   icon = "RemoteBombIcon";
+   r = 1.0;
+   g = 0.3;
+   b = 0;
 }
 
 RemoteBomber::~RemoteBomber() {

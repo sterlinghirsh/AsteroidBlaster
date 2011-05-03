@@ -17,6 +17,11 @@ RailGun::RailGun(AsteroidShip* owner)
    name = "Rail Gun";
    curAmmo = 15;
    purchased = false;
+
+   icon = "RailGunIcon";
+   r = 1;
+   g = 1;
+   b = 0;
 }
 
 RailGun::~RailGun() {

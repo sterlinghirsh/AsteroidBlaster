@@ -25,6 +25,10 @@ Energy::Energy(AsteroidShip* owner)
    chargingShot = NULL;
    soundHandle = -1;
    chargingSoundPlaying = false;
+   icon = "ChargeCannonIcon";
+   r = 0;
+   g = 0.5;
+   b = 1;
 }
 
 Energy::~Energy() {

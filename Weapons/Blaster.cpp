@@ -20,6 +20,10 @@ Blaster::Blaster(AsteroidShip* owner)
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
    purchased = true; // Start off owning the blaster
+   icon = "BlasterIcon";
+   r = 1;
+   g = 0;
+   b = 0;
 }
 
 Blaster::~Blaster() {

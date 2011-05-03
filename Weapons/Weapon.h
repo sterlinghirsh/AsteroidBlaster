@@ -72,6 +72,8 @@ class Weapon {
 
       bool fireBackwards;
 
+      double r, g, b;
+
    protected:
       WeaponType type; // Do we need this?
       double timeLastFired;

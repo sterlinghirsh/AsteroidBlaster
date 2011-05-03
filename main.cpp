@@ -143,6 +143,7 @@ void init() {
 #endif
 
 
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
    //GL setting calls
    //This enables alpha transparency so that things are see through
@@ -204,12 +205,16 @@ void init() {
    //glEnable(GL_NORMALIZE);
 
    //initialize textures
-   //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-   //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-   //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-   //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   // Might be slow?
+   //glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+   //glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
    //glBlendEquation(GL_FUNC_ADD);
+
+   /*
+   glEnable(GL_ALPHA_TEST);
+   glAlphaFunc(GL_GREATER, 0.01);
+   */
 
 }
 
@@ -223,7 +228,7 @@ void load() {
    Texture::Add("Images/Logo.png", "MainLogo");
    Texture::Add("Images/StoreLogo.png", "StoreLogo");
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
-   Texture::Add("Images/particle.png", "Particle");
+   Texture::Add("Images/particle3.png", "Particle");
    Texture::Add("Images/starsdark.bmp", "starsdark.png");
    Texture::Add("Images/AsteroidSurface.png", "AsteroidSurface");
    Texture::Add("Images/Shield.png", "ShieldIcon");
@@ -233,6 +238,16 @@ void load() {
    Texture::Add("Images/WeaponBarBackground3.png", "weaponbarbackgroundHoriz2");
    Texture::Add("Images/Weaponbar1Vertical.png", "weaponbarbackgroundVert");
    Texture::Add("Images/Weaponbar1Vertical2.png", "weaponbarbackgroundVert2");
+
+   // Weapon Icons
+   Texture::Add("Images/weaponicons/blaster.png", "BlasterIcon");
+   Texture::Add("Images/weaponicons/tractorbeam.png", "TractorBeamIcon");
+   Texture::Add("Images/weaponicons/chargecannon.png", "ChargeCannonIcon");
+   Texture::Add("Images/weaponicons/minelayer.png", "MineLayerIcon");
+   Texture::Add("Images/weaponicons/pikachuswrath.png", "PikachusWrathIcon");
+   Texture::Add("Images/weaponicons/railgun.png", "RailGunIcon");
+   Texture::Add("Images/weaponicons/remotebomb.png", "RemoteBombIcon");
+
    
    Image::Add(Point3D(0.0, 0.2, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("StoreLogo"), "StoreMenuLogo");
    Image::Add(Point3D(0.0, 0.2, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("MainLogo"), "MainMenuLogo");

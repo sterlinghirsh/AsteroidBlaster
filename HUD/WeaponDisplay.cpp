@@ -21,25 +21,51 @@ void WeaponDisplay::draw() {
    const float backgroundZOffset = 0.0f; // Some small negative number.
    glPushMatrix();
    glTranslatef(x, y, 0);
-   glScalef(0.67f, 0.67f, 0.67f);
+   //glScalef(0.67f, 0.67f, 0.67f);
    glPushMatrix();
    //setMaterial(BlackSolid);
    //glColor3f(1, 1, 1);
-   int maxWeapon = gameState->ship->weapons.size();
+
+   // Make a list of weapons that are purchased.
+   std::vector<Weapon*> purchasedWeapons;
+   std::vector<Weapon*>* shipWeapons = &gameState->ship->weapons; // For convenience
+   std::vector<Weapon*>::iterator weaponIter;
+
+   for (weaponIter = shipWeapons->begin(); weaponIter != shipWeapons->end(); weaponIter++) {
+      if ((*weaponIter)->purchased) {
+         purchasedWeapons.push_back(*weaponIter);
+      }
+   }
+
+   int numWeapons = purchasedWeapons.size();
    glDisable(GL_CULL_FACE);
    //glScalef(width / 2, height / 2, 0);
-   //glScalef(width / (float)maxWeapon, height / (float)maxWeapon, 0);
-   glScalef(1.0f / (float)maxWeapon, 1.0f / (float)maxWeapon, 0);
+   //glScalef(width / (float)numWeapons, height / (float)numWeapons, 0);
+   //glScalef(1.0f / (float)numWeapons, 1.0f / (float)numWeapons, 0);
+   glScaled(0.13, 0.13, 1);
    //glScalef(1.0f * gameState->aspect / 3.0f, 1.0f / 3.0f, 1.0f);
    //glScalef(3.0f / (float)gameSettings->GW, 3.0f / (float)gameSettings->GH, 0);
-   float smallW = gameState->aspect / (float)(maxWeapon + 1);
-   float largeW = 2.0f * gameState->aspect / (float)(maxWeapon + 1);
+   float smallW = gameState->aspect / (float)(numWeapons + 1);
+   float largeW = 2.0f * gameState->aspect / (float)(numWeapons + 1);
    int count = 0;
-   for (unsigned i = 0; i < gameState->ship->weapons.size(); i++) {
+
+   double smallIconWidth = 1.2; // 1 + 0.2 space.
+   double iconPosition =  -smallIconWidth * numWeapons / 2;
+
+   for (unsigned i = 0; i < shipWeapons->size(); i++) {
+      if (!(*shipWeapons)[i]->purchased) {
+         continue;
+      }
       glPushMatrix();
-      glTranslatef(2.1f * ((float)i - (float)(maxWeapon - 1) / 2), 0, 0);
-      gameState->ship->weapons[i]->drawIcon(i == curWeapon);
+      if (i == curWeapon)
+         iconPosition += smallIconWidth / 2;
+      glTranslated(iconPosition, 0, 0);
+
+      (*shipWeapons)[i]->drawIcon(i == curWeapon);
       glPopMatrix();
+      if (i == curWeapon)
+         iconPosition += smallIconWidth / 2;
+      iconPosition += smallIconWidth;
       count++;
    }
    //gameState->ship->weapons[curWeapon]->drawIcon();
