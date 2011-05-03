@@ -1085,7 +1085,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
 
    // Don't draw this while firing the tractorbeam.
    // TODO: Make 2 not a magic number.
-   if (currentWeapon == 0 && isFiring || (gameState->godMode && isFiring)) {
+   if (currentWeapon == TRACTOR_WEAPON_INDEX && isFiring || (gameState->godMode && isFiring)) {
       return;
    }
    // The coords of the boxes.

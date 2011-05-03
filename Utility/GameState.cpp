@@ -1119,22 +1119,22 @@ void GameState::mouseDown(int button) {
    case 4:
       // If we're in godMode, ignore whether or not a weapon is purchased
       if(godMode)
-         ship->prevWeapon();
+         ship->nextWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
          do {
-            ship->prevWeapon();
+            ship->nextWeapon();
          } while (!ship->getCurrentWeapon()->purchased);
       }
       break;
    case 5:
       // If we're in godMode, ignore whether or not a weapon is purchased
       if(godMode)
-         ship->nextWeapon();
+         ship->prevWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
          do {
-            ship->nextWeapon();
+            ship->prevWeapon();
          } while (!ship->getCurrentWeapon()->purchased);
       }
       break;

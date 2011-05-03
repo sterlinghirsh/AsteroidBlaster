@@ -19,7 +19,7 @@ RemoteBomber::RemoteBomber(AsteroidShip* owner) : Weapon(owner) {
    name = "Remote Bombs";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
-   purchased = true; // Start off owning the bomber
+   purchased = false;
    lastFiredFrame = 0;
    firedShot = NULL;
    icon = "RemoteBombIcon";

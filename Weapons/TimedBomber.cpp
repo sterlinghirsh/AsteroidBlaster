@@ -17,7 +17,7 @@ TimedBomber::TimedBomber(AsteroidShip* owner) : Weapon(owner) {
    name = "Mine Layer";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
-   purchased = true; // Start off owning the bomber
+   purchased = false;
 
    fireBackwards = true;
 

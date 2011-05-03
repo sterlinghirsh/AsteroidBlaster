@@ -13,9 +13,9 @@
 #define CENTERED 1
 #define RIGHT_ALIGN 2
 
-#define BLASTER_WEAPON_INDEX 0
-#define RAILGUN_WEAPON_INDEX 1
-#define TRACTOR_WEAPON_INDEX 2
+#define BLASTER_WEAPON_INDEX 1
+#define RAILGUN_WEAPON_INDEX 2
+#define TRACTOR_WEAPON_INDEX 0
 
 // This should probably be an enum.
 #define VIEW_COUNT 4
