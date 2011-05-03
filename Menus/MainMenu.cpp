@@ -300,7 +300,6 @@ void MainMenu::mouseDown(int button) {
    } else if(creditsText->mouseSelect(x,y)) {
       menuActive = false;
       creditsMenu->menuActive = true;
-      Music::stopMusic();
       Music::playMusic("Careless_Whisper.ogg");
    } else if(quitText->mouseSelect(x,y)) {
       running = false;
@@ -335,7 +334,6 @@ void MainMenu::activate() {
    SDL_ShowCursor(SDL_ENABLE);
    menuActive = true;
    SoundEffect::stopAllSoundEffect();
-   Music::stopMusic();
    Music::playMusic("8-bit3.ogg");
 
    setupShips();
@@ -344,7 +342,6 @@ void MainMenu::activate() {
 void MainMenu::deactivate() {
    SDL_ShowCursor(SDL_DISABLE);
    menuActive = false;
-   Music::stopMusic();
    Music::playMusic("Asteroids2.ogg");
 }
 

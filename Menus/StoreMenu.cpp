@@ -333,14 +333,12 @@ void StoreMenu::keyDown(int key) {
          SDL_ShowCursor(SDL_DISABLE);
          menuActive = false;
          SoundEffect::stopAllSoundEffect();
-         Music::stopMusic();
          Music::playMusic("Asteroids2.ogg");
          // Take care of repeated logic with the level timer.
          handleLevelTimer();
       } else {
          menuActive = true;
          SoundEffect::stopAllSoundEffect();
-         Music::stopMusic();
          Music::playMusic("8-bit3.ogg");
          // Pause the level timer.
          gameState->pauseLevelTimer();
@@ -355,7 +353,6 @@ void StoreMenu::keyDown(int key) {
       // Take care of repeated logic with the level timer.
       handleLevelTimer();
 
-      Music::stopMusic();
       Music::playMusic("Asteroids2.ogg");
       break;
    }
@@ -384,7 +381,6 @@ void StoreMenu::mouseDown(int button) {
          menuActive = false;
          // Take care of repeated logic with the level timer.
          handleLevelTimer();
-         Music::stopMusic();
          Music::playMusic("Asteroids2.ogg");
          return;
       }
@@ -535,7 +531,6 @@ void StoreMenu::update(double timeDiff) {
       timeLeft = DEFAULTTIME;
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
-      Music::stopMusic();
       Music::playMusic("Asteroids2.ogg");
    }*/
 }

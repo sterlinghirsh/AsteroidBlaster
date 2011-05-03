@@ -203,13 +203,11 @@ void HelpMenu::activate() {
    SDL_ShowCursor(SDL_ENABLE);
    menuActive = true;
    SoundEffect::stopAllSoundEffect();
-   Music::stopMusic();
    Music::playMusic("8-bit3.ogg");
 }
 
 void HelpMenu::deactivate() {
    SDL_ShowCursor(SDL_DISABLE);
    menuActive = false;
-   Music::stopMusic();
    Music::playMusic("Asteroids2.ogg");
 }

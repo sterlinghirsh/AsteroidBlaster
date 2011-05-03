@@ -30,6 +30,10 @@ void Music::Add(std::string file, std::string keyName) {
 
 
 void Music::playMusic(std::string keyName) {
+   if (!gameSettings->musicOn) {
+      return;
+   }
+
    if (currPlay == keyName) {
       std::cout << keyName << " is already playing!" << std::endl;
    } else if (currPlay != "\0") {
@@ -65,7 +69,7 @@ void Music::pauseMusic() {
 }
 
 void Music::resumeMusic() {
-   if (!gameSettings->musicOn) {
+   if (gameSettings->musicOn) {
       Mix_ResumeMusic();
    }
 }

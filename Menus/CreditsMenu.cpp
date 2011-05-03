@@ -269,7 +269,6 @@ void CreditsMenu::mouseDown(int button) {
       firstDrawn = false;
       mainMenu->menuActive = true;
       x = y = -1;
-      Music::stopMusic();
       Music::playMusic("8-bit3.ogg");
    }
 }

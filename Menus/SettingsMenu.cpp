@@ -32,34 +32,42 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
 
    menuTexts.push_back(new Text("Settings",  menuFont, position));
    types.push_back(TITLE_TYPE);
+
    menuTexts.push_back(new Text("Bloom Lighting:",  menuFont, position));
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getStatus(gameSettings->bloom), menuFont, position));
    types.push_back(RIGHT_TYPE);
+
    menuTexts.push_back(new Text("Mouse Capture:",  menuFont, position));
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getStatus(SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON), menuFont, position));
    types.push_back(RIGHT_TYPE);
+
    menuTexts.push_back(new Text("Fullscreen:",  menuFont, position));
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getStatus(gameSettings->fullscreen), menuFont, position));
    types.push_back(RIGHT_TYPE);
+
    menuTexts.push_back(new Text("Minimap:",  menuFont, position));
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getStatus(gameState->minimapOn()), menuFont, position));
    types.push_back(RIGHT_TYPE);
+
    menuTexts.push_back(new Text("Camera:",  menuFont, position));
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getViewStatus(gameState->ship->getCurrentView()), menuFont, position));
    types.push_back(RIGHT_TYPE);
+
    menuTexts.push_back(new Text("Music:",  menuFont, position));
    types.push_back(LEFT_TYPE);
-   menuTexts.push_back(new Text(getViewStatus(!Mix_PausedMusic()), menuFont, position));
+   menuTexts.push_back(new Text(getStatus(gameSettings->musicOn), menuFont, position));
    types.push_back(RIGHT_TYPE);
+
    menuTexts.push_back(new Text("SFX:",  menuFont, position));
    types.push_back(LEFT_TYPE);
-   menuTexts.push_back(new Text(getViewStatus(gameState->ship->getCurrentView()), menuFont, position));
+   menuTexts.push_back(new Text(getStatus(gameSettings->soundOn), menuFont, position));
    types.push_back(RIGHT_TYPE);
+
    menuTexts.push_back(new Text("Return", menuFont, position));
    types.push_back(SINGLE_SELECTABLE_TYPE);
 
@@ -206,12 +214,15 @@ void SettingsMenu::mouseDown(int button) {
    } else if(menuTexts[SFX_INDEX]->mouseSelect(x,y)) {
       gameSettings->soundOn = !gameSettings->soundOn;
    } else if(menuTexts[MUSIC_INDEX]->mouseSelect(x,y)) {
-      if (!gameSettings->musicOn && Mix_PausedMusic()) {
-         Music::resumeMusic();
-      } else if (gameSettings->musicOn && !Mix_PausedMusic()) {
-         Music::pauseMusic();
+      if (gameSettings->musicOn) {
+         printf("Disabling music.\n");
+         gameSettings->musicOn = false;
+         Music::stopMusic();
+      } else {
+         printf("Enabling music.\n");
+         gameSettings->musicOn = true;
+         Music::playMusic("8-bit3.ogg");
       }
-      gameSettings->musicOn = !gameSettings->musicOn;
    } else if(menuTexts[RETURN_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
       mainMenu->menuActive = true;
@@ -247,14 +258,12 @@ void SettingsMenu::activate() {
    SDL_ShowCursor(SDL_ENABLE);
    menuActive = true;
    SoundEffect::stopAllSoundEffect();
-   Music::stopMusic();
    Music::playMusic("8-bit3.ogg");
 }
 
 void SettingsMenu::deactivate() {
    SDL_ShowCursor(SDL_DISABLE);
    menuActive = false;
-   Music::stopMusic();
    Music::playMusic("Asteroids2.ogg");
 }
 
