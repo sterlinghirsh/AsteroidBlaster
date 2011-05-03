@@ -72,7 +72,7 @@ void ProgressBar::draw() {
          backgroundZOffset);
    glEnd();
 
-   backgroundZOffset += 0.1;
+   backgroundZOffset += 0.1f;
    
    glEnable(GL_TEXTURE_2D);
 
@@ -136,7 +136,7 @@ void ProgressBar::draw() {
 
    glBegin(GL_QUADS);
    
-   backgroundZOffset += 0.1;
+   backgroundZOffset += 0.1f;
    // Color goes from red to green.
    glColor3f(2 * (1 - amount), 2 * amount, 0);
    if (isHorizontal) {
