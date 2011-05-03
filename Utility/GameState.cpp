@@ -52,6 +52,10 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    shipCamera = new Camera(ship);
    spring->attach(ship, shipCamera);   
    spectatorCamera = new Camera(false);
+   //make it look at the center of the map for spectator mode
+   spectatorCamera->lookAt->x = 0;
+   spectatorCamera->lookAt->y = 0;
+   spectatorCamera->lookAt->z = 0;
    spectatorSpeed = 0.5;
    spectatorRadius = 120.0;
    
@@ -280,9 +284,10 @@ void GameState::update(double timeDiff) {
 void GameState::spectatorCameraUpdate(double timeDiff) {
    static double pieCounter = 0;
    if (pieCounter >= 2*M_PI) { pieCounter = 0; }
-   Point3D *camPos = new Point3D(sin(pieCounter)*spectatorRadius,sin(pieCounter)*(spectatorRadius/3),-cos(pieCounter)*spectatorRadius);
-   spectatorCamera->position = camPos;
-   spectatorCamera->lookAt(new Point3D(0,0,0));
+   spectatorCamera->position->x = sin(pieCounter)*spectatorRadius;
+   spectatorCamera->position->y = sin(pieCounter)*(spectatorRadius/3);
+   spectatorCamera->position->z = -cos(pieCounter)*spectatorRadius;
+   
    pieCounter += timeDiff*spectatorSpeed;
 }
 
