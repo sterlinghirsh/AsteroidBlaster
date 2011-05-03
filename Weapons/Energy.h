@@ -20,7 +20,7 @@ class Energy : public Weapon {
       virtual Point3D project(Object3D*);
       virtual void update(double timeDiff);
       virtual bool shouldFire(Point3D*, Point3D*);
-      void godMode(bool enabled);
+      void godMode(bool enabled); // ??? -shirsh
       virtual void debug();
       virtual void fire();
       virtual void resetChargingShot();
@@ -33,6 +33,9 @@ class Energy : public Weapon {
       Point3D* lastShotPos;
       unsigned long lastFiredFrame;
       double chargeStartTime;
+
+      bool chargingSoundPlaying;
+      int soundHandle;
 };
 
 #endif

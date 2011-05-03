@@ -23,6 +23,8 @@ Energy::Energy(AsteroidShip* owner)
    lastFiredFrame = 0;
    chargeStartTime = 0;
    chargingShot = NULL;
+   soundHandle = -1;
+   chargingSoundPlaying = false;
 }
 
 Energy::~Energy() {
@@ -41,20 +43,34 @@ void Energy::update(double timeDiff) {
    if (chargingShot != NULL) {
       chargingShot->position->updateMagnitude(ship->shotOrigin);
       chargingShot->updateChargeTime(doubleTime() - chargeStartTime);
+      
+      if (chargingSoundPlaying && doubleTime() - chargeStartTime > 5.0) {
+         SoundEffect::stopSoundEffect(soundHandle);
+         soundHandle = SoundEffect::playSoundEffect("ChargeShotLoop", true);
+         chargingSoundPlaying = false;
+      }
+
+   } else if (soundHandle != -1) {
+      SoundEffect::stopSoundEffect(soundHandle);
+      soundHandle = -1;
    }
    
    // If user has stopped charging a shot.
    if (chargingShot != NULL && lastFiredFrame == curFrame - 2) {
       // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
       Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed / (1 + std::min(doubleTime() - chargeStartTime, 3.0))));
+
       // Add a random variation to each of the shots.
       randomVariation.randomMagnitude();
       randomVariation.scalarMultiplyUpdate(randomVariationAmount);
       shotDirection.addUpdate(randomVariation);
       chargingShot->velocity->updateMagnitude(shotDirection);
+
       // Don't play sound effects in godMode b/c there would be too many.
+      SoundEffect::stopSoundEffect(soundHandle);
+      soundHandle = -1;
       if (!ship->gameState->godMode) {
-         SoundEffect::playSoundEffect("blaster2.wav");
+         SoundEffect::playSoundEffect("ChargeShotFire");
       }
       
       ship->setShakeAmount((float) std::min((doubleTime() - chargeStartTime) * 0.3, 0.5));
@@ -78,11 +94,15 @@ void Energy::fire() {
 
    lastFiredFrame = curFrame;
 
+   // If we haven't started a shot yet...
    if (chargeStartTime == 0 && chargingShot == NULL) {
       chargeStartTime = doubleTime();  
       Vector3D zeroVelocity(0, 0, 0);
       chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, ship, this, ship->gameState);
       ship->custodian->add(chargingShot);
+
+      soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", false);
+      chargingSoundPlaying = true;
    }
 
 }

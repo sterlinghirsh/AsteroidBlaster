@@ -17,8 +17,8 @@ void ProgressBar::setAmount(float _amount) {
    amount = (float) clamp(_amount, 0, 1);
 }
 
-void ProgressBar::setHorizontal(bool vert) {
-   isHorizontal = vert;
+void ProgressBar::setHorizontal(bool horiz) {
+   isHorizontal = horiz;
 }
 
 void ProgressBar::setSkew(float _xSkew, float _ySkew) {
@@ -37,10 +37,10 @@ void ProgressBar::draw() {
       drawHeight = amount * height;
       drawWidth = width;
    }
-   const float backgroundZOffset = 0.01f; // Some small negative number.
+   float backgroundZOffset = -0.1f; // Some small negative number.
    glPushMatrix();
    glTranslatef(x, y, 0);
-   setMaterial(BlackSolid);
+   glDisable(GL_LIGHTING);
    // Offsets for bottom left (bl), bottom right (br), top left (tl),
    // and top right (tr) corners, based on xSkew and ySkew.
    float leftScale, rightScale, bottomScale, topScale;
@@ -70,37 +70,112 @@ void ProgressBar::draw() {
    glVertex3f((outerBoxThickness + (width * bottomScale)),
          -(outerBoxThickness + (height * rightScale)),
          backgroundZOffset);
+   glEnd();
 
-   // Color goes from red to green.
-   glColor3f(2 * (1 - amount), 2 * amount, 0);
+   backgroundZOffset += 0.1;
+   
+   glEnable(GL_TEXTURE_2D);
+
    if (isHorizontal) {
+      glBindTexture(GL_TEXTURE_2D, Texture::getTexture("weaponbarbackgroundHoriz2"));
+   } else {
+      glBindTexture(GL_TEXTURE_2D, Texture::getTexture("weaponbarbackgroundVert2"));
+   }
+
+   glBegin(GL_QUADS);
+
+   // Now background of the inside.
+   glColor3f(1, 1, 1);
+
+   if (isHorizontal) {
+      glTexCoord2d( 0.0, 1.0 );
       glVertex3f(-(width * bottomScale),
             -(drawHeight * leftScale),
             backgroundZOffset);
+      
+      glTexCoord2d( 0.0, 0.0 );
       glVertex3f(-(width * topScale),
             (drawHeight * leftScale),
             backgroundZOffset);
+      
+      glTexCoord2d( 1.0, 0.0 );
+      glVertex3f(((width) * topScale),
+            (drawHeight * rightScale),
+            backgroundZOffset);
+
+      glTexCoord2d( 1.0, 1.0 );
+      glVertex3f(((width) * bottomScale),
+            -(drawHeight * rightScale),
+            backgroundZOffset);
+   } else {
+      glTexCoord2f( 0.0f, 1.0f );
+      glVertex3f(-(drawWidth * bottomScale),
+            -(height * leftScale),
+            backgroundZOffset);
+      glTexCoord2f( 0.0f, 0.0f );
+      glVertex3f(-(drawWidth * topScale),
+            ((height) * leftScale),
+            backgroundZOffset);
+      glTexCoord2f( 1.0f, 0.0f );
+      glVertex3f((drawWidth * topScale),
+            ((height) * rightScale),
+            backgroundZOffset);
+      glTexCoord2f( 1.0f, 1.0f );
+      glVertex3f((drawWidth * bottomScale),
+            -(height * rightScale),
+            backgroundZOffset);
+   }
+
+   glEnd();
+
+   if (isHorizontal) {
+      glBindTexture(GL_TEXTURE_2D, Texture::getTexture("weaponbarbackgroundHoriz"));
+   } else {
+      glBindTexture(GL_TEXTURE_2D, Texture::getTexture("weaponbarbackgroundVert"));
+   }
+
+   glBegin(GL_QUADS);
+   
+   backgroundZOffset += 0.1;
+   // Color goes from red to green.
+   glColor3f(2 * (1 - amount), 2 * amount, 0);
+   if (isHorizontal) {
+      glTexCoord2f( 0.0f, 0.0f );
+      glVertex3f(-(width * bottomScale),
+            -(drawHeight * leftScale),
+            backgroundZOffset);
+      glTexCoord2f( 0.0f, 1.0f );
+      glVertex3f(-(width * topScale),
+            (drawHeight * leftScale),
+            backgroundZOffset);
+      glTexCoord2f( 1.0f, 1.0f );
       glVertex3f(((drawWidth * 2 - width) * topScale),
             (drawHeight * rightScale),
             backgroundZOffset);
+      glTexCoord2f( 1.0f, 0.0f );
       glVertex3f(((drawWidth * 2 - width) * bottomScale),
             -(drawHeight * rightScale),
             backgroundZOffset);
    } else {
+      glTexCoord2f( 0.0f, 0.8f );
       glVertex3f(-(drawWidth * bottomScale),
             -(height * leftScale),
             backgroundZOffset);
+      glTexCoord2f( 0.0f, 0.0f );
       glVertex3f(-(drawWidth * topScale),
             ((drawHeight * 2 - height) * leftScale),
             backgroundZOffset);
+      glTexCoord2f( 1.0f, 0.0f );
       glVertex3f((drawWidth * topScale),
             ((drawHeight * 2 - height) * rightScale),
             backgroundZOffset);
+      glTexCoord2f( 1.0f, 0.8f );
       glVertex3f((drawWidth * bottomScale),
             -(height * rightScale),
             backgroundZOffset);
    }
    glEnd();
+   glDisable(GL_TEXTURE_2D);
 
    if (hasIcon) {
       glEnable(GL_TEXTURE_2D);

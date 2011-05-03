@@ -133,7 +133,7 @@ void reshape (GLsizei w, GLsizei h) {
    if (drawPerspective) {
       gluPerspective(VERT_FOV, (double)w/h, 0.3, 200);
    } else {
-      glOrtho((double)w/-h, (double) w/h, -1, 1, -0.5, 0.5);
+      glOrtho((double)w/-h, (double) w/h, -1, 1, -1, 1);
    }
    glMatrixMode(GL_MODELVIEW);
    glViewport(0, 0, w, h);

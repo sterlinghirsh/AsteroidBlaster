@@ -90,9 +90,9 @@ void init() {
       exit(1);
    }
 
-   //allocate channels for sound effects
+   //allocate  32 channels for sound effects
    SoundEffect::numChannels = Mix_AllocateChannels(CHANNEL_MAX);
-   //SoundEffect::numChannels = Mix_AllocateChannels(16);
+   printf("Allocated %d channels.\n", SoundEffect::numChannels);
 
    if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,1024)<0) {
       std::cerr << "Mix_OpenAudio Failed!" << std::endl;
@@ -229,6 +229,10 @@ void load() {
    Texture::Add("Images/Shield.png", "ShieldIcon");
    Texture::Add("Images/ShotIcon.png", "ShotIcon");
    Texture::Add("Images/zoe2.png", "ZoeRedEyes");
+   Texture::Add("Images/Weaponbar1.png", "weaponbarbackgroundHoriz");
+   Texture::Add("Images/WeaponBarBackground3.png", "weaponbarbackgroundHoriz2");
+   Texture::Add("Images/Weaponbar1Vertical.png", "weaponbarbackgroundVert");
+   Texture::Add("Images/Weaponbar1Vertical2.png", "weaponbarbackgroundVert2");
    
    Image::Add(Point3D(0.0, 0.2, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("StoreLogo"), "StoreMenuLogo");
    Image::Add(Point3D(0.0, 0.2, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("MainLogo"), "MainMenuLogo");
@@ -279,6 +283,9 @@ void load() {
    SoundEffect::Add("Sounds/Pulse.ogg", "Pulse");
    SoundEffect::Add("Sounds/CrystalRelease.wav", "CrystalRelease");
    SoundEffect::Add("Sounds/DoubleCrystalRelease.wav", "DoubleCrystalRelease");
+   SoundEffect::Add("Sounds/ChargeShotCharge.ogg", "ChargeShotCharge");
+   SoundEffect::Add("Sounds/ChargeShotLoop.ogg", "ChargeShotLoop");
+   SoundEffect::Add("Sounds/ChargeShotFire.wav", "ChargeShotFire");
    cout << "Load: finished" << endl;
 }
 
