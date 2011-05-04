@@ -285,7 +285,7 @@ void GameState::spectatorCameraUpdate(double timeDiff) {
    spectatorCamera->position->x = sin(pieCounter)*spectatorRadius;
    spectatorCamera->position->y = sin(pieCounter)*(spectatorRadius/3);
    spectatorCamera->position->z = -cos(pieCounter)*spectatorRadius;
-   
+   spectatorCamera->lookAt(0.0,0.0,0.0);
    pieCounter += timeDiff*spectatorSpeed;
 }
 
