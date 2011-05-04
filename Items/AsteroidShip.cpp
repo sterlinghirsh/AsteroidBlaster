@@ -364,7 +364,7 @@ void AsteroidShip::update(double timeDiff) {
       const double respawnTime = 3;
       shakeAmount = 0;
       // Handle respawning.
-      if (!respawnTimer.isRunning()) {
+      if (!respawnTimer.isRunning) {
          respawnTimer.setCountDown(respawnTime);
          // Make some sparkles when you die!~~~
          for (int i = 0; i < 500; ++i) {
@@ -1335,7 +1335,7 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
 }
 
 bool AsteroidShip::isRespawning() {
-   return respawnTimer.isRunning();
+   return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0;
 }
 
 // serialize 

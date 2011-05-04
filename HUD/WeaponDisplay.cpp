@@ -27,17 +27,17 @@ void WeaponDisplay::draw() {
    //glColor3f(1, 1, 1);
 
    // Make a list of weapons that are purchased.
-   std::vector<Weapon*> purchasedWeapons;
    std::vector<Weapon*>* shipWeapons = &gameState->ship->weapons; // For convenience
    std::vector<Weapon*>::iterator weaponIter;
 
+   int numWeapons = 0;
+
    for (weaponIter = shipWeapons->begin(); weaponIter != shipWeapons->end(); weaponIter++) {
       if ((*weaponIter)->purchased) {
-         purchasedWeapons.push_back(*weaponIter);
+         ++numWeapons;
       }
    }
 
-   int numWeapons = purchasedWeapons.size();
    glDisable(GL_CULL_FACE);
    //glScalef(width / 2, height / 2, 0);
    //glScalef(width / (float)numWeapons, height / (float)numWeapons, 0);

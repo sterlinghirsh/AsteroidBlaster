@@ -157,14 +157,16 @@ struct Timer {
    double countDownTime;
    double timePaused;
    bool isPaused;
+   bool isRunning;
 
-   Timer() : timeStarted(0), countDownTime(0), timePaused(0), isPaused(false) {}
+   Timer() : timeStarted(0), countDownTime(0), timePaused(0), isPaused(false), isRunning(false) {}
    
    inline void reset() {
       timeStarted = doubleTime();
       countDownTime = 0;
       timePaused = 0;
       isPaused = false;
+      isRunning = true;
    }
 
    inline void setCountDown(double _countDownTime) {
@@ -172,6 +174,7 @@ struct Timer {
       timePaused = 0;
       timeStarted = doubleTime();
       countDownTime = _countDownTime;
+      isRunning = true;
    }
 
    /**
@@ -179,6 +182,7 @@ struct Timer {
     */
    inline void restartCountDown() {
       timeStarted = doubleTime();
+      isRunning = true;
    }
 
    inline double getTimeLeft() {
@@ -211,6 +215,7 @@ struct Timer {
       // As long as the game's not already paused, pause it.
       if (!getIsPaused()) {
          isPaused = true;
+         isRunning = false;
          timePaused = doubleTime();
       }
    }
@@ -222,16 +227,13 @@ struct Timer {
       // As long as the game is already paused, resume it.
       if (getIsPaused()) {
          isPaused = false;
+         isRunning = true;
          timeStarted += doubleTime() - timePaused;
       }
    }
    
    inline bool getIsPaused() {
       return isPaused;
-   }
-
-   inline bool isRunning() {
-      return timeStarted != 0;
    }
 };
 

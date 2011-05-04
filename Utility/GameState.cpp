@@ -187,7 +187,7 @@ void GameState::addScreens() {
  */
 void GameState::update(double timeDiff) {
    // If the level should be over, let's go to the store menu.
-   if(levelTimer.isRunning() && levelTimer.getTimeLeft() <= 0) {
+   if(levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) {
          levelTimer.reset();
          nextLevel();
          return;
