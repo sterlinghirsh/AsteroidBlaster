@@ -160,13 +160,21 @@ struct Timer {
    bool isRunning;
 
    Timer() : timeStarted(0), countDownTime(0), timePaused(0), isPaused(false), isRunning(false) {}
+
+   inline void countUp() {
+      isRunning = true;
+      timeStarted = doubleTime();
+      isPaused = false;
+      countDownTime = 0;
+      timePaused = 0;
+   }
    
    inline void reset() {
       timeStarted = doubleTime();
       countDownTime = 0;
       timePaused = 0;
       isPaused = false;
-      isRunning = true;
+      isRunning = false;
    }
 
    inline void setCountDown(double _countDownTime) {
@@ -186,7 +194,7 @@ struct Timer {
    }
 
    inline double getTimeLeft() {
-      return timeStarted + countDownTime - doubleTime();
+      return countDownTime - getTimeRunning();
    }
 
    inline double getTimeRunning() {

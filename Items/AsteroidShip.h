@@ -266,6 +266,7 @@ class AsteroidShip : public Object3D {
       int particlesEmitted;
 
       Timer respawnTimer;
+      Timer aliveTimer;
       
       
    //protected functions------------------------------

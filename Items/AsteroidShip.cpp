@@ -188,6 +188,7 @@ void AsteroidShip::reInitialize() {
    velocity->updateMagnitude(0, 0, 0);
    position->updateMagnitude(0, 0, 0);
    respawnTimer.reset();
+   aliveTimer.countUp();
 }
 
 /**
@@ -388,7 +389,8 @@ void AsteroidShip::update(double timeDiff) {
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
 
-      if (gameState->gameIsRunning && timeLeftToRespawn <= 0) {
+      if (gameState->gameIsRunning && respawnTimer.isRunning &&
+       timeLeftToRespawn <= 0) {
          reInitialize();
       } else {
          fire(false);
@@ -844,12 +846,12 @@ void AsteroidShip::draw_ship() {
    glEnable(GL_COLOR_MATERIAL);
 
    // Make the ship start off flat and expand it to its normal size.
-   if (respawnTimer.getTimeRunning() < spawnRate) {
-      glScaled(.05, .05, (respawnTimer.getTimeRunning()) / spawnRate);
-   } else if (respawnTimer.getTimeRunning() < 2 * spawnRate) {
-      glScaled((respawnTimer.getTimeRunning() - spawnRate) / spawnRate, .05, 1);
-   } else if (respawnTimer.getTimeRunning() < 3 * spawnRate) {
-      glScaled(1, (respawnTimer.getTimeRunning() - 2 * spawnRate) / spawnRate, 1);
+   if (aliveTimer.getTimeRunning() < spawnRate) {
+      glScaled(.05, .05, (aliveTimer.getTimeRunning()) / spawnRate);
+   } else if (aliveTimer.getTimeRunning() < 2 * spawnRate) {
+      glScaled((aliveTimer.getTimeRunning() - spawnRate) / spawnRate, .05, 1);
+   } else if (aliveTimer.getTimeRunning() < 3 * spawnRate) {
+      glScaled(1, (aliveTimer.getTimeRunning() - 2 * spawnRate) / spawnRate, 1);
    }
    glTranslated(0, 0, -4);
    //printf("Respawn Timer: %f\n", respawnTimer.getTimeRunning());
