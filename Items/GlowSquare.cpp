@@ -119,7 +119,7 @@ void GlowSquare::draw() {
    timeDiff = (doubleTime() - timeLastHit) / fadeTime;
    
    // Set the timeLastHit to the latest time that is <= the current time.
-   while (flashTimes.size() > 0 && flashTimes.top() <= doubleTime()) {
+   while (!flashTimes.empty() && flashTimes.top() <= doubleTime()) {
       timeLastHit = flashTimes.top();
       flashTimes.pop();
       timeDiff = (doubleTime() - timeLastHit) / fadeTime;
