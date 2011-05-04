@@ -53,9 +53,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    spring->attach(ship, shipCamera);   
    spectatorCamera = new Camera(false);
    //make it look at the center of the map for spectator mode
-   spectatorCamera->lookAt->x = 0;
-   spectatorCamera->lookAt->y = 0;
-   spectatorCamera->lookAt->z = 0;
+   spectatorCamera->lookAt(0.0, 0.0, 0.0);
    spectatorSpeed = 0.5;
    spectatorRadius = 120.0;
    

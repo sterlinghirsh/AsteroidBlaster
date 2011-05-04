@@ -36,7 +36,7 @@ class Camera {
       Point3D getEyePoint();
       void shake(float newShakeAmount);
       void setViewVector(Vector3D* newView);
-      void lookAt(Point3D* point);
+      void lookAt(double x, double y, double z);
 };
 
 #endif

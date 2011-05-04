@@ -103,10 +103,10 @@ void Camera::shake(float newShakeAmount) {
    shakeAmount = (float) clamp(newShakeAmount, 0, 1);
 }
 
-void Camera::lookAt(Point3D* point) {
-   forward->x = point->x - position->x;
-   forward->y = point->y - position->y;
-   forward->z = point->z - position->z;
+void Camera::lookAt(double x, double y, double z) {
+   forward->x = x - position->x;
+   forward->y = y - position->y;
+   forward->z = z - position->z;
    forward->scalarMultiply(-1);
    forward->normalize();
    up->x = 0;
