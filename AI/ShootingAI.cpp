@@ -151,7 +151,7 @@ Object3D* ShootingAI::chooseTarget() {
       if (dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL) {
          consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
          // Don't shoot at myself.
-         if (consideredShip->id == ship->id || consideredShip->isRespawning())
+         if (consideredShip->id == ship->id)// || consideredShip->isRespawning())
             continue;
       }
 
@@ -173,7 +173,7 @@ Object3D* ShootingAI::chooseTarget() {
 
          // Only add weight if the considered ship is not our own ship.
          if (consideredShip->id != ship->id) {
-            curWeight += 8;
+            curWeight += 50;
             //printf("curweight is %d\n", curWeight);
          }
       }

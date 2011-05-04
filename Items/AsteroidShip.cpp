@@ -111,7 +111,6 @@ AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
    weapons.push_back(new RemoteBomber(this));
    weapons.push_back(new Energy(this));
    
-   shouldBeCulled = false;
    soundHandle = -1;
 
    cameraOffset = new Vector3D(0, 2, 5);
@@ -367,13 +366,16 @@ void AsteroidShip::update(double timeDiff) {
       // Handle respawning.
       if (!respawnTimer.isRunning()) {
          respawnTimer.setCountDown(respawnTime);
-         //make some sparcles when you die!~~~~
+         // Make some sparkles when you die!~~~
          for (int i = 0; i < 500; ++i) {
             Point3D* particleStartPoint = new Point3D(*position);
             Vector3D* particleDirection = new Vector3D();
             particleDirection->randomMagnitude();
             particleDirection->setLength(3);
             ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
+            // These may crash everything terribly when a ship explodes.
+            //delete particleStartPoint;
+            //delete particleDirection;
          }
       }
 
@@ -840,6 +842,8 @@ void AsteroidShip::draw_ship() {
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LIGHTING);
    glEnable(GL_COLOR_MATERIAL);
+
+   // Make the ship start off flat and expand it to its normal size.
    if (respawnTimer.getTimeRunning() < spawnRate) {
       glScaled(.05, .05, (respawnTimer.getTimeRunning()) / spawnRate);
    } else if (respawnTimer.getTimeRunning() < 2 * spawnRate) {
