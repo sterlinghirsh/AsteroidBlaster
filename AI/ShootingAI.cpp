@@ -90,7 +90,7 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
    return 0;
 }
 
-// kinda useless right now.
+// Choose the appropriate weapon for this situation.
 void ShootingAI::chooseWeapon(Object3D** target) {
    if (*target != NULL) {
       if ((dynamic_cast<Shard*>(*target)) != NULL) {

@@ -20,7 +20,7 @@
 #define BOOST_SCALE 2.0
 
 using namespace std;
-const double rotationFactor = 3;
+const double rotationFactor = 2.6;
 const float shipScale = 5;
 const double rotationalAcceleration = 10; // rad/sec^2
 const double spawnRate = .5;
