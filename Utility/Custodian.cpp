@@ -224,22 +224,27 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
 template<>
 void Collision<AsteroidShip, EnergyShot>::handleCollision() {
    if (a->isRespawning()) { return;}
-   a->health -= b->getDamage(a);
+   if (a != b->owner) {
+      a->health -= clamp(b->chargeTime, 0, 5) * 15.0;
 
-   a->velocity->updateMagnitude(0, 0, 0);
-   a->acceleration->updateMagnitude(0, 0, 0);
+      a->velocity->updateMagnitude(0, 0, 0);
+      a->acceleration->updateMagnitude(0, 0, 0);
 
-   b->shouldRemove = true;
-   SoundEffect::playSoundEffect("BlasterHit.wav");
-   if (b->weapon->chargingShot == b) {
-      b->weapon->resetChargingShot();
+      b->shouldRemove = true;
+      SoundEffect::playSoundEffect("BlasterHit.wav");
+      if (b->weapon->chargingShot == b) {
+         b->weapon->resetChargingShot();
+      }
+      a->shakeAmount = 1;
+      a->justGotHit = doubleTime();
    }
 }
 
 template<>
 void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
    if (a->isRespawning()) { return;}
-   if (!b->isExploded) {
+
+   if (!b->isExploded && a != b->owner) {
       b->shouldExplode = true;
       SoundEffect::playSoundEffect("BlasterHit.wav");
    } else {
@@ -249,18 +254,20 @@ void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
       shotToShip->setLength(newSpeed);
       a->addInstantAcceleration(shotToShip);
       a->health -= b->getDamage(a);
+      a->shakeAmount = 1;
+      a->justGotHit = doubleTime();
    }
 }
 
 template<>
 void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
    if (a->isRespawning()) { return;}
-   if (!b->isExploded) {
-      Vector3D positionToAsteroid(*b->position, *a->position);
-      double distance = positionToAsteroid.getLength();
+   if (!b->isExploded && a != b->owner) {
+      Vector3D positionToShip(*b->position, *a->position);
+      double distance = positionToShip.getLength();
       if (distance < b->seekRadius + a->radius) {
          if (distance > b->collisionRadius + a->radius) {
-            Vector3D* attraction = new Vector3D(positionToAsteroid);
+            Vector3D* attraction = new Vector3D(positionToShip);
             attraction->setLength(20.0);
             b->addAcceleration(attraction);
          } else {
@@ -275,6 +282,8 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
       double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
       shotToShip->setLength(newSpeed);
       a->addInstantAcceleration(shotToShip);
+      a->shakeAmount = 1;
+      a->justGotHit = doubleTime();
    }
 }
 

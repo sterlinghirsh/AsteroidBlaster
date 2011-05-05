@@ -60,7 +60,7 @@ void Energy::update(double timeDiff) {
    }
    
    // If user has stopped charging a shot.
-   if (chargingShot != NULL && lastFiredFrame == curFrame - 2) {
+   if (chargingShot != NULL && (lastFiredFrame == curFrame - 2 || ship->isRespawning() )) {
       // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
       Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed / (1 + std::min(doubleTime() - chargeStartTime, 3.0))));
 

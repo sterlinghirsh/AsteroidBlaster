@@ -379,6 +379,13 @@ void AsteroidShip::update(double timeDiff) {
       // Handle respawning.
       if (!respawnTimer.isRunning) {
          respawnTimer.setCountDown(respawnTime);
+         
+         // Update weapons one last time.
+         for (std::vector<Weapon*>::iterator iter = weapons.begin();
+               iter != weapons.end(); ++iter) {
+            (*iter)->update(timeDiff);
+         }
+
          // Make some sparkles when you die!~~~
          for (int i = 0; i < 500; ++i) {
             Point3D* particleStartPoint = new Point3D(*position);
