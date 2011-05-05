@@ -59,7 +59,7 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
   
    Point3D aim = lastShotPos;
    Point3D targetPos = chosenWeapon->project(target);
-   Vector3D targetDir = (targetPos - *ship->position).getNormalized();
+   Vector3D targetDir = (targetPos - (*ship).shotOrigin).getNormalized();
    
    // This section of code does angle interpolation.
    // Find the angle between our vector and where we want to be.
@@ -113,11 +113,13 @@ Object3D* ShootingAI::chooseTarget() {
    std::list<Drawable*>::iterator targets_iterator;
    Point3D* ship_position = ship->position;
    Vector3D vec;
-   double curWeight = -1.0;
-   double maxWeight = -1.0;
-   const double distWeight = 1000;
+   double curWeight = 0.0;
+   double maxWeight = 0.0;
+   const double distWeight = 600;
    const double radiusWeight = 1;
    const double proximityWeight = 3;
+   bool isAShip = false;
+   bool isAShard = false;
    
    // If the list of targets from the viewFrustum does not exist, give the AI no target.
    if(targets == NULL) {
@@ -129,12 +131,20 @@ Object3D* ShootingAI::chooseTarget() {
    AsteroidShip* consideredShip = NULL;
 
    for ( ; targets_iterator != targets->end(); ++targets_iterator) {
-      curWeight = -1.0;
+      curWeight = 0.0;
       //printf("starting null check.\n");
       if (*targets_iterator == NULL) {
          printf("targets_iterator was null!\n\n\n\n");
          continue;
       }
+      isAShip = false;
+      isAShard = false;
+      
+      if(dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL)
+         isAShip = true;
+
+      if(dynamic_cast<Shard*>(*targets_iterator) != NULL)
+         isAShard = true;
 
      if (dynamic_cast<Particle*>(*targets_iterator) != NULL) {
         //printf("continuing b/c of a particle!!! \n");
@@ -144,11 +154,10 @@ Object3D* ShootingAI::chooseTarget() {
       if (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && dynamic_cast<Shard*>(*targets_iterator) == NULL && dynamic_cast<AsteroidShip*>(*targets_iterator) == NULL) {
          continue;
       }
-      if (dynamic_cast<Shard*>(*targets_iterator) != NULL &&
-       (*targets_iterator)->position->distanceFrom(*ship_position) > 30)
+      if (isAShard && (*targets_iterator)->position->distanceFrom(*ship_position) > 30)
          continue;
 
-      if (dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL) {
+      if (isAShip) {
          consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
          // Don't shoot at myself.
          if (consideredShip->id == ship->id)// || consideredShip->isRespawning())
@@ -163,30 +172,40 @@ Object3D* ShootingAI::chooseTarget() {
       curWeight += vec * lastShotPos * proximityWeight;
       */
 
+      // Larger objects should have a higher priority.
       curWeight += 2*((*targets_iterator)->radius);
+
+      // Objects that are closer should be weighted higher.
       vec = (*(*targets_iterator)->position - *ship->position);
-      curWeight += distWeight / (vec * vec);
+      // Make sure vec is positive, so that we don't get a negative curWeight.
+      vec.abs();
+      double num = vec * vec;
+      //if (num < 0.0)
+      //  num *= -1;
+      //printf("num is %f\n", num);
+      curWeight += distWeight / (num);
+      //curWeight += vec * lastShotPos * proximityWeight;
       
       // Maybe add to the weight if the target is an AsteroidShip.
-      if (dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL) {
+      if (isAShip) {
           consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
 
          // Only add weight if the considered ship is not our own ship.
          if (consideredShip->id != ship->id) {
-            curWeight += 50;
-            //printf("curweight is %d\n", curWeight);
+            curWeight += 10;
+            //printf("added 10 b/c target is a ship.\n", curWeight);
          }
       }
       
       //printf("curweight summed up to %f\n", curWeight);
 
-      if (dynamic_cast<Shard*>(*targets_iterator) != NULL)
+      if (isAShard)
          curWeight *= ship->getWeapon(2)->curAmmo != 0;
       
       if (maxWeight < 0 || curWeight > maxWeight) {
          maxWeight = curWeight;
          closest = dynamic_cast<Object3D*> (*targets_iterator);
-      } 
+      }
    }
 
    delete targets;

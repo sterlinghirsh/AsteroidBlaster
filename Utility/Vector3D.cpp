@@ -62,6 +62,19 @@ void Vector3D::normalize() {
    z = z / length;
 }
 
+/**
+ * Make sure that the vector is all positive.
+ * Used by the Shooting AI's chooseTarget().
+ */
+void Vector3D::abs() {
+   if (x < 0.0)
+      x *= -1;
+   if (y < 0.0)
+      y *= -1;
+   if (z < 0.0)
+      z *= -1;
+}
+
 void Vector3D::updateMagnitude(double _x, double _y, double _z) {
    x = _x;
    y = _y;
