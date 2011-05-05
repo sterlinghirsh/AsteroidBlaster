@@ -208,7 +208,7 @@ void GameState::update(double timeDiff) {
       }
       SoundEffect::stopAllSoundEffect();
       */
-   if (!inMenu && ((gameIsRunning && custodian.asteroidCount == 0) || (levelTimer.getTimeLeft() <= 6))) {
+   if (!inMenu && ((gameIsRunning && custodian.asteroidCount == 0 && custodian.shardCount == 0) || (levelTimer.getTimeLeft() <= 6))) {
       // Check if it is done waiting until going to the next level
       if (countDown <= 0) {
          levelTimer.reset();
