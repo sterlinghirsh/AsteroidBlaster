@@ -208,11 +208,12 @@ double Shard::randRadius(double r) {
 void Shard::drawInMinimap() {
    glPushMatrix();
    position->glTranslate();
-   //glDisable(GL_LIGHTING);
+   glEnable(GL_LIGHTING);
    //glColor3f(0.4, 0.5, 0.7);
    setMaterial(WhiteSolid);
    gluSphere(quadric, 1, 4, 2);
    //glEnable(GL_LIGHTING);
+   glDisable(GL_LIGHTING);
    glPopMatrix();
 }
 
