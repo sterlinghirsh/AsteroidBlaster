@@ -26,8 +26,6 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    
    scrollWeapon = scrollAmmo = 0;
    
-   timeLeft = DEFAULTTIME;
-   
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT; 
    std::stringstream out;
@@ -143,12 +141,6 @@ void StoreMenu::draw() {
 
    // Clear the screen
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-   //timer
-   position.x = (Sint16) (gameSettings->GW*(1.0/10.0));
-   position.y = (Sint16) (gameSettings->GH*(1.0/10.0));
-   timerText->updateBody((int)timeLeft);
-   timerText->setPosition(position);
    
    //Done
    position.x = (Sint16) (gameSettings->GW*(8.0/10.0));
@@ -392,7 +384,6 @@ void StoreMenu::mouseDown(int button) {
    if(button == 1) {
       //if done was pushed, quit out of the menu
       if(doneText->mouseSelect(x,y)) {
-         timeLeft = timeLeft + DEFAULTTIME;
          SDL_ShowCursor(SDL_DISABLE);
          menuActive = false;
          clearOverlay();
@@ -543,12 +534,6 @@ void StoreMenu::mouseMove(int dx, int dy, int _x, int _y) {
 }
 
 void StoreMenu::update(double timeDiff) {
-   timeLeft -= timeDiff;
-   /*if (timeLeft <= 0) {
-      timeLeft = DEFAULTTIME;
-      SDL_ShowCursor(SDL_DISABLE);
-      menuActive = false;
-      Music::playMusic("Asteroids2.ogg");
-   }*/
+
 }
 

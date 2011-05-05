@@ -23,7 +23,6 @@ class StoreMenu : public Menu {
       int scrollWeapon;
       int scrollAmmo;
       int menuSelection;
-      double timeLeft;
       
       Text *doneText,
            *shardsText,

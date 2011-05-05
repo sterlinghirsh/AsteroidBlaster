@@ -517,7 +517,7 @@ void GameState::drawHud() {
    /* We need to disable the lighting temporarily
     * in order to set the color properly.
     */
-   //glDisable(GL_LIGHTING);
+   glDisable(GL_LIGHTING);
    glDisable(GL_CULL_FACE);
    drawAllText();
    if(usingShipCamera){
