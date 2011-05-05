@@ -18,12 +18,12 @@ Blaster::Blaster(AsteroidShip* owner)
 
    // Set the randomVariationAmount differently based on whether it's AI using it.
    if (owner->shooter->isEnabled()) {
-      randomVariationAmount = 3; // Units
+      randomVariationAmount = 6; // Units
    }
 
    // More accurate if it's a human player
    else {
-      randomVariationAmount = 1.5; // Units
+      randomVariationAmount = 1.2; // Units
    }
 
    name = "Blaster";
@@ -52,7 +52,7 @@ void Blaster::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void Blaster::fire() {
-   static Vector3D randomVariation;
+   Vector3D randomVariation;
    if (!isReady())
       return;
    // Update timeLastFired with new current time.
@@ -140,6 +140,6 @@ Point3D Blaster::project(Object3D* target) {
 bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
    Vector3D targetToShip = *target - ship->shotOrigin;
    targetToShip.normalize();
-   return (targetToShip - *aim).magnitude() < 0.5;
+   return (targetToShip - *aim).magnitude() < 0.6;
 }
 

@@ -45,12 +45,12 @@ void RailGun::fire() {
    timeLastFired = doubleTime();
    Point3D start = ship->shotOrigin;
    // Move start point by the shotDirection vector, multiplied by a scalar
-   ship->setShakeAmount(5.5);
+   ship->setShakeAmount(5.0);
    ship->custodian->add(new BeamShot(start,
             ship->shotDirection, ship, ship->gameState));
+   // Only take away ammo and play a sound if we're not in godMode
    if (!ship->gameState->godMode) {
       SoundEffect::playSoundEffect("Rail2.wav");
-      // Only take away some ammo if we're not in godMode
       curAmmo--;
    }
 }

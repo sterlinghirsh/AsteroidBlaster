@@ -181,11 +181,8 @@ Object3D* ShootingAI::chooseTarget() {
       vec = (*(*targets_iterator)->position - *ship->position);
       // Make sure vec is positive, so that we don't get a negative curWeight.
       vec.abs();
-      double num = vec * vec;
-      //if (num < 0.0)
-      //  num *= -1;
-      //printf("num is %f\n", num);
-      curWeight += distWeight / (num);
+      double tmp = vec * vec;
+      curWeight += distWeight / (tmp);
       //curWeight += vec * lastShotPos * proximityWeight;
       
       // Maybe add to the weight if the target is an AsteroidShip.
