@@ -19,7 +19,7 @@ TimedBomber::TimedBomber(AsteroidShip* owner) : Weapon(owner) {
    curAmmo = -1; // Infinite ammo
    purchased = false;
 
-   fireBackwards = true;
+   fireBackwards = false; // This used to be true for mine layer.
 
    icon = "MineLayerIcon";
    r = 1;
@@ -37,9 +37,6 @@ TimedBomber::~TimedBomber() {
  */
 void TimedBomber::update(double timeDiff) {
    // Do nothing, yet
-   if (ship->getCurrentWeapon() == this) {
-      ship->shotDirection.updateMagnitude(ship->forward->scalarMultiply(-1));
-   }
 }
 
 /**
@@ -49,6 +46,7 @@ void TimedBomber::fire() {
    static Vector3D randomVariation;
    if (!isReady())
       return;
+
    // Update timeLastFired with new current time.
    timeLastFired = doubleTime();
    // Copy the ship's position for the start point.

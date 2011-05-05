@@ -501,6 +501,7 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    shotOrigin = *position;
+   // I don't think anything does fireBackwards.
    if (getCurrentWeapon()->fireBackwards) {
       shotOriginScale = -4;
    } else {
