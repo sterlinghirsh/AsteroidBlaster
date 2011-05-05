@@ -7,7 +7,7 @@
 #include "Particles/BlasterShotParticle.h"
 #include "math.h"
 
-const float startingSize = 0.3f;
+const float startingSize = 0.5f;
 const float minLife = 1; // Seconds
 
 

@@ -1230,8 +1230,8 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    shipControlX = shipControlX / p2wx(gameSettings->GW);
    shipControlY = shipControlY / p2wy(0);
 
-   shipControlX = clamp(shipControlX * fabs(shipControlX * shipControlX * shipControlX * shipControlX), -1, 1);
-   shipControlY = clamp(-shipControlY * fabs(shipControlY * shipControlY * shipControlY * shipControlY), -1, 1);
+   shipControlX = clamp(shipControlX * fabs(shipControlX * shipControlX), -1, 1);
+   shipControlY = clamp(-shipControlY * fabs(shipControlY * shipControlY), -1, 1);
 
    if(!ship->flyingAI->isEnabled()) {
       if (doYaw) {
