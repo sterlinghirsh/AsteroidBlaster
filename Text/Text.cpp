@@ -283,7 +283,7 @@ void Text::SDL_GL_RenderText(const char *text,
 }
 
 bool Text::mouseSelect(int x, int y) {
-   if(!selectable) { return false;}
+   if(!selectable || disabled) { return false;}
    if(x >= pos.x &&
       x <= pos.x + pos.w &&
       y >= pos.y - TEXT_INVERT_VALUE &&
@@ -298,7 +298,7 @@ bool Text::mouseSelect(double x, double y) {
 }
 
 void Text::mouseHighlight(int x, int y) {
-   if(!selectable) { return;}
+   if(!selectable || disabled) { return;}
    if(x >= pos.x &&
       x <= pos.x + pos.w &&
       y >= pos.y - TEXT_INVERT_VALUE &&

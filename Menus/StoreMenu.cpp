@@ -413,7 +413,7 @@ void StoreMenu::mouseDown(int button) {
    
       //get the list of weapons from ship
       std::vector<Weapon*> weaponList = gameState->ship->getWeapons();
-      int shardsOwned = gameState->ship->nShards;
+      int &shardsOwned = gameState->ship->nShards;
       
       //if weapon menu section is selected
       if(menuSelection == WEAPONS) {
@@ -425,16 +425,18 @@ void StoreMenu::mouseDown(int button) {
                if(!weaponList[i]->purchased) {
                   // if you have enough money
                   if(shardsOwned >= weaponList[i]->buyPrice()) {
-                     weaponList[i]->purchased = true;
+                     std::cout << "bought " << weaponList[i]->getName() << "!" << std::endl;
                      gameState->ship->nShards -= weaponList[i]->buyPrice();
+                     weaponList[i]->purchased = true;
                   // not enough money
                   } else {
                      std::cout << "not enough money to buy " << weaponList[i]->getName() << "!" << std::endl;
                   }
                // if it is purchased, and you have enough money, upgrade
                } else if(shardsOwned >= weaponList[i]->buyPrice()) {
-                     weaponList[i]->level++;
+                     std::cout << "upgraded " << weaponList[i]->getName() << "!" << std::endl;
                      gameState->ship->nShards -= weaponList[i]->buyPrice();
+                     weaponList[i]->level++;
                //not enough money
                } else {
                   std::cout << "not enough money to upgrade " << weaponList[i]->getName() << "!" << std::endl;
