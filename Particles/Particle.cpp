@@ -96,10 +96,9 @@ void Particle::draw()
    
    position->glTranslate();
    
-   float alpha = (float) clamp(((startTime + life) - doubleTime()), 0, 1); 
 
    // glColor4f clamps alpha to [0, 1].
-   glColor4f( r,g,b, alpha);
+   glColor4d( r,g,b, getAlpha());
    glUseProgram(billboardShader);
    GLint sizeLoc = glGetUniformLocation(billboardShader, "size");
    glUniform1f(sizeLoc, (float) size);
@@ -160,4 +159,8 @@ void Particle::Clear() {
       delete *particle;
       particle = Particle::particles.erase(particle);
    }
+}
+
+double Particle::getAlpha() {
+   return clamp(((startTime + life) - doubleTime()), 0, 1); 
 }

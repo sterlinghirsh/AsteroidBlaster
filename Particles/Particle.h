@@ -34,6 +34,7 @@ class Particle : public Drawable {
       bool shouldRemove;
       static int particleDisplayList;
       static void initDisplayList();
+      virtual double getAlpha();
       
    protected:
       float life;

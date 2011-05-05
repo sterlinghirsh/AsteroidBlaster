@@ -30,3 +30,6 @@ void ShardParticle::Add(Point3D* pos, Vector3D* vec, const GameState* _gameState
    particles.push_back(new ShardParticle(pos, vec, _fade, _r, _g, _b, _gameState));
 }
 
+double ShardParticle::getAlpha() {
+   return 1;
+}
