@@ -142,9 +142,6 @@ void Texture::Add(std::string file, std::string keyName) {
       // this error should not go unhandled
    }
 
-   std::cout << "Loaded Image: " << file << " Colors: " << nOfColors
-    << "Rmask: " << image->format->Rmask << std::endl;
-
    // create texture
    glGenTextures(1, &texture );
    glBindTexture(GL_TEXTURE_2D, texture );
