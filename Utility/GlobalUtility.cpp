@@ -700,11 +700,11 @@ void drawGameState(GameState* gameStateIn,
       gameStateIn->drawHud();
    }
 
-   gameStateIn->drawOverlay();
+   
    glPopMatrix();
    // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
    gameStateIn->drawMinimap();
-   
+   gameStateIn->drawOverlay();
    gameStateIn->drawScreens();
 
    if (!lookAt) {
