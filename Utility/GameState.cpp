@@ -777,6 +777,8 @@ void GameState::nextLevel() {
       setLevelTimer();
    }
 
+   custodian.atLevelEnd();
+
    minimap = new Minimap(ship);
    gameIsRunning = true;
    // The current level is over when we're advancing to the next level.
@@ -1000,6 +1002,9 @@ void GameState::keyDown(int key) {
       break;
    case SDLK_F3:
       showBloomScreen = !showBloomScreen;
+      break;
+   case SDLK_F4:
+      nextLevel();
       break;
 
    case SDLK_F8:

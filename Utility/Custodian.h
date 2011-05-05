@@ -37,6 +37,7 @@ class Custodian {
       std::set<CollisionBase*, compareByDistance>* findCollisions(Drawable* item, bool searchBackwards = false);
       void findAllCollisions();
       std::vector<Drawable*>* getListOfObjects();
+      void atLevelEnd();
       void clear();
       int asteroidCount;
       int shardCount;

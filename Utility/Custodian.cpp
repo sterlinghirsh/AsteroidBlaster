@@ -727,3 +727,19 @@ void Custodian::clear() {
    asteroidCount = 0;
    shardCount = 0;
 }
+
+/**
+ * Do things at the end of the level such as remove asteroids/shards
+ */
+void Custodian::atLevelEnd() {
+   Asteroid3D* tempAst;
+   Shard* tempShard;
+   for (unsigned i = 0; i < objectsByMinX.size(); ++i) {
+      if ((tempAst = dynamic_cast<Asteroid3D*>(objectsByMinX[i])) != NULL) {
+         tempAst->shouldRemove = true;
+      } else if ((tempShard = dynamic_cast<Shard*>(objectsByMinX[i])) != NULL) {
+         tempShard->shouldRemove = true;
+      }
+   }
+}
+
