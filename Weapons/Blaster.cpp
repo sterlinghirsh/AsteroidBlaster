@@ -122,11 +122,14 @@ Point3D Blaster::project(Object3D* target) {
    return curTarget;
 }
 
+/**
+ * Tell the Shooting AI whether or not it should fire at the target given the
+ * target and where it's aiming.
+ * This leads to the AI leading it shots.
+ */
 bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
-   Vector3D targetToShip = *target - *ship->position;
+   Vector3D targetToShip = *target - ship->shotOrigin;
    targetToShip.normalize();
    return (targetToShip - *aim).magnitude() < 0.5;
 }
-
-
 

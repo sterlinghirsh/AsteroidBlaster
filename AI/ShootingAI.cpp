@@ -59,7 +59,7 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
   
    Point3D aim = lastShotPos;
    Point3D targetPos = chosenWeapon->project(target);
-   Vector3D targetDir = (targetPos - (*ship).shotOrigin).getNormalized();
+   Vector3D targetDir = (targetPos - ship->shotOrigin).getNormalized();
    
    // This section of code does angle interpolation.
    // Find the angle between our vector and where we want to be.

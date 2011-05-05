@@ -118,6 +118,11 @@ Point3D Missile::project(Object3D* target) {
    return curTarget;
 }
 
+/**
+ * Tell the Shooting AI whether or not it should fire at the target given the
+ * target and where it's aiming.
+ * This leads to the AI leading it shots.
+ */
 bool Missile::shouldFire(Point3D* target, Point3D* aim) {
-   return ((*target - *ship->position).getNormalized() - *aim).magnitude() < 0.5;
+   return ((*target - ship->shotOrigin).getNormalized() - *aim).magnitude() < 0.5;
 }
