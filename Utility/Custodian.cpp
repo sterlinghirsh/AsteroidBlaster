@@ -146,7 +146,6 @@ void Collision<AsteroidShip, Shot>::handleCollision() {
    int particlesToEmit = 10;
    if (a != b->owner) {
       a->health -= b->getDamage(a);
-      b->shouldRemove = true;
       a->shakeAmount = 1;
       a->justGotHit = doubleTime();
       SoundEffect::playSoundEffect("BlasterHit.wav");
