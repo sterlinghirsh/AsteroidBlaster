@@ -48,7 +48,7 @@ void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
    Vector3D* pushOnB = new Vector3D(pushOnA->scalarMultiply(-1));
 
    if (d <= maxR) {
-      printf("d <= maxR, d=%f|maxR=%f\n",d,maxR);
+      //printf("d <= maxR, d=%f|maxR=%f\n",d,maxR);
       if (d == 0) {
          printf("AsteroidShip is stuck\n");
          pushOnA->randomMagnitude();
@@ -159,12 +159,6 @@ void Collision<AsteroidShip, Shot>::handleCollision() {
          particleDirection->randomMagnitude();
          particleDirection->setLength(3);
          BlasterImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
-      }
-      if(a->health <= 0) {
-         if(a->id != 0) {
-            std::cerr << "AsteroidShip ID: " << a->id << " removed..." << std::endl;
-            a->shouldRemove = true;
-         } 
       }
    }
 }
