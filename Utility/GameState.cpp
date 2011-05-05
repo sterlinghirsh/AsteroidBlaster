@@ -293,7 +293,8 @@ void GameState::spectatorCameraUpdate(double timeDiff) {
  * Draw objects in the minimap.
  */
 void GameState::drawMinimap() {
-   minimap->draw();
+   if (!inMenu)
+      minimap->draw();
 }
 
 /**

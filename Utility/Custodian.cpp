@@ -33,6 +33,10 @@ template<>
 void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
    if (a->isRespawning()) { return;}
    if (b->isRespawning()) { return;}
+
+   if (a->gameState->inMenu)
+      return;
+
    double d = a->position->distanceFrom(*b->position);
    double combinedRad = a->radius + b->radius;
    if (combinedRad < d) {
