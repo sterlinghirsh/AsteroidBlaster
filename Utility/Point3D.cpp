@@ -14,11 +14,6 @@
  */
 #define EPSILON 0.001
 
-void breakbreakbreak() {
-   // Do nothing;
-   printf("breakbreakbreak\n");
-}
-
 Point3D::Point3D(const Vector3D& copy) {
    x = copy.x;
    y = copy.y;
