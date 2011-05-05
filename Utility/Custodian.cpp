@@ -300,8 +300,8 @@ void Collision<Asteroid3D, ExplosiveShot>::handleCollision() {
    } else {
       Vector3D* shotToAsteroid;
       shotToAsteroid = new Vector3D(*b->position, *a->position);
-      double distance = shotToAsteroid->getLength();
-      double newSpeed = 1000 / (((distance * distance) / b->explodeRadius + 1) * a->radius);
+      double distance = shotToAsteroid->getLength() - a->radius;
+      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
       shotToAsteroid->setLength(newSpeed);
       a->addInstantAcceleration(shotToAsteroid);
       a->health -= b->getDamage(a);
@@ -324,10 +324,15 @@ void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
             SoundEffect::playSoundEffect("BlasterHit.wav");
          }
       }
-      return;
+   } else {
+      a->health -= b->getDamage(a);
+      Vector3D* shotToAsteroid;
+      shotToAsteroid = new Vector3D(*b->position, *a->position);
+      double distance = shotToAsteroid->getLength() - a->radius;
+      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
+      shotToAsteroid->setLength(newSpeed);
+      a->addInstantAcceleration(shotToAsteroid);
    }
-
-   a->health -= b->getDamage(a);
 }
 
 template<>
