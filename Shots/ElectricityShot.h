@@ -25,6 +25,7 @@ class ElectricityShot : public Shot {
       double angle;
       double length;
       double farRadius;
+      bool hitYet;
 };
 
 #endif

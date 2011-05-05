@@ -189,29 +189,35 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
    const int numElecParticles = 1;
    double hitDistance = 0;
 
-   a->health -= b->getDamage(a);
-   
-   /* Normal collision detection gets done in CollisionTypes.h. 
-    * I can't think of an efficient way to do this, so I'm leaving it here
-    * to avoid creating a hack.
-    */
-   Point3D* closestPoint = a->sphereCollideWithRay(*b->position, *b->velocity, &hitDistance);
+   if (a != b->owner && !b->hitYet) {
 
-   // Sometimes, we decide that it's not a real hit. No big deal.
-   if (closestPoint != NULL) {
-      b->length = hitDistance;
-      Vector3D centerToImpactPoint(*a->position, *closestPoint);
-      centerToImpactPoint.setLength(5);
-      for (int i = 0; i < numElecParticles; ++i) {
-         Point3D* particleStartPoint = new Point3D(*closestPoint);
-         Vector3D* particleDirection = new Vector3D();
-         particleDirection->randomMagnitude();
-         particleDirection->setLength(3);
-         particleDirection->addUpdate(centerToImpactPoint);
-         ElectricityImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
+      /* Normal collision detection gets done in CollisionTypes.h. 
+       * I can't think of an efficient way to do this, so I'm leaving it here
+       * to avoid creating a hack.
+       */
+      Point3D* closestPoint = a->sphereCollideWithRay(*b->position, *b->velocity, &hitDistance);
+
+      // Sometimes, we decide that it's not a real hit. No big deal.
+      if (closestPoint != NULL) {
+         b->hitYet = true;
+         a->health -= b->getDamage(a);
+         a->shakeAmount = 1;
+         a->justGotHit = doubleTime();
+      
+         b->length = hitDistance;
+         Vector3D centerToImpactPoint(*a->position, *closestPoint);
+         centerToImpactPoint.setLength(5);
+         for (int i = 0; i < numElecParticles; ++i) {
+            Point3D* particleStartPoint = new Point3D(*closestPoint);
+            Vector3D* particleDirection = new Vector3D();
+            particleDirection->randomMagnitude();
+            particleDirection->setLength(3);
+            particleDirection->addUpdate(centerToImpactPoint);
+            ElectricityImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
+         }
+
+         delete closestPoint;
       }
-
-      delete closestPoint;
    }
 }
 

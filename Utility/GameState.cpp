@@ -294,7 +294,7 @@ void GameState::spectatorCameraUpdate(double timeDiff) {
  * Draw objects in the minimap.
  */
 void GameState::drawMinimap() {
-   if (!inMenu)
+   if (!inMenu && !ship->isRespawning())
       minimap->draw();
 }
 
@@ -520,7 +520,7 @@ void GameState::drawHud() {
    glDisable(GL_LIGHTING);
    glDisable(GL_CULL_FACE);
    drawAllText();
-   if(usingShipCamera){
+   if(usingShipCamera && !ship->isRespawning()){
       weaponReadyBar->draw();
       healthBar->draw();
       weaponBar->draw();

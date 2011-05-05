@@ -388,6 +388,12 @@ void AsteroidShip::update(double timeDiff) {
             //delete particleStartPoint;
             //delete particleDirection;
          }
+
+         // Release all the shards.
+         while (nShards > 0) {
+            custodian->add(makeShard());
+            --nShards;
+         }
       }
 
       double timeLeftToRespawn = respawnTimer.getTimeLeft();
@@ -1385,3 +1391,15 @@ std::string AsteroidShip::serialize() {
    return "";
 }
 
+Shard* AsteroidShip::makeShard() {
+   Vector3D randomOffset;
+   randomOffset.randomMagnitude();
+   randomOffset.scalarMultiplyUpdate(3);
+
+   Shard* shard;
+   shard = new Shard(0.5, gameState->worldSize, gameState);
+   shard->velocity->updateMagnitude(0.0, 0.0, 0.0);
+   shard->position->clone(position);
+   randomOffset.movePoint(*shard->position);
+   return shard;
+}

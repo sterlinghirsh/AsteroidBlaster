@@ -247,11 +247,11 @@ void Asteroid3D::drawGlow() {
 }
 
 void Asteroid3D::draw() {
-   glColor3f(1, 1, 1);
    glDisable(GL_CULL_FACE);
    setMaterial(Rock);
    
    Object3D::draw(); // This doesn't really do anything.
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    
    glEnable(GL_COLOR_MATERIAL);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
