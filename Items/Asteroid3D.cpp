@@ -91,8 +91,8 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    getBrightColor(randdouble(), cyan, magenta, yellow);
 
    Ring last;
-   double a = randdouble() * 0.5 + 0.75;
-   double b = randdouble() * 0.5 + 0.75;
+   double a = randdouble() * 0.25 + 0.875;
+   double b = randdouble() * 0.25 + 0.875;
 
    int npts = (int)((r + 3.0) / 1.5) * 2;
 
