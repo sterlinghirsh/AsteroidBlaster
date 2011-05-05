@@ -15,9 +15,9 @@ RailGun::RailGun(AsteroidShip* owner)
 : Weapon(owner) {
    coolDown = 2; // Seconds
    name = "Rail Gun";
-   curAmmo = -1;
-   purchased = false;
-   randomAIVariationAmount = 4;
+   curAmmo = 50;
+   purchased = true;
+   randomAIVariationAmount = 3;
 
    icon = "RailGunIcon";
    r = 1;

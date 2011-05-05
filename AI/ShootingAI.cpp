@@ -110,16 +110,13 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    if (*target != NULL) {
       if ((dynamic_cast<Shard*>(*target)) != NULL) {
          ship->selectWeapon(TRACTOR_WEAPON_INDEX);
-         //printf("chose tractor beam.\n");
       }
       else if (ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased && (*target)->radius < 10 && ship->getWeapon(RAILGUN_WEAPON_INDEX)->isCooledDown()
        && ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo > 0) {
          ship->selectWeapon(RAILGUN_WEAPON_INDEX);
-         //printf("chose railgun!!!!!!!.\n");
       }
       else {
          ship->selectWeapon(BLASTER_WEAPON_INDEX);
-         //printf("chose blaster.\n");
       }
    }
 
