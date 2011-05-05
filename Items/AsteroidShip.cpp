@@ -25,106 +25,113 @@ const float shipScale = 5;
 const double rotationalAcceleration = 10; // rad/sec^2
 const double spawnRate = .5;
 
-AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
-   Object3D(_gameState) {  // Initialize shot direction to forward
-      cullRadius = 12;
-      id = _id;
-      health = 100;
-      healthMax = 100;
+/**
+ * Constructor
+ */
+AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) : 
+   Object3D(_gameState) {
 
-      // Bounding box stuff.
-      maxX = maxY = maxZ = 3;
-      minX = minY = minZ = -3;
-      radius = 3;
-      updateBoundingBox();
+   cullRadius = 12;
+   id = _id;
+   health = 100;
+   healthMax = 100;
 
-      // Todo: comment these.
-      spin = 90;
-      flashiness = 0;
-      tracker = 0;
-      rando = 1;
+   // Bounding box stuff.
+   maxX = maxY = maxZ = 3;
+   minX = minY = minZ = -3;
+   radius = 3;
+   updateBoundingBox();
 
-      zMove = 2;
-      lineMove = zMove / 4;
-      frontX = 0;
-      frontY = 0;
-      frontZ = 0;
-      cornerX = .2;
-      cornerY = .2;
-      cornerZ = 1.3;
-      middleXY = .15;
-      middleZ = 1;
-      backX = 0;
-      backY = 0;
-      backZ = 1.6;
+   // Todo: comment these.
+   spin = 90;
+   flashiness = 0;
+   tracker = 0;
+   rando = 1;
 
-      hitX = 0;
-      hitY = 0;
-      hitZ = 0;
+   zMove = 2;
+   lineMove = zMove / 4;
+   frontX = 0;
+   frontY = 0;
+   frontZ = 0;
+   cornerX = .2;
+   cornerY = .2;
+   cornerZ = 1.3;
+   middleXY = .15;
+   middleZ = 1;
+   backX = 0;
+   backY = 0;
+   backZ = 1.6;
 
-      justGotHit = 0;
+   hitX = 0;
+   hitY = 0;
+   hitZ = 0;
 
-      //skew must be set to 0 til I figure out a better way to do things
-      skew = 0;
+   justGotHit = 0;
 
-      // TODO: Comment these.
-      x2Change = middleXY / 2;
-      y2Change = middleXY / 2;
-      z2Change = (backZ - middleZ) / 2;
-      xChange = 0;
-      yChange = 0;
-      zChange = 0;
-      backChange = 0;
+   //skew must be set to 0 til I figure out a better way to do things
+   skew = 0;
 
-      shotOriginScale = 4;
+   // TODO: Comment these.
+   x2Change = middleXY / 2;
+   y2Change = middleXY / 2;
+   z2Change = (backZ - middleZ) / 2;
+   xChange = 0;
+   yChange = 0;
+   zChange = 0;
+   backChange = 0;
 
-      // The ship's score. This number is displayed to the screen.
-      score = 0;
+   shotOriginScale = 4;
 
-      // The number of shard collected. This number is displayed to the screen.
-      nShards = 0;
+   // The ship's score. This number is displayed to the screen.
+   score = 0;
 
-      // The ship's max motion parameters.
-      maxForwardAccel = 10;
-      maxRightAccel = 5;
-      maxUpAccel = 5;
-      maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
+   // The number of shard collected. This number is displayed to the screen.
+   nShards = 0;
 
-      // TODO: create all of the shooters that this ship will have.
-      shooter = new ShootingAI(this);
-      flyingAI = new FlyingAI(this);
+   // The ship's max motion parameters.
+   maxForwardAccel = 10;
+   maxRightAccel = 5;
+   maxUpAccel = 5;
+   maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
 
-      // Create our Radar
-      radar = new Radar(this);
+   // TODO: create all of the shooters that this ship will have.
+   shooter = new ShootingAI(this);
+   flyingAI = new FlyingAI(this);
 
-      // Add weapons to the list!
-      /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
-      */
-      weapons.push_back(new TractorBeam(this));
-      weapons.push_back(new Blaster(this));
-      weapons.push_back(new RailGun(this));
-      weapons.push_back(new Electricity(this));
-      //weapons.push_back(new LawnMower(this));
-      //weapons.push_back(new Ram(this));
-      //weapons.push_back(new AntiInertia(this));
-      weapons.push_back(new TimedBomber(this));
-      weapons.push_back(new RemoteBomber(this));
-      weapons.push_back(new Energy(this));
+   // Create our Radar
+   radar = new Radar(this);
 
-      soundHandle = -1;
+   // Add weapons to the list!
+   /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
+   */
+   weapons.push_back(new TractorBeam(this));
+   weapons.push_back(new Blaster(this));
+   weapons.push_back(new RailGun(this));
+   weapons.push_back(new Electricity(this));
+   //weapons.push_back(new LawnMower(this));
+   //weapons.push_back(new Ram(this));
+   //weapons.push_back(new AntiInertia(this));
+   weapons.push_back(new TimedBomber(this));
+   weapons.push_back(new RemoteBomber(this));
+   weapons.push_back(new Energy(this));
 
-      cameraOffset = new Vector3D(0, 2, 5);
-      currentView = VIEW_THIRDPERSON_SHIP;
-      zoomFactor = 1.0;
-      zoomSpeed = 0.0;
+   soundHandle = -1;
 
-      shouldDrawInMinimap = true;
+   cameraOffset = new Vector3D(0, 2, 5);
+   currentView = VIEW_THIRDPERSON_SHIP;
+   zoomFactor = 1.0;
+   zoomSpeed = 0.0;
 
-      collisionType = collisionSphere = new CollisionSphere(4, *position);
+   shouldDrawInMinimap = true;
 
-      reInitialize();
-   }
+   collisionType = collisionSphere = new CollisionSphere(4, *position);
 
+   reInitialize();
+}
+
+/**
+ * Destructor
+ */
 AsteroidShip::~AsteroidShip() {
    for (unsigned int i = 0; i < weapons.size(); ++i) {
       delete (weapons[i]);
