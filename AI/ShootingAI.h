@@ -38,6 +38,10 @@ class ShootingAI : public AI {
    Object3D* lastTarget;
    Point3D aimingAt;
    bool enabled;
+   // These control how often the AI can swich weapons.
+   double weaponSwitchSpeed;
+   Timer weaponSwitchTimer;
+   Weapon* prevWeapon;
    
    /* TODO Add your respective functions here. */
    int aimAt(double dt, Object3D* target);

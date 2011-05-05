@@ -94,10 +94,6 @@ AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
    maxUpAccel = 5;
    maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
 
-   // TODO: create all of the shooters that this ship will have.
-   shooter = new ShootingAI(this);
-   flyingAI = new FlyingAI(this);
-
    // Create our Radar
    radar = new Radar(this);
 
@@ -127,6 +123,12 @@ AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
    collisionType = collisionSphere = new CollisionSphere(4, *position);
 
    reInitialize();
+
+   /* These must be created last b/c they need the ship / weapons to be
+    * initialized first.
+    */
+   shooter = new ShootingAI(this);
+   flyingAI = new FlyingAI(this);
 }
 
 /**

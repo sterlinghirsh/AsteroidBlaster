@@ -36,6 +36,15 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    enabled = false;
    //TODO possibly more stuff here.
    lastTarget = NULL;
+   prevWeapon = NULL;
+   
+   // These control how fast the AI can switch weapons.
+   weaponSwitchSpeed = 2.0;
+   weaponSwitchTimer.reset();
+   weaponSwitchTimer.setCountDown(weaponSwitchSpeed);
+   
+   // Set the default chosen weapon.
+   chosenWeapon = ship->getCurrentWeapon();
 }
 
 double min(double a, double b) {
@@ -55,6 +64,7 @@ double min(double a, double b) {
  */
 int ShootingAI::aimAt(double dt, Object3D* target) {
    Vector3D wouldHit;
+   Vector3D randomVariation;
    double ang = 0;
   
    Point3D aim = lastShotPos;
@@ -85,6 +95,11 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
    lastShotPos = aim;
    bool shouldFire = chosenWeapon->shouldFire(&targetPos, &aim);
 
+   // Add a random variation to the aim.
+   randomVariation.randomMagnitude();
+   randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount);
+   aim.addUpdate(randomVariation);
+   
    ship->fire(shouldFire);
 
    return 0;
@@ -95,14 +110,19 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    if (*target != NULL) {
       if ((dynamic_cast<Shard*>(*target)) != NULL) {
          ship->selectWeapon(TRACTOR_WEAPON_INDEX);
+         //printf("chose tractor beam.\n");
       }
-      else if (ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased && (*target)->radius < 2 && ship->getWeapon(RAILGUN_WEAPON_INDEX)->isCooledDown()
-       && ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo != 0) {
+      else if (ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased && (*target)->radius < 10 && ship->getWeapon(RAILGUN_WEAPON_INDEX)->isCooledDown()
+       && ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo > 0) {
          ship->selectWeapon(RAILGUN_WEAPON_INDEX);
+         //printf("chose railgun!!!!!!!.\n");
       }
-      else
+      else {
          ship->selectWeapon(BLASTER_WEAPON_INDEX);
+         //printf("chose blaster.\n");
+      }
    }
+
    chosenWeapon = ship->getCurrentWeapon();
 }
 
@@ -114,7 +134,7 @@ Object3D* ShootingAI::chooseTarget() {
    Point3D* ship_position = ship->position;
    Vector3D vec;
    double curWeight = 0.0;
-   double maxWeight = 0.0;
+   double maxWeight = -1.0;
    const double distWeight = 600;
    const double radiusWeight = 1;
    const double proximityWeight = 3;
@@ -123,6 +143,7 @@ Object3D* ShootingAI::chooseTarget() {
    
    // If the list of targets from the viewFrustum does not exist, give the AI no target.
    if(targets == NULL) {
+      printf("targets list was null.\n");
       return NULL;
    }
 
@@ -134,11 +155,16 @@ Object3D* ShootingAI::chooseTarget() {
       curWeight = 0.0;
       //printf("starting null check.\n");
       if (*targets_iterator == NULL) {
-         printf("targets_iterator was null!\n\n\n\n");
+         //printf("targets_iterator was null!\n\n\n\n");
          continue;
       }
       isAShip = false;
       isAShard = false;
+
+      if (dynamic_cast<Particle*>(*targets_iterator) != NULL) {
+        //printf("continuing b/c of a particle!!! \n");
+        continue;
+     }
       
       if(dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL)
          isAShip = true;
@@ -146,14 +172,10 @@ Object3D* ShootingAI::chooseTarget() {
       if(dynamic_cast<Shard*>(*targets_iterator) != NULL)
          isAShard = true;
 
-     if (dynamic_cast<Particle*>(*targets_iterator) != NULL) {
-        //printf("continuing b/c of a particle!!! \n");
-        continue;
-     }
-
       if (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && dynamic_cast<Shard*>(*targets_iterator) == NULL && dynamic_cast<AsteroidShip*>(*targets_iterator) == NULL) {
          continue;
       }
+
       if (isAShard && (*targets_iterator)->position->distanceFrom(*ship_position) > 30)
          continue;
 
@@ -180,8 +202,9 @@ Object3D* ShootingAI::chooseTarget() {
       // Objects that are closer should be weighted higher.
       vec = (*(*targets_iterator)->position - *ship->position);
       // Make sure vec is positive, so that we don't get a negative curWeight.
-      vec.abs();
       double tmp = vec * vec;
+      if (tmp < 0.0)
+         tmp *= -1;
       curWeight += distWeight / (tmp);
       //curWeight += vec * lastShotPos * proximityWeight;
       
@@ -246,7 +269,18 @@ int ShootingAI::think(double dt) {
       //target->position->print();
       lastTarget = target;
    }
-   chooseWeapon(&target);
+
+   // If it's been more than weaponSwitchSpeed seconds, we can switch weapons.
+   if (weaponSwitchTimer.isRunning && weaponSwitchTimer.getTimeLeft() <= 0) {
+      prevWeapon = ship->getCurrentWeapon();
+      chooseWeapon(&target);
+      // If we chose a new weapon, reset the timer so we can't switch again soon.
+      if (prevWeapon != chosenWeapon) {
+         //weaponSwitchTimer.setCountDown(weaponSwitchSpeed);
+         weaponSwitchTimer.restartCountDown();
+         //printf(" it was a new weapon, so we reset the timer.\n");
+      }
+   }
 
    if (target != NULL) {
       target->setTargeted(true);

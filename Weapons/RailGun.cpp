@@ -17,6 +17,7 @@ RailGun::RailGun(AsteroidShip* owner)
    name = "Rail Gun";
    curAmmo = -1;
    purchased = false;
+   randomAIVariationAmount = 4;
 
    icon = "RailGunIcon";
    r = 1;

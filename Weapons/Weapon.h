@@ -72,6 +72,8 @@ class Weapon {
       int ammoAmount;
 
       bool fireBackwards;
+      // The amount of variation added on when an AI is using the weapon.
+      double randomAIVariationAmount;
 
       double r, g, b;
 

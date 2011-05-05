@@ -19,6 +19,7 @@ class RailGun : public Weapon {
       virtual void update(double timeDiff);
       virtual void debug();
       virtual void fire();
+
 };
 
 #endif

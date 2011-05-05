@@ -17,6 +17,8 @@ TractorBeam::TractorBeam(AsteroidShip* owner) : Weapon(owner) {
    soundPlaying = false;
    curAmmo = -1;
    purchased = true;
+   randomAIVariationAmount = 4;
+
    icon = "TractorBeamIcon";
    r = 0;
    g = 1;

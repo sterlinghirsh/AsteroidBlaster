@@ -16,15 +16,9 @@ Blaster::Blaster(AsteroidShip* owner)
    shotSpeed = 40; // Units per second
    coolDown = 0.15; // Seconds
 
-   // Set the randomVariationAmount differently based on whether it's AI using it.
-   if (owner->shooter->isEnabled()) {
-      randomVariationAmount = 6; // Units
-   }
-
-   // More accurate if it's a human player
-   else {
-      randomVariationAmount = 1.2; // Units
-   }
+   // Random variations for the ShootingAI and human players.
+   randomAIVariationAmount = 4;
+   randomVariationAmount = 1.2; // Units
 
    name = "Blaster";
    lastShotPos = new Point3D(0, 1, 0);
@@ -65,6 +59,7 @@ void Blaster::fire() {
    randomVariation.randomMagnitude();
    randomVariation.scalarMultiplyUpdate(randomVariationAmount);
    shotDirection.addUpdate(randomVariation);
+
    ship->shotDirection.movePoint(start, 3);
    ship->setShakeAmount(0.05f);
    ship->custodian->add(new ProjectileShot(start,
