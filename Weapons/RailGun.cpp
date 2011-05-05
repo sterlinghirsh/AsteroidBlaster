@@ -17,7 +17,7 @@ RailGun::RailGun(AsteroidShip* owner)
    name = "Rail Gun";
    curAmmo = -1;
    purchased = true;
-   randomAIVariationAmount = 3;
+   randomAIVariationAmount = 4.5;
 
    icon = "RailGunIcon";
    r = 1;
@@ -52,7 +52,7 @@ void RailGun::fire() {
    // Only take away ammo and play a sound if we're not in godMode
    if (!ship->gameState->godMode) {
       SoundEffect::playSoundEffect("Rail2.wav");
-      curAmmo--;
+      //curAmmo--;
    }
 }
 
