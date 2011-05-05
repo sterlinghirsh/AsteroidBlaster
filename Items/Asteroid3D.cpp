@@ -66,9 +66,10 @@ Asteroid3D::~Asteroid3D() {
  * initializing them, and not much else.
  */
 void Asteroid3D::newRandomPosition() {
-   position->x = randdouble() * worldSize - worldSize / 2;
-   position->y = randdouble() * worldSize - worldSize / 2;
-   position->z = randdouble() * worldSize - worldSize / 2;
+   double extent = worldSize - radius;
+   position->x = randdouble() * extent - extent / 2;
+   position->y = randdouble() * extent - extent / 2;
+   position->z = randdouble() * extent - extent / 2;
    updateBoundingBox();
 }
 
