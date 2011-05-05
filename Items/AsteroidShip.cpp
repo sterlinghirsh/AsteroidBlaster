@@ -1312,7 +1312,10 @@ Vector3D* AsteroidShip::getCameraOffset() {
 }
 
 void AsteroidShip::nextView() {
-   setView((currentView + 1) % VIEW_COUNT);
+   if (currentView == VIEW_FIRSTPERSON_SHIP)
+      currentView = VIEW_THIRDPERSON_SHIP;
+   else
+      currentView = VIEW_FIRSTPERSON_SHIP;
 }
 
 void AsteroidShip::setView(int _view) {
