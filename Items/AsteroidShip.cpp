@@ -205,8 +205,10 @@ void AsteroidShip::reInitialize() {
  * The currentWeapon can also be set from nextWeapon() and prevWeapon().
  */
 void AsteroidShip::selectWeapon(int weaponType) {
-   currentWeapon = weaponType;
-   weapons[currentWeapon]->activationTimer.setCountDown(0.5);
+   if (currentWeapon != weaponType) {
+      currentWeapon = weaponType;
+      weapons[currentWeapon]->activationTimer.setCountDown(0.5);
+   }
 }
 
 /**

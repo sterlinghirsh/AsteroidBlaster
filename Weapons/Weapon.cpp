@@ -153,6 +153,6 @@ void Weapon::drawIcon(bool selected) {
 }
 
 bool Weapon::isReady() {
-   //return activationTimer.getTimeLeft() <= 0 && isCooledDown();
-   return isCooledDown();
+   return activationTimer.getTimeLeft() <= 0 && isCooledDown();
+   //return isCooledDown();
 }

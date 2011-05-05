@@ -111,8 +111,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
       if ((dynamic_cast<Shard*>(*target)) != NULL) {
          ship->selectWeapon(TRACTOR_WEAPON_INDEX);
       }
-      else if (ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased && (*target)->radius < 10 && ship->getWeapon(RAILGUN_WEAPON_INDEX)->isCooledDown()
-       && ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo > 0) {
+      else if (ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased && (*target)->radius < 10 && ship->getWeapon(RAILGUN_WEAPON_INDEX)->isCooledDown()) {
          ship->selectWeapon(RAILGUN_WEAPON_INDEX);
       }
       else {
@@ -275,7 +274,6 @@ int ShootingAI::think(double dt) {
       if (prevWeapon != chosenWeapon) {
          //weaponSwitchTimer.setCountDown(weaponSwitchSpeed);
          weaponSwitchTimer.restartCountDown();
-         //printf(" it was a new weapon, so we reset the timer.\n");
       }
    }
 
