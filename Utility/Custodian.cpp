@@ -297,7 +297,7 @@ void Collision<Asteroid3D, ProjectileShot>::handleCollision() {
    static Vector3D particleVariation;
    static Vector3D positionDifference;
    const double particleSpeed = 15;
-   double speed = 10 / (a->radius);
+   double speed = 6 / (a->radius);
 
    b->shouldRemove = true;
    

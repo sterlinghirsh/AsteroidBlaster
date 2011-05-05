@@ -588,7 +588,7 @@ Shard* Asteroid3D::makeShard(int num) {
 Asteroid3D* Asteroid3D::makeChild(int num, int dimension) {
    Asteroid3D* asteroid;
    asteroid = new Asteroid3D(radius/2, worldSize, gameState);
-   asteroid->velocity->scalarMultiplyUpdate(4);
+   asteroid->velocity->scalarMultiplyUpdate(3);
    asteroid->velocity->addUpdate(*velocity);
    asteroid->position->clone(position);
    if (dimension % 3 == 0)
