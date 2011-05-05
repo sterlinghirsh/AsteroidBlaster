@@ -177,6 +177,9 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
       b->lastHitFrame = curFrame;
       b->owner->score += (int) a->radius * 10;
       b->drawLength = a->position->distanceFrom(*b->position);
+      a->shakeAmount = 1;
+      a->justGotHit = doubleTime();
+      SoundEffect::playSoundEffect("BlasterHit.wav");
    }
 }
 
@@ -586,6 +589,7 @@ Custodian::Custodian(const GameState* _gameState) :
       collisionHandlers->push_back(new Collision<AsteroidShip, Asteroid3D>);
       collisionHandlers->push_back(new Collision<AsteroidShip, Shard>);
       collisionHandlers->push_back(new Collision<AsteroidShip, ProjectileShot>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, BeamShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, ElectricityShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, EnergyShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, TimedBombShot>);
