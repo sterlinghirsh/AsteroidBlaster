@@ -132,6 +132,7 @@ class AsteroidShip : public Object3D {
 
       float getShakeAmount();
       void setShakeAmount(float shakeIn);
+      double getAliveTime();
 
       void drawShotDirectionIndicators();
       void drawCrosshair();

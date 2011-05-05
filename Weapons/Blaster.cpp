@@ -15,7 +15,17 @@ Blaster::Blaster(AsteroidShip* owner)
 : Weapon(owner) {
    shotSpeed = 40; // Units per second
    coolDown = 0.15; // Seconds
-   randomVariationAmount = 1.5; // Units
+
+   // Set the randomVariationAmount differently based on whether it's AI using it.
+   if (owner->shooter->isEnabled()) {
+      randomVariationAmount = 3; // Units
+   }
+
+   // More accurate if it's a human player
+   else {
+      randomVariationAmount = 1.5; // Units
+   }
+
    name = "Blaster";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo

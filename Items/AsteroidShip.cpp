@@ -362,7 +362,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 
 void AsteroidShip::update(double timeDiff) {
    if (health <= 0) {
-      const double respawnTime = 3;
+      const double respawnTime = 4;
       shakeAmount = 0;
       // Handle respawning.
       if (!respawnTimer.isRunning) {
@@ -1230,6 +1230,13 @@ Weapon* AsteroidShip::getWeapon(int wep) {
 
 float AsteroidShip::getShakeAmount() {
    return shakeAmount;
+}
+
+/**
+ * How long has the ship been alive for?
+ */
+double AsteroidShip::getAliveTime() {
+   return aliveTimer.getTimeRunning();
 }
 
 void AsteroidShip::setShakeAmount(float shakeIn) {

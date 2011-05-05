@@ -159,8 +159,10 @@ Object3D* ShootingAI::chooseTarget() {
 
       if (isAShip) {
          consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
-         // Don't shoot at myself.
-         if (consideredShip->id == ship->id)// || consideredShip->isRespawning())
+         /* Don't shoot at myself, or the enemy if it's respawning, or if they just spawned.
+          * This is to avoid spawn camping.
+          */
+         if (consideredShip->id == ship->id || consideredShip->isRespawning() || consideredShip->getAliveTime() < 3)
             continue;
       }
 
