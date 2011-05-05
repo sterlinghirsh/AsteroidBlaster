@@ -42,20 +42,15 @@ class GameState : public InputReceiver {
        * update it in updateText(), and make it draw in drawAllText().
        */
       Text *FPSText,
-                        *numAsteroidsText,
-                        *numShardsText,
-                        *scoreText,
-                        *shardText,
-                        *healthText,
-                        *gameOverText,
-                        *winText,
-                        *weaponText,
-                        *ammoText,
-                        *curLevelText,
-                        *timerText;
-                        
-                        
-                        
+           *scoreText,
+           *shardText,
+           //*weaponText,
+           //*ammoText,
+           *curLevelText,
+           *timerText,
+           *gameOverText,
+           *winText;
+
       Custodian custodian;
       AsteroidShip* ship;
       Ball* ball;

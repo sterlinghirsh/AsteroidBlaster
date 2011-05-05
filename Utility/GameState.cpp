@@ -67,18 +67,17 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    std::string fontName = DEFAULT_FONT;
    int fontSize = 18;
    
+   //new all the test class we will be using
    FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
-   numAsteroidsText = new Text("Asteroids Remaining: ", custodian.asteroidCount, "",  hudFont, position);
-   numShardsText = new Text("Shards Remaining: ", custodian.shardCount, "",  hudFont, position);
    scoreText = new Text("Score: ", ship->getScore(), "",  hudFont, position);
    shardText = new Text("Shards: ", ship->getShards(), "",  hudFont, position);
-   healthText = new Text("Health: ", ship->getHealth(), "",  hudFont, position);
-   weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  hudFont, position);
-   
-   // Get the ammo into a stream to turn it into a string.
-   sstream2 << ship->getCurrentWeapon()->curAmmo;
-   ammoText = new Text("Ammo: ", sstream2.str(), "",  hudFont, position);
-   timerText = new Text("Time: ", sstream2.str(), "", hudFont, position);
+   //ammoText = new Text("Ammo: ", sstream2.str(), "",  hudFont, position);
+   //weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  hudFont, position);
+   timerText = new Text("", sstream2.str(), "", hudFont, position);
+   timerText->alignment = RIGHT_ALIGN;
+   curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
+   curLevelText->alignment = RIGHT_ALIGN;
+
    // Clear the sstream2
    sstream2.str("");
    
@@ -119,7 +118,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
    // TODO: comment this or rename it.
    isW = isA = isS = isD = false;
 
-   curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
+   
 }
 
 /**
@@ -542,51 +541,37 @@ void GameState::drawAllText() {
    
    SDL_Rect position;
    const Sint16 positionDifferenceY = 15;
+
+
+   // Position all the text on left side
    position.x = 10;
    position.y = 30;
-
-   /* Don't draw stuff in front of the text. */
-   //glDisable(GL_DEPTH_TEST);
-
-   // Draw all of the Text objects.
    FPSText->setPosition(position);
-   FPSText->draw();
-   
-   position.y = (Sint16) (position.y + positionDifferenceY);
-   numAsteroidsText->setPosition(position);
-   numAsteroidsText->draw();
 
-   position.y = (Sint16) (position.y + positionDifferenceY);
-   numShardsText->setPosition(position);
-   numShardsText->draw();
-   
    position.y = (Sint16) (position.y + positionDifferenceY);
    scoreText->setPosition(position);
-   scoreText->draw();
    
    position.y = (Sint16) (position.y + positionDifferenceY);
    shardText->setPosition(position);
-   shardText->draw();
    
-   //position.y = (Sint16) (position.y + positionDifferenceY);
-   //healthText->setPosition(position);
-   //healthText->draw();
-   
-   position.y = (Sint16) (position.y + positionDifferenceY);
-   weaponText->setPosition(position);
-   weaponText->draw();
-   
-   position.y = (Sint16) (position.y + positionDifferenceY);
-   ammoText->setPosition(position);
-   ammoText->draw();
-   
-   position.y = (Sint16) (position.y + positionDifferenceY);
+   // Position all the text on right side
+   position.x = (Sint16)(gameSettings->GW - 30);
+   position.y = 30;
    curLevelText->setPosition(position);
-   curLevelText->draw();
-
+   
    position.y = (Sint16) (position.y + positionDifferenceY);
    timerText->setPosition(position);
+   
+   // Draw all the text on left side
+   FPSText->draw();
+   scoreText->draw();
+   shardText->draw();
+
+   // Draw all the text on right side
    timerText->draw();
+   curLevelText->draw();
+
+   // Draw all overlay message
    GameMessage::drawAllMessages();
 }
 
@@ -594,21 +579,18 @@ void GameState::drawAllText() {
  * Update the values contained in all of the texts.
  */
 void GameState::updateText() {
-   FPSText->updateBody(curFPS);
-   numAsteroidsText->updateBody(custodian.asteroidCount);
-   numShardsText->updateBody(custodian.shardCount);
+   FPSText->updateBody((int)curFPS);
    scoreText->updateBody(ship->getScore());
    shardText->updateBody(ship->getShards());
-   healthText->updateBody(ship->getHealth());
-   weaponText->updateBody(ship->getCurrentWeapon()->getName());
+   //weaponText->updateBody(ship->getCurrentWeapon()->getName());
    // If the gun has infinite ammo, say so.
-   if(ship->getCurrentWeapon()->curAmmo == -1)
+   /*if(ship->getCurrentWeapon()->curAmmo == -1)
       ammoText->updateBody("Inf");
    else {
       sstream2 << ship->getCurrentWeapon()->curAmmo;
       ammoText->updateBody(sstream2.str());
       sstream2.str("");
-   }
+   }*/
 
    // Update the timer on screen to show the minutes & seconds remaining.
    std::string minutes;
@@ -742,7 +724,11 @@ void GameState::nextLevel() {
    Music::stopMusic();
    Music::playMusic("8-bit3.ogg");
    
-   storeMenu->menuActive = true;
+   if (!ship->shooter->isEnabled() && !ship->flyingAI->isEnabled()) {
+      storeMenu->menuActive = true;
+   } else {
+      setLevelTimer();
+   }
 
    minimap = new Minimap(ship);
    gameIsRunning = true;
