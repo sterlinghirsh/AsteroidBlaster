@@ -753,6 +753,11 @@ void GameState::nextLevel() {
    numAsteroidsToSpawn = curLevel;
    printf("Level'd up to %d!\n",curLevel);
    initAsteroids();
+   
+   if (curLevel > 1) {
+      addAIPlayer();
+   }
+
    GameMessage::Clear();
    addLevelMessage();
    countDown = 5;
