@@ -96,7 +96,7 @@ void Particle::draw()
    
    position->glTranslate();
    
-   float alpha = (float) ((startTime + life) - doubleTime()); 
+   float alpha = (float) clamp(((startTime + life) - doubleTime()), 0, 1); 
 
    // glColor4f clamps alpha to [0, 1].
    glColor4f( r,g,b, alpha);
