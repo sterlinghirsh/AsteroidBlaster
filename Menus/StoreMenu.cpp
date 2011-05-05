@@ -156,7 +156,7 @@ void StoreMenu::draw() {
    //health
    position.x = (Sint16) (gameSettings->GW*(2.0/10.0));
    position.y = (Sint16) (gameSettings->GH*(9.5/10.0));
-   healthText->updateBody(gameState->ship->health);
+   healthText->updateBody((int)gameState->ship->health);
    healthText->setPosition(position);
    
    
@@ -362,6 +362,9 @@ void StoreMenu::keyDown(int key) {
       handleLevelTimer();
 
       Music::playMusic("Asteroids2.ogg");
+      break;
+   case SDLK_F10:
+      gameState->ship->nShards += 10;
       break;
    }
 }

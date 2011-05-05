@@ -416,12 +416,7 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    //health regen
-   static double healthRegenTimer = 1.0;
-   if (healthRegenTimer <= 0) {
-      health += regenHealthLevel;
-      healthRegenTimer = 1.0;
-   }
-   healthRegenTimer -= timeDiff;
+   health += regenHealthLevel * timeDiff;
 
    if (shooter->isEnabled()) {
       shooter->think(timeDiff);
