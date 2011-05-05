@@ -698,6 +698,7 @@ void drawGameState(GameState* gameStateIn,
    if (!gameStateIn->inMenu) {
       gameStateIn->drawHud();
    }
+   gameStateIn->drawOverlay();
 
    glPopMatrix();
    // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
@@ -745,6 +746,9 @@ void initFbo() {
 
    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT,
          GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT3_EXT,
+         GL_TEXTURE_2D, Texture::getTexture("overlayTex"), 0);
 
    GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);

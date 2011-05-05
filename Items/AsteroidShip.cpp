@@ -1182,7 +1182,11 @@ Weapon* AsteroidShip::getCurrentWeapon() {
  * Just tell us what the next weapon up would be, but don't switch to it.
  */
 Weapon* AsteroidShip :: getNextWeapon() {
-   return weapons[(currentWeapon + 1) %weapons.size()];
+   //return weapons[(currentWeapon + 1) %weapons.size()];
+   //int tmpIndex = std::min(currentWeapon + 1, (int)weapons.size() - 1);
+   printf("getNext\n");
+   int tmpIndex = std::max(currentWeapon, (currentWeapon + 1) % (int) weapons.size());
+   return weapons[tmpIndex];
 }
 
 
@@ -1190,27 +1194,48 @@ Weapon* AsteroidShip :: getNextWeapon() {
  * Just tell us what the previous weapon would be, but don't switch to it.
  */
 Weapon* AsteroidShip :: getPreviousWeapon() {
-   return weapons[(currentWeapon - 1) %weapons.size()];
+   //return weapons[(currentWeapon - 1) %weapons.size()];
+   //int tmpIndex = std::max(currentWeapon - 1, 0);
+   //int tmpIndex = std::min(currentWeapon - 1, (currentWeapon + (int) weapons.size() - 1) % (int) weapons.size());
+   printf("getPrev\n");
+   int tmpIndex = std::max(currentWeapon - 1, 0);
+   return weapons[tmpIndex];
 }
 
 /**
- * Increment the current weapon and mod by the number of weapons.
+ * Find the next available weapon.
  */
 void AsteroidShip::nextWeapon() {
-   selectWeapon((currentWeapon + 1) % (int) weapons.size());
+   int thisWeapon = currentWeapon;
+   while (currentWeapon < weapons.size() - 1) {
+      if (weapons[currentWeapon + 1]->purchased) {
+         currentWeapon++;
+         return;
+      } else {
+         currentWeapon++;
+      }
+   }
+   if (!weapons[currentWeapon]->purchased) {
+      currentWeapon = thisWeapon;
+   }
 }
 
 /**
- * Decrement the current weapon and mod by the number of weapons.
+ * Find the previous available weapon.
  */
 void AsteroidShip::prevWeapon() {
-   // We add weaons.size() in the middle so that we don't do -1 % something.
-   selectWeapon((currentWeapon + (int) weapons.size() - 1) % (int) weapons.size());
-}
-
-// Return a reference to the list of weapons that the ship has.
-std::vector<Weapon*> AsteroidShip :: getWeaponsList() {
-   return weapons;
+   int thisWeapon = currentWeapon;
+   while (currentWeapon > 0) {
+      if (weapons[currentWeapon - 1]->purchased) {
+         currentWeapon--;
+         return;
+      } else {
+         currentWeapon--;
+      }
+   }
+   if (!weapons[currentWeapon]->purchased) {
+      currentWeapon = thisWeapon;
+   }
 }
 
 // Get the number of types of weapons the ship has. They're indexed 0 - (n-1)

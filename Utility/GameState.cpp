@@ -26,100 +26,100 @@ extern double minimapSizeFactor;
 std::ostringstream GameState :: sstream2;
 
 GameState::GameState(double worldSizeIn, bool _inMenu) :
- custodian(this) {
-   inMenu = _inMenu;
-   
-   godMode = false;
-   gameIsRunning = true;
-   levelOver = false;   
-   usingShipCamera = true;
-   
-   /* A view frustum culled list of objects to be used for drawing and by
-      the shooting AI.
-      */
-   viewFrustumObjects = NULL;
-   targetableViewFrustumObjects = NULL;
+   custodian(this) {
+      inMenu = _inMenu;
 
-   worldSize = worldSizeIn;
-   skybox = new Skybox();
-   ship = new AsteroidShip(this, -1);
-   if(!inMenu) {
-      ship = new AsteroidShip(this, shipId++);
+      godMode = false;
+      gameIsRunning = true;
+      levelOver = false;
+      usingShipCamera = true;
+
+      /* A view frustum culled list of objects to be used for drawing and by
+         the shooting AI.
+         */
+      viewFrustumObjects = NULL;
+      targetableViewFrustumObjects = NULL;
+
+      worldSize = worldSizeIn;
+      skybox = new Skybox();
+      ship = new AsteroidShip(this, -1);
+      if(!inMenu) {
+         ship = new AsteroidShip(this, shipId++);
+      }
+      spring = new Spring(this);
+      minimap = new Minimap(ship);
+
+      shipCamera = new Camera(ship);
+      spring->attach(ship, shipCamera);
+      spectatorCamera = new Camera(false);
+      //make it look at the center of the map for spectator mode
+      spectatorCamera->lookAt(0.0, 0.0, 0.0);
+      spectatorSpeed = 0.5;
+      spectatorRadius = 120.0;
+
+      cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
+      //sphere = new BoundingSphere(worldSize, 0, 0, 0);
+      // Set up our text objects to be displayed on screen.
+      curFPS = 0;
+
+      // Init Text Objects
+      SDL_Rect position = {0,0};
+      std::string fontName = DEFAULT_FONT;
+      int fontSize = 18;
+
+      //new all the test class we will be using
+      FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
+      scoreText = new Text("Score: ", ship->getScore(), "",  hudFont, position);
+      shardText = new Text("Shards: ", ship->getShards(), "",  hudFont, position);
+      //ammoText = new Text("Ammo: ", sstream2.str(), "",  hudFont, position);
+      //weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  hudFont, position);
+      timerText = new Text("", sstream2.str(), "", hudFont, position);
+      timerText->alignment = RIGHT_ALIGN;
+      curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
+      curLevelText->alignment = RIGHT_ALIGN;
+
+      // Clear the sstream2
+      sstream2.str("");
+
+      // Improve the positioning code.
+      weaponReadyBar = new ProgressBar(0.75f, 0.05f, -1.2f, -0.3f);
+      float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH *
+         2.0f * 0.6f;
+      const float healthHeight = 0.18f;
+      const float weaponBarHeight = 0.3f;
+      healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
+      healthBar->setHorizontal(true);
+      healthBar->setSkew(0.0, 0.05f);
+      //weaponBar = new WeaponDisplay(healthHeight * 1.5f, 1.0f, 0.0f, -0.9f + (healthHeight * 0.5f), this);
+      weaponBar = new WeaponDisplay(weaponBarHeight, weaponBarHeight, 0.0f, -0.9f + (weaponBarHeight * 0.5f), this);
+      //healthBar->setIcon("ShieldIcon");
+      weaponReadyBar->setIcon("ShotIcon");
+
+      // Set up objects.
+      custodian.add(ship);
+
+      // Start off at level 1.
+      curLevel = 1;
+      // Spawn one more asteroid for each level.
+      numAsteroidsToSpawn = curLevel;
+      initAsteroids();
+      doYaw = 0;
+      mouseX = 0;
+      mouseY = 0;
+      // The length of the countdown at the end of the level.
+      countDown = 6;
+      isCountingDown = false;
+
+      // Make a good formula here for how many seconds a level should last.
+      levelDuration = 180;
+
+      godMode = false;
+
+      // TODO: comment this or rename it.
+      isW = isA = isS = isD = false;
+
+
    }
-   spring = new Spring(this);
-   minimap = new Minimap(ship);
-
-   shipCamera = new Camera(ship);
-   spring->attach(ship, shipCamera);   
-   spectatorCamera = new Camera(false);
-   //make it look at the center of the map for spectator mode
-   spectatorCamera->lookAt(0.0, 0.0, 0.0);
-   spectatorSpeed = 0.5;
-   spectatorRadius = 120.0;
-   
-   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
-   //sphere = new BoundingSphere(worldSize, 0, 0, 0);
-   // Set up our text objects to be displayed on screen.
-   curFPS = 0;
-
-   // Init Text Objects
-   SDL_Rect position = {0,0};
-   std::string fontName = DEFAULT_FONT;
-   int fontSize = 18;
-   
-   //new all the test class we will be using
-   FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
-   scoreText = new Text("Score: ", ship->getScore(), "",  hudFont, position);
-   shardText = new Text("Shards: ", ship->getShards(), "",  hudFont, position);
-   //ammoText = new Text("Ammo: ", sstream2.str(), "",  hudFont, position);
-   //weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  hudFont, position);
-   timerText = new Text("", sstream2.str(), "", hudFont, position);
-   timerText->alignment = RIGHT_ALIGN;
-   curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
-   curLevelText->alignment = RIGHT_ALIGN;
-
-   // Clear the sstream2
-   sstream2.str("");
-   
-   // Improve the positioning code.
-   weaponReadyBar = new ProgressBar(0.75f, 0.05f, -1.2f, -0.3f);
-   float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH *
-      2.0f * 0.6f;
-   const float healthHeight = 0.18f;
-   const float weaponBarHeight = 0.3f;
-   healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
-   healthBar->setHorizontal(true);
-   healthBar->setSkew(0.0, 0.05f);
-   //weaponBar = new WeaponDisplay(healthHeight * 1.5f, 1.0f, 0.0f, -0.9f + (healthHeight * 0.5f), this);
-   weaponBar = new WeaponDisplay(weaponBarHeight, weaponBarHeight, 0.0f, -0.9f + (weaponBarHeight * 0.5f), this);
-   //healthBar->setIcon("ShieldIcon");
-   weaponReadyBar->setIcon("ShotIcon");
-
-   // Set up objects.
-   custodian.add(ship);
-
-   // Start off at level 1.
-   curLevel = 1;
-   // Spawn one more asteroid for each level.
-   numAsteroidsToSpawn = curLevel;
-   initAsteroids();
-   doYaw = 0;
-   mouseX = 0;
-   mouseY = 0;
-   // The length of the countdown at the end of the level.
-   countDown = 6;
-   isCountingDown = false;
-
-   // Make a good formula here for how many seconds a level should last.
-   levelDuration = 180;
-
-   godMode = false;
-
-   // TODO: comment this or rename it.
-   isW = isA = isS = isD = false;
-
-   
-}
 
 /**
  * The game should run for levelDuration # of seconds.
@@ -158,6 +158,7 @@ GameState::~GameState() {
    delete rawScreen;
    delete bloomScreen;
    delete fboScreen;
+   delete overlayScreen;
 }
 
 void GameState::addAIPlayer() {
@@ -179,6 +180,7 @@ void GameState::addScreens() {
    rawScreen = new Screen(0, 0, Texture::getTexture("hblurTex"));
    bloomScreen = new Screen(0, 1, Texture::getTexture("bloomTex"));
    fboScreen = new Screen(1, 0, Texture::getTexture("fboTex"));
+   overlayScreen = new Screen(0, 2, Texture::getTexture("overlayTex"));
 }
 
 /**
@@ -187,24 +189,24 @@ void GameState::addScreens() {
 void GameState::update(double timeDiff) {
    // If the level should be over, let's go to the store menu.
    if(levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) {
-         levelTimer.reset();
-         nextLevel();
-         return;
+      levelTimer.reset();
+      nextLevel();
+      return;
    }
    // Determine whether or not the game should continue running
    //if (gameIsRunning && ship->getHealth() <= 0) {
 
-      //gameIsRunning = false;
-      // Draw the win or lose text
-      /*
+   //gameIsRunning = false;
+   // Draw the win or lose text
+   /*
       if (!gameIsRunning && ship->getHealth() <= 0) {
-         std::ostringstream msg;
-         msg << "Game Over!";
-         GameMessage::Add(msg.str(), 30, 5);
+      std::ostringstream msg;
+      msg << "Game Over!";
+      GameMessage::Add(msg.str(), 30, 5);
       } else if (!gameIsRunning && ship->getHealth() > 0) {
-         std::ostringstream msg;
-         msg << "Game Won!";
-         GameMessage::Add(msg.str(), 30, 5);
+      std::ostringstream msg;
+      msg << "Game Won!";
+      GameMessage::Add(msg.str(), 30, 5);
       }
       SoundEffect::stopAllSoundEffect();
       */
@@ -238,7 +240,7 @@ void GameState::update(double timeDiff) {
 
    // Keep items in the box.
    cube->constrain(ship);
-   
+
    // Update each item.
    for (item = objects->begin(); item != objects->end(); ++item) {
       if (*item == NULL)
@@ -246,11 +248,11 @@ void GameState::update(double timeDiff) {
       (*item)->update(timeDiff);
       cube->constrain(*item);
    }
-   
+
    // Add items that should be added, remove items that should be removed, update
    // positions in the sorted lists.
    custodian.update();
-   
+
    // Get updated list.
    objects = custodian.getListOfObjects();
 
@@ -266,10 +268,10 @@ void GameState::update(double timeDiff) {
       delete collisions;
       // TODO: fix memory leak.
    }
-   
+
    // Update all of the text seen on screen.
    updateText();
-   
+
    weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
    healthBar->setAmount(((float) ship->health / (float) ship->healthMax));
    cube->update(timeDiff);
@@ -304,6 +306,7 @@ void GameState::drawScreens() {
    bloomScreen->draw();
    rawScreen->draw();
    fboScreen->draw();
+   overlayScreen->draw();
 }
 
 /**
@@ -330,7 +333,7 @@ void GameState::draw(bool drawGlow) {
    } else {
       currentCamera = spectatorCamera;
    }
-   
+
    shipCamera->setViewVector(ship->getViewVector());
    shipCamera->setOffset(*ship->getCameraOffset());
 
@@ -344,7 +347,7 @@ void GameState::draw(bool drawGlow) {
    // Get a list of all of the objects after culling them down to the view frustum.
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
    // Get targetable view frustum objects in the shooting ai.
-   
+
    if (!drawGlow) {
       glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
       if (!inMenu && usingShipCamera)
@@ -353,9 +356,9 @@ void GameState::draw(bool drawGlow) {
       for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
          if (*listIter == NULL) {
             continue;
-         } else if (*listIter == ship && inMenu) { 
+         } else if (*listIter == ship && inMenu) {
             // Don't draw the ship in first Person mode.
-         } else {      
+         } else {
             (*listIter)->draw();
          }
       }
@@ -365,7 +368,7 @@ void GameState::draw(bool drawGlow) {
       for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
          if (*listIter == NULL || *listIter == ship) {
             continue;
-         } else {      
+         } else {
             (*listIter)->drawGlow();
          }
       }
@@ -373,7 +376,7 @@ void GameState::draw(bool drawGlow) {
       if (!inMenu) {
          // if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
          // ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
-            ship->draw();
+         ship->draw();
       }
    }
 
@@ -438,7 +441,7 @@ void GameState::vBlur() {
    GLint texLoc = glGetUniformLocation(vBlurShader, "blurSampler");
    glUseProgram(vBlurShader);
    glUniform1i(texLoc, tex);
-   
+
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
    glDrawBuffer(GL_COLOR_ATTACHMENT2_EXT);
 
@@ -459,7 +462,7 @@ void GameState::vBlur() {
    glEnable(GL_LIGHTING);
    glPopMatrix();
    glUseProgram(0);
-   
+
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
    //printf("v\n");
 }
@@ -493,7 +496,7 @@ void GameState::drawBloom() {
    glEnable(GL_LIGHTING);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glPopMatrix();
-   
+
    glColor4f(1.0, 1.0, 1.0, 1.0);
    glBindTexture(GL_TEXTURE_2D, 0);
    glClear(GL_DEPTH_BUFFER_BIT);
@@ -507,7 +510,7 @@ void GameState::drawHud() {
     * The shipCamera is set to be just 0.25 behind where you're looking at.
     */
    gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
-   
+
    //glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
 
 
@@ -527,9 +530,53 @@ void GameState::drawHud() {
    usePerspective();
    glPopMatrix();
    glEnable(GL_CULL_FACE);
-   
+
    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
+
+void GameState::drawOverlay() {
+   useOrtho();
+   glPushMatrix();
+   glBlendFunc(GL_ONE, GL_ONE);
+   glDisable(GL_LIGHTING);
+   float minY = -1.0;
+   float maxY = 1.0;
+   float minX = -1.0f * aspect;
+   float maxX = 1.0f * aspect;
+   glEnable(GL_TEXTURE_2D);
+   glBindTexture(GL_TEXTURE_2D, Texture::getTexture("overlayTex"));
+
+   float texMaxX = (float) gameSettings->GW / (float) texSize;
+   float texMaxY = (float) gameSettings->GH / (float) texSize;
+   glColor3f(1.0, 1.0, 1.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(minX, minY, 0.0);
+   glTexCoord2f(texMaxX, 0.0);
+   glVertex3f(maxX, minY, 0.0);
+   glTexCoord2f(texMaxX, texMaxY);
+   glVertex3f(maxX, maxY, 0.0);
+   glTexCoord2f(0.0, texMaxY);
+   glVertex3f(minX, maxY, 0.0);
+   glEnd();
+   glDisable(GL_TEXTURE_2D);
+   glEnable(GL_LIGHTING);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glPopMatrix();
+
+   //glColor4f(1.0, 1.0, 1.0, 1.0);
+   glBindTexture(GL_TEXTURE_2D, 0);
+   glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+/*
+void GameState::clearOverlay() {
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+   glDrawBuffer(GL_COLOR_ATTACHMENT2_EXT);
+   glClear(GL_COLOR_BUFFER_BIT);
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+}
+*/
 
 /**
  * Draw all of the text in the allTexts list to the screen.
@@ -538,7 +585,7 @@ void GameState::drawHud() {
  * one time here to improve efficiency.
  */
 void GameState::drawAllText() {
-   
+
    SDL_Rect position;
    const Sint16 positionDifferenceY = 15;
 
@@ -550,18 +597,18 @@ void GameState::drawAllText() {
 
    position.y = (Sint16) (position.y + positionDifferenceY);
    scoreText->setPosition(position);
-   
+
    position.y = (Sint16) (position.y + positionDifferenceY);
    shardText->setPosition(position);
-   
+
    // Position all the text on right side
    position.x = (Sint16)(gameSettings->GW - 30);
    position.y = 30;
    curLevelText->setPosition(position);
-   
+
    position.y = (Sint16) (position.y + positionDifferenceY);
    timerText->setPosition(position);
-   
+
    // Draw all the text on left side
    FPSText->draw();
    scoreText->draw();
@@ -585,12 +632,12 @@ void GameState::updateText() {
    //weaponText->updateBody(ship->getCurrentWeapon()->getName());
    // If the gun has infinite ammo, say so.
    /*if(ship->getCurrentWeapon()->curAmmo == -1)
-      ammoText->updateBody("Inf");
-   else {
-      sstream2 << ship->getCurrentWeapon()->curAmmo;
-      ammoText->updateBody(sstream2.str());
-      sstream2.str("");
-   }*/
+     ammoText->updateBody("Inf");
+     else {
+     sstream2 << ship->getCurrentWeapon()->curAmmo;
+     ammoText->updateBody(sstream2.str());
+     sstream2.str("");
+     }*/
 
    // Update the timer on screen to show the minutes & seconds remaining.
    std::string minutes;
@@ -624,7 +671,7 @@ void GameState::initAsteroids() {
    }
 
    Asteroid3D* tempAsteroid;
-   
+
    std::set<CollisionBase*, compareByDistance>* collisions;
    std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
@@ -678,7 +725,7 @@ void GameState::reset(bool shouldLoad) {
    delete ship;
    delete spring;
    delete minimap;
-   
+
    custodian.clear();
    Particle::Clear();
 
@@ -687,10 +734,10 @@ void GameState::reset(bool shouldLoad) {
    if(shouldLoad) {
       load();
    }
-   
+
    numAsteroidsToSpawn = curLevel;
    curLevelText->updateBody(curLevel);
-   
+
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    ship = new AsteroidShip(this, shipId++);
    spring = new Spring(this);
@@ -709,7 +756,7 @@ void GameState::reset(bool shouldLoad) {
 
    GameMessage::Clear();
    addLevelMessage();
-   
+
    setLevelTimer();
 }
 
@@ -723,7 +770,7 @@ void GameState::nextLevel() {
    SoundEffect::stopAllSoundEffect();
    Music::stopMusic();
    Music::playMusic("8-bit3.ogg");
-   
+
    if (!ship->shooter->isEnabled() && !ship->flyingAI->isEnabled()) {
       storeMenu->menuActive = true;
    } else {
@@ -739,7 +786,7 @@ void GameState::nextLevel() {
    numAsteroidsToSpawn = curLevel;
    printf("Level'd up to %d!\n",curLevel);
    initAsteroids();
-   
+
    if (curLevel > 1) {
       addAIPlayer();
    }
@@ -755,11 +802,11 @@ void GameState::nextLevel() {
 void GameState::keyDown(int key) {
    //If game is not running, do not take input anymore
    if(!gameIsRunning){ return;}
-      
+
    switch(key) {
-   //movement keys, not valid if flying AI is enabled
-   
-   if(!ship->flyingAI->isEnabled()) {
+      //movement keys, not valid if flying AI is enabled
+
+      if(!ship->flyingAI->isEnabled()) {
       case SDLK_w:
          isW = true;
          if (isS) {
@@ -768,7 +815,7 @@ void GameState::keyDown(int key) {
             ship->accelerateForward(1);
          }
          break;
-         
+
       case SDLK_s:
          isS = true;
          if (isW) {
@@ -817,20 +864,20 @@ void GameState::keyDown(int key) {
          ship->setRollSpeed(0);
          break;
 
-      /*
-      case SDLK_LSHIFT:
-         ship->setBoost(true);
-         break;
-      */
+         /*
+            case SDLK_LSHIFT:
+            ship->setBoost(true);
+            break;
+            */
 
       case SDLK_b:
          ship->setBrake(true);
          break;
-   
-   }
+
+      }
 
 
-   //Camera controls
+      //Camera controls
    case SDLK_8:
       ship->setZoomSpeed(-1);
       break;
@@ -856,9 +903,9 @@ void GameState::keyDown(int key) {
    case SDLK_KP_DIVIDE:
       spectatorRadius -= 10.0;
       break;
-      
 
-   // AI controls
+
+      // AI controls
    case SDLK_g:
       //TODO: Based on how many shooting AIs this ship has, activate the correct one.
       if(ship->shooter->isEnabled())
@@ -891,33 +938,29 @@ void GameState::keyDown(int key) {
       break;
 
 
-   //switch weapons
+      //switch weapons
    case SDLK_v:
       // If we're in godMode, ignore whether or not a weapon is purchased
       if(godMode)
-         ship->prevWeapon();
+         ship->nextWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
-         do {
-            ship->nextWeapon();
-         } while (!ship->getCurrentWeapon()->purchased);
+         ship->prevWeapon();
       }
       break;
-      
+
    case SDLK_z:
       // If we're in godMode, ignore whether or not a weapon is purchased
       if(godMode)
-         ship->prevWeapon();
+         ship->nextWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
-         do {
-            ship->prevWeapon();
-         } while (!ship->getCurrentWeapon()->purchased);
+         ship->nextWeapon();
       }
       break;
 
 
-   // Minimap Display Size
+      // Minimap Display Size
    case SDLK_1:
       minimap->adjustDisplaySizeDirection = 1;
       break;
@@ -941,7 +984,7 @@ void GameState::keyDown(int key) {
       break;
 
 
-   // Audio and Video settings
+      // Audio and Video settings
    case SDLK_KP_ENTER:
       if (Mix_PausedMusic()) {
          Music::resumeMusic();
@@ -949,9 +992,9 @@ void GameState::keyDown(int key) {
          Music::pauseMusic();
       }
       break;
-   
-   
-   // DEBUG KEYS
+
+
+      // DEBUG KEYS
    case SDLK_F2:
       gameSettings->bloom = !gameSettings->bloom;
       break;
@@ -969,7 +1012,7 @@ void GameState::keyDown(int key) {
    case SDLK_F10:
       ship->nShards += 10;
       break;
-   // If the user presses F11, give them all of the weapons.
+      // If the user presses F11, give them all of the weapons.
    case SDLK_F11:
       // Make all of the weapons be purchased.
       for (int i = 0; i < ship->getNumWeapons(); i++) {
@@ -979,7 +1022,7 @@ void GameState::keyDown(int key) {
          }
       }
       break;
-   // Enables God Mode
+      // Enables God Mode
    case SDLK_F12:
       godMode = !godMode;
       printf("Zoe mode: %d\n", godMode);
@@ -1066,22 +1109,22 @@ void GameState::keyUp(int key) {
    case SDLK_b:
       ship->setBrake(false);
       break;
-   // Minimap Size
+      // Minimap Size
    case SDLK_1:
       minimap->adjustDisplaySizeDirection = 0;
       break;
    case SDLK_2:
       minimap->adjustDisplaySizeDirection = 0;
       break;
-   // Minimap Zoom
+      // Minimap Zoom
    case SDLK_3:
       minimap->adjustZoomDirection = 0;
       break;
    case SDLK_4:
       minimap->adjustZoomDirection = 0;
       break;
-   
-   // Camera
+
+      // Camera
    case SDLK_8:
    case SDLK_9:
       ship->setZoomSpeed(0);
@@ -1095,7 +1138,7 @@ void GameState::keyUp(int key) {
 void GameState::mouseDown(int button) {
    //If game is not running, do not take input anymore
    if(!gameIsRunning){ return;}
-   
+
    switch(button) {
       // Left mouse down
    case 1:
@@ -1114,23 +1157,19 @@ void GameState::mouseDown(int button) {
    case 4:
       // If we're in godMode, ignore whether or not a weapon is purchased
       if(godMode)
-         ship->nextWeapon();
+         ship->prevWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
-         do {
-            ship->nextWeapon();
-         } while (!ship->getCurrentWeapon()->purchased);
+         ship->prevWeapon();
       }
       break;
    case 5:
       // If we're in godMode, ignore whether or not a weapon is purchased
       if(godMode)
-         ship->prevWeapon();
+         ship->nextWeapon();
       else {
          // Keep scrolling through weapons as long as they're not purchased.
-         do {
-            ship->prevWeapon();
-         } while (!ship->getCurrentWeapon()->purchased);
+         ship->nextWeapon();
       }
       break;
    }
@@ -1142,7 +1181,7 @@ void GameState::mouseDown(int button) {
 void GameState::mouseUp(int button) {
    //If game is not running, do not take input anymore
    if(!gameIsRunning){ return;}
-   
+
    switch (button) {
       // Left mouse up
    case 1:
@@ -1161,7 +1200,7 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    //If game is not running, do not take input anymore
    if(!gameIsRunning)
       return;
-   
+
    shipControlX = p2wx(x);
    shipControlY = p2wy(y);
 
@@ -1231,7 +1270,7 @@ void GameState::debugPosition() {
 
    asteroid->update(0.01);
    asteroid->debug();
-   
+
    // Make all of the weapons be purchased.
    for (int i = 0; i < ship->getNumWeapons(); i++) {
       ship->getWeapon(i)->purchased = true;

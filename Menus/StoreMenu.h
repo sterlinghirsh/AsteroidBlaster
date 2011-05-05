@@ -53,6 +53,7 @@ class StoreMenu : public Menu {
       //called from the outside
       void draw();
       void update(double dt);
+      void clearOverlay();
       
       //virtual functions required by InputReciever
       virtual void keyUp(int key);

@@ -123,7 +123,19 @@ StoreMenu::~StoreMenu() {
    }
 }
 
+void StoreMenu::clearOverlay() {
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+   glDrawBuffer(GL_COLOR_ATTACHMENT3_EXT);
+
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+}
+
 void StoreMenu::draw() {
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+   glDrawBuffer(GL_COLOR_ATTACHMENT3_EXT);
+   
    SDL_Rect position;
    position.x = (Sint16) (gameSettings->GW/3);
    position.y = (Sint16) (gameSettings->GH/2);
@@ -288,8 +300,10 @@ void StoreMenu::draw() {
    }
    
    Image::getImage("StoreMenuLogo")->drawImage();
-   SDL_GL_SwapBuffers();
-
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+   usePerspective();
+   glPopMatrix();
+   //SDL_GL_SwapBuffers();
 }
 
 void StoreMenu::drawTexts(std::vector<Text*> texts) {
@@ -332,6 +346,7 @@ void StoreMenu::keyDown(int key) {
       if(menuActive){
          SDL_ShowCursor(SDL_DISABLE);
          menuActive = false;
+         clearOverlay();
          SoundEffect::stopAllSoundEffect();
          Music::playMusic("Asteroids2.ogg");
          // Take care of repeated logic with the level timer.
@@ -350,6 +365,7 @@ void StoreMenu::keyDown(int key) {
     case SDLK_n:
       SDL_ShowCursor(SDL_DISABLE);
       menuActive = false;
+      clearOverlay();
       // Take care of repeated logic with the level timer.
       handleLevelTimer();
 
@@ -379,6 +395,7 @@ void StoreMenu::mouseDown(int button) {
          timeLeft = timeLeft + DEFAULTTIME;
          SDL_ShowCursor(SDL_DISABLE);
          menuActive = false;
+         clearOverlay();
          // Take care of repeated logic with the level timer.
          handleLevelTimer();
          Music::playMusic("Asteroids2.ogg");

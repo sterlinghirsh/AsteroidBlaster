@@ -111,6 +111,7 @@ class GameState : public InputReceiver {
       Screen* bloomScreen;
       Screen* rawScreen;
       Screen* fboScreen;
+      Screen* overlayScreen;
 
       std::list<Object3D*> objects;
    
@@ -144,6 +145,7 @@ class GameState : public InputReceiver {
 
       void drawAllText();
       void drawHud();
+      void drawOverlay();
       void updateText();
 
       void update(double timeDiff);

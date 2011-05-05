@@ -15,55 +15,55 @@
 #endif
 
 BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID, const GameState* _gameState) :
- squareSize(_squareSize), wallSize(_wallSize), wallColor(_wallColor), wallID(_wallID), gameState(_gameState) {
-   // Initialize Wall Squares
-   squaresPerSide = (int) round(2 * wallSize / squareSize);
-   numSquares = squaresPerSide * squaresPerSide;
-   squares.reserve(numSquares); 
+   squareSize(_squareSize), wallSize(_wallSize), wallColor(_wallColor), wallID(_wallID), gameState(_gameState) {
+      // Initialize Wall Squares
+      squaresPerSide = (int) round(2 * wallSize / squareSize);
+      numSquares = squaresPerSide * squaresPerSide;
+      squares.reserve(numSquares);
 
-   /* These three variables dictate where this will be positioned relative
-    * to the plane. The X and Y are the coords in the plane.
-    * The Z will be the constant value for this plane.
-    */
-   float squareX, squareY, squareZ;
-   double minX, minY;
+      /* These three variables dictate where this will be positioned relative
+       * to the plane. The X and Y are the coords in the plane.
+       * The Z will be the constant value for this plane.
+       */
+      float squareX, squareY, squareZ;
+      double minX, minY;
 
-   // If wall is top, front, or right
-   squareZ = (float) (wallID <= WALL_RIGHT ? wallSize : -wallSize);
-   
-   // These will probably always be the same.
-   minX = minY = -wallSize;
-   // Create the squares.
-   for (int y = 0; y < squaresPerSide; ++y) {
-      for (int x = 0; x < squaresPerSide; ++x) {
-         squareX = (float) (minX + (x * squareSize));
-         squareY = (float) (minY + (y * squareSize));
+      // If wall is top, front, or right
+      squareZ = (float) (wallID <= WALL_RIGHT ? wallSize : -wallSize);
 
-         if (wallID % 3 == 0) {
-            // If wall is top or bottom.
-            squares.push_back(new GlowSquare(wallColor, (float) squareSize, 
-             squareX, squareZ, squareY, this, x, y));
-         } else if (wallID % 3 == 1) {
-            // If wall is Front or Back.
-            squares.push_back(new GlowSquare(wallColor, (float) squareSize, 
-             squareX, squareY, squareZ, this, x, y));
-         } else {
-            // If wall is Left or Right.
-            squares.push_back(new GlowSquare(wallColor, (float) squareSize, 
-             squareZ, squareX, squareY, this, x, y));
+      // These will probably always be the same.
+      minX = minY = -wallSize;
+      // Create the squares.
+      for (int y = 0; y < squaresPerSide; ++y) {
+         for (int x = 0; x < squaresPerSide; ++x) {
+            squareX = (float) (minX + (x * squareSize));
+            squareY = (float) (minY + (y * squareSize));
+
+            if (wallID % 3 == 0) {
+               // If wall is top or bottom.
+               squares.push_back(new GlowSquare(wallColor, (float) squareSize,
+                        squareX, squareZ, squareY, this, x, y));
+            } else if (wallID % 3 == 1) {
+               // If wall is Front or Back.
+               squares.push_back(new GlowSquare(wallColor, (float) squareSize,
+                        squareX, squareY, squareZ, this, x, y));
+            } else {
+               // If wall is Left or Right.
+               squares.push_back(new GlowSquare(wallColor, (float) squareSize,
+                        squareZ, squareX, squareY, this, x, y));
+            }
          }
       }
-   }
-   initDisplayList();
-   switch(wallID) {
+      initDisplayList();
+      switch(wallID) {
       case WALL_TOP: normal.updateMagnitude(0, -1, 0); break;
       case WALL_BOTTOM: normal.updateMagnitude(0, 1, 0); break;
       case WALL_FRONT: normal.updateMagnitude(0, 0, -1); break;
       case WALL_BACK: normal.updateMagnitude(0, 0, 1); break;
       case WALL_LEFT: normal.updateMagnitude(1, 0, 0); break;
       case WALL_RIGHT: normal.updateMagnitude(-1, 0, 0); break;
+      }
    }
-}
 
 BoundingWall::~BoundingWall() {
    for (int i = 0; i < squares.size(); ++i) {
@@ -117,9 +117,9 @@ void BoundingWall::constrain(Drawable* item) {
 
    if (!actuallyHit)
       return;
-   
+
    Point3D intersectionPoint = item->getWallIntersectionPoint(this);
-   
+
    // Test again for intersectionPoint.
    if (!actuallyHit)
       return;
@@ -146,7 +146,8 @@ void BoundingWall::draw() {
    Point3D cameraPosition = temp->getEyePoint();
    //cameraPosition.add(*gameState->camera->offset);
    //cameraPosition.subtract(*gameState->camera->forward);
-   switch (wallID) {
+   if (!gameState->inMenu) {
+      switch (wallID) {
       case WALL_TOP:
          if (cameraPosition.y > wallSize) return; break;
       case WALL_BOTTOM:
@@ -159,28 +160,29 @@ void BoundingWall::draw() {
          if (cameraPosition.z > wallSize) return; break;
       case WALL_BACK:
          if (-cameraPosition.z > wallSize) return; break;
+      }
    }
-   
+
    glCallList(linesDisplayList);
    std::vector<GlowSquare*>::iterator square;
    for (square = squares.begin(); square != squares.end();
-    ++square) {
-      (*square)->draw();   
+         ++square) {
+      (*square)->draw();
    }
 }
 
 void BoundingWall::drawGlow() {
    std::vector<GlowSquare*>::iterator square;
    for (square = squares.begin(); square != squares.end();
-    ++square) {
-      (*square)->draw();   
+         ++square) {
+      (*square)->draw();
    }
 }
 
 void BoundingWall::update(double timeDiff) {
    std::vector<GlowSquare*>::iterator square;
    for (square = squares.begin(); square != squares.end();
-    ++square) {
+         ++square) {
       (*square)->update(timeDiff);
    }
 }
@@ -194,7 +196,7 @@ void BoundingWall::initDisplayList() {
 
    std::vector<GlowSquare*>::iterator square;
    for (square = squares.begin(); square != squares.end();
-    ++square) {
+         ++square) {
       glBegin(GL_LINE_STRIP);
       (*square)->drawLines();
       glEnd();

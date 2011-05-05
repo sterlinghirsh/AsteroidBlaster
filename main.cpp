@@ -225,6 +225,7 @@ void load() {
    Texture::Add(texSize, texSize, "bloomTex");
    Texture::Add(texSize, texSize, "fboTex");
    Texture::Add(texSize, texSize, "hblurTex");
+   Texture::Add(texSize, texSize, "overlayTex");
    Texture::Add("Images/Logo.png", "MainLogo");
    Texture::Add("Images/StoreLogo.png", "StoreLogo");
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
@@ -381,8 +382,9 @@ int main(int argc, char* argv[]) {
          SDL_ShowCursor(SDL_ENABLE);
          storeMenu->update(timeDiff);
          storeMenu->draw();
+         gameState->gameIsRunning = false;
          //draw(gameState);
-
+         drawGameState(gameState);
       } else if (settingsMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          settingsMenu->draw();
@@ -396,6 +398,7 @@ int main(int argc, char* argv[]) {
          creditsMenu->update(lastUpdateTime);
 
       } else {
+         gameState->gameIsRunning = true;
          update(gameState, timeDiff);
          drawGameState(gameState, false);
       }
