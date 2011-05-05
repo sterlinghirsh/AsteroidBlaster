@@ -53,7 +53,7 @@ void Blaster::update(double timeDiff) {
  */
 void Blaster::fire() {
    static Vector3D randomVariation;
-   if (!isCooledDown())
+   if (!isReady())
       return;
    // Update timeLastFired with new current time.
    timeLastFired = doubleTime();

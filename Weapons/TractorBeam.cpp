@@ -36,6 +36,9 @@ void TractorBeam::update(double timeDiff) {
 }
 
 void TractorBeam::fire() {
+   if (!isReady())
+      return;
+
    Point3D start = ship->shotOrigin;
    ship->custodian->add(new TractorBeamShot(start, ship->shotDirection, ship, ship->gameState));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new TractorBeamShot(start, ship->shotDirection, ship));

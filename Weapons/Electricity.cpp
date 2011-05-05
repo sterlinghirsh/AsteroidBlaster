@@ -47,6 +47,9 @@ void Electricity::update(double timeDiff) {
 }
 
 void Electricity::fire() {
+   if (!isReady())
+      return;
+
    if (shotsFired == 0) {
       timeStartedFiring = doubleTime();
    }

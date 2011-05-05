@@ -93,7 +93,7 @@ void Energy::resetChargingShot() {
  * This is what actually shoots. Finally!
  */
 void Energy::fire() {
-   if (!isCooledDown())
+   if (!isReady())
       return;
 
    lastFiredFrame = curFrame;

@@ -39,7 +39,7 @@ void Missile::update(double timeDiff) {
  */
 void Missile::fire() {
    static Vector3D randomVariation;
-   if (!isCooledDown())
+   if (!isReady())
       return;
    // Update timeLastFired with new current time.
    timeLastFired = doubleTime();

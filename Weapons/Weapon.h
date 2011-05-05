@@ -10,6 +10,7 @@
 #define __WEAPON_H__
 
 #include <string>
+#include "Utility/GlobalUtility.h"
 
 /* Incomplete declaration for pointers. */
 class Object3D;
@@ -73,6 +74,10 @@ class Weapon {
       bool fireBackwards;
 
       double r, g, b;
+
+      Timer activationTimer;
+
+      virtual bool isReady();
 
    protected:
       WeaponType type; // Do we need this?

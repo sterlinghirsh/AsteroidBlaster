@@ -197,6 +197,7 @@ void AsteroidShip::reInitialize() {
  */
 void AsteroidShip::selectWeapon(int weaponType) {
    currentWeapon = weaponType;
+   weapons[currentWeapon]->activationTimer.setCountDown(0.5);
 }
 
 /**
@@ -1196,7 +1197,7 @@ Weapon* AsteroidShip :: getPreviousWeapon() {
  * Increment the current weapon and mod by the number of weapons.
  */
 void AsteroidShip::nextWeapon() {
-   currentWeapon = (currentWeapon + 1) % (int) weapons.size();
+   selectWeapon((currentWeapon + 1) % (int) weapons.size());
 }
 
 /**
@@ -1204,7 +1205,7 @@ void AsteroidShip::nextWeapon() {
  */
 void AsteroidShip::prevWeapon() {
    // We add weaons.size() in the middle so that we don't do -1 % something.
-   currentWeapon = (currentWeapon + (int) weapons.size() - 1) % (int) weapons.size();
+   selectWeapon((currentWeapon + (int) weapons.size() - 1) % (int) weapons.size());
 }
 
 // Return a reference to the list of weapons that the ship has.

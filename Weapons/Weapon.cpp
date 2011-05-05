@@ -23,6 +23,7 @@ Weapon::Weapon(AsteroidShip* owner)
    fireBackwards = false;
 
    r = g = b = 0;
+   activationTimer.reset();
 }
 
 Weapon::~Weapon() {
@@ -149,4 +150,8 @@ void Weapon::drawIcon(bool selected) {
    glEnd();
    glDisable(GL_TEXTURE_2D);
 
+}
+
+bool Weapon::isReady() {
+   return activationTimer.getTimeLeft() <= 0 && isCooledDown();
 }

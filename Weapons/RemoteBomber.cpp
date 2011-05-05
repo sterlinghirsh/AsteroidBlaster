@@ -54,7 +54,7 @@ void RemoteBomber::fire() {
    static Vector3D randomVariation;
    lastFiredFrame = curFrame;
 
-   if ((!isCooledDown()) || firedShot != NULL)
+   if ((!isReady()) || firedShot != NULL)
       return;
 
    // Update timeLastFired with new current time.
