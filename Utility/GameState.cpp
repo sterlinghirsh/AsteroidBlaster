@@ -1058,9 +1058,11 @@ void GameState::keyUp(int key) {
 
    switch(key) {
 
+      /*
    case SDLK_r:
       reset();
       break;
+      */
 
    case SDLK_s:
       isS = false;
