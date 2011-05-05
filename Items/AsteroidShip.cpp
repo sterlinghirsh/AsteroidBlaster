@@ -26,104 +26,104 @@ const double rotationalAcceleration = 10; // rad/sec^2
 const double spawnRate = .5;
 
 AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
- Object3D(_gameState) {  // Initialize shot direction to forward
-   cullRadius = 12;
-   id = _id;
-   health = 100;
-   healthMax = 100;
-   
-   // Bounding box stuff.
-   maxX = maxY = maxZ = 3;
-   minX = minY = minZ = -3;
-   radius = 3;
-   updateBoundingBox();
-   
-   // Todo: comment these.
-   spin = 90;
-   flashiness = 0;
-   tracker = 0;
-   rando = 1;
-   
-   zMove = 2;
-   lineMove = zMove / 4;
-   frontX = 0;
-   frontY = 0;
-   frontZ = 0;
-   cornerX = .2;
-   cornerY = .2;
-   cornerZ = 1.3;
-   middleXY = .15;
-   middleZ = 1;
-   backX = 0;
-   backY = 0;
-   backZ = 1.6;
-   
-   hitX = 0;
-   hitY = 0;
-   hitZ = 0;
-   
-   justGotHit = 0;
-   
-   //skew must be set to 0 til I figure out a better way to do things
-   skew = 0;
-   
-   // TODO: Comment these.
-   x2Change = middleXY / 2;
-   y2Change = middleXY / 2;
-   z2Change = (backZ - middleZ) / 2;
-   xChange = 0;
-   yChange = 0;
-   zChange = 0;
-   backChange = 0;
-   
-   shotOriginScale = 4;
-   
-   // The ship's score. This number is displayed to the screen.
-   score = 0;
-  
-   // The number of shard collected. This number is displayed to the screen.
-   nShards = 0;
-   
-   // The ship's max motion parameters.
-   maxForwardAccel = 10;
-   maxRightAccel = 5;
-   maxUpAccel = 5;
-   maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
+   Object3D(_gameState) {  // Initialize shot direction to forward
+      cullRadius = 12;
+      id = _id;
+      health = 100;
+      healthMax = 100;
 
-   // TODO: create all of the shooters that this ship will have.
-   shooter = new ShootingAI(this);
-   flyingAI = new FlyingAI(this);
+      // Bounding box stuff.
+      maxX = maxY = maxZ = 3;
+      minX = minY = minZ = -3;
+      radius = 3;
+      updateBoundingBox();
 
-   // Create our Radar
-   radar = new Radar(this);
+      // Todo: comment these.
+      spin = 90;
+      flashiness = 0;
+      tracker = 0;
+      rando = 1;
 
-   // Add weapons to the list!
-   /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
-    */
-   weapons.push_back(new TractorBeam(this));
-   weapons.push_back(new Blaster(this));
-   weapons.push_back(new RailGun(this));
-   weapons.push_back(new Electricity(this));
-   //weapons.push_back(new LawnMower(this));
-   //weapons.push_back(new Ram(this));
-   //weapons.push_back(new AntiInertia(this));
-   weapons.push_back(new TimedBomber(this));
-   weapons.push_back(new RemoteBomber(this));
-   weapons.push_back(new Energy(this));
-   
-   soundHandle = -1;
+      zMove = 2;
+      lineMove = zMove / 4;
+      frontX = 0;
+      frontY = 0;
+      frontZ = 0;
+      cornerX = .2;
+      cornerY = .2;
+      cornerZ = 1.3;
+      middleXY = .15;
+      middleZ = 1;
+      backX = 0;
+      backY = 0;
+      backZ = 1.6;
 
-   cameraOffset = new Vector3D(0, 2, 5);
-   currentView = VIEW_THIRDPERSON_SHIP;
-   zoomFactor = 1.0;
-   zoomSpeed = 0.0;
+      hitX = 0;
+      hitY = 0;
+      hitZ = 0;
 
-   shouldDrawInMinimap = true;
+      justGotHit = 0;
 
-   collisionType = collisionSphere = new CollisionSphere(4, *position);
+      //skew must be set to 0 til I figure out a better way to do things
+      skew = 0;
 
-   reInitialize();
-}
+      // TODO: Comment these.
+      x2Change = middleXY / 2;
+      y2Change = middleXY / 2;
+      z2Change = (backZ - middleZ) / 2;
+      xChange = 0;
+      yChange = 0;
+      zChange = 0;
+      backChange = 0;
+
+      shotOriginScale = 4;
+
+      // The ship's score. This number is displayed to the screen.
+      score = 0;
+
+      // The number of shard collected. This number is displayed to the screen.
+      nShards = 0;
+
+      // The ship's max motion parameters.
+      maxForwardAccel = 10;
+      maxRightAccel = 5;
+      maxUpAccel = 5;
+      maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
+
+      // TODO: create all of the shooters that this ship will have.
+      shooter = new ShootingAI(this);
+      flyingAI = new FlyingAI(this);
+
+      // Create our Radar
+      radar = new Radar(this);
+
+      // Add weapons to the list!
+      /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
+      */
+      weapons.push_back(new TractorBeam(this));
+      weapons.push_back(new Blaster(this));
+      weapons.push_back(new RailGun(this));
+      weapons.push_back(new Electricity(this));
+      //weapons.push_back(new LawnMower(this));
+      //weapons.push_back(new Ram(this));
+      //weapons.push_back(new AntiInertia(this));
+      weapons.push_back(new TimedBomber(this));
+      weapons.push_back(new RemoteBomber(this));
+      weapons.push_back(new Energy(this));
+
+      soundHandle = -1;
+
+      cameraOffset = new Vector3D(0, 2, 5);
+      currentView = VIEW_THIRDPERSON_SHIP;
+      zoomFactor = 1.0;
+      zoomSpeed = 0.0;
+
+      shouldDrawInMinimap = true;
+
+      collisionType = collisionSphere = new CollisionSphere(4, *position);
+
+      reInitialize();
+   }
 
 AsteroidShip::~AsteroidShip() {
    for (unsigned int i = 0; i < weapons.size(); ++i) {
@@ -153,7 +153,7 @@ void AsteroidShip::reInitialize() {
    maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
    shotOrigin = *position;
    forward->movePoint(shotOrigin, shotOriginScale);
-   
+
    forward->updateMagnitude(0, 0, 1);
    up->updateMagnitude(0, 1, 0);
    right->updateMagnitude(-1, 0, 0);
@@ -161,7 +161,7 @@ void AsteroidShip::reInitialize() {
    // Is the ship firing? Not when it's instantiated.
    isFiring = false;
    shotPhi = shotTheta = 0;
-   
+
    // The ship's health. This number is displayed to the screen.
    health = 100;
    healthMax = 100;
@@ -169,19 +169,19 @@ void AsteroidShip::reInitialize() {
    healthUpgradePrice = 5;
    healthPrice = 2;
    healthAmount = 10;
-   
+
    regenHealthLevel = 0;
    regenHealthUpgradePrice = 10;
    regenHealthLevelMax = 5;
-   
+
    //engine upgrade, terminal speed is raised when leved up
    engineUpgrade = 0;
    engineMax = 5;
    enginePrice = 10;
-   
+
    // The ship's currently selected weapon.
    currentWeapon = 1; // Blaster
-   
+
    accelerationStartTime = doubleTime();
    particlesEmitted = 0;
 
@@ -250,9 +250,9 @@ void AsteroidShip::setRollSpeed(double rollAmountIn) {
 
 void AsteroidShip::updatePlayerAcceleration() {
    addAcceleration(new Vector3D(
-         forward->scalarMultiply(curForwardAccel).add(
-            right->scalarMultiply(curRightAccel).add(
-               up->scalarMultiply(curUpAccel)))));
+            forward->scalarMultiply(curForwardAccel).add(
+               right->scalarMultiply(curRightAccel).add(
+                  up->scalarMultiply(curUpAccel)))));
 }
 
 void AsteroidShip::setBrake(bool doBrake) {
@@ -391,7 +391,7 @@ void AsteroidShip::update(double timeDiff) {
       }
 
       if (gameState->gameIsRunning && respawnTimer.isRunning &&
-       timeLeftToRespawn <= 0) {
+            timeLeftToRespawn <= 0) {
          reInitialize();
       } else {
          fire(false);
@@ -417,13 +417,13 @@ void AsteroidShip::update(double timeDiff) {
    if (shooter->isEnabled()) {
       shooter->think(timeDiff);
    }
-   
+
    if(flyingAI->isEnabled()) {
       flyingAI->think(timeDiff);
    } else {
       updatePlayerAcceleration();
    }
-   
+
    if (isBraking) {
       velocity->x -= velocity->x * timeDiff * brakeFactor;
       velocity->y -= velocity->y * timeDiff * brakeFactor;
@@ -443,35 +443,35 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    Object3D::update(timeDiff);
-   
+
    if (rollSpeed > targetRollSpeed) {
-      rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration), 
-       targetRollSpeed, rollSpeed);
+      rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration),
+            targetRollSpeed, rollSpeed);
    } else if (rollSpeed < targetRollSpeed) {
-      rollSpeed = clamp(rollSpeed + (timeDiff * rotationalAcceleration), 
-       rollSpeed, targetRollSpeed);
+      rollSpeed = clamp(rollSpeed + (timeDiff * rotationalAcceleration),
+            rollSpeed, targetRollSpeed);
    }
-   
+
    if (pitchSpeed > targetPitchSpeed) {
-      pitchSpeed = clamp(pitchSpeed - (timeDiff * rotationalAcceleration), 
-       targetPitchSpeed, pitchSpeed);
+      pitchSpeed = clamp(pitchSpeed - (timeDiff * rotationalAcceleration),
+            targetPitchSpeed, pitchSpeed);
    } else if (pitchSpeed < targetPitchSpeed) {
-      pitchSpeed = clamp(pitchSpeed + (timeDiff * rotationalAcceleration), 
-       pitchSpeed, targetPitchSpeed);
+      pitchSpeed = clamp(pitchSpeed + (timeDiff * rotationalAcceleration),
+            pitchSpeed, targetPitchSpeed);
    }
-   
+
    if (yawSpeed > targetYawSpeed) {
-      yawSpeed = clamp(yawSpeed - (timeDiff * rotationalAcceleration), 
-       targetYawSpeed, yawSpeed);
+      yawSpeed = clamp(yawSpeed - (timeDiff * rotationalAcceleration),
+            targetYawSpeed, yawSpeed);
    } else if (yawSpeed < targetYawSpeed) {
-      yawSpeed = clamp(yawSpeed + (timeDiff * rotationalAcceleration), 
-       yawSpeed, targetYawSpeed);
+      yawSpeed = clamp(yawSpeed + (timeDiff * rotationalAcceleration),
+            yawSpeed, targetYawSpeed);
    }
-   
+
    roll(timeDiff * rollSpeed);
    pitch(timeDiff * pitchSpeed);
    yaw(timeDiff * yawSpeed);
-   
+
    if (!shooter->isEnabled()) {
       updateShotDirectionVector();
    }
@@ -483,7 +483,7 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    if (!gameState->inMenu &&
-    (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
+         (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
       if (soundHandle == -1)
          soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav", true);
    } else {
@@ -516,7 +516,7 @@ void AsteroidShip::update(double timeDiff) {
       if (backChange > (backZ - middleZ)) {
          backChange = (backZ - middleZ);
       }
-      
+
       if (backChange == (backZ - middleZ)) {
          xChange += lineMove * timeDiff;
          yChange += lineMove * timeDiff;
@@ -525,7 +525,7 @@ void AsteroidShip::update(double timeDiff) {
          y2Change += lineMove * timeDiff;
          z2Change += zMove * timeDiff;
       }
-      
+
       if (x2Change > middleXY) {
          xChange = 0;
          yChange = 0;
@@ -534,21 +534,21 @@ void AsteroidShip::update(double timeDiff) {
          y2Change = middleXY / 2;
          z2Change = (backZ - middleZ) / 2;
       }
-      
+
    } else {
       backChange -= zMove * timeDiff;
       if (backChange < 0) {
          backChange = 0;
       }
    }
-   
+
    if (doubleTime() - justGotHit < 2) {
       //justGotHit -= timeDiff;
       drawHit = true;
    } else {
       drawHit = false;
    }
-   
+
    //printf("Just got hit variable: %d\n", drawHit);
 
    createEngineParticles(timeDiff);
@@ -557,7 +557,7 @@ void AsteroidShip::update(double timeDiff) {
    const float minZoom = 1;
    const float maxZoom = 3;
    zoomFactor = (float) clamp(zoomFactor + (timeDiff * zoomSpeed)
-    , minZoom, maxZoom);
+         , minZoom, maxZoom);
 }
 
 /**
@@ -588,11 +588,11 @@ void AsteroidShip::draw_frontpanels() {
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, cornerY, cornerZ);
    glVertex3d(middleXY, skew, middleZ);
-   
+
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-middleXY, skew, middleZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
-   
+
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
    glVertex3d(-middleXY, skew, middleZ);
@@ -602,7 +602,7 @@ void AsteroidShip::draw_frontpanels() {
    glVertex3d(cornerX, -cornerY, cornerZ);
    glEnd();
    glUseProgram(0);
-   
+
    glUseProgram(shipXShader);
    glBegin(GL_TRIANGLES);
    glVertex3d(frontX, frontY, frontZ);
@@ -612,7 +612,7 @@ void AsteroidShip::draw_frontpanels() {
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
    glVertex3d(skew, middleXY, middleZ);
-   
+
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(skew, -middleXY, middleZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
@@ -622,14 +622,14 @@ void AsteroidShip::draw_frontpanels() {
    glVertex3d(skew, -middleXY, middleZ);
    glEnd();
    glUseProgram(0);
-   
+
    glPopMatrix();
 }
 
 void AsteroidShip::draw_backpanels() {
    glUseProgram(backShader);
    glBegin(GL_TRIANGLES);
-   
+
    glVertex3d(middleXY, skew, middleZ);
    glVertex3d(cornerX, cornerY, cornerZ);
    glVertex3d(skew, middleXY, middleZ);
@@ -653,7 +653,7 @@ void AsteroidShip::draw_spaceboner() {
    glBegin(GL_TRIANGLES);
    if (curForwardAccel == 10.0) {
       glColor4d(1, .4, 0, 1);
-      
+
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(skew, middleXY, middleZ);
       glVertex3d(backX, backY, middleZ + backChange);
@@ -676,7 +676,7 @@ void AsteroidShip::draw_spaceboner() {
       glVertex3d(-middleXY, skew, middleZ);
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(skew, middleXY, middleZ);
-      
+
       glVertex3d(-middleXY, skew, middleZ);
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(skew, -middleXY, middleZ);
@@ -698,7 +698,7 @@ void AsteroidShip::draw_spaceboner() {
       glVertex3d(-middleXY, skew, middleZ);
       glVertex3d(backX, backY, middleZ + backChange);
       glVertex3d(skew, middleXY, middleZ);
-   }   
+   }
    glEnd();
 }
 
@@ -712,9 +712,9 @@ void AsteroidShip::draw_bonerlines() {
          glVertex3d(skew, middleXY - yChange, middleZ + zChange);
          glVertex3d(-middleXY + xChange, skew, middleZ + zChange);
          glVertex3d(skew, -middleXY + yChange, middleZ + zChange);
-         glVertex3d(middleXY - xChange, skew, middleZ + zChange);  
+         glVertex3d(middleXY - xChange, skew, middleZ + zChange);
          glEnd();
-         
+
          glBegin(GL_LINE_LOOP);
          glVertex3d(middleXY - x2Change, skew, middleZ + z2Change);
          glVertex3d(skew, middleXY - y2Change, middleZ + z2Change);
@@ -724,10 +724,10 @@ void AsteroidShip::draw_bonerlines() {
          glEnd();
 
       }
-      
+
       glBegin(GL_LINE_LOOP);
       glColor3d(1, .4, 0);
-      
+
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(cornerX, cornerY, cornerZ);
       glVertex3d(skew, middleXY, middleZ);
@@ -777,22 +777,22 @@ void AsteroidShip::draw_bonerlines() {
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(backX, backY, middleZ + backChange);
       glVertex3d(skew, middleXY, middleZ);
-      
+
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(skew, -middleXY, middleZ);
       glVertex3d(backX, backY, middleZ + backChange);
-      
-      
+
+
       glVertex3d(-middleXY, skew, middleZ);
       glVertex3d(skew, -middleXY, middleZ);
       glVertex3d(backX, backY, middleZ + backChange);
-      
-      
+
+
       glVertex3d(-middleXY, skew, middleZ);
       glVertex3d(backX, backY, middleZ + backChange);
       glVertex3d(skew, middleXY, middleZ);
       glEnd();
-      
+
       glBegin(GL_LINE_LOOP);
       glColor3d(1, .4, 0);
       glVertex3d(middleXY, skew, middleZ);
@@ -810,16 +810,16 @@ void AsteroidShip::draw_frontlines() {
    glColor3d(0, 1, 1);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, cornerY, cornerZ);
-   
+
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
-   
+
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
-   
+
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, -cornerY, cornerZ);
-   glEnd(); 
+   glEnd();
 }
 
 void AsteroidShip::draw_backlines() {
@@ -864,25 +864,25 @@ void AsteroidShip::draw_ship() {
    glEnable(GL_NORMALIZE);
 
    draw_frontpanels();
-   
+
    draw_backpanels();
-   
+
    draw_spaceboner();
 
    /* Outline of Ship */
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   
+
    glLineWidth(1.5);
    glDisable(GL_LIGHTING);
-   
+
    draw_bonerlines();
-   
+
    draw_frontlines();
-   
+
    draw_backlines();
-   
+
    if(drawHit) {
       //glPushMatrix();
       draw_hitEffect();
@@ -933,7 +933,7 @@ void AsteroidShip::draw_hitEffect() {
    hitX += (double) (rand() % 10);
    hitY += (double) (rand() % 20);
    hitZ += (double) (rand() % 30);
-   
+
    double sx, sy, sz;
    sx = 5 / (1.5 * 5);
    sy = 5 / (.5 * 5);
@@ -968,23 +968,23 @@ void AsteroidShip::draw_hitEffect() {
 void AsteroidShip::draw() {
    if (getHealth() <= 0)
       return;
-      
+
    /*
-   GLUquadricObj *quadratic;
-   float ballx, bally, ballz;
-   ballx = 0.0;
-   bally = 0.0;
-   ballz = 2.0;
-   quadratic=gluNewQuadric();
-   gluQuadricNormals(quadratic, GLU_SMOOTH);
-   */
+      GLUquadricObj *quadratic;
+      float ballx, bally, ballz;
+      ballx = 0.0;
+      bally = 0.0;
+      ballz = 2.0;
+      quadratic=gluNewQuadric();
+      gluQuadricNormals(quadratic, GLU_SMOOTH);
+      */
    glPushMatrix();
    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
    // Translate to the position.
    position->glTranslate();
    //shotOrigin->glTranslate();
    // Rotate to the current up/right/forward vectors.
-   
+
    glRotate();
    spin+= 2;
    glColor4d(0, 0, 0, .8);
@@ -992,16 +992,16 @@ void AsteroidShip::draw() {
    draw_ship();
 
    /*
-   glBegin(GL_POINTS);
-   glVertex3f(0.0, 0.0, 0.0);
-   glEnd();
-   */
+      glBegin(GL_POINTS);
+      glVertex3f(0.0, 0.0, 0.0);
+      glEnd();
+      */
    glPopMatrix();
    /*
-   Ball ball = Ball();
-   ball.attach(this);
-   ball.draw();
-   */
+      Ball ball = Ball();
+      ball.attach(this);
+      ball.draw();
+      */
 }
 
 void AsteroidShip::updateShotDirectionVector() {
@@ -1046,7 +1046,7 @@ void AsteroidShip::drawCrosshair() {
 
    // If we should be drawing the boxes, do that instead.
    if (currentView != VIEW_FIRSTPERSON_SHIP &&
-    currentView != VIEW_FIRSTPERSON_GUN) {
+         currentView != VIEW_FIRSTPERSON_GUN) {
       return drawShotDirectionIndicators();
    }
 
@@ -1147,7 +1147,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
    drawPoint.draw();
    up->movePoint(drawPoint, boxSize);
    drawPoint.draw();
-   
+
    boxSize -= boxDecrement;
    right->movePoint(drawPoint, boxDecrement / 2.0);
 
@@ -1207,17 +1207,18 @@ Weapon* AsteroidShip :: getPreviousWeapon() {
  */
 void AsteroidShip::nextWeapon() {
    int thisWeapon = currentWeapon;
-   while (currentWeapon < weapons.size() - 1) {
-      if (weapons[currentWeapon + 1]->purchased) {
-         currentWeapon++;
+   while (thisWeapon < weapons.size() - 1) {
+      if (weapons[thisWeapon + 1]->purchased) {
+         selectWeapon(thisWeapon + 1);
          return;
       } else {
-         currentWeapon++;
+         thisWeapon++;
       }
    }
-   if (!weapons[currentWeapon]->purchased) {
-      currentWeapon = thisWeapon;
+   if (!weapons[thisWeapon]->purchased) {
+      thisWeapon = currentWeapon;
    }
+   selectWeapon(thisWeapon);
 }
 
 /**
@@ -1225,17 +1226,18 @@ void AsteroidShip::nextWeapon() {
  */
 void AsteroidShip::prevWeapon() {
    int thisWeapon = currentWeapon;
-   while (currentWeapon > 0) {
-      if (weapons[currentWeapon - 1]->purchased) {
-         currentWeapon--;
+   while (thisWeapon > 0) {
+      if (weapons[thisWeapon - 1]->purchased) {
+         selectWeapon(thisWeapon - 1);
          return;
       } else {
-         currentWeapon--;
+         thisWeapon--;
       }
    }
-   if (!weapons[currentWeapon]->purchased) {
-      currentWeapon = thisWeapon;
+   if (!weapons[thisWeapon]->purchased) {
+      thisWeapon = currentWeapon;
    }
+   selectWeapon(thisWeapon);
 }
 
 // Get the number of types of weapons the ship has. They're indexed 0 - (n-1)
@@ -1271,13 +1273,13 @@ void AsteroidShip::setShakeAmount(float shakeIn) {
 
 Vector3D* AsteroidShip::getViewVector() {
    switch(currentView) {
-      case VIEW_FIRSTPERSON_SHIP:
-      case VIEW_THIRDPERSON_SHIP: return forward;
-      case VIEW_FIRSTPERSON_GUN: 
-      case VIEW_THIRDPERSON_GUN: return getShotDirection();
-      default:
-       fprintf(stderr, "getViewVector got currentView %d\n", currentView);
-      return forward;
+   case VIEW_FIRSTPERSON_SHIP:
+   case VIEW_THIRDPERSON_SHIP: return forward;
+   case VIEW_FIRSTPERSON_GUN:
+   case VIEW_THIRDPERSON_GUN: return getShotDirection();
+   default:
+                              fprintf(stderr, "getViewVector got currentView %d\n", currentView);
+                              return forward;
    }
 }
 
@@ -1329,13 +1331,13 @@ void AsteroidShip::setZoomSpeed(float speed) {
 /**
  * This is used to set up ships initially.
  * Do not use this for moving ships in the game.
- * The vectors should come out as orthogonal. 
+ * The vectors should come out as orthogonal.
  * This sets right to be forward x up.
  * Then up is set to right x forward.
  */
 void AsteroidShip::setOrientation(double forwardX, double forwardY, double forwardZ,
- double upX, double upY, double upZ) {
-   // Set forward and 
+      double upX, double upY, double upZ) {
+   // Set forward and
    forward->updateMagnitude(forwardX, forwardY, forwardZ);
    up->updateMagnitude(upX, upY, upZ);
 
@@ -1351,19 +1353,19 @@ void AsteroidShip::setOrientation(double forwardX, double forwardY, double forwa
  */
 void AsteroidShip::setOrientation(Vector3D& forward, Vector3D& up) {
    setOrientation(forward.x, forward.y, forward.z,
- up.x, up.y, up.z);
+         up.x, up.y, up.z);
 }
 
 /**
  * Look at some point with an arbitrary up vector.
- * This is used by the menu, and should not be used in the game. 
+ * This is used by the menu, and should not be used in the game.
  */
 void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
- double upX, double upY, double upZ) {
+      double upX, double upY, double upZ) {
    Vector3D _forward(lookAtX - position->x,
-    lookAtY - position->y,
-    lookAtZ - position->z);
-   
+         lookAtY - position->y,
+         lookAtZ - position->z);
+
    Vector3D _up(upX, upY, upZ);
 
    setOrientation(_forward, _up);
@@ -1373,7 +1375,7 @@ bool AsteroidShip::isRespawning() {
    return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0;
 }
 
-// serialize 
+// serialize
 std::string AsteroidShip::serialize() {
    return "";
 }

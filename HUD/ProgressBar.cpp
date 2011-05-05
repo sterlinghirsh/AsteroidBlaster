@@ -37,7 +37,7 @@ void ProgressBar::draw() {
       drawHeight = amount * height;
       drawWidth = width;
    }
-   float backgroundZOffset = -0.1f; // Some small negative number.
+   float backgroundZOffset = 0.0f; // Some small negative number.
    glPushMatrix();
    glTranslatef(x, y, 0);
    glDisable(GL_LIGHTING);

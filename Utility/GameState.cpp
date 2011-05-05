@@ -517,7 +517,7 @@ void GameState::drawHud() {
    /* We need to disable the lighting temporarily
     * in order to set the color properly.
     */
-   glDisable(GL_LIGHTING);
+   //glDisable(GL_LIGHTING);
    glDisable(GL_CULL_FACE);
    drawAllText();
    if(usingShipCamera){
@@ -525,7 +525,7 @@ void GameState::drawHud() {
       healthBar->draw();
       weaponBar->draw();
    }
-   glEnable(GL_LIGHTING);
+   //glEnable(GL_LIGHTING);
    //glEnable(GL_DEPTH_TEST);
    usePerspective();
    glPopMatrix();
@@ -535,20 +535,33 @@ void GameState::drawHud() {
 }
 
 void GameState::drawOverlay() {
+   glClear(GL_DEPTH_BUFFER_BIT);
    useOrtho();
    glPushMatrix();
-   glBlendFunc(GL_ONE, GL_ONE);
    glDisable(GL_LIGHTING);
    float minY = -1.0;
    float maxY = 1.0;
    float minX = -1.0f * aspect;
    float maxX = 1.0f * aspect;
+
+   if (!gameIsRunning) {
+      glColor4f(0.0, 1.0, 0.0, 0.7f);
+      float scale = 1.0;
+      glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
+      glBegin(GL_QUADS);
+      glVertex3f(minX * scale, minY * scale, 0.0);
+      glVertex3f(maxX * scale, minY * scale, 0.0);
+      glVertex3f(maxX * scale, maxY * scale, 0.0);
+      glVertex3f(minX * scale, maxY * scale, 0.0);
+      glEnd();
+   }
+
+   glBlendFunc(GL_ONE, GL_ONE);
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, Texture::getTexture("overlayTex"));
-
    float texMaxX = (float) gameSettings->GW / (float) texSize;
    float texMaxY = (float) gameSettings->GH / (float) texSize;
-   glColor3f(1.0, 1.0, 1.0);
+   glColor4f(1.0, 1.0, 1.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(minX, minY, 0.0);
@@ -570,13 +583,13 @@ void GameState::drawOverlay() {
 }
 
 /*
-void GameState::clearOverlay() {
+   void GameState::clearOverlay() {
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
    glDrawBuffer(GL_COLOR_ATTACHMENT2_EXT);
    glClear(GL_COLOR_BUFFER_BIT);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-}
-*/
+   }
+   */
 
 /**
  * Draw all of the text in the allTexts list to the screen.

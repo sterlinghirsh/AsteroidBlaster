@@ -695,14 +695,15 @@ void drawGameState(GameState* gameStateIn,
    if (gameSettings->bloom) {
       gameStateIn->drawBloom();
    }
+   //if (!gameStateIn->inMenu && !gameStateIn->gameIsRunning) {
    if (!gameStateIn->inMenu) {
       gameStateIn->drawHud();
    }
-   gameStateIn->drawOverlay();
 
    glPopMatrix();
    // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
    gameStateIn->drawMinimap();
+   gameStateIn->drawOverlay();
    gameStateIn->drawScreens();
 
    if (!lookAt) {
