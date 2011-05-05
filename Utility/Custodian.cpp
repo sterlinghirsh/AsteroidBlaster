@@ -29,6 +29,9 @@
 #include "Particles/BlasterImpactParticle.h"
 #include "Particles/TractorAttractionParticle.h"
 
+/**
+ * AsteroidShip collisions======================================================
+ */
 template<>
 void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
    if (a->isRespawning()) { return;}
@@ -106,8 +109,7 @@ void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
 template<>
 void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
    if (a->isRespawning()) { return;}
-   if ((doubleTime() - a->justGotHit > 1) && 
-    !(a->currentWeapon == 4 && a->isFiring && a->weapons[4]->curAmmo > 0)) {
+   if (doubleTime() - a->justGotHit > 1) {
       /* Remove health from both equal to minHealthDeduction + randomHealthDeduction 
        * or b->health or a->health, whichever is smallest.
        */
@@ -145,7 +147,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
 }
 
 template<>
-void Collision<AsteroidShip, Shot>::handleCollision() {
+void Collision<AsteroidShip, ProjectileShot>::handleCollision() {
    if (a->isRespawning()) { return;}
    int particlesToEmit = 10;
    if (a != b->owner) {
@@ -160,6 +162,146 @@ void Collision<AsteroidShip, Shot>::handleCollision() {
          particleDirection->setLength(3);
          BlasterImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
       }
+      b->shouldRemove = true;
+   }
+}
+
+template<>
+void Collision<AsteroidShip, BeamShot>::handleCollision() {
+   if (a->isRespawning()) { return;}
+   if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame) {
+      //TODO addInstantVelocity b->velocity->scalarMultiply(10)
+      a->health -= b->getDamage(a);
+      b->hitYet = true;
+      b->hitItem = a;
+      b->lastHitFrame = curFrame;
+      b->owner->score += (int) a->radius * 10;
+      b->drawLength = a->position->distanceFrom(*b->position);
+   }
+}
+
+template<>
+void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
+   if (a->isRespawning()) { return;}
+   const int numElecParticles = 1;
+   double hitDistance = 0;
+
+   a->health -= b->getDamage(a);
+   
+   /* Normal collision detection gets done in CollisionTypes.h. 
+    * I can't think of an efficient way to do this, so I'm leaving it here
+    * to avoid creating a hack.
+    */
+   Point3D* closestPoint = a->sphereCollideWithRay(*b->position, *b->velocity, &hitDistance);
+
+   // Sometimes, we decide that it's not a real hit. No big deal.
+   if (closestPoint != NULL) {
+      b->length = hitDistance;
+      Vector3D centerToImpactPoint(*a->position, *closestPoint);
+      centerToImpactPoint.setLength(5);
+      for (int i = 0; i < numElecParticles; ++i) {
+         Point3D* particleStartPoint = new Point3D(*closestPoint);
+         Vector3D* particleDirection = new Vector3D();
+         particleDirection->randomMagnitude();
+         particleDirection->setLength(3);
+         particleDirection->addUpdate(centerToImpactPoint);
+         ElectricityImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
+      }
+
+      delete closestPoint;
+   }
+}
+
+template<>
+void Collision<AsteroidShip, EnergyShot>::handleCollision() {
+   if (a->isRespawning()) { return;}
+   a->health -= b->getDamage(a);
+
+   a->velocity->updateMagnitude(0, 0, 0);
+   a->acceleration->updateMagnitude(0, 0, 0);
+
+   b->shouldRemove = true;
+   SoundEffect::playSoundEffect("BlasterHit.wav");
+   if (b->weapon->chargingShot == b) {
+      b->weapon->resetChargingShot();
+   }
+}
+
+template<>
+void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
+   if (a->isRespawning()) { return;}
+   if (!b->isExploded) {
+      b->shouldExplode = true;
+      SoundEffect::playSoundEffect("BlasterHit.wav");
+   } else {
+      Vector3D* shotToShip = new Vector3D(*b->position, *a->position);
+      double distance = shotToShip->getLength() - a->radius;
+      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
+      shotToShip->setLength(newSpeed);
+      a->addInstantAcceleration(shotToShip);
+      a->health -= b->getDamage(a);
+   }
+}
+
+template<>
+void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
+   if (a->isRespawning()) { return;}
+   if (!b->isExploded) {
+      Vector3D positionToAsteroid(*b->position, *a->position);
+      double distance = positionToAsteroid.getLength();
+      if (distance < b->seekRadius + a->radius) {
+         if (distance > b->collisionRadius + a->radius) {
+            Vector3D* attraction = new Vector3D(positionToAsteroid);
+            attraction->setLength(20.0);
+            b->addAcceleration(attraction);
+         } else {
+            b->shouldExplode = true;
+            SoundEffect::playSoundEffect("BlasterHit.wav");
+         }
+      }
+   } else {
+      a->health -= b->getDamage(a);
+      Vector3D* shotToShip = new Vector3D(*b->position, *a->position);
+      double distance = shotToShip->getLength() - a->radius;
+      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
+      shotToShip->setLength(newSpeed);
+      a->addInstantAcceleration(shotToShip);
+   }
+}
+
+/**
+ * Asteroid3D collisions========================================================
+ */
+template<>
+void Collision<Asteroid3D, ProjectileShot>::handleCollision() {
+   const int particlesToEmit = 10;
+   
+   static Vector3D particleVariation;
+   static Vector3D positionDifference;
+   const double particleSpeed = 15;
+   double speed = 10 / (a->radius);
+
+   b->shouldRemove = true;
+   
+   a->lastHitShotOwner = b->owner;
+   a->health -= b->getDamage(a);
+
+   Vector3D* newAcceleration = new Vector3D(*b->position, *a->position);
+   newAcceleration->setLength(speed);
+   a->addInstantAcceleration(newAcceleration);
+   
+   SoundEffect::playSoundEffect("BlasterHit.wav");
+   // Make some particles!
+
+   positionDifference.updateMagnitude(*a->position, *b->position);
+   positionDifference.setLength(particleSpeed);
+
+   for (int i = 0; i <= particlesToEmit; ++i) {
+      particleVariation.randomMagnitude();
+      particleVariation.setLength(particleSpeed);
+      particleVariation.addUpdate(positionDifference);
+      BlasterImpactParticle::Add(new Point3D(*b->position), 
+       new Vector3D(particleVariation), b->gameState);
    }
 }
 
@@ -216,15 +358,6 @@ void Collision<Asteroid3D, ElectricityShot>::handleCollision() {
 }
 
 template<>
-void Collision<Asteroid3D, AntiInertiaShot>::handleCollision() {
-   a->lastHitShotOwner = b->owner;
-   Vector3D* newVelocity = new Vector3D(*a->velocity);
-   newVelocity->scalarMultiplyUpdate(-0.1);
-   a->addInstantAcceleration(newVelocity);
-   a->rotationSpeed = std::max(a->rotationSpeed - 0.5, 0.0);
-}
-
-template<>
 void Collision<Asteroid3D, EnergyShot>::handleCollision() {
    a->energyHitAsteroid = true;
    a->lastHitShotOwner = b->owner;
@@ -249,46 +382,6 @@ void Collision<Asteroid3D, EnergyShot>::handleCollision() {
    if (b->weapon->chargingShot == b) {
       b->weapon->resetChargingShot();
    }
-}
-
-template<>
-void Collision<Asteroid3D, ProjectileShot>::handleCollision() {
-   const int particlesToEmit = 10;
-   
-   static Vector3D particleVariation;
-   static Vector3D positionDifference;
-   const double particleSpeed = 15;
-   double speed = 10 / (a->radius);
-
-   b->shouldRemove = true;
-   
-   a->lastHitShotOwner = b->owner;
-   a->health -= b->getDamage(a);
-
-   Vector3D* newAcceleration = new Vector3D(*b->position, *a->position);
-   newAcceleration->setLength(speed);
-   a->addInstantAcceleration(newAcceleration);
-   
-   SoundEffect::playSoundEffect("BlasterHit.wav");
-   // Make some particles!
-
-   positionDifference.updateMagnitude(*a->position, *b->position);
-   positionDifference.setLength(particleSpeed);
-
-   for (int i = 0; i <= particlesToEmit; ++i) {
-      particleVariation.randomMagnitude();
-      particleVariation.setLength(particleSpeed);
-      particleVariation.addUpdate(positionDifference);
-      BlasterImpactParticle::Add(new Point3D(*b->position), 
-       new Vector3D(particleVariation), b->gameState);
-   }
-}
-
-template<>
-void Collision<Asteroid3D, Shot>::handleCollision() {
-   a->lastHitShotOwner = b->owner;
-   a->health -= b->getDamage(a);
-   b->shouldRemove = true;
 }
 
 template<>
@@ -437,13 +530,6 @@ void Collision<Shard, BeamShot>::handleCollision() {
 }
 
 template<>
-void Collision<Shard, AntiInertiaShot>::handleCollision() {
-   Vector3D* newVelocity = new Vector3D(*a->velocity);
-   newVelocity->scalarMultiplyUpdate(-0.1);
-   a->addInstantAcceleration(newVelocity);
-}
-
-template<>
 void Collision<Asteroid3D, Shard>::handleCollision() {
    double speed = a->velocity->getLength();
    b->velocity->updateMagnitude(*a->position, *b->position);
@@ -494,28 +580,30 @@ Custodian::Custodian(const GameState* _gameState) :
    
    if (collisionHandlers == NULL) {
       collisionHandlers = new std::vector<CollisionBase*>();
-      // Initialize collision handlers.
+      
+      // Collision for AsteroidShip
       collisionHandlers->push_back(new Collision<AsteroidShip, AsteroidShip>);
       collisionHandlers->push_back(new Collision<AsteroidShip, Asteroid3D>);
       collisionHandlers->push_back(new Collision<AsteroidShip, Shard>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, Shot>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, ProjectileShot>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, ElectricityShot>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, EnergyShot>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, TimedBombShot>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, ExplosiveShot>);
 
+      // Collision for Asteroid3D
       collisionHandlers->push_back(new Collision<Asteroid3D, ProjectileShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, BeamShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, TractorBeamShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, ElectricityShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, AntiInertiaShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, EnergyShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, TimedBombShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, ExplosiveShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, Shot>);
-      
       collisionHandlers->push_back(new Collision<Asteroid3D, Asteroid3D>);
       collisionHandlers->push_back(new Collision<Asteroid3D, Shard>);
 
       collisionHandlers->push_back(new Collision<Shard, TractorBeamShot>);
       collisionHandlers->push_back(new Collision<Shard, BeamShot>);
-      collisionHandlers->push_back(new Collision<Shard, AntiInertiaShot>);
       collisionHandlers->push_back(new Collision<Shard, ExplosiveShot>);
       collisionHandlers->push_back(new Collision<Shard, Shot>);
       collisionHandlers->push_back(new Collision<Shard, Shard>);
