@@ -7,12 +7,9 @@
 #include "Items/Spring.h"
 #include "Items/AsteroidShip.h"
 
-// The length of the springs when fully contracted (MUST BE NON-ZERO).
-#define POS_SPRING_LEN 0.2
-#define UP_SPRING_LEN 0.2
 // The scaling factor of the forces (higher is stronger).
-#define POS_FORCE_SCALE 2.0
-#define UP_FORCE_SCALE 1.0
+#define POS_FORCE_SCALE 15.0
+#define UP_FORCE_SCALE 15.0
 
 Spring::Spring(const GameState* _gameState) :
    Object3D(_gameState) {
@@ -31,12 +28,8 @@ void Spring::update(double ms) {
       Vector3D displace = (anchor->position)->add(*anchor->getCameraOffset());
       Vector3D springVector = displace.subtract(*item->position);
       double length = springVector.getLength();
-      if (length == 0.0) { return; }
-      double normalLength = POS_SPRING_LEN;
-      double forceScalar = (length - normalLength) / normalLength;
-      springVector.scalarMultiplyUpdate(1.0 / length);
-      Vector3D forceVector = springVector.scalarMultiply(forceScalar);
-      forceVector.scalarMultiplyUpdate(ms * POS_FORCE_SCALE);
+      if (length <= 0.001 && length >= -0.001) { return; }
+      Vector3D forceVector = springVector.scalarMultiply(ms * POS_FORCE_SCALE);
       item->position->addUpdate(forceVector);
    }
    // Connect the up vectors with a spring force.
@@ -44,12 +37,15 @@ void Spring::update(double ms) {
       Vector3D displace = *anchor->up;
       Vector3D springVector = displace.subtract(*item->up);
       double length = springVector.getLength();
-      if (length == 0.0) { return; }
-      double normalLength = UP_SPRING_LEN;
+      if (length <= 0.001 && length >= -0.001) { return; }
+      Vector3D forceVector = springVector.scalarMultiply(ms * UP_FORCE_SCALE);
+      item->up->addUpdate(forceVector);
+      /*
       double forceScalar = (length - normalLength) / normalLength;
       springVector.scalarMultiplyUpdate(1.0 / length);
       Vector3D forceVector = springVector.scalarMultiply(forceScalar);
       forceVector.scalarMultiplyUpdate(ms * UP_FORCE_SCALE);
       item->up->addUpdate(forceVector);
+      */
    }
 }
