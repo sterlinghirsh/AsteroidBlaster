@@ -24,6 +24,10 @@ void Spring::attach(AsteroidShip* anchorIn, Camera* itemIn) {
 
 void Spring::update(double ms) {
    // Connect the positions with a spring force.
+   bool doSpring = anchor->getCurrentView() == VIEW_THIRDPERSON_SHIP
+         || anchor->getCurrentView() == VIEW_THIRDPERSON_GUN;
+   doSpring &= isAttached;
+
    if (isAttached) {
       Vector3D displace = (anchor->position)->add(*anchor->getCameraOffset());
       Vector3D springVector = displace.subtract(*item->position);
