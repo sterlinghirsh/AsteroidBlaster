@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ $# -lt 1 ];
+then 
+   echo afind \(AsteroidBlasterFind\) recursively searches files for a string.
+   echo afind prints the file, line number, and context of matches,
+   echo and excludes ./Libraries/ and *.o from results.
+   echo
+   echo Usage: afind \[filepattern\] \[pattern\]
+   echo Example: afind \"\*.cpp\" \"createEngineParticles\"
+   echo Example: afind \"createEngineParticles\"
+   exit;
+fi;
+
+if [ $# -lt 2 ];
+   then files="*"; search="${1}";
+   else files="${1}"; search="${2}";
+fi; 
+find -P . -name "$files" -a ! -wholename '*/.*' -a ! -wholename '*/Libraries/*' -a ! -name '*.o' -exec grep -Hin ${3} "$search" {} \; ; 
