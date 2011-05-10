@@ -87,16 +87,6 @@ double Drawable::unrootedDist(Drawable *other) {
    return unrootedDist(other->position);
 }
 
-/**
- * Returns the radius of the object which should be used for View Frustum Culling.
- */
-double Drawable::getCullRadius() {
-   if (cullRadius == -1.0) {
-      return radius;
-   } else {
-      return cullRadius;
-   }
-}
 
 /**
  * Subclasses can extend this, but this draws a sphere on the minimap.

@@ -3,7 +3,6 @@
 #include <algorithm>
 #include "Vector3D.h"
 
-#include "Utility/GlobalUtility.h"
 
 /** Doubles have a lot of precision.
  * We want to cut that down a bit.
@@ -215,10 +214,6 @@ void Vector3D::rotate(double angle, const Vector3D& axis) {
 
 void Vector3D::rotateByDegrees(double angle, const Vector3D& axis) {
    rotate(angle / (180 / 3.14159265), axis);
-}
-
-void Vector3D::glTranslate(double length) {
-   glTranslated(length * x, length * y, length * z);
 }
 
 void Vector3D::reflect(Vector3D& axis) {

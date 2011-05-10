@@ -211,10 +211,7 @@ void init() {
 
    //glBlendEquation(GL_FUNC_ADD);
 
-   /*
-   glEnable(GL_ALPHA_TEST);
-   glAlphaFunc(GL_GREATER, 0.01);
-   */
+   glAlphaFunc(GL_GREATER, 0.1f);
 
 }
 

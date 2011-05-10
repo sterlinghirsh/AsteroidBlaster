@@ -63,7 +63,7 @@ class Drawable {
       virtual void drawGlow() {return;}
       
       //To be overwritten by all subclasses. This is an empty stub only.
-      virtual void update(double timeDifference) {return;}
+      virtual void update(double timeDifference) = 0;
       
       virtual void drawInMinimap();
       virtual void hitWall(BoundingWall* wall);
@@ -80,7 +80,16 @@ class Drawable {
       double unrootedDist(Drawable *other);
       
       //Returns the radius of the object which should be used for View Frustum Culling.
-      double getCullRadius();
+      /**
+       * Returns the radius of the object which should be used for View Frustum Culling.
+       */
+      virtual inline double getCullRadius() {
+         if (cullRadius == -1.0) {
+            return radius;
+         } else {
+            return cullRadius;
+         }
+      }
       
       
    //private functions------------------------------

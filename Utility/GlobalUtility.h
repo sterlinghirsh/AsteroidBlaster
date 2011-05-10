@@ -34,6 +34,8 @@
 #include "Utility/GameSettings.h"
 
 #include <math.h>
+#include <algorithm>
+
 
 
 
@@ -82,7 +84,6 @@ double p2wWidth(int);
 double p2ix(int);
 double p2iy(int);
 void reshape(GLsizei w, GLsizei h);
-double clamp(double, double, double);
 double randdouble();
 GLuint setShaders(char * vert, char * frag, char * geom);
 GLuint setShaders(char * vert, char * frag);
@@ -139,8 +140,16 @@ void toggleFullScreen();
 
 extern bool running;
 
+inline double randdouble() {
+   return (double)rand() / (double) RAND_MAX;
+}
+
 inline double doubleTime() {
    return currentTime;
+}
+
+inline double clamp(double num, double minVal, double maxVal) {
+   return std::max(minVal, std::min(num, maxVal));
 }
 
 inline double distance3D(double x1, double y1, double z1, double x2,
@@ -169,10 +178,10 @@ struct Color {
    GLfloat r, g, b, a;
    Color(GLfloat _r, GLfloat _g, GLfloat _b, GLfloat _a = 1) :
       r(_r), g(_g), b(_b), a(_a) {}
-   void setColor() {
+   inline void setColor() {
       glColor4f(r, g, b, a);
    }
-   void setColorWithAlpha(GLfloat tempAlpha) {
+   inline void setColorWithAlpha(GLfloat tempAlpha) {
       glColor4f(r, g, b, tempAlpha);
    }
 };

@@ -26,19 +26,20 @@ class Plane {
          mag = (float) sqrt((a*a) + (b*b) + (c*c));
       }
       
-      double distanceTo(double x, double y, double z) {
-         double dist =  (a * x) + (b * y) + (c * z) + d;
-         return dist;
+      inline double distanceTo(double x, double y, double z) {
+         return (a * x) + (b * y) + (c * z) + d;
       }
 
       bool onTargetablePositiveSide(Drawable* obj) {
          // Multiply by 1.75 instead of 2.05 to make sure the AI only targets objects which are mostly on screen, rather than being allowed to target things which are barely off screen.
-         return distanceTo(obj->position->x, obj->position->y, obj->position->z) > -1*obj->getCullRadius()*1.75;
+         return distanceTo(obj->position->x, obj->position->y, obj->position->z) > 
+          -1.75 * obj->getCullRadius();
       }
 
       bool onDrawablePositiveSide(Drawable* obj) {
          // Multiply by 2.05 instead of 2 to make sure things slightly off screen are still drawn, to be sure we prevent popping.
-         return distanceTo(obj->position->x, obj->position->y, obj->position->z) > -1*obj->getCullRadius()*2.05;  
+         return distanceTo(obj->position->x, obj->position->y, obj->position->z) > 
+          -2.05 * obj->getCullRadius(); 
          // Test with radius instead of Axis Aligned Bounding Boxes
          /*
             distanceTo(obj->maxPosition->x, obj->maxPosition->y, obj->maxPosition->z) > 0 ||

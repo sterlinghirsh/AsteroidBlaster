@@ -6,12 +6,13 @@
  */
 
 #include "Network/ClientCommand.h"
+#include "Utility/Constants.h"
 
 void ClientCommand::reset() {
    forwardAcceleration = rightAcceleration = upAcceleration = 0;
    yawSpeed = rollSpeed = pitchSpeed = 0;
    brake = fire = false;
-   currentWeapon = 1; // Ship's default.
+   currentWeapon = BLASTER_WEAPON_INDEX; // Ship's default.
    mouseX = mouseY = 0;
 }
 

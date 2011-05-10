@@ -49,6 +49,7 @@ class Sprite : public Drawable {
        Point3D posIn, double drawWidth, double drawHeight, const GameState* _gameState);
       
       static void updateSprites(double timeDiff);
+      virtual void update(double timeDiff) {};
       
    //private functions------------------------------
    private:

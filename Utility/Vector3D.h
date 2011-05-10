@@ -7,6 +7,7 @@
 #define __VECTOR3D_H__
 
 #include <stdio.h>
+#include "Utility/GlobalUtility.h"
 
 class Vector3D {
    public:
@@ -68,7 +69,15 @@ class Vector3D {
          z *= scalar;
       }
       void setLength(double);
-      void glTranslate(double length = 1);
+      
+      inline void glTranslate() {
+         glTranslated(x, y, z);
+      }
+      
+      inline void glTranslate(double length) {
+         glTranslated(length * x, length * y, length * z);
+      }
+
       void reflect(Vector3D& axis);
       Vector3D getNormalVector();
       void negativeX();

@@ -22,7 +22,11 @@ class Point3D : public Vector3D {
       
       Point3D(const Vector3D& copy);
 
-      virtual void draw();
+      virtual void draw() {
+         glVertex3d(x, y, z);
+      }
+
+
       void print();
 
       static const Point3D Zero;

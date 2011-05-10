@@ -5,8 +5,6 @@
  * helper functions globally accessable.
  */
 
-#include <algorithm>
-
 #ifdef WIN32
 #include <winsock2.h>
 #include <windows.h>
@@ -145,15 +143,6 @@ void usePerspective() {
 void useOrtho() {
    drawPerspective = false;
    reshape(gameSettings->GW, gameSettings->GH);
-}
-
-
-double clamp(double num, double minVal, double maxVal) {
-   return max(minVal, min(num, maxVal));
-}
-
-double randdouble() {
-   return (double)rand() / (double) RAND_MAX;
 }
 
 void updateDoubleTime() {

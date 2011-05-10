@@ -49,6 +49,12 @@ Particle::~Particle() {
 
 void Particle::updateParticles(double timeDifference)
 {
+   while (particles.size() >= MAX_PARTICLES) {
+      // Erase the oldest particle silently.
+      delete particles.front();
+      particles.pop_front();
+   }
+
    list<Particle*>::iterator particle = Particle::particles.begin();
 
    while(particle != Particle::particles.end()) {
@@ -72,8 +78,6 @@ void Particle::updateParticles(double timeDifference)
  */
 void Particle::update(double timeDifference)
 {
-   // Do the parent's update.
-   Drawable::update(timeDifference);
    // Move On The X Axis By X Speed 
    position->x += velocity->x * timeDifference;
    // Move On The Y Axis By Y Speed 
@@ -121,6 +125,8 @@ void Particle::initDisplayList() {
    glEnable(GL_TEXTURE_2D);
    //Disable(GL_DEPTH_TEST);
    glDisable(GL_CULL_FACE);
+   glEnable(GL_ALPHA_TEST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
    glBegin(GL_TRIANGLE_FAN);
    
    // Top Left
@@ -140,15 +146,11 @@ void Particle::initDisplayList() {
    glDisable(GL_TEXTURE_2D);
    glUseProgram(0);
    glDepthMask(true);
+   glDisable(GL_ALPHA_TEST);
    glEndList();
 }
 
 void Particle::Add(Particle* newParticle) {
-   if (particles.size() >= MAX_PARTICLES) {
-      // Erase the oldest particle silently.
-      delete particles.front();
-      particles.pop_front();
-   }
    particles.push_back(newParticle);
 }
 

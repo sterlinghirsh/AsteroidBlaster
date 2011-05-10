@@ -11,7 +11,6 @@
 
 // Sensible limit on particles. Maybe should be even lower?
 #define MAX_PARTICLES 5000
-#define PARTICLE_LIFE 0.002f
 
 class Particle : public Drawable {
    public:
@@ -35,6 +34,9 @@ class Particle : public Drawable {
       static int particleDisplayList;
       static void initDisplayList();
       virtual double getAlpha();
+      virtual inline double getCullRadius() {
+         return 0;
+      }
       
    protected:
       float life;
