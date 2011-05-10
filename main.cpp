@@ -368,6 +368,10 @@ int main(int argc, char* argv[]) {
    //declare the event that will be reused
    SDL_Event* event = new SDL_Event();
 
+   updateDoubleTime();
+   timeDiff = doubleTime() - lastUpdateTime;
+   lastUpdateTime = doubleTime();
+
    while (running) {
       updateDoubleTime();
       timeDiff = doubleTime() - lastUpdateTime;
