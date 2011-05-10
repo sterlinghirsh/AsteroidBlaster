@@ -107,6 +107,33 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
 
 // Choose the appropriate weapon for this situation.
 void ShootingAI::chooseWeapon(Object3D** target) {
+   /*double curWeight = 0.0;
+   double maxWeight = -1.0;
+   // States whether or not the chosen target is a ship / shard
+   bool isAShip = false;
+   bool isAShard = false;
+
+   if(dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL)
+      isAShip = true;
+
+   if(dynamic_cast<Shard*>(*targets_iterator) != NULL)
+      isAShard = true;
+   
+   // For each of the weapons on the ship's weapons list
+   std::list<Weapon*>::iterator weapons_iterator;
+   for( ; weapons_iterator != ship->weapons->end(); ++weapons_iterator) {
+      curWeight = 0.0;
+      maxWeight = -1.0;
+
+      // Add to the weighting for each weapon for various situations
+
+   }
+   */
+
+   
+   
+   
+   
    if (*target != NULL) {
       if ((dynamic_cast<Shard*>(*target)) != NULL) {
          ship->selectWeapon(TRACTOR_WEAPON_INDEX);
@@ -133,10 +160,11 @@ Object3D* ShootingAI::chooseTarget() {
    double maxWeight = -1.0;
    const double distWeight = 600;
    const double radiusWeight = 1;
-   const double proximityWeight = 3;
+   const double proximityWeight = 2;
    bool isAShip = false;
    bool isAShard = false;
    
+   //printf("size of targets list is: %d\n", targets->size());
    // If the list of targets from the viewFrustum does not exist, give the AI no target.
    if(targets == NULL) {
       printf("targets list was null.\n");
@@ -148,82 +176,90 @@ Object3D* ShootingAI::chooseTarget() {
    AsteroidShip* consideredShip = NULL;
 
    for ( ; targets_iterator != targets->end(); ++targets_iterator) {
-      curWeight = 0.0;
       //printf("starting null check.\n");
       if (*targets_iterator == NULL) {
          //printf("targets_iterator was null!\n\n\n\n");
          continue;
       }
-      isAShip = false;
-      isAShard = false;
 
       if (dynamic_cast<Particle*>(*targets_iterator) != NULL) {
         //printf("continuing b/c of a particle!!! \n");
         continue;
      }
       
-      if(dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL)
-         isAShip = true;
+     curWeight = 0.0;
+     isAShip = false;
+     isAShard = false;
+      
+     if(dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL)
+        isAShip = true;
 
-      if(dynamic_cast<Shard*>(*targets_iterator) != NULL)
-         isAShard = true;
+     if(dynamic_cast<Shard*>(*targets_iterator) != NULL)
+        isAShard = true;
 
-      if (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && dynamic_cast<Shard*>(*targets_iterator) == NULL && dynamic_cast<AsteroidShip*>(*targets_iterator) == NULL) {
+     if (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && !isAShard && !isAShip) {
          continue;
       }
 
-      if (isAShard && (*targets_iterator)->position->distanceFrom(*ship_position) > 30)
-         continue;
+     if (isAShard && (*targets_iterator)->position->distanceFrom(*ship_position) > 30)
+        continue;
 
-      if (isAShip) {
-         consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
-         /* Don't shoot at myself, or the enemy if it's respawning, or if they just spawned.
-          * This is to avoid spawn camping.
-          */
-         if (consideredShip->id == ship->id || consideredShip->isRespawning() || consideredShip->getAliveTime() < 3)
-            continue;
-      }
+     if (isAShip) {
+        consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
+        /* Don't shoot at myself, or the enemy if it's respawning, or if they just spawned.
+         * This is to avoid spawn camping.
+         */
+        if (consideredShip->id == ship->id || consideredShip->isRespawning() || consideredShip->getAliveTime() < 3) {
+           continue;
+        }
 
-      //printf("curWeight started at %f\n", curWeight);
-      /*curWeight = radiusWeight / ((*targets_iterator)->radius);
-      vec = (*(*targets_iterator)->position - *ship->position);
-      curWeight += distWeight / (vec * vec);
-      vec.normalize();
-      curWeight += vec * lastShotPos * proximityWeight;
-      */
+        // Only add weight if the considered ship is not our own ship.
+        if (consideredShip->id != ship->id) {
+           curWeight += 10;
+           //printf("added 10 b/c target is a ship.\n", curWeight);
+        }
+     }
 
-      // Larger objects should have a higher priority.
-      curWeight += 2*((*targets_iterator)->radius);
+     //printf("curWeight started at %f\n", curWeight);
+     /*curWeight = radiusWeight / ((*targets_iterator)->radius);
+     vec = (*(*targets_iterator)->position - *ship->position);
+     curWeight += distWeight / (vec * vec);
+     vec.normalize();
+     curWeight += vec * lastShotPos * proximityWeight;
+     */
 
-      // Objects that are closer should be weighted higher.
-      vec = (*(*targets_iterator)->position - *ship->position);
-      // Make sure vec is positive, so that we don't get a negative curWeight.
-      double tmp = vec * vec;
-      if (tmp < 0.0)
-         tmp *= -1;
-      curWeight += distWeight / (tmp);
-      //curWeight += vec * lastShotPos * proximityWeight;
+     // Larger objects should have a higher priority.
+     curWeight += 2*((*targets_iterator)->radius);
+
+     // Objects that are closer should be weighted higher.
+     vec = (*(*targets_iterator)->position - *ship->position);
+     // Make sure vec is positive, so that we don't get a negative curWeight.
+     double tmp = vec * vec;
+     if (tmp < 0.0)
+        tmp *= -1;
+     curWeight += distWeight / (tmp);
+     curWeight += vec * lastShotPos * proximityWeight;
       
-      // Maybe add to the weight if the target is an AsteroidShip.
-      if (isAShip) {
-          consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
+     // Consdier adding to the weight if the target is an AsteroidShip.
+     if (isAShip) {
+         //consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
 
-         // Only add weight if the considered ship is not our own ship.
-         if (consideredShip->id != ship->id) {
-            curWeight += 10;
-            //printf("added 10 b/c target is a ship.\n", curWeight);
-         }
-      }
+        // Only add weight if the considered ship is not our own ship.
+        if (consideredShip->id != ship->id) {
+           curWeight += 10;
+           //printf("added 10 b/c target is a ship.\n", curWeight);
+        }
+     }
       
-      //printf("curweight summed up to %f\n", curWeight);
+     //printf("curweight summed up to %f\n", curWeight);
 
-      if (isAShard)
-         curWeight *= ship->getWeapon(2)->curAmmo != 0;
+     if (isAShard)
+        curWeight *= ship->getWeapon(2)->curAmmo != 0;
       
-      if (maxWeight < 0 || curWeight > maxWeight) {
-         maxWeight = curWeight;
-         closest = dynamic_cast<Object3D*> (*targets_iterator);
-      }
+     if (maxWeight < 0 || curWeight > maxWeight) {
+        maxWeight = curWeight;
+        closest = dynamic_cast<Object3D*> (*targets_iterator);
+     }
    }
 
    delete targets;

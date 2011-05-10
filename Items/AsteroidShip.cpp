@@ -103,7 +103,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    radar = new Radar(this);
 
    // Add weapons to the list!
-   /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE MAGIC NUMBER 2 for the TractorBeam IN THE FUNCTION drawShotDirectionIndicators below.
+   /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE CONSTANTS IN Utility/Constants.h
    */
    weapons.push_back(new TractorBeam(this));
    weapons.push_back(new Blaster(this));
@@ -1118,11 +1118,6 @@ void AsteroidShip::draw() {
       glEnd();
       */
    glPopMatrix();
-   /*
-      Ball ball = Ball();
-      ball.attach(this);
-      ball.draw();
-      */
 }
 
 void AsteroidShip::updateShotDirectionVector() {
@@ -1150,7 +1145,7 @@ void AsteroidShip::updateShotDirection(Vector3D dir) {
    shotDirection = dir;
 }
 
-Radar *AsteroidShip::getRadar() {
+Radar* AsteroidShip::getRadar() {
    return radar;
 }
 
@@ -1221,7 +1216,6 @@ void AsteroidShip::drawShotDirectionIndicators() {
       return;
 
    // Don't draw this while firing the tractorbeam.
-   // TODO: Make 2 not a magic number.
    if (currentWeapon == TRACTOR_WEAPON_INDEX && isFiring || (gameState->godMode && isFiring)) {
       return;
    }
