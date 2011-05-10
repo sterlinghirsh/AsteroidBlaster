@@ -43,6 +43,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
       worldSize = worldSizeIn;
       skybox = new Skybox();
       ship = new AsteroidShip(this);
+      clientCommand.shipID = ship->id;
       
       spring = new Spring(this);
       minimap = new Minimap(ship);
@@ -237,7 +238,9 @@ void GameState::update(double timeDiff) {
    std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
    // Keep items in the box.
-   cube->constrain(ship);
+   // cube->constrain(ship); why did we do this twice?
+
+   ship->readCommand(clientCommand);
 
    // Update each item.
    for (item = objects->begin(); item != objects->end(); ++item) {
@@ -737,6 +740,8 @@ void GameState::reset(bool shouldLoad) {
 
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    ship = new AsteroidShip(this);
+   clientCommand.reset();
+   clientCommand.shipID = ship->id;
    spring = new Spring(this);
    cube->constrain(ship);
    minimap = new Minimap(ship);
@@ -809,58 +814,58 @@ void GameState::keyDown(int key) {
       case SDLK_w:
          isW = true;
          if (isS) {
-            ship->accelerateForward(0);
+            clientCommand.forwardAcceleration = 0;
          } else {
-            ship->accelerateForward(1);
+            clientCommand.forwardAcceleration = 1;
          }
          break;
 
       case SDLK_s:
          isS = true;
          if (isW) {
-            ship->accelerateForward(0);
+            clientCommand.forwardAcceleration = 0;
          } else {
-            ship->accelerateForward(-1);
+            clientCommand.forwardAcceleration = -1;
          }
          break;
 
       case SDLK_a:
          isA = true;
          if (isD) {
-            ship->setYawSpeed(0.0);
+            clientCommand.yawSpeed = 0;
          } else {
-            ship->setYawSpeed(1.0);
+            clientCommand.yawSpeed = 1.0;
          }
          break;
 
       case SDLK_d:
          isD = true;
          if (isA) {
-            ship->setYawSpeed(0.0);
+            clientCommand.yawSpeed = 0.0;
          } else {
-            ship->setYawSpeed(-1.0);
+            clientCommand.yawSpeed = -1.0;
          }
          break;
 
       case SDLK_q:
-         ship->accelerateRight(-1);
+         clientCommand.rightAcceleration = -1;
          break;
 
       case SDLK_e:
-         ship->accelerateRight(1);
+         clientCommand.rightAcceleration = 1;
          break;
 
       case SDLK_SPACE:
-         ship->accelerateUp(1);
+         clientCommand.upAcceleration = 1;
          break;
 
       case SDLK_LCTRL:
-         ship->accelerateUp(-1);
+         clientCommand.upAcceleration = -1;
          break;
 
       case SDLK_RSHIFT:
          doYaw = !doYaw;
-         ship->setRollSpeed(0);
+         clientCommand.rollSpeed = 0;
          break;
 
          /*
@@ -870,9 +875,8 @@ void GameState::keyDown(int key) {
             */
 
       case SDLK_b:
-         ship->setBrake(true);
+         clientCommand.brake = true;
          break;
-
       }
 
 
@@ -918,20 +922,10 @@ void GameState::keyDown(int key) {
       // When you disable the flyingAI, stop accelerating the ship.
       if(ship->flyingAI->isEnabled()) {
          ship->flyingAI->disable();
-         ship->accelerateForward(0);
-         ship->accelerateRight(0);
-         ship->accelerateUp(0);
-         ship->setYawSpeed(0.0);
-         ship->setPitchSpeed(0.0);
-         ship->setRollSpeed(0.0);
+         clientCommand.reset();
       } else {
          // Stop accelerating the ship when turning on the flyingAI as well.
-         ship->accelerateForward(0);
-         ship->accelerateRight(0);
-         ship->accelerateUp(0);
-         ship->setYawSpeed(0.0);
-         ship->setPitchSpeed(0.0);
-         ship->setRollSpeed(0.0);
+         clientCommand.reset();
          ship->flyingAI->enable();
       }
       break;
@@ -939,23 +933,13 @@ void GameState::keyDown(int key) {
 
       //switch weapons
    case SDLK_v:
-      // If we're in godMode, ignore whether or not a weapon is purchased
-      if(godMode)
-         ship->nextWeapon();
-      else {
-         // Keep scrolling through weapons as long as they're not purchased.
-         ship->prevWeapon();
-      }
+      // Keep scrolling through weapons as long as they're not purchased.
+      clientCommand.currentWeapon = ship->getPrevWeaponID();
       break;
 
    case SDLK_z:
-      // If we're in godMode, ignore whether or not a weapon is purchased
-      if(godMode)
-         ship->nextWeapon();
-      else {
-         // Keep scrolling through weapons as long as they're not purchased.
-         ship->nextWeapon();
-      }
+      // Keep scrolling through weapons as long as they're not purchased.
+      clientCommand.currentWeapon = ship->getNextWeaponID();
       break;
 
 
@@ -1051,9 +1035,9 @@ void GameState::keyUp(int key) {
       isS = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isW) {
-            ship->accelerateForward(1);
+            clientCommand.forwardAcceleration = 1;
          } else {
-            ship->accelerateForward(0);
+            clientCommand.forwardAcceleration = 0;
          }
       }
       break;
@@ -1062,9 +1046,9 @@ void GameState::keyUp(int key) {
       isW = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isS) {
-            ship->accelerateForward(-1);
+            clientCommand.forwardAcceleration = -1;
          } else {
-            ship->accelerateForward(0);
+            clientCommand.forwardAcceleration = 0;
          }
       }
       break;
@@ -1073,9 +1057,9 @@ void GameState::keyUp(int key) {
       isA = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isD) {
-            ship->setYawSpeed(-1.0);
+            clientCommand.yawSpeed = -1.0;
          } else {
-            ship->setYawSpeed(0.0);
+            clientCommand.yawSpeed = 0;
          }
       }
       break;
@@ -1084,9 +1068,9 @@ void GameState::keyUp(int key) {
       isD = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isA) {
-            ship->setYawSpeed(1.0);
+            clientCommand.yawSpeed = 1.0;
          } else {
-            ship->setYawSpeed(0.0);
+            clientCommand.yawSpeed = 0;
          }
       }
       //if(!ship->flyingAI->isEnabled())
@@ -1096,22 +1080,24 @@ void GameState::keyUp(int key) {
    case SDLK_q:
    case SDLK_e:
       if(!ship->flyingAI->isEnabled())
-         ship->accelerateRight(0);
+         clientCommand.rightAcceleration = 0;
       break;
 
    case SDLK_SPACE:
    case SDLK_LCTRL:
       if(!ship->flyingAI->isEnabled())
-         ship->accelerateUp(0);
+         clientCommand.upAcceleration = 0;
       break;
 
+      /*
    case SDLK_LSHIFT:
       if(!ship->flyingAI->isEnabled())
          ship->setBoost(false);
       break;
+*/
 
    case SDLK_b:
-      ship->setBrake(false);
+      clientCommand.brake = false;
       break;
       // Minimap Size
    case SDLK_1:
@@ -1146,35 +1132,22 @@ void GameState::mouseDown(int button) {
    switch(button) {
       // Left mouse down
    case 1:
-      //ship->selectWeapon(0);
-      ship->fire(true);
+      clientCommand.fire = true;
       break;
 
       // Right mouse down
    case 3:
       doYaw = !doYaw;
-      ship->setRollSpeed(0);
-      ship->setYawSpeed(0);
-      //printf("right mouse down\n");
+      clientCommand.rollSpeed = 0;
+      clientCommand.yawSpeed = 0;
       break;
 
+      // Scroll
    case 4:
-      // If we're in godMode, ignore whether or not a weapon is purchased
-      if(godMode)
-         ship->prevWeapon();
-      else {
-         // Keep scrolling through weapons as long as they're not purchased.
-         ship->prevWeapon();
-      }
+      clientCommand.currentWeapon = ship->getPrevWeaponID();
       break;
    case 5:
-      // If we're in godMode, ignore whether or not a weapon is purchased
-      if(godMode)
-         ship->nextWeapon();
-      else {
-         // Keep scrolling through weapons as long as they're not purchased.
-         ship->nextWeapon();
-      }
+      clientCommand.currentWeapon = ship->getNextWeaponID();
       break;
    }
 }
@@ -1189,13 +1162,13 @@ void GameState::mouseUp(int button) {
    switch (button) {
       // Left mouse up
    case 1:
-      ship->fire(false);
+      clientCommand.fire = false;
       break;
       // Right mouse up
    case 3:
       doYaw = !doYaw;
-      ship->setRollSpeed(0);
-      ship->setYawSpeed(0);
+      clientCommand.rollSpeed = 0;
+      clientCommand.yawSpeed = 0;
       break;
    }
 }
@@ -1210,8 +1183,9 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 
    mouseX = shipControlX;
    mouseY = shipControlY;
-
-   ship->updateShotDirection(shipControlX, shipControlY);
+   
+   clientCommand.mouseX = mouseX;
+   clientCommand.mouseY = mouseY;
 
    shipControlX = shipControlX / p2wx(gameSettings->GW);
    shipControlY = shipControlY / p2wy(0);
@@ -1221,14 +1195,13 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 
    if(!ship->flyingAI->isEnabled()) {
       if (doYaw) {
-         ship->setYawSpeed(-shipControlX);
+         clientCommand.yawSpeed = -shipControlX;
       } else {
-         ship->setRollSpeed(shipControlX);
+         clientCommand.rollSpeed = shipControlX;
       }
 
-      ship->setPitchSpeed(shipControlY);
+      clientCommand.pitchSpeed = shipControlY;
    }
-
 }
 
 double GameState::getWallxMin() const { return cube->xMin; }

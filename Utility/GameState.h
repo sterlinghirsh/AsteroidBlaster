@@ -27,6 +27,8 @@
 #include "HUD/WeaponDisplay.h"
 #include "HUD/Minimap.h"
 #include "HUD/Screen.h"
+#include "Network/ClientCommand.h"
+
 #include <list>
 #include <sstream>
 
@@ -76,6 +78,7 @@ class GameState : public InputReceiver {
       WeaponDisplay* weaponBar;
       double curFPS, worldSize;
       double lastDrawTime;
+      ClientCommand clientCommand;
       
    //private variables------------------------------
    private:

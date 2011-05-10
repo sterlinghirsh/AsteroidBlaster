@@ -12,12 +12,15 @@
 #include "Particles/EngineParticle.h"
 #include "Particles/ElectricityImpactParticle.h"
 #include "Text/GameMessage.h"
+#include "Network/ClientCommand.h"
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
 #endif
 
 #define BOOST_SCALE 2.0
+
+#define SHOT_ANGLE_FACTOR ((M_PI/180) * VERT_FOV / 2)
 
 using namespace std;
 const double rotationFactor = 2.6;
@@ -280,24 +283,33 @@ void AsteroidShip::setBoost(bool doBoost) {
  * Set the engine's acceleration.
  */
 void AsteroidShip::accelerateForward(int dir) {
+   if (curForwardAccel == 0) {
+      accelerationStartTime = doubleTime();
+      particlesEmitted = 0;
+   }
+
    curForwardAccel = dir * maxForwardAccel;
    updatePlayerAcceleration();
-   accelerationStartTime = doubleTime();
-   particlesEmitted = 0;
 }
 
 void AsteroidShip::accelerateUp(int dir) {
+   if (curForwardAccel == 0) {
+      accelerationStartTime = doubleTime();
+      particlesEmitted = 0;
+   }
+
    curUpAccel = dir * maxUpAccel;
    updatePlayerAcceleration();
-   accelerationStartTime = doubleTime();
-   particlesEmitted = 0;
 }
 
 void AsteroidShip::accelerateRight(int dir) {
+   if (curForwardAccel == 0) {
+      accelerationStartTime = doubleTime();
+      particlesEmitted = 0;
+   }
+
    curRightAccel = dir * maxRightAccel;
    updatePlayerAcceleration();
-   accelerationStartTime = doubleTime();
-   particlesEmitted = 0;
 }
 
 void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
@@ -600,8 +612,8 @@ void AsteroidShip::update(double timeDiff) {
 void AsteroidShip::updateShotDirection(double xOffset, double yOffset) {
    aimX = xOffset;
    aimY = yOffset;
-   shotPhi = (M_PI/180) * yOffset * VERT_FOV / 2;
-   shotTheta = (M_PI/180) * xOffset * VERT_FOV / (/*((double) GW/GH) / */ -2);
+   shotPhi = yOffset * SHOT_ANGLE_FACTOR;
+   shotTheta = -xOffset * SHOT_ANGLE_FACTOR;
    updateShotDirectionVector();
 }
 
@@ -1311,11 +1323,14 @@ Weapon* AsteroidShip :: getPreviousWeapon() {
  * Find the next available weapon.
  */
 void AsteroidShip::nextWeapon() {
+   selectWeapon(getNextWeaponID());
+}
+
+int AsteroidShip::getNextWeaponID() {
    int thisWeapon = currentWeapon;
    while (thisWeapon < weapons.size() - 1) {
       if (weapons[thisWeapon + 1]->purchased) {
-         selectWeapon(thisWeapon + 1);
-         return;
+         return thisWeapon + 1;
       } else {
          thisWeapon++;
       }
@@ -1323,18 +1338,21 @@ void AsteroidShip::nextWeapon() {
    if (!weapons[thisWeapon]->purchased) {
       thisWeapon = currentWeapon;
    }
-   selectWeapon(thisWeapon);
+   return thisWeapon;
 }
 
 /**
  * Find the previous available weapon.
  */
 void AsteroidShip::prevWeapon() {
+   selectWeapon(getPrevWeaponID());
+}
+
+int AsteroidShip::getPrevWeaponID() {
    int thisWeapon = currentWeapon;
    while (thisWeapon > 0) {
       if (weapons[thisWeapon - 1]->purchased) {
-         selectWeapon(thisWeapon - 1);
-         return;
+         return thisWeapon - 1;
       } else {
          thisWeapon--;
       }
@@ -1342,7 +1360,7 @@ void AsteroidShip::prevWeapon() {
    if (!weapons[thisWeapon]->purchased) {
       thisWeapon = currentWeapon;
    }
-   selectWeapon(thisWeapon);
+   return thisWeapon;
 }
 
 // Get the number of types of weapons the ship has. They're indexed 0 - (n-1)
@@ -1500,4 +1518,23 @@ Shard* AsteroidShip::makeShard() {
    shard->position->clone(position);
    randomOffset.movePoint(*shard->position);
    return shard;
+}
+
+void AsteroidShip::readCommand(ClientCommand& command) {
+   accelerateForward(command.forwardAcceleration);
+   accelerateRight(command.rightAcceleration);
+   accelerateUp(command.upAcceleration);
+
+   setYawSpeed(command.yawSpeed);
+   setRollSpeed(command.rollSpeed);
+   setPitchSpeed(command.pitchSpeed);
+
+   fire(command.fire);
+
+   setBrake(command.brake);
+
+   selectWeapon(command.currentWeapon);
+
+   // This works as long as VERT_FOV is the same on both sides.
+   updateShotDirection(command.mouseX, command.mouseY);
 }

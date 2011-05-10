@@ -41,6 +41,7 @@ class Shot;
 class Radar;
 class ShootingAI;
 class FlyingAI;
+class ClientCommand;
 
 class AsteroidShip : public Object3D {
    //public variables------------------------------
@@ -182,6 +183,8 @@ class AsteroidShip : public Object3D {
       // Weapon related functions
       void nextWeapon();
       void prevWeapon();
+      int getNextWeaponID();
+      int getPrevWeaponID();
       // Return a reference to the list of weapons that the ship has.
       // Get the number of types of weapons the ship has. They're indexed 0 - (n-1)
       int getNumWeapons();
@@ -192,6 +195,8 @@ class AsteroidShip : public Object3D {
       Vector3D* getShotDirection();
       Weapon* getWeapon(int wep);
       std::vector<Weapon*> getWeapons(){ return weapons; }
+
+      void readCommand(ClientCommand& command);
       
       
    //private functions------------------------------
