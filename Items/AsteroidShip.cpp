@@ -134,6 +134,9 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
     */
    shooter = new ShootingAI(this);
    flyingAI = new FlyingAI(this);
+
+   color1 = randdouble();
+   color2 = randdouble();
 }
 
 /**
@@ -283,7 +286,7 @@ void AsteroidShip::setBoost(bool doBoost) {
  * Set the engine's acceleration.
  */
 void AsteroidShip::accelerateForward(int dir) {
-   if (curForwardAccel == 0) {
+   if (curForwardAccel == 0 && dir != 0) {
       accelerationStartTime = doubleTime();
       particlesEmitted = 0;
    }
@@ -293,7 +296,7 @@ void AsteroidShip::accelerateForward(int dir) {
 }
 
 void AsteroidShip::accelerateUp(int dir) {
-   if (curForwardAccel == 0) {
+   if (curUpAccel == 0 && dir != 0) {
       accelerationStartTime = doubleTime();
       particlesEmitted = 0;
    }
@@ -303,7 +306,7 @@ void AsteroidShip::accelerateUp(int dir) {
 }
 
 void AsteroidShip::accelerateRight(int dir) {
-   if (curForwardAccel == 0) {
+   if (curRightAccel == 0 && dir != 0) {
       accelerationStartTime = doubleTime();
       particlesEmitted = 0;
    }
@@ -313,29 +316,29 @@ void AsteroidShip::accelerateRight(int dir) {
 }
 
 void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
-      Vector3D& offsetDirectionX, Vector3D& offsetDirectionY, int color) {
+      Vector3D& offsetDirectionX, Vector3D& offsetDirectionY, double color) {
    static Vector3D particleVariation;
    static Point3D curPoint;
    static Vector3D initialOffset;
    static Vector3D randomOffset;
-   const float randomAmount = 0.1f;
+   const float randomAmount = 0.5f;
    curPoint = emitter;
 
    // Translate the point in 2D
    randomOffset.add(offsetDirectionX.scalarMultiply(randomAmount * (randdouble() - 0.5)));
    randomOffset.add(offsetDirectionY.scalarMultiply(randomAmount * (randdouble() - 0.5)));
    randomOffset.add(baseDirection.scalarMultiply(randomAmount * (randdouble() -0.5)));
-   randomOffset.scalarMultiplyUpdate(0.01);
+   //randomOffset.scalarMultiplyUpdate(0.01);
 
-   particleVariation.updateMagnitude(baseDirection.scalarMultiply(randdouble() * 2));
+   particleVariation.updateMagnitude(baseDirection.scalarMultiply(randdouble() * 8));
    particleVariation.addUpdate(offsetDirectionX.scalarMultiply(randdouble() * 8 - 4));
    particleVariation.addUpdate(offsetDirectionY.scalarMultiply(randdouble() * 8 - 4));
-   particleVariation.scalarMultiplyUpdate(0.05);
+   particleVariation.scalarMultiplyUpdate(0.3);
    //curPoint = position->add(randomPoint);
    initialOffset.movePoint(curPoint);
    randomOffset.movePoint(curPoint);
    EngineParticle::Add(new Point3D(curPoint),
-         new Vector3D(baseDirection.add(particleVariation)), color, gameState);
+         new Vector3D(baseDirection.scalarMultiply(10.0).add(particleVariation)), color, gameState);
 }
 
 void AsteroidShip::createEngineParticles(double timeDiff) {
@@ -344,18 +347,19 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    const float increment = 0.01f;
 
    //const float length = acceleration->getLength;
-   const int newParticlesPerSecond = 30;
+   const int newParticlesPerSecond = 100;
    static Vector3D baseParticleAcceleration;
    static Point3D emitter;
 
    double accelerationTime = doubleTime() - accelerationStartTime;
+   const double colorVariation = 0.2 * randdouble();
    while ((double) particlesEmitted / accelerationTime < newParticlesPerSecond) {
       // First do up Acceleration.
       if (curUpAccel != 0) {
          baseParticleAcceleration = up->scalarMultiply(-curUpAccel * 0.2);
          emitter = *position;
          forward->movePoint(emitter, -0.5);
-         addNewParticle(emitter, baseParticleAcceleration, *forward, *right);
+         addNewParticle(emitter, baseParticleAcceleration, *forward, *right, color1 + colorVariation);
       }
 
       // Next do right Acceleration.
@@ -363,7 +367,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
          baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
          emitter = *position;
          forward->movePoint(emitter, -0.7);
-         addNewParticle(emitter, baseParticleAcceleration, *forward, *up);
+         addNewParticle(emitter, baseParticleAcceleration, *forward, *up, color2 + colorVariation);
       }
 
       // Next do forward Acceleration.
@@ -375,11 +379,11 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 
          // First do the right side.
          right->movePoint(initialPoint, 1);
-         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 2);
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color1 - colorVariation);
 
          // Next do the left side.
          right->movePoint(initialPoint, -2);
-         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, 3);
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color2 - colorVariation);
       }
 
       ++particlesEmitted;

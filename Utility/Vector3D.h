@@ -45,7 +45,11 @@ class Vector3D {
       void rotateByDegrees(double angle, const Vector3D& axis);
       void randomMagnitude();
       Vector3D scalarMultiply(double);
-      void scalarMultiplyUpdate(double);
+      inline void scalarMultiplyUpdate(double scalar) {
+         x *= scalar;
+         y *= scalar;
+         z *= scalar;
+      }
       void setLength(double);
       void glTranslate(double length = 1);
       void reflect(Vector3D& axis);

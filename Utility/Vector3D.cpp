@@ -140,12 +140,6 @@ Vector3D Vector3D::cross(Vector3D& rhs) {
    return product;
 }
 
-void Vector3D::scalarMultiplyUpdate(double scalar) {
-   x *= scalar;
-   y *= scalar;
-   z *= scalar;
-}
-
 Vector3D Vector3D::scalarMultiply(double scalar) {
    Vector3D product (x * scalar, y * scalar, z * scalar);
    return product;

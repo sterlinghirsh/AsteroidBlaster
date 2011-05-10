@@ -274,6 +274,9 @@ class AsteroidShip : public Object3D {
 
       Timer respawnTimer;
       Timer aliveTimer;
+
+      float color1;
+      float color2;
       
       
    //protected functions------------------------------
@@ -295,7 +298,7 @@ class AsteroidShip : public Object3D {
 
       void createEngineParticles(double timeDiff);
       void addNewParticle(Point3D& emitter, Vector3D& initialOffset, Vector3D& offsetDirectionX,
-       Vector3D& offsetDirectionY, int color = 1);
+       Vector3D& offsetDirectionY, double color = 1.0);
       Shard* makeShard();
 
 };
