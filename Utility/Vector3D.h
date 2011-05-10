@@ -13,10 +13,28 @@ class Vector3D {
       double x, y, z;
       //const static double drawScale = 0.01;
 
-      Vector3D(double _x = 0, double _y = 0, double _z = 0);
-      Vector3D(Vector3D, Vector3D);
+      Vector3D(double _x = 0, double _y = 0, double _z = 0)
+       : x(_x), y(_y), z(_z) {}
 
-      double dot(Vector3D&);
+      Vector3D(const Vector3D& v1, const Vector3D& v2)
+       : x(v2.x - v1.x), y(v2.y - v1.y), z(v2.z - v1.z) {}
+
+      Vector3D(const Vector3D& v)
+       : x(v.x), y(v.y), z(v.z) {}
+
+      Vector3D(const Vector3D* v)
+       : x(v->x), y(v->y), z(v->z) {}
+
+      inline double dot(const Vector3D& rhs) {
+         return (x * rhs.x) + (y * rhs.y) + (z * rhs.z);
+      }
+      
+      inline void updateMagnitude(double _x, double _y, double _z) {
+         x = _x;
+         y = _y;
+         z = _z;
+      }
+
       Vector3D cross(Vector3D&);
       Vector3D add(Vector3D);
       Vector3D subtract(Vector3D&);
@@ -33,7 +51,6 @@ class Vector3D {
       void normalize();
       void abs();
       const Vector3D getNormalized() const;
-      void updateMagnitude(double, double, double);
       void updateMagnitude(Vector3D, Vector3D);
       void updateMagnitude(Vector3D*, Vector3D*);
       void updateMagnitude(Vector3D);

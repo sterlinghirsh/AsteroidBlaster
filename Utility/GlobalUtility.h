@@ -33,6 +33,8 @@
 
 #include "Utility/GameSettings.h"
 
+#include <math.h>
+
 
 
 class GameState;
@@ -70,6 +72,7 @@ extern SettingsMenu* settingsMenu;
 extern CreditsMenu* creditsMenu;
 extern TTF_Font* hudFont;
 extern TTF_Font* menuFont;
+extern double currentTime;
 
 
 double p2wx(int);
@@ -79,9 +82,6 @@ double p2wWidth(int);
 double p2ix(int);
 double p2iy(int);
 void reshape(GLsizei w, GLsizei h);
-double distance3D(double x1, double y1, double z1, double x2 = 0,
- double y2 = 0, double z2 = 0);
-double distance2D(double x1, double y1, double x2 = 0, double y2 = 0);
 double clamp(double, double, double);
 double randdouble();
 GLuint setShaders(char * vert, char * frag, char * geom);
@@ -90,7 +90,7 @@ GLuint setShaders(char * vert);
 char *textFileRead(char *fn);
 void printShaderLog(GLuint obj);
 void printProgramLog(GLuint obj);
-double doubleTime();
+
 int minutesRemaining(double secondsRemaining);
 int secondsRemainder(double secondsRemaining);
 void useOrtho();
@@ -138,6 +138,32 @@ void toggleGrabMode();
 void toggleFullScreen();
 
 extern bool running;
+
+inline double doubleTime() {
+   return currentTime;
+}
+
+inline double distance3D(double x1, double y1, double z1, double x2,
+      double y2, double z2) {
+   return sqrt(
+         (x2 - x1) * (x2 - x1) +
+         (y2 - y1) * (y2 - y1) +
+         (z2 - z1) * (z2 - z1));
+}
+
+inline double distance3D(double x1, double y1, double z1) {
+   return sqrt(x1 * x1 + y1 * y1 + z1 * z1);
+}
+
+inline double distance2D(double x1, double y1, double x2, double y2) {
+   return sqrt(
+         (x2 - x1) * (x2 - x1) +
+         (y2 - y1) * (y2 - y1));
+}
+
+inline double distance2D(double x1, double y1) {
+   return sqrt(x1 * x1 + y1 * y1);
+}
 
 struct Color {
    GLfloat r, g, b, a;

@@ -12,12 +12,6 @@
 
 using namespace std;
 
-// Default, magnitude-only, and magnitude-and-position constructors all in one.
-Vector3D::Vector3D(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
-
-Vector3D::Vector3D(Vector3D p1, Vector3D p2) {
-   updateMagnitude(p1, p2);
-}
 
 void Vector3D::movePoint(Vector3D& point, double scale) {
    point.x += x * scale;
@@ -75,12 +69,6 @@ void Vector3D::abs() {
       z *= -1;
 }
 
-void Vector3D::updateMagnitude(double _x, double _y, double _z) {
-   x = _x;
-   y = _y;
-   z = _z;
-}
-
 void Vector3D::randomMagnitude() {
    updateMagnitude(2 * randdouble() - 1, 2 * randdouble() - 1,
     2 * randdouble() - 1);
@@ -126,10 +114,6 @@ double Vector3D::getAngleInRadians(Vector3D& rhs) {
 
 double Vector3D::getAngleInDegrees(Vector3D& rhs) {
    return getAngleInRadians(rhs) * 180 / 3.14159265;
-}
-
-double Vector3D::dot(Vector3D& rhs) {
-   return (x * rhs.x) + (y * rhs.y) + (z * rhs.z);
 }
 
 Vector3D Vector3D::cross(Vector3D& rhs) {

@@ -16,11 +16,11 @@ else
    PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa
 endif
 
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) -g $(SDL_LIBS) -lSDL_mixer -lSDL_image -lSDL_ttf
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) -lSDL_mixer -lSDL_image -lSDL_ttf -pg -O3
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c $(SDL_CFLAGS) -g -Wconversion -Werror
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -iquote -Wall -c $(SDL_CFLAGS) -Wconversion -Werror -pg -O3
 CC=g++
 
 PROGNAME=AsteroidBlaster

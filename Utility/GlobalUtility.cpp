@@ -5,7 +5,6 @@
  * helper functions globally accessable.
  */
 
-#include <math.h>
 #include <algorithm>
 
 #ifdef WIN32
@@ -148,19 +147,6 @@ void useOrtho() {
    reshape(gameSettings->GW, gameSettings->GH);
 }
 
-double distance3D(double x1, double y1, double z1, double x2,
-      double y2, double z2) {
-   return sqrt(
-         (x2 - x1) * (x2 - x1) +
-         (y2 - y1) * (y2 - y1) +
-         (z2 - z1) * (z2 - z1));
-}
-
-double distance2D(double x1, double y1, double x2, double y2) {
-   return sqrt(
-         (x2 - x1) * (x2 - x1) +
-         (y2 - y1) * (y2 - y1));
-}
 
 double clamp(double num, double minVal, double maxVal) {
    return max(minVal, min(num, maxVal));
@@ -183,10 +169,6 @@ void updateDoubleTime() {
 #endif
    currentTime = answer;
 
-}
-
-double doubleTime() {
-   return currentTime;
 }
 
 /**
