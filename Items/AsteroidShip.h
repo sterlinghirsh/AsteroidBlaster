@@ -75,6 +75,8 @@ class AsteroidShip : public Object3D {
       double lineMove;
       double zMove;
       double justGotHit;
+      double invulnerableTime;
+      bool spawnInvulnerable;
       CollisionSphere* collisionSphere;
       
       // A ship has a single flying AI
@@ -252,6 +254,7 @@ class AsteroidShip : public Object3D {
 
       bool isBraking;
       bool isBoosting;
+      bool isFirstSpawn;
 
       float zoomFactor;
       float zoomSpeed;
@@ -284,6 +287,7 @@ class AsteroidShip : public Object3D {
       void draw_frontlines();
       void draw_backlines();
       void draw_hitEffect();
+      void draw_spawn();
 
       void createEngineParticles(double timeDiff);
       void addNewParticle(Point3D& emitter, Vector3D& initialOffset, Vector3D& offsetDirectionX,

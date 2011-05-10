@@ -109,7 +109,7 @@ void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
 template<>
 void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
    if (a->isRespawning()) { return;}
-   if (doubleTime() - a->justGotHit > 1) {
+   if (doubleTime() - a->justGotHit > a->invulnerableTime || !(a->spawnInvulnerable)) {
       /* Remove health from both equal to minHealthDeduction + randomHealthDeduction 
        * or b->health or a->health, whichever is smallest.
        */
@@ -150,7 +150,7 @@ template<>
 void Collision<AsteroidShip, ProjectileShot>::handleCollision() {
    if (a->isRespawning()) { return;}
    int particlesToEmit = 10;
-   if (a != b->owner) {
+   if (a != b->owner  && !(a->spawnInvulnerable)) {
       a->health -= b->getDamage(a);
       a->shakeAmount = 1;
       a->justGotHit = doubleTime();
@@ -169,7 +169,7 @@ void Collision<AsteroidShip, ProjectileShot>::handleCollision() {
 template<>
 void Collision<AsteroidShip, BeamShot>::handleCollision() {
    if (a->isRespawning()) { return;}
-   if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame) {
+   if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame  && !(a->spawnInvulnerable)) {
       //TODO addInstantVelocity b->velocity->scalarMultiply(10)
       a->health -= b->getDamage(a);
       b->hitYet = true;
@@ -189,7 +189,7 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
    const int numElecParticles = 1;
    double hitDistance = 0;
 
-   if (a != b->owner && !b->hitYet) {
+   if (a != b->owner && !b->hitYet  && !(a->spawnInvulnerable)) {
 
       /* Normal collision detection gets done in CollisionTypes.h. 
        * I can't think of an efficient way to do this, so I'm leaving it here
@@ -224,7 +224,7 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
 template<>
 void Collision<AsteroidShip, EnergyShot>::handleCollision() {
    if (a->isRespawning()) { return;}
-   if (a != b->owner) {
+   if (a != b->owner  && !(a->spawnInvulnerable)) {
       a->health -= clamp(b->chargeTime, 0, 5) * 15.0;
 
       a->velocity->updateMagnitude(0, 0, 0);

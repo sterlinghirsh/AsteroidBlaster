@@ -65,8 +65,11 @@ AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) :
    hitX = 0;
    hitY = 0;
    hitZ = 0;
-
+   
+   spawnInvulnerable = true;
+   invulnerableTime = .25;
    justGotHit = 0;
+   isFirstSpawn = true;
 
    //skew must be set to 0 til I figure out a better way to do things
    skew = 0;
@@ -373,6 +376,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 }
 
 void AsteroidShip::update(double timeDiff) {
+   double timeLeftToRespawn = respawnTimer.getTimeLeft();
    if (health <= 0) {
       const double respawnTime = 4;
       shakeAmount = 0;
@@ -405,7 +409,7 @@ void AsteroidShip::update(double timeDiff) {
          }
       }
 
-      double timeLeftToRespawn = respawnTimer.getTimeLeft();
+      //double timeLeftToRespawn = respawnTimer.getTimeLeft();
 
       if (this == gameState->ship) {
          std::ostringstream gameMsg;
@@ -413,9 +417,10 @@ void AsteroidShip::update(double timeDiff) {
 
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
-
+      printf("Got here: %f\n", timeLeftToRespawn);
       if (gameState->gameIsRunning && respawnTimer.isRunning &&
             timeLeftToRespawn <= 0) {
+         //printf("Got here\n");
          reInitialize();
       } else {
          fire(false);
@@ -430,6 +435,8 @@ void AsteroidShip::update(double timeDiff) {
       }
    }
 
+   //if(timeLeftToRespawn >= 0) {
+   //printf("Got here: %f\n", timeLeftToRespawn);
    //health regen
    health += regenHealthLevel * timeDiff;
 
@@ -562,7 +569,7 @@ void AsteroidShip::update(double timeDiff) {
       }
    }
 
-   if (doubleTime() - justGotHit < 2) {
+   if (doubleTime() - justGotHit < invulnerableTime) {
       //justGotHit -= timeDiff;
       drawHit = true;
    } else {
@@ -572,6 +579,13 @@ void AsteroidShip::update(double timeDiff) {
    //printf("Just got hit variable: %d\n", drawHit);
 
    createEngineParticles(timeDiff);
+   if (timeLeftToRespawn + spawnRate * 3 >= 0) {
+         //printf("Got here\n");
+         //reInitialize();
+         justGotHit = doubleTime();
+         velocity->updateMagnitude(0, 0, 0);
+         //position->updateMagnitude(0, 0, 0);
+   }
 
    // Update the zoom level.
    const float minZoom = 1;
@@ -603,7 +617,7 @@ void AsteroidShip::keepFiring() {
 
 void AsteroidShip::draw_frontpanels() {
    glUseProgram(shipYShader);
-   glPushMatrix();
+   //glPushMatrix();
    glBegin(GL_TRIANGLES);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, cornerY, cornerZ);
@@ -643,7 +657,7 @@ void AsteroidShip::draw_frontpanels() {
    glEnd();
    glUseProgram(0);
 
-   glPopMatrix();
+   //glPopMatrix();
 }
 
 void AsteroidShip::draw_backpanels() {
@@ -856,7 +870,53 @@ void AsteroidShip::draw_backlines() {
    glEnd();
 }
 
+void AsteroidShip::draw_spawn() {
+   if (!isFirstSpawn) {
+      glPushMatrix();
+      if (aliveTimer.getTimeRunning() < (3 * spawnRate)) {
+         glScaled(0, 0, 0);
+      } else if (aliveTimer.getTimeRunning() < (4 * spawnRate)) {
+         glScaled(.05, .05, (aliveTimer.getTimeRunning() - 3 * spawnRate) / spawnRate);
+      } else if (aliveTimer.getTimeRunning() < (5 * spawnRate)) {
+         glScaled((aliveTimer.getTimeRunning() - 4 * spawnRate) / spawnRate, .05, 1);
+      } else if (aliveTimer.getTimeRunning() < (6 * spawnRate)) {
+         glScaled(1, (aliveTimer.getTimeRunning() - 5 * spawnRate) / spawnRate, 1);
+      }
+      draw_ship();
+      glPopMatrix();
+   } else {
+      glPushMatrix();
+      if (aliveTimer.getTimeRunning() < (spawnRate)) {
+         glScaled(.05, .05, (aliveTimer.getTimeRunning()) / spawnRate);
+      } else if (aliveTimer.getTimeRunning() < (2 * spawnRate)) {
+         glScaled((aliveTimer.getTimeRunning() - spawnRate) / spawnRate, .05, 1);
+      } else if (aliveTimer.getTimeRunning() < (3 * spawnRate)) {
+         glScaled(1, (aliveTimer.getTimeRunning() - 2 * spawnRate) / spawnRate, 1);
+      } else if (aliveTimer.getTimeRunning() > (6 * spawnRate)) {
+         isFirstSpawn = false;
+      }
+      draw_ship();
+      glPopMatrix();
+   }
+   if (isFirstSpawn && aliveTimer.getTimeRunning() < 3 * spawnRate) {
+      glPushMatrix();
+      glTranslated(0, 0, -4);
+      glScaled(7.5, 2.5, 4);
+      draw_hitEffect();
+      glPopMatrix();
+   } else if (!isFirstSpawn && aliveTimer.getTimeRunning() > 3 * spawnRate && aliveTimer.getTimeRunning() < 6 * spawnRate) {
+      glPushMatrix();
+      glTranslated(0, 0, -4);
+      glScaled(7.5, 2.5, 4);
+      draw_hitEffect();
+      glPopMatrix();
+   }
+   //draw_ship();
+}
+
 void AsteroidShip::draw_ship() {
+   //printf("Time Left: %f\n", respawnTimer.getTimeLeft());
+   //printf("Is it respawning? : %f\n", aliveTimer.getTimeRunning());
    glPolygonOffset(1.0f, 1.0f);
    glEnable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -867,14 +927,18 @@ void AsteroidShip::draw_ship() {
    glEnable(GL_COLOR_MATERIAL);
 
    // Make the ship start off flat and expand it to its normal size.
-   if (aliveTimer.getTimeRunning() < spawnRate) {
-      glScaled(.05, .05, (aliveTimer.getTimeRunning()) / spawnRate);
-   } else if (aliveTimer.getTimeRunning() < 2 * spawnRate) {
-      glScaled((aliveTimer.getTimeRunning() - spawnRate) / spawnRate, .05, 1);
-   } else if (aliveTimer.getTimeRunning() < 3 * spawnRate) {
-      glScaled(1, (aliveTimer.getTimeRunning() - 2 * spawnRate) / spawnRate, 1);
-   }
+   /*if (respawnTimer.getTimeLeft() + 6 * spawnRate < 0) {
+      glPushMatrix();
+      draw_spawn();
+      glPopMatrix();
+   }*/
    glTranslated(0, 0, -4);
+
+   /*if (respawnTimer.getTimeLeft() + (3 * spawnRate) > -1.5 && respawnTimer.getTimeLeft() + (3 * spawnRate) < 0) {
+      glPushMatrix();
+      draw_hitEffect();
+      glPopMatrix();
+   }*/
    //printf("Respawn Timer: %f\n", respawnTimer.getTimeRunning());
    glScaled(1.5, .5, .8);
    glScaled(shipScale, shipScale, shipScale);
@@ -903,11 +967,11 @@ void AsteroidShip::draw_ship() {
 
    draw_backlines();
 
-   if(drawHit) {
+   //if(drawHit) {
       //glPushMatrix();
-      draw_hitEffect();
+      //draw_hitEffect();
       //glPopMatrix();
-   }
+   //}
 
    glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);
@@ -1009,7 +1073,29 @@ void AsteroidShip::draw() {
    spin+= 2;
    glColor4d(0, 0, 0, .8);
    //glRotated(90, 1, 0, 0);
-   draw_ship();
+   if (respawnTimer.getTimeLeft() + 6 * spawnRate > 0) {
+      spawnInvulnerable = true;
+      glPushMatrix();
+      draw_spawn();
+      glPopMatrix();
+   } else {
+      spawnInvulnerable = false;
+      draw_ship();
+      if(drawHit) {
+         draw_hitEffect();
+      }
+   }
+   
+   if (aliveTimer.getTimeRunning() > (6 * spawnRate)) {
+         isFirstSpawn = false;
+   }
+   /*if (respawnTimer.getTimeLeft() + (3 * spawnRate) > -1.5 && respawnTimer.getTimeLeft() + (3 * spawnRate) < 0) {
+      glPushMatrix();
+      glTranslated(0, 0, -4);
+      glScaled(7.5, 2.5, 4);
+      draw_hitEffect();
+      glPopMatrix();
+   }*/
 
    /*
       glBegin(GL_POINTS);
@@ -1395,6 +1481,7 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
 }
 
 bool AsteroidShip::isRespawning() {
+   //printf("Is it respawning? : %d\n", respawnTimer.isRunning && (respawnTimer.getTimeLeft() + spawnRate) > 0);
    return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0;
 }
 
