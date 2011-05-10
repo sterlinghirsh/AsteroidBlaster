@@ -31,8 +31,8 @@ void EngineParticle::Add(Point3D* pos, Vector3D* vec, double color, const GameSt
 }
 
 void EngineParticle::update(double timeDifference) {
-   float velocityReductionPerSecond = 20.0 * randdouble();
-   float lengthSquared = velocity->getComparisonLength();
+   double velocityReductionPerSecond = 20.0 * randdouble();
+   double lengthSquared = velocity->getComparisonLength();
 
    velocity->scalarMultiplyUpdate(1 - timeDifference);
 

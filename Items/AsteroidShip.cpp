@@ -135,8 +135,8 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    shooter = new ShootingAI(this);
    flyingAI = new FlyingAI(this);
 
-   color1 = randdouble();
-   color2 = randdouble();
+   color1 = (float) randdouble();
+   color2 = (float) randdouble();
 }
 
 /**
