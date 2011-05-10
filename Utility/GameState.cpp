@@ -1184,8 +1184,8 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    mouseX = shipControlX;
    mouseY = shipControlY;
    
-   clientCommand.mouseX = mouseX;
-   clientCommand.mouseY = mouseY;
+   clientCommand.mouseX = (float) mouseX;
+   clientCommand.mouseY = (float) mouseY;
 
    shipControlX = shipControlX / p2wx(gameSettings->GW);
    shipControlY = shipControlY / p2wy(0);
@@ -1195,12 +1195,12 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 
    if(!ship->flyingAI->isEnabled()) {
       if (doYaw) {
-         clientCommand.yawSpeed = -shipControlX;
+         clientCommand.yawSpeed = (float) -shipControlX;
       } else {
-         clientCommand.rollSpeed = shipControlX;
+         clientCommand.rollSpeed = (float) shipControlX;
       }
 
-      clientCommand.pitchSpeed = shipControlY;
+      clientCommand.pitchSpeed = (float) shipControlY;
    }
 }
 
