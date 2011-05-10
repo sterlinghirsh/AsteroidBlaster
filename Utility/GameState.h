@@ -56,7 +56,7 @@ class GameState : public InputReceiver {
       Ball* ball;
       Spring* spring;
       // Used when looping over Drawable objects
-      std::vector<Drawable*>::iterator item;
+      std::vector<Object3D*>::iterator item;
       // Used when looping over Drawable objects in drawMinimap
       std::list<Drawable*>::iterator listIter;
 

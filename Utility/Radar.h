@@ -27,12 +27,6 @@ class Radar {
       virtual ~Radar();
       
       /**
-       * Provides a complete, unfiltered reading of the whole environment.
-       * This reading does not include Particles of any type!
-       */
-      std::list<Drawable*>* getFullReading();
-      
-      /**
        * Provides a filtered reading of the environment based on what's near 
        * the owner AsteroidShip.
        * The distance which objects must be within to be returned by getMinimapReading()
@@ -45,7 +39,7 @@ class Radar {
       virtual std::list<Drawable*>* getViewFrustumReading();
       /* Same as getViewFrustumReading, but only returns targetable objects for the AI. No particles are included.
        */
-      virtual std::list<Drawable*>* getTargetableViewFrustumReading();
+      virtual std::list<Object3D*>* getTargetableViewFrustumReading();
       
       /**
        * Used for distance comparison for z ordering of objects
@@ -65,7 +59,7 @@ class Radar {
       std::list<Particle*> :: iterator particleIter;
       std::list<Sprite*> :: iterator spriteIter;
       // Set up a vector iterator to go over a vector.
-      std::vector<Drawable*> :: iterator vectorIter;
+      std::vector<Object3D*> :: iterator vectorIter;
 
 };
 

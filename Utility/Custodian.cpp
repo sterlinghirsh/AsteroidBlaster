@@ -595,6 +595,7 @@ static std::vector<CollisionBase*>* collisionHandlers = NULL;
 Custodian::Custodian(const GameState* _gameState) :
  gameState(_gameState) {
    shardCount = asteroidCount = 0;
+   nextID = 0;
    
    if (collisionHandlers == NULL) {
       collisionHandlers = new std::vector<CollisionBase*>();
@@ -633,7 +634,7 @@ Custodian::Custodian(const GameState* _gameState) :
  * Compares by minX in Object3D.
  * Returns true if first argument goes before the second argument.* Sorts nulls last.
  */
-static bool compareByMinX (Drawable* item1, Drawable* item2) {
+static bool compareByMinX (Object3D* item1, Object3D* item2) {
    // If the first item is null, the second item comes first.
    if (item1 == NULL)
       return false;
@@ -647,7 +648,7 @@ static bool compareByMinX (Drawable* item1, Drawable* item2) {
  * Compares by maxX in Object3D.
  * Returns true if first argument goes before the second argument.* Sorts nulls last.
  */
-static bool compareByMaxX (Drawable* item1, Drawable* item2) {
+static bool compareByMaxX (Object3D* item1, Object3D* item2) {
    // If the first item is null, the second item comes first.
    if (item1 == NULL)
       return false;
@@ -660,7 +661,7 @@ static bool compareByMaxX (Drawable* item1, Drawable* item2) {
 bool compareByDistance::operator() (CollisionBase* const& lhs, CollisionBase* const& rhs) const {
    return lhs->squaredDistance < rhs->squaredDistance;
 }
-Drawable* compareByDistance::curObject;
+Object3D* compareByDistance::curObject;
 
 /**
  * Run this after all objects have moved.
@@ -669,7 +670,7 @@ Drawable* compareByDistance::curObject;
  * they are removed from the list.
  */
 void Custodian::update() {
-   Drawable* tempObject;
+   Object3D* tempObject;
    // Iterate over objects that need to be added.
    while (objectsToAdd.size() > 0) {
       // Get the first item in the list.
@@ -684,9 +685,9 @@ void Custodian::update() {
       // Add the item to the sorted lists.
       objectsByMinX.push_back(tempObject);
       objectsByMaxX.push_back(tempObject);
+      objectsByID.insert(std::pair<unsigned, Object3D*>(tempObject->id, tempObject));
       // Remove the item.
       objectsToAdd.pop_front();
-      assert (objectsByMinX.size() == objectsByMaxX.size());
    }
 
    // This lets us know where we can stop searching.
@@ -720,14 +721,16 @@ void Custodian::update() {
       objectsByMinX.pop_back();
       objectsByMaxX.pop_back();
    }
+   
+   assert (objectsByMinX.size() == objectsByMaxX.size());
 }
 
 /**
- * Call this on a Drawable object if you want it to be custodian'd.
+ * Call this on a Object3D object if you want it to be custodian'd.
  * This doesn't add the item right away, but waits until the next udpate 
  * to do it. In effect, items are added to a queue of items to add.
  */
-void Custodian::add(Drawable* objectIn) {
+void Custodian::add(Object3D* objectIn) {
    objectsToAdd.push_back(objectIn);
    if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
       asteroidCount++;
@@ -737,11 +740,14 @@ void Custodian::add(Drawable* objectIn) {
 }
 
 /**
- * Remove a Drawable object.
+ * Remove a Object3D object.
+ * This is a private function. To make an object not be in the custodian, set
+ * the object's shouldRemove = true.
  */
-void Custodian::remove(Drawable* objectIn) {
+void Custodian::remove(Object3D* objectIn) {
    objectsByMinX[objectIn->minXRank] = NULL;
    objectsByMaxX[objectIn->maxXRank] = NULL;
+   objectsByID.erase(objectIn->id);
    if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
       asteroidCount--;
    } else if (dynamic_cast<Shard*>(objectIn) != NULL) {
@@ -754,7 +760,7 @@ void Custodian::remove(Drawable* objectIn) {
  * This returns a pointer to a new std::list. You must delete
  * if after you use it.
  */
-std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Drawable* item, bool searchBackwards) {
+std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Object3D* item, bool searchBackwards) {
 
    compareByDistance::curObject = item;
    // TODO: Order this by distance.
@@ -767,9 +773,9 @@ std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Drawable*
    if (item == NULL)
       return sublist;
 
-   std::set<Drawable*, compareByDistance >::iterator iter;
+   std::set<Object3D*, compareByDistance >::iterator iter;
    size_t numElements = objectsByMinX.size();
-   Drawable* other;
+   Object3D* other;
 
    if (searchBackwards) {
       /* Start at the current maxX - 1. Check whether elements to 
@@ -824,13 +830,14 @@ std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Drawable*
    return sublist;
 }
 
-std::vector<Drawable*>* Custodian::getListOfObjects() {
+std::vector<Object3D*>* Custodian::getListOfObjects() {
    return &objectsByMinX;
 }
 
 void Custodian::clear() {
    objectsByMinX.clear();
    objectsByMaxX.clear();
+   objectsByID.clear();
    asteroidCount = 0;
    shardCount = 0;
 }
@@ -850,3 +857,23 @@ void Custodian::atLevelEnd() {
    }
 }
 
+/**
+ * Return the current value of nextID and then increment nextID.
+ */
+unsigned Custodian::getNextID() {
+   return nextID++;
+}
+
+/**
+ * We want to return a null pointer if we search for a bad value.
+ * I'm also going to add a debug output, but if anyone needs
+ * the debug output, you can remove it.
+ */
+Object3D* Custodian::operator[] (unsigned i) { 
+   std::map<unsigned, Object3D*>::iterator iter;
+   iter = objectsByID.find(i);
+   if (iter == objectsByID.end())
+      return NULL;
+   else
+      return iter->second;
+}

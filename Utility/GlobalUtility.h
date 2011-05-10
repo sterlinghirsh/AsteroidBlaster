@@ -38,7 +38,6 @@
 class GameState;
 
 extern GameSettings* gameSettings;
-extern int shipId;
 extern int flopY(int);
 extern int texSize;
 extern unsigned long curFrame;

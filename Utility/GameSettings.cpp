@@ -20,6 +20,7 @@ GameSettings::GameSettings() {
    soundOn = true;
    musicOn = true;
    mouseCapture = false;
+   useOverlay = false;
 
    windowedGW = 800;
    windowedGH = 600;
@@ -51,6 +52,7 @@ void GameSettings::writeOut() {
       printf("Writing config...\n");
    }
    fprintf(configFile, "bloom %d\n", (int) bloom);
+   fprintf(configFile, "useOverlay %d\n", (int) useOverlay);
    fprintf(configFile, "fullscreen %d\n", (int) fullscreen);
    fprintf(configFile, "musicOn %d\n", (int) musicOn);
    fprintf(configFile, "soundOn %d\n", (int) soundOn);
@@ -75,6 +77,10 @@ void GameSettings::readIn() {
 
    if (fscanf(configFile, "bloom %d ", &readInt) > 0) {
       bloom = (bool) readInt;
+   }
+
+   if (fscanf(configFile, "useOverlay %d ", &readInt) > 0) {
+      useOverlay = (bool) readInt;
    }
 
    if (fscanf(configFile, "fullscreen %d ", &readInt) > 0) {

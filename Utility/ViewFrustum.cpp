@@ -55,6 +55,93 @@ bool ViewFrustum :: checkDrawableOutside(Drawable* obj) {
 }
 
 // Take in a list of all Drawables, and cull it down to a list of only the Drawables in front.
+std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* all) {
+   // The culled vector to be returned.
+   std::list<Object3D*>* returnMe = new std::list<Object3D*>;
+   // Set up an iterator to go over the list.
+   std::vector<Object3D*> :: iterator iter;
+
+   // Save a copy of the model view matrix.
+   glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&modelViewMatrix);
+   
+   // Switch to the Projection Matrix.
+   glMatrixMode(GL_PROJECTION);
+   glPushMatrix();
+      // Multiply the model view matrix onto the projection matrix
+      glMultMatrixf((GLfloat*)&modelViewMatrix);
+      // Save the new composite matrix, which holds the magic key to our view frustum's planes.
+      glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat*)&projMatrix);
+   // Do all this inside push and pop so we don't mess up the real Projection Matrix.
+   glPopMatrix();
+   // Switch back to the Modelview Matrix.
+   glMatrixMode(GL_MODELVIEW);
+
+   // Load values for the left clipping plane.
+   left->a = projMatrix._41 + projMatrix._11;
+   left->b = projMatrix._42 + projMatrix._12;
+   left->c = projMatrix._43 + projMatrix._13;
+   left->d = projMatrix._44 + projMatrix._14;
+   
+   // Load values for the right clipping plane->
+   right->a = projMatrix._41 - projMatrix._11;
+   right->b = projMatrix._42 - projMatrix._12;
+   right->c = projMatrix._43 - projMatrix._13;
+   right->d = projMatrix._44 - projMatrix._14;
+   
+   // Load values for the top clipping plane->
+   top->a = projMatrix._41 - projMatrix._21;
+   top->b = projMatrix._42 - projMatrix._22;
+   top->c = projMatrix._43 - projMatrix._23;
+   top->d = projMatrix._44 - projMatrix._24;
+   
+   // Load values for the bottom clipping plane->
+   bottom->a = projMatrix._41 + projMatrix._21;
+   bottom->b = projMatrix._42 + projMatrix._22;
+   bottom->c = projMatrix._43 + projMatrix._23;
+   bottom->d = projMatrix._44 + projMatrix._24;
+   
+   // Load values for the near clipping plane->
+   near->a = projMatrix._41 + projMatrix._31;
+   near->b = projMatrix._42 + projMatrix._32;
+   near->c = projMatrix._43 + projMatrix._33;
+   near->d = projMatrix._44 + projMatrix._34;
+   
+   // Load values for the far clipping plane->
+   far->a = projMatrix._41 - projMatrix._31;
+   far->b = projMatrix._42 - projMatrix._32;
+   far->c = projMatrix._43 - projMatrix._33;
+   far->d = projMatrix._44 - projMatrix._34;
+   
+   left->calcMag();
+   right->calcMag();
+   top->calcMag();
+   bottom->calcMag();
+   near->calcMag();
+   far->calcMag();
+ 
+   // As opposed to the checker, the one doing the checking. 
+   Object3D* checkee;
+   // call checkOutside() on each of the Object3Ds in all.
+   // Build a new set of Object3Ds out of each of the ones that got back false.
+   for (iter = all->begin(); iter != all->end(); ++iter) {
+      checkee = *iter;
+
+      // Skip this one if it's NULL
+      if(checkee == NULL)
+         continue;
+
+      /**
+       * Only actually add it if it's inside the targetable area
+       * (slightly different than the drawable area).
+       */
+      if(!checkTargetableOutside(checkee) || !checkee->shouldBeCulled) {
+         returnMe->push_back(checkee);
+      }
+   }
+   return returnMe;
+}
+
+// Take in a list of all Drawables, and cull it down to a list of only the Drawables in front.
 std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* all, bool skipParticles) {
    // The culled vector to be returned.
    std::list<Drawable*>* returnMe = new std::list<Drawable*>;

@@ -29,7 +29,6 @@
 GameSettings* gameSettings;
 //int texSize = nextPowerOfTwo(std::max(gameSettings->GW, gameSettings->GH));
 int texSize = 512;
-int shipId = 0;
 unsigned long curFrame = 0;
 bool drawPerspective = true;
 bool showBloomScreen = false;
@@ -704,9 +703,14 @@ void drawGameState(GameState* gameStateIn,
    glPopMatrix();
    // Flush The GL Rendering Pipeline - this doesn't seem strictly necessary
    gameStateIn->drawMinimap();
-   gameStateIn->drawOverlay();
+
+   if (gameSettings->useOverlay) {
+      gameStateIn->drawOverlay();
+   }
+
    gameStateIn->drawScreens();
 
+   // TODO: Make this clearer. Why not swap when lookAt is true?
    if (!lookAt) {
       SDL_GL_SwapBuffers();
    }
@@ -734,11 +738,13 @@ void initFbo() {
    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
          GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthbuffer);
 
-   //int maxbuffers;
-   //glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxbuffers);
-   //if (maxbuffers < 4) {
-   //printf("maxbuffers (%d) less than needed buffers (4)\n", maxbuffers);
-   //}
+   int maxbuffers;
+   glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &maxbuffers);
+   if (maxbuffers < 4) {
+      printf("maxbuffers (%d) less than needed buffers (4). Disabling overlay and bloom.\n", maxbuffers);
+      gameSettings->useOverlay = false;
+      gameSettings->bloom = false;
+   }
 
    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
          GL_TEXTURE_2D, Texture::getTexture("fboTex"), 0);
@@ -753,6 +759,41 @@ void initFbo() {
          GL_TEXTURE_2D, Texture::getTexture("overlayTex"), 0);
 
    GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+
+   if (status == GL_FRAMEBUFFER_UNSUPPORTED_EXT) {
+      printf("Framebuffers unsupported.\n");
+      exit(EXIT_FAILURE);
+   } else if (status == GL_FRAMEBUFFER_COMPLETE_EXT) {
+      printf("Framebuffers supported.\n");
+   }
+
+   useOrtho();
+   glDisable(GL_LIGHTING);
+
+   float aspect = (float)gameSettings->GW/(float)gameSettings->GH;
+   
+   float minY = -1.0;
+   float maxY = 1.0;
+   float minX = -1.0f * aspect;
+   float maxX = 1.0f * aspect;
+   
+   float texMaxX = (float) gameSettings->GW / (float) texSize;
+   float texMaxY = (float) gameSettings->GH / (float) texSize;
+
+   glColor4f(1.0, 1.0, 1.0, 1.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(minX, minY, 0.0);
+   glTexCoord2f(texMaxX, 0.0);
+   glVertex3f(maxX, minY, 0.0);
+   glTexCoord2f(texMaxX, texMaxY);
+   glVertex3f(maxX, maxY, 0.0);
+   glTexCoord2f(0.0, texMaxY);
+   glVertex3f(minX, maxY, 0.0);
+   glEnd();
+
+   glEnable(GL_LIGHTING);
+
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 }

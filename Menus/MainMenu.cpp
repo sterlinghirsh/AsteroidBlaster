@@ -66,10 +66,10 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    // Initialize the ship(s) in the background.
    menuGameState = new GameState(WORLD_SIZE, true);
 
-   ship1 = new AsteroidShip(menuGameState, -1);
-   ship2 = new AsteroidShip(menuGameState, -1);
-   ship3 = new AsteroidShip(menuGameState, -1);
-   ship4 = new AsteroidShip(menuGameState, -1);
+   ship1 = new AsteroidShip(menuGameState);
+   ship2 = new AsteroidShip(menuGameState);
+   ship3 = new AsteroidShip(menuGameState);
+   ship4 = new AsteroidShip(menuGameState);
 
    setupShips();
 

@@ -24,6 +24,7 @@ class ViewFrustum {
        * that are inside the view frustum.
        */
       virtual std::list<Drawable*>* cullToViewFrustum(std::vector<Drawable*>* all, bool skipParticles);
+      virtual std::list<Object3D*>* cullToViewFrustum(std::vector<Object3D*>* all);
       
       /* Prints out details about all of the planes of the view frustum.
        */

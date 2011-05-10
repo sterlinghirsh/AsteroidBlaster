@@ -122,17 +122,21 @@ StoreMenu::~StoreMenu() {
 }
 
 void StoreMenu::clearOverlay() {
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-   glDrawBuffer(GL_COLOR_ATTACHMENT3_EXT);
+   if (gameSettings->useOverlay) {
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+      glDrawBuffer(GL_COLOR_ATTACHMENT3_EXT);
 
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+   }
 }
 
 void StoreMenu::draw() {
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-   glDrawBuffer(GL_COLOR_ATTACHMENT3_EXT);
+   if (gameSettings->useOverlay) {
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+      glDrawBuffer(GL_COLOR_ATTACHMENT3_EXT);
+   }
    
    SDL_Rect position;
    position.x = (Sint16) (gameSettings->GW/3);
@@ -295,7 +299,11 @@ void StoreMenu::draw() {
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
    usePerspective();
    glPopMatrix();
-   //SDL_GL_SwapBuffers();
+
+   // We swap buffers in gameSettings if we're using the overlay.
+   if (!gameSettings->useOverlay) {
+      SDL_GL_SwapBuffers();
+   }
 }
 
 void StoreMenu::drawTexts(std::vector<Text*> texts) {

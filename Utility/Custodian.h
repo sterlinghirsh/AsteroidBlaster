@@ -9,21 +9,20 @@
 #ifndef __CUSTODIAN_H__
 #define __CUSTODIAN_H__
 
-#include "Items/Drawable.h"
 #include "Items/Object3D.h"
 #include <vector>
 #include <set>
 #include <list>
+#include <map>
 
 // Incomplete class declaration so we can use pointers.
 class Object3D;
-class Drawable;
 class GameState;
 
 struct CollisionBase;
 
 struct compareByDistance {
-   static Drawable* curObject;
+   static Object3D* curObject;
    static Vector3D d1;
    static Vector3D d2;
    bool operator() (CollisionBase* const& lhs, CollisionBase* const& rhs) const;
@@ -32,23 +31,28 @@ struct compareByDistance {
 class Custodian {
    public:
       void update();
-      void add(Drawable* objectIn);
-      void remove(Drawable* objectIn);
-      std::set<CollisionBase*, compareByDistance>* findCollisions(Drawable* item, bool searchBackwards = false);
+      void add(Object3D* objectIn);
+      std::set<CollisionBase*, compareByDistance>* findCollisions(Object3D* item, bool searchBackwards = false);
       void findAllCollisions();
-      std::vector<Drawable*>* getListOfObjects();
+      std::vector<Object3D*>* getListOfObjects();
       void atLevelEnd();
       void clear();
       int asteroidCount;
       int shardCount;
-      
+      unsigned getNextID();
+
       Custodian(const GameState* _gameState);
 
+      Object3D* operator[] (unsigned i);
+
    private:
-      std::vector<Drawable*> objectsByMinX;
-      std::vector<Drawable*> objectsByMaxX;
-      std::list<Drawable*> objectsToAdd;
+      unsigned nextID;
+      std::vector<Object3D*> objectsByMinX;
+      std::vector<Object3D*> objectsByMaxX;
+      std::map<unsigned, Object3D*> objectsByID;
+      std::list<Object3D*> objectsToAdd;
       const GameState* gameState;
+      void remove(Object3D* objectIn);
 };
 
 #endif

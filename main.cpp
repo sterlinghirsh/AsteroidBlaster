@@ -387,8 +387,10 @@ int main(int argc, char* argv[]) {
          storeMenu->update(timeDiff);
          storeMenu->draw();
          gameState->gameIsRunning = false;
-         //draw(gameState);
-         drawGameState(gameState);
+
+         if (gameSettings->useOverlay) {
+            drawGameState(gameState);
+         }
       } else if (settingsMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          settingsMenu->draw();

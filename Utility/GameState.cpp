@@ -42,10 +42,8 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
 
       worldSize = worldSizeIn;
       skybox = new Skybox();
-      ship = new AsteroidShip(this, -1);
-      if(!inMenu) {
-         ship = new AsteroidShip(this, shipId++);
-      }
+      ship = new AsteroidShip(this);
+      
       spring = new Spring(this);
       minimap = new Minimap(ship);
 
@@ -162,7 +160,7 @@ GameState::~GameState() {
 }
 
 void GameState::addAIPlayer() {
-   AsteroidShip* otherShip = new AsteroidShip(this, shipId++);
+   AsteroidShip* otherShip = new AsteroidShip(this);
    double randX = (randdouble() - 0.5)*(worldSize / 2);
    double randY = (randdouble() - 0.5)*(worldSize / 2);
    double randZ = (randdouble() - 0.5)*(worldSize / 2);
@@ -234,7 +232,7 @@ void GameState::update(double timeDiff) {
       }
    }
 
-   std::vector<Drawable*>* objects = custodian.getListOfObjects();
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
    std::set<CollisionBase*, compareByDistance>* collisions;
    std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
@@ -583,15 +581,6 @@ void GameState::drawOverlay() {
    usePerspective();
 }
 
-/*
-   void GameState::clearOverlay() {
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-   glDrawBuffer(GL_COLOR_ATTACHMENT2_EXT);
-   glClear(GL_COLOR_BUFFER_BIT);
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-   }
-   */
-
 /**
  * Draw all of the text in the allTexts list to the screen.
  * This function should be called once per display loop.
@@ -632,7 +621,7 @@ void GameState::drawAllText() {
    timerText->draw();
    curLevelText->draw();
 
-   // Draw all overlay message
+   // Draw all messages
    GameMessage::drawAllMessages();
 }
 
@@ -699,14 +688,10 @@ void GameState::initAsteroids() {
    custodian.add(spaceHolder);
 
    int numCollisions = 0;
-   double baseMinAsteroidSize = 8;
-   double minAsteroidSize = 8;
-   double asteroidSizeVariation = 5;
-   double asteroidSize;
+   double asteroidSize = 8;
    // Spawn the initial asteroids for the game.
    for (int i = 0; i < numAsteroidsToSpawn; ++i) {
-      asteroidSize = (minAsteroidSize + asteroidSizeVariation * randdouble()) / sqrt((double)numAsteroidsToSpawn);
-      tempAsteroid = new Asteroid3D(minAsteroidSize + asteroidSizeVariation * randdouble(), worldSize, this, true);
+      tempAsteroid = new Asteroid3D(asteroidSize, worldSize, this, true);
       // Add each asteroid to the custodian so we know of its existence.
       custodian.add(tempAsteroid);
       do {
@@ -720,8 +705,7 @@ void GameState::initAsteroids() {
          delete collisions;
       } while (numCollisions > 0);
    }
-   custodian.remove(spaceHolder);
-   custodian.update();
+   spaceHolder->shouldRemove = true;
 }
 
 void GameState::setCurFPS(double fpsIn) {
@@ -732,7 +716,6 @@ void GameState::setCurFPS(double fpsIn) {
  * Reset everything in the game to play again
  */
 void GameState::reset(bool shouldLoad) {
-   shipId = 0;
    delete shipCamera;
    delete spectatorCamera;
    delete cube;
@@ -753,7 +736,7 @@ void GameState::reset(bool shouldLoad) {
    curLevelText->updateBody(curLevel);
 
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
-   ship = new AsteroidShip(this, shipId++);
+   ship = new AsteroidShip(this);
    spring = new Spring(this);
    cube->constrain(ship);
    minimap = new Minimap(ship);
@@ -1272,8 +1255,8 @@ void GameState::debugPosition() {
    reset();
    // Find the asteroid. Set its position.
    Asteroid3D* asteroid = NULL;
-   std::vector<Drawable*>* objects = custodian.getListOfObjects();
-   std::vector<Drawable*>::iterator iter = objects->begin();
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
+   std::vector<Object3D*>::iterator iter = objects->begin();
 
    for (; iter != objects->end(); ++iter) {
       asteroid = dynamic_cast<Asteroid3D*>(*iter);

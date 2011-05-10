@@ -45,7 +45,6 @@ class FlyingAI;
 class AsteroidShip : public Object3D {
    //public variables------------------------------
    public:
-      int id;
       int score;
       int nShards;
       int engineUpgrade;
@@ -102,7 +101,7 @@ class AsteroidShip : public Object3D {
    //public functions------------------------------
    public:
       //constructor
-      AsteroidShip(const GameState* _gameState, int _id);
+      AsteroidShip(const GameState* _gameState);
       //destructor
       virtual ~AsteroidShip();
       

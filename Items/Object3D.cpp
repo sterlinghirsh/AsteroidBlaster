@@ -9,8 +9,11 @@
 #include <math.h>
 #include <algorithm>
 #include "Utility/Matrix4.h"
+#include "Utility/Custodian.h"
 
 Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState) {
+   id = custodian->getNextID();
+
    minX = minY = minZ = -0.5;
    maxX = maxY = maxZ =  0.5;
    updateBoundingBox();

@@ -26,39 +26,6 @@ Radar :: ~Radar() {
 }
 
 /**
- * Provides a complete, unfiltered reading of the whole environment.
- * This reading does not include Particles of any type!
- */
-std::list<Drawable*>* Radar :: getFullReading() {
-   /* Get the custodian out of gameState, and get its vector of Objects.
-    * Use this vector to construct a new copied vector (to be safe), and return that one.
-    */
-   std::vector<Drawable*>* all (custodian->getListOfObjects());
-
-   if (all == NULL)
-      return NULL;
-   
-   // The new list, which will be returned
-   std::list<Drawable*>* allNew = new std::list<Drawable*>();
-   
-   // As opposed to the checker, the one doing the checking. 
-   Drawable* checkee;
-   
-   // Iterate over all the Object3D's the custodian gave us
-   for (vectorIter = all->begin(); vectorIter != all->end(); ++vectorIter) {
-      // Copy all of the ptrs into a list
-      checkee = *vectorIter;
-
-      // Add the Drawable object to the allNew list if it's not a particle
-      if (dynamic_cast<Particle*>(checkee) == NULL) {
-         allNew->push_back(checkee);
-      }
-   }
-   
-   return allNew;
-}
-
-/**
  * Provides a filtered reading of the environment based on what's near 
  * the owner AsteroidShip.
  * The distance which objects must be within to be returned by getMinimapReading()
@@ -70,7 +37,7 @@ std::list<Drawable*>* Radar :: getMinimapReading(float radius, int& totalItems) 
    /* Get the custodian out of gameState, and get its vector of Objects.
     * Use this vector to construct a new copied vector (to be safe), and return that one.
     */
-   std::vector<Drawable*>* all (custodian->getListOfObjects());
+   std::vector<Object3D*>* all = custodian->getListOfObjects();
    
    std::list<Drawable*>* nearList = new std::list<Drawable*>();
    
@@ -101,16 +68,16 @@ std::list<Drawable*>* Radar :: getMinimapReading(float radius, int& totalItems) 
  * This ONLY returns targetable objects, NOT particles.
  * Ex: Asteroid3D's, Shards.
  */
-std::list<Drawable*>* Radar :: getTargetableViewFrustumReading() {
+std::list<Object3D*>* Radar :: getTargetableViewFrustumReading() {
    // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
-   std::vector<Drawable*> allObjects (*custodian->getListOfObjects());
+   std::vector<Object3D*>* allObjects =custodian->getListOfObjects();
 
    // Set the camera temporarily.
 
    glPushMatrix();
       owner->setCameraDirectly();
       // Turn the vector of allObjects into a list. True says to cull it down to only the targetable ones (no particles)
-      std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(&allObjects, true);
+      std::list<Object3D*>* culledList = curFrustum->cullToViewFrustum(allObjects);
    glPopMatrix();
    
    return culledList;
@@ -121,8 +88,14 @@ std::list<Drawable*>* Radar :: getTargetableViewFrustumReading() {
  */
 std::list<Drawable*>* Radar :: getViewFrustumReading() {
    // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
-   std::vector<Drawable*> allObjects (*custodian->getListOfObjects());
-// TODO: Reverse this: get the list of particles first, and append objects to that, rather than getting the list of objects, and appending particles to it.
+   std::vector<Drawable*> allObjects;
+   
+   std::vector<Object3D*>* custodianObjects = (custodian->getListOfObjects());
+   for (vectorIter = custodianObjects->begin(); vectorIter != custodianObjects->end(); ++vectorIter) {
+      allObjects.push_back(*vectorIter);
+   }
+
+   // TODO: Reverse this: get the list of particles first, and append objects to that, rather than getting the list of objects, and appending particles to it.
    Drawable* curParticle;
    // Add all of the particles to allObjects.
    for (particleIter = Particle::particles.begin(); particleIter != Particle::particles.end(); ++particleIter) {

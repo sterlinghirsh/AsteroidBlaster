@@ -28,11 +28,10 @@ const double spawnRate = .5;
 /**
  * Constructor
  */
-AsteroidShip::AsteroidShip(const GameState* _gameState, int _id) : 
-   Object3D(_gameState) {
+AsteroidShip::AsteroidShip(const GameState* _gameState) : 
+ Object3D(_gameState) {
 
    cullRadius = 12;
-   id = _id;
    health = 100;
    healthMax = 100;
 

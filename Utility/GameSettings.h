@@ -23,6 +23,7 @@ class GameSettings {
       int windowedGW, windowedGH;
       int fullscreenGW, fullscreenGH;
       bool mouseCapture;
+      bool useOverlay;
 
       void toggleFullScreen();
 

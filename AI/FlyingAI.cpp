@@ -65,19 +65,20 @@ FlyingAI::~FlyingAI() {
  * Grabs a list of asteroids from the game radar.
  */
 std::list<Asteroid3D*>* FlyingAI :: getAsteroidList() {
-   std::list<Drawable*>* targets = radar->getFullReading();
+   std::vector<Object3D*>* targets = ship->custodian->getListOfObjects();
    if (targets == NULL) {
       return NULL;
    }
 
    std::list<Asteroid3D*>* asteroids = new std::list<Asteroid3D*>();
-   std::list<Drawable*>::iterator targets_iterator = targets->begin();
+   std::vector<Object3D*>::iterator targets_iterator = targets->begin();
+   Asteroid3D* asteroid;
    
    for ( ; targets_iterator != targets->end(); targets_iterator++) {
-      if (*targets_iterator == NULL || (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL)) {
+      if (*targets_iterator == NULL || (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) == NULL) {
          continue;
       }      
-      asteroids->push_front( dynamic_cast<Asteroid3D*>(*targets_iterator) );
+      asteroids->push_front(asteroid);
    }
    
    return asteroids;
@@ -89,8 +90,8 @@ Point3D* FlyingAI :: getClosestShard() {
    float shortestDist = 9999, tempDist = 9999;
    Point3D* closestShard = new Point3D(0,0,0);
    Point3D temp;
-   std::list<Drawable*>* targets = radar->getFullReading();
-   std::list<Drawable*>::iterator iter;
+   std::vector<Object3D*>* targets = ship->custodian->getListOfObjects();
+   std::vector<Object3D*>::iterator iter;
    
    iter = targets->begin();
    

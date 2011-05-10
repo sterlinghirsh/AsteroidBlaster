@@ -23,6 +23,7 @@ class Object3D : public Drawable {
       bool lockUpVector;
       double angle;
       double rotationSpeed;
+      unsigned id;
       
       
    //private variables------------------------------
