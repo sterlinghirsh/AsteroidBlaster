@@ -17,7 +17,7 @@ else
    SDL_LIBS=$(shell "/sw/bin/sdl-config" "--libs")
    SDL_CFLAGS=$(shell "/sw/bin/sdl-config" "--cflags")
    BOOST_LDFLAGS=
-   PLATFORMSPECIFICCFLAGS=
+   PLATFORMSPECIFICCFLAGS=-I /opt/local/include
    PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa
 endif
 
