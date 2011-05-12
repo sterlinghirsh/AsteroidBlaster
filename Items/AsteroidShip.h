@@ -76,7 +76,9 @@ class AsteroidShip : public Object3D {
       double zMove;
       double justGotHit;
       double invulnerableTime;
+      double timeLeftToRespawn;
       bool spawnInvulnerable;
+      bool drawSpawn;
       CollisionSphere* collisionSphere;
       
       // A ship has a single flying AI
