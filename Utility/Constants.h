@@ -21,6 +21,8 @@
 #define REMOTEBOMBER_WEAPON_INDEX 5
 #define ENERGY_WEAPON_INDEX 6
 
+#define NUMBER_OF_WEAPONS 7
+
 // This should probably be an enum.
 #define VIEW_COUNT 4
 #define VIEW_FIRSTPERSON_SHIP 0

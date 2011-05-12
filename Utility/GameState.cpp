@@ -240,7 +240,9 @@ void GameState::update(double timeDiff) {
    // Keep items in the box.
    // cube->constrain(ship); why did we do this twice?
 
-   ship->readCommand(clientCommand);
+   if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
+      ship->readCommand(clientCommand);
+   }
 
    // Update each item.
    for (item = objects->begin(); item != objects->end(); ++item) {

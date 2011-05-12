@@ -50,7 +50,6 @@ class Vector3D {
       double getAngleInDegrees(Vector3D&);
       void draw();
       void normalize();
-      void abs();
       const Vector3D getNormalized() const;
       void updateMagnitude(Vector3D, Vector3D);
       void updateMagnitude(Vector3D*, Vector3D*);

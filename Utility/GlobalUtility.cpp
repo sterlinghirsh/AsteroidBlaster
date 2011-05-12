@@ -782,3 +782,21 @@ void toggleGrabMode() {
       SDL_WM_GrabInput(SDL_GRAB_ON);
    }
 }
+
+/**
+ * Find the index which has the maximum value in an array of doubles.
+ * length is the length of arr.
+ */
+int maxValuedIndexInArray(double arr[], int length) {
+   double maxValue = arr[0];
+   int maxIndex = 0;
+
+   for(int i=1; i<length; i++) {
+      if (arr[i] > maxValue) {
+         maxValue = arr[i];
+         maxIndex = i;
+      }
+   }
+
+   return maxIndex;
+}

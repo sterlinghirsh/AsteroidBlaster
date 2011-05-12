@@ -105,6 +105,12 @@ void drawGameState(GameState* gameState,
       float uX = 0.0, float uY = 0.0, float uZ = 0.0);
 void initFbo();
 int nextPowerOfTwo(int num);
+/**
+ * Find the index which has the maximum value in an array of doubles.
+ * length is the length of arr.
+ */
+int maxValuedIndexInArray(double arr[], int length);
+
 
 // Used for defining a material
 typedef struct materialStruct {
