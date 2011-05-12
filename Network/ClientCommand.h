@@ -8,34 +8,58 @@
 #ifndef __CLIENTCOMMAND_H__
 #define __CLIENTCOMMAND_H__
 
-struct ClientCommand {
-   // Administrative
-   unsigned shipID; // Maybe clientid?
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
-   // Movement input
-   int forwardAcceleration;
-   int rightAcceleration;
-   int upAcceleration;
-   bool brake;
 
-   // Rotation input
-   float yawSpeed;
-   float rollSpeed;
-   float pitchSpeed;
+class ClientCommand {
+   public:
+      ClientCommand();
+      virtual ~ClientCommand();
+      virtual void reset();
 
-   // Weapon input
-   bool fire;
-   
-   // Which weapon to use
-   int currentWeapon;
+      void print();
 
-   // Aim
-   float mouseX;
-   float mouseY;
+      // Administrative
+      unsigned shipID; // Maybe clientid?
 
-   ClientCommand();
-   virtual ~ClientCommand();
-   virtual void reset();
+      // Movement input
+      int forwardAcceleration;
+      int rightAcceleration;
+      int upAcceleration;
+      bool brake;
+
+      // Rotation input
+      float yawSpeed;
+      float rollSpeed;
+      float pitchSpeed;
+
+      // Weapon input
+      bool fire;
+      
+      // Which weapon to use
+      int currentWeapon;
+
+      // Aim
+      float mouseX;
+      float mouseY;
+
+      friend class boost::serialization::access;
+      
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & forwardAcceleration;
+         ar & rightAcceleration;
+         ar & upAcceleration;
+         ar & yawSpeed;
+         ar & rollSpeed;
+         ar & pitchSpeed;
+         ar & brake;
+         ar & fire;
+         ar & currentWeapon;
+         ar & mouseX;
+         ar & mouseY;
+      }
 };
 
 #endif

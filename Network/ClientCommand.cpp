@@ -8,6 +8,13 @@
 #include "Network/ClientCommand.h"
 #include "Utility/Constants.h"
 
+ClientCommand::ClientCommand() {
+   shipID = 0;
+   reset();
+}
+
+ClientCommand::~ClientCommand() {}
+
 void ClientCommand::reset() {
    forwardAcceleration = rightAcceleration = upAcceleration = 0;
    yawSpeed = rollSpeed = pitchSpeed = 0;
@@ -16,9 +23,23 @@ void ClientCommand::reset() {
    mouseX = mouseY = 0;
 }
 
-ClientCommand::ClientCommand() {
-   shipID = 0;
-   reset();
+void ClientCommand::print() {
+   std::cout << "forwardAcceleration=" << forwardAcceleration << std::endl <<
+               "rightAcceleration=" << rightAcceleration << std::endl <<
+               "upAcceleration=" << upAcceleration << std::endl <<
+               "yawSpeed=" << yawSpeed << std::endl <<
+               "rollSpeed=" << rollSpeed << std::endl <<
+               "pitchSpeed=" << pitchSpeed << std::endl <<
+               "brake=" << brake << std::endl <<
+               "fire=" << fire << std::endl <<
+               "currentWeapon=" << currentWeapon << std::endl <<
+               "mouseX=" << mouseX << std::endl <<
+               "mouseY=" << mouseY << std::endl;
+
+   forwardAcceleration = rightAcceleration = upAcceleration = 0;
+   yawSpeed = rollSpeed = pitchSpeed = 0;
+   brake = fire = false;
+   currentWeapon = 1; // Ship's default.
+   mouseX = mouseY = 0;
 }
 
-ClientCommand::~ClientCommand() {}
