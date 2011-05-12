@@ -639,43 +639,119 @@ void AsteroidShip::keepFiring() {
 }
 
 void AsteroidShip::draw_frontpanels() {
+   GLfloat lightPos[3] = {0, 0, 0};
+   GLfloat eyePos[3] = {0, 0, 0};
+   
+   eyePos[0] = (float)gameState->spring->item->position->x - 3.0f;
+   eyePos[1] = (float)gameState->spring->item->position->y - 3.0f;
+   eyePos[2] = (float)gameState->spring->item->position->z + 2.0f;
+
+   lightPos[0] = (float)gameState->getWallxMin();
+   lightPos[1] = (float)gameState->getWallyMin();
+   lightPos[2] = (float)gameState->getWallzMin();
+   
+   GLint lightLoc = glGetUniformLocation(shipYShader, "LightPos");
+   GLint eyeLoc = glGetUniformLocation(shipYShader, "EyePos");
    glUseProgram(shipYShader);
+   glUniform3f(lightLoc, lightPos[0], lightPos[1], lightPos[2]);
+   glUniform3f(eyeLoc, eyePos[0], eyePos[1], eyePos[2]);
    glBegin(GL_TRIANGLES);
+   Point3D p1 = Point3D(frontX, frontY, frontZ);
+   Point3D p2 = Point3D(cornerX, cornerY, cornerZ);
+   Point3D p3 = Point3D(middleXY, skew, middleZ);
+   Vector3D s1 = p1 - p2;
+   Vector3D s2 = p3 - p2;
+   Vector3D normal = s2.cross(s1);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, cornerY, cornerZ);
    glVertex3d(middleXY, skew, middleZ);
+   normal.addNormal();
 
+   p1 = Point3D(frontX, frontY, frontZ);
+   p2 = Point3D(-middleXY, skew, middleZ);
+   p3 = Point3D(-cornerX, cornerY, cornerZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s1.cross(s2);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-middleXY, skew, middleZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
+   normal.addNormal();
 
+   p1 = Point3D(frontX, frontY, frontZ);
+   p2 = Point3D(-cornerX, -cornerY, cornerZ);
+   p3 = Point3D(-middleXY, skew, middleZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s2.cross(s1);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
    glVertex3d(-middleXY, skew, middleZ);
+   normal.addNormal();
 
+   p1 = Point3D(frontX, frontY, frontZ);
+   p2 = Point3D(middleXY, skew, middleZ);
+   p3 = Point3D(cornerX, -cornerY, cornerZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s1.cross(s2);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(middleXY, skew, middleZ);
    glVertex3d(cornerX, -cornerY, cornerZ);
+   normal.addNormal();
    glEnd();
    glUseProgram(0);
 
+   lightLoc = glGetUniformLocation(shipXShader, "LightPos");
+   eyeLoc = glGetUniformLocation(shipXShader, "EyePos");
    glUseProgram(shipXShader);
+   glUniform3f(lightLoc, lightPos[0], lightPos[1], lightPos[2]);
+   glUniform3f(eyeLoc, eyePos[0], eyePos[1], eyePos[2]);
    glBegin(GL_TRIANGLES);
+   
+   p1 = Point3D(frontX, frontY, frontZ);
+   p2 = Point3D(skew, middleXY, middleZ);
+   p3 = Point3D(cornerX, cornerY, cornerZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s1.cross(s2);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(skew, middleXY, middleZ);
    glVertex3d(cornerX, cornerY, cornerZ);
+   //normal.addNormal();
 
+   p1 = Point3D(frontX, frontY, frontZ);
+   p2 = Point3D(-cornerX, cornerY, cornerZ);
+   p3 = Point3D(skew, middleXY, middleZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s2.cross(s1);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
    glVertex3d(skew, middleXY, middleZ);
+   normal.addNormal();
 
+   p1 = Point3D(frontX, frontY, frontZ);
+   p2 = Point3D(skew, -middleXY, middleZ);
+   p3 = Point3D(-cornerX, -cornerY, cornerZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s1.cross(s2);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(skew, -middleXY, middleZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
+   //normal.addNormal();
 
+   p1 = Point3D(frontX, frontY, frontZ);
+   p2 = Point3D(cornerX, -cornerY, cornerZ);
+   p3 = Point3D(skew, -middleXY, middleZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s2.cross(s1);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, -cornerY, cornerZ);
    glVertex3d(skew, -middleXY, middleZ);
+   //normal.addNormal();
    glEnd();
    glUseProgram(0);
 
@@ -683,24 +759,72 @@ void AsteroidShip::draw_frontpanels() {
 }
 
 void AsteroidShip::draw_backpanels() {
+   GLfloat lightPos[3] = {0, 0, 0};
+   GLfloat eyePos[3] = {0, 0, 0};
+   
+   eyePos[0] = (float)gameState->spring->item->position->x - 3.0f;
+   eyePos[1] = (float)gameState->spring->item->position->y - 3.0f;
+   eyePos[2] = (float)gameState->spring->item->position->z + 2.0f;
+
+   /*
+   lightPos[0] = (float)gameState->getWallxMin();
+   lightPos[1] = (float)gameState->getWallyMin();
+   lightPos[2] = (float)gameState->getWallzMin();
+   */
+   lightPos[0] = 0;
+   lightPos[1] = 0;
+   lightPos[2] = 0;
+   
+   GLint lightLoc = glGetUniformLocation(shipYShader, "LightPos");
+   GLint eyeLoc = glGetUniformLocation(shipYShader, "EyePos");
    glUseProgram(backShader);
+   glUniform3f(lightLoc, lightPos[0], lightPos[1], lightPos[2]);
+   glUniform3f(eyeLoc, eyePos[0], eyePos[1], eyePos[2]);
    glBegin(GL_TRIANGLES);
 
+   Point3D p1 = Point3D(middleXY, skew, middleZ);
+   Point3D p2 = Point3D(cornerX, cornerY, cornerZ);
+   Point3D p3 = Point3D(skew, middleXY, middleZ);
+   Vector3D s1 = p1 - p2;
+   Vector3D s2 = p3 - p2;
+   Vector3D normal = s2.cross(s1);
    glVertex3d(middleXY, skew, middleZ);
    glVertex3d(cornerX, cornerY, cornerZ);
    glVertex3d(skew, middleXY, middleZ);
+   normal.addNormal();
 
+   p1 = Point3D(middleXY, skew, middleZ);
+   p2 = Point3D(skew, -middleXY, middleZ);
+   p3 = Point3D(cornerX, -cornerY, cornerZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s1.cross(s2);
    glVertex3d(middleXY, skew, middleZ);
    glVertex3d(skew, -middleXY, middleZ);
    glVertex3d(cornerX, -cornerY, cornerZ);
+   normal.addNormal();
 
+   p1 = Point3D(-middleXY, skew, middleZ);
+   p2 = Point3D(cornerX, -cornerY, cornerZ);
+   p3 = Point3D(skew, -middleXY, middleZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s2.cross(s1);
    glVertex3d(-middleXY, skew, middleZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
    glVertex3d(skew, -middleXY, middleZ);
+   normal.addNormal();
 
+   p1 = Point3D(-middleXY, skew, middleZ);
+   p2 = Point3D(skew, middleXY, middleZ);
+   p3 = Point3D(-cornerX, cornerY, cornerZ);
+   s1 = p1 - p2;
+   s2 = p3 - p2;
+   normal = s1.cross(s2);
    glVertex3d(-middleXY, skew, middleZ);
    glVertex3d(skew, middleXY, middleZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
+   normal.addNormal();
    glEnd();
    glUseProgram(0);
 }
