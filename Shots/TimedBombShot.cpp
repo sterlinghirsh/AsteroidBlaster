@@ -25,8 +25,8 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const
    explodeRadius = 8;
    
    damage = 40;
-   slowDownPerSecond = 5.0;
-   seekRadius = 20.0;
+   slowDownPerSecond = 1.0;
+   seekRadius = 0.0;
    collisionRadius = 0.25;
    collisionSphere->updateRadius(seekRadius);
 }
@@ -44,17 +44,21 @@ void TimedBombShot::draw() {
    glPushMatrix();
       glDisable(GL_LIGHTING);
 
-      double amountDone = (doubleTime() - timeFired) / timeToExplode;
+      /*double amountDone = (doubleTime() - timeFired) / timeToExplode;
       if (fmod(amountDone * amountDone * 80, 2) < 1) {
          glColor3d(0.4, 0.8, 0.4);
       } else {
          glColor3d(1.0, 0.4, 0.4);
-      }
+      }*/
+      //glDisable(GL_
+      glColor3d(1, .6, 0);
       setMaterial(ShotMaterial);
-      position->glTranslate();
+      //position->glTranslate();
 
       // Radius 0.5, 5 slices, 5 stacks.
-      gluSphere(quadric, 0.5, 5, 5);
+      gluSphere(quadric, 0.3, 5, 5);
+      glColor3d(0, 1, 0);
+      gluCylinder(quadric, .3, .3, 1, 5, 5);
 
       glEnable(GL_LIGHTING);
    glPopMatrix();

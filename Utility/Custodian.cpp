@@ -261,8 +261,9 @@ void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
 
 template<>
 void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
-   if (a->isRespawning() || a == b->owner) { return;}
-   if (!b->isExploded) {
+   return;
+   if (a->isRespawning()) { return;}
+   if (!b->isExploded && a != b->owner) {
       Vector3D positionToShip(*b->position, *a->position);
       double distance = positionToShip.getLength();
       if (distance < b->seekRadius + a->radius) {
@@ -275,7 +276,7 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
             SoundEffect::playSoundEffect("BlasterHit.wav");
          }
       }
-   } else {
+   } else if (a != b->owner) {
       a->health -= b->getDamage(a);
       Vector3D* shotToShip = new Vector3D(*b->position, *a->position);
       double distance = shotToShip->getLength() - a->radius;

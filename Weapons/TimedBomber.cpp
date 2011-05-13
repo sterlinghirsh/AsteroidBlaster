@@ -81,7 +81,7 @@ void TimedBomber::debug() {
  */
 Point3D TimedBomber::project(Object3D* target) {
    Point3D wouldHit;
-   double speed = 40;
+   double speed = .1;
    double time = 0, dist = 0;
    int iterations = 0;
 

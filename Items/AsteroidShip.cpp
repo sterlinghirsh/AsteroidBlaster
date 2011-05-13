@@ -397,7 +397,6 @@ void AsteroidShip::update(double timeDiff) {
       shakeAmount = 0;
       // Handle respawning.
       if (!respawnTimer.isRunning) {
-         printf("Hope i don't keep getting here\n");
          respawnTimer.setCountDown(respawnTime);
          timeLeftToRespawn = respawnTimer.getTimeLeft();
          // Update weapons one last time.
@@ -432,7 +431,6 @@ void AsteroidShip::update(double timeDiff) {
          gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
-      printf("Got here: %f\n", timeLeftToRespawn);
       if (gameState->gameIsRunning && respawnTimer.isRunning && timeLeftToRespawn <= 1.5) {
          timeLeftToRespawn = 1.5;
          reInitialize();
@@ -1374,6 +1372,54 @@ void AsteroidShip::drawShotDirectionIndicators() {
    drawPoint.draw();
    up->movePoint(drawPoint, boxSize);
    drawPoint.draw();
+   
+   
+   // Move again
+   shotDirection.movePoint(drawPoint, distanceIncrement);
+   // top right
+   glColor3d(1, 1, 0.2);
+   right->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   right->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+
+   boxSize -= boxDecrement;
+   right->movePoint(drawPoint, boxDecrement / 2.0);
+   
+   
+   // Move again
+   shotDirection.movePoint(drawPoint, distanceIncrement);
+   // top right
+   glColor3d(1, 0.2, 1.0);
+   right->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   right->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+
+   boxSize -= boxDecrement;
+   right->movePoint(drawPoint, boxDecrement / 2.0);
+   
+   
+   shotDirection.movePoint(drawPoint, distanceIncrement);
+   // top right
+   glColor3d(.2, 1, 1);
+   right->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   right->movePoint(drawPoint, -boxSize);
+   drawPoint.draw();
+   up->movePoint(drawPoint, boxSize);
+   drawPoint.draw();
+
    glEnd();
    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
    glLineWidth(1.0);
