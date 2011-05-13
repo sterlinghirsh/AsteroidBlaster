@@ -14,12 +14,18 @@ class TimedBombShot : public ExplosiveShot {
       TimedBombShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gamestate);
       virtual ~TimedBombShot();
       virtual void draw();
+      virtual void drawExplosion();
       virtual void update(double timeDiff);
       virtual void hitWall(BoundingWall* wall);
       // Called when the shot's isExploded becomes true.
       virtual void explode();
 
       // In seconds.
+      double spin;
+      double rx;
+      double ry;
+      double rz;
+      double timeSinceExploded;
       double timeToExplode;
       double seekRadius;
       double slowDownPerSecond;

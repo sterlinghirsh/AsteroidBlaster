@@ -24,6 +24,14 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const
    
    explodeRadius = 8;
    
+   spin = 90;
+   
+   rx = 0;
+   ry = 0;
+   rz = 0;
+   
+   timeSinceExploded = -1;
+   
    damage = 40;
    slowDownPerSecond = 1.0;
    seekRadius = 0.0;
@@ -37,7 +45,10 @@ TimedBombShot::~TimedBombShot() {
 
 void TimedBombShot::draw() {
    // Don't draw the bomb again if it already exploded.
-   if (isExploded) {
+   if (isExploded && timeSinceExploded > 0) {
+      drawExplosion();
+      return;
+   } else if (isExploded) {
       return;
    }
 
@@ -64,31 +75,84 @@ void TimedBombShot::draw() {
    glPopMatrix();
 }
 
+void TimedBombShot::drawExplosion() {
+   double scaleSize;
+   glPushMatrix();
+      glDisable(GL_LIGHTING);
+
+      glColor3d(1, .6, 0);
+      setMaterial(ShotMaterial);
+      position->glTranslate();
+
+      // Radius 0.5, 5 slices, 5 stacks.
+      rx += (double) (rand() % 10);
+      ry += (double) (rand() % 20);
+      rz += (double) (rand() % 30);
+
+      /*double sx, sy, sz;
+      sx = 5 / (1.5 * 5);
+      sy = 5 / (.5 * 5);
+      sz = 5 / (.8 * 5);*/
+
+      if (rx > 100) {
+         rx = 0;
+      }
+      if (ry > 100) {
+         ry = 0;
+      }
+      if (rz > 100) {
+         rz = 0;
+      }
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glUseProgram(hitShader);
+      glPushMatrix();
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glDisable(GL_LIGHTING);
+      //printf("I got into draw hit effect\n");
+      scaleSize = 5 * (2 - timeSinceExploded) * timeSinceExploded * timeSinceExploded * timeSinceExploded * timeSinceExploded;
+      glScaled(scaleSize, scaleSize, scaleSize);
+      
+      //glTranslated(0, 0, .6);
+      glRotated(spin, rx, ry, rz);
+      gluSphere(quadric, .6, 20, 20);
+      glPopMatrix();
+      glUseProgram(0);
+
+      glEnable(GL_LIGHTING);
+   glPopMatrix();
+}
+
 void TimedBombShot::update(double timeDiff) {
-   double newSpeed = velocity->getLength();
-   newSpeed -= timeDiff * slowDownPerSecond;
-   newSpeed = std::max(0.0, newSpeed);
-   velocity->setLength(newSpeed);
+   if(!isExploded){
+      double newSpeed = velocity->getLength();
+      newSpeed -= timeDiff * slowDownPerSecond;
+      newSpeed = std::max(0.0, newSpeed);
+      velocity->setLength(newSpeed);
 
-   ExplosiveShot::update(timeDiff);
-
+      ExplosiveShot::update(timeDiff);
+   }
    /* If the bomb has already blown up and we're back here again,
     * then we've already gone through a cycle of hit detection, so it's time
     * for the bomb to be removed.
     */
-   if (isExploded) {
+   if (isExploded && timeSinceExploded < 0) {
       shouldRemove = true;
    }
 
    // If the bomb should explode this frame and has not already, then explode.
    if (shouldExplode && !isExploded) {
-      explode();
+      timeSinceExploded = 2;
+      isExploded = true;
+      //explode();
    }
    // If more time has passed than the bomb's timeToExplode, blow it up.
    if (!isExploded && (doubleTime() - timeFired > timeToExplode)) {
-      explode();
+      timeSinceExploded = 2;
+      isExploded = true;
+      //explode();
    }
-
+   
+   timeSinceExploded -= timeDiff;
       // Find out how projectileShot's are removed.
 }
 
