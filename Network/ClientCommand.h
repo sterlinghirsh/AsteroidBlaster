@@ -8,10 +8,6 @@
 #ifndef __CLIENTCOMMAND_H__
 #define __CLIENTCOMMAND_H__
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
-
 class ClientCommand {
    public:
       ClientCommand();
@@ -44,8 +40,6 @@ class ClientCommand {
       float mouseX;
       float mouseY;
 
-      friend class boost::serialization::access;
-      
       template<class Archive> 
             void serialize(Archive & ar, const unsigned int version) {
          ar & forwardAcceleration;

@@ -9,7 +9,6 @@ ifeq ($(UNAME), Linux)
    BOOSTLIB=/home/shirsh/boost/stage/lib
    SDL_LIBS=$(shell "sdl-config" "--libs")
    SDL_CFLAGS=$(shell "sdl-config" "--cflags")
-   BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath=$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt  $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
    PLATFORMSPECIFICCFLAGS=-I./Libraries/glew-1.5.8/include -I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_mixer-1.2.11 -I./Libraries/SDL_image-1.2.10
    PLATFORMSPECIFICLDFLAGS= -L./Libraries/glew-1.5.8/lib -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_mixer-1.2.11/build/.libs/ -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_mixer-1.2.11/build/.libs/ -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs  -lGL -lGLU -lSDL -lGLEW -lglut -lpthread
 else
@@ -17,10 +16,11 @@ else
    BOOSTLIB=/opt/local/lib
    SDL_LIBS=$(shell "/sw/bin/sdl-config" "--libs")
    SDL_CFLAGS=$(shell "/sw/bin/sdl-config" "--cflags")
-   BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
    PLATFORMSPECIFICCFLAGS=-I /opt/local/include
    PLATFORMSPECIFICLDFLAGS=$(BOOST_LDFLAGS) -framework OpenGL -Wl,-framework,Cocoa
 endif
+   
+BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
 
 LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(BOOST_LDFLAGS) -lSDL_mixer -lSDL_image -lSDL_ttf -g 
 # -I. -iquote makes it so quoted #includes look in ./

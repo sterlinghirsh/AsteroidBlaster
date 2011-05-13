@@ -9,6 +9,11 @@
 #include "Utility/Constants.h"
 #include <iostream>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
+
+
 ClientCommand::ClientCommand() {
    shipID = 0;
    reset();
