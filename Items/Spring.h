@@ -10,6 +10,8 @@
 #include "Items/Object3D.h"
 #include "Graphics/Camera.h"
 
+class AsteroidShip;
+
 class Spring : public Object3D {
    public:
       Spring(const GameState* _gameState);

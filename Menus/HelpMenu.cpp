@@ -8,6 +8,7 @@
 #include "Text/Text.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
+#include "Menus/MainMenu.h"
 
 #define TITLE_INDEX 0
 #define RETURN_INDEX (menuTexts.size() - 1)

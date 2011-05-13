@@ -27,6 +27,9 @@
 #include "HUD/Minimap.h"
 #include "HUD/Screen.h"
 
+#include "Menus/MainMenu.h"
+#include "Menus/StoreMenu.h"
+
 #include <math.h>
 #include <stdio.h>
 #include <fstream>

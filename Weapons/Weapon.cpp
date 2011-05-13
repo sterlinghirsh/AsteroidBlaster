@@ -9,6 +9,7 @@
 #include "Items/AsteroidShip.h"
 #include "Utility/Custodian.h"
 #include <sstream>
+#include "Graphics/Texture.h"
 
 /**
  * Initialize the ship and timeLastFired.

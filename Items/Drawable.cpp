@@ -8,6 +8,7 @@
 #include "Items/Drawable.h"
 #include "Items/BoundingWall.h"
 #include "Utility/GameState.h"
+#include <iostream>
 
 /**
  * Default constructor. Shouldn't be used.

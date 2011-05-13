@@ -9,6 +9,7 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Items/AsteroidShip.h"
+#include "Menus/MainMenu.h"
 
 #define TITLE_INDEX 0
 #define BLOOM_INDEX 2

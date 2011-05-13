@@ -22,24 +22,20 @@
 
 #include "SDL.h"
 #include "SDL_ttf.h"
-#include "Utility/Constants.h"
-#include "Utility/InputManager.h"
-#include "Menus/MainMenu.h"
-#include "Menus/StoreMenu.h"
-#include "Menus/SettingsMenu.h"
-#include "Menus/HelpMenu.h"
-#include "Menus/CreditsMenu.h"
-#include "Graphics/Texture.h"
 
+#include "Utility/Constants.h"
 #include "Utility/GameSettings.h"
 
 #include <math.h>
 #include <algorithm>
 
-
-
-
 class GameState;
+class MainMenu;
+class StoreMenu;
+class SettingsMenu;
+class HelpMenu;
+class CreditsMenu;
+class InputManager;
 
 extern GameSettings* gameSettings;
 extern int flopY(int);

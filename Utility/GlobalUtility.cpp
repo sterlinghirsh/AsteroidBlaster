@@ -19,6 +19,7 @@
 
 #include "Utility/GameSettings.h"
 #include "Utility/GameState.h"
+#include "Graphics/Texture.h"
 
 //#include "SDL_video.h"
 

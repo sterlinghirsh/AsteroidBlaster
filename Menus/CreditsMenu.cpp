@@ -4,6 +4,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Utility/GameState.h"
 #include "Menus/CreditsMenu.h"
+#include "Menus/MainMenu.h"
 #include "Graphics/Texture.h"
 #include "Text/Text.h"
 #include "Utility/Music.h"

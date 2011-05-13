@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "Utility/GlobalUtility.h"
 #include "Menus/StoreMenu.h"
+#include "Menus/MainMenu.h"
 #include "Graphics/Texture.h"
 #include "Items/AsteroidShip.h"
 #include "Utility/Music.h"

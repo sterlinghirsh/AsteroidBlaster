@@ -3,7 +3,13 @@
 #include "SDL.h"
 #include "Utility/GlobalUtility.h"
 #include "Utility/GameState.h"
+
 #include "Menus/MainMenu.h"
+#include "Menus/StoreMenu.h"
+#include "Menus/SettingsMenu.h"
+#include "Menus/HelpMenu.h"
+#include "Menus/CreditsMenu.h"
+
 #include "Graphics/Image.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
