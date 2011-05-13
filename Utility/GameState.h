@@ -9,37 +9,26 @@
 #ifndef __GAMESTATE_H__
 #define __GAMESTATE_H__
 
-#include "Items/AsteroidShip.h"
-#include "Items/BoundingSpace.h"
-#include "Items/BoundingSphere.h"
-#include "Items/Asteroid3D.h"
-#include "Items/Ball.h"
-#include "Items/Spring.h"
-#include "Graphics/Skybox.h"
-#include "Graphics/Sprite.h"
-#include "Particles/Particle.h"
-#include "Graphics/Camera.h"
-#include "Text/Text.h"
 #include "Utility/Custodian.h"
 #include "Utility/InputManager.h"
-#include "Utility/GlobalUtility.h"
-#include "HUD/ProgressBar.h"
-#include "HUD/WeaponDisplay.h"
-#include "HUD/Minimap.h"
-#include "HUD/Screen.h"
 #include "Network/ClientCommand.h"
 
 #include <list>
-#include <sstream>
 
+class Camera;
+class Skybox;
+class BoundingSpace;
 class AsteroidShip;
 class Minimap;
+class Spring;
+class Text;
+class ProgressBar;
+class WeaponDisplay;
+class Screen;
 
 class GameState : public InputReceiver {
    //public variables------------------------------
    public:
-      static std::ostringstream sstream2;
-      
       /* All of the text objects to be drawn each frame. If you want more text drawn, declare it here,
        * update it in updateText(), and make it draw in drawAllText().
        */
@@ -55,7 +44,6 @@ class GameState : public InputReceiver {
 
       Custodian custodian;
       AsteroidShip* ship;
-      Ball* ball;
       Spring* spring;
       // Used when looping over Drawable objects
       std::vector<Object3D*>::iterator item;
@@ -110,7 +98,6 @@ class GameState : public InputReceiver {
 
       Skybox* skybox;
       //Camera* camera;
-      BoundingSphere* sphere;
       Minimap* minimap;
       Screen* bloomScreen;
       Screen* rawScreen;

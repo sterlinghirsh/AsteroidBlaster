@@ -9,6 +9,7 @@
 #include "Graphics/Texture.h"
 #include "Utility/GameState.h"
 #include "Utility/GlobalUtility.h"
+#include "Items/AsteroidShip.h"
 
 WeaponDisplay::WeaponDisplay(float _height, float _width, float _x, float _y, const GameState *_gameState) :
    height(_height), width(_width), x(_x), y(_y), gameState(_gameState) {

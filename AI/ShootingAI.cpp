@@ -20,6 +20,7 @@
 #include "Utility/Quaternion.h"
 #include "Weapons/Weapon.h"
 #include "Utility/GlobalUtility.h"
+#include "Particles/Particle.h"
 #include <math.h>
 
 #ifdef WIN32

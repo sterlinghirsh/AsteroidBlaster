@@ -6,6 +6,9 @@
 
 #include "Graphics/MeshFace.h"
 #include "Utility/GameState.h"
+// TODO: a better way.
+#include "Items/AsteroidShip.h"
+#include "Items/BoundingSpace.h"
 
 #define ASTEROID3D_LINE_W 0.5
 #define MAX_INDEPENDENT_FACES 500

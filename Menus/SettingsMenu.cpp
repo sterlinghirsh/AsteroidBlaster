@@ -8,6 +8,7 @@
 #include "Text/Text.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
+#include "Items/AsteroidShip.h"
 
 #define TITLE_INDEX 0
 #define BLOOM_INDEX 2

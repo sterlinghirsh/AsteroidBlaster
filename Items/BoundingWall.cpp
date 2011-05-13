@@ -8,6 +8,7 @@
 #include "Items/BoundingWall.h"
 #include "Items/Object3D.h"
 #include "Utility/GameState.h"
+#include "Graphics/Camera.h"
 #include <math.h>
 
 #ifdef WIN32

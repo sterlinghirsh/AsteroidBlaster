@@ -5,6 +5,8 @@
  */
 
 #include "BeamShot.h"
+#include "Items/BoundingWall.h"
+
 #include <math.h>
 #include <algorithm>
 

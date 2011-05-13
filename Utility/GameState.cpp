@@ -15,15 +15,30 @@
 #include "Text/GameMessage.h"
 #include "Utility/Collision.h"
 #include "Utility/GlobalUtility.h"
+#include "Items/Asteroid3D.h"
+#include "Items/Spring.h"
+#include "Text/Text.h"
+#include "Items/BoundingSpace.h"
+#include "Graphics/Skybox.h"
+#include "Graphics/Sprite.h"
+#include "Graphics/Camera.h"
+#include "HUD/ProgressBar.h"
+#include "HUD/WeaponDisplay.h"
+#include "HUD/Minimap.h"
+#include "HUD/Screen.h"
+
 #include <math.h>
 #include <stdio.h>
 #include <fstream>
+#include <sstream>
+
+#include "Items/AsteroidShip.h"
 
 #define SAVEFILENAME "AsteroidBlaster.sav"
 
 extern double minimapSizeFactor;
 
-std::ostringstream GameState :: sstream2;
+std::ostringstream sstream2; // TODO: Better name plz.
 
 GameState::GameState(double worldSizeIn, bool _inMenu) :
    custodian(this) {

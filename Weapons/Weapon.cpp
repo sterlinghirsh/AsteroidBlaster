@@ -8,6 +8,7 @@
 #include "Items/Object3D.h"
 #include "Items/AsteroidShip.h"
 #include "Utility/Custodian.h"
+#include <sstream>
 
 /**
  * Initialize the ship and timeLastFired.

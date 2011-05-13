@@ -7,6 +7,7 @@
 #include "Particles/BlasterShotParticle.h"
 #include "Particles/BlasterImpactParticle.h"
 #include "Utility/SoundEffect.h"
+#include "Graphics/Sprite.h"
 
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"

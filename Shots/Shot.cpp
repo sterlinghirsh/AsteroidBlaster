@@ -5,6 +5,7 @@
  */
 
 #include "Shots/Shot.h"
+#include "Items/BoundingWall.h"
 #include <iostream>
 
 materialStruct ShotMaterial = {
