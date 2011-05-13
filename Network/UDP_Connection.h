@@ -49,8 +49,7 @@ class UDP_Connection {
       void handle_send(boost::shared_ptr<std::string>,
                         const boost::system::error_code&,
                         std::size_t);
-
-      std::string make_daytime_string();
+      
 
       
 };

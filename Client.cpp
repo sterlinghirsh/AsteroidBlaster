@@ -21,6 +21,8 @@
 using boost::asio::ip::udp;
 
 int clientID;
+ClientCommand localClientCommand;
+udp::endpoint sender_endpoint;
 
 void mySleep(unsigned int mseconds) {
     clock_t goal = mseconds + clock();
@@ -53,32 +55,36 @@ int main(int argc, char* argv[]) {
          oa << i;
          std::cout << "Sending1: " << oss.str() << std::endl;
          socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
+      }
 
+      {
          // then wait for the answer back...
          boost::array<char, 80> recv_buf;
-         udp::endpoint sender_endpoint;
          size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
 
          // decode the answer, and grab the assigned clientID
-         std::cout << "raw1: " << recv_buf.data() << std::endl;
          std::istringstream iss(recv_buf.data());
          boost::archive::text_iarchive ia(iss);
-         std::cout << "Receiving1: " << oss.str() << std::endl;
          ia >> clientID;
+         std::cout << "my clientID is " << clientID << std::endl;
+      }
 
+      {
          // then do handshake 2
-         oss.str("");
+         std::ostringstream oss;
          i = 1;
+         boost::archive::text_oarchive oa(oss);
          oa << i << clientID;
-         std::cout << "Sending2: " << oss.str() << std::endl;
          socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
+      }
 
-         // then wait for the answer back...
-         len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
-
+      {
+         // then wait for the answer back for handshake3...
+         boost::array<char, 80> recv_buf;
+         size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
          // decode the answer, and make sure that the packet id is 2
-         iss.str(recv_buf.data());
-         std::cout << "Receiving2: " << oss.str() << std::endl;
+         std::istringstream iss(recv_buf.data());
+         boost::archive::text_iarchive ia(iss);
          int temp;
          ia >> temp;
          if (temp == 2) {
@@ -86,22 +92,21 @@ int main(int argc, char* argv[]) {
          }
       }
 
-      ClientCommand test;
+      
 
 
       while (1) {
-         if ( i < 20 ) {
-            std::ostringstream oss;
-            
-            {
-               boost::archive::text_oarchive oa(oss);
-               oa << i << (const ClientCommand)test;
-            }
-
-            std::cout << "oss.str()=" << oss.str() << std::endl;
-
-            socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
+         std::ostringstream oss;
+         
+         {
+            boost::archive::text_oarchive oa(oss);
+            i = 3;
+            oa << i << (const ClientCommand)localClientCommand;
          }
+
+         std::cout << "oss.str()=" << oss.str() << std::endl;
+
+         socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
 
          boost::array<char, 80> recv_buf;
          udp::endpoint sender_endpoint;

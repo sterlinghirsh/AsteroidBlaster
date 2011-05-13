@@ -13,6 +13,7 @@
 #include <boost/archive/text_iarchive.hpp>
 
 #include "Network/UDP_Connection.h"
+#include "Network/ClientCommand.h"
 
 //Constructor
 UDP_Connection::UDP_Connection(boost::asio::io_service& io_service)
@@ -47,44 +48,91 @@ void UDP_Connection::handle_receive(const boost::system::error_code& error, std:
    // See if this is a new client or not...
    std::map<boost::asio::ip::udp::endpoint, unsigned>::iterator iter = remoteClients.find(tempEndPoint);
 
+   int receivedPackID;
+
    // It is a new client!
    if (iter == remoteClients.end()) {
       std::cout << "new client found: " << tempEndPoint << std::endl;
-
       // test to see if it's an init packet, if it is not, well then throw it away!
-      std::cout << "raw1: " << recv_buffer_.data() << std::endl;
-      std::istringstream iss(recv_buffer_.data());
-      boost::archive::text_iarchive ia(iss);
-      int i;
-      ia >> i;
-      if (i == 0) {
+      {
+         std::istringstream iss(recv_buffer_.data());
+         boost::archive::text_iarchive ia(iss);
+         ia >> receivedPackID;
+      }
+      if (receivedPackID == 0) {
          std::cout << "init packet found, adding with ID of " << currClientID << std::endl;
          remoteClients.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint),currClientID) );
          
 
-         // now send the client handshake2 back
-         std::ostringstream oss;
-         boost::archive::text_oarchive oa(oss);
-         oa << currClientID;
-         std::cout << "Sending1: " << oss.str() << std::endl;
+         // now send the client handshake1 back
+         {
+            std::ostringstream oss;
+            boost::archive::text_oarchive oa(oss);
+            oa << currClientID;
+            std::cout << "Sending1: " << oss.str() << std::endl;
 
-         boost::shared_ptr<std::string> message(new std::string(oss.str()));
+            boost::shared_ptr<std::string> message(new std::string(oss.str()));
 
-         std::cout << "raw1:" << *message << std::endl;
+            std::cout << "raw1:" << *message << std::endl;
 
-         socket_.async_send_to(boost::asio::buffer(*message), tempEndPoint,
-             boost::bind(&UDP_Connection::handle_send, this, message,
-               boost::asio::placeholders::error,
-               boost::asio::placeholders::bytes_transferred));
+            socket_.async_send_to(boost::asio::buffer(*message), tempEndPoint,
+                boost::bind(&UDP_Connection::handle_send, this, message,
+                  boost::asio::placeholders::error,
+                  boost::asio::placeholders::bytes_transferred));
+         }
 
          currClientID++;
       } else {
-         std::cout << "Error! this packet is not init packet:" <<  i << ". |||" << recv_buffer_.data() << std::endl;
+         std::cout << "Error! this packet is not init packet:" <<  receivedPackID << ". |||" << recv_buffer_.data() << std::endl;
       }
 
    // It's a client that already has send packets before
    } else {
       std::cout << "old client found, id:" << iter->second << "| address:" << tempEndPoint << std::endl;
+      std::cout << "recv_buffer_.data()=" << recv_buffer_.data() << std::endl;
+
+      // grab the packet id
+      std::istringstream iss(recv_buffer_.data());
+      boost::archive::text_iarchive ia(iss);
+      ia >> receivedPackID;
+
+      // it's a clientcommand packet!
+      if (receivedPackID == 1) {
+         std::cout << "Got handshake2 packet!" << std::endl;
+         int tempClientID;
+         ia >> tempClientID;
+         if (tempClientID == iter->second) {
+            std::cout << "Is the correct ID!" << std::endl;
+            // now send the client handshake3 back
+            {
+               int i = 2;
+               std::ostringstream oss;
+               boost::archive::text_oarchive oa(oss);
+               oa << i;
+               std::cout << "Sending1: " << oss.str() << std::endl;
+
+               boost::shared_ptr<std::string> message(new std::string(oss.str()));
+
+               std::cout << "raw1:" << *message << std::endl;
+
+               socket_.async_send_to(boost::asio::buffer(*message), tempEndPoint,
+                   boost::bind(&UDP_Connection::handle_send, this, message,
+                     boost::asio::placeholders::error,
+                     boost::asio::placeholders::bytes_transferred));
+            }
+
+         } else {
+            std::cout << "Wrong ID? Removing this ID/Client" << std::endl;
+            remoteClients.erase (tempEndPoint);
+         }
+      } else if (receivedPackID == 3) {
+         std::cout << "Got ClientCommand packet!" << std::endl;
+         ClientCommand temp;
+         ia >> temp;
+         temp.print();
+      } else {
+         std::cout << "Error! this packet id is unknown:" <<  receivedPackID << ". |||" << recv_buffer_.data() << std::endl;
+      }
    }
 
    start_receive();
@@ -107,13 +155,6 @@ void UDP_Connection::UDP_Connection::send(std::string msg, boost::asio::ip::udp:
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
 }
-
-std::string UDP_Connection::make_daytime_string() {
-   using namespace std; // For time_t, time and ctime;
-   time_t now = time(0);
-   return ctime(&now);
-}
-
 
 
 
