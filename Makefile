@@ -9,7 +9,7 @@ ifeq ($(UNAME), Linux)
    # Linux stuff
    SDL_LIBS=$(shell "sdl-config" "--libs")
    SDL_CFLAGS=$(shell "sdl-config" "--cflags")
-   BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath=$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt  $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
+   BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath=$(BOOSTLIB) -Bstatic -lboost_iostreams -lboost_system -lboost_serialization  $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
    PLATFORMSPECIFICCFLAGS=-I./Libraries/glew-1.5.8/include -I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_mixer-1.2.11 -I./Libraries/SDL_image-1.2.10
    PLATFORMSPECIFICLDFLAGS= -L./Libraries/glew-1.5.8/lib -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_mixer-1.2.11/build/.libs/ -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_mixer-1.2.11/build/.libs/ -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs  -lGL -lGLU -lSDL -lGLEW -lglut -lpthread
 else

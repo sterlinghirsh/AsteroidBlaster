@@ -7,6 +7,7 @@
 
 #include "Network/ClientCommand.h"
 #include "Utility/Constants.h"
+#include <iostream>
 
 ClientCommand::ClientCommand() {
    shipID = 0;
