@@ -48,6 +48,7 @@ extern unsigned long curFrame;
 extern bool drawPerspective;
 extern bool showBloomScreen;
 extern bool cameraFollow;
+extern bool running;
 extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
 extern GLuint fadeShader;
@@ -143,8 +144,6 @@ void setMaterial(materialStruct material);
 void updateDoubleTime();
 void toggleGrabMode();
 void toggleFullScreen();
-
-extern bool running;
 
 inline double randdouble() {
    return (double)rand() / (double) RAND_MAX;

@@ -39,7 +39,6 @@ using namespace std;
 GameState* gameState;
 
 // True while the game is in play.
-bool running = true;
 bool fullScreen = false;
 
 // the absolute time update was last called

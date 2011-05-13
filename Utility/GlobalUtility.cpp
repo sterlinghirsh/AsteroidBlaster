@@ -30,6 +30,7 @@ unsigned long curFrame = 0;
 bool drawPerspective = true;
 bool showBloomScreen = false;
 bool cameraFollow = true;
+bool running = true;
 GLUquadricObj *quadric = NULL;
 GLuint tractorBeamShader = 0;
 GLuint fadeShader = 0;
