@@ -34,10 +34,6 @@ void Server::gameFunction() {
    ++mainCount;
    ++count1;
 
-   if (udpConnection->receivedMsg.size() >= 10) {
-      std::cout << "OMG THIS IS MORE THAN TEN" << "\n";
-   }
-
    gameThread.expires_at(gameThread.expires_at() + boost::posix_time::seconds(1));
    gameThread.async_wait(mainStrand.wrap(boost::bind(&Server::gameFunction, this)));
 }

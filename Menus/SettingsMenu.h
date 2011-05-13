@@ -5,6 +5,7 @@
 
 #include "Menus/Menu.h"
 #include "Utility/InputManager.h"
+#include <string>
 
 class GameState;
 

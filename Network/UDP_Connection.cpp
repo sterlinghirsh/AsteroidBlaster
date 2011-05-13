@@ -72,16 +72,8 @@ void UDP_Connection::handle_receive(const boost::system::error_code& error, std:
                std::ostringstream oss;
                boost::archive::text_oarchive oa(oss);
                oa << currClientID;
-               //std::cout << "Sending1: " << oss.str() << std::endl;
 
-               boost::shared_ptr<std::string> message(new std::string(oss.str()));
-
-               //std::cout << "raw1:" << *message << std::endl;
-
-               socket_.async_send_to(boost::asio::buffer(*message), tempEndPoint,
-                   boost::bind(&UDP_Connection::handle_send, this, message,
-                     boost::asio::placeholders::error,
-                     boost::asio::placeholders::bytes_transferred));
+               send(oss.str(), tempEndPoint);
             }
             currClientID++;
          } else {
@@ -104,16 +96,7 @@ void UDP_Connection::handle_receive(const boost::system::error_code& error, std:
                   std::ostringstream oss;
                   boost::archive::text_oarchive oa(oss);
                   oa << i;
-                  //std::cout << "Sending1: " << oss.str() << std::endl;
-
-                  boost::shared_ptr<std::string> message(new std::string(oss.str()));
-
-                  //std::cout << "raw1:" << *message << std::endl;
-
-                  socket_.async_send_to(boost::asio::buffer(*message), tempEndPoint,
-                      boost::bind(&UDP_Connection::handle_send, this, message,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred));
+                  send(oss.str(), tempEndPoint);
                }
                remoteClients.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint),tempIter->second) );
                tempRemoteClients.erase (tempEndPoint);
@@ -153,7 +136,7 @@ void UDP_Connection::handle_send(boost::shared_ptr<std::string>,
    //std::cout << "UDP_Connection running handle_send..." << std::endl;
 }
 
-void UDP_Connection::UDP_Connection::send(std::string msg, boost::asio::ip::udp::endpoint dest) {
+void UDP_Connection::send(std::string msg, boost::asio::ip::udp::endpoint dest) {
       boost::shared_ptr<std::string> message(
           new std::string(msg));
 

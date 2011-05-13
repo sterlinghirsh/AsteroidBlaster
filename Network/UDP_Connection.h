@@ -23,7 +23,6 @@ class UDP_Connection {
    //public variables
    public:
       unsigned currClientID;
-      std::list<std::string> receivedMsg;
       std::map<boost::asio::ip::udp::endpoint, unsigned> tempRemoteClients;
       std::map<boost::asio::ip::udp::endpoint, unsigned> remoteClients;
       boost::asio::ip::udp::endpoint tempEndPoint;
