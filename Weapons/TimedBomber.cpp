@@ -14,7 +14,7 @@ TimedBomber::TimedBomber(AsteroidShip* owner) : Weapon(owner) {
    shotSpeed = 20; // Units per second
    coolDown = 5.0; // Seconds
    randomVariationAmount = 0.25; // Units
-   name = "Mine Layer";
+   name = "Timed Bomber";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
    purchased = false;

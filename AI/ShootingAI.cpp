@@ -108,67 +108,140 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
 
 // Choose the appropriate weapon for this situation.
 void ShootingAI::chooseWeapon(Object3D** target) {
-   /*
+   // Don't choose a new weapon if there's no target.
+   if (*target == NULL) {
+      return;
+   }
+
    Vector3D vec;
    double curWeight = 0.0;
    double maxWeight = -1.0;
    /* Stores the weight of each weapon. At the end of the function, the weapon
     * with the highest weight is chosen.
    */
-   /*
+   
    double weaponWeights[7];
 
    // States whether or not the chosen target is a ship / shard
    bool isAShip = false;
    bool isAShard = false;
 
-   if(dynamic_cast<AsteroidShip*>(*target) != NULL)
+   // Only consider any weapon if it's purchased & has ammo.
+   bool considerTractor = (ship->weapons[TRACTOR_WEAPON_INDEX]->purchased && (ship->getWeapon(TRACTOR_WEAPON_INDEX)->curAmmo != 0));
+   bool considerBlaster = (ship->weapons[BLASTER_WEAPON_INDEX]->purchased && (ship->getWeapon(BLASTER_WEAPON_INDEX)->curAmmo != 0));
+   bool considerRailgun = (ship->weapons[RAILGUN_WEAPON_INDEX]->purchased && (ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo != 0));
+   bool considerElectricity = (ship->weapons[ELECTRICITY_WEAPON_INDEX]->purchased && (ship->getWeapon(ELECTRICITY_WEAPON_INDEX)->curAmmo != 0));
+   bool considerTimedBomber = (ship->weapons[TIMEDBOMBER_WEAPON_INDEX]->purchased && (ship->getWeapon(TIMEDBOMBER_WEAPON_INDEX)->curAmmo != 0));
+   bool considerRemoteBomber = (ship->weapons[REMOTEBOMBER_WEAPON_INDEX]->purchased && (ship->getWeapon(REMOTEBOMBER_WEAPON_INDEX)->curAmmo != 0));
+   bool considerEnergy = (ship->weapons[ENERGY_WEAPON_INDEX]->purchased && (ship->getWeapon(ENERGY_WEAPON_INDEX)->curAmmo != 0));
+
+   // Zero out the list of weapon weights so we can build them up.
+   for(int x = 0; x < 7; x++)
+      weaponWeights[x] = 0.0;
+
+   /*
+   printf("ConsiderTractor is %s\n", (considerTractor)? "true":"false");
+   printf("ConsiderBlaster is %s\n", (considerBlaster)? "true":"false");
+   printf("ConsiderRailgun is %s\n", (considerRailgun)? "true":"false");
+   printf("ConsiderElectricity %s\n", (considerElectricity)? "true":"false");
+   printf("ConsiderTimedBomber is %s\n", (considerTimedBomber)? "true":"false");
+   printf("ConsiderRemoteBomber is %s\n", (considerRemoteBomber)? "true":"false");
+   printf("ConsiderEnergy is %s\n", (considerEnergy)? "true":"false");
+   */
+
+   if (dynamic_cast<AsteroidShip*>(*target) != NULL)
       isAShip = true;
 
    // If the target is a shard, only ever choose the tractor beam.
-   if(dynamic_cast<Shard*>(*target) != NULL) {
+   if (dynamic_cast<Shard*>(*target) != NULL) {
       isAShard = true;
       ship->selectWeapon(TRACTOR_WEAPON_INDEX);
       chosenWeapon = ship->getCurrentWeapon();
       return;
    }
 
-   // Zero out the list of weapon weights so we can build them up.
-   for(int x = 0; x < 7; x++)
-      weaponWeights[x] = 0.0;
-   
-   // Consider target's radius.
-   weaponWeights[TRACTOR_WEAPON_INDEX] += (*target)->radius;
-   weaponWeights[BLASTER_WEAPON_INDEX] += (*target)->radius;
-   weaponWeights[RAILGUN_WEAPON_INDEX] += (*target)->radius;
-   weaponWeights[ELECTRICITY_WEAPON_INDEX] += (*target)->radius;
-   weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += (*target)->radius;
-   weaponWeights[REMOTEBOMBER_WEAPON_INDEX] += (*target)->radius;
-   weaponWeights[ENERGY_WEAPON_INDEX] += (*target)->radius;
-
-   // Consider target's distance.
    // Objects that are closer should be weighted higher.
+   // dist will be used for each distance weighting calculation.
    vec = (*(*target)->position - *ship->position);
    // Make sure dist is positive, so that we don't get a negative weight.
    double dist = vec * vec;
    if (dist < 0.0)
      dist *= -1;
-   weaponWeights[TRACTOR_WEAPON_INDEX] += dist;
-   weaponWeights[BLASTER_WEAPON_INDEX] += dist;
-   weaponWeights[RAILGUN_WEAPON_INDEX] += dist;
-   weaponWeights[ELECTRICITY_WEAPON_INDEX] += dist;
-   weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += dist;
-   weaponWeights[REMOTEBOMBER_WEAPON_INDEX] += dist;
-   weaponWeights[ENERGY_WEAPON_INDEX] += dist;
+
+   /* We would consider the tractor beam here, but it's already definitively
+    * chosen up above, if the target is a shard.
+    */
+
+   // Only add up weights for the blaster if we're considering it.
+   if (considerBlaster) {
+      // Consider the target's radius.
+      weaponWeights[BLASTER_WEAPON_INDEX] += 1.5 * (*target)->radius;
+
+      // Consider the target's distance.
+      weaponWeights[BLASTER_WEAPON_INDEX] += dist;
+   }
+
+   // Only add up weights for the railgun if we're considering it.
+   if (considerRailgun) {
+      // Consider the target's radius. Smaller is much better.
+      weaponWeights[RAILGUN_WEAPON_INDEX] += 2 / (*target)->radius;
+
+      // Consider the target's distance. Further is much better.
+      weaponWeights[RAILGUN_WEAPON_INDEX] += dist;
+   }
+
+   // Only add up weights for the electricity gun if we're considering it.
+   if (considerElectricity) {
+      // Consider the target's radius.
+      weaponWeights[ELECTRICITY_WEAPON_INDEX] += (*target)->radius;
+
+      // Consider the target's distance.
+      weaponWeights[ELECTRICITY_WEAPON_INDEX] += dist;
+   }
+
+   // Only add up weights for the timed bomber if we're considering it.
+   if (considerTimedBomber) {
+      // Consider the target's radius.
+      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 1 / (*target)->radius;
+
+      // Consider the target's distance.
+      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] +=  2 * dist;
+   }
+
+   // Only add up weights for the timed bomber if we're considering it.
+   if (considerRemoteBomber) {
+      // Consider the target's radius. Smaller is better.
+      weaponWeights[REMOTEBOMBER_WEAPON_INDEX] += 1 / (*target)->radius;
+
+      // Consider the target's distance. Further is better.
+      weaponWeights[REMOTEBOMBER_WEAPON_INDEX] += 2 * dist;
+   }
+
+   // Only add up weights for the energy weapon if we're considering it.
+   if (considerEnergy) {
+      // Consider the target's radius.
+      weaponWeights[ENERGY_WEAPON_INDEX] += (*target)->radius;
+
+      // Consider the target's distance.
+      weaponWeights[ENERGY_WEAPON_INDEX] += dist;
+   }
    
+   /*
+   for(int i = 0; i < NUMBER_OF_WEAPONS; i++)
+      printf("weapons[%d] was weighted as: %f\n", i, weaponWeights[i]);
+   */
 
    // Select the weapon index which has the highest weight.
    ship->selectWeapon(maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS));
    chosenWeapon = ship->getCurrentWeapon();
-   */
+
+   int ndx =  maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS);
+
+   //printf("Chose %d, with weight %f\n", ndx, weaponWeights[ndx]);
 
 
    
+   /*
    if (*target != NULL) {
       if ((dynamic_cast<Shard*>(*target)) != NULL) {
          ship->selectWeapon(TRACTOR_WEAPON_INDEX);
@@ -182,6 +255,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    }
 
    chosenWeapon = ship->getCurrentWeapon();
+   */
 }
 
 Object3D* ShootingAI::chooseTarget() {
@@ -289,7 +363,7 @@ Object3D* ShootingAI::chooseTarget() {
      //printf("curweight summed up to %f\n", curWeight);
 
      if (isAShard)
-        curWeight *= ship->getWeapon(2)->curAmmo != 0;
+        curWeight *= ship->getWeapon(TRACTOR_WEAPON_INDEX)->curAmmo != 0;
       
      if (maxWeight < 0 || curWeight > maxWeight) {
         maxWeight = curWeight;
