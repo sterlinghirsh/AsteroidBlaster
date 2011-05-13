@@ -263,7 +263,7 @@ void StoreMenu::draw() {
       
       // buy engine upgrade
       out.str(""); 
-      if (nextEngineLevel <= 5) {
+      if (nextEngineLevel <= gameState->ship->engineMax) {
          out << "Upgrade Engine Level to " << nextEngineLevel << " $" << nextEngineLevel*gameState->ship->enginePrice;
          engineShipText->selectable = true;
       } else {
@@ -273,7 +273,7 @@ void StoreMenu::draw() {
       engineShipText->updateBody(out.str());
       // buy regen health upgrade
       out.str(""); 
-      if (nextRegenHealthLevel <= 5) {
+      if (nextRegenHealthLevel <= gameState->ship->regenHealthLevelMax) {
          out << "Upgrade Regen Health Level to " << nextRegenHealthLevel << " $" << nextRegenHealthLevel*gameState->ship->regenHealthUpgradePrice;
          regenHealthShipText->selectable = true;
       } else {

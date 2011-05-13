@@ -100,6 +100,23 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    maxUpAccel = 5;
    maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
 
+   // The ship's health. This number is displayed to the screen.
+   health = 100;
+   healthMax = 100;
+   healthUpgradeAmount = 5;
+   healthUpgradePrice = 5;
+   healthPrice = 2;
+   healthAmount = 10;
+
+   regenHealthLevel = 0;
+   regenHealthUpgradePrice = 10;
+   regenHealthLevelMax = 10;
+
+   //engine upgrade, terminal speed is raised when leved up
+   engineUpgrade = 0;
+   engineMax = 5;
+   enginePrice = 10;
+
    // Create our Radar
    radar = new Radar(this);
 
@@ -180,25 +197,10 @@ void AsteroidShip::reInitialize() {
    isFiring = false;
    shotPhi = shotTheta = 0;
 
-   // The ship's health. This number is displayed to the screen.
-   health = 100;
-   healthMax = 100;
-   healthUpgradeAmount = 5;
-   healthUpgradePrice = 5;
-   healthPrice = 2;
-   healthAmount = 10;
-
-   regenHealthLevel = 0;
-   regenHealthUpgradePrice = 10;
-   regenHealthLevelMax = 5;
-
-   //engine upgrade, terminal speed is raised when leved up
-   engineUpgrade = 0;
-   engineMax = 5;
-   enginePrice = 10;
-
    // The ship's currently selected weapon.
    currentWeapon = 1; // Blaster
+
+   health = healthMax;
 
    accelerationStartTime = doubleTime();
    particlesEmitted = 0;
@@ -469,6 +471,9 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    health += regenHealthLevel * timeDiff;
+   if (health > healthMax) {
+      health = healthMax;
+   }
 
    if (shooter->isEnabled()) {
       shooter->think(timeDiff);
