@@ -9,7 +9,7 @@ ifeq ($(UNAME), Linux)
    BOOSTLIB=/home/shirsh/boost/stage/lib
    SDL_LIBS=$(shell "sdl-config" "--libs")
    SDL_CFLAGS=$(shell "sdl-config" "--cflags")
-   BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath=$(BOOSTLIB) -Bstatic -lboost_iostreams -lboost_system -lboost_serialization  $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
+   BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath=$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt  $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
    PLATFORMSPECIFICCFLAGS=-I./Libraries/glew-1.5.8/include -I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_mixer-1.2.11 -I./Libraries/SDL_image-1.2.10
    PLATFORMSPECIFICLDFLAGS= -L./Libraries/glew-1.5.8/lib -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_mixer-1.2.11/build/.libs/ -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_mixer-1.2.11/build/.libs/ -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs  -lGL -lGLU -lSDL -lGLEW -lglut -lpthread
 else
@@ -39,7 +39,7 @@ ITEMSFILES=Items/Drawable.cpp Items/Object3D.cpp Items/Asteroid3D.cpp Items/Aste
 SHOTSFILES=Shots/Shot.cpp Shots/BeamShot.cpp Shots/ProjectileShot.cpp Shots/TractorBeamShot.cpp Shots/ElectricityShot.cpp Shots/LawnMowerShot.cpp Shots/RamShot.cpp Shots/AntiInertiaShot.cpp Shots/ExplosiveShot.cpp Shots/EnergyShot.cpp Shots/TimedBombShot.cpp Shots/RemoteBombShot.cpp
 
 AIFILES=AI/FlyingAI.cpp AI/ShootingAI.cpp 
-NETWORKFILES=Network/ClientCommand.cpp
+NETWORKFILES=Network/ClientCommand.cpp Network/UDP_Connection.cpp
 
 WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/TractorBeam.cpp Weapons/Electricity.cpp Weapons/LawnMower.cpp Weapons/Ram.cpp Weapons/AntiInertia.cpp Weapons/TimedBomber.cpp Weapons/Energy.cpp Weapons/RemoteBomber.cpp
 
@@ -50,7 +50,7 @@ FILES=$(UTILITYFILES) $(MENUFILES) $(GRAPHICSFILES) $(ITEMSFILES) $(SHOTSFILES) 
 
 OBJECTS=$(FILES:.cpp=.o)
 
-all: $(FILES) AsteroidBlaster
+all: $(FILES) AsteroidBlaster Server Client
 
 AsteroidBlaster: AsteroidBlaster.o $(OBJECTS)
 	$(CC) $(LDFLAGS) AsteroidBlaster.o $(OBJECTS) -o $@
@@ -91,7 +91,7 @@ gdb:
 	gdb ./${PROGNAME}
 
 clean:
-	rm -f *.o */*.o ${PROGNAME} ${PROGNAME}.dSYM
+	rm -f *.o */*.o ${PROGNAME} ${PROGNAME}.dSYM Client Server
 
 gprof:
 	gprof ${PROGNAME} gmon.out | less

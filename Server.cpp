@@ -1,96 +1,68 @@
-//
-// server.cpp
-// ~~~~~~~~~~
-//
-// Copyright (c) 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
+/**
+ * @file
+ * Server class implementation.
+ * <pre>
+ * This class is multithreaded. It uses UDP_Connection to handle the networking.
+ * </pre>
+ *
+ * @author Ryuho Kudo
+ */
 
-#include <ctime>
-#include <iostream>
-#include <string>
-#include <boost/array.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/asio.hpp>
 
-#include "Network/ClientCommand.h"
+#include "Server.h"
 
-using boost::asio::ip::udp;
+UDP_Connection* udpConnection;
 
-std::string make_daytime_string()
-{
-  using namespace std; // For time_t, time and ctime;
-  time_t now = time(0);
-  return ctime(&now);
+Server::Server(boost::asio::io_service& io) : 
+      mainStrand(io), 
+      gameThread(io, boost::posix_time::seconds(0)), 
+      networkThread(io, boost::posix_time::seconds(0)),
+      mainCount(0),
+      count1(0),
+      count2(0) {
+   gameThread.async_wait(mainStrand.wrap(boost::bind(&Server::gameFunction, this)));
+   networkThread.async_wait(mainStrand.wrap(boost::bind(&Server::networkFunction, this)));
 }
 
-class udp_server
-{
-public:
-  udp_server(boost::asio::io_service& io_service)
-    : socket_(io_service, udp::endpoint(udp::v4(), 5000))
-  {
-    start_receive();
-  }
+Server::~Server() {
+   std::cout << "Final count is " << mainCount << "\n";
+}
 
-private:
-   void start_receive() {
-      socket_.async_receive_from(
-         boost::asio::buffer(recv_buffer_), remote_endpoint_,
-         boost::bind(&udp_server::handle_receive, this,
-         boost::asio::placeholders::error,
-         boost::asio::placeholders::bytes_transferred));
+void Server::gameFunction() {
+   return;
+   std::cout << "Timer 1: " << mainCount << "\n";
+   ++mainCount;
+   ++count1;
+
+   if (udpConnection->receivedMsg.size() >= 10) {
+      std::cout << "OMG THIS IS MORE THAN TEN" << "\n";
    }
 
-   void handle_receive(const boost::system::error_code& error, std::size_t ) {
-      if (!error || error == boost::asio::error::message_size) {
-         boost::shared_ptr<std::string> message(new std::string(make_daytime_string()));
-         socket_.async_send_to(boost::asio::buffer(*message), remote_endpoint_,
-            boost::bind(&udp_server::handle_send, this, message,
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred));
+   gameThread.expires_at(gameThread.expires_at() + boost::posix_time::seconds(1));
+   gameThread.async_wait(mainStrand.wrap(boost::bind(&Server::gameFunction, this)));
+}
 
-         //std::cout << "recv_buf.data()=|" << recv_buffer_.data() << "|" << std::endl;
-         ClientCommand test;
-         int i = 0;
-         std::istringstream iss(recv_buffer_.data());
-         boost::archive::text_iarchive ia(iss);
-         ia >> i >> test;
+void Server::networkFunction() {
+   return;
+   if (count2 < 5) {
+      std::cout << "Timer 2: " << mainCount << "\n";
+      ++mainCount;
+      ++count2;
 
-         std::cout << "i = " << i << std::endl;
-         test.print();
-         
-         start_receive();
-      }
+      networkThread.expires_at(networkThread.expires_at() + boost::posix_time::seconds(0));
+      networkThread.async_wait(mainStrand.wrap(boost::bind(&Server::networkFunction, this)));
    }
+}
 
-  void handle_send(boost::shared_ptr<std::string> /*message*/,
-      const boost::system::error_code& /*error*/,
-      std::size_t /*bytes_transferred*/){
-      
-  }
+int main() {
+   boost::asio::io_service io;
 
-  udp::socket socket_;
-  udp::endpoint remote_endpoint_;
-  boost::array<char, 1400> recv_buffer_;
-};
+   Server p(io);
+   udpConnection = new UDP_Connection(io);
+   boost::thread t(boost::bind(&boost::asio::io_service::run, &io));
+   io.run();
+   t.join();
 
-int main()
-{
-  try
-  {
-    boost::asio::io_service io_service;
-    udp_server server(io_service);
-    io_service.run();
-  }
-  catch (std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-  }
-
-  return 0;
+   return 0;
 }
 

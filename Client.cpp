@@ -20,6 +20,7 @@
 
 using boost::asio::ip::udp;
 
+int clientID;
 
 void mySleep(unsigned int mseconds) {
     clock_t goal = mseconds + clock();
@@ -42,22 +43,65 @@ int main(int argc, char* argv[]) {
       udp::socket socket(io_service);
       socket.open(udp::v4());
 
-      int i = 1000;
+      int i = 0;
+
+      // do the hand Shake!
+      {
+         // First construct an init packet with packet id of 0 then send it
+         std::ostringstream oss;
+         boost::archive::text_oarchive oa(oss);
+         oa << i;
+         std::cout << "Sending1: " << oss.str() << std::endl;
+         socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
+
+         // then wait for the answer back...
+         boost::array<char, 80> recv_buf;
+         udp::endpoint sender_endpoint;
+         size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
+
+         // decode the answer, and grab the assigned clientID
+         std::cout << "raw1: " << recv_buf.data() << std::endl;
+         std::istringstream iss(recv_buf.data());
+         boost::archive::text_iarchive ia(iss);
+         std::cout << "Receiving1: " << oss.str() << std::endl;
+         ia >> clientID;
+
+         // then do handshake 2
+         oss.str("");
+         i = 1;
+         oa << i << clientID;
+         std::cout << "Sending2: " << oss.str() << std::endl;
+         socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
+
+         // then wait for the answer back...
+         len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
+
+         // decode the answer, and make sure that the packet id is 2
+         iss.str(recv_buf.data());
+         std::cout << "Receiving2: " << oss.str() << std::endl;
+         int temp;
+         ia >> temp;
+         if (temp == 2) {
+            std::cout << "Handshake Complete! I am now a client with ID of " << clientID << std::endl;
+         }
+      }
+
       ClientCommand test;
 
 
       while (1) {
-         std::ostringstream oss;
-         
-         {
-            boost::archive::text_oarchive oa(oss);
-            oa << i << (const ClientCommand)test;
+         if ( i < 20 ) {
+            std::ostringstream oss;
+            
+            {
+               boost::archive::text_oarchive oa(oss);
+               oa << i << (const ClientCommand)test;
+            }
+
+            std::cout << "oss.str()=" << oss.str() << std::endl;
+
+            socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
          }
-
-         
-         std::cout << "oss.str()=" << oss.str() << std::endl;
-
-         socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
 
          boost::array<char, 80> recv_buf;
          udp::endpoint sender_endpoint;
@@ -65,9 +109,9 @@ int main(int argc, char* argv[]) {
 
          std::cout.write(recv_buf.data(), len);
          std::cout << "recv_buf.data()=|" << recv_buf.data() << "| with length of " << len << std::endl;
-         //std::cout << recv_buf[0] << "| with length of " << len << std::endl;
+         std::cout << recv_buf[0] << "| with length of " << len << std::endl;
          i++;
-         mySleep(100000);
+         sleep(1);
       }
    } catch (std::exception& e) {
       std::cerr << e.what() << std::endl;
