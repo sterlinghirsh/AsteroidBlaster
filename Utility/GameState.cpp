@@ -53,7 +53,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu) :
       spectatorCamera = new Camera(false);
       //make it look at the center of the map for spectator mode
       spectatorCamera->lookAt(0.0, 0.0, 0.0);
-      spectatorSpeed = 0.5;
+      spectatorSpeed = 0.2;
       spectatorRadius = 120.0;
 
       cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
