@@ -35,6 +35,8 @@ int main(int argc, char* argv[]) {
          std::cerr << "Usage: client <host>" << std::endl;
          return 1;
       }
+      localClientCommand.forwardAcceleration = 1;
+
 
       boost::asio::io_service io_service;
 
@@ -53,7 +55,6 @@ int main(int argc, char* argv[]) {
          std::ostringstream oss;
          boost::archive::text_oarchive oa(oss);
          oa << i;
-         std::cout << "Sending1: " << oss.str() << std::endl;
          socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
       }
 
@@ -108,14 +109,6 @@ int main(int argc, char* argv[]) {
 
          socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
 
-         boost::array<char, 80> recv_buf;
-         udp::endpoint sender_endpoint;
-         size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
-
-         std::cout.write(recv_buf.data(), len);
-         std::cout << "recv_buf.data()=|" << recv_buf.data() << "| with length of " << len << std::endl;
-         std::cout << recv_buf[0] << "| with length of " << len << std::endl;
-         i++;
          sleep(1);
       }
    } catch (std::exception& e) {
