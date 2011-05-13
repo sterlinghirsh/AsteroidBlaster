@@ -45,14 +45,26 @@ WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/
 HUDFILES=HUD/ProgressBar.cpp HUD/Minimap.cpp HUD/Screen.cpp HUD/WeaponDisplay.cpp
 PARTICLEFILES=Particles/Particle.cpp Particles/BlasterShotParticle.cpp Particles/EngineParticle.cpp Particles/BlasterImpactParticle.cpp Particles/TractorAttractionParticle.cpp Particles/ElectricityImpactParticle.cpp Particles/ShardParticle.cpp
 TEXTFILES=Text/Text.cpp Text/GameMessage.cpp
-FILES=AsteroidBlaster.cpp $(UTILITYFILES) $(MENUFILES) $(GRAPHICSFILES) $(ITEMSFILES) $(SHOTSFILES) $(AIFILES) $(NETWORKFILES) $(WEAPONSFILES) $(HUDFILES) $(PARTICLEFILES) $(TEXTFILES)
+FILES=$(UTILITYFILES) $(MENUFILES) $(GRAPHICSFILES) $(ITEMSFILES) $(SHOTSFILES) $(AIFILES) $(NETWORKFILES) $(WEAPONSFILES) $(HUDFILES) $(PARTICLEFILES) $(TEXTFILES)
 
 OBJECTS=$(FILES:.cpp=.o)
 
-all: $(FILES) $(PROGNAME)
+all: $(FILES) AsteroidBlaster
 
-$(PROGNAME): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+AsteroidBlaster: AsteroidBlaster.o $(OBJECTS)
+	$(CC) $(LDFLAGS) AsteroidBlaster.o $(OBJECTS) -o $@
+AsteroidBlaster.o: AsteroidBlaster.cpp
+	$(CC) $(CFLAGS) $< -o $@
+
+Client: Client.o $(OBJECTS)
+	$(CC) $(LDFLAGS) Client.o $(OBJECTS) -o $@
+Client.o: Client.cpp
+	$(CC) $(CFLAGS) $< -o $@
+
+Server: Server.o $(OBJECTS)
+	$(CC) $(LDFLAGS) Server.o $(OBJECTS) -o $@
+Server.o: Server.cpp
+	$(CC) $(CFLAGS) $< -o $@
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
