@@ -8,9 +8,6 @@
 #include <list>
 #include <sstream>
 
-// Constant value used in other files.
-#define WORLD_SIZE 80.00
-
 #include "Utility/GlobalUtility.h"
 #include "Utility/Point3D.h"
 #include "Items/Asteroid3D.h"
@@ -34,35 +31,9 @@
 #include "SDL.h"
 #include "SDL_mixer.h"
 
-using namespace std;
-
 GameState* gameState;
-
-// True while the game is in play.
-bool fullScreen = false;
-
 // the absolute time update was last called
 static double lastUpdateTime = 0;
-// the absolute time update was last called
-//static double lastDrawTime = 0;
-
-// This double contains the FPS to be printed to the screen each frame.
-
-// TODO: Move this out of here.
-GLfloat headlight_pos[4] = {(float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), 1.0f};
-GLfloat headlight_amb[4] = {0.1f, 0.1f, 0.1f, 1.0f};
-GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
-GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
-
-GLfloat minimaplight_pos[4] = {0, 0, 0, 1};
-GLfloat minimaplight_amb[4] = {1, 1, 1, 0.5};
-GLfloat minimaplight_diff[4] = {1, 1, 1, 0.5};
-GLfloat minimaplight_spec[4] = {1, 1, 1, 0.5};
-
-GLfloat ambientlight_pos[4] = {0, 0, 0, 1};
-GLfloat ambientlight_amb[4] = {1, 1, 1, 0.5};
-GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
-GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
 
 void init() {
    // Initialize the SDL video/audio system
@@ -182,6 +153,22 @@ void init() {
    //glEnable(GL_POLYGON_SMOOTH);
 
    //initialize light
+   GLfloat headlight_pos[4] = {(float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), 1.0f};
+   GLfloat headlight_amb[4] = {0.1f, 0.1f, 0.1f, 1.0f};
+   GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
+   GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
+
+   GLfloat minimaplight_pos[4] = {0, 0, 0, 1};
+   GLfloat minimaplight_amb[4] = {1, 1, 1, 0.5};
+   GLfloat minimaplight_diff[4] = {1, 1, 1, 0.5};
+   GLfloat minimaplight_spec[4] = {1, 1, 1, 0.5};
+
+   GLfloat ambientlight_pos[4] = {0, 0, 0, 1};
+   GLfloat ambientlight_amb[4] = {1, 1, 1, 0.5};
+   GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
+   GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
+
+
    //glEnable(GL_LIGHT0);
    //glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
    //glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
@@ -298,7 +285,7 @@ void load() {
    SoundEffect::Add("Sounds/ChargeShotCharge.ogg", "ChargeShotCharge");
    SoundEffect::Add("Sounds/ChargeShotLoop.ogg", "ChargeShotLoop");
    SoundEffect::Add("Sounds/ChargeShotFire.wav", "ChargeShotFire");
-   cout << "Load: finished" << endl;
+   std::cout << "Load: finished" << std::endl;
 }
 
 void update(GameState* gameState, double timeDiff) {

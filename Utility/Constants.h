@@ -8,6 +8,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#define WORLD_SIZE 80.00
+
 #define VERT_FOV 45.0
 #define LEFT_ALIGN 0
 #define CENTERED 1

@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
             oa << i << (const ClientCommand)localClientCommand;
          }
 
-         std::cout << "oss.str()=" << oss.str() << std::endl;
+         std::cout << "sending packet: " << oss.str() << std::endl;
 
          socket.send_to(boost::asio::buffer(oss.str()), receiver_endpoint);
 
