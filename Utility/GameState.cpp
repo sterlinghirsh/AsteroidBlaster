@@ -772,11 +772,12 @@ void GameState::addLevelMessage() {
 
 void GameState::nextLevel() {
    SoundEffect::stopAllSoundEffect();
-   Music::stopMusic();
-   Music::playMusic("8-bit3.ogg");
+
 
    if (!ship->shooter->isEnabled() && !ship->flyingAI->isEnabled()) {
       storeMenu->menuActive = true;
+      Music::stopMusic();
+      Music::playMusic("8-bit3.ogg");
    } else {
       setLevelTimer();
    }
