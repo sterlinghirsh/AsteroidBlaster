@@ -17,7 +17,7 @@ else
    BOOSTLIB=/opt/local/lib
    SDL_LIBS=$(shell "/sw/bin/sdl-config" "--libs")
    SDL_CFLAGS=$(shell "/sw/bin/sdl-config" "--cflags")
-   BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams -lboost_system -lboost_serialization  $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
+   BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
    PLATFORMSPECIFICCFLAGS=-I /opt/local/include
    PLATFORMSPECIFICLDFLAGS=$(BOOST_LDFLAGS) -framework OpenGL -Wl,-framework,Cocoa
 endif

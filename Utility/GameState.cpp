@@ -807,8 +807,6 @@ void GameState::nextLevel() {
       setLevelTimer();
    }
 
-   custodian.atLevelEnd();
-
    minimap = new Minimap(ship);
    gameIsRunning = true;
    // The current level is over when we're advancing to the next level.

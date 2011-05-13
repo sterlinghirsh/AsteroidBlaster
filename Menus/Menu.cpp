@@ -4,6 +4,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Menus/Menu.h"
 #include "Graphics/Texture.h"
+#include "Text/Text.h"
 
 Menu::Menu() {
    menuActive = false;
