@@ -5,6 +5,7 @@
 #include "Utility/GameState.h"
 #include "Menus/SettingsMenu.h"
 #include "Graphics/Texture.h"
+#include "Text/Text.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 

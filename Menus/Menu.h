@@ -3,8 +3,9 @@
 #define __MENU_H__
 
 
-#include "Text/Text.h"
 #include "Utility/InputManager.h"
+
+class Text;
 
 class Menu : public InputReceiver {
    public:

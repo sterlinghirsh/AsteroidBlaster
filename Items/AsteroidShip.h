@@ -47,7 +47,11 @@ class AsteroidShip : public Object3D {
    //public variables------------------------------
    public:
       int score;
-      int nShards;
+
+      int nShards; // Total number of shards the ship has.
+      int bankedShards; // Shards that were collected in previous rounds.
+      int curRoundShards; // Shards that were collected this round.
+
       int engineUpgrade;
       int engineMax;
       int enginePrice;
@@ -199,7 +203,8 @@ class AsteroidShip : public Object3D {
       std::vector<Weapon*> getWeapons(){ return weapons; }
 
       void readCommand(ClientCommand& command);
-      
+
+      void atLevelEnd();
       
    //private functions------------------------------
    private:

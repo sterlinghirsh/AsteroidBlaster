@@ -8,6 +8,7 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Graphics/Image.h"
+#include "Text/Text.h"
 #include <iostream>
 
 
@@ -70,11 +71,6 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    }
    
    //get ship related text in shipTexts
-   out.str(""); 
-   out << "Buy Ship Health $" << gameState->ship->healthPrice;
-   healthShipText = new Text(out.str(), menuFont, position);
-   shipTexts.push_back(healthShipText);
-   
    
    out.str(""); 
    out << "Upgrade Engine $" << gameState->ship->enginePrice;
@@ -252,9 +248,6 @@ void StoreMenu::draw() {
       shipText->setColor(SDL_BLUE);
       
       position.y = (Sint16) ((gameSettings->GH*(5.0/10.0)));
-      //health
-      healthShipText->setPosition(position);
-      position.y = (Sint16) ((position.y + (gameSettings->GH/10)));
       engineShipText->setPosition(position);
       position.y = (Sint16) ((position.y + (gameSettings->GH/10)));
       maxHealthShipText->setPosition(position);
@@ -373,6 +366,7 @@ void StoreMenu::keyDown(int key) {
       break;
    case SDLK_F10:
       gameState->ship->nShards += 10;
+      gameState->ship->bankedShards += 10;
       break;
    }
 }
@@ -435,15 +429,19 @@ void StoreMenu::mouseDown(int button) {
                   if(shardsOwned >= weaponList[i]->buyPrice()) {
                      std::cout << "bought " << weaponList[i]->getName() << "!" << std::endl;
                      gameState->ship->nShards -= weaponList[i]->buyPrice();
+                     gameState->ship->bankedShards -= weaponList[i]->buyPrice();
+                     // Will we be buying stuff in the middle of the game?
                      weaponList[i]->purchased = true;
                   // not enough money
                   } else {
+                     // TODO: Make this print in the menu.
                      std::cout << "not enough money to buy " << weaponList[i]->getName() << "!" << std::endl;
                   }
                // if it is purchased, and you have enough money, upgrade
                } else if(shardsOwned >= weaponList[i]->buyPrice()) {
                      std::cout << "upgraded " << weaponList[i]->getName() << "!" << std::endl;
                      gameState->ship->nShards -= weaponList[i]->buyPrice();
+                     gameState->ship->bankedShards -= weaponList[i]->buyPrice();
                      weaponList[i]->level++;
                //not enough money
                } else {
@@ -462,6 +460,7 @@ void StoreMenu::mouseDown(int button) {
                   if(shardsOwned >= weaponList[i]->ammoPrice) {
                      weaponList[i]->curAmmo += weaponList[i]->ammoAmount;
                      gameState->ship->nShards -= weaponList[i]->ammoAmount;
+                     gameState->ship->bankedShards -= weaponList[i]->ammoAmount;
                   } else {
                      std::cout << "not enough money to buy ammo for " << weaponList[i]->getName() << "!" << std::endl;
                   }
@@ -472,21 +471,17 @@ void StoreMenu::mouseDown(int button) {
          double health = gameState->ship->health;
          int nextEngineLevel = gameState->ship->engineUpgrade + 1;
          int nextRegenHealthLevel = gameState->ship->regenHealthLevel + 1;
-         if(healthShipText->mouseSelect(x,y) && shardsOwned >= gameState->ship->healthPrice) {
-            if(gameState->ship->healthMax <= (health + gameState->ship->healthAmount)) {
-               gameState->ship->health = gameState->ship->healthMax;
-            } else {
-               gameState->ship->health += gameState->ship->healthAmount;
-            }
-            gameState->ship->nShards -= gameState->ship->healthPrice;
-         } else if(engineShipText->mouseSelect(x,y) && shardsOwned >= gameState->ship->enginePrice*nextEngineLevel) {
+         if(engineShipText->mouseSelect(x,y) && shardsOwned >= gameState->ship->enginePrice*nextEngineLevel) {
             gameState->ship->nShards -= gameState->ship->enginePrice*nextEngineLevel;
+            gameState->ship->bankedShards -= gameState->ship->enginePrice*nextEngineLevel;
             gameState->ship->engineUpgrade += 1;
          } else if(maxHealthShipText->mouseSelect(x,y) && shardsOwned >= gameState->ship->healthMaxUpgradePrice()) {
             gameState->ship->nShards -= gameState->ship->healthMaxUpgradePrice();
+            gameState->ship->bankedShards -= gameState->ship->healthMaxUpgradePrice();
             gameState->ship->healthMax += gameState->ship->healthUpgradeAmount;
          } else if(regenHealthShipText->mouseSelect(x,y) && shardsOwned >= nextRegenHealthLevel*gameState->ship->regenHealthUpgradePrice) {
             gameState->ship->nShards -= nextRegenHealthLevel*gameState->ship->regenHealthUpgradePrice;
+            gameState->ship->bankedShards -= nextRegenHealthLevel*gameState->ship->regenHealthUpgradePrice;
             gameState->ship->regenHealthLevel += 1;
          }
       } else {

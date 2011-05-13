@@ -4,7 +4,6 @@
 
 
 #include "Menus/Menu.h"
-#include "Utility/InputManager.h"
 
 class GameState;
 
@@ -31,7 +30,6 @@ class StoreMenu : public Menu {
            *weaponsText,
            *ammoText,
            *shipText,
-           *healthShipText,
            *engineShipText,
            *maxHealthShipText,
            *regenHealthShipText;

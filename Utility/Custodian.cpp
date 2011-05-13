@@ -141,6 +141,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
       a->health = a->healthMax;
 
    a->nShards++;
+   a->curRoundShards++;
    a->score += 69;
    b->shouldRemove = true;
    SoundEffect::playSoundEffect("CrystalCollect.wav");
@@ -733,10 +734,22 @@ void Custodian::update() {
  */
 void Custodian::add(Object3D* objectIn) {
    objectsToAdd.push_back(objectIn);
-   if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
+
+   Asteroid3D* asteroid;
+   Shard* shard;
+   Shot* shot;
+   AsteroidShip* ship;
+
+   if ((asteroid = dynamic_cast<Asteroid3D*>(objectIn)) != NULL) {
       asteroidCount++;
-   } else if (dynamic_cast<Shard*>(objectIn) != NULL) {
+      asteroids.insert(asteroid);
+   } else if ((shard = dynamic_cast<Shard*>(objectIn)) != NULL) {
       shardCount++;
+      shards.insert(shard);
+   } else if ((shot = dynamic_cast<Shot*>(objectIn)) != NULL) {
+      shots.insert(shot);
+   } else if ((ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
+      ships.insert(ship);
    }
 }
 
@@ -749,11 +762,24 @@ void Custodian::remove(Object3D* objectIn) {
    objectsByMinX[objectIn->minXRank] = NULL;
    objectsByMaxX[objectIn->maxXRank] = NULL;
    objectsByID.erase(objectIn->id);
-   if (dynamic_cast<Asteroid3D*>(objectIn) != NULL) {
+   
+   Asteroid3D* asteroid;
+   Shard* shard;
+   Shot* shot;
+   AsteroidShip* ship;
+
+   if ((asteroid = dynamic_cast<Asteroid3D*>(objectIn)) != NULL) {
       asteroidCount--;
-   } else if (dynamic_cast<Shard*>(objectIn) != NULL) {
+      asteroids.erase(asteroid);
+   } else if ((shard = dynamic_cast<Shard*>(objectIn)) != NULL) {
       shardCount--;
+      shards.erase(shard);
+   } else if ((shot = dynamic_cast<Shot*>(objectIn)) != NULL) {
+      shots.erase(shot);
+   } else if ((ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
+      ships.erase(ship);
    }
+
    delete objectIn;
 }
 
@@ -839,6 +865,12 @@ void Custodian::clear() {
    objectsByMinX.clear();
    objectsByMaxX.clear();
    objectsByID.clear();
+
+   ships.clear();
+   asteroids.clear();
+   shards.clear();
+   shots.clear();
+
    asteroidCount = 0;
    shardCount = 0;
 }

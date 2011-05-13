@@ -8,6 +8,7 @@
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Items/AsteroidShip.h"
+#include "Text/Text.h"
 #include <iostream>
 #include <fstream>
 

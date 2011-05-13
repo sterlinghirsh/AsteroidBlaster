@@ -93,6 +93,8 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
 
    // The number of shard collected. This number is displayed to the screen.
    nShards = 0;
+   bankedShards = 0;
+   curRoundShards = 0;
 
    // The ship's max motion parameters.
    maxForwardAccel = 10;
@@ -420,9 +422,10 @@ void AsteroidShip::update(double timeDiff) {
          }
 
          // Release all the shards.
-         while (nShards > 0) {
+         while (curRoundShards > 0) {
             custodian->add(makeShard());
             --nShards;
+            --curRoundShards;
          }
       }
       
@@ -1682,4 +1685,13 @@ void AsteroidShip::readCommand(ClientCommand& command) {
 
    // This works as long as VERT_FOV is the same on both sides.
    updateShotDirection(command.mouseX, command.mouseY);
+}
+
+/**
+ * This is called on the ship when the level ends.
+ */
+void AsteroidShip::atLevelEnd() {
+   bankedShards += curRoundShards;
+   curRoundShards = 0;
+   health = healthMax;
 }

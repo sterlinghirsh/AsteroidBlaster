@@ -18,6 +18,10 @@
 // Incomplete class declaration so we can use pointers.
 class Object3D;
 class GameState;
+class Asteroid3D;
+class AsteroidShip;
+class Shard;
+class Shot;
 
 struct CollisionBase;
 
@@ -45,11 +49,21 @@ class Custodian {
 
       Object3D* operator[] (unsigned i);
 
+      // Maybe these should be private with accessors?
+      std::set<Asteroid3D*> asteroids;
+      std::set<Shard*> shards;
+      std::set<Shot*> shots;
+      std::set<AsteroidShip*> ships;
+
    private:
       unsigned nextID;
       std::vector<Object3D*> objectsByMinX;
       std::vector<Object3D*> objectsByMaxX;
       std::map<unsigned, Object3D*> objectsByID;
+
+      // Later, for networking.
+      //std::map<unsigned, AsteroidShip*> shipsByClientID;
+
       std::list<Object3D*> objectsToAdd;
       const GameState* gameState;
       void remove(Object3D* objectIn);

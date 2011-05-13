@@ -775,6 +775,29 @@ void GameState::addLevelMessage() {
 void GameState::nextLevel() {
    SoundEffect::stopAllSoundEffect();
 
+   std::set<AsteroidShip*>::iterator shipIter;
+
+   for (shipIter = custodian.ships.begin(); shipIter != custodian.ships.end(); ++shipIter) {
+      (*shipIter)->atLevelEnd();
+   }
+
+   std::set<Asteroid3D*>::iterator asteroidIter;
+   
+   for (asteroidIter = custodian.asteroids.begin(); asteroidIter != custodian.asteroids.end(); ++asteroidIter) {
+      (*asteroidIter)->shouldRemove = true;;
+   }
+   
+   std::set<Shard*>::iterator shardIter;
+   
+   for (shardIter = custodian.shards.begin(); shardIter != custodian.shards.end(); ++shardIter) {
+      (*shardIter)->shouldRemove = true;;
+   }
+
+   std::set<Shot*>::iterator shotIter;
+   
+   for (shotIter = custodian.shots.begin(); shotIter != custodian.shots.end(); ++shotIter) {
+      (*shotIter)->shouldRemove = true;;
+   }
 
    if (!ship->shooter->isEnabled() && !ship->flyingAI->isEnabled()) {
       storeMenu->menuActive = true;
@@ -1002,6 +1025,7 @@ void GameState::keyDown(int key) {
 
    case SDLK_F10:
       ship->nShards += 10;
+      ship->curRoundShards += 10;
       break;
       // If the user presses F11, give them all of the weapons.
    case SDLK_F11:
