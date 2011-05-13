@@ -80,6 +80,8 @@ class GameState : public InputReceiver {
       double lastDrawTime;
       ClientCommand clientCommand;
       
+      BoundingSpace* cube;
+      
    //private variables------------------------------
    private:
    
@@ -108,7 +110,6 @@ class GameState : public InputReceiver {
 
       Skybox* skybox;
       //Camera* camera;
-      BoundingSpace* cube;
       BoundingSphere* sphere;
       Minimap* minimap;
       Screen* bloomScreen;

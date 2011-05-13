@@ -551,7 +551,7 @@ void Asteroid3D::update(double timeDiff) {
 
          newFace->velocity->addUpdate(newDirection);
 
-         custodian->add(newFace);
+         MeshFace::Add(newFace);
       }
 
       SoundEffect::playSoundEffect("Explosion1.wav");

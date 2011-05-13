@@ -259,8 +259,9 @@ void GameState::update(double timeDiff) {
    // Get updated list.
    objects = custodian.getListOfObjects();
 
-   Particle :: updateParticles(timeDiff);
+   Particle::updateParticles(timeDiff);
    Sprite::updateSprites(timeDiff);
+   MeshFace::updateIndependentFaces(timeDiff);
 
    // Check every object for collisions.
    for (item = objects->begin(); item != objects->end(); ++item) {
@@ -730,6 +731,7 @@ void GameState::reset(bool shouldLoad) {
 
    custodian.clear();
    Particle::Clear();
+   MeshFace::Clear();
 
    curLevel = 1;
    //temp

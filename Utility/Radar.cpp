@@ -7,6 +7,15 @@
 
 #include "Radar.h"
 #include "Items/AsteroidShip.h"
+#include "Particles/Particle.h"
+#include "Graphics/Sprite.h"
+#include "Graphics/MeshFace.h"
+#include "Items/Drawable.h"
+
+// Set up a list iterator to go over a list.
+std::list<Drawable*> :: iterator listIter;
+// Set up a vector iterator to go over a vector.
+std::vector<Object3D*> :: iterator vectorIter;
 
 Point3D* Radar::cameraPosition;
 Vector3D* Radar::viewVector;
@@ -51,8 +60,7 @@ std::list<Drawable*>* Radar :: getMinimapReading(float radius, int& totalItems) 
       checkee = *vectorIter;
       
       // If the object is not a particle & is within the required nearby distance to be drawn
-      if(checkee != NULL && (dynamic_cast<Particle*>(checkee) == NULL) &&
-       checkee->shouldDrawInMinimap) { 
+      if(checkee != NULL && checkee->shouldDrawInMinimap) { 
          ++totalItems;
          if (owner->position->distanceFrom(*(checkee->position)) <= radius) {
             nearList->push_back(checkee);
@@ -95,6 +103,13 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
       allObjects.push_back(*vectorIter);
    }
 
+   // Sprite list iterator.
+   std::list<Sprite*>::iterator spriteIter;
+   // Set up a particle list iterator.
+   std::list<Particle*>::iterator particleIter;
+   // Set up a meshface list iterator.
+   std::list<MeshFace*>::iterator meshFaceIter;
+
    // TODO: Reverse this: get the list of particles first, and append objects to that, rather than getting the list of objects, and appending particles to it.
    Drawable* curParticle;
    // Add all of the particles to allObjects.
@@ -105,6 +120,10 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
 
    for (spriteIter = Sprite::sprites.begin(); spriteIter != Sprite::sprites.end(); ++spriteIter) {
       allObjects.push_back(*spriteIter);
+   }
+   
+   for (meshFaceIter = MeshFace::independentFaces.begin(); meshFaceIter != MeshFace::independentFaces.end(); ++meshFaceIter) {
+      allObjects.push_back(*meshFaceIter);
    }
 
    // Sterling:

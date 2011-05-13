@@ -11,13 +11,12 @@
 #include "Items/AsteroidShip.h"
 #include "Utility/ViewFrustum.h"
 #include "Utility/GameState.h"
-#include "Particles/Particle.h"
-#include "Graphics/Sprite.h"
-#include "Items/Drawable.h"
 #include <list>
 
 // Incomplete declaration so we can use the pointer.
 class AsteroidShip;
+class Object3D;
+class Drawable;
 
 class Radar {
    public:
@@ -53,14 +52,6 @@ class Radar {
       AsteroidShip* owner;
       Custodian* custodian;
       ViewFrustum* curFrustum;
-      // Set up a list iterator to go over a list.
-      std::list<Drawable*> :: iterator listIter;
-      // Set up a particle list iterator.
-      std::list<Particle*> :: iterator particleIter;
-      std::list<Sprite*> :: iterator spriteIter;
-      // Set up a vector iterator to go over a vector.
-      std::vector<Object3D*> :: iterator vectorIter;
-
 };
 
 #endif

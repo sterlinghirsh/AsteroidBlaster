@@ -11,11 +11,12 @@
 
 #include "Graphics/MeshPoint.h"
 #include "Utility/Vector3D.h"
-#include "Items/Object3D.h"
+#include "Items/Drawable.h"
+#include <list>
 
-class MeshFace : public Object3D {
+class MeshFace : public Drawable {
    public:
-      MeshFace() : Object3D(NULL) {};
+      MeshFace() : Drawable(NULL) {};
       MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3, const GameState* _gameState);
       virtual ~MeshFace();
       void offsetBy(double scale);
@@ -40,6 +41,13 @@ class MeshFace : public Object3D {
       virtual void setTexture(GLuint _tex);
       virtual void update(double timeDiff);
       double lifetime;
+      Vector3D* axis;
+      double angle;
+      double rotationSpeed;
+      static void Add(MeshFace* face);
+      static void updateIndependentFaces(double timeDifference);
+      static void Clear();
+      static std::list<MeshFace*> independentFaces;
 };
 
 #endif

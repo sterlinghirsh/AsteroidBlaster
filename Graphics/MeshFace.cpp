@@ -5,13 +5,15 @@
  */
 
 #include "Graphics/MeshFace.h"
-#include "Items/Drawable.h"
 #include "Utility/GameState.h"
 
 #define ASTEROID3D_LINE_W 0.5
+#define MAX_INDEPENDENT_FACES 500
+
+std::list<MeshFace*> MeshFace::independentFaces;
 
 MeshFace::MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3, const GameState* _gameState) :
- Object3D(_gameState),
+ Drawable(_gameState),
  p1(_p1), p2(_p2), p3(_p3) {
    setFaceColor(0.0f, 0.0f, 0.0f);
    setLineColor(1.0f, 1.0f, 1.0f);
@@ -20,6 +22,9 @@ MeshFace::MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3, const GameSta
    textured = false;
    timeExploded = 0;
    lifetime = 2;
+   velocity = new Vector3D(0, 0, 0);
+   minX = minY = minZ = -0.5;
+   maxX = maxY = maxZ =  0.5;
 }
 
 MeshFace::~MeshFace() {
@@ -104,23 +109,14 @@ void MeshFace::draw(bool drawSmooth, bool drawTex) {
 }
 
 void MeshFace::drawLines() {
-   MeshPoint p1_tmp = MeshPoint(p1.x + offset.x,
-         p1.y + offset.y,
-         p1.z + offset.z);
-   MeshPoint p2_tmp = MeshPoint(p2.x + offset.x,
-         p2.y + offset.y,
-         p2.z + offset.z);
-   MeshPoint p3_tmp = MeshPoint(p3.x + offset.x,
-         p3.y + offset.y,
-         p3.z + offset.z);
    float curAlpha = timeExploded == 0 ? 1.0f : 
     (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
 
    glColor4f(lineR, lineG, lineB, curAlpha);
    glBegin(GL_LINE_LOOP);
-   p1_tmp.draw();
-   p2_tmp.draw();
-   p3_tmp.draw();
+   p1.draw();
+   p2.draw();
+   p3.draw();
    glEnd();
 }
 
@@ -158,7 +154,7 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
 }
 
 void MeshFace::nullPointers() {
-   Object3D::nullPointers();
+   Drawable::nullPointers();
    // Nothing here.
 }
 
@@ -180,8 +176,16 @@ void MeshFace::setTexture(GLuint _tex) {
 }
 
 void MeshFace::update(double timeDiff) {
-   Object3D::update(timeDiff);
-   // Something?
+   angle += rotationSpeed * timeDiff;
+
+   gameState->cube->constrain(this);
+   velocity->scalarMultiply(timeDiff).movePoint(*position);
+   
+   minPosition->clone(position);
+   maxPosition->clone(position);
+   minPosition->offsetBy(minX, minY, minZ);
+   maxPosition->offsetBy(maxX, maxY, maxZ);
+
    if (doubleTime() - timeExploded > lifetime) {
       shouldRemove = true;
    }
@@ -236,4 +240,41 @@ void MeshFace::drawGlow() {
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glLineWidth(1);
    glDisable(GL_COLOR_MATERIAL);
+}
+
+void MeshFace::Add(MeshFace* face) {
+   independentFaces.push_back(face);
+}
+
+void MeshFace::updateIndependentFaces(double timeDifference) {
+   while (independentFaces.size() >= MAX_INDEPENDENT_FACES) {
+      delete independentFaces.front();
+      independentFaces.pop_front();
+   }
+
+   std::list<MeshFace*>::iterator face = MeshFace::independentFaces.begin();
+
+   while(face != MeshFace::independentFaces.end()) {
+      if (*face != NULL) {
+         (*face)->update(timeDifference);
+         if ((*face)->shouldRemove) {
+            delete *face;
+            face = MeshFace::independentFaces.erase(face);
+         } else {
+            ++face;
+         }
+      } else {
+         // Don't delete a NULL pointer...
+         face = MeshFace::independentFaces.erase(face);
+      }
+   }
+}
+
+void MeshFace::Clear() {
+   std::list<MeshFace*>::iterator face = MeshFace::independentFaces.begin();
+   
+   while(face != MeshFace::independentFaces.end()) {
+      delete *face;
+      face = MeshFace::independentFaces.erase(face);
+   }
 }
