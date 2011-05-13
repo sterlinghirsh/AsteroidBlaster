@@ -56,23 +56,6 @@ then
    make -j 3 || exit
    echo "Done!"
    cd ..
-   
-   #SDL_net--------------------
-   echo "SDL_net"
-   echo "Unzipping.."
-   gunzip SDL_net-1.2.7.tar.gz
-   echo "Extracting.."
-   tar -xf SDL_net-1.2.7.tar
-   #deleting gunziped file
-   rm SDL_net-1.2.7.tar
-   svn revert SDL_net-1.2.7.tar.gz
-   cd SDL_net-1.2.7
-   echo "Configuring.."
-   ./configure || exit
-   echo "Making.."
-   make -j 3 || exit
-   echo "Done!"
-   cd ..
 
    #glew--------------------
    echo "GLEW"
@@ -104,10 +87,6 @@ then
    #SDL_image--------------------
    echo "Cleaning SDL_image..."
    rm -rf SDL_image-1.2.10
-   
-   #SDL_net--------------------
-   echo "Cleaning SDL_net..."
-   rm -rf SDL_net-1.2.7
    
    #glew--------------------
    echo "Cleaning GLEW..."
