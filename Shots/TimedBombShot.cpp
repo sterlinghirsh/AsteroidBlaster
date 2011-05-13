@@ -53,7 +53,7 @@ void TimedBombShot::draw() {
       //glDisable(GL_
       glColor3d(1, .6, 0);
       setMaterial(ShotMaterial);
-      //position->glTranslate();
+      position->glTranslate();
 
       // Radius 0.5, 5 slices, 5 stacks.
       gluSphere(quadric, 0.3, 5, 5);
