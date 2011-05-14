@@ -10,6 +10,7 @@
 
 #include "Utility/CollisionTypes.h"
 #include "Utility/Point3D.h"
+#include <string>
 
 // Incomplete class declaration so we can have the pointer to it.
 class Custodian;

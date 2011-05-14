@@ -353,13 +353,17 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    const float increment = 0.01f;
 
    //const float length = acceleration->getLength;
-   const int newParticlesPerSecond = 100;
+   const int maxParticlesPerFrame = 10;
+   const int newParticlesPerSecond = 80;
    static Vector3D baseParticleAcceleration;
    static Point3D emitter;
 
    double accelerationTime = doubleTime() - accelerationStartTime;
    const double colorVariation = 0.2 * randdouble();
-   while ((double) particlesEmitted / accelerationTime < newParticlesPerSecond) {
+   int particlesThisFrame = 0;
+   
+   while ((double) particlesEmitted / accelerationTime < newParticlesPerSecond &&
+    particlesThisFrame < maxParticlesPerFrame) {
       // First do up Acceleration.
       if (curUpAccel != 0) {
          baseParticleAcceleration = up->scalarMultiply(-curUpAccel * 0.2);
@@ -393,6 +397,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
       }
 
       ++particlesEmitted;
+      ++particlesThisFrame;
    }
 }
 

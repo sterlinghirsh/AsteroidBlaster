@@ -6,8 +6,10 @@ BOOSTINC=/usr/include/boost/
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
    # Linux stuff
-   #BOOSTLIB=/home/shirsh/boost/stage/lib
-   BOOSTLIB=
+   # Use this if you're on a school machine.
+   BOOSTLIB=/home/shirsh/boost/stage/lib
+   # Use this if you're on a machine with boost installed natively.
+   #BOOSTLIB=/usr/lib
    SDL_LIBS=$(shell "sdl-config" "--libs")
    SDL_CFLAGS=$(shell "sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=-I./Libraries/glew-1.5.8/include -I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_mixer-1.2.11 -I./Libraries/SDL_image-1.2.10
