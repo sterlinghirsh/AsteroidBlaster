@@ -336,10 +336,10 @@ void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
    randomOffset.add(baseDirection.scalarMultiply(randomAmount * (randdouble() -0.5)));
    //randomOffset.scalarMultiplyUpdate(0.01);
 
-   particleVariation.updateMagnitude(baseDirection.scalarMultiply(randdouble() * 8));
+   particleVariation.updateMagnitude(baseDirection.scalarMultiply(randdouble() * 6));
    particleVariation.addUpdate(offsetDirectionX.scalarMultiply(randdouble() * 8 - 4));
    particleVariation.addUpdate(offsetDirectionY.scalarMultiply(randdouble() * 8 - 4));
-   particleVariation.scalarMultiplyUpdate(0.3);
+   particleVariation.scalarMultiplyUpdate(0.2);
    //curPoint = position->add(randomPoint);
    initialOffset.movePoint(curPoint);
    randomOffset.movePoint(curPoint);
@@ -354,7 +354,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 
    //const float length = acceleration->getLength;
    const int maxParticlesPerFrame = 10;
-   const int newParticlesPerSecond = 80;
+   const int newParticlesPerSecond = 50;
    static Vector3D baseParticleAcceleration;
    static Point3D emitter;
 
