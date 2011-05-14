@@ -602,6 +602,42 @@ void setupVideo() {
    }
 }
 
+void drawScreenQuad(int tex) {
+   useOrtho();
+   float aspect = (float)gameSettings->GW/(float)gameSettings->GH;
+   glPushMatrix();
+   glBlendFunc(GL_ONE, GL_ONE);
+   glDisable(GL_LIGHTING);
+   float minY = -1.0;
+   float maxY = 1.0;
+   float minX = -1.0f * aspect;
+   float maxX = 1.0f * aspect;
+   glEnable(GL_TEXTURE_2D);
+   glBindTexture(GL_TEXTURE_2D, tex);
+
+   float texMaxX = (float) gameSettings->GW / (float) texSize;
+   float texMaxY = (float) gameSettings->GH / (float) texSize;
+   glColor4f(1.0, 1.0, 1.0, 0.5);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(minX, minY, 0.0);
+   glTexCoord2f(texMaxX, 0.0);
+   glVertex3f(maxX, minY, 0.0);
+   glTexCoord2f(texMaxX, texMaxY);
+   glVertex3f(maxX, maxY, 0.0);
+   glTexCoord2f(0.0, texMaxY);
+   glVertex3f(minX, maxY, 0.0);
+   glEnd();
+   glDisable(GL_TEXTURE_2D);
+   glEnable(GL_LIGHTING);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glPopMatrix();
+
+   glColor4f(1.0, 1.0, 1.0, 1.0);
+   glBindTexture(GL_TEXTURE_2D, 0);
+   glClear(GL_DEPTH_BUFFER_BIT);
+}
+
 void drawGameState(GameState* gameStateIn,
       bool lookAt, float eX, float eY, float eZ,
       float lX, float lY, float lZ,
@@ -690,16 +726,6 @@ void drawGameState(GameState* gameStateIn,
    gameStateIn->lastDrawTime = doubleTime();
 }
 
-
-int nextPowerOfTwo(int num) {
-   int result = 1;
-   while (result < num) {
-      result *= 2;
-   }
-   printf("%d -> %d\n", num, result);
-   return result;
-}
-
 void initFbo() {
    glGenFramebuffersEXT(1, &fbo);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
@@ -769,6 +795,44 @@ void initFbo() {
 
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
+}
+
+void fboBegin(int buffer) {
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+   glDrawBuffer(buffer);
+}
+
+void fboEnd() {
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+}
+
+void fboClear(int buffer) {
+   fboBegin(buffer);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   //glClear(GL_COLOR_BUFFER_BIT);
+   //glClear(GL_DEPTH_BUFFER_BIT);
+   fboEnd();
+}
+
+void clearAllBuffers() {
+   /*
+   fboClear(GLOW_BUFFER);
+   fboClear(BLUR_BUFFER);
+   fboClear(BLOOM_BUFFER);
+   fboClear(DEPTH_BUFFER);
+   //fboClear(GEOM_BUFFER);
+   fboClear(NORMAL_BUFFER);
+   fboClear(OVERLAY_BUFFER);
+   */
+}
+
+int nextPowerOfTwo(int num) {
+   int result = 1;
+   while (result < num) {
+      result *= 2;
+   }
+   printf("%d -> %d\n", num, result);
+   return result;
 }
 
 void toggleFullScreen() {

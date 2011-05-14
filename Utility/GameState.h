@@ -99,10 +99,7 @@ class GameState : public InputReceiver {
       Skybox* skybox;
       //Camera* camera;
       Minimap* minimap;
-      Screen* bloomScreen;
-      Screen* rawScreen;
-      Screen* fboScreen;
-      Screen* overlayScreen;
+      std::vector<Screen> screens;
 
       std::list<Object3D*> objects;
    

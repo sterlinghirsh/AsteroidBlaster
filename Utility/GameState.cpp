@@ -172,10 +172,6 @@ GameState::~GameState() {
    delete spring;
    delete cube;
    delete weaponReadyBar;
-   delete rawScreen;
-   delete bloomScreen;
-   delete fboScreen;
-   delete overlayScreen;
 }
 
 void GameState::addAIPlayer() {
@@ -194,10 +190,10 @@ void GameState::addAIPlayer() {
  */
 void GameState::addScreens() {
    printf("screens added\n");
-   rawScreen = new Screen(0, 0, Texture::getTexture("hblurTex"));
-   bloomScreen = new Screen(0, 1, Texture::getTexture("bloomTex"));
-   fboScreen = new Screen(1, 0, Texture::getTexture("fboTex"));
-   overlayScreen = new Screen(0, 2, Texture::getTexture("overlayTex"));
+   screens.push_back(Screen(0, 0, Texture::getTexture("hblurTex")));
+   screens.push_back(Screen(0, 1, Texture::getTexture("bloomTex")));
+   screens.push_back(Screen(1, 0, Texture::getTexture("fboTex")));
+   screens.push_back(Screen(0, 2, Texture::getTexture("overlayTex")));
 }
 
 /**
@@ -325,10 +321,9 @@ void GameState::drawMinimap() {
  */
 void GameState::drawScreens() {
    if (!showBloomScreen) { return; }
-   bloomScreen->draw();
-   rawScreen->draw();
-   fboScreen->draw();
-   overlayScreen->draw();
+   for (unsigned i = 0; i < screens.size(); i++) {
+      screens[i].draw();
+   }
 }
 
 /**
@@ -362,7 +357,9 @@ void GameState::draw(bool drawGlow) {
    if (!inMenu) {
       currentCamera->setCamera(true);
       shipCamera->shake(ship->getShakeAmount());
-      skybox->draw(currentCamera);
+      if (!drawGlow) {
+         skybox->draw(currentCamera);
+      }
    }
    cube->draw();
 
@@ -406,122 +403,39 @@ void GameState::draw(bool drawGlow) {
 }
 
 void GameState::hBlur() {
-   glClear(GL_COLOR_BUFFER_BIT);
-   useOrtho();
-   glPushMatrix();
-   glDisable(GL_LIGHTING);
-   float minY = -1.0;
-   float maxY = 1.0;
-   float minX = -1.0f * aspect;
-   float maxX = 1.0f * aspect;
    int tex = Texture::getTexture("fboTex");
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, tex);
    GLint texLoc = glGetUniformLocation(hBlurShader, "RTscene");
    glUseProgram(hBlurShader);
    glUniform1i(texLoc, tex);
-
+   
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
    glDrawBuffer(GL_COLOR_ATTACHMENT1_EXT);
+   glClear(GL_COLOR_BUFFER_BIT);
 
-   float texMaxX = (float) gameSettings->GW / (float) texSize;
-   float texMaxY = (float) gameSettings->GH / (float) texSize;
-   glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(minX, minY, 0.0);
-   glTexCoord2f(texMaxX, 0.0);
-   glVertex3f(maxX, minY, 0.0);
-   glTexCoord2f(texMaxX, texMaxY);
-   glVertex3f(maxX, maxY, 0.0);
-   glTexCoord2f(0.0, texMaxY);
-   glVertex3f(minX, maxY, 0.0);
-   glEnd();
-   glUseProgram(0);
-   glDisable(GL_TEXTURE_2D);
-   glEnable(GL_LIGHTING);
+   drawScreenQuad(tex);
 
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-   glPopMatrix();
-   glBindTexture(GL_TEXTURE_2D, 0);
-   //printf("hblur\n");
 }
 
 void GameState::vBlur() {
-   glClear(GL_COLOR_BUFFER_BIT);
-   useOrtho();
-   glPushMatrix();
-   glDisable(GL_LIGHTING);
-   float minY = -1.0;
-   float maxY = 1.0;
-   float minX = -1.0f * aspect;
-   float maxX = 1.0f * aspect;
    int tex = Texture::getTexture("hblurTex");
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, tex);
    GLint texLoc = glGetUniformLocation(vBlurShader, "blurSampler");
    glUseProgram(vBlurShader);
    glUniform1i(texLoc, tex);
 
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
    glDrawBuffer(GL_COLOR_ATTACHMENT2_EXT);
+   glClear(GL_COLOR_BUFFER_BIT);
+   
+   drawScreenQuad(tex);
 
-   float texMaxX = (float) gameSettings->GW / (float) texSize;
-   float texMaxY = (float) gameSettings->GH / (float) texSize;
-   glColor4f(1.0, 1.0, 1.0, 0.5);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(minX, minY, 0.0);
-   glTexCoord2f(texMaxX, 0.0);
-   glVertex3f(maxX, minY, 0.0);
-   glTexCoord2f(texMaxX, texMaxY);
-   glVertex3f(maxX, maxY, 0.0);
-   glTexCoord2f(0.0, texMaxY);
-   glVertex3f(minX, maxY, 0.0);
-   glEnd();
-   glDisable(GL_TEXTURE_2D);
-   glEnable(GL_LIGHTING);
-   glPopMatrix();
    glUseProgram(0);
 
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-   //printf("v\n");
 }
 
 void GameState::drawBloom() {
-   useOrtho();
-   glPushMatrix();
-   glBlendFunc(GL_ONE, GL_ONE);
-   glDisable(GL_LIGHTING);
-   float minY = -1.0;
-   float maxY = 1.0;
-   float minX = -1.0f * aspect;
-   float maxX = 1.0f * aspect;
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, Texture::getTexture("bloomTex"));
-
-   float texMaxX = (float) gameSettings->GW / (float) texSize;
-   float texMaxY = (float) gameSettings->GH / (float) texSize;
-   glColor4f(1.0, 1.0, 1.0, 0.5);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(minX, minY, 0.0);
-   glTexCoord2f(texMaxX, 0.0);
-   glVertex3f(maxX, minY, 0.0);
-   glTexCoord2f(texMaxX, texMaxY);
-   glVertex3f(maxX, maxY, 0.0);
-   glTexCoord2f(0.0, texMaxY);
-   glVertex3f(minX, maxY, 0.0);
-   glEnd();
-   glDisable(GL_TEXTURE_2D);
-   glEnable(GL_LIGHTING);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   glPopMatrix();
-
-   glColor4f(1.0, 1.0, 1.0, 1.0);
-   glBindTexture(GL_TEXTURE_2D, 0);
-   glClear(GL_DEPTH_BUFFER_BIT);
+   drawScreenQuad(Texture::getTexture("bloomTex"));
 }
 
 void GameState::drawHud() {
@@ -578,31 +492,8 @@ void GameState::drawOverlay() {
       glEnd();
    }
 
-   glBlendFunc(GL_ONE, GL_ONE);
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, Texture::getTexture("overlayTex"));
-   float texMaxX = (float) gameSettings->GW / (float) texSize;
-   float texMaxY = (float) gameSettings->GH / (float) texSize;
-   glColor4f(1.0, 1.0, 1.0, 1.0);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(minX, minY, 0.0);
-   glTexCoord2f(texMaxX, 0.0);
-   glVertex3f(maxX, minY, 0.0);
-   glTexCoord2f(texMaxX, texMaxY);
-   glVertex3f(maxX, maxY, 0.0);
-   glTexCoord2f(0.0, texMaxY);
-   glVertex3f(minX, maxY, 0.0);
-   glEnd();
-   glDisable(GL_TEXTURE_2D);
-   glEnable(GL_LIGHTING);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   glPopMatrix();
-
-   //glColor4f(1.0, 1.0, 1.0, 1.0);
-   glBindTexture(GL_TEXTURE_2D, 0);
-   glClear(GL_DEPTH_BUFFER_BIT);
-   usePerspective();
+   int tex = Texture::getTexture("overlayTex");
+   drawScreenQuad(tex);
 }
 
 /**
