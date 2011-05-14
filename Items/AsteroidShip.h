@@ -179,7 +179,7 @@ class AsteroidShip : public Object3D {
       // Camera and view related functions
       void setView(int _view);
       int getCurrentView();
-      void setCameraDirectly();
+      void setCameraToShotOrigin();
       void setZoomSpeed(float speed);
       void setOrientation(double forwardX, double forwardY, double forwardZ, double upX, double upY, double upZ);
       void setOrientation(Vector3D& _forward, Vector3D& _up);

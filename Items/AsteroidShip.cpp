@@ -1597,11 +1597,11 @@ int AsteroidShip::getCurrentView() {
    return currentView;
 }
 
-void AsteroidShip::setCameraDirectly() {
-   gluLookAt(position->x, position->y, position->z,
-         position->x + forward->x,
-         position->y + forward->y,
-         position->z + forward->z,
+void AsteroidShip::setCameraToShotOrigin() {
+   gluLookAt(shotOrigin.x, shotOrigin.y, shotOrigin.z,
+         shotOrigin.x + forward->x,
+         shotOrigin.y + forward->y,
+         shotOrigin.z + forward->z,
          up->x, up->y, up->z);
 }
 

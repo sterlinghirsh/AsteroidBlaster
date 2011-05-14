@@ -164,7 +164,7 @@ void Collision<AsteroidShip, ProjectileShot>::handleCollision() {
    int particlesToEmit = 10;
    if (a != b->owner  && !(a->spawnInvulnerable)) {
       a->health -= b->getDamage(a);
-      a->shakeAmount = 1;
+      a->shakeAmount = 0.9;
       a->justGotHit = doubleTime();
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       for (int i = 0; i <= particlesToEmit; ++i) {
@@ -184,12 +184,12 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
    if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame  && !(a->spawnInvulnerable)) {
       //TODO addInstantVelocity b->velocity->scalarMultiply(10)
       a->health -= b->getDamage(a);
+      a->shakeAmount = 0.9;
       b->hitYet = true;
       b->hitItem = a;
       b->lastHitFrame = curFrame;
       b->owner->score += (int) a->radius * 10;
       b->drawLength = a->position->distanceFrom(*b->position);
-      a->shakeAmount = 1;
       a->justGotHit = doubleTime();
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
    }

@@ -81,9 +81,8 @@ std::list<Object3D*>* Radar :: getTargetableViewFrustumReading() {
    std::vector<Object3D*>* allObjects =custodian->getListOfObjects();
 
    // Set the camera temporarily.
-
    glPushMatrix();
-      owner->setCameraDirectly();
+      owner->setCameraToShotOrigin();
       // Turn the vector of allObjects into a list. True says to cull it down to only the targetable ones (no particles)
       std::list<Object3D*>* culledList = curFrustum->cullToViewFrustum(allObjects);
    glPopMatrix();
@@ -145,7 +144,7 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
    }
    */
     
-   /* We need to set the camera position which will be used to compare the distanes
+   /* We need to set the camera position which will be used to compare the distances
     * of the two drawable objects.
     */
    // Make a copy of the ship's position

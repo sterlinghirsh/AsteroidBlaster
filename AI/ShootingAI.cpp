@@ -125,12 +125,11 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 
    // States whether or not the chosen target is a ship / shard
    bool isAShip = false;
-   bool isAShard = false;
 
-   // Only consider any weapon if it's purchased & has ammo.
+   // Only consider any weapon if it's purchased & has ammo & is cooled down.
    bool considerTractor = (ship->weapons[TRACTOR_WEAPON_INDEX]->purchased && (ship->getWeapon(TRACTOR_WEAPON_INDEX)->curAmmo != 0));
    bool considerBlaster = (ship->weapons[BLASTER_WEAPON_INDEX]->purchased && (ship->getWeapon(BLASTER_WEAPON_INDEX)->curAmmo != 0));
-   bool considerRailgun = (ship->weapons[RAILGUN_WEAPON_INDEX]->purchased && (ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo != 0));
+   bool considerRailgun = (ship->weapons[RAILGUN_WEAPON_INDEX]->purchased && (ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo != 0) && ship->getWeapon(RAILGUN_WEAPON_INDEX)->isCooledDown());
    bool considerElectricity = (ship->weapons[ELECTRICITY_WEAPON_INDEX]->purchased && (ship->getWeapon(ELECTRICITY_WEAPON_INDEX)->curAmmo != 0));
    bool considerTimedBomber = (ship->weapons[TIMEDBOMBER_WEAPON_INDEX]->purchased && (ship->getWeapon(TIMEDBOMBER_WEAPON_INDEX)->curAmmo != 0));
    bool considerRemoteBomber = (ship->weapons[REMOTEBOMBER_WEAPON_INDEX]->purchased && (ship->getWeapon(REMOTEBOMBER_WEAPON_INDEX)->curAmmo != 0));
@@ -155,9 +154,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 
    // If the target is a shard, only ever choose the tractor beam.
    if (dynamic_cast<Shard*>(*target) != NULL) {
-      isAShard = true;
-      ship->selectWeapon(TRACTOR_WEAPON_INDEX);
-      chosenWeapon = ship->getCurrentWeapon();
+      selectWeaponUpdateChosen(TRACTOR_WEAPON_INDEX);
       return;
    }
 
@@ -176,10 +173,15 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    // Only add up weights for the blaster if we're considering it.
    if (considerBlaster) {
       // Consider the target's radius.
-      weaponWeights[BLASTER_WEAPON_INDEX] += 1.5 * (*target)->radius;
+      weaponWeights[BLASTER_WEAPON_INDEX] += 1.75 * (*target)->radius;
 
       // Consider the target's distance.
       weaponWeights[BLASTER_WEAPON_INDEX] += dist;
+
+      // printf("target's velocity was %f\n", (*target)->velocity->magnitude());
+
+      // Consider the target's velocity. Slower is better.
+      weaponWeights[BLASTER_WEAPON_INDEX] += 10 / (*target)->velocity->magnitude();
    }
 
    // Only add up weights for the railgun if we're considering it.
@@ -189,6 +191,9 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 
       // Consider the target's distance. Further is much better.
       weaponWeights[RAILGUN_WEAPON_INDEX] += dist;
+
+      // Consider the target's velocity. Faster is much better.
+      weaponWeights[RAILGUN_WEAPON_INDEX] += (*target)->velocity->magnitude();
    }
 
    // Only add up weights for the electricity gun if we're considering it.
@@ -197,7 +202,10 @@ void ShootingAI::chooseWeapon(Object3D** target) {
       weaponWeights[ELECTRICITY_WEAPON_INDEX] += (*target)->radius;
 
       // Consider the target's distance.
-      weaponWeights[ELECTRICITY_WEAPON_INDEX] += dist;
+      weaponWeights[ELECTRICITY_WEAPON_INDEX] += 1.5 * dist;
+
+      // Consider the target's velocity. Faster is much better.
+      weaponWeights[ELECTRICITY_WEAPON_INDEX] += (*target)->velocity->magnitude();
    }
 
    // Only add up weights for the timed bomber if we're considering it.
@@ -207,6 +215,9 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 
       // Consider the target's distance.
       weaponWeights[TIMEDBOMBER_WEAPON_INDEX] +=  2 * dist;
+
+      // Consider the target's velocity. Slower is much better.
+      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 300 / (*target)->velocity->magnitude();
    }
 
    // Only add up weights for the timed bomber if we're considering it.
@@ -221,20 +232,20 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    // Only add up weights for the energy weapon if we're considering it.
    if (considerEnergy) {
       // Consider the target's radius.
-      weaponWeights[ENERGY_WEAPON_INDEX] += (*target)->radius;
+      weaponWeights[ENERGY_WEAPON_INDEX] += 1.4 * (*target)->radius;
 
       // Consider the target's distance.
       weaponWeights[ENERGY_WEAPON_INDEX] += dist;
+
+      // Consider the target's velocity. Slower is better.
+      weaponWeights[ENERGY_WEAPON_INDEX] += 200 / (*target)->velocity->magnitude();
    }
    
-   /*
    for(int i = 0; i < NUMBER_OF_WEAPONS; i++)
-      printf("weapons[%d] was weighted as: %f\n", i, weaponWeights[i]);
-   */
+      //printf("weapons[%d] was weighted as: %f\n", i, weaponWeights[i]);
 
    // Select the weapon index which has the highest weight.
-   ship->selectWeapon(maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS));
-   chosenWeapon = ship->getCurrentWeapon();
+   selectWeaponUpdateChosen(maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS));
 
    int ndx =  maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS);
 
@@ -259,6 +270,11 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    */
 }
 
+void ShootingAI::selectWeaponUpdateChosen(int weaponIndex) {
+   ship->selectWeapon(weaponIndex);
+   chosenWeapon = ship->getCurrentWeapon();
+}
+
 Object3D* ShootingAI::chooseTarget() {
    // Make the AI choose from a list of Targetable objects instead of Drawable objects, which are inside the view frustum.
    std::list<Object3D*>* targets;
@@ -274,7 +290,7 @@ Object3D* ShootingAI::chooseTarget() {
    bool isAShip = false;
    bool isAShard = false;
    
-   //printf("size of targets list is: %d\n", targets->size());
+   // printf("size of targets list is: %d\n", targets->size());
    // If the list of targets from the viewFrustum does not exist, give the AI no target.
    if(targets == NULL) {
       printf("targets list was null.\n");
@@ -291,11 +307,6 @@ Object3D* ShootingAI::chooseTarget() {
          //printf("targets_iterator was null!\n\n\n\n");
          continue;
       }
-
-      if (dynamic_cast<Particle*>(*targets_iterator) != NULL) {
-        //printf("continuing b/c of a particle!!! \n");
-        continue;
-     }
       
      curWeight = 0.0;
      isAShip = false;
@@ -304,13 +315,15 @@ Object3D* ShootingAI::chooseTarget() {
      if(dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL)
         isAShip = true;
 
-     if(dynamic_cast<Shard*>(*targets_iterator) != NULL)
+     else if(dynamic_cast<Shard*>(*targets_iterator) != NULL)
         isAShard = true;
 
+     // If the target is not an asteroid, shard, or ship, skip it.
      if (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && !isAShard && !isAShip) {
          continue;
       }
 
+     // If it's a shard and it's further than 30 units away, skip it.
      if (isAShard && (*targets_iterator)->position->distanceFrom(*ship_position) > 30)
         continue;
 
@@ -325,7 +338,7 @@ Object3D* ShootingAI::chooseTarget() {
 
         // Only add weight if the considered ship is not our own ship.
         if (consideredShip->id != ship->id) {
-           curWeight += 10;
+           curWeight += 20;
            //printf("added 10 b/c target is a ship.\n", curWeight);
         }
      }
@@ -349,17 +362,6 @@ Object3D* ShootingAI::chooseTarget() {
         tmp *= -1;
      curWeight += distWeight / (tmp);
      curWeight += vec * lastShotPos * proximityWeight;
-      
-     // Consdier adding to the weight if the target is an AsteroidShip.
-     if (isAShip) {
-         //consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
-
-        // Only add weight if the considered ship is not our own ship.
-        if (consideredShip->id != ship->id) {
-           curWeight += 10;
-           //printf("added 10 b/c target is a ship.\n", curWeight);
-        }
-     }
       
      //printf("curweight summed up to %f\n", curWeight);
 
