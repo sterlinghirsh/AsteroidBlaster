@@ -24,7 +24,7 @@ else
 endif
    
 #BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
-BOOST_LDFLAGS= -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt
+BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt
 
 LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(BOOST_LDFLAGS) -lSDL_mixer -lSDL_image -lSDL_ttf -g 
 # -I. -iquote makes it so quoted #includes look in ./
