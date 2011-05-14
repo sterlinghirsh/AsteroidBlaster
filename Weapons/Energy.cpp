@@ -50,7 +50,7 @@ void Energy::update(double timeDiff) {
       
       if (chargingSoundPlaying && doubleTime() - chargeStartTime > 5.0) {
          SoundEffect::stopSoundEffect(soundHandle);
-         soundHandle = SoundEffect::playSoundEffect("ChargeShotLoop", true);
+         soundHandle = SoundEffect::playSoundEffect("ChargeShotLoop", ship->position, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
          chargingSoundPlaying = false;
       }
 
@@ -74,7 +74,7 @@ void Energy::update(double timeDiff) {
       SoundEffect::stopSoundEffect(soundHandle);
       soundHandle = -1;
       if (!ship->gameState->godMode) {
-         SoundEffect::playSoundEffect("ChargeShotFire");
+         SoundEffect::playSoundEffect("ChargeShotFire", ship->position, ship == ship->gameState->ship);
       }
       
       ship->setShakeAmount((float) std::min((doubleTime() - chargeStartTime) * 0.3, 0.5));

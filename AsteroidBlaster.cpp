@@ -74,6 +74,8 @@ void init() {
       exit(1);
    }
 
+   SoundEffect::Init();
+
    // Set opengl attributes
    SDL_GL_SetAttribute(SDL_GL_RED_SIZE,      5);
    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,    5);

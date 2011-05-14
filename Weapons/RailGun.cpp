@@ -51,7 +51,7 @@ void RailGun::fire() {
             ship->shotDirection, ship, ship->gameState));
    // Only take away ammo and play a sound if we're not in godMode
    if (!ship->gameState->godMode) {
-      SoundEffect::playSoundEffect("Rail2.wav");
+      SoundEffect::playSoundEffect("Rail2.wav", &start);
       //curAmmo--;
    }
 }

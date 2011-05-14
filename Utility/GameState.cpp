@@ -287,6 +287,8 @@ void GameState::update(double timeDiff) {
       // TODO: fix memory leak.
    }
 
+   SoundEffect::updatePositions(ship);
+
    // Update all of the text seen on screen.
    updateText();
 

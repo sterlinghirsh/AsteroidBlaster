@@ -555,7 +555,8 @@ void AsteroidShip::update(double timeDiff) {
    if (!gameState->inMenu &&
          (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
       if (soundHandle == -1)
-         soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav", true);
+         soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav", 
+          position, (this == gameState->ship), DEFAULT_VOLUME, true);
    } else {
       if (soundHandle != -1) {
          SoundEffect::stopSoundEffect(soundHandle);

@@ -123,7 +123,13 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
       b->health -= healthToRemove;
 
       a->shakeAmount = 8;
-      SoundEffect::playSoundEffect("ShipHit.wav");
+
+      Vector3D shipToAsteroid(a->position, b->position);
+      shipToAsteroid.normalize();
+      Point3D collisionPoint(a->position);
+      collisionPoint.addUpdate(shipToAsteroid.scalarMultiply(a->radius));
+
+      SoundEffect::playSoundEffect("ShipHit.wav", &collisionPoint);
 
       a->justGotHit = doubleTime();
       a->addInstantAcceleration(new Vector3D(*(b->velocity)));
@@ -144,7 +150,12 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
    a->curRoundShards++;
    a->score += 69;
    b->shouldRemove = true;
-   SoundEffect::playSoundEffect("CrystalCollect.wav");
+   
+   Point3D* soundSource = NULL;
+   if (a != a->gameState->ship) {
+      soundSource = a->position;
+   }
+   SoundEffect::playSoundEffect("CrystalCollect.wav", soundSource);
 }
 
 template<>
@@ -155,7 +166,7 @@ void Collision<AsteroidShip, ProjectileShot>::handleCollision() {
       a->health -= b->getDamage(a);
       a->shakeAmount = 1;
       a->justGotHit = doubleTime();
-      SoundEffect::playSoundEffect("BlasterHit.wav");
+      SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       for (int i = 0; i <= particlesToEmit; ++i) {
          Point3D* particleStartPoint = new Point3D(*(b->position));
          Vector3D* particleDirection = new Vector3D();
@@ -180,7 +191,7 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
       b->drawLength = a->position->distanceFrom(*b->position);
       a->shakeAmount = 1;
       a->justGotHit = doubleTime();
-      SoundEffect::playSoundEffect("BlasterHit.wav");
+      SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
    }
 }
 
@@ -216,6 +227,7 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
             particleDirection->addUpdate(centerToImpactPoint);
             ElectricityImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
          }
+         SoundEffect::playSoundEffect("BlasterHit.wav", closestPoint);
 
          delete closestPoint;
       }
@@ -232,7 +244,7 @@ void Collision<AsteroidShip, EnergyShot>::handleCollision() {
       a->acceleration->updateMagnitude(0, 0, 0);
 
       b->shouldRemove = true;
-      SoundEffect::playSoundEffect("BlasterHit.wav");
+      SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       if (b->weapon->chargingShot == b) {
          b->weapon->resetChargingShot();
       }
@@ -247,7 +259,7 @@ void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
 
    if (!b->isExploded && a != b->owner) {
       b->shouldExplode = true;
-      SoundEffect::playSoundEffect("BlasterHit.wav");
+      SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
    } else {
       Vector3D* shotToShip = new Vector3D(*b->position, *a->position);
       double distance = shotToShip->getLength() - a->radius;
@@ -274,7 +286,7 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
             b->addAcceleration(attraction);
          } else {
             b->shouldExplode = true;
-            SoundEffect::playSoundEffect("BlasterHit.wav");
+            SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
          }
       }
    } else if (a != b->owner) {
@@ -310,7 +322,7 @@ void Collision<Asteroid3D, ProjectileShot>::handleCollision() {
    newAcceleration->setLength(speed);
    a->addInstantAcceleration(newAcceleration);
    
-   SoundEffect::playSoundEffect("BlasterHit.wav");
+   SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
    // Make some particles!
 
    positionDifference.updateMagnitude(*a->position, *b->position);
@@ -373,6 +385,7 @@ void Collision<Asteroid3D, ElectricityShot>::handleCollision() {
          ElectricityImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
       }
 
+      SoundEffect::playSoundEffect("BlasterHit.wav", closestPoint);
       delete closestPoint;
    }
 }
@@ -398,7 +411,7 @@ void Collision<Asteroid3D, EnergyShot>::handleCollision() {
    a->acceleration->updateMagnitude(0, 0, 0);
 
    b->shouldRemove = true;
-   SoundEffect::playSoundEffect("BlasterHit.wav");
+   SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
    if (b->weapon->chargingShot == b) {
       b->weapon->resetChargingShot();
    }
@@ -409,7 +422,7 @@ void Collision<Asteroid3D, ExplosiveShot>::handleCollision() {
    a->lastHitShotOwner = b->owner;
    if (!b->isExploded) {
       b->shouldExplode = true;
-      SoundEffect::playSoundEffect("BlasterHit.wav");
+      SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
    } else {
       Vector3D* shotToAsteroid;
       shotToAsteroid = new Vector3D(*b->position, *a->position);
@@ -434,7 +447,7 @@ void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
             b->addAcceleration(attraction);
          } else {
             b->shouldExplode = true;
-            SoundEffect::playSoundEffect("BlasterHit.wav");
+            SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
          }
       }
    } else {

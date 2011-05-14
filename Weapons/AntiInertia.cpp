@@ -29,7 +29,7 @@ void AntiInertia::update(double timeDiff) {
    if (currentFrame == lastFiredFrame && !soundPlaying) {
       // We should play sound.
       soundPlaying = true;
-      soundHandle = SoundEffect::playSoundEffect("Pulse", true);
+      soundHandle = SoundEffect::playSoundEffect("Pulse.wav", ship->position, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
    } else if (currentFrame != lastFiredFrame && soundPlaying) {
       SoundEffect::stopSoundEffect(soundHandle);
       soundPlaying = false;
