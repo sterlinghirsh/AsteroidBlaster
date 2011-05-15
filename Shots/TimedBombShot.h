@@ -22,6 +22,7 @@ class TimedBombShot : public ExplosiveShot {
 
       // In seconds.
       double spin;
+      double scaleSize;
       double rx;
       double ry;
       double rz;

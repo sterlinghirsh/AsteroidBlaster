@@ -59,6 +59,7 @@ extern GLuint shipXShader;
 extern GLuint shipYShader;
 extern GLuint backShader;
 extern GLuint hitShader;
+extern GLuint explosionShader;
 extern GLuint fbo;
 extern GLuint depthbuffer;
 extern SDL_Surface* gDrawSurface;

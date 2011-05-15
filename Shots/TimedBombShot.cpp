@@ -21,7 +21,7 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const
 
    // Blow up 15 seconds after it's fired.
    timeToExplode = 15;
-   
+   scaleSize = 0;
    explodeRadius = 8;
    
    spin = 90;
@@ -34,7 +34,7 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const
    
    damage = 40;
    slowDownPerSecond = 1.0;
-   seekRadius = 0.0;
+   seekRadius = 20.0;
    collisionRadius = 0.25;
    collisionSphere->updateRadius(seekRadius);
 }
@@ -76,23 +76,16 @@ void TimedBombShot::draw() {
 }
 
 void TimedBombShot::drawExplosion() {
-   double scaleSize;
+   double addSize;
    glPushMatrix();
       glDisable(GL_LIGHTING);
 
-      glColor3d(1, .6, 0);
       setMaterial(ShotMaterial);
       position->glTranslate();
 
-      // Radius 0.5, 5 slices, 5 stacks.
       rx += (double) (rand() % 10);
       ry += (double) (rand() % 20);
       rz += (double) (rand() % 30);
-
-      /*double sx, sy, sz;
-      sx = 5 / (1.5 * 5);
-      sy = 5 / (.5 * 5);
-      sz = 5 / (.8 * 5);*/
 
       if (rx > 100) {
          rx = 0;
@@ -104,12 +97,19 @@ void TimedBombShot::drawExplosion() {
          rz = 0;
       }
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      glUseProgram(hitShader);
+      glUseProgram(explosionShader);
       glPushMatrix();
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);
-      //printf("I got into draw hit effect\n");
-      scaleSize = 5 * (2 - timeSinceExploded) * timeSinceExploded * timeSinceExploded * timeSinceExploded * timeSinceExploded;
+      //printf("Time since exploded: %f\n", timeToExplode);
+      glColor4d(1, .6, 0, timeSinceExploded);
+      //scaleSize = 3 * (2.5 - timeSinceExploded) * (2.5 - timeSinceExploded);
+      addSize = timeSinceExploded / (2.5 - timeSinceExploded);
+      if (scaleSize > 15) {
+         scaleSize += addSize / 5;
+      } else {
+         scaleSize += addSize;
+      }
       glScaled(scaleSize, scaleSize, scaleSize);
       
       //glTranslated(0, 0, .6);
@@ -145,6 +145,7 @@ void TimedBombShot::update(double timeDiff) {
       isExploded = true;
       //explode();
    }
+   //printf("Time since exploded: %f\n", doubleTime() - timeFired);
    // If more time has passed than the bomb's timeToExplode, blow it up.
    if (!isExploded && (doubleTime() - timeFired > timeToExplode)) {
       timeSinceExploded = 2;
