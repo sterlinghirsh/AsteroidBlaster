@@ -32,6 +32,7 @@
 #include "Menus/SettingsMenu.h"
 #include "Menus/HelpMenu.h"
 #include "Menus/CreditsMenu.h"
+#include "Text/Input.h"
 
 #include "SDL.h"
 #include "SDL_mixer.h"
@@ -344,6 +345,7 @@ int main(int argc, char* argv[]) {
    settingsMenu = new SettingsMenu(gameState);
    helpMenu = new HelpMenu();
    creditsMenu = new CreditsMenu();
+   chat = new Input(gameState);
    //turn the menu on for the inial menu display
    mainMenu->menuActive = true;
 
@@ -356,6 +358,7 @@ int main(int argc, char* argv[]) {
    inputManager->addReceiver(settingsMenu);
    inputManager->addReceiver(helpMenu);
    inputManager->addReceiver(creditsMenu);
+   inputManager->addReceiver(chat);
 
    //declare the event that will be reused
    SDL_Event* event = new SDL_Event();
@@ -399,6 +402,8 @@ int main(int argc, char* argv[]) {
          gameState->gameIsRunning = true;
          update(gameState, timeDiff);
          drawGameState(gameState, false);
+         chat->update(timeDiff);
+         chat->draw();
       }
 
       while (SDL_PollEvent(event)) {
@@ -424,6 +429,7 @@ int main(int argc, char* argv[]) {
    delete helpMenu;
    delete creditsMenu;
    delete inputManager;
+   delete chat;
    Music::FreeAll();
    SoundEffect::FreeAll();
 

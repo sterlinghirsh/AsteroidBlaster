@@ -21,7 +21,7 @@ class SettingsMenu : public Menu {
    void draw();
    
    void keyUp(int key);
-   void keyDown(int key);
+   void keyDown(int key, int unicode);
    void mouseDown(int button);
    void mouseMove(int dx, int dy, int x, int y);
    void mouseUp(int button);

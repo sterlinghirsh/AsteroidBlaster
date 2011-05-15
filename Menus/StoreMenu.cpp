@@ -332,7 +332,7 @@ void StoreMenu::handleLevelTimer() {
 /**
  * Handles the player pressing down a key
  */
-void StoreMenu::keyDown(int key) {
+void StoreMenu::keyDown(int key, int unicode) {
    //do nothing if main menu is active
    if(mainMenu->menuActive) { return; } 
    

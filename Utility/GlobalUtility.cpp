@@ -58,6 +58,7 @@ StoreMenu* storeMenu = NULL;
 SettingsMenu* settingsMenu = NULL;
 HelpMenu* helpMenu = NULL;
 CreditsMenu* creditsMenu = NULL;
+Input* chat = NULL;
 TTF_Font* hudFont = NULL;
 TTF_Font* menuFont = NULL;
 

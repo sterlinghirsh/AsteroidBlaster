@@ -35,6 +35,7 @@ class StoreMenu;
 class SettingsMenu;
 class HelpMenu;
 class CreditsMenu;
+class Input;
 class InputManager;
 
 extern GameSettings* gameSettings;
@@ -70,6 +71,7 @@ extern StoreMenu* storeMenu;
 extern HelpMenu* helpMenu;
 extern SettingsMenu* settingsMenu;
 extern CreditsMenu* creditsMenu;
+extern Input* chat;
 extern TTF_Font* hudFont;
 extern TTF_Font* menuFont;
 extern double currentTime;

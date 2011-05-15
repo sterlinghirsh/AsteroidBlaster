@@ -29,6 +29,7 @@
 
 #include "Menus/MainMenu.h"
 #include "Menus/StoreMenu.h"
+#include "Text/Input.h"
 #include "Items/AsteroidShip.h"
 
 #include "Network/UDP_Connection.h"
@@ -765,9 +766,9 @@ void GameState::nextLevel() {
 /**
  * Handles the player pressing down a key
  */
-void GameState::keyDown(int key) {
+void GameState::keyDown(int key, int unicode) {
    //If game is not running, do not take input anymore
-   if(!gameIsRunning){ return;}
+   if(!gameIsRunning || chat->chatActive){ return;}
 
    switch(key) {
       //movement keys, not valid if flying AI is enabled
@@ -904,6 +905,10 @@ void GameState::keyDown(int key) {
       clientCommand.currentWeapon = ship->getNextWeaponID();
       break;
 
+   // Enable chat.
+   case SDLK_j:
+      chat->activate();
+      break;
 
       // Minimap Display Size
    case SDLK_1:
@@ -984,7 +989,7 @@ void GameState::keyDown(int key) {
  */
 void GameState::keyUp(int key) {
    //If game is not running, do not take input anymore
-   if(!gameIsRunning){ return;}
+   if(!gameIsRunning || chat->chatActive){ return;}
 
    switch(key) {
 

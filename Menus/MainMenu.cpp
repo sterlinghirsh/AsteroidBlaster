@@ -245,7 +245,7 @@ void MainMenu::draw(GameState* gameState) {
 /**
  * Handles the player pressing down a key
  */
-void MainMenu::keyDown(int key) {
+void MainMenu::keyDown(int key, int unicode) {
    switch(key) {
    case SDLK_m:
       if(menuActive) {

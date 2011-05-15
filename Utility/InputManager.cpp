@@ -45,7 +45,7 @@ void InputManager::update(const SDL_Event& e) {
 
    case SDL_KEYDOWN:
       for (it = receivers.begin(); it != receivers.end(); it++)
-         (*it)->keyDown(e.key.keysym.sym);
+         (*it)->keyDown(e.key.keysym.sym, e.key.keysym.unicode);
       break;
 
    case SDL_KEYUP:

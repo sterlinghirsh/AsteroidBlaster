@@ -155,7 +155,7 @@ void HelpMenu::draw() {
 /**
  * Handles the player pressing down a key
  */
-void HelpMenu::keyDown(int key) {
+void HelpMenu::keyDown(int key, int unicode) {
    return;
 }
 

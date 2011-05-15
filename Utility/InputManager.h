@@ -19,7 +19,7 @@
 
 struct InputReceiver {
    virtual void keyUp(int key)=0;
-   virtual void keyDown(int key)=0;
+   virtual void keyDown(int key, int unicode)=0;
    virtual void mouseDown(int button)=0;
    virtual void mouseMove(int dx, int dy, int x, int y)=0;
    virtual void mouseUp(int button)=0;

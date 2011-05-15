@@ -247,7 +247,7 @@ void CreditsMenu::draw() {
 /**
  * Handles the player pressing down a key
  */
-void CreditsMenu::keyDown(int key) {
+void CreditsMenu::keyDown(int key, int unicode) {
    if (!menuActive) { return; }
 
    //switch(key) {

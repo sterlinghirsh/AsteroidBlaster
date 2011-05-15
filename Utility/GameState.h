@@ -126,7 +126,7 @@ class GameState : public InputReceiver {
       
       // virtual functions required by InputReciever
       virtual void keyUp(int key);
-      virtual void keyDown(int key);
+      virtual void keyDown(int key, int unicode);
       virtual void mouseDown(int button);
       virtual void mouseMove(int dx, int dy, int x, int y);
       virtual void mouseUp(int button);

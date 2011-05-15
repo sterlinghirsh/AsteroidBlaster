@@ -193,7 +193,7 @@ void SettingsMenu::draw() {
 /**
  * Handles the player pressing down a key
  */
-void SettingsMenu::keyDown(int key) {
+void SettingsMenu::keyDown(int key, int unicode) {
    return;
 }
 
