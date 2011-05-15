@@ -157,7 +157,7 @@ void SoundEffect::setPosition(int handle, Vector3D* position, Object3D* receiver
 
    // If it's on the left, make it from 360 (directly ahead) to 180 (directly behind).
    if (leftRightAmount < 0) {
-      angle = 360 - angle;
+      angle = (Sint16) (360 - angle);
    }
 
    Mix_SetPosition(handle, angle, distance);
