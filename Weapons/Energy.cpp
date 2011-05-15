@@ -105,7 +105,7 @@ void Energy::fire() {
       chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, ship, this, ship->gameState);
       ship->custodian->add(chargingShot);
 
-      soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", false);
+      soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position);
       chargingSoundPlaying = true;
    }
 
