@@ -357,8 +357,10 @@ Object3D* ShootingAI::chooseTarget() {
      if(dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL)
         isAShip = true;
 
-     else if(dynamic_cast<Shard*>(*targets_iterator) != NULL)
+     else if(dynamic_cast<Shard*>(*targets_iterator) != NULL) {
+        curWeight += 30;
         isAShard = true;
+     }
 
      // If the target is not an asteroid, shard, or ship, skip it.
      if (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && !isAShard && !isAShip) {
@@ -366,7 +368,7 @@ Object3D* ShootingAI::chooseTarget() {
       }
 
      // If it's a shard and it's further than 30 units away, skip it.
-     if (isAShard && (*targets_iterator)->position->distanceFrom(*ship_position) > 30)
+     if (isAShard && (*targets_iterator)->position->distanceFrom(*ship_position) > ship->weapons[TRACTOR_WEAPON_INDEX]->range)
         continue;
 
      if (isAShip) {
@@ -381,7 +383,6 @@ Object3D* ShootingAI::chooseTarget() {
         // Only add weight if the considered ship is not our own ship.
         if (consideredShip->id != ship->id) {
            curWeight += 20;
-           //printf("added 10 b/c target is a ship.\n", curWeight);
         }
      }
 

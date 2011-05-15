@@ -21,7 +21,8 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn,
  AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState) {
    persist = true;
    angle = M_PI / 20; // Radians from the center
-   length = 40;
+   // The length of the tractor beam shot is the range of the weapon.
+   length = owner->weapons[TRACTOR_WEAPON_INDEX]->range;
    farRadius = length * tan(angle);
    framesAlive = 0;
    forward = new Vector3D(*velocity);

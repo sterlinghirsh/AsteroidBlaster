@@ -23,6 +23,10 @@ Weapon::Weapon(AsteroidShip* owner)
    ammoAmount = 1;
    weaponPrice = 2;
    fireBackwards = false;
+   /* Initialize the range to an arbitrary large number for all weapons.
+    * Children will set their own range if necessary.
+    */
+   range = 9999;
 
    r = g = b = 0;
    activationTimer.reset();

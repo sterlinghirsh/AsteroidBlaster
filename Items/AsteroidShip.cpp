@@ -1706,3 +1706,4 @@ void AsteroidShip::atLevelEnd() {
    curRoundShards = 0;
    health = healthMax;
 }
+

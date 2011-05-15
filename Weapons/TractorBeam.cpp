@@ -1,5 +1,4 @@
-/**
- * Tractor Beam
+/** * Tractor Beam
  * This pulls in crystals.
  * @author Sterling Hirsh (shirsh@calpoly.edu)
  * @date Valentine's Day <3
@@ -18,6 +17,7 @@ TractorBeam::TractorBeam(AsteroidShip* owner) : Weapon(owner) {
    curAmmo = -1;
    purchased = true;
    randomAIVariationAmount = 4;
+   range = 40;
 
    icon = "TractorBeamIcon";
    r = 0;

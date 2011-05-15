@@ -70,6 +70,8 @@ class Weapon {
       int levelMax;
       int ammoPrice;
       int ammoAmount;
+      // The range of the weapon. For most, this will be 9999.
+      float range;
 
       bool fireBackwards;
       // The amount of variation added on when an AI is using the weapon.
