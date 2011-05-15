@@ -41,11 +41,5 @@ void ClientCommand::print() {
                "currentWeapon=" << currentWeapon << std::endl <<
                "mouseX=" << mouseX << std::endl <<
                "mouseY=" << mouseY << std::endl;
-
-   forwardAcceleration = rightAcceleration = upAcceleration = 0;
-   yawSpeed = rollSpeed = pitchSpeed = 0;
-   brake = fire = false;
-   currentWeapon = 1; // Ship's default.
-   mouseX = mouseY = 0;
 }
 

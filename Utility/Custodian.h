@@ -54,14 +54,15 @@ class Custodian {
       std::set<Shot*> shots;
       std::set<AsteroidShip*> ships;
 
+      // mapping of client id to ship ID
+      std::map<unsigned, AsteroidShip*> shipsByClientID;
+
    private:
       unsigned nextID;
       std::vector<Object3D*> objectsByMinX;
       std::vector<Object3D*> objectsByMaxX;
       std::map<unsigned, Object3D*> objectsByID;
 
-      // Later, for networking.
-      //std::map<unsigned, AsteroidShip*> shipsByClientID;
 
       std::list<Object3D*> objectsToAdd;
       const GameState* gameState;

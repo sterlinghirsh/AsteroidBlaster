@@ -10,6 +10,7 @@
 
 
 #include "Server.h"
+#include "Utility/GameState.h"
 
 UDP_Connection* udpConnection;
 
@@ -52,12 +53,15 @@ void Server::networkFunction() {
 
 int main() {
    boost::asio::io_service io;
-
+   //GameState* gameState = new GameState(80.00, false, false);
    Server p(io);
-   udpConnection = new UDP_Connection(io);
+   //udpConnection = new UDP_Connection(io, gameState);
    boost::thread t(boost::bind(&boost::asio::io_service::run, &io));
-   io.run();
-   t.join();
+   //io.run();
+   //t.join();
+   while (1) {
+      
+   }
 
    return 0;
 }

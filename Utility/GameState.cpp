@@ -29,13 +29,17 @@
 
 #include "Menus/MainMenu.h"
 #include "Menus/StoreMenu.h"
+#include "Items/AsteroidShip.h"
+
+#include "Network/UDP_Connection.h"
 
 #include <math.h>
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
+#include <boost/thread.hpp>
 
-#include "Items/AsteroidShip.h"
+
 
 #define SAVEFILENAME "AsteroidBlaster.sav"
 
@@ -43,9 +47,20 @@ extern double minimapSizeFactor;
 
 std::ostringstream sstream2; // TODO: Better name plz.
 
-GameState::GameState(double worldSizeIn, bool _inMenu) :
+GameState::GameState(double worldSizeIn, bool _inMenu, bool _isServer) :
    custodian(this) {
       inMenu = _inMenu;
+      isServer = _isServer;
+
+      if (isServer) {
+         io = new boost::asio::io_service();
+         udpConnection = new UDP_Connection(*io, this);
+         networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
+      } else {
+         io = NULL;
+         udpConnection = NULL;
+         networkThread = NULL;
+      }
 
       godMode = false;
       gameIsRunning = true;
@@ -183,6 +198,16 @@ void GameState::addAIPlayer() {
    otherShip->flyingAI->enable();
    otherShip->shooter->enable();
    custodian.add(otherShip);
+}
+
+void GameState::addNetworkPlayer(unsigned clientID) {
+   AsteroidShip* otherShip = new AsteroidShip(this);
+   double randX = (randdouble() - 0.5)*(worldSize / 2);
+   double randY = (randdouble() - 0.5)*(worldSize / 2);
+   double randZ = (randdouble() - 0.5)*(worldSize / 2);
+   otherShip->position->update(randX, randY, randZ);
+   custodian.add(otherShip);
+   custodian.shipsByClientID.insert(std::pair<unsigned, AsteroidShip*>(clientID, otherShip));
 }
 
 /**

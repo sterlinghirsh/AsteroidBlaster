@@ -54,7 +54,7 @@ FILES=$(UTILITYFILES) $(MENUFILES) $(GRAPHICSFILES) $(ITEMSFILES) $(SHOTSFILES) 
 
 OBJECTS=$(FILES:.cpp=.o)
 
-all: $(FILES) AsteroidBlaster Server Client
+all: $(FILES) AsteroidBlaster
 
 AsteroidBlaster: AsteroidBlaster.o $(OBJECTS)
 	$(CC) $(LDFLAGS) AsteroidBlaster.o $(OBJECTS) -o $@

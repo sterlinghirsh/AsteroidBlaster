@@ -14,12 +14,14 @@
 
 #include "Network/UDP_Connection.h"
 #include "Network/ClientCommand.h"
+#include "Utility/GameState.h"
+#include "Items/AsteroidShip.h"
 
 //Constructor
-UDP_Connection::UDP_Connection(boost::asio::io_service& io_service)
-: socket_(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 5000)) {
+UDP_Connection::UDP_Connection(boost::asio::io_service& io_service, GameState* _GameState)
+: socket_(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 5000)), gameState(_GameState) {
    //std::cout << "UDP_Connection running constructor..." << std::endl;
-   currClientID = 0;
+   curClientID = 0;
    start_receive();
 }
 
@@ -63,24 +65,25 @@ void UDP_Connection::handle_receive(const boost::system::error_code& error, std:
             ia >> receivedPackID;
          }
          if (receivedPackID == 0) {
-            std::cout << "init packet found, adding with ID of " << currClientID << std::endl;
-            tempRemoteClients.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint),currClientID) );
+            std::cout << "init packet found, adding with ID of " << curClientID << std::endl;
+            tempRemoteClients.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint),curClientID) );
             
 
             // now send the client handshake1 back
             {
                std::ostringstream oss;
                boost::archive::text_oarchive oa(oss);
-               oa << currClientID;
+               oa << curClientID;
 
                send(oss.str(), tempEndPoint);
             }
-            currClientID++;
+            curClientID++;
          } else {
             std::cout << "Error! this packet is not init packet:" <<  receivedPackID << ". |||" << recv_buffer_.data() << std::endl;
          }
       } else {
-         std::cout << "handshake2 initiated with client id client found, id:" << tempIter->second << std::endl;
+         int curClientID = realIter->second;
+         std::cout << "handshake2 initiated with client id client found, id:" << curClientID << std::endl;
          std::istringstream iss(recv_buffer_.data());
          boost::archive::text_iarchive ia(iss);
          ia >> receivedPackID;
@@ -88,8 +91,8 @@ void UDP_Connection::handle_receive(const boost::system::error_code& error, std:
             std::cout << "Got handshake2 packet!" << std::endl;
             int tempClientID;
             ia >> tempClientID;
-            if (tempClientID == tempIter->second) {
-               std::cout << "Is the correct ID!" << std::endl;
+            if (tempClientID == curClientID) {
+               std::cout << "The ID is correct! Adding it to the game for good!" << std::endl;
                // now send the client handshake3 back
                {
                   int i = 2;
@@ -98,10 +101,11 @@ void UDP_Connection::handle_receive(const boost::system::error_code& error, std:
                   oa << i;
                   send(oss.str(), tempEndPoint);
                }
-               remoteClients.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint),tempIter->second) );
+               remoteClients.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint), curClientID) );
                tempRemoteClients.erase (tempEndPoint);
+               gameState->addNetworkPlayer(curClientID);
             } else {
-               std::cout << "Wrong ID? Removing this ID/Client. tempClientID=" << tempClientID << "|realIter->second=" << tempIter->second << std::endl;
+               std::cout << "Wrong ID? Removing this ID/Client. tempClientID=" << tempClientID << "|realIter->second=" << curClientID << std::endl;
                tempRemoteClients.erase (tempEndPoint);
             }
          } else {
@@ -110,16 +114,24 @@ void UDP_Connection::handle_receive(const boost::system::error_code& error, std:
       }
    // It's a client that already has send packets before
    } else {
-      std::cout << "old client found, id:" << realIter->second << "| address:" << tempEndPoint << std::endl;
+      int curClientID = realIter->second;
+      std::cout << "old client found, id:" << curClientID << "| address:" << tempEndPoint << std::endl;
       std::istringstream iss(recv_buffer_.data());
       boost::archive::text_iarchive ia(iss);
       ia >> receivedPackID;
 
       if (receivedPackID == 3) {
-         std::cout << "Got ClientCommand packet!" << std::endl;
-         ClientCommand temp;
-         ia >> temp;
-         temp.print();
+         std::cout << "Got ClientCommand packet! Applying it to client id: " << curClientID << std::endl;
+         ClientCommand tempCommand;
+         ia >> tempCommand;
+         tempCommand.print();
+         std::map<unsigned, AsteroidShip*>::iterator iterShip = gameState->custodian.shipsByClientID.find(curClientID);
+         if (iterShip == gameState->custodian.shipsByClientID.end()) {
+            std::cout << "umm something went wrong.. client id is invalid?" << std::endl;
+         } else {
+            iterShip->second->readCommand(tempCommand);
+         }
+
       } else {
          std::cout << "Error! this packet id is unknown:" <<  receivedPackID << ". |||" << recv_buffer_.data() << std::endl;
       }

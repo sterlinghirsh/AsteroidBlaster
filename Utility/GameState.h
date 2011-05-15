@@ -25,6 +25,15 @@ class Text;
 class ProgressBar;
 class WeaponDisplay;
 class Screen;
+class UDP_Connection;
+
+namespace boost {
+   class thread;
+   
+   namespace asio {
+      class io_service;
+   }
+}
 
 class GameState : public InputReceiver {
    //public variables------------------------------
@@ -56,6 +65,7 @@ class GameState : public InputReceiver {
       // Bloom
       float aspect;
       
+      bool isServer;
       bool godMode;
       bool gameIsRunning;
       bool inMenu;
@@ -69,6 +79,11 @@ class GameState : public InputReceiver {
       ClientCommand clientCommand;
       
       BoundingSpace* cube;
+
+      //server stuff
+      UDP_Connection* udpConnection;
+      boost::thread* networkThread;
+      boost::asio::io_service* io;
       
    //private variables------------------------------
    private:
@@ -106,7 +121,7 @@ class GameState : public InputReceiver {
    
    //public functions------------------------------
    public:
-      GameState(double worldSize, bool _inMenu);
+      GameState(double worldSize, bool _inMenu, bool _isServer);
       virtual ~GameState();
       
       // virtual functions required by InputReciever
@@ -159,6 +174,7 @@ class GameState : public InputReceiver {
       void setLevelTimer();
       
       void addAIPlayer();
+      void addNetworkPlayer(unsigned clientID);
       
       void serialize(std::ostream &oss);
       void deserialize(std::istream &iss);

@@ -328,9 +328,10 @@ int main(int argc, char* argv[]) {
 
    // Load the textures, sounds, and music.
    load();
-
+   
+   bool isServer = argc == 2;
    // Initialize the gameState
-   gameState = new GameState(WORLD_SIZE, false);
+   gameState = new GameState(WORLD_SIZE, false, isServer);
    
    // Initialize the screens
    gameState->addScreens();
