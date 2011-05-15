@@ -351,16 +351,13 @@ FlyMode FlyingAI :: chooseMode(void) {
 /**
  * Preform flying AI operations
  */
-int FlyingAI :: think(double dt) {
-   if (ship->gameState == NULL)
-      return 0;
+void FlyingAI :: think(double dt) {
+   // If the FlyingAI isn't enabled, or there's no gamestate, skip flying.
+   if (!enabled || ship->gameState == NULL)
+      return;
    
    Vector3D* desiredForward;
    Vector3D* desiredTraj;
-   if(!enabled) {
-      return 0;
-   }
-   
    curMode = chooseMode();
    
    switch (curMode) {
@@ -393,8 +390,6 @@ int FlyingAI :: think(double dt) {
 
    if(desiredTraj != NULL)
       delete desiredTraj;
-      
-   return 0;
 }
 
 void FlyingAI :: enable() {

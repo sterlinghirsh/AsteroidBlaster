@@ -43,15 +43,19 @@ class ShootingAI : public AI {
    Timer weaponSwitchTimer;
    Weapon* prevWeapon;
    
-   /* TODO Add your respective functions here. */
    int aimAt(double dt, Object3D* target);
+   /**
+    * Called when the AI doesn't have a target. In this case, it should just lock
+    * the cursor to the middle of the screen.
+    */
+   void aimCursorAtMiddle(double dt);
    void chooseWeapon(Object3D** target);
    void selectWeaponUpdateChosen(int weaponIndex);
    Object3D* chooseTarget();
 
    public:
    ShootingAI(AsteroidShip* owner);
-   virtual int think(double dt);
+   virtual void think(double dt);
    // Enable this AI
    virtual void enable();
    // Disable this AI. It will stop shooting.

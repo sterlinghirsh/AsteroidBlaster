@@ -1597,6 +1597,10 @@ int AsteroidShip::getCurrentView() {
    return currentView;
 }
 
+/**
+ * Used by Radar to move the camera to the shot origin, so that VFC for
+ * the ShootingAI will only target things it could see.
+ */
 void AsteroidShip::setCameraToShotOrigin() {
    gluLookAt(shotOrigin.x, shotOrigin.y, shotOrigin.z,
          shotOrigin.x + forward->x,

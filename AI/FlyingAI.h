@@ -63,7 +63,7 @@ class FlyingAI : public AI {
 public:  
    FlyingAI(AsteroidShip* owner);
    virtual ~FlyingAI();
-   virtual int think(double dt);
+   virtual void think(double dt);
    virtual void enable();
    virtual void disable();
    virtual bool isEnabled();

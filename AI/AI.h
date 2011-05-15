@@ -13,7 +13,7 @@
 
 class AI {
    public:
-      virtual int think(double dt)=0;
+      virtual void think(double dt)=0;
       virtual void enable()=0;
       virtual void disable()=0;
       virtual bool isEnabled()=0;

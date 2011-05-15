@@ -107,6 +107,48 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
    return 0;
 }
 
+/**
+ * Called when the AI doesn't have a target. In this case, it should just lock
+ * the cursor to the middle of the screen.
+ */
+void ShootingAI::aimCursorAtMiddle(double dt) {
+   Vector3D wouldHit;
+   double ang = 0;
+  
+   Point3D aim = lastShotPos;
+   // This target position is just in front of the ship.
+   Point3D targetPos = ship->shotOrigin;
+   //Vector3D backwards = *(ship->forward);
+   //backwards.scalarMultiply(-1);
+
+   ship->forward->movePoint(targetPos);
+
+   Vector3D targetDir = (targetPos - ship->shotOrigin).getNormalized();
+
+   // This section of code does angle interpolation.
+   // Find the angle between our vector and where we want to be.
+   ang = acos(aim * targetDir);
+
+   // Get our axis of rotation.
+   wouldHit = (aim ^ targetDir);
+   wouldHit.normalize();
+
+   if (ang > (gunRotSpeed * dt)) {
+      Quaternion q;
+      q.FromAxis(wouldHit, gunRotSpeed * dt);
+
+      aim = q * aim;
+      // Normalize the vector.
+      aim.normalize();
+   }
+   else {
+      aim = targetDir;
+   }
+   
+   ship->updateShotDirection(aim);
+   lastShotPos = aim;
+}
+
 // Choose the appropriate weapon for this situation.
 void ShootingAI::chooseWeapon(Object3D** target) {
    // Don't choose a new weapon if there's no target.
@@ -378,14 +420,12 @@ Object3D* ShootingAI::chooseTarget() {
    return closest;
 }
 
-int ShootingAI::think(double dt) {
-   if(!enabled) {
-      return 0;
+void ShootingAI::think(double dt) {
+   // If the ShootingAI isn't enabled, or there's no gamestate, skip shooting.
+   if(!enabled || ship->gameState == NULL) {
+      return;
    }
    
-   // TODO this is where stuff goes! Should probably figure out the order of
-   // the functions.
-
    /* Also, do we want to try and rechoose a target every think (ie frame)?
     * If not, it would make the shooter a little quicker, but may end up
     * shooting at bad targets (if the gun is pointed in the opposite direction,
@@ -396,8 +436,6 @@ int ShootingAI::think(double dt) {
     * Just an idea, we will talk it over.
     */
 
-   /* This order is tentative. We will probably change it. */
-   
    Object3D* target = chooseTarget();
 
    if (target == NULL && target != lastTarget) {
@@ -430,11 +468,10 @@ int ShootingAI::think(double dt) {
       aimAt(dt, target);
    }
    else {
+      // Aim the cursor in front of the ship
+      aimCursorAtMiddle(dt);
       ship->fire(false);
    }
-
-   // Think has a return value just in case it needs to.
-   return 0;
 }
 
 void ShootingAI :: enable() {
