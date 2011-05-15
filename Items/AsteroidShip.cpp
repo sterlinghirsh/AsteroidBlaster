@@ -1673,9 +1673,10 @@ Shard* AsteroidShip::makeShard() {
 
    Shard* shard;
    shard = new Shard(0.5, gameState->worldSize, gameState);
-   shard->velocity->updateMagnitude(0.0, 0.0, 0.0);
    shard->position->clone(position);
    randomOffset.movePoint(*shard->position);
+   shard->velocity->updateMagnitude(position, shard->position);
+   shard->velocity->scalarMultiplyUpdate(10);
    return shard;
 }
 
