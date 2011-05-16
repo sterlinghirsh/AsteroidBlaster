@@ -23,6 +23,16 @@
 
 #define SHOT_ANGLE_FACTOR ((M_PI/180) * VERT_FOV / 2)
 
+int TRACTOR_WEAPON_INDEX = 0;
+int BLASTER_WEAPON_INDEX = 0;
+int RAILGUN_WEAPON_INDEX = 0;
+int ELECTRICITY_WEAPON_INDEX = 0;
+int TIMEDBOMBER_WEAPON_INDEX = 0;
+int REMOTEBOMBER_WEAPON_INDEX = 0;
+int ENERGY_WEAPON_INDEX = 0;
+
+int NUMBER_OF_WEAPONS = 0;
+
 using namespace std;
 const double rotationFactor = 2.6;
 const float shipScale = 5;
@@ -131,20 +141,20 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    // Add weapons to the list!
    /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE CONSTANTS IN Utility/Constants.h
    */
-   weapons.push_back(new TractorBeam(this));
-   weapons.push_back(new Blaster(this));
-   weapons.push_back(new RailGun(this));
-   weapons.push_back(new Electricity(this));
-   //weapons.push_back(new LawnMower(this));
-   //weapons.push_back(new Ram(this));
-   //weapons.push_back(new AntiInertia(this));
-   weapons.push_back(new TimedBomber(this));
-   weapons.push_back(new RemoteBomber(this));
-   weapons.push_back(new Energy(this));
+   int tmpNumberOfWeapons = 0;
+   
+   weapons.push_back(new TractorBeam(this, tmpNumberOfWeapons++));
+   weapons.push_back(new Blaster(this, tmpNumberOfWeapons++));
+   weapons.push_back(new RailGun(this, tmpNumberOfWeapons++));
+   weapons.push_back(new Electricity(this, tmpNumberOfWeapons++));
+   //weapons.push_back(new LawnMower(this, tmpNumberOfWeapons++));
+   //weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
+   //weapons.push_back(new AntiInertia(this, tmpNumberOfWeapons++));
+   weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
+   weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
+   weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
 
-   for (int i = 0; i < weapons.size(); ++i) {
-      weapons[i]->index = i;
-   }
+   NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
 
    soundHandle = -1;
 

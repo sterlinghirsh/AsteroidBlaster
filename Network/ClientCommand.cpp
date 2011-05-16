@@ -6,7 +6,7 @@
  */
 
 #include "Network/ClientCommand.h"
-#include "Utility/Constants.h"
+#include "Utility/GlobalUtility.h"
 #include <iostream>
 
 #include <boost/archive/text_oarchive.hpp>

@@ -15,7 +15,7 @@ class AsteroidShip;
 
 class TractorBeam : public Weapon {
    public:
-      TractorBeam(AsteroidShip* owner);
+      TractorBeam(AsteroidShip* owner, int _index);
       virtual ~TractorBeam();
       virtual Point3D project(Object3D*);
       virtual bool shouldFire(Point3D*, Point3D*);

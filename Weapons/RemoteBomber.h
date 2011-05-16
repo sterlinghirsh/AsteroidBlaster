@@ -14,7 +14,7 @@ class RemoteBombShot;
 
 class RemoteBomber : public Weapon {
    public:
-      RemoteBomber(AsteroidShip* owner);
+      RemoteBomber(AsteroidShip* owner, int _index);
       virtual ~RemoteBomber();
       virtual Point3D project(Object3D*);
       virtual void update(double timeDiff);

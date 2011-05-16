@@ -12,7 +12,7 @@
 
 double minExplodeTime = 0.5;
 
-RemoteBomber::RemoteBomber(AsteroidShip* owner) : Weapon(owner) {
+RemoteBomber::RemoteBomber(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    shotSpeed = 30.0; // Units per second
    coolDown = 5; // Seconds
    randomVariationAmount = 0.25; // Units

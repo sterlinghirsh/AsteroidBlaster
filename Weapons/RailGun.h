@@ -12,7 +12,7 @@
 
 class RailGun : public Weapon {
    public:
-      RailGun(AsteroidShip* owner);
+      RailGun(AsteroidShip* owner, int _index);
       virtual ~RailGun();
       virtual Point3D project(Object3D*);
       virtual bool shouldFire(Point3D*, Point3D*);

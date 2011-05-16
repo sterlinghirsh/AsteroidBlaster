@@ -11,8 +11,8 @@
 #include "Utility/Quaternion.h"
 #include "Utility/SoundEffect.h"
 
-RailGun::RailGun(AsteroidShip* owner)
-: Weapon(owner) {
+RailGun::RailGun(AsteroidShip* owner, int _index)
+: Weapon(owner, _index) {
    coolDown = 2; // Seconds
    name = "Rail Gun";
    curAmmo = -1;

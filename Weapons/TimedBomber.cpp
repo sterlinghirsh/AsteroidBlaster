@@ -10,7 +10,7 @@
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
 
-TimedBomber::TimedBomber(AsteroidShip* owner) : Weapon(owner) {
+TimedBomber::TimedBomber(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    shotSpeed = 20; // Units per second
    coolDown = 5.0; // Seconds
    randomVariationAmount = 0.25; // Units

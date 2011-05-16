@@ -15,7 +15,7 @@ struct Point3D;
 /* Classter Energy */
 class Energy : public Weapon {
    public:
-      Energy(AsteroidShip* owner);
+      Energy(AsteroidShip* owner, int _index);
       virtual ~Energy();
       virtual Point3D project(Object3D*);
       virtual void update(double timeDiff);

@@ -14,7 +14,7 @@ struct Point3D;
 /* Classter Blaster */
 class Blaster : public Weapon {
    public:
-      Blaster(AsteroidShip* owner);
+      Blaster(AsteroidShip* owner, int _index);
       virtual ~Blaster();
       virtual Point3D project(Object3D*);
       virtual void update(double timeDiff);

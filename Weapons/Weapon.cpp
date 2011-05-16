@@ -14,8 +14,8 @@
 /**
  * Initialize the ship and timeLastFired.
  */
-Weapon::Weapon(AsteroidShip* owner)
-: ship(owner), timeLastFired(0), icon("ZoeRedEyes") {
+Weapon::Weapon(AsteroidShip* owner, int _index)
+: ship(owner), index(_index), timeLastFired(0), icon("ZoeRedEyes") {
    level = 1;
    levelMax = 5;
    purchased = false;
@@ -30,7 +30,6 @@ Weapon::Weapon(AsteroidShip* owner)
 
    r = g = b = 0;
    activationTimer.reset();
-   index = -2;
 }
 
 Weapon::~Weapon() {

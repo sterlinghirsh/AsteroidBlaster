@@ -11,8 +11,8 @@
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
 
-Blaster::Blaster(AsteroidShip* owner)
-: Weapon(owner) {
+Blaster::Blaster(AsteroidShip* owner, int _index)
+: Weapon(owner, _index) {
    shotSpeed = 40; // Units per second
    coolDown = 0.15; // Seconds
 

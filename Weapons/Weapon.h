@@ -27,7 +27,7 @@ enum WeaponType {
 
 class Weapon {
    public:
-      Weapon(AsteroidShip* owner);
+      Weapon(AsteroidShip* owner, int _index);
       virtual ~Weapon();
       virtual void fire()=0;
       virtual void debug()=0;

@@ -11,8 +11,8 @@
 #include "Utility/SoundEffect.h"
 #include "Shots/EnergyShot.h"
 
-Energy::Energy(AsteroidShip* owner)
-: Weapon(owner) {
+Energy::Energy(AsteroidShip* owner, int _index)
+: Weapon(owner, _index) {
    shotSpeed = 80; // Units per second
    coolDown = 0.3; // Seconds
    randomVariationAmount = 1.0; // Units

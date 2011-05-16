@@ -9,7 +9,7 @@
 #include "Shots/TractorBeamShot.h"
 #include "Utility/SoundEffect.h"
 
-TractorBeam::TractorBeam(AsteroidShip* owner) : Weapon(owner) {
+TractorBeam::TractorBeam(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    coolDown = 0;
    name = "Tractor Beam";
    lastFiredFrame = 0; // We use these three to handle the audio.

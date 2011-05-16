@@ -77,6 +77,15 @@ extern TTF_Font* hudFont;
 extern TTF_Font* menuFont;
 extern double currentTime;
 
+extern int TRACTOR_WEAPON_INDEX;
+extern int BLASTER_WEAPON_INDEX;
+extern int RAILGUN_WEAPON_INDEX;
+extern int ELECTRICITY_WEAPON_INDEX;
+extern int TIMEDBOMBER_WEAPON_INDEX;
+extern int REMOTEBOMBER_WEAPON_INDEX;
+extern int ENERGY_WEAPON_INDEX;
+
+extern int NUMBER_OF_WEAPONS;
 
 double p2wx(int);
 double p2wy(int);

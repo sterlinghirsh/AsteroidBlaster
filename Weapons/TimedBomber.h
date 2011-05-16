@@ -13,7 +13,7 @@ struct Point3D;
 
 class TimedBomber : public Weapon {
    public:
-      TimedBomber(AsteroidShip* owner);
+      TimedBomber(AsteroidShip* owner, int _index);
       virtual ~TimedBomber();
       virtual Point3D project(Object3D*);
       virtual void update(double timeDiff);
