@@ -7,30 +7,36 @@
  */
 
 #include "Utility/GameState.h"
+
 #include "Utility/Matrix4.h"
 #include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
-#include "Graphics/Texture.h"
-#include "Particles/Particle.h"
-#include "Text/GameMessage.h"
 #include "Utility/Collision.h"
 #include "Utility/GlobalUtility.h"
-#include "Items/Asteroid3D.h"
-#include "Items/Spring.h"
-#include "Text/Text.h"
-#include "Items/BoundingSpace.h"
+
+#include "Graphics/Texture.h"
 #include "Graphics/Skybox.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Camera.h"
+
+#include "Particles/Particle.h"
+
+#include "Text/Text.h"
+#include "Text/Input.h"
+#include "Text/GameMessage.h"
+
+#include "Items/AsteroidShip.h"
+#include "Items/BoundingSpace.h"
+#include "Items/Asteroid3D.h"
+#include "Items/Spring.h"
+
+#include "Menus/MainMenu.h"
+#include "Menus/StoreMenu.h"
+
 #include "HUD/ProgressBar.h"
 #include "HUD/WeaponDisplay.h"
 #include "HUD/Minimap.h"
 #include "HUD/Screen.h"
-
-#include "Menus/MainMenu.h"
-#include "Menus/StoreMenu.h"
-#include "Text/Input.h"
-#include "Items/AsteroidShip.h"
 
 #include "Network/UDP_Server.h"
 #include "Network/UDP_Client.h"
@@ -40,8 +46,6 @@
 #include <fstream>
 #include <sstream>
 #include <boost/thread.hpp>
-
-
 
 #define SAVEFILENAME "AsteroidBlaster.sav"
 
@@ -168,6 +172,25 @@ GameState::GameState(GameStateMode _gsm) :
    }
 
 /**
+ * Deconstructor: clean up all of our objects.
+ */
+GameState::~GameState() {
+   delete skybox;
+   delete ship;
+   delete shipCamera;
+   delete spectatorCamera;
+   delete spring;
+   delete cube;
+   delete weaponReadyBar;
+   if (udpServer != NULL) {
+      delete udpServer;
+   }
+   if (udpClient != NULL) {
+      delete udpServer;
+   }
+}
+
+/**
  * The game should run for levelDuration # of seconds.
  */
 void GameState::setLevelTimer() {
@@ -188,19 +211,6 @@ void GameState::pauseLevelTimer() {
  */
 void GameState::resumeLevelTimer() {
    levelTimer.resume();
-}
-
-/**
- * Deconstructor: clean up all of our objects.
- */
-GameState::~GameState() {
-   delete skybox;
-   delete ship;
-   delete shipCamera;
-   delete spectatorCamera;
-   delete spring;
-   delete cube;
-   delete weaponReadyBar;
 }
 
 void GameState::addAIPlayer() {
