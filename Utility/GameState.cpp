@@ -68,11 +68,13 @@ GameState::GameState(GameStateMode _gsm) :
          udpServer = NULL;
          networkThread = NULL;
       } else if (gsm == ClientMode) {
+         inMenu = false;
          io = new boost::asio::io_service();
          udpClient = new UDP_Client(*io, this, ipAddress, portNumber);
          udpServer = NULL;
          networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       } else if (gsm == ServerMode) {
+         inMenu = false;
          io = new boost::asio::io_service();
          udpClient = NULL;
          udpServer = new UDP_Server(*io, this, portNumber);
@@ -768,6 +770,7 @@ void GameState::initAsteroids() {
       } while (numCollisions > 0);
    }
    spaceHolder->shouldRemove = true;
+   custodian.update();
 }
 
 void GameState::setCurFPS(double fpsIn) {
@@ -812,7 +815,7 @@ void GameState::reset(bool shouldLoad) {
    // The level is not over when we're starting a new game.
    levelOver = false;
    isCountingDown = false;
-
+   
    custodian.add(ship);
    initAsteroids();
 

@@ -78,6 +78,12 @@ Server.o: Server.cpp
 run:
 	./${PROGNAME}
 
+runServer:
+	./${PROGNAME} -s 5000
+
+runClient:
+	./${PROGNAME} -c localhost 5000
+
 lib:
 	./lib.sh make
 
