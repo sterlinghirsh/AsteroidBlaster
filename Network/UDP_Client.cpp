@@ -26,7 +26,8 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
    clientID = 0;
 
    boost::asio::ip::udp::resolver resolver(io_service);
-   boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), _ip, _portNum);
+   boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), _ip,
+    (boost::asio::ip::resolver_query_base::flags) _portNum);
    serverEndPoint = *resolver.resolve(query);
    
    // Start handshake-------------------------
