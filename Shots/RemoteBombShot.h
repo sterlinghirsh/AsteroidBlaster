@@ -13,7 +13,7 @@ class RemoteBomber;
 
 class RemoteBombShot : public ExplosiveShot {
    public:
-      RemoteBombShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn, RemoteBomber* const _weapon, const GameState* _gamestate);
+      RemoteBombShot(Point3D &posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, RemoteBomber* const _weapon, const GameState* _gamestate);
       virtual ~RemoteBombShot();
       virtual void draw();
       virtual void update(double timeDiff);

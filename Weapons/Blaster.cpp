@@ -63,7 +63,7 @@ void Blaster::fire() {
    ship->shotDirection.movePoint(start, 3);
    ship->setShakeAmount(0.05f);
    ship->custodian->add(new ProjectileShot(start,
-            shotDirection, ship, ship->gameState));
+            shotDirection, index, ship, ship->gameState));
    // Don't play sound effects in godMode b/c there would be too many.
    if (!ship->gameState->godMode) {
       SoundEffect::playSoundEffect("BlasterShot2.wav", &start);

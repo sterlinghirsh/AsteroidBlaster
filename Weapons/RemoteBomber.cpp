@@ -70,7 +70,7 @@ void RemoteBomber::fire() {
    ship->shotDirection.movePoint(start);
    ship->setShakeAmount(0.1f);
    firedShot = new RemoteBombShot(start,
-    shotDirection, ship, this, ship->gameState);
+    shotDirection, index, ship, this, ship->gameState);
    ship->custodian->add(firedShot);
    // Don't play sound effects in godMode b/c there would be too many.
    if (!ship->gameState->godMode) {

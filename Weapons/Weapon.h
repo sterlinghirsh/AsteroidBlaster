@@ -70,6 +70,9 @@ class Weapon {
       int levelMax;
       int ammoPrice;
       int ammoAmount;
+      
+      // The index of the weapon in the weapons array.
+      int index;
       // The range of the weapon. For most, this will be 9999.
       float range;
 

@@ -15,8 +15,8 @@
 
 const int particleCycle = 100;
 
-ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn,
- AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState) {
+ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
+ AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
    persist = false;
    minX = minY = minZ = -0.1;
    maxX = maxY = maxZ = 0.1;

@@ -29,6 +29,8 @@
 #include "Weapons/RemoteBomber.h"
 #include <list>
 
+#define DAMAGER_INDEX_ASTEROID -1
+
 // Later we'll put in a model for the ship.
 
 extern GLfloat headlight_pos[4];
@@ -47,6 +49,8 @@ class AsteroidShip : public Object3D {
    //public variables------------------------------
    public:
       int score;
+      int kills;
+      int deaths;
 
       int nShards; // Total number of shards the ship has.
       int bankedShards; // Shards that were collected in previous rounds.
@@ -84,6 +88,9 @@ class AsteroidShip : public Object3D {
       bool spawnInvulnerable;
       bool drawSpawn;
       CollisionSphere* collisionSphere;
+
+      Object3D* lastDamager;
+      int lastDamagerWeapon;
       
       // A ship has a single flying AI
       // TODO: A ship has a list of shooting AIs rather than just one

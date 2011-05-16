@@ -34,8 +34,8 @@ materialStruct ballMaterial = {
    {0.3f, 0.3f, 0.3f, 0.8f}
 };
 
-BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gameState) :
- Shot(posIn, dirIn, ownerIn, _gameState) {
+BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gameState) :
+ Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
    lifetime = 1.0;
    // In this context, velocity means direction.
    hitYet = false;

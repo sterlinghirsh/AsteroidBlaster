@@ -91,6 +91,11 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
 
    // The ship's score. This number is displayed to the screen.
    score = 0;
+   kills = 0;
+   deaths = 0;
+
+   lastDamager = NULL;
+   lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
 
    // The number of shard collected. This number is displayed to the screen.
    nShards = 0;
@@ -136,6 +141,10 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    weapons.push_back(new TimedBomber(this));
    weapons.push_back(new RemoteBomber(this));
    weapons.push_back(new Energy(this));
+
+   for (int i = 0; i < weapons.size(); ++i) {
+      weapons[i]->index = i;
+   }
 
    soundHandle = -1;
 
@@ -409,18 +418,32 @@ void AsteroidShip::update(double timeDiff) {
       if (!respawnTimer.isRunning) {
          respawnTimer.setCountDown(respawnTime);
          timeLeftToRespawn = respawnTimer.getTimeLeft();
+
+         ++deaths;
+         AsteroidShip* lastDamagerShip = dynamic_cast<AsteroidShip*>(lastDamager);
+         if (lastDamagerShip != NULL) {
+            lastDamagerShip->kills++;
+            std::cout << lastDamagerShip->id << " killed " << id << " with a " << weapons[lastDamagerWeapon]->getName() << "." << std::endl;
+         } else {
+            std::cout << id << " was killed by an asteroid." << std::endl;
+         }
+
          // Update weapons one last time.
          for (std::vector<Weapon*>::iterator iter = weapons.begin();
                iter != weapons.end(); ++iter) {
             (*iter)->update(timeDiff);
          }
 
+         // Fix all the velocities with anything added from the killer.
+         Object3D::update(timeDiff);
+         velocity->print();
          // Make some sparkles when you die!~~~
          for (int i = 0; i < 500; ++i) {
             Point3D* particleStartPoint = new Point3D(*position);
             Vector3D* particleDirection = new Vector3D();
             particleDirection->randomMagnitude();
-            particleDirection->setLength(3);
+            particleDirection->setLength(3 * randdouble());
+            particleDirection->addUpdate(velocity->scalarMultiply(randdouble()));
             ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
             // These may crash everything terribly when a ship explodes.
             //delete particleStartPoint;

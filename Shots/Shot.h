@@ -26,7 +26,7 @@ class Shot : public Object3D {
       bool persist;
       static double frequency; // Shots per sec
       AsteroidShip* owner; // Who fired the shot?
-      Shot(Point3D& posIn, Vector3D dirIn, AsteroidShip* ownerIn, const GameState* _gameState);
+      Shot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* ownerIn, const GameState* _gameState);
       virtual ~Shot();
 
       virtual void draw();
@@ -34,6 +34,8 @@ class Shot : public Object3D {
       virtual void drawInMinimap();
       virtual void debug();
       bool isBeam;
+
+      int weaponIndex;
 
       double damage;
 

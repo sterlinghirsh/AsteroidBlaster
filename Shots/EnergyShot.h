@@ -11,7 +11,7 @@ class Energy;
 
 class EnergyShot : public Shot {
    public:
-      EnergyShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn, Energy* const weaponIn, const GameState* _gameState);
+      EnergyShot(Point3D &posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, Energy* const weaponIn, const GameState* _gameState);
       virtual void draw();
       virtual void update(double timeDiff);
       int particleNum;

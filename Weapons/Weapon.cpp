@@ -30,6 +30,7 @@ Weapon::Weapon(AsteroidShip* owner)
 
    r = g = b = 0;
    activationTimer.reset();
+   index = -2;
 }
 
 Weapon::~Weapon() {

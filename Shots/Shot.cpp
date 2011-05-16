@@ -15,9 +15,11 @@ materialStruct ShotMaterial = {
   {8.0}
 };
 
-Shot::Shot(Point3D& posIn, Vector3D dirIn,
- AsteroidShip* const ownerIn, const GameState* _gameState) : owner(ownerIn),
- Object3D(_gameState) {
+Shot::Shot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
+ AsteroidShip* const ownerIn, const GameState* _gameState) : 
+ owner(ownerIn),
+ Object3D(_gameState),
+ weaponIndex(_weaponIndex) {
    *position = posIn;
    velocity = new Vector3D(dirIn);
    //velocity->setLength(40.0);

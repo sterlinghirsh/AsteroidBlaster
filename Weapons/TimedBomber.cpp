@@ -60,7 +60,7 @@ void TimedBomber::fire() {
    ship->shotDirection.movePoint(start);
    ship->setShakeAmount(0.1f);
    ship->custodian->add(new TimedBombShot(start,
-            shotDirection, ship, ship->gameState));
+            shotDirection, index, ship, ship->gameState));
    // Don't play sound effects in godMode b/c there would be too many.
    if (!ship->gameState->godMode) {
       SoundEffect::playSoundEffect("BlasterShot2.wav");

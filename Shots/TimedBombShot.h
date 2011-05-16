@@ -11,7 +11,7 @@
 
 class TimedBombShot : public ExplosiveShot {
    public:
-      TimedBombShot(Point3D &posIn, Vector3D dirIn, AsteroidShip* const ownerIn, const GameState* _gamestate);
+      TimedBombShot(Point3D &posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gamestate);
       virtual ~TimedBombShot();
       virtual void draw();
       virtual void drawExplosion();

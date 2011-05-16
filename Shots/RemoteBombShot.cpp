@@ -14,9 +14,9 @@
 
 double pulseSize = 0;
 
-RemoteBombShot::RemoteBombShot(Point3D& posIn, Vector3D dirIn,
+RemoteBombShot::RemoteBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, RemoteBomber* const _weapon, const GameState* _gameState) : 
- ExplosiveShot(posIn, dirIn, ownerIn, _gameState),
+ ExplosiveShot(posIn, dirIn, _weaponIndex, ownerIn, _gameState),
  weapon(_weapon) {
    minX = minY = minZ = -1;
    maxX = maxY = maxZ = 1;

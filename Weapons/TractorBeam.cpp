@@ -42,7 +42,7 @@ void TractorBeam::fire() {
       return;
 
    Point3D start = ship->shotOrigin;
-   ship->custodian->add(new TractorBeamShot(start, ship->shotDirection, ship, ship->gameState));
+   ship->custodian->add(new TractorBeamShot(start, ship->shotDirection, index, ship, ship->gameState));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new TractorBeamShot(start, ship->shotDirection, ship));
    lastFiredFrame = curFrame;
    // We should play sound.

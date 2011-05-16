@@ -136,6 +136,9 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
       a->addInstantAcceleration(new Vector3D(*b->position, *a->position));
       b->addInstantAcceleration(new Vector3D(*(a->velocity)));
       b->addInstantAcceleration(new Vector3D(*a->position, *b->position));
+
+      a->lastDamager = b;
+      a->lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
    }
 }
 
@@ -175,6 +178,8 @@ void Collision<AsteroidShip, ProjectileShot>::handleCollision() {
          BlasterImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
       }
       b->shouldRemove = true;
+      a->lastDamager = b->owner;
+      a->lastDamagerWeapon = b->weaponIndex;
    }
 }
 
@@ -191,7 +196,14 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
       b->owner->score += (int) a->radius * 10;
       b->drawLength = a->position->distanceFrom(*b->position);
       a->justGotHit = doubleTime();
+      a->addInstantAcceleration(new Vector3D(b->velocity->scalarMultiply(20)));
+      b->velocity->scalarMultiply(10).print();
+      a->velocity->print();
+
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
+      a->lastDamager = b->owner;
+      a->lastDamagerWeapon = b->weaponIndex;
+
    }
 }
 
@@ -215,6 +227,8 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
          a->health -= b->getDamage(a);
          a->shakeAmount = 1;
          a->justGotHit = doubleTime();
+         a->lastDamager = b->owner;
+         a->lastDamagerWeapon = b->weaponIndex;
       
          b->length = hitDistance;
          Vector3D centerToImpactPoint(*a->position, *closestPoint);
@@ -250,6 +264,8 @@ void Collision<AsteroidShip, EnergyShot>::handleCollision() {
       }
       a->shakeAmount = 1;
       a->justGotHit = doubleTime();
+      a->lastDamager = b->owner;
+      a->lastDamagerWeapon = b->weaponIndex;
    }
 }
 
@@ -269,14 +285,16 @@ void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
       a->health -= b->getDamage(a);
       a->shakeAmount = 1;
       a->justGotHit = doubleTime();
+      a->lastDamager = b->owner;
+      a->lastDamagerWeapon = b->weaponIndex;
    }
 }
 
 template<>
 void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
    return;
-   if (a->isRespawning()) { return;}
-   if (!b->isExploded && a != b->owner) {
+   if (a->isRespawning() || a == b->owner) { return;}
+   if (!b->isExploded) {
       Vector3D positionToShip(*b->position, *a->position);
       double distance = positionToShip.getLength();
       if (distance < b->seekRadius + a->radius) {
@@ -289,7 +307,7 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
             SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
          }
       }
-   } else if (a != b->owner) {
+   } else {
       a->health -= b->getDamage(a);
       Vector3D* shotToShip = new Vector3D(*b->position, *a->position);
       double distance = shotToShip->getLength() - a->radius;
@@ -298,6 +316,8 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
       a->addInstantAcceleration(shotToShip);
       a->shakeAmount = 1;
       a->justGotHit = doubleTime();
+      a->lastDamager = b->owner;
+      a->lastDamagerWeapon = b->weaponIndex;
    }
 }
 
