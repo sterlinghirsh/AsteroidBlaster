@@ -308,6 +308,7 @@ void update(GameState* gameState, double timeDiff) {
 
 int main(int argc, char* argv[]) {
    GameStateMode _gsm;
+   bool badArugment = false;
    if (argc == 1) {
       _gsm = SingleMode;
    } else if (argc == 3) {
@@ -316,20 +317,29 @@ int main(int argc, char* argv[]) {
          _gsm = ServerMode;
          std::istringstream iss(argv[2]);
          iss >> portNumber;
+      } else {
+         badArugment = true;
       }
    } else if (argc == 4) {
       std::string s(argv[1]);
       if (s.compare("-c") == 0) {
          _gsm = ClientMode;
-         std::string tempIP(argv[3]);
+         std::string tempIP(argv[2]);
          ipAddress = tempIP;
-         std::istringstream iss(argv[2]);
+         std::istringstream iss(argv[3]);
          iss >> portNumber;
+      } else {
+         badArugment = true;
       }
    } else {
+      badArugment = true;
+   }
+
+   if (badArugment) {
       std::cerr << "Usage: AsteroidBlaster [-s <port number> | -c <ip> <port number>]" << std::endl;
       return 1;
    }
+
 
    srand((unsigned)time(NULL));
 
