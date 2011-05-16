@@ -33,7 +33,33 @@ struct compareByDistance {
 };
 
 class Custodian {
+   //public variables------------------------------
    public:
+      // mapping of client id to ship ID
+      std::map<unsigned, AsteroidShip*> shipsByClientID;
+
+      std::set<Asteroid3D*> asteroids;
+      std::set<Shard*> shards;
+      std::set<Shot*> shots;
+      std::set<AsteroidShip*> ships;
+
+
+   //private variables------------------------------
+   private:
+      unsigned nextID;
+      std::vector<Object3D*> objectsByMinX;
+      std::vector<Object3D*> objectsByMaxX;
+      std::map<unsigned, Object3D*> objectsByID;
+      std::list<Object3D*> objectsToAdd;
+      const GameState* gameState;
+
+
+   //public functions------------------------------
+   public:
+      Custodian(const GameState* _gameState);
+
+      Object3D* operator[] (unsigned i);
+
       void update();
       void add(Object3D* objectIn);
       std::set<CollisionBase*, compareByDistance>* findCollisions(Object3D* item, bool searchBackwards = false);
@@ -44,28 +70,9 @@ class Custodian {
       int shardCount;
       unsigned getNextID();
 
-      Custodian(const GameState* _gameState);
 
-      Object3D* operator[] (unsigned i);
-
-      // Maybe these should be private with accessors?
-      std::set<Asteroid3D*> asteroids;
-      std::set<Shard*> shards;
-      std::set<Shot*> shots;
-      std::set<AsteroidShip*> ships;
-
-      // mapping of client id to ship ID
-      std::map<unsigned, AsteroidShip*> shipsByClientID;
-
+   //private functions------------------------------
    private:
-      unsigned nextID;
-      std::vector<Object3D*> objectsByMinX;
-      std::vector<Object3D*> objectsByMaxX;
-      std::map<unsigned, Object3D*> objectsByID;
-
-
-      std::list<Object3D*> objectsToAdd;
-      const GameState* gameState;
       void remove(Object3D* objectIn);
 };
 
