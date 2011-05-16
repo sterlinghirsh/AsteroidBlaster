@@ -11,7 +11,7 @@ void main()
    float thisRatio;
    thisRatio = otherRatio * 2.0;
    thisColor = myColor;
-   thisAlpha = (sqrt(vecta.x * vecta.x + vecta.y * vecta.y + vecta.z * vecta.z) - .3) / .3;
+   thisAlpha = (sqrt(vecta.x * vecta.x + vecta.y * vecta.y + vecta.z * vecta.z) - .4) / .5;
    //thisAlpha = 0.0;
    thisColor.a = thisAlpha;
    //Create a modifiable vec4 to change the alpha and assign it to gl_FragColor

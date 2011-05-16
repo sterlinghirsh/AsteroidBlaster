@@ -7,6 +7,7 @@
 #include "Shots/ExplosiveShot.h"
 #include "Utility/SoundEffect.h"
 #include "Graphics/Sprite.h"
+#include "Items/BoundingWall.h"
 
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"
@@ -83,13 +84,14 @@ void TimedBombShot::draw() {
 }
 
 void TimedBombShot::drawExplosion() {
-   //double addSize;
+   double xzScale;;
    glPushMatrix();
       GLint loc1;
       glDisable(GL_LIGHTING);
       glDisable(GL_CULL_FACE);
       setMaterial(ShotMaterial);
       position->glTranslate();
+      glRotate();
 
       rx += (double) (rand() % 10);
       ry += (double) (rand() % 20);
@@ -112,7 +114,7 @@ void TimedBombShot::drawExplosion() {
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);
       //printf("Time since exploded: %f\n", helper);
-      glColor4d(1, .6, 0, timeSinceExploded - .2);
+      glColor4d(1, .6, 0, timeSinceExploded - .1);
 
       //addSize = timeSinceExploded / (2.5 - timeSinceExploded);
       if (scaleSize > 15) {
@@ -137,7 +139,7 @@ void TimedBombShot::drawExplosion() {
       //glRotated(spin, rx, ry, rz);
       if(timeSinceExploded < 1.3) {
          glUseProgram(ringShader);
-         glPushMatrix();
+         glPushMatrix();/*
          glColor4d(1, 0, 0, timeSinceExploded * 5);
          glScaled(secondScale, secondScale, 1);
          glPushMatrix();
@@ -152,26 +154,26 @@ void TimedBombShot::drawExplosion() {
          glTranslated(0, 0, -.3);
          gluCylinder(quadric, .6, .6, .6, 20, 20);
          glPopMatrix();
-         glPopMatrix();
-         
+         glPopMatrix();*/
+         glColor4d(0, .2, 1, timeSinceExploded*5);
          glPushMatrix();
          //glColor4d(0, 0, 1, 1);//timeSinceExploded * .3);
-         glScaled(secondScale, 1, secondScale);
-         glRotated(90, 1, 0, 0);
+         glRotated(110, 1, 0, 0);
+         glScaled(secondScale, secondScale, 1);
          glPushMatrix();
          glTranslated(0, 0, -.3);
-         gluDisk(quadric, .3, .6, 20, 20);
+         gluDisk(quadric, .1, .6, 20, 20);
          glPopMatrix();
          glPushMatrix();
          glTranslated(0, 0, .3);
-         gluDisk(quadric, .3, .6, 20, 20);
+         gluDisk(quadric, .1, .6, 20, 20);
          glPopMatrix();
          glPushMatrix();
          glTranslated(0, 0, -.3);
          gluCylinder(quadric, .6, .6, .6, 20, 20);
          glPopMatrix();
          glPopMatrix();
-         
+         /*
          glPushMatrix();
          //glColor4d(0, 0, 1, 1);//timeSinceExploded * .3);
          glScaled(1, secondScale, secondScale);
@@ -187,16 +189,20 @@ void TimedBombShot::drawExplosion() {
          glPushMatrix();
          glTranslated(0, 0, -.3);
          gluCylinder(quadric, .6, .6, .6, 20, 20);
-         glPopMatrix();
+         glPopMatrix();*/
          glPopMatrix();
          glUseProgram(explosionShader);
       }
       //if (scaleSize <= secondScale) {
-      glColor4d(1, .6, 0, timeSinceExploded - .2);
+      glColor4d(1, .6, 0, timeSinceExploded - .1);
          glPushMatrix();
+         if(timeSinceExploded > 1.3) {
+            glScaled(scaleSize / 2.5, scaleSize, scaleSize / 2.5);
+         } else {
+            glScaled(scaleSize * (2.3 - timeSinceExploded) * (2.3 - timeSinceExploded) / 2.5, scaleSize, scaleSize * (2.3 - timeSinceExploded) * (2.3 - timeSinceExploded) / 2.5);
+         }
+         glRotated(20, 1, 0, 0);
          glRotated(spin, rx, ry, rz);
-         glScaled(scaleSize, scaleSize, scaleSize);
-         
          gluSphere(quadric, .6, 20, 20);
          glPopMatrix();
       //}
@@ -211,7 +217,7 @@ void TimedBombShot::drawExplosion() {
 void TimedBombShot::update(double timeDiff) {
    if(timeSinceExploded > 0) {
       if (timeSinceExploded < 1.3) {
-         secondScale += 26 * timeDiff;
+         secondScale += 50 * timeDiff;
       }
       addSize = timeDiff * 70 * timeSinceExploded / (2.5 - timeSinceExploded);
    }
@@ -259,6 +265,10 @@ void TimedBombShot::hitWall(BoundingWall* wall) {
    updateBoundingBox();
 
    ExplosiveShot::hitWall(wall);
+   
+   if (wall->actuallyHit) {
+      shouldExplode = true;   
+   }
 
    minX = minY = minZ = -seekRadius;
    maxX = maxY = maxZ = seekRadius;
