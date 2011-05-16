@@ -24,16 +24,17 @@ class GameState;
 class UDP_Connection {
    //public variables
    public:
-      unsigned curClientID;
       std::map<boost::asio::ip::udp::endpoint, unsigned> tempRemoteClients;
       std::map<boost::asio::ip::udp::endpoint, unsigned> remoteClients;
       boost::asio::ip::udp::endpoint tempEndPoint;
       GameState* gameState;
 
-   //private variables
-   private:
       boost::asio::ip::udp::socket socket_;
       boost::array<char, 1400> recv_buffer_;
+
+   //private variables
+   private:
+
 
    //public functions
    public:
@@ -45,11 +46,11 @@ class UDP_Connection {
 
    //private functions
    private:
-      void start_receive();
-      void handle_receive(const boost::system::error_code& error, std::size_t );
-      void handle_send(boost::shared_ptr<std::string>,
-                        const boost::system::error_code&,
-                        std::size_t);
+      virtual void start_receive();
+      virtual void handle_receive(const boost::system::error_code& error, std::size_t );
+      virtual void handle_send(boost::shared_ptr<std::string>,
+                              const boost::system::error_code&,
+                              std::size_t);
       
 
       

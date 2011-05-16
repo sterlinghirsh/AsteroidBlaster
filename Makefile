@@ -43,7 +43,7 @@ ITEMSFILES=Items/Drawable.cpp Items/Object3D.cpp Items/Asteroid3D.cpp Items/Aste
 SHOTSFILES=Shots/Shot.cpp Shots/BeamShot.cpp Shots/ProjectileShot.cpp Shots/TractorBeamShot.cpp Shots/ElectricityShot.cpp Shots/ExplosiveShot.cpp Shots/EnergyShot.cpp Shots/TimedBombShot.cpp Shots/RemoteBombShot.cpp
 
 AIFILES=AI/FlyingAI.cpp AI/ShootingAI.cpp 
-NETWORKFILES=Network/ClientCommand.cpp Network/UDP_Connection.cpp
+NETWORKFILES=Network/ClientCommand.cpp Network/UDP_Connection.cpp Network/UDP_Server.cpp Network/UDP_Client.cpp
 
 WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/TractorBeam.cpp Weapons/Electricity.cpp Weapons/TimedBomber.cpp Weapons/Energy.cpp Weapons/RemoteBomber.cpp
 
