@@ -16,7 +16,7 @@
 #include "Items/AsteroidShip.h"
 
 //Constructor
-UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameState, std::string _ip, unsigned _portNum)
+UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameState, std::string _ip, std::string _portNum)
 : socket_(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 0)), gameState(_GameState) {
 
    gameState = _GameState;
@@ -26,8 +26,7 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
    clientID = 0;
 
    boost::asio::ip::udp::resolver resolver(io_service);
-   boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), _ip,
-    (boost::asio::ip::udp::resolver::query::flags) _portNum);
+   boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), _ip, _portNum.c_str());
    serverEndPoint = *resolver.resolve(query);
    
    // Start handshake-------------------------
@@ -115,4 +114,13 @@ void UDP_Client::handle_send(boost::shared_ptr<std::string>,
    //std::cout << "UDP_Client running handle_send..." << std::endl;
 }
 
+void UDP_Client::send(std::string msg, boost::asio::ip::udp::endpoint dest) {
+      boost::shared_ptr<std::string> message(
+          new std::string(msg));
+
+      socket_.async_send_to(boost::asio::buffer(*message), dest,
+          boost::bind(&UDP_Client::handle_send, this, message,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+}
 

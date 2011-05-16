@@ -73,7 +73,7 @@ TTF_Font* menuFont = NULL;
 
 //Used for server/client stuff
 std::string ipAddress = "";
-unsigned portNumber = 0;
+std::string portNumber = "";
 
 using namespace std;
 

@@ -46,6 +46,8 @@
 #include <fstream>
 #include <sstream>
 #include <boost/thread.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 #define SAVEFILENAME "AsteroidBlaster.sav"
 
@@ -77,7 +79,11 @@ GameState::GameState(GameStateMode _gsm) :
          inMenu = false;
          io = new boost::asio::io_service();
          udpClient = NULL;
-         udpServer = new UDP_Server(*io, this, portNumber);
+
+         std::istringstream iss(portNumber);
+         int tempPortNumber;
+         iss >> tempPortNumber;
+         udpServer = new UDP_Server(*io, this, tempPortNumber);
          networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       }
 
@@ -312,6 +318,20 @@ void GameState::update(double timeDiff) {
    if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
       ship->readCommand(clientCommand);
    }
+   
+   static double tempClientSend = 0;
+   if (gsm == ClientMode) {
+      tempClientSend += timeDiff;
+      if (tempClientSend >= 0.1) {
+         std::ostringstream oss;
+         boost::archive::text_oarchive oa(oss);
+         int i = 3;
+         oa << i << (const ClientCommand)clientCommand;
+         udpClient->send(oss.str(), udpClient->serverEndPoint);
+         tempClientSend = 0;
+      }
+   }
+
 
    // Update each item.
    for (item = objects->begin(); item != objects->end(); ++item) {

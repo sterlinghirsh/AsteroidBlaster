@@ -82,7 +82,7 @@ extern double currentTime;
 
 //Used for server/client stuff
 extern std::string ipAddress;
-extern unsigned portNumber;
+extern std::string portNumber;
 
 extern int TRACTOR_WEAPON_INDEX;
 extern int BLASTER_WEAPON_INDEX;

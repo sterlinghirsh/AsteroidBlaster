@@ -38,7 +38,7 @@ class UDP_Client {
    public:
       //constructor
       //UDP_Client(boost::asio::io_service& io_service, GameState* gameState, std::string _ip, unsigned _portNum);
-      UDP_Client(boost::asio::io_service& io_service, GameState* _GameState, std::string _ip, unsigned _portNum);
+      UDP_Client(boost::asio::io_service& io_service, GameState* _GameState, std::string _ip, std::string _portNum);
       ~UDP_Client();
 
       void send(std::string msg, boost::asio::ip::udp::endpoint dest);

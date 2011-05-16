@@ -326,8 +326,8 @@ int main(int argc, char* argv[]) {
          _gsm = ClientMode;
          std::string tempIP(argv[2]);
          ipAddress = tempIP;
-         std::istringstream iss(argv[3]);
-         iss >> portNumber;
+         std::string tempPort(argv[3]);
+         portNumber = tempPort;
       } else {
          badArugment = true;
       }

@@ -9,12 +9,12 @@
  * @author Ryuho Kudo
  */
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 #include "Network/UDP_Server.h"
 #include "Utility/GameState.h"
 #include "Items/AsteroidShip.h"
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 //Constructor
 UDP_Server::UDP_Server(boost::asio::io_service& io_service, GameState* _GameState, unsigned _portNumber)
@@ -117,16 +117,15 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
    // It's a client that already has send packets before
    } else {
       int clientIDCounter = realIter->second;
-      std::cout << "old client found, id:" << clientIDCounter << "| address:" << tempEndPoint << std::endl;
+      //std::cout << "old client found, id:" << clientIDCounter << "| address:" << tempEndPoint << std::endl;
       std::istringstream iss(recv_buffer_.data());
       boost::archive::text_iarchive ia(iss);
       ia >> receivedPackID;
 
       if (receivedPackID == 3) {
-         std::cout << "Got ClientCommand packet! Applying it to client id: " << clientIDCounter << std::endl;
+         //std::cout << "Got ClientCommand packet! Applying it to client id: " << clientIDCounter << std::endl;
          ClientCommand tempCommand;
          ia >> tempCommand;
-         tempCommand.print();
          std::map<unsigned, AsteroidShip*>::iterator iterShip = gameState->custodian.shipsByClientID.find(clientIDCounter);
          if (iterShip == gameState->custodian.shipsByClientID.end()) {
             std::cout << "umm something went wrong.. client id is invalid?" << std::endl;
