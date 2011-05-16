@@ -11,6 +11,7 @@
 #include "Utility/SoundEffect.h"
 
 TimedBomber::TimedBomber(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
+   TIMEDBOMBER_WEAPON_INDEX = index;
    shotSpeed = 20; // Units per second
    coolDown = 5.0; // Seconds
    randomVariationAmount = 0.25; // Units

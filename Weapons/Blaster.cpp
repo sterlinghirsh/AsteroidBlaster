@@ -13,6 +13,7 @@
 
 Blaster::Blaster(AsteroidShip* owner, int _index)
 : Weapon(owner, _index) {
+   BLASTER_WEAPON_INDEX = index;
    shotSpeed = 40; // Units per second
    coolDown = 0.15; // Seconds
 

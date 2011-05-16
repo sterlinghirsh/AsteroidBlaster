@@ -13,6 +13,7 @@
 
 Energy::Energy(AsteroidShip* owner, int _index)
 : Weapon(owner, _index) {
+   ENERGY_WEAPON_INDEX = index;
    shotSpeed = 80; // Units per second
    coolDown = 0.3; // Seconds
    randomVariationAmount = 1.0; // Units

@@ -11,6 +11,7 @@
 #include "Utility/SoundEffect.h"
 
 Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
+   ELECTRICITY_WEAPON_INDEX = index;
    shotsFired = 0;
    shotsPerSec = 30;
    coolDown = 0;

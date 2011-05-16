@@ -13,6 +13,7 @@
 
 RailGun::RailGun(AsteroidShip* owner, int _index)
 : Weapon(owner, _index) {
+   RAILGUN_WEAPON_INDEX = index;
    coolDown = 2; // Seconds
    name = "Rail Gun";
    curAmmo = -1;
