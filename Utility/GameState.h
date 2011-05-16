@@ -139,14 +139,24 @@ class GameState : public InputReceiver {
       virtual void mouseUp(int button);
       
       void draw();
+      void update(double timeDiff);
+
+      // Update functions of various kinds
+      void updateText();
+      void networkUpdate(double timeDiff);
+
+      // Draw functions of various kinds
       void drawObjects(bool drawGlow = false);
+      void drawScreens();
       void hBlur();
       void vBlur();
       void drawBlur();
       void drawBloom();
-      
       void drawMinimap();
-      void drawScreens();
+      void drawAllText();
+      void drawHud();
+      void drawOverlay();
+
       void addScreens();
 
       bool minimapOn();
@@ -154,12 +164,9 @@ class GameState : public InputReceiver {
       void pauseLevelTimer();
       void resumeLevelTimer();
 
-      void drawAllText();
-      void drawHud();
-      void drawOverlay();
-      void updateText();
 
-      void update(double timeDiff);
+      
+
       void initAsteroids();
       void setCurFPS(double fpsIn);
       bool getMenuMode();

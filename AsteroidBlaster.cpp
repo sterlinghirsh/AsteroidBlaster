@@ -298,14 +298,6 @@ void load() {
    std::cout << "Load: finished" << std::endl;
 }
 
-void update(GameState* gameState, double timeDiff) {
-   gameState->update(timeDiff);
-   GameMessage::updateAllMessages(timeDiff);
-
-   lastUpdateTime = doubleTime();
-   ++curFrame;
-}
-
 int main(int argc, char* argv[]) {
    GameStateMode _gsm;
    bool badArugment = false;
@@ -434,8 +426,11 @@ int main(int argc, char* argv[]) {
 
       } else {
          gameState->gameIsRunning = true;
-         update(gameState, timeDiff);
+         gameState->update(timeDiff);
+         gameState->networkUpdate(timeDiff);
+         lastUpdateTime = doubleTime();
          gameState->draw();
+
          //chat->update(timeDiff);
          //chat->draw();
       }

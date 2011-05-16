@@ -319,20 +319,6 @@ void GameState::update(double timeDiff) {
    if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
       ship->readCommand(clientCommand);
    }
-   
-   static double tempClientSend = 0;
-   if (gsm == ClientMode) {
-      tempClientSend += timeDiff;
-      if (tempClientSend >= 0.1) {
-         std::ostringstream oss;
-         boost::archive::text_oarchive oa(oss);
-         int i = 3;
-         oa << i << (const ClientCommand)clientCommand;
-         udpClient->send(oss.str(), udpClient->serverEndPoint);
-         tempClientSend = 0;
-      }
-   }
-
 
    // Update each item.
    for (item = objects->begin(); item != objects->end(); ++item) {
@@ -352,6 +338,7 @@ void GameState::update(double timeDiff) {
    Particle::updateParticles(timeDiff);
    Sprite::updateSprites(timeDiff);
    MeshFace::updateIndependentFaces(timeDiff);
+   GameMessage::updateAllMessages(timeDiff);
 
    // Check every object for collisions.
    for (item = objects->begin(); item != objects->end(); ++item) {
@@ -374,6 +361,29 @@ void GameState::update(double timeDiff) {
    minimap->update(timeDiff);
    spring->update(timeDiff);
    spectatorCameraUpdate(timeDiff);
+   ++curFrame;
+}
+
+void GameState::networkUpdate(double timeDiff) {
+   // CLIENT-->SERVER stuff~~~~~~~~~~~~~~~~~~~~~~
+   if (gsm == ClientMode) {
+      // For sending clientcommands to the server
+      static double tempClientSend = 0;
+      tempClientSend += timeDiff;
+      if (tempClientSend >= 0.1) {
+         std::ostringstream oss;
+         boost::archive::text_oarchive oa(oss);
+         int i = 3;
+         oa << i << (const ClientCommand)clientCommand;
+         udpClient->send(oss.str(), udpClient->serverEndPoint);
+         tempClientSend = 0;
+      }
+
+      
+   // SERVER-->CLIENT stuff~~~~~~~~~~~~~~~~~~~~~~
+   } else if (gsm == ServerMode){
+      
+   }
 }
 
 void GameState::spectatorCameraUpdate(double timeDiff) {
