@@ -194,7 +194,7 @@ GameState::~GameState() {
       delete udpServer;
    }
    if (udpClient != NULL) {
-      delete udpServer;
+      delete udpClient;
    }
    // Somehow makes it segfault when quitting so commented out
    /*if (io != NULL) {
@@ -370,7 +370,7 @@ void GameState::networkUpdate(double timeDiff) {
       // For sending clientcommands to the server
       static double tempClientSend = 0;
       tempClientSend += timeDiff;
-      if (tempClientSend >= 0.1) {
+      if (tempClientSend >= 0.05) {
          std::ostringstream oss;
          boost::archive::text_oarchive oa(oss);
          int i = 3;

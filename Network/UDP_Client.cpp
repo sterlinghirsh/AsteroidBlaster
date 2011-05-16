@@ -80,6 +80,15 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
 
 UDP_Client::~UDP_Client() {
    //std::cout << "UDP_Client destructing..." << std::endl;
+
+   // Send remvoe signal to the server
+   std::cout << "Sending remove signal to the server, clientID:" << clientID << std::endl;
+   std::ostringstream oss;
+   int i = 4;
+   boost::archive::text_oarchive oa(oss);
+   oa << i;
+   socket_.send_to(boost::asio::buffer(oss.str()), serverEndPoint);
+
    socket_.cancel();
    socket_.close();
 }

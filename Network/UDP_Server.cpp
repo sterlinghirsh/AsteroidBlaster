@@ -84,8 +84,8 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
             std::cout << "Error! this packet is not init packet:" <<  receivedPackID << ". |||" << recv_buffer_.data() << std::endl;
          }
       } else {
-         int clientIDCounter = tempIter->second;
-         std::cout << "handshake2 initiated with client id client found, id:" << clientIDCounter << std::endl;
+         int currentClientID = tempIter->second;
+         std::cout << "handshake2 initiated with client id client found, id:" << currentClientID << std::endl;
          std::istringstream iss(recv_buffer_.data());
          boost::archive::text_iarchive ia(iss);
          ia >> receivedPackID;
@@ -93,7 +93,7 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
             std::cout << "Got handshake2 packet!" << std::endl;
             int tempClientID;
             ia >> tempClientID;
-            if (tempClientID == clientIDCounter) {
+            if (tempClientID == currentClientID) {
                std::cout << "The ID is correct! Adding it to the game for good!" << std::endl;
                // now send the client handshake3 back
                {
@@ -103,11 +103,11 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
                   oa << i;
                   send(oss.str(), tempEndPoint);
                }
-               remoteClients.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint), clientIDCounter) );
+               remoteClients.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint), currentClientID) );
                tempRemoteClients.erase (tempEndPoint);
-               gameState->addNetworkPlayer(clientIDCounter);
+               gameState->addNetworkPlayer(currentClientID);
             } else {
-               std::cout << "Wrong ID? Removing this ID/Client. tempClientID=" << tempClientID << "|clientIDCounter=" << clientIDCounter << std::endl;
+               std::cout << "Wrong ID? Removing this ID/Client. tempClientID=" << tempClientID << "|currentClientID=" << currentClientID << std::endl;
                tempRemoteClients.erase (tempEndPoint);
             }
          } else {
@@ -116,23 +116,31 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
       }
    // It's a client that already has send packets before
    } else {
-      int clientIDCounter = realIter->second;
-      //std::cout << "old client found, id:" << clientIDCounter << "| address:" << tempEndPoint << std::endl;
+      int currentClientID = realIter->second;
+      //std::cout << "old client found, id:" << currentClientID << "| address:" << tempEndPoint << std::endl;
       std::istringstream iss(recv_buffer_.data());
       boost::archive::text_iarchive ia(iss);
       ia >> receivedPackID;
 
+      AsteroidShip* curShip = NULL;
+      //look for the ship associated with this client
+      std::map<unsigned, AsteroidShip*>::iterator iterShip = gameState->custodian.shipsByClientID.find(currentClientID);
+      if (iterShip == gameState->custodian.shipsByClientID.end()) {
+         std::cout << "umm something went wrong.. client id is invalid?" << std::endl;
+      } else {
+         curShip = iterShip->second;
+      }
+
       if (receivedPackID == 3) {
-         //std::cout << "Got ClientCommand packet! Applying it to client id: " << clientIDCounter << std::endl;
+         //std::cout << "Got ClientCommand packet! Applying it to client id: " << currentClientID << std::endl;
          ClientCommand tempCommand;
          ia >> tempCommand;
-         std::map<unsigned, AsteroidShip*>::iterator iterShip = gameState->custodian.shipsByClientID.find(clientIDCounter);
-         if (iterShip == gameState->custodian.shipsByClientID.end()) {
-            std::cout << "umm something went wrong.. client id is invalid?" << std::endl;
-         } else {
-            iterShip->second->readCommand(tempCommand);
-         }
+         curShip->readCommand(tempCommand);
 
+      } else if (receivedPackID == 4) {
+         std::cout << "Client ID:" << currentClientID << " quit!" << std::endl;
+         tempRemoteClients.erase (tempEndPoint);
+         curShip->shouldRemove = true;
       } else {
          std::cout << "Error! this packet id is unknown:" <<  receivedPackID << ". |||" << recv_buffer_.data() << std::endl;
       }
