@@ -2,7 +2,8 @@
  * @file
  * UDP_Server class implementation.
  * <pre>
- * Inherits from UDP_Connection class. Handles Server side connection stuff.
+ * This class is an aiso::io_service. It takes care of getting UDP packets and
+ * sending UDP packets.
  * </pre>
  *
  * @author Ryuho Kudo
@@ -12,25 +13,26 @@
 #include <boost/archive/text_iarchive.hpp>
 
 #include "Network/UDP_Server.h"
-#include "Network/ClientCommand.h"
 #include "Utility/GameState.h"
 #include "Items/AsteroidShip.h"
 
 //Constructor
-UDP_Server::UDP_Server(boost::asio::io_service& io_service, GameState* _GameState)
-: UDP_Connection(io_service, _GameState) {
+UDP_Server::UDP_Server(boost::asio::io_service& io_service, GameState* _GameState, unsigned _portNumber)
+: socket_(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), (short unsigned int) _portNumber)), gameState(_GameState) {
    //std::cout << "UDP_Server running constructor..." << std::endl;
+   std::cout << "UDP_Server being constructed with port #" << _portNumber << std::endl;
    clientIDCounter = 0;
    start_receive();
 }
 
 UDP_Server::~UDP_Server() {
    //std::cout << "UDP_Server destructing..." << std::endl;
+   socket_.cancel();
+   socket_.close();
 }
 
 
 void UDP_Server::start_receive() {
-   std::cout << "UDP_Server running start_receive..." << std::endl;
    socket_.async_receive_from(
       boost::asio::buffer(recv_buffer_), tempEndPoint,
       boost::bind(&UDP_Server::handle_receive, this,
@@ -82,7 +84,7 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
             std::cout << "Error! this packet is not init packet:" <<  receivedPackID << ". |||" << recv_buffer_.data() << std::endl;
          }
       } else {
-         int clientIDCounter = realIter->second;
+         int clientIDCounter = tempIter->second;
          std::cout << "handshake2 initiated with client id client found, id:" << clientIDCounter << std::endl;
          std::istringstream iss(recv_buffer_.data());
          boost::archive::text_iarchive ia(iss);
@@ -105,7 +107,7 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
                tempRemoteClients.erase (tempEndPoint);
                gameState->addNetworkPlayer(clientIDCounter);
             } else {
-               std::cout << "Wrong ID? Removing this ID/Client. tempClientID=" << tempClientID << "|realIter->second=" << clientIDCounter << std::endl;
+               std::cout << "Wrong ID? Removing this ID/Client. tempClientID=" << tempClientID << "|clientIDCounter=" << clientIDCounter << std::endl;
                tempRemoteClients.erase (tempEndPoint);
             }
          } else {
@@ -147,4 +149,18 @@ void UDP_Server::handle_send(boost::shared_ptr<std::string>,
                   std::size_t){
    //std::cout << "UDP_Server running handle_send..." << std::endl;
 }
+
+void UDP_Server::send(std::string msg, boost::asio::ip::udp::endpoint dest) {
+      boost::shared_ptr<std::string> message(
+          new std::string(msg));
+
+      socket_.async_send_to(boost::asio::buffer(*message), dest,
+          boost::bind(&UDP_Server::handle_send, this, message,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+}
+
+
+
+
 

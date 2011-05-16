@@ -53,15 +53,27 @@ GLuint depthbuffer = 0;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 double currentTime = -1;
+
+// Inputmanager used by all the main classes
 InputManager* inputManager = NULL;
+
+// The menu classes
 MainMenu* mainMenu = NULL;
 StoreMenu* storeMenu = NULL;
 SettingsMenu* settingsMenu = NULL;
 HelpMenu* helpMenu = NULL;
 CreditsMenu* creditsMenu = NULL;
+
+// What?
 Input* chat = NULL;
+
+// Fonts used in this game
 TTF_Font* hudFont = NULL;
 TTF_Font* menuFont = NULL;
+
+//Used for server/client stuff
+std::string ipAddress = "";
+unsigned portNumber = 0;
 
 using namespace std;
 

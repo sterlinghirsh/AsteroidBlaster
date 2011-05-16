@@ -310,18 +310,24 @@ int main(int argc, char* argv[]) {
    GameStateMode _gsm;
    if (argc == 1) {
       _gsm = SingleMode;
-   } else if (argc == 2) {
+   } else if (argc == 3) {
       std::string s(argv[1]);
       if (s.compare("-s") == 0) {
          _gsm = ServerMode;
-      } else if (s.compare("-c") == 0) {
+         std::istringstream iss(argv[2]);
+         iss >> portNumber;
+      }
+   } else if (argc == 4) {
+      std::string s(argv[1]);
+      if (s.compare("-c") == 0) {
          _gsm = ClientMode;
-      } else {
-         std::cerr << "Usage: AsteroidBlaster [-s | -c]" << std::endl;
-         return 1;
+         std::string tempIP(argv[3]);
+         ipAddress = tempIP;
+         std::istringstream iss(argv[2]);
+         iss >> portNumber;
       }
    } else {
-      std::cerr << "Usage: AsteroidBlaster [-s | -c]" << std::endl;
+      std::cerr << "Usage: AsteroidBlaster [-s <port number> | -c <ip> <port number>]" << std::endl;
       return 1;
    }
 

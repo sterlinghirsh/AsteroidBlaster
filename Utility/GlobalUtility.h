@@ -28,7 +28,9 @@
 
 #include <math.h>
 #include <algorithm>
+#include <string>
 
+// Forward declaration
 class GameState;
 class MainMenu;
 class StoreMenu;
@@ -38,6 +40,7 @@ class CreditsMenu;
 class Input;
 class InputManager;
 
+// extern variables actually defined in .cpp
 extern GameSettings* gameSettings;
 extern int flopY(int);
 extern int texSize;
@@ -77,6 +80,10 @@ extern TTF_Font* hudFont;
 extern TTF_Font* menuFont;
 extern double currentTime;
 
+//Used for server/client stuff
+extern std::string ipAddress;
+extern unsigned portNumber;
+
 extern int TRACTOR_WEAPON_INDEX;
 extern int BLASTER_WEAPON_INDEX;
 extern int RAILGUN_WEAPON_INDEX;
@@ -87,6 +94,7 @@ extern int ENERGY_WEAPON_INDEX;
 
 extern int NUMBER_OF_WEAPONS;
 
+// Global functions used throughout the program
 double p2wx(int);
 double p2wy(int);
 double p2wHeight(int);

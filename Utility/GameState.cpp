@@ -69,13 +69,13 @@ GameState::GameState(GameStateMode _gsm) :
          networkThread = NULL;
       } else if (gsm == ClientMode) {
          io = new boost::asio::io_service();
-         udpClient = new UDP_Client(*io, this);
+         udpClient = new UDP_Client(*io, this, ipAddress, portNumber);
          udpServer = NULL;
          networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       } else if (gsm == ServerMode) {
          io = new boost::asio::io_service();
          udpClient = NULL;
-         udpServer = new UDP_Server(*io, this);
+         udpServer = new UDP_Server(*io, this, portNumber);
          networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       }
 
@@ -187,6 +187,10 @@ GameState::~GameState() {
    }
    if (udpClient != NULL) {
       delete udpServer;
+   }
+   if (io != NULL) {
+      io->stop();
+      delete io;
    }
 }
 

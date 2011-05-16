@@ -2,7 +2,7 @@
  * @file
  * UDP_Client class header.
  * <pre>
- * Inherits from UDP_Connection
+ * 
  * </pre>
  *
  * @author Ryuho Kudo
@@ -11,12 +11,25 @@
 #ifndef UDP_CLIENT_H
 #define UDP_CLIENT_H
 
-#include "Network/UDP_Connection.h"
+#include <list>
+#include <map>
+#include <boost/array.hpp>
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/asio.hpp>
 
-class UDP_Client: public UDP_Connection {
+class GameState;
+
+class UDP_Client {
    //public variables
    public:
       int clientID;
+      boost::asio::ip::udp::endpoint serverEndPoint;
+      boost::asio::ip::udp::endpoint clientEndPoint;
+      GameState* gameState;
+
+      boost::asio::ip::udp::socket socket_;
+      boost::array<char, 1400> recv_buffer_;
 
    //private variables
    private:
@@ -24,14 +37,17 @@ class UDP_Client: public UDP_Connection {
    //public functions
    public:
       //constructor
-      UDP_Client(boost::asio::io_service& io_service, GameState* gameState);
+      //UDP_Client(boost::asio::io_service& io_service, GameState* gameState, std::string _ip, unsigned _portNum);
+      UDP_Client(boost::asio::io_service& io_service, GameState* _GameState, std::string _ip, unsigned _portNum);
       ~UDP_Client();
+
+      void send(std::string msg, boost::asio::ip::udp::endpoint dest);
 
    //private functions
    private:
-      virtual void start_receive();
-      virtual void handle_receive(const boost::system::error_code& error, std::size_t );
-      virtual void handle_send(boost::shared_ptr<std::string>,
+      void start_receive();
+      void handle_receive(const boost::system::error_code& error, std::size_t );
+      void handle_send(boost::shared_ptr<std::string>,
                               const boost::system::error_code&,
                               std::size_t);
 };

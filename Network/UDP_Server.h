@@ -2,7 +2,7 @@
  * @file
  * UDP_Server class header.
  * <pre>
- * Inherits from UDP_Connection
+ * Has client counter and means of communicating to clients
  * </pre>
  *
  * @author Ryuho Kudo
@@ -11,26 +11,44 @@
 #ifndef UDP_SERVER_H
 #define UDP_SERVER_H
 
-#include "Network/UDP_Connection.h"
+#include <list>
+#include <map>
+#include <boost/array.hpp>
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/asio.hpp>
 
-class UDP_Server: public UDP_Connection {
+class GameState;
+
+class UDP_Server {
    //public variables
    public:
+      std::map<boost::asio::ip::udp::endpoint, unsigned> tempRemoteClients;
+      std::map<boost::asio::ip::udp::endpoint, unsigned> remoteClients;
+      boost::asio::ip::udp::endpoint tempEndPoint;
+      GameState* gameState;
       unsigned clientIDCounter;
+
+      boost::asio::ip::udp::socket socket_;
+      boost::array<char, 1400> recv_buffer_;
+
    //private variables
    private:
+
 
    //public functions
    public:
       //constructor
-      UDP_Server(boost::asio::io_service& io_service, GameState* gameState);
+      UDP_Server(boost::asio::io_service& io_service, GameState* gameState, unsigned _portNumber);
       ~UDP_Server();
+
+      void send(std::string msg, boost::asio::ip::udp::endpoint dest);
 
    //private functions
    private:
-      virtual void start_receive();
-      virtual void handle_receive(const boost::system::error_code& error, std::size_t );
-      virtual void handle_send(boost::shared_ptr<std::string>,
+      void start_receive();
+      void handle_receive(const boost::system::error_code& error, std::size_t );
+      void handle_send(boost::shared_ptr<std::string>,
                               const boost::system::error_code&,
                               std::size_t);
 };
