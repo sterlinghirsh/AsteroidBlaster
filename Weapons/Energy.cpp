@@ -177,3 +177,10 @@ Point3D Energy::project(Object3D* target) {
 bool Energy::shouldFire(Point3D* target, Point3D* aim) {
    return ((*target - ship->shotOrigin).getNormalized() - *aim).magnitude() < 0.5;
 }
+
+void Energy::stopSounds() {
+   if (soundHandle != -1) {
+      SoundEffect::stopSoundEffect(soundHandle);
+      soundHandle = -1;
+   }
+}

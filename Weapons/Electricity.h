@@ -24,6 +24,7 @@ class Electricity : public Weapon {
       int shotsFired;
       int shotsPerSec;
       double timeStartedFiring;
+      virtual void stopSounds();
    private:
       int currentFrame;
       int lastFiredFrame;

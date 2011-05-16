@@ -64,3 +64,10 @@ Point3D TractorBeam::project(Object3D* object) {
 bool TractorBeam::shouldFire(Point3D* target, Point3D* aim) {
    return true;
 }
+
+void TractorBeam::stopSounds() {
+   if (soundHandle != -1) {
+      SoundEffect::stopSoundEffect(soundHandle);
+      soundHandle = -1;
+   }
+}

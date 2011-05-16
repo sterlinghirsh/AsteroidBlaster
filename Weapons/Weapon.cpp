@@ -162,3 +162,7 @@ bool Weapon::isReady() {
    return activationTimer.getTimeLeft() <= 0 && isCooledDown();
    //return isCooledDown();
 }
+
+void Weapon::stopSounds() {
+   // Do nothing.
+}

@@ -86,6 +86,8 @@ class Weapon {
 
       virtual bool isReady();
 
+      virtual void stopSounds();
+
    protected:
       WeaponType type; // Do we need this?
       double timeLastFired;

@@ -25,6 +25,7 @@ class Energy : public Weapon {
       virtual void fire();
       virtual void resetChargingShot();
       EnergyShot* chargingShot;
+      virtual void stopSounds();
 
    protected:
       double shotSpeed;

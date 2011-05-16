@@ -309,6 +309,7 @@ class AsteroidShip : public Object3D {
       void draw_backlines();
       void draw_hitEffect();
       void draw_spawn();
+      void stopSounds();
 
       void createEngineParticles(double timeDiff);
       void addNewParticle(Point3D& emitter, Vector3D& initialOffset, Vector3D& offsetDirectionX,

@@ -424,6 +424,7 @@ void AsteroidShip::update(double timeDiff) {
    if (health <= 0) {
       const double respawnTime = 4;
       shakeAmount = 0;
+      stopSounds();
       // Handle respawning.
       if (!respawnTimer.isRunning) {
          respawnTimer.setCountDown(respawnTime);
@@ -446,7 +447,6 @@ void AsteroidShip::update(double timeDiff) {
 
          // Fix all the velocities with anything added from the killer.
          Object3D::update(timeDiff);
-         velocity->print();
          // Make some sparkles when you die!~~~
          for (int i = 0; i < 500; ++i) {
             Point3D* particleStartPoint = new Point3D(*position);
@@ -1740,5 +1740,18 @@ void AsteroidShip::atLevelEnd() {
    bankedShards += curRoundShards;
    curRoundShards = 0;
    health = healthMax;
+   shakeAmount = 0;
+   
+   stopSounds();
 }
 
+void AsteroidShip::stopSounds() {
+   if (soundHandle != -1) {
+      SoundEffect::stopSoundEffect(soundHandle);
+      soundHandle = -1;
+   }
+
+   for (int i = 0; i < weapons.size(); ++i) {
+      weapons[i]->stopSounds();
+   }
+}

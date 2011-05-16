@@ -98,3 +98,10 @@ Point3D Electricity::project(Object3D* object) {
 bool Electricity::shouldFire(Point3D* target, Point3D* aim) {
    return true;
 }
+
+void Electricity::stopSounds() {
+   if (soundHandle != -1) {
+      SoundEffect::stopSoundEffect(soundHandle);
+      soundHandle = -1;
+   }
+}
