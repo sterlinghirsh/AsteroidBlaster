@@ -47,6 +47,7 @@ GLuint shipYShader = 0;
 GLuint backShader = 0;
 GLuint hitShader = 0;
 GLuint explosionShader = 0;
+GLuint ringShader = 0;
 GLuint fbo = 0;
 GLuint depthbuffer = 0;
 SDL_Surface* gDrawSurface = NULL;
