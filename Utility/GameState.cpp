@@ -61,6 +61,7 @@ GameState::GameState(GameStateMode _gsm) :
       if (gsm == SingleMode) {
          inMenu = false;
          io = NULL;
+         udpClient = NULL;
          udpServer = NULL;
          networkThread = NULL;
       } else if (gsm == MenuMode) {
@@ -842,6 +843,7 @@ void GameState::reset(bool shouldLoad) {
    shipCamera = new Camera(ship);
    spring->attach(ship, shipCamera);
    spectatorCamera = new Camera(false);
+
    gameIsRunning = true;
    // The level is not over when we're starting a new game.
    levelOver = false;
@@ -1106,6 +1108,10 @@ void GameState::keyDown(int key, int unicode) {
       break;
    case SDLK_F4:
       nextLevel();
+      break;
+
+   case SDLK_F6:
+      testFunction();
       break;
 
    case SDLK_F7:
@@ -1385,26 +1391,34 @@ void GameState::debugPosition() {
 
 void GameState::save() {
    std::ofstream ofs(SAVEFILENAME);
-   serialize(ofs);
+   ofs << "GameState: " << curLevel;
    ofs.close();
    std::cout << "Saved GameState" << std::endl;
 }
 
 void GameState::load() {
    std::ifstream ifs(SAVEFILENAME);
-   deserialize(ifs);
+
+   std::string temp;
+   ifs >> temp;
+   ifs >> curLevel;
+
    ifs.close();
    std::cout << "Loaded GameState" << std::endl;
 }
 
-void GameState::serialize(std::ostream &oss) {
-   oss << "GameState: " << curLevel;
+void GameState::testFunction() {
+   /*
+   std::ostringstream oss;
+   boost::archive::text_oarchive oa(oss);
+   oa << custodian.shards;
+   std::cout << "|||Shards|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
+   */
+   Shard* testShard = new Shard(1, 80.0, this);
+   custodian.add(testShard);
+   std::ostringstream oss;
+   boost::archive::text_oarchive oa(oss);
+   //oa << testShard;
+   //std::cout << "|||Shards|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
 }
-
-void GameState::deserialize(std::istream &iss) {
-   std::string temp;
-   iss >> temp;
-   iss >> curLevel;
-}
-
 

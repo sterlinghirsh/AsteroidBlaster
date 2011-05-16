@@ -104,6 +104,15 @@ class Vector3D {
       const Vector3D operator*(double scalar) const;
       const Vector3D operator^(const Vector3D& rhs) const;
 
+   // Serialization
+   public:
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & x;
+         ar & y;
+         ar & z;
+      }
+
 };
 
 #endif

@@ -13,6 +13,7 @@
 #include "Utility/Vector3D.h"
 #include "Utility/GlobalUtility.h"
 #include <queue>
+#include <boost/serialization/base_object.hpp>
 
 class Object3D : public Drawable {
    //public variables------------------------------
@@ -79,6 +80,31 @@ class Object3D : public Drawable {
       virtual void updateBoundingBox();
       virtual void updateAcceleration(double timeDiff);
 
+   // Serialization
+   public:
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & boost::serialization::base_object<Drawable>(*this);
+         ar & velocity;
+
+         ar & acceleration;
+         ar & axis;
+         ar & up;
+         ar & right;
+         ar & forward;
+         ar & lockUpVector;
+         ar & angle;
+         ar & rotationSpeed;
+         ar & id;
+
+         ar & yawSpeed;
+         ar & pitchSpeed;
+         ar & rollSpeed;
+         ar & displayList;
+         ar & accelerations;
+         ar & instantAccelerations;
+         ar & targeted;
+      }
 };
 
 #endif

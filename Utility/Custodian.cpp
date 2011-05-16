@@ -198,7 +198,6 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
       a->justGotHit = doubleTime();
       a->addInstantAcceleration(new Vector3D(b->velocity->scalarMultiply(20)));
       b->velocity->scalarMultiply(10).print();
-      a->velocity->print();
 
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       a->lastDamager = b->owner;

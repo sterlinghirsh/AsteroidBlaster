@@ -9,6 +9,7 @@
 
 #include "Utility/Point3D.h"
 #include <math.h>
+#include <boost/serialization/base_object.hpp>
 
 class CollisionSphere;
 class CollisionBox;
@@ -51,6 +52,15 @@ class CollisionType {
          printf("Un-Overridden CollisionType::collidesWithBox.\n");
          return false;
       }
+
+
+   // Serialization
+   public:
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & minPosition;
+         ar & maxPosition;
+      }
 };
 
 class CollisionBox : public CollisionType {
@@ -69,6 +79,13 @@ class CollisionBox : public CollisionType {
           maxPosition.z < box->minPosition.z);
       }
 
+
+   // Serialization
+   public:
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & boost::serialization::base_object<CollisionType>(*this);
+      }
 };
 
 class CollisionSphere : public CollisionType {
@@ -114,6 +131,16 @@ class CollisionSphere : public CollisionType {
       virtual bool collidesWithRay(CollisionRay* ray);
       virtual bool collidesWithPoint(CollisionPoint* point);
       virtual bool collidesWithCone(CollisionCone* cone);
+
+   // Serialization
+   public:
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & boost::serialization::base_object<CollisionType>(*this);
+         ar & radius;
+         ar & radiusSquared;
+         ar & center;
+      }
 };
 
 class CollisionPoint : public CollisionType {
@@ -137,6 +164,15 @@ class CollisionPoint : public CollisionType {
           position.y >= box->minPosition.y &&
           position.z <= box->maxPosition.z &&
           position.z >= box->minPosition.z;
+      }
+
+
+   // Serialization
+   public:
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & boost::serialization::base_object<CollisionType>(*this);
+         ar & position;
       }
 };
 
@@ -173,6 +209,17 @@ class CollisionRay : public CollisionType {
 
          // We don't want any points that are behind the origin or further than length.
          return !((root1 < 0 || root1 > length) && (root2 < 0 || root2 > length));
+      }
+
+
+   // Serialization
+   public:
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & boost::serialization::base_object<CollisionType>(*this);
+         ar & origin;
+         ar & direction;
+         ar & length;
       }
 };
 //class CollisionMesh : public CollisionType {};
@@ -272,6 +319,23 @@ class CollisionCone : public CollisionType {
          }
          return false;
          */
+      }
+
+
+   // Serialization
+   public:
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & boost::serialization::base_object<CollisionType>(*this);
+         ar & angle;
+         ar & sinReciprocal;
+         ar & cosReciprocal;
+         ar & sinAngle;
+         ar & cosAngle;
+         ar & sinSquared;
+         ar & length;
+         ar & direction;
+         ar & origin;
       }
 };
 

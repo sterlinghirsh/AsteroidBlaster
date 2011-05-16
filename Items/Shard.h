@@ -12,6 +12,7 @@
 #include "Items/Object3D.h"
 #include <list>
 #include <vector>
+#include <boost/serialization/base_object.hpp>
 
 #define SPINS_PER_SEC 0.5
 #define NUM_ORBITERS 1
@@ -50,6 +51,25 @@ class Shard : public Object3D {
       int _nPoints;
       void drawOtherOrbiters();
       double orbiterOffset;
+
+
+   // Serialization
+   public:
+      template<class Archive> 
+            void serialize(Archive & ar, const unsigned int version) {
+         ar & boost::serialization::base_object<Object3D>(*this);
+         ar & rotationVector;
+         ar & rotationSpeed;
+         ar & rotationAmount;
+         ar & scalex;
+         ar & scaley;
+         ar & scalez;
+         ar & worldSize;
+         ar & sizeX;
+         ar & sizeY;
+         ar & sizeZ;
+         ar & collisionRadius;
+      }
 };
 
 #endif

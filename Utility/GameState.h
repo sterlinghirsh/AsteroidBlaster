@@ -196,6 +196,8 @@ class GameState : public InputReceiver {
       
       void save();
       void load();
+
+      void testFunction();
    
    //private functions------------------------------
    private:
