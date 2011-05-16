@@ -95,7 +95,7 @@ void TimedBombShot::drawExplosion() {
       ry += (double) (rand() % 20);
       rz += (double) (rand() % 30);
       
-      float helper = secondScale * .6;
+      float helper = (float) (secondScale * .6);
 
       if (rx > 100) {
          rx = 0;
