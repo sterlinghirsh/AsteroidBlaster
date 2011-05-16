@@ -32,7 +32,8 @@
 #include "Text/Input.h"
 #include "Items/AsteroidShip.h"
 
-#include "Network/UDP_Connection.h"
+#include "Network/UDP_Server.h"
+#include "Network/UDP_Client.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -51,24 +52,26 @@ std::ostringstream sstream2; // TODO: Better name plz.
 GameState::GameState(GameStateMode _gsm) :
    custodian(this) {
       gsm = _gsm;
-
       if (gsm == SingleMode) {
          inMenu = false;
          io = NULL;
-         udpConnection = NULL;
+         udpServer = NULL;
          networkThread = NULL;
       } else if (gsm == MenuMode) {
          inMenu = true;
          io = NULL;
-         udpConnection = NULL;
+         udpClient = NULL;
+         udpServer = NULL;
          networkThread = NULL;
       } else if (gsm == ClientMode) {
-         io = NULL;
-         udpConnection = NULL;
-         networkThread = NULL;
+         io = new boost::asio::io_service();
+         udpClient = new UDP_Client(*io, this);
+         udpServer = NULL;
+         networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       } else if (gsm == ServerMode) {
          io = new boost::asio::io_service();
-         udpConnection = new UDP_Connection(*io, this);
+         udpClient = NULL;
+         udpServer = new UDP_Server(*io, this);
          networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       }
 

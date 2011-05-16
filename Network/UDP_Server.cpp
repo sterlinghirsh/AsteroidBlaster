@@ -30,6 +30,7 @@ UDP_Server::~UDP_Server() {
 
 
 void UDP_Server::start_receive() {
+   std::cout << "UDP_Server running start_receive..." << std::endl;
    socket_.async_receive_from(
       boost::asio::buffer(recv_buffer_), tempEndPoint,
       boost::bind(&UDP_Server::handle_receive, this,

@@ -16,6 +16,7 @@
 class UDP_Client: public UDP_Connection {
    //public variables
    public:
+      int clientID;
 
    //private variables
    private:

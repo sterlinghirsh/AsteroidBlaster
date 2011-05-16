@@ -351,7 +351,7 @@ int main(int argc, char* argv[]) {
    load();
    
    // Initialize the gameState
-   gameState = new GameState(SingleMode);
+   gameState = new GameState(_gsm);
    
    // Initialize the screens
    gameState->addScreens();

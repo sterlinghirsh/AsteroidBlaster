@@ -20,6 +20,7 @@
 UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameState)
 : UDP_Connection(io_service, _GameState) {
    //std::cout << "UDP_Client running constructor..." << std::endl;
+   clientID = 0;
    start_receive();
 }
 

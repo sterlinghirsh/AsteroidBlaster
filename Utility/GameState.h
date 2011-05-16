@@ -25,7 +25,8 @@ class Text;
 class ProgressBar;
 class WeaponDisplay;
 class Screen;
-class UDP_Connection;
+class UDP_Server;
+class UDP_Client;
 
 enum GameStateMode { SingleMode, MenuMode, ClientMode, ServerMode };
 
@@ -85,7 +86,8 @@ class GameState : public InputReceiver {
       GameStateMode gsm;
 
       //server stuff
-      UDP_Connection* udpConnection;
+      UDP_Server* udpServer;
+      UDP_Client* udpClient;
       boost::thread* networkThread;
       boost::asio::io_service* io;
       
