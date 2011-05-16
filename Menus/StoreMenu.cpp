@@ -292,7 +292,6 @@ void StoreMenu::draw() {
    Image::getImage("StoreMenuLogo")->drawImage();
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
    usePerspective();
-   glPopMatrix();
 
    // We swap buffers in gameSettings if we're using the overlay.
    if (!gameSettings->useOverlay) {

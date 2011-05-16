@@ -307,6 +307,24 @@ void update(GameState* gameState, double timeDiff) {
 }
 
 int main(int argc, char* argv[]) {
+   GameStateMode _gsm;
+   if (argc == 1) {
+      _gsm = SingleMode;
+   } else if (argc == 2) {
+      std::string s(argv[1]);
+      if (s.compare("-s") == 0) {
+         _gsm = ServerMode;
+      } else if (s.compare("-c") == 0) {
+         _gsm = ClientMode;
+      } else {
+         std::cerr << "Usage: AsteroidBlaster [-s | -c]" << std::endl;
+         return 1;
+      }
+   } else {
+      std::cerr << "Usage: AsteroidBlaster [-s | -c]" << std::endl;
+      return 1;
+   }
+
    srand((unsigned)time(NULL));
 
    // This sets up defaults and reads in any necessary settings.
@@ -332,9 +350,8 @@ int main(int argc, char* argv[]) {
    // Load the textures, sounds, and music.
    load();
    
-   bool isServer = argc == 2;
    // Initialize the gameState
-   gameState = new GameState(WORLD_SIZE, false, isServer);
+   gameState = new GameState(SingleMode);
    
    // Initialize the screens
    gameState->addScreens();
@@ -385,7 +402,7 @@ int main(int argc, char* argv[]) {
          gameState->gameIsRunning = false;
 
          if (gameSettings->useOverlay) {
-            drawGameState(gameState);
+            gameState->draw();
          }
       } else if (settingsMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
@@ -402,7 +419,7 @@ int main(int argc, char* argv[]) {
       } else {
          gameState->gameIsRunning = true;
          update(gameState, timeDiff);
-         drawGameState(gameState, false);
+         gameState->draw();
          chat->update(timeDiff);
          chat->draw();
       }

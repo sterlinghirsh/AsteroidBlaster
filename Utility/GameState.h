@@ -27,6 +27,8 @@ class WeaponDisplay;
 class Screen;
 class UDP_Connection;
 
+enum GameStateMode { SingleMode, MenuMode, ClientMode, ServerMode };
+
 namespace boost {
    class thread;
    
@@ -65,11 +67,11 @@ class GameState : public InputReceiver {
       // Bloom
       float aspect;
       
-      bool isServer;
       bool godMode;
       bool gameIsRunning;
       bool inMenu;
       bool levelOver;
+      bool drawGraphics;
    
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
@@ -80,6 +82,8 @@ class GameState : public InputReceiver {
       
       BoundingSpace* cube;
 
+      GameStateMode gsm;
+
       //server stuff
       UDP_Connection* udpConnection;
       boost::thread* networkThread;
@@ -89,6 +93,7 @@ class GameState : public InputReceiver {
    private:
    
       bool usingShipCamera;
+
       Camera* shipCamera;
       Camera* spectatorCamera;
       double spectatorSpeed;
@@ -121,7 +126,7 @@ class GameState : public InputReceiver {
    
    //public functions------------------------------
    public:
-      GameState(double worldSize, bool _inMenu, bool _isServer);
+      GameState(GameStateMode _gsm);
       virtual ~GameState();
       
       // virtual functions required by InputReciever
@@ -131,7 +136,8 @@ class GameState : public InputReceiver {
       virtual void mouseMove(int dx, int dy, int x, int y);
       virtual void mouseUp(int button);
       
-      void draw(bool drawGlow = false);
+      void draw();
+      void drawObjects(bool drawGlow = false);
       void hBlur();
       void vBlur();
       void drawBlur();

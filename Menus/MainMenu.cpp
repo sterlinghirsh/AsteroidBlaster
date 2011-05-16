@@ -71,7 +71,7 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    
 
    // Initialize the ship(s) in the background.
-   menuGameState = new GameState(WORLD_SIZE, true, false);
+   menuGameState = new GameState(MenuMode);
 
    ship1 = new AsteroidShip(menuGameState);
    ship2 = new AsteroidShip(menuGameState);
@@ -98,97 +98,19 @@ MainMenu::~MainMenu() {
 }
 
 void MainMenu::draw() {
-   SDL_Rect position;
-   position.x = (Sint16) (gameSettings->GW/2);
-   position.y = (Sint16) (gameSettings->GH/2.3);
-   for(unsigned i = 0; i < menuTexts.size(); i++) {
-      menuTexts[i]->setPosition(position);
-      position.y = (Sint16) (position.y + (gameSettings->GH/15));
-   }
-
-   // make stuff selectable and greyed out depending on stuff
-   continueText->selectable = !firstTime;
-   saveGameText->selectable = !firstTime;
-   if(firstTime) {
-      continueText->setColor(SDL_GREY);
-      saveGameText->setColor(SDL_GREY);
-   } else {
-      continueText->setColor(SDL_WHITE);
-      saveGameText->setColor(SDL_WHITE);
-   }
-   
-   
-
-   drawGameState(menuGameState, true, 0, 0, 20,
-         0, 0, -1,
-         0, 1, 0);
-/*
-   // Clear the screen.
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-   glPushMatrix();
-   // Draw glowing objects to a texture for the bloom effect.
-   menuGameState->aspect = (float) (gameSettings->GW / gameSettings->GH);
-   if (gameSettings->bloom) {
-      glPushMatrix();
-      gluLookAt(0, 0, 20, // Eye at origin.
-            0, 0, -1, // X goes right, Z goes away.
-            0, 1, 0); // Y goes up.
-
-      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-      glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glPushMatrix();
-      menuGameState->drawGlow();
-
-      glPopMatrix();
-      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-      menuGameState->hBlur();
-      menuGameState->vBlur();
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glPopMatrix();
-   }
-   usePerspective();
-
-   // Draw menu background stuff.
-
-   gluLookAt(0, 0, 20, // Eye at origin.
-         0, 0, -1, // X goes right, Z goes away.
-         0, 1, 0); // Y goes up.
-
-   // Draw background.
    menuGameState->draw();
-   //drawGameState(menuGameState);
-
-   glClear(GL_DEPTH_BUFFER_BIT);
-   //menuGameState->drawScreens();
-   if (gameSettings->bloom) {
-      menuGameState->drawBloom();
-   }
-   */
-   mainGameState->drawScreens();
-   //menuGameState->drawScreens();
-
-   glPopMatrix();
-
-   // Clear the depth buffer to draw on top of the ship.
-   glClear(GL_DEPTH_BUFFER_BIT);
-
+   
    //draw the text
    glPushMatrix();
-   useOrtho();
-   glDisable(GL_CULL_FACE);
-   glDisable(GL_LIGHTING);
+      useOrtho();
+      glDisable(GL_CULL_FACE);
+      glDisable(GL_LIGHTING);
 
-   for(unsigned i = 0; i < menuTexts.size(); i++) {
-      menuTexts[i]->draw();
-   }
+      for(unsigned i = 0; i < menuTexts.size(); i++) {
+         menuTexts[i]->draw();
+      }
 
-   usePerspective();
+      usePerspective();
    glPopMatrix();
 
    Image::getImage("MainMenuLogo")->drawImage();
@@ -196,51 +118,6 @@ void MainMenu::draw() {
    SDL_GL_SwapBuffers();
 
 }
-
-/*
-void MainMenu::draw(GameState* gameState) {
-   // the time difference since last update call
-   //double timeDiff = doubleTime() - lastDrawTime;
-
-   //gameState->setCurFPS(1 / timeDiff);
-
-   // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   usePerspective();
-
-   glMatrixMode(GL_MODELVIEW);
-
-
-   // Draw glowing objects to a texture for the bloom effect.
-   gameState->aspect = (float)gameSettings->GW/(float)gameSettings->GH;
-   if (gameSettings->bloom) {
-      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-      glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glPushMatrix();
-      gameState->drawGlow();
-
-      glPopMatrix();
-      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-      gameState->hBlur();
-      gameState->vBlur();
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   }
-
-   usePerspective();
-   // Draw the main screen
-   glPushMatrix();
-   gameState->draw();
-
-   //Particle::drawParticles();
-   //drawCrosshair();
-   glPopMatrix();
-}
-*/
 
 /**
  * Handles the player pressing down a key
@@ -250,8 +127,7 @@ void MainMenu::keyDown(int key, int unicode) {
    case SDLK_m:
       if(menuActive) {
          // If we're in the menu already, don't do anything when the player presses m.
-      }
-      else {
+      } else {
          mainGameState->pauseLevelTimer();
          activate();
       }
@@ -371,6 +247,30 @@ void MainMenu::update(double timeDiff) {
       ship2->setOrientation(0, 1, 0,
             -1, 0, 0);
    }
+
+
+   // Set menu Positions depending on current window size, has to be 
+   // done each update beacuse the window size could have changed
+   SDL_Rect position;
+   position.x = (Sint16) (gameSettings->GW/2);
+   position.y = (Sint16) (gameSettings->GH/2.3);
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
+      menuTexts[i]->setPosition(position);
+      position.y = (Sint16) (position.y + (gameSettings->GH/15));
+   }
+
+   // make stuff selectable and greyed out depending on stuff
+   continueText->selectable = !firstTime;
+   saveGameText->selectable = !firstTime;
+   if(firstTime) {
+      continueText->setColor(SDL_GREY);
+      saveGameText->setColor(SDL_GREY);
+   } else {
+      continueText->setColor(SDL_WHITE);
+      saveGameText->setColor(SDL_WHITE);
+   }
+
+
    menuGameState->update(timeDiff);
 }
 

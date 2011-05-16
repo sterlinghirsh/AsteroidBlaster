@@ -48,19 +48,28 @@ extern double minimapSizeFactor;
 
 std::ostringstream sstream2; // TODO: Better name plz.
 
-GameState::GameState(double worldSizeIn, bool _inMenu, bool _isServer) :
+GameState::GameState(GameStateMode _gsm) :
    custodian(this) {
-      inMenu = _inMenu;
-      isServer = _isServer;
+      gsm = _gsm;
 
-      if (isServer) {
-         io = new boost::asio::io_service();
-         udpConnection = new UDP_Connection(*io, this);
-         networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
-      } else {
+      if (gsm == SingleMode) {
+         inMenu = false;
          io = NULL;
          udpConnection = NULL;
          networkThread = NULL;
+      } else if (gsm == MenuMode) {
+         inMenu = true;
+         io = NULL;
+         udpConnection = NULL;
+         networkThread = NULL;
+      } else if (gsm == ClientMode) {
+         io = NULL;
+         udpConnection = NULL;
+         networkThread = NULL;
+      } else if (gsm == ServerMode) {
+         io = new boost::asio::io_service();
+         udpConnection = new UDP_Connection(*io, this);
+         networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       }
 
       godMode = false;
@@ -74,7 +83,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu, bool _isServer) :
       viewFrustumObjects = NULL;
       targetableViewFrustumObjects = NULL;
 
-      worldSize = worldSizeIn;
+      worldSize = WORLD_SIZE;
       skybox = new Skybox();
       ship = new AsteroidShip(this);
       clientCommand.shipID = ship->id;
@@ -100,7 +109,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu, bool _isServer) :
       std::string fontName = DEFAULT_FONT;
       int fontSize = 18;
 
-      //new all the test class we will be using
+      //new all the text class we will be using
       FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
       scoreText = new Text("Score: ", ship->getScore(), "",  hudFont, position);
       shardText = new Text("Shards: ", ship->getShards(), "",  hudFont, position);
@@ -151,6 +160,7 @@ GameState::GameState(double worldSizeIn, bool _inMenu, bool _isServer) :
       // TODO: comment this or rename it.
       isW = isA = isS = isD = false;
 
+      drawGraphics = true;
 
    }
 
@@ -369,31 +379,123 @@ void GameState::toggleMinimap() {
 }
 
 /**
- * Draw the main view.
+ * Draw everything in gamestate
  */
-void GameState::draw(bool drawGlow) {
+void  GameState::draw() {
+   if (!drawGraphics) {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      SDL_GL_SwapBuffers();
+      return;
+   }
+   // the time difference since last update call
+   double timeDiff = doubleTime() - lastDrawTime;
+
+   setCurFPS(1 / timeDiff);
+
+   // Clear the screen
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   usePerspective();
+
+   glMatrixMode(GL_MODELVIEW);
+
+
+   // Draw glowing objects to a texture for the bloom effect.
+   aspect = (float)gameSettings->GW/(float)gameSettings->GH;
+   if (gameSettings->bloom) {
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+      glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glPushMatrix();
+
+      if (inMenu) {
+         gluLookAt(0, 0, 20, // Eye at origin + 20.
+               0, 0, -1, // X goes right, Z goes away.
+               0, 1, 0); // Y goes up.
+      }
+
+      drawObjects(true);
+
+      glPopMatrix();
+      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+      hBlur();
+      vBlur();
+
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   }
+
+   usePerspective();
+
+   // Draw the main screen
+   glPushMatrix();
+      if (inMenu) {
+         gluLookAt(0, 0, 20, // Eye at origin.
+               0, 0, -1, // X goes right, Z goes away.
+               0, 1, 0); // Y goes up.
+      }
+      drawObjects();
+   glPopMatrix();
+
+   glPushMatrix();
+      // Draw the hud
+      glClear(GL_DEPTH_BUFFER_BIT);
+      if (gameSettings->bloom) {
+         drawBloom();
+      }
+
+      if (!inMenu) {
+         drawHud();
+      }
+   glPopMatrix();
+
+   if (gameSettings->useOverlay) {
+      drawOverlay();
+   }
+
+   drawScreens();
+
+   // TODO: Make this clearer. Why not swap when lookAt is true?
+   if (!inMenu) {
+      SDL_GL_SwapBuffers();
+   }
+   lastDrawTime = doubleTime();
+}
+
+/**
+ * Draw objects
+ */
+void GameState::drawObjects(bool drawGlow) {
+   if (!drawGraphics) {
+      return;
+   }
+
+   // This decides where the camera is, either ship or spectator camera.
    Camera *currentCamera;
    if (usingShipCamera) {
       currentCamera = shipCamera;
+      shipCamera->setViewVector(ship->getViewVector());
+      shipCamera->setOffset(*ship->getCameraOffset());
    } else {
       currentCamera = spectatorCamera;
    }
 
-   shipCamera->setViewVector(ship->getViewVector());
-   shipCamera->setOffset(*ship->getCameraOffset());
-
+   // If this gameState is not mainGamestate menu, set the camera and shake.
    if (!inMenu) {
       currentCamera->setCamera(true);
       shipCamera->shake(ship->getShakeAmount());
-      if (!drawGlow) {
-         skybox->draw(currentCamera);
-      }
    }
+
+   // Draw the skybox if this gameState is not mainmenu and is glow shading
+   if (!inMenu && !drawGlow) {
+      skybox->draw(currentCamera);
+   }
+
+   // Draw the outer cube
    cube->draw();
 
    // Get a list of all of the objects after culling them down to the view frustum.
    viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
-   // Get targetable view frustum objects in the shooting ai.
 
    if (!drawGlow) {
       glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
@@ -421,8 +523,6 @@ void GameState::draw(bool drawGlow) {
       }
 
       if (!inMenu) {
-         // if (ship->getCurrentView() == VIEW_THIRDPERSON_SHIP ||
-         // ship->getCurrentView() == VIEW_THIRDPERSON_GUN)
          ship->draw();
       }
    }
@@ -466,62 +566,64 @@ void GameState::drawBloom() {
    drawScreenQuad(Texture::getTexture("bloomTex"));
 }
 
+// Draw the Hud, which includes, minimap, weapon/health bar, text overlay...
 void GameState::drawHud() {
-   useOrtho();
+   glPushMatrix();
+      useOrtho();
 
-   /* Set the shipCamera using the location of your eye,
-    * the location where you're looking at, and the up vector.
-    * The shipCamera is set to be just 0.25 behind where you're looking at.
-    */
-   gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
+      /* Set the shipCamera using the location of your eye,
+       * the location where you're looking at, and the up vector.
+       * The shipCamera is set to be just 0.25 behind where you're looking at.
+       */
+      gluLookAt(0, 0, 0.25, 0, 0, 0, 0, 1, 0);
 
-   //glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
+      //glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
 
 
-   /* We need to disable the lighting temporarily
-    * in order to set the color properly.
-    */
-   glDisable(GL_LIGHTING);
-   glDisable(GL_CULL_FACE);
-   drawAllText();
-   if(usingShipCamera && !ship->isRespawning()){
-      weaponReadyBar->draw();
-      healthBar->draw();
-      weaponBar->draw();
-   }
-   //glEnable(GL_LIGHTING);
-   //glEnable(GL_DEPTH_TEST);
-   usePerspective();
+      /* We need to disable the lighting temporarily
+       * in order to set the color properly.
+       */
+      glDisable(GL_LIGHTING);
+      glDisable(GL_CULL_FACE);
+      drawAllText();
+      if(usingShipCamera && !ship->isRespawning()){
+         weaponReadyBar->draw();
+         healthBar->draw();
+         weaponBar->draw();
+         drawMinimap();
+      }
+      usePerspective();
+      
+      glEnable(GL_CULL_FACE);
+
    glPopMatrix();
-   glEnable(GL_CULL_FACE);
-
-   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void GameState::drawOverlay() {
-   glClear(GL_DEPTH_BUFFER_BIT);
-   useOrtho();
    glPushMatrix();
-   glDisable(GL_LIGHTING);
-   float minY = -1.0;
-   float maxY = 1.0;
-   float minX = -1.0f * aspect;
-   float maxX = 1.0f * aspect;
+      glClear(GL_DEPTH_BUFFER_BIT);
+      useOrtho();
+      glDisable(GL_LIGHTING);
+      float minY = -1.0;
+      float maxY = 1.0;
+      float minX = -1.0f * aspect;
+      float maxX = 1.0f * aspect;
 
-   if (!gameIsRunning) {
-      glColor4f(0.0, 1.0, 0.0, 0.7f);
-      float scale = 1.0;
-      glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
-      glBegin(GL_QUADS);
-      glVertex3f(minX * scale, minY * scale, 0.0);
-      glVertex3f(maxX * scale, minY * scale, 0.0);
-      glVertex3f(maxX * scale, maxY * scale, 0.0);
-      glVertex3f(minX * scale, maxY * scale, 0.0);
-      glEnd();
-   }
+      if (!gameIsRunning) {
+         glColor4f(0.0, 1.0, 0.0, 0.7f);
+         float scale = 1.0;
+         glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
+         glBegin(GL_QUADS);
+         glVertex3f(minX * scale, minY * scale, 0.0);
+         glVertex3f(maxX * scale, minY * scale, 0.0);
+         glVertex3f(maxX * scale, maxY * scale, 0.0);
+         glVertex3f(minX * scale, maxY * scale, 0.0);
+         glEnd();
+      }
 
-   int tex = Texture::getTexture("overlayTex");
-   drawScreenQuad(tex);
+      int tex = Texture::getTexture("overlayTex");
+      drawScreenQuad(tex);
+   glPopMatrix();
 }
 
 /**
@@ -953,6 +1055,10 @@ void GameState::keyDown(int key, int unicode) {
       break;
    case SDLK_F4:
       nextLevel();
+      break;
+
+   case SDLK_F7:
+      drawGraphics = !drawGraphics;
       break;
 
    case SDLK_F8:

@@ -110,10 +110,6 @@ void drawCylinder(double radius, double length);
 void getBrightColor(double hue, float& r, float& g, float& b);
 void setupVideo();
 void drawScreenQuad(int tex);
-void drawGameState(GameState* gameState,
-      bool lookAt = false, float eX = 0.0, float eY = 0.0, float eZ = 0.0,
-      float lX = 0.0, float lY = 0.0, float lZ = 0.0,
-      float uX = 0.0, float uY = 0.0, float uZ = 0.0);
 void initFbo();
 void fboBegin(int buffer);
 void fboEnd();
