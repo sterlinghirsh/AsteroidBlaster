@@ -424,7 +424,7 @@ void AsteroidShip::update(double timeDiff) {
    if (health <= 0) {
       const double respawnTime = 4;
       shakeAmount = 0;
-      stopSounds();
+      //stopSounds();
       // Handle respawning.
       if (!respawnTimer.isRunning) {
          respawnTimer.setCountDown(respawnTime);
@@ -1742,7 +1742,7 @@ void AsteroidShip::atLevelEnd() {
    health = healthMax;
    shakeAmount = 0;
    
-   stopSounds();
+   //stopSounds();
 }
 
 void AsteroidShip::stopSounds() {

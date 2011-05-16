@@ -196,10 +196,11 @@ GameState::~GameState() {
    if (udpClient != NULL) {
       delete udpServer;
    }
-   if (io != NULL) {
+   // Somehow makes it segfault when quitting so commented out
+   /*if (io != NULL) {
       io->stop();
       delete io;
-   }
+   }*/
 }
 
 /**

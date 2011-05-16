@@ -436,8 +436,8 @@ int main(int argc, char* argv[]) {
          gameState->gameIsRunning = true;
          update(gameState, timeDiff);
          gameState->draw();
-         chat->update(timeDiff);
-         chat->draw();
+         //chat->update(timeDiff);
+         //chat->draw();
       }
 
       while (SDL_PollEvent(event)) {
