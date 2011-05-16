@@ -13,6 +13,7 @@
 #include <list>
 #include <vector>
 #include <boost/serialization/base_object.hpp>
+#include <boost/serialization/export.hpp>
 
 #define SPINS_PER_SEC 0.5
 #define NUM_ORBITERS 1
@@ -23,6 +24,8 @@
 #define CUBE_MODE 0
 #define DECEL_RATE 0.2
 #define ORBITER_CLR glColor3f(0.2, 0.5, 0.8)
+
+
 
 class Shard : public Object3D {
    public:
@@ -57,6 +60,7 @@ class Shard : public Object3D {
    public:
       template<class Archive> 
             void serialize(Archive & ar, const unsigned int version) {
+         std::cout << "lol the classic got to here, shard" << std::endl;
          ar & boost::serialization::base_object<Object3D>(*this);
          ar & rotationVector;
          ar & rotationSpeed;
@@ -71,5 +75,7 @@ class Shard : public Object3D {
          ar & collisionRadius;
       }
 };
+
+//BOOST_CLASS_EXPORT(Shard);
 
 #endif

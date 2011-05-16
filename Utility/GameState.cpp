@@ -1414,11 +1414,12 @@ void GameState::testFunction() {
    oa << custodian.shards;
    std::cout << "|||Shards|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
    */
-   Shard* testShard = new Shard(1, 80.0, this);
-   custodian.add(testShard);
+   Shard testShard(1, 80.0, this);
+   //Point3D* p = new Point3D(0.0, 1.1, 2.2);
+   //custodian.add(testShard);
    std::ostringstream oss;
    boost::archive::text_oarchive oa(oss);
-   //oa << testShard;
-   //std::cout << "|||Shards|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
+   oa << testShard;
+   std::cout << "|||Shards|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
 }
 

@@ -12,6 +12,7 @@
 #include "Utility/Custodian.h"
 #include <string>
 
+
 Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState) {
    id = custodian->getNextID();
 

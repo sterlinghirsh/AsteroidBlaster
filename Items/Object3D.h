@@ -13,7 +13,9 @@
 #include "Utility/Vector3D.h"
 #include "Utility/GlobalUtility.h"
 #include <queue>
+#include <iostream>
 #include <boost/serialization/base_object.hpp>
+#include <boost/serialization/export.hpp>
 
 class Object3D : public Drawable {
    //public variables------------------------------
@@ -66,7 +68,6 @@ class Object3D : public Drawable {
    //protected variables------------------------------
    protected:
       double yawSpeed, pitchSpeed, rollSpeed;
-      GLuint displayList;
       std::queue<Vector3D*> accelerations;
       std::queue<Vector3D*> instantAccelerations;
       bool targeted;
@@ -84,27 +85,25 @@ class Object3D : public Drawable {
    public:
       template<class Archive> 
             void serialize(Archive & ar, const unsigned int version) {
+         std::cout << "lol the classic got to here, Object3DS" << std::endl;
          ar & boost::serialization::base_object<Drawable>(*this);
-         ar & velocity;
+         ar & id;
 
          ar & acceleration;
          ar & axis;
          ar & up;
          ar & right;
          ar & forward;
-         ar & lockUpVector;
+
          ar & angle;
          ar & rotationSpeed;
-         ar & id;
 
          ar & yawSpeed;
          ar & pitchSpeed;
          ar & rollSpeed;
-         ar & displayList;
-         ar & accelerations;
-         ar & instantAccelerations;
-         ar & targeted;
       }
 };
+
+//BOOST_CLASS_EXPORT(Object3D);
 
 #endif
