@@ -1299,8 +1299,9 @@ void AsteroidShip::updateShotDirection(Point3D dir) {
  * This is the crosshair for first person.
  */
 void AsteroidShip::drawCrosshair() {
-   if (getHealth() <= 0)
+   if (getHealth() <= 0 || timeLeftToRespawn > 0) {
       return;
+   }
 
    // If we should be drawing the boxes, do that instead.
    if (currentView != VIEW_FIRSTPERSON_SHIP &&
@@ -1691,7 +1692,7 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
 
 bool AsteroidShip::isRespawning() {
    //printf("Is it respawning? : %d\n", respawnTimer.isRunning && (respawnTimer.getTimeLeft() + spawnRate) > 0);
-   return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0;
+   return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0 && timeLeftToRespawn <= 0;
 }
 
 // serialize
