@@ -295,6 +295,7 @@ void load() {
    SoundEffect::Add("Sounds/ChargeShotCharge.ogg", "ChargeShotCharge");
    SoundEffect::Add("Sounds/ChargeShotLoop.ogg", "ChargeShotLoop");
    SoundEffect::Add("Sounds/ChargeShotFire.wav", "ChargeShotFire");
+   SoundEffect::Add("Sounds/TimedBombExplosion.wav", "TimedBombExplosion");
    std::cout << "Load: finished" << std::endl;
 }
 

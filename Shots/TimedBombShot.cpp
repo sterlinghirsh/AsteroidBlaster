@@ -276,17 +276,12 @@ void TimedBombShot::update(double timeDiff) {
    }
 
    // If the bomb should explode this frame and has not already, then explode.
-   if (shouldExplode && !isExploded) {
-      timeSinceExploded = 1.5;
-      isExploded = true;
-      //explode();
-   }
-   //printf("Time since exploded: %f\n", doubleTime() - timeFired);
    // If more time has passed than the bomb's timeToExplode, blow it up.
-   if (!isExploded && (doubleTime() - timeFired > timeToExplode)) {
+   if ((shouldExplode || doubleTime() - timeFired > timeToExplode) && !isExploded) {
       timeSinceExploded = 1.5;
       isExploded = true;
       //explode();
+      SoundEffect::playSoundEffect("TimedBombExplosion", position, false, 255);
    }
    
    timeSinceExploded -= timeDiff;
