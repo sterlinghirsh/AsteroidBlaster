@@ -285,6 +285,7 @@ void load() {
    SoundEffect::Add("Sounds/CrystalCollect.wav", "CrystalCollect.wav");
    SoundEffect::Add("Sounds/TractorBeam.wav", "TractorBeam.wav");
    SoundEffect::Add("Sounds/Pikachu.wav", "Pikachu.wav");
+   SoundEffect::Add("Sounds/ElectricitySound.wav", "ElectricitySound");
    SoundEffect::Add("Sounds/ShipEngine.wav", "ShipEngine.wav");
    SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
    SoundEffect::Add("Sounds/ShipHit.wav", "ShipHit.wav");
