@@ -31,10 +31,10 @@ void EngineParticle::Add(Point3D* pos, Vector3D* vec, double color, const GameSt
 }
 
 void EngineParticle::AddLowHealth(Point3D* pos, Vector3D* vec, double color, const GameState* _gameState) {
-   float _fade = (float) (randdouble() + minLife) / 2;
+   float _fade = (float) (randdouble() + minLife) / 4;
    float _r = .2f;
-   float _g = .2;
-   float _b = .2;
+   float _g = .2f;
+   float _b = .2f;
 
    //getBrightColor(color, _r, _g, _b);
 

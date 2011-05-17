@@ -381,7 +381,7 @@ void AsteroidShip::addNewLowHealthParticle(Point3D& emitter, Vector3D& baseDirec
    randomOffset.add(baseDirection.scalarMultiply(randomAmount * (randdouble() -0.5)));
    //randomOffset.scalarMultiplyUpdate(0.01);
 
-   particleVariation.updateMagnitude(baseDirection.scalarMultiply(randdouble() * 6));
+   particleVariation.updateMagnitude(baseDirection.scalarMultiply(randdouble() * 30));
    particleVariation.addUpdate(offsetDirectionX.scalarMultiply(randdouble() * 8 - 4));
    particleVariation.addUpdate(offsetDirectionY.scalarMultiply(randdouble() * 8 - 4));
    particleVariation.scalarMultiplyUpdate(0.2);
@@ -452,7 +452,7 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
    const float increment = 0.01f;
 
    //const float length = acceleration->getLength;
-   const int maxParticlesPerFrame = 10;
+   const int maxParticlesPerFrame = 8;
    const int newParticlesPerSecond = 50;
    static Vector3D baseParticleAcceleration;
    static Point3D emitter;
@@ -461,8 +461,7 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
    const double colorVariation = 0.2 * randdouble();
    int particlesThisFrame = 0;
    
-   //while ((double) particlesEmitted / accelerationTime < newParticlesPerSecond &&
-    //particlesThisFrame < maxParticlesPerFrame) {
+   while (particlesThisFrame < maxParticlesPerFrame && particlesThisFrame < ((33 - health) / 3)) {
       // First do up Acceleration.
       //if (curUpAccel != 0) {
          //printf("Get here\n");
@@ -498,7 +497,7 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
 
       ++particlesEmitted;
       ++particlesThisFrame;
-   //}
+   }
 }
 
 void AsteroidShip::update(double timeDiff) {
