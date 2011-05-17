@@ -51,6 +51,8 @@
 
 #define SAVEFILENAME "AsteroidBlaster.sav"
 
+#include "Network/NetShard.h"
+
 extern double minimapSizeFactor;
 
 std::ostringstream sstream2; // TODO: Better name plz.
@@ -1415,11 +1417,29 @@ void GameState::testFunction() {
    std::cout << "|||Shards|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
    */
    Shard testShard(1, 80.0, this);
+   testShard.position->updateMagnitude(0, 5, 10);
+   testShard.velocity->updateMagnitude(1, 2, 3);
+   NetShard testNetShard;
+   testNetShard.fromObject(&testShard);
    //Point3D* p = new Point3D(0.0, 1.1, 2.2);
    //custodian.add(testShard);
    std::ostringstream oss;
    boost::archive::text_oarchive oa(oss);
-   oa << testShard;
+   oa << testNetShard;
    std::cout << "|||Shards|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
+   
+   NetShard newTestNetShard;
+   std::istringstream iss(oss.str());
+   boost::archive::text_iarchive ia(iss);
+   ia >> newTestNetShard;
+   
+   Object3D* newObject = NULL;
+   newTestNetShard.toObject(this, newObject);
+   if (newObject != NULL) {
+      custodian.add(newObject);
+   } else {
+      std::cout << "Unserialization failed!" << std::endl;
+   }
+
 }
 

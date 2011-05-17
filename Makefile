@@ -79,10 +79,10 @@ run:
 	./${PROGNAME}
 
 runServer:
-	./${PROGNAME} -s 5000
+	./${PROGNAME} -s 5001
 
 runClient:
-	./${PROGNAME} -c localhost 5000
+	./${PROGNAME} -c localhost 5001
 
 lib:
 	./lib.sh make

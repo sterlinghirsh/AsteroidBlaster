@@ -27,6 +27,7 @@ class Object3D : public Drawable {
       double angle;
       double rotationSpeed;
       unsigned id;
+      double yawSpeed, pitchSpeed, rollSpeed;
       
       
    //private variables------------------------------
@@ -67,7 +68,6 @@ class Object3D : public Drawable {
    
    //protected variables------------------------------
    protected:
-      double yawSpeed, pitchSpeed, rollSpeed;
       std::queue<Vector3D*> accelerations;
       std::queue<Vector3D*> instantAccelerations;
       bool targeted;

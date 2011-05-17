@@ -104,25 +104,10 @@ class Drawable {
             void serialize(Archive & ar, const unsigned int version) {
          ar & position;
          ar & velocity;
-         ar & minPosition;
-         ar & maxPosition;
-         ar & collisionType;
          // gameState?
          // custodian?
          ar & radius;
          ar & shouldRemove;
-         ar & cullRadius;
-         ar & shouldBeCulled;
-         ar & minXRank;
-         ar & maxXRank;
-         ar & shouldConstrain;
-         ar & shouldDrawInMinimap;
-         ar & minX;
-         ar & minY;
-         ar & minZ;
-         ar & maxX;
-         ar & maxY;
-         ar & maxZ;
       }
 };
 
