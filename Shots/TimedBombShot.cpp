@@ -21,7 +21,7 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, A
    updateBoundingBox();
 
    // Blow up 15 seconds after it's fired.
-   timeToExplode = 15;
+   timeToExplode = 100;
    scaleSize = 0;
    secondScale = 0;
    explodeRadius = 8;
@@ -33,7 +33,7 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, A
    ry = 0;
    rz = 0;
    
-   forward = new Vector3D(*(owner->forward));
+   forward = new Vector3D((owner->shotDirection));
    up = new Vector3D(*(owner->up));
    right = new Vector3D(*(owner->right));
    
@@ -60,7 +60,12 @@ void TimedBombShot::draw() {
    }
 
    glPushMatrix();
+      glDisable(GL_CULL_FACE);
       glDisable(GL_LIGHTING);
+      glEnable(GL_NORMALIZE);
+      //glDisable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glDisable(GL_POLYGON_OFFSET_LINE);
 
       /*double amountDone = (doubleTime() - timeFired) / timeToExplode;
       if (fmod(amountDone * amountDone * 80, 2) < 1) {
@@ -69,16 +74,44 @@ void TimedBombShot::draw() {
          glColor3d(1.0, 0.4, 0.4);
       }*/
       //glDisable(GL_
-      glColor3d(1, .6, 0);
-      setMaterial(ShotMaterial);
+      glColor4d(1, 0, 0, 1);
+      //setMaterial(BlackSolid);
       position->glTranslate();
       glRotate();
-
-      // Radius 0.5, 5 slices, 5 stacks.
-      gluSphere(quadric, 0.3, 5, 5);
-      glColor3d(0, 1, 0);
-      gluCylinder(quadric, .3, .3, 1, 5, 5);
-
+      
+      glPushMatrix();
+      gluSphere(quadric, 0.3, 30, 30);
+      
+      glPopMatrix();
+      
+      glPushMatrix();
+      glColor4d(.0, 0, .0, 1);
+      gluCylinder(quadric, .31, .31, 1.5, 30, 30);
+      glPopMatrix();
+      
+      glPushMatrix();
+      glTranslated(0, 0, 1.5);
+      gluDisk(quadric, 0, .3, 15, 15);
+      
+      glPopMatrix();
+      
+      glLineWidth(2);
+      glPushMatrix();
+      glBegin(GL_LINES);
+      glColor4d(1, 0, 0, 1);
+      for(double z = 0; z <= 1.5; z += .1) {
+         glVertex3d(.33 * sin((z / 1.5) * M_PI * 2), .33 * cos((z / 1.5) * M_PI * 2), z);
+         glVertex3d(.33 * sin(((z + .1) / 1.5) * M_PI * 2), .33 * cos(((z + .1) / 1.5) * M_PI * 2), z + .1);
+         
+         glVertex3d(-.33 * sin((z / 1.5) * M_PI * 2), -.33 * cos((z / 1.5) * M_PI * 2), z);
+         glVertex3d(-.33 * sin(((z + .1) / 1.5) * M_PI * 2), -.33 * cos(((z + .1) / 1.5) * M_PI * 2), z + .1);
+      }
+      glEnd();
+      glPopMatrix();
+      
+      glLineWidth(1.0);
+      glEnable(GL_BLEND);
+      glEnable(GL_CULL_FACE);
       glEnable(GL_LIGHTING);
    glPopMatrix();
 }
@@ -123,6 +156,8 @@ void TimedBombShot::drawExplosion() {
          scaleSize += addSize;
       }
       
+      xzScale = scaleSize * (2.3 - timeSinceExploded) * (2.3 - timeSinceExploded) / 2.5, scaleSize;
+      
       loc1 = glGetUniformLocation(ringShader,"ratio");
       glUniform1f(loc1,helper);
       //scaleSize = 20;
@@ -158,7 +193,7 @@ void TimedBombShot::drawExplosion() {
          glColor4d(0, .2, 1, timeSinceExploded*5);
          glPushMatrix();
          //glColor4d(0, 0, 1, 1);//timeSinceExploded * .3);
-         glRotated(110, 1, 0, 0);
+         glRotated(90, 1, 0, 0);
          glScaled(secondScale, secondScale, 1);
          glPushMatrix();
          glTranslated(0, 0, -.3);
@@ -199,9 +234,9 @@ void TimedBombShot::drawExplosion() {
          if(timeSinceExploded > 1.3) {
             glScaled(scaleSize / 2.5, scaleSize, scaleSize / 2.5);
          } else {
-            glScaled(scaleSize * (2.3 - timeSinceExploded) * (2.3 - timeSinceExploded) / 2.5, scaleSize, scaleSize * (2.3 - timeSinceExploded) * (2.3 - timeSinceExploded) / 2.5);
+            glScaled(xzScale, scaleSize, xzScale);
          }
-         glRotated(20, 1, 0, 0);
+         //glRotated(20, 1, 0, 0);
          glRotated(spin, rx, ry, rz);
          gluSphere(quadric, .6, 20, 20);
          glPopMatrix();

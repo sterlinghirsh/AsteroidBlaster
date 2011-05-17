@@ -366,6 +366,32 @@ void AsteroidShip::addNewParticle(Point3D& emitter, Vector3D& baseDirection,
          new Vector3D(baseDirection.scalarMultiply(10.0).add(particleVariation)), color, gameState);
 }
 
+void AsteroidShip::addNewLowHealthParticle(Point3D& emitter, Vector3D& baseDirection,
+      Vector3D& offsetDirectionX, Vector3D& offsetDirectionY, double color) {
+   static Vector3D particleVariation;
+   static Point3D curPoint;
+   static Vector3D initialOffset;
+   static Vector3D randomOffset;
+   const float randomAmount = 0.5f;
+   curPoint = emitter;
+
+   // Translate the point in 2D
+   randomOffset.add(offsetDirectionX.scalarMultiply(randomAmount * (randdouble() - 0.5)));
+   randomOffset.add(offsetDirectionY.scalarMultiply(randomAmount * (randdouble() - 0.5)));
+   randomOffset.add(baseDirection.scalarMultiply(randomAmount * (randdouble() -0.5)));
+   //randomOffset.scalarMultiplyUpdate(0.01);
+
+   particleVariation.updateMagnitude(baseDirection.scalarMultiply(randdouble() * 6));
+   particleVariation.addUpdate(offsetDirectionX.scalarMultiply(randdouble() * 8 - 4));
+   particleVariation.addUpdate(offsetDirectionY.scalarMultiply(randdouble() * 8 - 4));
+   particleVariation.scalarMultiplyUpdate(0.2);
+   //curPoint = position->add(randomPoint);
+   initialOffset.movePoint(curPoint);
+   randomOffset.movePoint(curPoint);
+   EngineParticle::AddLowHealth(new Point3D(curPoint),
+         new Vector3D(baseDirection.scalarMultiply(10.0).add(particleVariation)), color, gameState);
+}
+
 void AsteroidShip::createEngineParticles(double timeDiff) {
    //add particles in the opposite direction of the acceration
 
@@ -418,6 +444,61 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
       ++particlesEmitted;
       ++particlesThisFrame;
    }
+}
+
+void AsteroidShip::createLowHealthParticles(double timeDiff){
+   //add particles in the opposite direction of the acceration
+
+   const float increment = 0.01f;
+
+   //const float length = acceleration->getLength;
+   const int maxParticlesPerFrame = 10;
+   const int newParticlesPerSecond = 50;
+   static Vector3D baseParticleAcceleration;
+   static Point3D emitter;
+
+   double accelerationTime = doubleTime() - accelerationStartTime;
+   const double colorVariation = 0.2 * randdouble();
+   int particlesThisFrame = 0;
+   
+   //while ((double) particlesEmitted / accelerationTime < newParticlesPerSecond &&
+    //particlesThisFrame < maxParticlesPerFrame) {
+      // First do up Acceleration.
+      //if (curUpAccel != 0) {
+         //printf("Get here\n");
+         baseParticleAcceleration = up->scalarMultiply(.3);
+         emitter = *position;
+         forward->movePoint(emitter, -0.5);
+         addNewLowHealthParticle(emitter, baseParticleAcceleration, *forward, *right, color1 + colorVariation);
+      //}
+
+      // Next do right Acceleration.
+      /*if (curRightAccel != 0) {
+         baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
+         emitter = *position;
+         forward->movePoint(emitter, -0.7);
+         addNewParticle(emitter, baseParticleAcceleration, *forward, *up, color2 + colorVariation);
+      }
+
+      // Next do forward Acceleration.
+      if (curForwardAccel != 0) {
+         // We want to do two streams.
+         baseParticleAcceleration = forward->scalarMultiply(-curForwardAccel * 0.05);
+         Point3D initialPoint(*position);
+         forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
+
+         // First do the right side.
+         right->movePoint(initialPoint, 1);
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color1 - colorVariation);
+
+         // Next do the left side.
+         right->movePoint(initialPoint, -2);
+         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color2 - colorVariation);
+      }*/
+
+      ++particlesEmitted;
+      ++particlesThisFrame;
+   //}
 }
 
 void AsteroidShip::update(double timeDiff) {
@@ -655,6 +736,7 @@ void AsteroidShip::update(double timeDiff) {
 
 
    createEngineParticles(timeDiff);
+   if(health < 30) createLowHealthParticles(timeDiff);
 
    // Update the zoom level.
    const float minZoom = 1;

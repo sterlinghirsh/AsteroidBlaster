@@ -30,6 +30,22 @@ void EngineParticle::Add(Point3D* pos, Vector3D* vec, double color, const GameSt
    Particle::Add(new EngineParticle(pos, vec, _fade, _r, _g, _b, _gameState));
 }
 
+void EngineParticle::AddLowHealth(Point3D* pos, Vector3D* vec, double color, const GameState* _gameState) {
+   float _fade = (float) (randdouble() + minLife) / 2;
+   float _r = .2f;
+   float _g = .2;
+   float _b = .2;
+
+   //getBrightColor(color, _r, _g, _b);
+
+   const float dimFactor = 10.0;
+   _r = _r / dimFactor;
+   _g = _g / dimFactor;
+   _b = _b / dimFactor;
+
+   Particle::Add(new EngineParticle(pos, vec, _fade, _r, _g, _b, _gameState));
+}
+
 void EngineParticle::update(double timeDifference) {
    double velocityReductionPerSecond = 20.0 * randdouble();
    double lengthSquared = velocity->getComparisonLength();
