@@ -40,7 +40,7 @@ LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(BOOST_LDFLAGS) -lSDL_mixer -lSD
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -Wconversion -g -Wall
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -g
 CC=g++
 
 PROGNAME=AsteroidBlaster
@@ -53,7 +53,7 @@ ITEMSFILES=Items/Drawable.cpp Items/Object3D.cpp Items/Asteroid3D.cpp Items/Aste
 SHOTSFILES=Shots/Shot.cpp Shots/BeamShot.cpp Shots/ProjectileShot.cpp Shots/TractorBeamShot.cpp Shots/ElectricityShot.cpp Shots/ExplosiveShot.cpp Shots/EnergyShot.cpp Shots/TimedBombShot.cpp Shots/RemoteBombShot.cpp
 
 AIFILES=AI/FlyingAI.cpp AI/ShootingAI.cpp 
-NETWORKFILES=Network/ClientCommand.cpp Network/UDP_Server.cpp Network/UDP_Client.cpp Network/NetShard.cpp
+NETWORKFILES=Network/ClientCommand.cpp Network/UDP_Server.cpp Network/UDP_Client.cpp Network/NetShard.cpp Network/NetAsteroid.cpp
 
 WEAPONSFILES=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/TractorBeam.cpp Weapons/Electricity.cpp Weapons/TimedBomber.cpp Weapons/Energy.cpp Weapons/RemoteBomber.cpp
 
