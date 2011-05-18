@@ -41,6 +41,7 @@
 #include "Network/UDP_Server.h"
 #include "Network/UDP_Client.h"
 #include "Network/NetShard.h"
+#include "Network/NetAsteroid.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -386,7 +387,7 @@ void GameState::networkUpdate(double timeDiff) {
       
    // SERVER-->CLIENT stuff~~~~~~~~~~~~~~~~~~~~~~
    } else if (gsm == ServerMode){
-      
+
    }
 }
 
@@ -827,6 +828,11 @@ void GameState::reset(bool shouldLoad) {
    Particle::Clear();
    MeshFace::Clear();
 
+   gameIsRunning = true;
+   // The level is not over when we're starting a new game.
+   levelOver = false;
+   isCountingDown = false;
+
    curLevel = 1;
    //temp
    if(shouldLoad) {
@@ -837,6 +843,7 @@ void GameState::reset(bool shouldLoad) {
    curLevelText->updateBody(curLevel);
 
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
+
    ship = new AsteroidShip(this);
    clientCommand.reset();
    clientCommand.shipID = ship->id;
@@ -847,10 +854,7 @@ void GameState::reset(bool shouldLoad) {
    spring->attach(ship, shipCamera);
    spectatorCamera = new Camera(false);
 
-   gameIsRunning = true;
-   // The level is not over when we're starting a new game.
-   levelOver = false;
-   isCountingDown = false;
+
    
    custodian.add(ship);
    initAsteroids();
@@ -859,6 +863,22 @@ void GameState::reset(bool shouldLoad) {
    addLevelMessage();
 
    setLevelTimer();
+
+   if( gsm == ClientMode) {
+      udpClient->AllObjFlag = true;
+
+      //request NET_ALLOBJ_REQ
+      std::ostringstream oss;
+      boost::archive::text_oarchive oa(oss);
+      int packID = NET_ALLOBJ_REQ;
+      oa << packID;
+      udpClient->send(oss.str(), udpClient->serverEndPoint);
+
+      while (udpClient->AllObjFlag) {
+         std::cout << "waiting for AllObjFlag..." << std::endl;
+      }
+   }
+
 }
 
 void GameState::addLevelMessage() {
@@ -1411,15 +1431,24 @@ void GameState::load() {
 }
 
 void GameState::testFunction() {
-   /*
+   //Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState, bool isFirst) :
+
+   Asteroid3D* testStroid = new Asteroid3D(5, 80.0, this, false);
+   testStroid->position->updateMagnitude(0, 5, 10);
+   testStroid->velocity->updateMagnitude(1, 2, 3);
+   custodian.add(testStroid);
+
+   NetAsteroid testNetAsteroid;
+
+   testNetAsteroid.fromObject(testStroid);
+
    std::ostringstream oss;
    boost::archive::text_oarchive oa(oss);
-   oa << custodian.shards;
-   std::cout << "|||Shards|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
-   */
-   Shard testShard(1, 80.0, this);
-   testShard.position->updateMagnitude(0, 5, 10);
-   testShard.velocity->updateMagnitude(1, 2, 3);
+   oa << testNetAsteroid;
+
+   std::cout << "|||testNetAsteroid|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
+
+   /*
    NetShard testNetShard;
    testNetShard.fromObject(&testShard);
    //Point3D* p = new Point3D(0.0, 1.1, 2.2);
@@ -1441,6 +1470,6 @@ void GameState::testFunction() {
    } else {
       std::cout << "Unserialization failed!" << std::endl;
    }
-
+   */
 }
 

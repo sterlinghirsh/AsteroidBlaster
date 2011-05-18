@@ -75,8 +75,6 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
          if (receivedPackID == NET_HS_REQ) {
             std::cout << "init packet found, adding with ID of " << clientIDCounter << std::endl;
             tempEndpointToClientID.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint),clientIDCounter) );
-            
-
             // now send the client handshake1 back
             {
                std::ostringstream oss;
@@ -147,7 +145,25 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
          std::cout << "Client ID:" << currentClientID << " quit!" << std::endl;
          endpointToClientID.erase (tempEndPoint);
          curShip->shouldRemove = true;
-      } else {
+      } else if (receivedPackID == NET_SHIPID_REQ) {
+         // now send NET_SHIPID_RES
+         {
+            std::ostringstream oss;
+            boost::archive::text_oarchive oa(oss);
+            int packID = NET_SHIPID_RES;
+            oa << packID << curShip->id;
+            send(oss.str(), tempEndPoint);
+         }
+      } else if (receivedPackID == NET_ALLOBJ_REQ) {
+         // now send NET_SHIPID_RES
+         {
+            std::ostringstream oss;
+            boost::archive::text_oarchive oa(oss);
+            int packID = NET_ALLOBJ_FIN;
+            oa << packID;
+            send(oss.str(), tempEndPoint);
+         }
+      }else {
          std::cout << "Error! this packet id is unknown:" <<  receivedPackID << ". |||" << recv_buffer_.data() << std::endl;
       }
    }

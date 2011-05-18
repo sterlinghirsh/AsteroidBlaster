@@ -26,6 +26,8 @@ class UDP_Client {
    //public variables
    public:
       int clientID;
+      int shipID;
+      int AllObjFlag;
       boost::asio::ip::udp::endpoint serverEndPoint;
       boost::asio::ip::udp::endpoint clientEndPoint;
       GameState* gameState;

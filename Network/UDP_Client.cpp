@@ -27,7 +27,8 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
    //std::cout << "UDP_Client running constructor..." << std::endl;
    std::cout << "UDP_Client being constructed which will try to connect IP:" 
              << _ip << " and port #" << _portNum << std::endl;
-   clientID = 0;
+   clientID = -1;
+   shipID = -1;
 
    boost::asio::ip::udp::resolver resolver(io_service);
    boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), _ip, _portNum.c_str());
@@ -81,6 +82,31 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
          std::cout << "Handshake Complete! I am now a client with ID of " << clientID << std::endl;
       }
    }
+
+   {
+      // ask for the ship's ID
+      std::ostringstream oss;
+      boost::archive::text_oarchive oa(oss);
+      int packID = NET_SHIPID_REQ;
+      oa << packID;
+      socket_.send_to(boost::asio::buffer(oss.str()), serverEndPoint);
+   }
+
+   {
+      // then wait for the answer back for handshake3...
+      size_t len = socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
+      // decode the answer, and make sure that the packet id is 2
+      std::istringstream iss(recv_buffer_.data());
+      boost::archive::text_iarchive ia(iss);
+      int temp;
+      ia >> temp >> shipID;
+      if (temp == NET_SHIPID_RES) {
+         std::cout << "shipID=" << shipID << std::endl;
+      } else {
+         std::cout << "packet not NET_SHIPID_RES! Packet ID=" << temp << std::endl;
+      }
+   }
+
    // End handshake-------------------------
 
    start_receive();
@@ -126,7 +152,6 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
    ia >> receivedPackID;
 
    if (receivedPackID == NET_OBJ_SHARD) {
-      std::cout << "iss.str()=" << iss.str() << std:: endl;
       std::cout << "got shard!" << std::endl;
       NetShard newTestNetShard;
       ia >> newTestNetShard;
@@ -137,9 +162,15 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
       } else {
          std::cerr << "Unserialization failed!" << std::endl;
       }
-   } else {
+   } 
+
+
+   else if (receivedPackID == NET_ALLOBJ_FIN) {
+      AllObjFlag = false;
+   }
+
+   else {
       std::cerr << "unknown packet ID revieved: " << receivedPackID << std::endl;
-      std::cerr << "iss.str()=" << iss.str() << std::endl;
    }
 
    start_receive();

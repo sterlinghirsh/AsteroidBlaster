@@ -37,6 +37,12 @@
 #define NET_OBJ_REMOVE 100
 #define NET_OBJ_SHARD 101
 
+#define NET_SHIPID_REQ 500
+#define NET_SHIPID_RES 501
+
+#define NET_ALLOBJ_REQ 502
+#define NET_ALLOBJ_FIN 503
+
 
 #endif
 
