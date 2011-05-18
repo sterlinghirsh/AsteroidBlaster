@@ -124,7 +124,7 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
    boost::archive::text_iarchive ia(iss);
    ia >> receivedPackID;
 
-   if (receivedPackID == 100) {
+   if (receivedPackID == NET_OBJ_SHARD) {
       std::cout << "got shard!" << std::endl;
       NetShard newTestNetShard;
       ia >> newTestNetShard;
