@@ -798,7 +798,7 @@ void Custodian::add(Object3D* objectIn) {
          testNetShard.fromObject(shard);
          std::ostringstream oss;
          boost::archive::text_oarchive oa(oss);
-         int i = 100;
+         int i = NET_OBJ_SHARD;
          oa << i << testNetShard;
          gameState->udpServer->sendAll(oss.str());
       }
