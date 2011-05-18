@@ -395,20 +395,21 @@ void AsteroidShip::addNewLowHealthParticle(Point3D& emitter, Vector3D& baseDirec
 void AsteroidShip::createEngineParticles(double timeDiff) {
    //add particles in the opposite direction of the acceration
 
-   const float increment = 0.01f;
+   float increment = 0.01f;
 
    //const float length = acceleration->getLength;
-   const int maxParticlesPerFrame = 10;
-   const int newParticlesPerSecond = 50;
-   static Vector3D baseParticleAcceleration;
-   static Point3D emitter;
+   int maxParticlesPerFrame = 10;
+   int newParticlesPerSecond = 50;
+   Vector3D baseParticleAcceleration;
+   Point3D emitter;
 
    double accelerationTime = doubleTime() - accelerationStartTime;
-   const double colorVariation = 0.2 * randdouble();
+   double colorVariation = 0.2 * randdouble();
    int particlesThisFrame = 0;
    
    while ((double) particlesEmitted / accelerationTime < newParticlesPerSecond &&
     particlesThisFrame < maxParticlesPerFrame) {
+      //printf("Totally getting here %f\n", particlesThisFrame);
       // First do up Acceleration.
       if (curUpAccel != 0) {
          baseParticleAcceleration = up->scalarMultiply(-curUpAccel * 0.2);
@@ -430,7 +431,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
          // We want to do two streams.
          baseParticleAcceleration = forward->scalarMultiply(-curForwardAccel * 0.05);
          Point3D initialPoint(*position);
-         forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
+         forward->movePoint(initialPoint,  -(curForwardAccel * 0.07));
 
          // First do the right side.
          right->movePoint(initialPoint, 1);
@@ -449,25 +450,26 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 void AsteroidShip::createLowHealthParticles(double timeDiff){
    //add particles in the opposite direction of the acceration
 
-   const float increment = 0.01f;
+   float increment = 0.01f;
 
    //const float length = acceleration->getLength;
-   const int maxParticlesPerFrame = 8;
-   const int newParticlesPerSecond = 50;
-   static Vector3D baseParticleAcceleration;
-   static Point3D emitter;
+   int maxParticlesPerFrame = 8;
+   int newParticlesPerSecond = 50;
+   Vector3D baseParticleAcceleration;
+   Point3D emitter;
 
    double accelerationTime = doubleTime() - accelerationStartTime;
-   const double colorVariation = 0.2 * randdouble();
+   double colorVariation = 0.2 * randdouble();
    int particlesThisFrame = 0;
    
-   while (particlesThisFrame < maxParticlesPerFrame && particlesThisFrame < ((33 - health) / 3)) {
+   while (particlesThisFrame < maxParticlesPerFrame && particlesThisFrame < ((50 - health) /5)) {
       // First do up Acceleration.
       //if (curUpAccel != 0) {
          //printf("Get here\n");
-         baseParticleAcceleration = up->scalarMultiply(.3);
+         baseParticleAcceleration = up->scalarMultiply(.5 * (.5 - randdouble())) + right->scalarMultiply(.5 * (.5 - randdouble()));
          emitter = *position;
          forward->movePoint(emitter, -0.5);
+         //up->movePoint(emitter, .1);
          addNewLowHealthParticle(emitter, baseParticleAcceleration, *forward, *right, color1 + colorVariation);
       //}
 
@@ -495,7 +497,7 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
          addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color2 - colorVariation);
       }*/
 
-      ++particlesEmitted;
+      //++particlesEmitted;
       ++particlesThisFrame;
    }
 }
@@ -556,6 +558,7 @@ void AsteroidShip::update(double timeDiff) {
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
       if (gameState->gameIsRunning && respawnTimer.isRunning && timeLeftToRespawn <= 1.5) {
+         printf("Got to this crucial spot\n");
          timeLeftToRespawn = 1.5;
          reInitialize();
       } else {
@@ -733,9 +736,8 @@ void AsteroidShip::update(double timeDiff) {
       drawHit = false;
    }
 
-
    createEngineParticles(timeDiff);
-   if(health < 30) createLowHealthParticles(timeDiff);
+   if(health < 50) createLowHealthParticles(timeDiff);
 
    // Update the zoom level.
    const float minZoom = 1;

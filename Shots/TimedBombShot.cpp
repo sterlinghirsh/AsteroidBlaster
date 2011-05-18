@@ -156,7 +156,20 @@ void TimedBombShot::drawExplosion() {
          scaleSize += addSize;
       }
       
-      xzScale = scaleSize * (2.3 - timeSinceExploded) * (2.3 - timeSinceExploded) / 2.5, scaleSize;
+      xzScale = scaleSize * (2.3 - timeSinceExploded) * (2.3 - timeSinceExploded) / 3.5; //scaleSize;
+      
+      glColor4d(1, .6, 0, timeSinceExploded - .1);
+         glPushMatrix();
+         if(timeSinceExploded > 1.3) {
+            glScaled(scaleSize / 3.5, scaleSize, scaleSize / 3.5);
+         } else {
+            //glScaled(scaleSize / 2.5, scaleSize, scaleSize / 2.5);
+            glScaled(xzScale, scaleSize, xzScale);
+         }
+         //glRotated(20, 1, 0, 0);
+         glRotated(spin, rx, ry, rz);
+         gluSphere(quadric, .6, 20, 20);
+         glPopMatrix();
       
       loc1 = glGetUniformLocation(ringShader,"ratio");
       glUniform1f(loc1,helper);
@@ -190,18 +203,18 @@ void TimedBombShot::drawExplosion() {
          gluCylinder(quadric, .6, .6, .6, 20, 20);
          glPopMatrix();
          glPopMatrix();*/
-         glColor4d(0, .2, 1, timeSinceExploded*5);
+         glColor4d(0, .2, 1, timeSinceExploded*4);
          glPushMatrix();
          //glColor4d(0, 0, 1, 1);//timeSinceExploded * .3);
          glRotated(90, 1, 0, 0);
          glScaled(secondScale, secondScale, 1);
          glPushMatrix();
          glTranslated(0, 0, -.3);
-         gluDisk(quadric, .1, .6, 20, 20);
+         gluDisk(quadric, .3, .6, 20, 20);
          glPopMatrix();
          glPushMatrix();
          glTranslated(0, 0, .3);
-         gluDisk(quadric, .1, .6, 20, 20);
+         gluDisk(quadric, .3, .6, 20, 20);
          glPopMatrix();
          glPushMatrix();
          glTranslated(0, 0, -.3);
@@ -232,8 +245,9 @@ void TimedBombShot::drawExplosion() {
       glColor4d(1, .6, 0, timeSinceExploded - .1);
          glPushMatrix();
          if(timeSinceExploded > 1.3) {
-            glScaled(scaleSize / 2.5, scaleSize, scaleSize / 2.5);
+            glScaled(scaleSize / 3.5, scaleSize, scaleSize / 3.5);
          } else {
+            //glScaled(scaleSize / 2.5, scaleSize, scaleSize / 2.5);
             glScaled(xzScale, scaleSize, xzScale);
          }
          //glRotated(20, 1, 0, 0);
