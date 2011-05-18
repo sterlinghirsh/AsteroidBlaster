@@ -12,8 +12,12 @@
 #include <boost/archive/text_iarchive.hpp>
 
 #include "Network/UDP_Client.h"
+
+
 #include "Utility/GameState.h"
 #include "Items/AsteroidShip.h"
+
+#include "Network/NetShard.h"
 
 //Constructor
 UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameState, std::string _ip, std::string _portNum)
@@ -30,46 +34,50 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
    serverEndPoint = *resolver.resolve(query);
    
    // Start handshake-------------------------
-   int i = 0;
    {
       // First construct an init packet with packet id of 0 then send it
       std::ostringstream oss;
       boost::archive::text_oarchive oa(oss);
-      oa << i;
+      int packID = NET_HS_REQ;
+      oa << packID;
       socket_.send_to(boost::asio::buffer(oss.str()), serverEndPoint);
    }
 
    {
       // then wait for the answer back...
-      boost::array<char, 80> recv_buf;
-      size_t len = socket_.receive_from(boost::asio::buffer(recv_buf), serverEndPoint);
-
+      size_t len = socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
+      int i;
       // decode the answer, and grab the assigned clientID
-      std::istringstream iss(recv_buf.data());
+      std::istringstream iss(recv_buffer_.data());
       boost::archive::text_iarchive ia(iss);
-      ia >> clientID;
-      std::cout << "my clientID is " << clientID << std::endl;
+      ia >> i;
+      if (i == NET_HS_RES) {
+         ia >> clientID;
+         std::cout << "my clientID is " << clientID << std::endl;
+      } else {
+         std::cerr << "Wrong packet ID! iss.str()=" << iss.str() << std::endl;
+         return;
+      }
    }
 
    {
       // then do handshake 2
       std::ostringstream oss;
-      i = 1;
       boost::archive::text_oarchive oa(oss);
-      oa << i << clientID;
+      int packID = NET_HS_ACK;
+      oa << packID << clientID;
       socket_.send_to(boost::asio::buffer(oss.str()), serverEndPoint);
    }
 
    {
       // then wait for the answer back for handshake3...
-      boost::array<char, 80> recv_buf;
-      size_t len = socket_.receive_from(boost::asio::buffer(recv_buf), serverEndPoint);
+      size_t len = socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
       // decode the answer, and make sure that the packet id is 2
-      std::istringstream iss(recv_buf.data());
+      std::istringstream iss(recv_buffer_.data());
       boost::archive::text_iarchive ia(iss);
       int temp;
       ia >> temp;
-      if (temp == 2) {
+      if (temp == NET_HS_FIN) {
          std::cout << "Handshake Complete! I am now a client with ID of " << clientID << std::endl;
       }
    }
@@ -84,7 +92,7 @@ UDP_Client::~UDP_Client() {
    // Send remvoe signal to the server
    std::cout << "Sending remove signal to the server, clientID:" << clientID << std::endl;
    std::ostringstream oss;
-   int i = 4;
+   int i = NET_KILL;
    boost::archive::text_oarchive oa(oss);
    oa << i;
    socket_.send_to(boost::asio::buffer(oss.str()), serverEndPoint);
@@ -111,6 +119,26 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
       return;
    }
 
+   int receivedPackID = -1;
+   std::istringstream iss(recv_buffer_.data());
+   boost::archive::text_iarchive ia(iss);
+   ia >> receivedPackID;
+
+   if (receivedPackID == 100) {
+      std::cout << "got shard!" << std::endl;
+      NetShard newTestNetShard;
+      ia >> newTestNetShard;
+      Object3D* newObject = NULL;
+      newTestNetShard.toObject(gameState, newObject);
+      if (newObject != NULL) {
+         gameState->custodian.add(newObject);
+      } else {
+         std::cerr << "Unserialization failed!" << std::endl;
+      }
+   } else {
+      std::cerr << "unknown packet ID revieved: " << receivedPackID << std::endl;
+      std::cerr << "iss.str()=" << iss.str() << std::endl;
+   }
 
    start_receive();
 

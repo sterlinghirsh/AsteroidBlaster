@@ -10,6 +10,7 @@
 
 #include "Utility/SoundEffect.h"
 
+#include <sstream>
 #include <algorithm>
 #include <assert.h>
 #include <vector>
@@ -29,6 +30,11 @@
 #include "Particles/BlasterImpactParticle.h"
 #include "Particles/TractorAttractionParticle.h"
 
+#include "Network/UDP_Server.h"
+#include "Network/NetShard.h"
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 /**
  * AsteroidShip collisions======================================================
  */
@@ -767,10 +773,10 @@ void Custodian::update() {
 void Custodian::add(Object3D* objectIn) {
    objectsToAdd.push_back(objectIn);
 
-   Asteroid3D* asteroid;
-   Shard* shard;
-   Shot* shot;
-   AsteroidShip* ship;
+   Asteroid3D* asteroid = NULL;
+   Shard* shard = NULL;
+   Shot* shot = NULL;
+   AsteroidShip* ship = NULL;
 
    if ((asteroid = dynamic_cast<Asteroid3D*>(objectIn)) != NULL) {
       asteroidCount++;
@@ -782,6 +788,20 @@ void Custodian::add(Object3D* objectIn) {
       shots.insert(shot);
    } else if ((ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
       ships.insert(ship);
+   }
+
+   // If the gamestate is a server, send it over to all the clients...
+   if (gameState->gsm == ServerMode) {
+      if (shard != NULL) {
+         std::cout << "creating net shards..." << std::endl;
+         NetShard testNetShard;
+         testNetShard.fromObject(shard);
+         std::ostringstream oss;
+         boost::archive::text_oarchive oa(oss);
+         int i = 100;
+         oa << i << testNetShard;
+         gameState->udpServer->sendAll(oss.str());
+      }
    }
 }
 

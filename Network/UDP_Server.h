@@ -18,19 +18,21 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 
+#include "Utility/Constants.h"
+
 class GameState;
 
 class UDP_Server {
    //public variables
    public:
-      std::map<boost::asio::ip::udp::endpoint, unsigned> tempRemoteClients;
-      std::map<boost::asio::ip::udp::endpoint, unsigned> remoteClients;
+      std::map<boost::asio::ip::udp::endpoint, unsigned> tempEndpointToClientID;
+      std::map<boost::asio::ip::udp::endpoint, unsigned> endpointToClientID;
       boost::asio::ip::udp::endpoint tempEndPoint;
       GameState* gameState;
       unsigned clientIDCounter;
 
       boost::asio::ip::udp::socket socket_;
-      boost::array<char, 1400> recv_buffer_;
+      boost::array<char, PACK_SIZE> recv_buffer_;
 
    //private variables
    private:
@@ -43,6 +45,7 @@ class UDP_Server {
       ~UDP_Server();
 
       void send(std::string msg, boost::asio::ip::udp::endpoint dest);
+      void sendAll(std::string msg);
 
    //private functions
    private:

@@ -18,6 +18,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 
+#include "Utility/Constants.h"
+
 class GameState;
 
 class UDP_Client {
@@ -29,7 +31,7 @@ class UDP_Client {
       GameState* gameState;
 
       boost::asio::ip::udp::socket socket_;
-      boost::array<char, 1400> recv_buffer_;
+      boost::array<char, PACK_SIZE> recv_buffer_;
 
    //private variables
    private:

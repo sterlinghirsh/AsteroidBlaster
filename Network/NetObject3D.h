@@ -122,7 +122,6 @@ struct NetObject3D {
 
    template <class Archive>
     void serialize(Archive & ar, const unsigned int version) {
-      std::cout << "lol the classic got to here, NetObject3D" << std::endl;
       ar & id;
 
       ar & acceleration;

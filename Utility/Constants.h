@@ -23,5 +23,20 @@
 #define VIEW_THIRDPERSON_GUN 3
 
 
+// Network stuff
+#define PACK_SIZE 1400
+
+//packet id numbers
+#define NET_HS_REQ 0
+#define NET_HS_RES 1
+#define NET_HS_ACK 2
+#define NET_HS_FIN 3
+#define NET_CLIENTCOMMAND 4
+#define NET_KILL 5
+
+#define NET_OBJ_REMOVE 100
+#define NET_OBJ_SHARD 101
+
+
 #endif
 

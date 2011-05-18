@@ -40,6 +40,7 @@
 
 #include "Network/UDP_Server.h"
 #include "Network/UDP_Client.h"
+#include "Network/NetShard.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -51,7 +52,7 @@
 
 #define SAVEFILENAME "AsteroidBlaster.sav"
 
-#include "Network/NetShard.h"
+
 
 extern double minimapSizeFactor;
 
@@ -376,7 +377,7 @@ void GameState::networkUpdate(double timeDiff) {
       if (tempClientSend >= 0.05) {
          std::ostringstream oss;
          boost::archive::text_oarchive oa(oss);
-         int i = 3;
+         int i = NET_CLIENTCOMMAND;
          oa << i << (const ClientCommand)clientCommand;
          udpClient->send(oss.str(), udpClient->serverEndPoint);
          tempClientSend = 0;
