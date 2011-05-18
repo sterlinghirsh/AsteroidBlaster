@@ -103,6 +103,7 @@ UDP_Client::~UDP_Client() {
 
 
 void UDP_Client::start_receive() {
+   memset(&recv_buffer_[0], 0, PACK_SIZE);
    socket_.async_receive_from(
       boost::asio::buffer(recv_buffer_), serverEndPoint,
       boost::bind(&UDP_Client::handle_receive, this,
@@ -125,6 +126,7 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
    ia >> receivedPackID;
 
    if (receivedPackID == NET_OBJ_SHARD) {
+      std::cout << "iss.str()=" << iss.str() << std:: endl;
       std::cout << "got shard!" << std::endl;
       NetShard newTestNetShard;
       ia >> newTestNetShard;
@@ -141,7 +143,6 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
    }
 
    start_receive();
-
 }
 
 //The parameters are message being handled, error code, and bytes transfered

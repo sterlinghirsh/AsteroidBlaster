@@ -161,20 +161,20 @@ void init() {
    //glEnable(GL_POLYGON_SMOOTH);
 
    //initialize light
-   GLfloat headlight_pos[4] = {(float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), 1.0f};
-   GLfloat headlight_amb[4] = {0.1f, 0.1f, 0.1f, 1.0f};
-   GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
-   GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
+   //GLfloat headlight_pos[4] = {(float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), 1.0f};
+   //GLfloat headlight_amb[4] = {0.1f, 0.1f, 0.1f, 1.0f};
+   //GLfloat headlight_diff[4] = {1, 1, 1, 1.0};
+   //GLfloat headlight_spec[4] = {1, 1, 1, 1.0};
 
    GLfloat minimaplight_pos[4] = {0, 0, 0, 1};
    GLfloat minimaplight_amb[4] = {1, 1, 1, 0.5};
    GLfloat minimaplight_diff[4] = {1, 1, 1, 0.5};
    GLfloat minimaplight_spec[4] = {1, 1, 1, 0.5};
 
-   GLfloat ambientlight_pos[4] = {0, 0, 0, 1};
-   GLfloat ambientlight_amb[4] = {1, 1, 1, 0.5};
-   GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
-   GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
+   //GLfloat ambientlight_pos[4] = {0, 0, 0, 1};
+   //GLfloat ambientlight_amb[4] = {1, 1, 1, 0.5};
+   //GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
+   //GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
 
 
    //glEnable(GL_LIGHT0);

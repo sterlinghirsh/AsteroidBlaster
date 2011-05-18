@@ -40,7 +40,7 @@ LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(BOOST_LDFLAGS) -lSDL_mixer -lSD
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -Wconversion -g
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -Wconversion -g -Wall
 CC=g++
 
 PROGNAME=AsteroidBlaster

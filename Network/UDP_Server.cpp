@@ -38,6 +38,7 @@ UDP_Server::~UDP_Server() {
 
 
 void UDP_Server::start_receive() {
+   memset(&recv_buffer_[0], 0, PACK_SIZE);
    socket_.async_receive_from(
       boost::asio::buffer(recv_buffer_), tempEndPoint,
       boost::bind(&UDP_Server::handle_receive, this,
