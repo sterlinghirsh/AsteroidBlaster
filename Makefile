@@ -9,6 +9,8 @@ ifeq ($(UNAME), Linux)
    # Linux stuff
    # Use this if you're on a school machine.
 	BOOSTINC=/home/shirsh/boost
+	# We have to use this version on linux since the -mt version doesn't exist.
+	PSBOOST_LDFLAGS=-lboost_thread
    # Use this if you're on a machine with boost installed natively.
    #BOOSTLIB=/usr/lib
    SDL_LIBS=$(shell "sdl-config" "--libs")
@@ -18,16 +20,21 @@ ifeq ($(UNAME), Linux)
 else
    # Mac stuff
    BOOSTLIB=/opt/local/lib
+	# We use the -mt version on mac since the non-mt doesn't exist.
+	PSBOOST_LDFLAGS=-lboost_thread-mt
    SDL_LIBS=$(shell "/sw/bin/sdl-config" "--libs")
    SDL_CFLAGS=$(shell "/sw/bin/sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=-I /opt/local/include
    PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB)
 endif
    
+# failed BOOST_LDFLAGS attempts. Keeping them around jic just in case.
 #BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
 #BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt -t
-BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams -lboost_system -lboost_serialization -lboost_thread
 #BOOST_LDFLAGS=$(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_filesystem.a $(BOOSTLIB)/libboost_iostreams.a $(BOOSTLIB)/libboost_thread.a $(BOOSTLIB)/libboost_serialization.a 
+
+# include the previous ld flags.
+BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams -lboost_system -lboost_serialization $(PSBOOST_LDFLAGS)
 
 LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(BOOST_LDFLAGS) -lSDL_mixer -lSDL_image -lSDL_ttf -g -t
 # -I. -iquote makes it so quoted #includes look in ./
