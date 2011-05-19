@@ -1038,7 +1038,7 @@ void AsteroidShip::draw_bonerlines() {
 
       }
       glBegin(GL_LINE_LOOP);
-      glColor3d(r, g, b);
+      glColor3d(1, 0, 0);
 
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(cornerX, cornerY, cornerZ);
