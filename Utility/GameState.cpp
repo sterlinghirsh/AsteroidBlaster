@@ -451,7 +451,7 @@ void GameState::spectatorCameraUpdate(double timeDiff) {
    spectatorCamera->position->y = sin(pieCounter)*(spectatorRadius/3);
    spectatorCamera->position->z = -cos(pieCounter)*spectatorRadius;
    spectatorCamera->lookAt(0.0,0.0,0.0);
-   //pieCounter += timeDiff*spectatorSpeed;
+   pieCounter += timeDiff*spectatorSpeed;
 }
 
 /**
@@ -593,6 +593,7 @@ void GameState::drawObjects(bool drawGlow) {
       currentCamera->setCamera(true);
       shipCamera->shake(ship->getShakeAmount());
    }
+   
 
    // Draw the skybox if this gameState is not mainmenu and is glow shading
    if (!inMenu && !drawGlow) {
@@ -1499,18 +1500,6 @@ void GameState::load() {
 }
 
 void GameState::testFunction() {
-   AsteroidShip* testShip = new AsteroidShip(this);
-   testShip->position->updateMagnitude(0, 5, 10);
-   testShip->velocity->updateMagnitude(1, 2, 3);
-   custodian.add(testShip);
 
-   NetShip testNetShip;
-
-   testNetShip.fromObject(testShip);
-
-   std::ostringstream oss;
-   boost::archive::text_oarchive oa(oss);
-   oa << testNetShip;
-   std::cout << "oss.str()=" << oss.str() << std::endl;
 }
 
