@@ -763,6 +763,10 @@ void AsteroidShip::draw_frontpanels() {
    GLfloat lightPos[3] = {0, 0, 0};
    GLfloat eyePos[3] = {0, 0, 0};
    
+   float r, g, b;
+   getBrightColor(color1, r, g, b);
+   glColor3d(r, g, b);
+   
    eyePos[0] = (float)gameState->spring->item->position->x - 3.0f;
    eyePos[1] = (float)gameState->spring->item->position->y - 3.0f;
    eyePos[2] = (float)gameState->spring->item->position->z + 2.0f;
@@ -883,6 +887,10 @@ void AsteroidShip::draw_backpanels() {
    GLfloat lightPos[3] = {0, 0, 0};
    GLfloat eyePos[3] = {0, 0, 0};
    
+   float r, g, b;
+   getBrightColor(color2, r, g, b);
+   glColor3d(r, g, b);
+   
    eyePos[0] = (float)gameState->spring->item->position->x - 3.0f;
    eyePos[1] = (float)gameState->spring->item->position->y - 3.0f;
    eyePos[2] = (float)gameState->spring->item->position->z + 2.0f;
@@ -895,6 +903,8 @@ void AsteroidShip::draw_backpanels() {
    lightPos[0] = 0;
    lightPos[1] = 0;
    lightPos[2] = 0;
+   
+   
    
    GLint lightLoc = glGetUniformLocation(shipYShader, "LightPos");
    GLint eyeLoc = glGetUniformLocation(shipYShader, "EyePos");
@@ -1004,6 +1014,8 @@ void AsteroidShip::draw_spaceboner() {
 }
 
 void AsteroidShip::draw_bonerlines() {
+   float r, g, b;
+   getBrightColor(color2, r, g, b);
    if (curForwardAccel == 10.0) {
       glLineWidth(3.0);
       if (backChange == (backZ - middleZ)) {
@@ -1025,9 +1037,8 @@ void AsteroidShip::draw_bonerlines() {
          glEnd();
 
       }
-
       glBegin(GL_LINE_LOOP);
-      glColor3d(1, .4, 0);
+      glColor3d(r, g, b);
 
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(cornerX, cornerY, cornerZ);
@@ -1064,7 +1075,7 @@ void AsteroidShip::draw_bonerlines() {
       glEnd();
    } else if (backChange == 0) {
       glBegin(GL_LINE_LOOP);
-      glColor3d(1, .4, 0);
+      glColor3d(r, g, b);
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(skew, middleXY, middleZ);
       glVertex3d(-middleXY, skew, middleZ);
@@ -1074,7 +1085,7 @@ void AsteroidShip::draw_bonerlines() {
    } else {
       glLineWidth(3.0);
       glBegin(GL_LINE_LOOP);
-      glColor3d(1, .4, 0);
+      glColor3d(r, g, b);
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(backX, backY, middleZ + backChange);
       glVertex3d(skew, middleXY, middleZ);
@@ -1095,7 +1106,7 @@ void AsteroidShip::draw_bonerlines() {
       glEnd();
 
       glBegin(GL_LINE_LOOP);
-      glColor3d(1, .4, 0);
+      glColor3d(r, g, b);
       glVertex3d(middleXY, skew, middleZ);
       glVertex3d(skew, middleXY, middleZ);
       glVertex3d(-middleXY, skew, middleZ);
@@ -1107,8 +1118,10 @@ void AsteroidShip::draw_bonerlines() {
 }
 
 void AsteroidShip::draw_frontlines() {
+   float r, g, b;
+   getBrightColor(color1, r, g, b);
    glBegin(GL_LINES);
-   glColor3d(0, 1, 1);
+   glColor3d(r, g, b);
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, cornerY, cornerZ);
 
@@ -1179,7 +1192,7 @@ void AsteroidShip::draw_ship() {
 
    glDisable(GL_CULL_FACE);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   glEnable(GL_LIGHTING);
+   glDisable(GL_LIGHTING);
    glEnable(GL_COLOR_MATERIAL);
 
    // Make the ship start off flat and expand it to its normal size.
@@ -1205,7 +1218,7 @@ void AsteroidShip::draw_ship() {
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
    glLineWidth(1.5);
-   glDisable(GL_LIGHTING);
+   //glDisable(GL_LIGHTING);
 
    draw_bonerlines();
 
@@ -1311,7 +1324,7 @@ void AsteroidShip::draw() {
 
    glRotate();
    spin+= 2;
-   glColor4d(0, 0, 0, .8);
+   glColor4d(0, 0, 0, 1);
    //glRotated(90, 1, 0, 0);
 
    if (drawSpawn && !(gameState->inMenu)) {
