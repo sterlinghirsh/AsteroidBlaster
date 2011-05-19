@@ -31,15 +31,15 @@ class Plane {
       }
 
       bool onTargetablePositiveSide(Drawable* obj) {
-         // Multiply by 1.75 instead of 2.05 to make sure the AI only targets objects which are mostly on screen, rather than being allowed to target things which are barely off screen.
+         // Multiply by 1.75 instead of 2.25 to make sure the AI only targets objects which are mostly on screen, rather than being allowed to target things which are barely off screen.
          return distanceTo(obj->position->x, obj->position->y, obj->position->z) > 
-          -1.75 * obj->getCullRadius();
+          -1.65 * obj->getCullRadius();
       }
 
       bool onDrawablePositiveSide(Drawable* obj) {
-         // Multiply by 2.05 instead of 2 to make sure things slightly off screen are still drawn, to be sure we prevent popping.
+         // Multiply by 2.25 instead of 2 to make sure things slightly off screen are still drawn, to be sure we prevent popping.
          return distanceTo(obj->position->x, obj->position->y, obj->position->z) > 
-          -2.05 * obj->getCullRadius(); 
+          -2.25 * obj->getCullRadius(); 
          // Test with radius instead of Axis Aligned Bounding Boxes
          /*
             distanceTo(obj->maxPosition->x, obj->maxPosition->y, obj->maxPosition->z) > 0 ||

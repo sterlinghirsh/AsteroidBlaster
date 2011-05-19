@@ -759,7 +759,8 @@ int nextPowerOfTwo(int num) {
       result *= 2;
    }
    printf("%d -> %d\n", num, result);
-   return result;
+   //return result;
+   return num;
 }
 
 void toggleFullScreen() {

@@ -236,8 +236,8 @@ struct Timer {
 
    inline void setCountDown(double _countDownTime) {
       timeStarted = doubleTime();
-      isPaused = false;
       timePaused = 0;
+      isPaused = false;
       countDownTime = _countDownTime;
       isRunning = true;
    }

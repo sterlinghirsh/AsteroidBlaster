@@ -190,15 +190,6 @@ void Object3D::glRotate(bool doTranspose) {
    modelViewMatrix.glMultMatrix();
 }
 
-void Object3D::setTargeted(bool a) {
-   targeted = a;
-}
-
-bool Object3D::isTargeted() {
-   return targeted;
-}
-
-
 void Object3D::addAcceleration(Vector3D* newAccel) {
    accelerations.push(newAccel);
 }

@@ -26,7 +26,7 @@ Drawable::Drawable() {
  * Base class main constructor.
  */
 Drawable :: Drawable(const GameState* _gameState) :
- gameState(_gameState) {
+ gameState((GameState*) _gameState) {
  
    position = new Point3D(0, 0, 0);
    minPosition = new Point3D(0, 0, 0);
@@ -51,7 +51,7 @@ Drawable :: Drawable(const GameState* _gameState) :
 }
 
 /**
- * Deconstructor - not much to do at this high of a level
+ * Deconstructor - get rid of everything shared that we can. 
  */
 Drawable :: ~Drawable() {
    if (position != NULL)

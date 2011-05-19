@@ -1371,16 +1371,12 @@ void AsteroidShip::debug() {
    printf("--\n");
 }
 
-void AsteroidShip::updateShotDirection(Vector3D dir) {
+void AsteroidShip::updateShotDirection(Vector3D& dir) {
    shotDirection = dir;
 }
 
 Radar* AsteroidShip::getRadar() {
    return radar;
-}
-
-void AsteroidShip::updateShotDirection(Point3D dir) {
-   shotDirection = Vector3D(dir.x, dir.y, dir.z);
 }
 
 /**

@@ -53,8 +53,6 @@ class Object3D : public Drawable {
       virtual void setRollSpeed(double radiansPerSecond);
       virtual void drawBoundingBox();
       virtual void drawBoundingSphere();
-      virtual void setTargeted(bool a);
-      virtual bool isTargeted();
       virtual void addAcceleration(Vector3D* newAccel);
       virtual void addInstantAcceleration(Vector3D* newAccel);
       virtual void nullPointers();

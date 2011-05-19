@@ -142,8 +142,7 @@ class AsteroidShip : public Object3D {
       
       // We'll have to update this later so the AI can use it.
       void updateShotDirection(double xOffset, double yOffset);
-      void updateShotDirection(Vector3D dir);
-      void updateShotDirection(Point3D dir);
+      void updateShotDirection(Vector3D& dir);
       void keepFiring();
       // Change this to something reasonable once we have a radar.
       Radar *getRadar();

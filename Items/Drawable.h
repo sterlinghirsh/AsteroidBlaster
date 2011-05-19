@@ -28,7 +28,7 @@ class Drawable {
       CollisionType* collisionType;
       
       //pointer to things not owned by this class
-      const GameState* gameState;
+      GameState* gameState;
       Custodian* custodian;
       
       double radius; // TODO
@@ -42,8 +42,6 @@ class Drawable {
       double minX, minY, minZ, maxX, maxY, maxZ;
       
 
-      
-      
    //private variables------------------------------
    private:
    

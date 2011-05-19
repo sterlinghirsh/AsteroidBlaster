@@ -34,23 +34,31 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    ship = owner;
    aimingAt = Point3D(0,1,0);
    lastShotPos = Point3D(0,0.9,0);
+   target = NULL;
+   prevWeapon = NULL;
+   targetID = -1;
    // Start the AI as disabled
    enabled = false;
-   //TODO possibly more stuff here.
-   lastTarget = NULL;
-   prevWeapon = NULL;
+   needToChooseTarget = false;
    
-   // These control how fast the AI can switch weapons.
+   // These control how fast the AI can switch weapons (in seconds).
    weaponSwitchSpeed = 2.0;
    weaponSwitchTimer.reset();
    weaponSwitchTimer.setCountDown(weaponSwitchSpeed);
+
+   // These control how fast the AI can switch targets (in seconds).
+   targetSwitchSpeed = 0.25;
+   targetSwitchTimer.reset();
+   targetSwitchTimer.setCountDown(targetSwitchSpeed);
    
    // Set the default chosen weapon.
    chosenWeapon = ship->getCurrentWeapon();
 }
 
-double min(double a, double b) {
-   return a < b ? a : b;
+/**
+ * Deconstructor - cleanup.
+ */
+ShootingAI::~ShootingAI() {
 }
 
 /** Aims at an object.
@@ -92,9 +100,17 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
    else {
       aim = targetDir;
    }
-   
+
+   // The aiming should be clamped within a radius
+   double forwardDotAim = aim.dot(*ship->forward);
+   double upDotAim = aim.dot(*ship->up);
+   double rightDotAim = aim.dot(*ship->right);
+   // (Root 2)/2 radians
+   const double minForwardAimAmount = 0.707;
+
    ship->updateShotDirection(aim);
    lastShotPos = aim;
+
    bool shouldFire = chosenWeapon->shouldFire(&targetPos, &aim);
 
    // Add a random variation to the aim.
@@ -102,7 +118,11 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
    randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount);
    aim.addUpdate(randomVariation);
    
-   ship->fire(shouldFire);
+   // If the cursor is going outside of the allowable range, choose a new target.
+   if(forwardDotAim < minForwardAimAmount) {
+      needToChooseTarget = true;
+   }
+   else ship->fire(shouldFire);
 
    return 0;
 }
@@ -114,13 +134,14 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
 void ShootingAI::aimCursorAtMiddle(double dt) {
    Vector3D wouldHit;
    double ang = 0;
-  
    Point3D aim = lastShotPos;
+
    // This target position is just in front of the ship.
    Point3D targetPos = ship->shotOrigin;
-   //Vector3D backwards = *(ship->forward);
-   //backwards.scalarMultiply(-1);
 
+   /* Move the target position a bit in the forward direction to make sure
+    * that it's in front of the ship, not behind it.
+    */
    ship->forward->movePoint(targetPos);
 
    Vector3D targetDir = (targetPos - ship->shotOrigin).getNormalized();
@@ -151,11 +172,6 @@ void ShootingAI::aimCursorAtMiddle(double dt) {
 
 // Choose the appropriate weapon for this situation.
 void ShootingAI::chooseWeapon(Object3D** target) {
-   // Don't choose a new weapon if there's no target.
-   if (*target == NULL) {
-      return;
-   }
-
    Vector3D vec;
    double curWeight = 0.0;
    double maxWeight = -1.0;
@@ -165,7 +181,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    
    double weaponWeights[7];
 
-   // States whether or not the chosen target is a ship / shard
+   // States whether or not the chosen target is a ship
    bool isAShip = false;
 
    // Only consider any weapon if it's purchased & has ammo & is cooled down.
@@ -195,7 +211,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
       isAShip = true;
 
    // If the target is a shard, only ever choose the tractor beam.
-   if (dynamic_cast<Shard*>(*target) != NULL) {
+   if (considerTractor && dynamic_cast<Shard*>(*target) != NULL) {
       selectWeaponUpdateChosen(TRACTOR_WEAPON_INDEX);
       return;
    }
@@ -218,7 +234,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
       weaponWeights[BLASTER_WEAPON_INDEX] += 1.75 * (*target)->radius;
 
       // Consider the target's distance.
-      weaponWeights[BLASTER_WEAPON_INDEX] += dist;
+      weaponWeights[BLASTER_WEAPON_INDEX] += 1.01 * dist;
 
       // printf("target's velocity was %f\n", (*target)->velocity->magnitude());
 
@@ -293,25 +309,9 @@ void ShootingAI::chooseWeapon(Object3D** target) {
 
    //printf("Chose %d, with weight %f\n", ndx, weaponWeights[ndx]);
 
-
-   
-   /*
-   if (*target != NULL) {
-      if ((dynamic_cast<Shard*>(*target)) != NULL) {
-         ship->selectWeapon(TRACTOR_WEAPON_INDEX);
-      }
-      else if (ship->getWeapon(RAILGUN_WEAPON_INDEX)->purchased && (*target)->radius < 10 && ship->getWeapon(RAILGUN_WEAPON_INDEX)->isCooledDown()) {
-         ship->selectWeapon(RAILGUN_WEAPON_INDEX);
-      }
-      else {
-         ship->selectWeapon(BLASTER_WEAPON_INDEX);
-      }
-   }
-
-   chosenWeapon = ship->getCurrentWeapon();
-   */
 }
 
+// Helper function, reused by chooseWeapon.
 void ShootingAI::selectWeaponUpdateChosen(int weaponIndex) {
    ship->selectWeapon(weaponIndex);
    chosenWeapon = ship->getCurrentWeapon();
@@ -354,11 +354,11 @@ Object3D* ShootingAI::chooseTarget() {
      isAShip = false;
      isAShard = false;
       
-     if(dynamic_cast<AsteroidShip*>(*targets_iterator) != NULL)
+     if((consideredShip = dynamic_cast<AsteroidShip*>(*targets_iterator)) != NULL)
         isAShip = true;
 
      else if(dynamic_cast<Shard*>(*targets_iterator) != NULL) {
-        curWeight += 30;
+        curWeight += 35;
         isAShard = true;
      }
 
@@ -372,7 +372,6 @@ Object3D* ShootingAI::chooseTarget() {
         continue;
 
      if (isAShip) {
-        consideredShip = dynamic_cast<AsteroidShip*> (*targets_iterator);
         /* Don't shoot at myself, or the enemy if it's respawning, or if they just spawned.
          * This is to avoid spawn camping.
          */
@@ -418,6 +417,10 @@ Object3D* ShootingAI::chooseTarget() {
    }
 
    delete targets;
+   
+   // No need to choose a new target any more
+   needToChooseTarget = false;
+
    return closest;
 }
 
@@ -436,36 +439,35 @@ void ShootingAI::think(double dt) {
     *
     * Just an idea, we will talk it over.
     */
-
-   Object3D* target = chooseTarget();
-
-   if (target == NULL && target != lastTarget) {
-      //printf("Could not find a target!\n");
-      lastTarget = target;
+   if (targetID != -1) {
+      target = ship->gameState->custodian[targetID];
    }
-   else if (target != lastTarget) {
-      //printf("Switching targets..\n");
-      if (!lastTarget) {
-         //printf("No previous target.\n");
+   
+   /* If there is no target, or we need to choose a target b/c the old one
+    * went off screen, or if the timer is up and we're allowed to switch
+    * targets.
+    */
+   if (target == NULL || needToChooseTarget || (targetSwitchTimer.isRunning && targetSwitchTimer.getTimeLeft() <= 0)) {
+      target = chooseTarget();
+      // If there was nothing on screen, target could have wound up NULL
+      if (target != NULL) {
+         targetID = target->id;
+         targetSwitchTimer.restartCountDown();
       }
-      //printf("New target at: ");
-      //target->position->print();
-      lastTarget = target;
    }
 
    // If it's been more than weaponSwitchSpeed seconds, we can switch weapons.
-   if (weaponSwitchTimer.isRunning && weaponSwitchTimer.getTimeLeft() <= 0) {
+   // Don't bother choosing a weapon if target is NULL
+   if (target != NULL && weaponSwitchTimer.isRunning && weaponSwitchTimer.getTimeLeft() <= 0) {
       prevWeapon = ship->getCurrentWeapon();
       chooseWeapon(&target);
       // If we chose a new weapon, reset the timer so we can't switch again soon.
       if (prevWeapon != chosenWeapon) {
-         //weaponSwitchTimer.setCountDown(weaponSwitchSpeed);
          weaponSwitchTimer.restartCountDown();
       }
    }
 
    if (target != NULL) {
-      target->setTargeted(true);
       aimAt(dt, target);
    }
    else {

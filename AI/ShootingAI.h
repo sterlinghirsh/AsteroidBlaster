@@ -35,13 +35,21 @@ class ShootingAI : public AI {
    AsteroidShip* ship;
    Weapon* chosenWeapon;
    Point3D lastShotPos;
-   Object3D* lastTarget;
+   Object3D* target;
+   int targetID;
    Point3D aimingAt;
+   Weapon* prevWeapon;
    bool enabled;
-   // These control how often the AI can swich weapons.
+   bool needToChooseTarget;
+
+   // These control how fast the AI can switch weapons (in seconds).
    double weaponSwitchSpeed;
    Timer weaponSwitchTimer;
-   Weapon* prevWeapon;
+
+   // These control how fast the AI can switch targets (in seconds).
+   double targetSwitchSpeed;
+   Timer targetSwitchTimer;
+
    
    int aimAt(double dt, Object3D* target);
    /**
@@ -50,11 +58,15 @@ class ShootingAI : public AI {
     */
    void aimCursorAtMiddle(double dt);
    void chooseWeapon(Object3D** target);
+   // Helper function, reused by chooseWeapon.
    void selectWeaponUpdateChosen(int weaponIndex);
    Object3D* chooseTarget();
 
    public:
    ShootingAI(AsteroidShip* owner);
+   // Destructor
+   virtual ~ShootingAI();
+
    virtual void think(double dt);
    // Enable this AI
    virtual void enable();

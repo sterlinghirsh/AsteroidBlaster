@@ -65,6 +65,7 @@ FlyingAI::~FlyingAI() {
  * Grabs a list of asteroids from the game radar.
  */
 std::list<Asteroid3D*>* FlyingAI :: getAsteroidList() {
+   // TODO: get list of Asteroid3Ds, instead of all objects
    std::vector<Object3D*>* targets = ship->custodian->getListOfObjects();
    if (targets == NULL) {
       return NULL;
@@ -90,6 +91,7 @@ Point3D* FlyingAI :: getClosestShard() {
    float shortestDist = 9999, tempDist = 9999;
    Point3D* closestShard = new Point3D(0,0,0);
    Point3D temp;
+   // TODO: Use the list of Shards, instead of list of all objects.
    std::vector<Object3D*>* targets = ship->custodian->getListOfObjects();
    std::vector<Object3D*>::iterator iter;
    
@@ -99,15 +101,15 @@ Point3D* FlyingAI :: getClosestShard() {
       if (*iter == NULL || (dynamic_cast<Shard*>(*iter) == NULL)) {
          continue;
       }  
-      // All of these used to have a , 2 inside the prens.
+      // TODO: 2?
       tempDist = (float) (
-        ((*iter)->position->x - ship->position->x) *
-        ((*iter)->position->x - ship->position->x) +
-        ((*iter)->position->y - ship->position->y) *
-        ((*iter)->position->y - ship->position->y) +
-        ((*iter)->position->z - ship->position->z) *
-        ((*iter)->position->z - ship->position->z));
-         
+        ((*iter)->position->x - ship->position->x, 2) *
+        ((*iter)->position->x - ship->position->x, 2) +
+        ((*iter)->position->y - ship->position->y, 2) *
+        ((*iter)->position->y - ship->position->y, 2) +
+        ((*iter)->position->z - ship->position->z, 2) *
+        ((*iter)->position->z - ship->position->z, 2));
+
       if(shortestDist > tempDist) {
          shortestDist = tempDist;
          closestShard->x = (*iter)->position->x;

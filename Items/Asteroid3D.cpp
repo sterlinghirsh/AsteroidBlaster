@@ -259,12 +259,8 @@ void Asteroid3D::draw() {
    glRotated(angle, axis->x, axis->y, axis->z);
    glScaled(scalex, scaley, scalez);
 
-   if (isTargeted()) {
-      glColor3f(1.0f, 0.0f, 0.0f);
-   } else {
-      //glColor3f(0.0, 0.0, 0.0);
-      glColor3f(1.0, 1.0, 1.0);
-   }
+   // Set the base color to white
+   glColor3f(1.0, 1.0, 1.0);
    
    // Draw lines
 
@@ -313,7 +309,6 @@ void Asteroid3D::draw() {
 
    glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();
-   setTargeted(false);
    glEnable(GL_CULL_FACE);
 }
 
