@@ -1448,28 +1448,6 @@ void GameState::testFunction() {
 
    std::cout << "|||testNetAsteroid|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
 
-   /*
-   NetShard testNetShard;
-   testNetShard.fromObject(&testShard);
-   //Point3D* p = new Point3D(0.0, 1.1, 2.2);
-   //custodian.add(testShard);
-   std::ostringstream oss;
-   boost::archive::text_oarchive oa(oss);
-   oa << testNetShard;
-   std::cout << "|||Shards|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
-   
-   NetShard newTestNetShard;
-   std::istringstream iss(oss.str());
-   boost::archive::text_iarchive ia(iss);
-   ia >> newTestNetShard;
-   
-   Object3D* newObject = NULL;
-   newTestNetShard.toObject(this, newObject);
-   if (newObject != NULL) {
-      custodian.add(newObject);
-   } else {
-      std::cout << "Unserialization failed!" << std::endl;
-   }
-   */
+
 }
 

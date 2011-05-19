@@ -32,6 +32,7 @@
 
 #include "Network/UDP_Server.h"
 #include "Network/NetShard.h"
+#include "Network/NetAsteroid.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -793,13 +794,23 @@ void Custodian::add(Object3D* objectIn) {
    // If the gamestate is a server, send it over to all the clients...
    if (gameState->gsm == ServerMode) {
       if (shard != NULL) {
-         std::cout << "creating net shards..." << std::endl;
+         std::cout << "creating net shard..." << std::endl;
          NetShard testNetShard;
          testNetShard.fromObject(shard);
          std::ostringstream oss;
          boost::archive::text_oarchive oa(oss);
          int i = NET_OBJ_SHARD;
          oa << i << testNetShard;
+         gameState->udpServer->sendAll(oss.str());
+      }
+      if (asteroid != NULL) {
+         std::cout << "creating net asteroid..." << std::endl;
+         NetAsteroid testNetAsteroid;
+         testNetAsteroid.fromObject(asteroid);
+         std::ostringstream oss;
+         boost::archive::text_oarchive oa(oss);
+         int i = NET_OBJ_ASTEROID;
+         oa << i << testNetAsteroid;
          gameState->udpServer->sendAll(oss.str());
       }
    }

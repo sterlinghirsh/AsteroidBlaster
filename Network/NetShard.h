@@ -20,7 +20,7 @@ struct NetShard : public NetObject3D {
       ar & boost::serialization::base_object<NetObject3D>(*this);
    }
 
-   virtual void toObject(GameState* gameState, Object3D*& item);
+   virtual bool toObject(GameState* gameState, Object3D*& item);
 };
 
 BOOST_CLASS_EXPORT_KEY(NetShard);

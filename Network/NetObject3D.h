@@ -85,10 +85,10 @@ struct NetObject3D {
       velocity = *in->velocity;
    }
 
-   virtual void toObject(GameState* gameState, Object3D*& item) {
+   virtual bool toObject(GameState* gameState, Object3D*& item) {
       if (item == NULL) {
          std::cout << "Item " << id << " doesn't exist yet. It should have been created earlier." << std::endl;
-         return;
+         return false;
       }
 
       item->id = id;
@@ -118,6 +118,7 @@ struct NetObject3D {
       
       *item->position = position;
       *item->velocity = velocity;
+      return false;
    }
 
    template <class Archive>

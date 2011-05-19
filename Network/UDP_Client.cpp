@@ -18,6 +18,7 @@
 #include "Items/AsteroidShip.h"
 
 #include "Network/NetShard.h"
+#include "Network/NetAsteroid.h"
 
 //Constructor
 UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameState, std::string _ip, std::string _portNum)
@@ -151,19 +152,22 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
    boost::archive::text_iarchive ia(iss);
    ia >> receivedPackID;
 
+   Object3D* newObject = NULL;
+   bool created = false;
+
    if (receivedPackID == NET_OBJ_SHARD) {
       std::cout << "got shard!" << std::endl;
       NetShard newTestNetShard;
       ia >> newTestNetShard;
-      Object3D* newObject = NULL;
-      newTestNetShard.toObject(gameState, newObject);
-      if (newObject != NULL) {
-         gameState->custodian.add(newObject);
-      } else {
-         std::cerr << "Unserialization failed!" << std::endl;
-      }
-   } 
+      created = newTestNetShard.toObject(gameState, newObject);
+   }
 
+   else if (receivedPackID == NET_OBJ_ASTEROID) {
+      std::cout << "got asteroid!" << std::endl;
+      NetAsteroid newNetAsteroid;
+      ia >> newNetAsteroid;
+      created = newNetAsteroid.toObject(gameState, newObject);
+   } 
 
    else if (receivedPackID == NET_ALLOBJ_FIN) {
       AllObjFlag = false;
@@ -171,6 +175,10 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
 
    else {
       std::cerr << "unknown packet ID revieved: " << receivedPackID << std::endl;
+   }
+
+   if (created) {
+      gameState->custodian.add(newObject);
    }
 
    start_receive();

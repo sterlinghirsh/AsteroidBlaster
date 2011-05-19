@@ -9,12 +9,21 @@
 #include "boost/serialization/export.hpp"
 
 struct NetAsteroid : public NetObject3D {
+   double health;
+   float cyan;
+   float magenta;
+   float yellow;
+
    template <class Archive>
     void serialize(Archive & ar, const unsigned int version) {
       ar & boost::serialization::base_object<NetObject3D>(*this);
+      ar & health;
+      ar & cyan;
+      ar & magenta;
+      ar & yellow;
    }
 
-   virtual void toObject(GameState* gameState, Object3D*& item);
+   virtual bool toObject(GameState* gameState, Object3D*& item);
 };
 
 BOOST_CLASS_EXPORT_KEY(NetAsteroid);

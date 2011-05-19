@@ -42,13 +42,14 @@ class Asteroid3D : public Object3D {
 
       CollisionSphere* collisionSphere;
       
+      // Holds a random color.
+      float cyan, magenta, yellow;
       
    //private variables------------------------------
    private:   
       std::vector<Ring> _rList;
       int _nPoints;
-      // Holds a random color.
-      float cyan, magenta, yellow;
+
    
    //public functions------------------------------
    public:
