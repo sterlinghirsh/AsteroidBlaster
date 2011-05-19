@@ -106,7 +106,28 @@ GameState::GameState(GameStateMode _gsm) :
 
       worldSize = WORLD_SIZE;
       skybox = new Skybox();
-      ship = new AsteroidShip(this);
+      if (gsm == ClientMode) {
+         while (udpClient->shipID == -1) {
+            std::cout << "udpClient->shipID == -1" << std::endl;
+         }
+         std::cout << "udpClient->shipID != -1" << std::endl;
+         Object3D* temp = NULL;
+         unsigned i = 0;
+         while(temp == NULL) {
+            temp = custodian[udpClient->shipID];
+            std::cout << "i=" << i << "\r";
+            i++;
+         }
+         ship = dynamic_cast<AsteroidShip*>(temp);
+         if (ship == NULL) {
+            std::cout << "GameState::setShipWithID came up with NULL" << std::endl;
+         } else {
+            std::cout << "GameState::reset on client successful! with ship id of " << ship->id << std::endl;
+         }
+      } else {
+         ship = new AsteroidShip(this);
+      }
+
       clientCommand.shipID = ship->id;
       
       spring = new Spring(this);
@@ -119,6 +140,8 @@ GameState::GameState(GameStateMode _gsm) :
       spectatorCamera->lookAt(0.0, 0.0, 0.0);
       spectatorSpeed = 0.2;
       spectatorRadius = 120.0;
+
+
 
       cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
       //sphere = new BoundingSphere(worldSize, 0, 0, 0);
@@ -874,7 +897,31 @@ void GameState::reset(bool shouldLoad) {
 
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
 
-   ship = new AsteroidShip(this);
+   if (gsm == ClientMode) {
+      while (udpClient->shipID == -1) {
+         std::cout << "udpClient->shipID == -1" << std::endl;
+      }
+      std::cout << "udpClient->shipID != -1" << std::endl;
+      Object3D* temp = NULL;
+      unsigned i = 0;
+      while(temp == NULL) {
+         temp = custodian[udpClient->shipID];
+         std::cout << "i=" << i << "\r";
+         i++;
+      }
+      if (temp == NULL) {
+         std::cout << "temp came up NULL" << std::endl;
+      }
+      ship = dynamic_cast<AsteroidShip*>(temp);
+      if (ship == NULL) {
+         std::cout << "GameState::setShipWithID came up with NULL" << std::endl;
+      } else {
+         std::cout << "GameState::reset on client successful! with ship id of " << ship->id << std::endl;
+      }
+   } else {
+      ship = new AsteroidShip(this);
+   }
+
    clientCommand.reset();
    clientCommand.shipID = ship->id;
    spring = new Spring(this);
@@ -898,18 +945,6 @@ void GameState::reset(bool shouldLoad) {
       custodian.clear();
       Particle::Clear();
       MeshFace::Clear();
-      udpClient->AllObjFlag = true;
-
-      //request NET_ALLOBJ_REQ
-      std::ostringstream oss;
-      boost::archive::text_oarchive oa(oss);
-      int packID = NET_ALLOBJ_REQ;
-      oa << packID;
-      udpClient->send(oss.str(), udpClient->serverEndPoint);
-
-      while (udpClient->AllObjFlag) {
-         std::cout << "waiting for AllObjFlag..." << std::endl;
-      }
    }
 
 }

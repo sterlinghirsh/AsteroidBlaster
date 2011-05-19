@@ -720,7 +720,6 @@ void Custodian::update() {
       // Add the item to the sorted lists.
       objectsByMinX.push_back(tempObject);
       objectsByMaxX.push_back(tempObject);
-      objectsByID.insert(std::pair<unsigned, Object3D*>(tempObject->id, tempObject));
       // Remove the item.
       objectsToAdd.pop_front();
    }
@@ -784,6 +783,8 @@ void Custodian::add(Object3D* objectIn) {
    } else if ((ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
       ships.insert(ship);
    }
+
+   objectsByID.insert(std::pair<unsigned, Object3D*>(objectIn->id, objectIn));
 
    // If the gamestate is a server, send it over to all the clients...
    if (gameState->gsm == ServerMode) {

@@ -10,6 +10,7 @@
  */
 
 #include "Network/UDP_Server.h"
+#include "Network/NetShip.h"
 
 #include "Utility/GameState.h"
 #include "Utility/Constants.h"
@@ -154,16 +155,19 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
             oa << packID << curShip->id;
             send(oss.str(), tempEndPoint);
          }
-      } else if (receivedPackID == NET_ALLOBJ_REQ) {
-         // now send NET_SHIPID_RES
+
+         // then send the new ship to everyone
          {
+            NetShip testNetship;
+            testNetship.fromObject(curShip);
             std::ostringstream oss;
             boost::archive::text_oarchive oa(oss);
-            int packID = NET_ALLOBJ_FIN;
-            oa << packID;
-            send(oss.str(), tempEndPoint);
+            int i = NET_OBJ_SHIP;
+            oa << i << testNetship;
+            sendAll(oss.str());
          }
-      }else {
+
+      } else {
          std::cout << "Error! this packet id is unknown:" <<  receivedPackID << ". |||" << recv_buffer_.data() << std::endl;
       }
    }

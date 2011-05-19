@@ -41,7 +41,7 @@ LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(BOOST_LDFLAGS) -lSDL_mixer -lSD
 # -Wall makes warnings appear
 # -c makes .o files
 
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -g -Wall
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -g
 CC=g++
 
 PROGNAME=AsteroidBlaster

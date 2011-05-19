@@ -96,22 +96,6 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
       socket_.send_to(boost::asio::buffer(oss.str()), serverEndPoint);
    }
 
-   {
-      // then wait for the answer back for handshake3...
-      socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
-
-      // decode the answer, and make sure that the packet id is 2
-      std::istringstream iss(recv_buffer_.data());
-      boost::archive::text_iarchive ia(iss);
-      int temp;
-      ia >> temp >> shipID;
-      if (temp == NET_SHIPID_RES) {
-         std::cout << "shipID=" << shipID << std::endl;
-      } else {
-         std::cout << "packet not NET_SHIPID_RES! Packet ID=" << temp << std::endl;
-      }
-   }
-
    // End handshake-------------------------
 
    start_receive();
@@ -186,14 +170,15 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
    }
 
    else if (receivedPackID == NET_OBJ_SHIP) {
-      //std::cout << "got ship!" << std::endl;
       NetShip newNetShip;
       ia >> newNetShip;
       created = newNetShip.toObject(gameState, newObject);
+      //std::cout << "Got ship packet. This ship's ID is " << newObject->id << std::endl;
    } 
 
-   else if (receivedPackID == NET_ALLOBJ_FIN) {
-      AllObjFlag = false;
+   else if (receivedPackID == NET_SHIPID_RES) {
+      ia >> shipID;
+      std::cout << "My ship ID is " << shipID << std::endl;
    }
 
    else {

@@ -164,9 +164,6 @@ class GameState : public InputReceiver {
       void pauseLevelTimer();
       void resumeLevelTimer();
 
-
-      
-
       void initAsteroids();
       void setCurFPS(double fpsIn);
       bool getMenuMode();

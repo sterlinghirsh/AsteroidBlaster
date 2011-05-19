@@ -27,7 +27,6 @@ class UDP_Client {
    public:
       int clientID;
       int shipID;
-      int AllObjFlag;
       boost::asio::ip::udp::endpoint serverEndPoint;
       boost::asio::ip::udp::endpoint clientEndPoint;
 
