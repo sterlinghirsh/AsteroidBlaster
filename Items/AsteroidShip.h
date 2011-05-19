@@ -92,6 +92,9 @@ class AsteroidShip : public Object3D {
       Object3D* lastDamager;
       int lastDamagerWeapon;
       
+      float color1;
+      float color2;
+
       // A ship has a single flying AI
       // TODO: A ship has a list of shooting AIs rather than just one
       ShootingAI* shooter;
@@ -288,9 +291,6 @@ class AsteroidShip : public Object3D {
 
       Timer respawnTimer;
       Timer aliveTimer;
-
-      float color1;
-      float color2;
       
       
    //protected functions------------------------------

@@ -30,3 +30,14 @@ bool NetAsteroid::toObject(GameState* gameState, Object3D*& item) {
    NetObject3D::toObject(gameState, item);
    return itemCreated;
 }
+
+bool NetAsteroid::fromObject(Asteroid3D* in) {
+   NetObject3D::fromObject(in);
+
+   health = in->health;
+   cyan = in->cyan;
+   magenta = in->magenta;
+   yellow = in->yellow;
+}
+
+

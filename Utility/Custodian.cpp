@@ -33,6 +33,7 @@
 #include "Network/UDP_Server.h"
 #include "Network/NetShard.h"
 #include "Network/NetAsteroid.h"
+#include "Network/NetShip.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -60,7 +61,7 @@ void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
    if (d <= maxR) {
       //printf("d <= maxR, d=%f|maxR=%f\n",d,maxR);
       if (d == 0) {
-         printf("AsteroidShip is stuck\n");
+         //printf("AsteroidShip is stuck\n");
          pushOnA->randomMagnitude();
       }
       pushOnA->setLength(0.1); // Units per sec per sec.
@@ -787,7 +788,7 @@ void Custodian::add(Object3D* objectIn) {
    // If the gamestate is a server, send it over to all the clients...
    if (gameState->gsm == ServerMode) {
       if (shard != NULL) {
-         std::cout << "creating net shard..." << std::endl;
+         //std::cout << "creating net shard..." << std::endl;
          NetShard testNetShard;
          testNetShard.fromObject(shard);
          std::ostringstream oss;
@@ -797,13 +798,23 @@ void Custodian::add(Object3D* objectIn) {
          gameState->udpServer->sendAll(oss.str());
       }
       if (asteroid != NULL) {
-         std::cout << "creating net asteroid..." << std::endl;
+         //std::cout << "creating net asteroid..." << std::endl;
          NetAsteroid testNetAsteroid;
          testNetAsteroid.fromObject(asteroid);
          std::ostringstream oss;
          boost::archive::text_oarchive oa(oss);
          int i = NET_OBJ_ASTEROID;
          oa << i << testNetAsteroid;
+         gameState->udpServer->sendAll(oss.str());
+      }
+      if (ship != NULL) {
+         //std::cout << "creating net ship..." << std::endl;
+         NetShip testNetship;
+         testNetship.fromObject(ship);
+         std::ostringstream oss;
+         boost::archive::text_oarchive oa(oss);
+         int i = NET_OBJ_SHIP;
+         oa << i << testNetship;
          gameState->udpServer->sendAll(oss.str());
       }
    }
@@ -834,6 +845,14 @@ void Custodian::remove(Object3D* objectIn) {
       shots.erase(shot);
    } else if ((ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
       ships.erase(ship);
+   }
+
+   if(gameState->gsm == ServerMode) {
+      std::ostringstream oss;
+      boost::archive::text_oarchive oa(oss);
+      int i = NET_OBJ_REMOVE;
+      oa << i << objectIn->id;
+      gameState->udpServer->sendAll(oss.str());
    }
 
    delete objectIn;

@@ -42,6 +42,7 @@
 #include "Network/UDP_Client.h"
 #include "Network/NetShard.h"
 #include "Network/NetAsteroid.h"
+#include "Network/NetShip.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -391,13 +392,13 @@ void GameState::networkUpdate(double timeDiff) {
 }
 
 void GameState::spectatorCameraUpdate(double timeDiff) {
-   static double pieCounter = 0;
+   static double pieCounter = M_PI*0.75;
    if (pieCounter >= 2*M_PI) { pieCounter = 0; }
    spectatorCamera->position->x = sin(pieCounter)*spectatorRadius;
    spectatorCamera->position->y = sin(pieCounter)*(spectatorRadius/3);
    spectatorCamera->position->z = -cos(pieCounter)*spectatorRadius;
    spectatorCamera->lookAt(0.0,0.0,0.0);
-   pieCounter += timeDiff*spectatorSpeed;
+   //pieCounter += timeDiff*spectatorSpeed;
 }
 
 /**
@@ -1430,23 +1431,18 @@ void GameState::load() {
 }
 
 void GameState::testFunction() {
-   //Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState, bool isFirst) :
+   AsteroidShip* testShip = new AsteroidShip(this);
+   testShip->position->updateMagnitude(0, 5, 10);
+   testShip->velocity->updateMagnitude(1, 2, 3);
+   custodian.add(testShip);
 
-   Asteroid3D* testStroid = new Asteroid3D(5, 80.0, this, false);
-   testStroid->position->updateMagnitude(0, 5, 10);
-   testStroid->velocity->updateMagnitude(1, 2, 3);
-   custodian.add(testStroid);
+   NetShip testNetShip;
 
-   NetAsteroid testNetAsteroid;
-
-   testNetAsteroid.fromObject(testStroid);
+   testNetShip.fromObject(testShip);
 
    std::ostringstream oss;
    boost::archive::text_oarchive oa(oss);
-   oa << testNetAsteroid;
-
-   std::cout << "|||testNetAsteroid|||" << std::endl << oss.str() << std::endl << "|||END|||" << std::endl;
-
-
+   oa << testNetShip;
+   std::cout << "oss.str()=" << oss.str() << std::endl;
 }
 

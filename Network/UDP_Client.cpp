@@ -19,6 +19,7 @@
 
 #include "Network/NetShard.h"
 #include "Network/NetAsteroid.h"
+#include "Network/NetShip.h"
 
 //Constructor
 UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameState, std::string _ip, std::string _portNum)
@@ -158,18 +159,37 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
    Object3D* newObject = NULL;
    bool created = false;
 
-   if (receivedPackID == NET_OBJ_SHARD) {
-      std::cout << "got shard!" << std::endl;
+   if (receivedPackID == NET_OBJ_REMOVE) {
+      //std::cout << "got object remove packet!" << std::endl;
+      int removeID;
+      ia >> removeID;
+      Object3D* removeObj = gameState->custodian[removeID];
+      if (removeObj) {
+         removeObj->shouldRemove = true;
+      } else {
+         std::cout << "id:" << removeID << " not there!" << std::endl;
+      }
+   } 
+
+   else if (receivedPackID == NET_OBJ_SHARD) {
+      //std::cout << "got shard!" << std::endl;
       NetShard newTestNetShard;
       ia >> newTestNetShard;
       created = newTestNetShard.toObject(gameState, newObject);
    }
 
    else if (receivedPackID == NET_OBJ_ASTEROID) {
-      std::cout << "got asteroid!" << std::endl;
+      //std::cout << "got asteroid!" << std::endl;
       NetAsteroid newNetAsteroid;
       ia >> newNetAsteroid;
       created = newNetAsteroid.toObject(gameState, newObject);
+   }
+
+   else if (receivedPackID == NET_OBJ_SHIP) {
+      //std::cout << "got ship!" << std::endl;
+      NetShip newNetShip;
+      ia >> newNetShip;
+      created = newNetShip.toObject(gameState, newObject);
    } 
 
    else if (receivedPackID == NET_ALLOBJ_FIN) {
