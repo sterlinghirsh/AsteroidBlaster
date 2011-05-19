@@ -191,10 +191,12 @@ GameState::GameState(GameStateMode _gsm) :
       if (gsm != ClientMode) {
          // Set up objects.
          custodian.add(ship);
+         // It crashes without this. :/
+         initAsteroids();
+      } else {
+         custodian.update();
       }
       
-      // It crashes without this. :/
-      initAsteroids();
 
       doYaw = 0;
       mouseX = 0;
@@ -951,10 +953,11 @@ void GameState::reset(bool shouldLoad) {
 
    if (gsm != ClientMode) {
       custodian.add(ship);
-   } 
-   
-   // Crashes without this.
-   initAsteroids();
+      // Crashes without this.
+      initAsteroids();
+   } else {
+      custodian.update();
+   }
 
    GameMessage::Clear();
    addLevelMessage();
@@ -1012,10 +1015,15 @@ void GameState::nextLevel() {
    curLevelText->updateBody(curLevel);
    numAsteroidsToSpawn = curLevel;
    printf("Level'd up to %d!\n",curLevel);
-   initAsteroids();
 
-   if (curLevel > 1 && gsm != ClientMode) {
-      addAIPlayer();
+   if (gsm != ClientMode) {
+      initAsteroids();
+
+      if (curLevel > 1) {
+         addAIPlayer();
+      }
+   } else {
+      custodian.update();
    }
 
    GameMessage::Clear();
