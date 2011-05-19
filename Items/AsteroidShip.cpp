@@ -1766,7 +1766,7 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
 
 bool AsteroidShip::isRespawning() {
    //printf("Is it respawning? : %d\n", respawnTimer.isRunning && (respawnTimer.getTimeLeft() + spawnRate) > 0);
-   return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0 && timeLeftToRespawn <= 0;
+   return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0 && timeLeftToRespawn > 0;
 }
 
 // serialize
