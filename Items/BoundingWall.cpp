@@ -67,7 +67,7 @@ BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, in
    }
 
 BoundingWall::~BoundingWall() {
-   for (int i = 0; i < squares.size(); ++i) {
+   for (unsigned i = 0; i < squares.size(); ++i) {
       delete squares[i];
    }
 }

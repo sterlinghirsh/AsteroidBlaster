@@ -28,11 +28,12 @@ class UDP_Server {
       std::map<boost::asio::ip::udp::endpoint, unsigned> tempEndpointToClientID;
       std::map<boost::asio::ip::udp::endpoint, unsigned> endpointToClientID;
       boost::asio::ip::udp::endpoint tempEndPoint;
-      GameState* gameState;
       unsigned clientIDCounter;
 
       boost::asio::ip::udp::socket socket_;
       boost::array<char, PACK_SIZE> recv_buffer_;
+      
+      GameState* gameState;
 
    //private variables
    private:

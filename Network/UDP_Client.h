@@ -30,10 +30,11 @@ class UDP_Client {
       int AllObjFlag;
       boost::asio::ip::udp::endpoint serverEndPoint;
       boost::asio::ip::udp::endpoint clientEndPoint;
-      GameState* gameState;
 
       boost::asio::ip::udp::socket socket_;
       boost::array<char, PACK_SIZE> recv_buffer_;
+      
+      GameState* gameState;
 
    //private variables
    private:

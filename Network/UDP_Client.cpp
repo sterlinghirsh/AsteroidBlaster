@@ -47,7 +47,8 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
 
    {
       // then wait for the answer back...
-      size_t len = socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
+      socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
+
       int i;
       // decode the answer, and grab the assigned clientID
       std::istringstream iss(recv_buffer_.data());
@@ -73,7 +74,8 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
 
    {
       // then wait for the answer back for handshake3...
-      size_t len = socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
+      socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
+
       // decode the answer, and make sure that the packet id is 2
       std::istringstream iss(recv_buffer_.data());
       boost::archive::text_iarchive ia(iss);
@@ -95,7 +97,8 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
 
    {
       // then wait for the answer back for handshake3...
-      size_t len = socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
+      socket_.receive_from(boost::asio::buffer(recv_buffer_), serverEndPoint);
+
       // decode the answer, and make sure that the packet id is 2
       std::istringstream iss(recv_buffer_.data());
       boost::archive::text_iarchive ia(iss);

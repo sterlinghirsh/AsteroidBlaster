@@ -17,8 +17,8 @@ materialStruct ShotMaterial = {
 
 Shot::Shot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, const GameState* _gameState) : 
- owner(ownerIn),
  Object3D(_gameState),
+ owner(ownerIn),
  weaponIndex(_weaponIndex) {
    *position = posIn;
    velocity = new Vector3D(dirIn);

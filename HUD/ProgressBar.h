@@ -19,17 +19,17 @@ class ProgressBar {
       void draw();
       void setIcon(std::string _texture);
    private:
-      bool isHorizontal;
-      float outerBoxThickness;
-      float amount; // The amount full the progress bar is, from 0 to 1.
       // Height, width, x, and y are in world coords.
       float height;
       float width;
       float x;
       float y;
+      float amount; // The amount full the progress bar is, from 0 to 1.
+      float outerBoxThickness;
+      bool hasIcon;
+      bool isHorizontal;
       float xSkew;
       float ySkew;
-      bool hasIcon;
       std::string icon;
 };
 

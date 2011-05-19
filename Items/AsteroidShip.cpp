@@ -395,9 +395,6 @@ void AsteroidShip::addNewLowHealthParticle(Point3D& emitter, Vector3D& baseDirec
 void AsteroidShip::createEngineParticles(double timeDiff) {
    //add particles in the opposite direction of the acceration
 
-   float increment = 0.01f;
-
-   //const float length = acceleration->getLength;
    int maxParticlesPerFrame = 10;
    int newParticlesPerSecond = 50;
    Vector3D baseParticleAcceleration;
@@ -450,15 +447,10 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 void AsteroidShip::createLowHealthParticles(double timeDiff){
    //add particles in the opposite direction of the acceration
 
-   float increment = 0.01f;
-
-   //const float length = acceleration->getLength;
    int maxParticlesPerFrame = 8;
-   int newParticlesPerSecond = 50;
    Vector3D baseParticleAcceleration;
    Point3D emitter;
 
-   double accelerationTime = doubleTime() - accelerationStartTime;
    double colorVariation = 0.2 * randdouble();
    int particlesThisFrame = 0;
    
@@ -1393,9 +1385,7 @@ void AsteroidShip::drawCrosshair() {
    }
 
    double crosshairSizeX = 0.05;
-   double crosshairSizeY = 0.05;
    double thicknessX = 0.01;
-   double thicknessY = 0.01;
    glPushMatrix();
    glLoadIdentity();
 
@@ -1404,19 +1394,7 @@ void AsteroidShip::drawCrosshair() {
    glColor3f(1, 1, 1);
    useOrtho();
    glDisable(GL_LIGHTING);
-   /*
-      glBegin(GL_QUADS);
-      glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
-      glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() + thicknessY, 0);
-      glVertex3f(gameState->ship->getAimX() - crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
-      glVertex3f(gameState->ship->getAimX() + crosshairSizeX, gameState->ship->getAimY() - thicknessY, 0);
-
-      glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
-      glVertex3f(gameState->ship->getAimX() + thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
-      glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() + crosshairSizeY, 0);
-      glVertex3f(gameState->ship->getAimX() - thicknessX, gameState->ship->getAimY() - crosshairSizeY, 0);
-      glEnd();
-      */
+   
    if (currentView == VIEW_FIRSTPERSON_SHIP) {
       glTranslatef((GLfloat)getAimX(),(GLfloat) getAimY(),(GLfloat)0.0f);
    }
@@ -1442,7 +1420,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
       return;
 
    // Don't draw this while firing the tractorbeam.
-   if (currentWeapon == TRACTOR_WEAPON_INDEX && isFiring || (gameState->godMode && isFiring)) {
+   if (isFiring && (currentWeapon == TRACTOR_WEAPON_INDEX || gameState->godMode)) {
       return;
    }
    // The coords of the boxes.
@@ -1599,7 +1577,7 @@ void AsteroidShip::nextWeapon() {
 }
 
 int AsteroidShip::getNextWeaponID() {
-   int thisWeapon = currentWeapon;
+   unsigned thisWeapon = currentWeapon;
    while (thisWeapon < weapons.size() - 1) {
       if (weapons[thisWeapon + 1]->purchased) {
          return thisWeapon + 1;
@@ -1834,7 +1812,7 @@ void AsteroidShip::stopSounds() {
       soundHandle = -1;
    }
 
-   for (int i = 0; i < weapons.size(); ++i) {
+   for (unsigned i = 0; i < weapons.size(); ++i) {
       weapons[i]->stopSounds();
    }
 }

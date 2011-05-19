@@ -99,13 +99,14 @@ Point3D* FlyingAI :: getClosestShard() {
       if (*iter == NULL || (dynamic_cast<Shard*>(*iter) == NULL)) {
          continue;
       }  
+      // All of these used to have a , 2 inside the prens.
       tempDist = (float) (
-        ((*iter)->position->x - ship->position->x, 2) *
-        ((*iter)->position->x - ship->position->x, 2) +
-        ((*iter)->position->y - ship->position->y, 2) *
-        ((*iter)->position->y - ship->position->y, 2) +
-        ((*iter)->position->z - ship->position->z, 2) *
-        ((*iter)->position->z - ship->position->z, 2));
+        ((*iter)->position->x - ship->position->x) *
+        ((*iter)->position->x - ship->position->x) +
+        ((*iter)->position->y - ship->position->y) *
+        ((*iter)->position->y - ship->position->y) +
+        ((*iter)->position->z - ship->position->z) *
+        ((*iter)->position->z - ship->position->z));
          
       if(shortestDist > tempDist) {
          shortestDist = tempDist;

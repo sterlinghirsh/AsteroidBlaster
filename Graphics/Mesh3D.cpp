@@ -17,7 +17,7 @@ Mesh3D::Mesh3D() : drawNormals(false) {
 
 Mesh3D::~Mesh3D() {
    //printf("deleting faces.\n");
-   for (int i = 0; i < faces.size(); ++i) {
+   for (unsigned i = 0; i < faces.size(); ++i) {
       delete faces[i];
    }
    faces.empty();
@@ -29,13 +29,13 @@ void Mesh3D::tick(double ms) {
 }
 
 void Mesh3D::setFaceColor(float r, float g, float b) {
-   for (int i = 0; i < faces.size(); i++) {
+   for (unsigned i = 0; i < faces.size(); i++) {
       faces[i]->setFaceColor(r, g, b);
    }
 }
 
 void Mesh3D::setLineColor(float r, float g, float b) {
-   for (int i = 0; i < faces.size(); i++) {
+   for (unsigned i = 0; i < faces.size(); i++) {
       faces[i]->setLineColor(r, g, b);
    }
 }

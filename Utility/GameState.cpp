@@ -127,7 +127,6 @@ GameState::GameState(GameStateMode _gsm) :
       // Init Text Objects
       SDL_Rect position = {0,0};
       std::string fontName = DEFAULT_FONT;
-      int fontSize = 18;
 
       //new all the text class we will be using
       FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);

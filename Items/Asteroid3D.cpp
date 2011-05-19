@@ -26,7 +26,6 @@
 using namespace std;
 
 static double timediff = (double) clock();
-static double spinTime = 0;
 double randomR = 0;
 double randomG = 0;
 double randomB = 0;
@@ -493,7 +492,7 @@ void Asteroid3D::update(double timeDiff) {
 
       MeshFace* newFace;
       MeshFace* oldFace;
-      for (int i = 0; i < mesh.faces.size(); i++) {
+      for (unsigned i = 0; i < mesh.faces.size(); i++) {
          //mesh.faces[i].position->updateMagnitude();
          // Copy them all.
          oldFace = (mesh.faces[i]);

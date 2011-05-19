@@ -16,8 +16,6 @@
 #endif
 
 static float flashiness = 0;
-static float tracker = 0;
-static int rando = 1;
 
 ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, double strengthOfShot, const GameState* _gameState) : 
@@ -119,8 +117,6 @@ void ElectricityShot::drawShot(bool isGlow) {
    //how fast you want the lighting flashing from blue to white. Higher number == faster flash
    float flash = .7f;
 
-   float lpos[4] = {1.0, 0.5, 1.0, 0.0};   // light postion
-   //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
    Point3D start(*position);
    velocity->movePoint(start, length);
    start.glTranslate();

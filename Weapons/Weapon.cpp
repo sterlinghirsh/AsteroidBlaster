@@ -105,10 +105,6 @@ void Weapon::drawIcon(bool selected) {
    /* Really Nice Perspective Calculations */
    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
    glBlendFunc(GL_ONE, GL_ONE);
-   //glColor3f(1, 1, 1);
-   //glColor3f(clr, clr, clr);
-   float startX, startY, width, height;
-   //glScaled(2, 2, 2);
 
    // Draw box around weapons.
    if (selected) {

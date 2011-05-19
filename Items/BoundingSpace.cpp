@@ -82,8 +82,6 @@ void BoundingSpace::constrain(Drawable* item) {
 /* Draw the bounding box grid on the world.
 */
 void BoundingSpace::draw() {
-   const double wall = extent;
-   const double alpha = 0;
    glDisable(GL_LIGHTING);
    glDisable(GL_CULL_FACE);
 

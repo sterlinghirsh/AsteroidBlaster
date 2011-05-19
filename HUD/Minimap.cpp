@@ -36,7 +36,6 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
    static Matrix4 modelViewMatrix;
    const float ringWidth = (zoomLevel / 80) / displaySize;
    double radius2D; // Radius when an object is projected onto the forward-right plane of the ship.
-   double radius3D; // Radius from the ship in 3D space.
    const float scaleFactor = 1 / zoomLevel;
    std::list<Drawable*>::iterator listIter;
    static Point3D objectPosition;

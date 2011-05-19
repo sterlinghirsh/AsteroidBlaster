@@ -19,10 +19,10 @@ class Ring {
     double minZ();
     std::vector<Point3D> _pList;
     std::vector<int> _nList;
-    Mesh3D *_mesh;
     MeshPoint _head;
     int _pts;
     double _rad;
     double _h;
     double _offset;
+    Mesh3D *_mesh;
 };

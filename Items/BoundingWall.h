@@ -27,12 +27,12 @@ class GameState;
 class BoundingWall {
    public:
       void constrain(Drawable* item);
+      int squareSize;
+      int wallSize;
       Color* wallColor;
       int wallID;
-      int wallSize;
       std::vector<GlowSquare*> squares;
       int numSquares;
-      int squareSize;
       int squaresPerSide;
 
       BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, int _wallID, const GameState* _gameState);

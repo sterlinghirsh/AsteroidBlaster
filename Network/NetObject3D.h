@@ -18,6 +18,14 @@
 struct NetObject3D {
    // Object3D stuff
    unsigned id;
+   double angle;
+   double rotationSpeed;
+   double yawSpeed;
+   double pitchSpeed;
+   double rollSpeed;
+   double radius;
+   bool shouldRemove; // Maybe...
+
    Vector3D acceleration;
 
    // Maybe only include these on a case by case basis, since they're not always used.
@@ -25,17 +33,10 @@ struct NetObject3D {
    Vector3D up;
    Vector3D right;
    Vector3D forward;
-   double angle;
-   double rotationSpeed;
-   double yawSpeed;
-   double pitchSpeed;
-   double rollSpeed;
 
    // Drawable stuff
    Vector3D velocity;
    Point3D position;
-   double radius;
-   bool shouldRemove; // Maybe...
    // How do we handle collisions? Set on client side?
    // Oh wait, we don't need collisions on client side!
    

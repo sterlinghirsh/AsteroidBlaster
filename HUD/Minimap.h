@@ -14,9 +14,9 @@ class AsteroidShip;
 
 class Minimap {
    public:
+      AsteroidShip* ship;
       float displaySize;
       float zoomLevel;
-      AsteroidShip* ship;
 
       int adjustZoomDirection;
       int adjustDisplaySizeDirection;

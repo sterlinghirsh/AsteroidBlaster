@@ -105,8 +105,6 @@ void TractorBeamShot::draw() {
       //than 2 for spacing to be irregular between the lines
       float sharpness = 2;
       
-      float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
-      //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
       Point3D start(*position);
       velocity->movePoint(start, length);
       start.glTranslate();

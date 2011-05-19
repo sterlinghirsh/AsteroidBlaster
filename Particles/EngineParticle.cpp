@@ -47,11 +47,8 @@ void EngineParticle::AddLowHealth(Point3D* pos, Vector3D* vec, double color, con
 }
 
 void EngineParticle::update(double timeDifference) {
-   double velocityReductionPerSecond = 20.0 * randdouble();
-   double lengthSquared = velocity->getComparisonLength();
-
    velocity->scalarMultiplyUpdate(1 - timeDifference);
-
+   
    // Do the parent's update.
    Particle::update(timeDifference);
 }

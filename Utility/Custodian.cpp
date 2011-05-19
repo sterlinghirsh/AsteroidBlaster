@@ -71,9 +71,6 @@ void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
       b->addAcceleration(pushOnB);
    }
 
-   double speed_a = a->velocity->getLength();
-   double speed_b = b->velocity->getLength();
-
    Vector3D reflectionAxis(*b->position, *a->position);
    reflectionAxis.normalize();
 
@@ -490,7 +487,6 @@ void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
 template<>
 void Collision<Asteroid3D, Asteroid3D>::handleCollision() {
    double d = a->position->distanceFrom(*b->position);
-   double combinedRad = a->radius + b->radius;
    double maxR = std::max(a->radius, b->radius);
    Vector3D* pushOnA = new Vector3D(*b->position, *a->position);
    Vector3D* pushOnB = new Vector3D(pushOnA->scalarMultiply(-1));
@@ -507,9 +503,6 @@ void Collision<Asteroid3D, Asteroid3D>::handleCollision() {
       a->addAcceleration(pushOnA);
       b->addAcceleration(pushOnB);
    }
-
-   double speed_a = a->velocity->getLength();
-   double speed_b = b->velocity->getLength();
 
    Vector3D reflectionAxis(*b->position, *a->position);
    reflectionAxis.normalize();
@@ -895,7 +888,7 @@ std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Object3D*
    /* Start at the current minX + 1. Check whether elements to
     * the right have a minX that is below item's maxX.
     */
-   for (int i = item->minXRank + 1; i < numElements; ++i) {
+   for (unsigned i = item->minXRank + 1; i < numElements; ++i) {
       other = objectsByMinX[i];
       if (other == NULL)
          continue;

@@ -47,9 +47,7 @@ void Texture::Add(std::string file, std::string keyName) {
    }
 
 
-   SDL_Surface *image, *temp;
-   int x = 0, y = 0, w, h;
-   SDL_Rect area;
+   SDL_Surface *image;
    unsigned int texture;
 
    image=IMG_Load(file.c_str());
@@ -59,28 +57,6 @@ void Texture::Add(std::string file, std::string keyName) {
       exit(1);
    }
 
-   // set width and height
-   int width = image->w;
-   int height = image->h;
-   
-   // get the closest w and h that's in the power of 2
-   /*
-   int tempLoop = 1;
-   int loopVal = 1;
-   while (loopVal < width) {
-      loopVal = tempLoop * tempLoop;
-      tempLoop++;
-   }
-   w = loopVal;
-   
-   tempLoop = 1;
-   loopVal = 1;
-   while (loopVal < height) {
-      loopVal = tempLoop * tempLoop;
-      tempLoop++;
-   }
-   h = loopVal;
-   */
 
    /* Create a 32-bit surface with the bytes of each pixel in R,G,B,A order,       
    as expected by OpenGL for textures */    
@@ -98,30 +74,6 @@ void Texture::Add(std::string file, std::string keyName) {
    bmask = 0x00ff0000;
    amask = 0xff000000;
 #endif
-
-   //SDL_SetAlpha( image, SDL_SRCALPHA | SDL_RLEACCEL, amask ); 
-   // blit from bitmap to a temporary surface with 32 bits per pixel
-   /*
-   temp = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, rmask, gmask, bmask, amask);
-
-   if(temp == NULL){
-      std::cerr << "Failed to create temporary surface..." << std::endl;
-      exit (1);
-   }
-   */
-
-   // set up rectangle
-   /*
-   area.x = (Sint16) (x * width);
-   area.y = (Sint16) (y * height);
-   area.w = (Sint16) width;
-   area.h = (Sint16) height;
-
-   if(SDL_BlitSurface(image, &area, temp, NULL)== -1){
-      std::cerr << "Failed to blit bitmap to temporary surface..." << std::endl;
-      exit (1);
-   }
-   */
 
    GLenum texture_format;
    GLint  nOfColors;
@@ -146,44 +98,17 @@ void Texture::Add(std::string file, std::string keyName) {
    glGenTextures(1, &texture );
    glBindTexture(GL_TEXTURE_2D, texture );
    
-   /*
-   if(temp->pixels == NULL){
-      std::cerr << "Failed to create texture..." << std::endl;
-      exit (1);
-   }
-   */
-
-   // if temporary surface must be locked
-   // lock temporary surface
-   /*
-   if(SDL_MUSTLOCK(temp)) {
-      SDL_LockSurface(temp);
-   }
-   */
-
    // turn bitmap into texture
    //glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, temp->w, temp->h, 0, texture_format, GL_UNSIGNED_BYTE, temp->pixels );
    gluBuild2DMipmaps(GL_TEXTURE_2D, nOfColors, image->w, image->h, 
     texture_format, GL_UNSIGNED_BYTE, image->pixels);
 
-   // if temporary surface had to be locked
-   // unlock temporary surface again
-   /*
-   if(SDL_MUSTLOCK(temp)) {
-      SDL_UnlockSurface(temp );
-   }
-   */
-
    // set texture filtering
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-   // free temporary surface
-   //SDL_FreeSurface(temp);
-
-   // free image
+      // free image
    SDL_FreeSurface(image);
-
 
    textures.insert(std::pair<std::string, unsigned int>(keyName,texture));
      
