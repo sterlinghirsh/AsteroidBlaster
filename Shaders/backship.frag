@@ -61,7 +61,7 @@ void main()
 
    const vec4 specMaterial = vec4(1.0, 1.0, 1.0, 1.0);
 
-   fragColor += specComponent*specMaterial;
+   //fragColor += specComponent*specMaterial;
    clamp(fragColor, 0.0, 1.0);
 
    gl_FragColor = fragColor;
