@@ -109,18 +109,21 @@ GameState::GameState(GameStateMode _gsm) :
       if (gsm == ClientMode) {
          while (udpClient->shipID == -1) {
             std::cout << "udpClient->shipID == -1" << std::endl;
+            sleep(1);
          }
          std::cout << "udpClient->shipID != -1" << std::endl;
+
          Object3D* temp = NULL;
-         unsigned i = 0;
-         while(temp == NULL) {
-            temp = custodian[udpClient->shipID];
-            std::cout << "i=" << i << "\r";
-            i++;
+
+         // Wait until we have a valid ship object from the server.
+         while((temp = custodian[udpClient->shipID]) == NULL) {
+            sleep(1);
          }
+
          ship = dynamic_cast<AsteroidShip*>(temp);
          if (ship == NULL) {
             std::cout << "GameState::setShipWithID came up with NULL" << std::endl;
+            exit(1);
          } else {
             std::cout << "GameState::reset on client successful! with ship id of " << ship->id << std::endl;
          }
@@ -180,14 +183,19 @@ GameState::GameState(GameStateMode _gsm) :
       //healthBar->setIcon("ShieldIcon");
       weaponReadyBar->setIcon("ShotIcon");
 
-      // Set up objects.
-      custodian.add(ship);
-
       // Start off at level 1.
       curLevel = 1;
       // Spawn one more asteroid for each level.
       numAsteroidsToSpawn = curLevel;
+
+      if (gsm != ClientMode) {
+         // Set up objects.
+         custodian.add(ship);
+      }
+      
+      // It crashes without this. :/
       initAsteroids();
+
       doYaw = 0;
       mouseX = 0;
       mouseY = 0;
@@ -898,24 +906,32 @@ void GameState::reset(bool shouldLoad) {
 
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
 
+   std::cout << "Resetting." << std::endl;
+   
+   if( gsm == ClientMode) {
+      custodian.clear();
+      Particle::Clear();
+      MeshFace::Clear();
+   }
+
    if (gsm == ClientMode) {
       while (udpClient->shipID == -1) {
          std::cout << "udpClient->shipID == -1" << std::endl;
+         sleep(1);
       }
       std::cout << "udpClient->shipID != -1" << std::endl;
+
       Object3D* temp = NULL;
-      unsigned i = 0;
-      while(temp == NULL) {
-         temp = custodian[udpClient->shipID];
-         std::cout << "i=" << i << "\r";
-         i++;
+
+      // Wait until we have a valid ship object from the server.
+      while((temp = custodian[udpClient->shipID]) == NULL) {
+         sleep(1);
       }
-      if (temp == NULL) {
-         std::cout << "temp came up NULL" << std::endl;
-      }
+
       ship = dynamic_cast<AsteroidShip*>(temp);
       if (ship == NULL) {
          std::cout << "GameState::setShipWithID came up with NULL" << std::endl;
+         exit(1);
       } else {
          std::cout << "GameState::reset on client successful! with ship id of " << ship->id << std::endl;
       }
@@ -933,20 +949,17 @@ void GameState::reset(bool shouldLoad) {
    spectatorCamera = new Camera(false);
 
 
+   if (gsm != ClientMode) {
+      custodian.add(ship);
+   } 
    
-   custodian.add(ship);
+   // Crashes without this.
    initAsteroids();
 
    GameMessage::Clear();
    addLevelMessage();
 
    setLevelTimer();
-
-   if( gsm == ClientMode) {
-      custodian.clear();
-      Particle::Clear();
-      MeshFace::Clear();
-   }
 
 }
 
