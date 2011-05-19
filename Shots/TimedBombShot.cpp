@@ -21,13 +21,17 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, A
    updateBoundingBox();
 
    // Blow up 15 seconds after it's fired.
-   timeToExplode = 100;
+   timeToExplode = 15;
    scaleSize = 0;
    secondScale = 0;
    explodeRadius = 8;
    addSize = 0;
    spin = 90;
-   //isExploded = true;
+   
+   rotationSpeed = randdouble() * 10; // Degrees per sec.
+   axis = new Vector3D(0, 1, 0);
+   axis->randomMagnitude();
+   axis->normalize();
    
    rx = 0;
    ry = 0;
@@ -60,55 +64,144 @@ void TimedBombShot::draw() {
    }
 
    glPushMatrix();
+      glColor4d(1, 1, 1, 1);
       glDisable(GL_CULL_FACE);
       glDisable(GL_LIGHTING);
       glEnable(GL_NORMALIZE);
-      //glDisable(GL_BLEND);
+
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_POLYGON_OFFSET_LINE);
 
-      /*double amountDone = (doubleTime() - timeFired) / timeToExplode;
-      if (fmod(amountDone * amountDone * 80, 2) < 1) {
-         glColor3d(0.4, 0.8, 0.4);
-      } else {
-         glColor3d(1.0, 0.4, 0.4);
-      }*/
-      //glDisable(GL_
-      glColor4d(1, 0, 0, 1);
-      //setMaterial(BlackSolid);
       position->glTranslate();
       glRotate();
       
-      glPushMatrix();
-      gluSphere(quadric, 0.3, 30, 30);
+      glTranslated(0, 0, -.75);
       
+      glPushMatrix();
+      
+      gluCylinder(quadric, .35, .35, .2, 30, 30);
+      glPushMatrix();
+      gluDisk(quadric, 0, .4, 30, 30);
+      gluDisk(quadric, .35, .4, 30, 30);
+      glTranslated(0, 0, .2);
+      gluDisk(quadric, .35, .4, 30, 30);
       glPopMatrix();
       
-      glPushMatrix();
-      glColor4d(.0, 0, .0, 1);
-      gluCylinder(quadric, .31, .31, 1.5, 30, 30);
-      glPopMatrix();
+      gluCylinder(quadric, .4, .4, .2, 30, 30);
+      
+      glTranslated(0, 0, 1.3);
+      
+      gluCylinder(quadric, .35, .35, .2, 30, 30);
       
       glPushMatrix();
-      glTranslated(0, 0, 1.5);
-      gluDisk(quadric, 0, .3, 15, 15);
+      gluDisk(quadric, .35, .4, 30, 30);
+      glTranslated(0, 0, .2);
+      gluDisk(quadric, .35, .4, 30, 30);
+      gluDisk(quadric, 0, .4, 30, 30);
+      glPopMatrix();
+      
+      gluCylinder(quadric, .4, .4, .2, 30, 30);
       
       glPopMatrix();
       
       glLineWidth(2);
       glPushMatrix();
+      glRotated(spin/2, 0, 0, 1);
       glBegin(GL_LINES);
-      glColor4d(1, 0, 0, 1);
-      for(double z = 0; z <= 1.5; z += .1) {
-         glVertex3d(.33 * sin((z / 1.5) * M_PI * 2), .33 * cos((z / 1.5) * M_PI * 2), z);
-         glVertex3d(.33 * sin(((z + .1) / 1.5) * M_PI * 2), .33 * cos(((z + .1) / 1.5) * M_PI * 2), z + .1);
-         
-         glVertex3d(-.33 * sin((z / 1.5) * M_PI * 2), -.33 * cos((z / 1.5) * M_PI * 2), z);
-         glVertex3d(-.33 * sin(((z + .1) / 1.5) * M_PI * 2), -.33 * cos(((z + .1) / 1.5) * M_PI * 2), z + .1);
-      }
+
+      glVertex3d(.32, 0, 0);
+      glVertex3d(.32, 0, .5);
+      glVertex3d(-.32, 0, 0);
+      glVertex3d(-.32, 0, .5);
+      glVertex3d(0, .32, 0);
+      glVertex3d(0, .32, .5);
+      glVertex3d(0, -.32, 0);
+      glVertex3d(0, -.32, .5);
       glEnd();
       glPopMatrix();
       
+      glPushMatrix();
+      glColor4d(0, 1, 0, 1);
+      glRotated(-spin, 0, 0, 1);
+      glBegin(GL_LINES);
+      glVertex3d(.32, 0, .5);
+      glVertex3d(.32, 0, 1);
+      glVertex3d(-.32, 0, .5);
+      glVertex3d(-.32, 0, 1);
+      glVertex3d(0, .32, .5);
+      glVertex3d(0, .32, 1);
+      glVertex3d(0, -.32, .5);
+      glVertex3d(0, -.32, 1);
+      glEnd();
+      glPopMatrix();
+      
+      glPushMatrix();
+      glColor4d(1, 1, 1, 1);
+      glRotated(spin*2, 0, 0, 1);
+      glBegin(GL_LINES);
+      glVertex3d(.32, 0, 1);
+      glVertex3d(.32, 0, 1.5);
+      glVertex3d(-.32, 0, 1);
+      glVertex3d(-.32, 0, 1.5);
+      glVertex3d(0, .32, 1);
+      glVertex3d(0, .32, 1.5);
+      glVertex3d(0, -.32, 1);
+      glVertex3d(0, -.32, 1.5);
+      glEnd();
+      glPopMatrix();
+      
+      glPushMatrix();
+      glBegin(GL_LINES);
+      glColor4d(.5, .5, 0, 1);
+      double rando;
+      
+      glVertex3d(.4, 0, .2);
+      for(double z = .3; z < 1.3; z+=.1){
+         rando = randdouble();
+         glVertex3d(.4 + (rando * .1), (.5 - rando) * .2, z);
+         glVertex3d(.4 + (rando * .1), (.5 - rando) * .2, z);
+      }
+      
+      glVertex3d(.4, 0, 1.3);
+      
+      glVertex3d(-.4, 0, .2);
+      
+      for(double z = .2; z < 1.2; z+=.1){
+         rando = randdouble();
+         glVertex3d(-.4 + (rando * -.1), (.5 - rando) * .2, z);
+         glVertex3d(-.4 + (rando * -.1), (.5 - rando) * .2, z);
+      }
+      
+      glVertex3d(-.4, 0, 1.3);
+      
+      
+      
+      glVertex3d(0, .4, .2);
+      for(double z = .3; z < 1.3; z+=.1){
+         rando = randdouble();
+         glVertex3d((.5 - rando) * .2, .4 + (rando * .1), z);
+         glVertex3d((.5 - rando) * .2, .4 + (rando * .1), z);
+      }
+      
+      glVertex3d(0, .4, 1.3);
+      
+      glVertex3d(0, -.4, .2);
+      
+      for(double z = .2; z < 1.2; z+=.1){
+         rando = randdouble();
+         glVertex3d((.5 - rando) * .2, -.4 + (rando * -.1), z);
+         glVertex3d((.5 - rando) * .2, -.4 + (rando * -.1), z);
+      }
+      
+      glVertex3d(0, -.4, 1.3);
+      glEnd();
+      glPopMatrix();
+      
+      glPushMatrix();
+      glColor4d(0, 0, 0, 1);
+      gluCylinder(quadric, .31, .31, 1.5, 30, 30);
+      glPopMatrix();
+
       glLineWidth(1.0);
       glEnable(GL_BLEND);
       glEnable(GL_CULL_FACE);
@@ -116,8 +209,15 @@ void TimedBombShot::draw() {
    glPopMatrix();
 }
 
+void TimedBombShot::drawGlow(){
+   draw();
+}
+
 void TimedBombShot::drawExplosion() {
-   double xzScale;;
+   double xzScale;
+   double subtractor = 1.6;
+   double divider = 3.5;
+   double ringTime = .6;
    glPushMatrix();
       GLint loc1;
       glDisable(GL_LIGHTING);
@@ -125,6 +225,7 @@ void TimedBombShot::drawExplosion() {
       setMaterial(ShotMaterial);
       position->glTranslate();
       glRotate();
+      glRotated(90, 1, 0, 0);
 
       rx += (double) (rand() % 10);
       ry += (double) (rand() % 20);
@@ -146,66 +247,34 @@ void TimedBombShot::drawExplosion() {
       glPushMatrix();
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);
-      //printf("Time since exploded: %f\n", helper);
-      glColor4d(1, .6, 0, timeSinceExploded - .1);
 
-      //addSize = timeSinceExploded / (2.5 - timeSinceExploded);
+      glColor4d(1, .6, 0, timeSinceExploded);
+
       if (scaleSize > 15) {
          scaleSize += addSize / 15;
       } else {
          scaleSize += addSize;
       }
       
-      xzScale = scaleSize * (2.3 - timeSinceExploded) * (2.3 - timeSinceExploded) / 3.5; //scaleSize;
+      xzScale = scaleSize * (subtractor - timeSinceExploded) * (subtractor - timeSinceExploded) / divider;
       
-      glColor4d(1, .6, 0, timeSinceExploded - .1);
          glPushMatrix();
-         if(timeSinceExploded > 1.3) {
-            glScaled(scaleSize / 3.5, scaleSize, scaleSize / 3.5);
+         if(timeSinceExploded > ringTime) {
+            glScaled(scaleSize / divider, scaleSize, scaleSize / divider);
          } else {
-            //glScaled(scaleSize / 2.5, scaleSize, scaleSize / 2.5);
             glScaled(xzScale, scaleSize, xzScale);
          }
-         //glRotated(20, 1, 0, 0);
          glRotated(spin, rx, ry, rz);
          gluSphere(quadric, .6, 20, 20);
          glPopMatrix();
       
       loc1 = glGetUniformLocation(ringShader,"ratio");
       glUniform1f(loc1,helper);
-      //scaleSize = 20;
-      //secondScale = 30;
-      
-      /*if (scaleSize > secondScale) {
-         glPushMatrix();
-         glRotated(spin, rx, ry, rz);
-         glScaled(scaleSize, scaleSize, scaleSize);
-         
-         gluSphere(quadric, .6, 20, 20);
-         glPopMatrix();
-      }*/
-      //glRotated(spin, rx, ry, rz);
-      if(timeSinceExploded < 1.3) {
+
+      if(timeSinceExploded < ringTime) {
          glUseProgram(ringShader);
-         glPushMatrix();/*
-         glColor4d(1, 0, 0, timeSinceExploded * 5);
-         glScaled(secondScale, secondScale, 1);
          glPushMatrix();
-         glTranslated(0, 0, -.3);
-         gluDisk(quadric, .3, .6, 20, 20);
-         glPopMatrix();
-         glPushMatrix();
-         glTranslated(0, 0, .3);
-         gluDisk(quadric, .3, .6, 20, 20);
-         glPopMatrix();
-         glPushMatrix();
-         glTranslated(0, 0, -.3);
-         gluCylinder(quadric, .6, .6, .6, 20, 20);
-         glPopMatrix();
-         glPopMatrix();*/
          glColor4d(0, .2, 1, timeSinceExploded*4);
-         glPushMatrix();
-         //glColor4d(0, 0, 1, 1);//timeSinceExploded * .3);
          glRotated(90, 1, 0, 0);
          glScaled(secondScale, secondScale, 1);
          glPushMatrix();
@@ -221,40 +290,19 @@ void TimedBombShot::drawExplosion() {
          gluCylinder(quadric, .6, .6, .6, 20, 20);
          glPopMatrix();
          glPopMatrix();
-         /*
-         glPushMatrix();
-         //glColor4d(0, 0, 1, 1);//timeSinceExploded * .3);
-         glScaled(1, secondScale, secondScale);
-         glRotated(90, 0, 1, 0);
-         glPushMatrix();
-         glTranslated(0, 0, -.3);
-         gluDisk(quadric, .3, .6, 20, 20);
-         glPopMatrix();
-         glPushMatrix();
-         glTranslated(0, 0, .3);
-         gluDisk(quadric, .3, .6, 20, 20);
-         glPopMatrix();
-         glPushMatrix();
-         glTranslated(0, 0, -.3);
-         gluCylinder(quadric, .6, .6, .6, 20, 20);
-         glPopMatrix();*/
-         glPopMatrix();
          glUseProgram(explosionShader);
       }
-      //if (scaleSize <= secondScale) {
-      glColor4d(1, .6, 0, timeSinceExploded - .1);
+
+      glColor4d(1, .6, 0, timeSinceExploded);
          glPushMatrix();
-         if(timeSinceExploded > 1.3) {
-            glScaled(scaleSize / 3.5, scaleSize, scaleSize / 3.5);
+         if(timeSinceExploded > ringTime) {
+            glScaled(scaleSize / divider, scaleSize, scaleSize / divider);
          } else {
-            //glScaled(scaleSize / 2.5, scaleSize, scaleSize / 2.5);
             glScaled(xzScale, scaleSize, xzScale);
          }
-         //glRotated(20, 1, 0, 0);
          glRotated(spin, rx, ry, rz);
          gluSphere(quadric, .6, 20, 20);
          glPopMatrix();
-      //}
 
       glPopMatrix();
       glUseProgram(0);
@@ -264,16 +312,20 @@ void TimedBombShot::drawExplosion() {
 }
 
 void TimedBombShot::update(double timeDiff) {
+   spin += 200 * timeDiff;
    if(timeSinceExploded > 0) {
-      if (timeSinceExploded < 1.3) {
-         secondScale += 50 * timeDiff;
+      if (timeSinceExploded < .6) {
+         secondScale += 100 * timeDiff;
       }
-      addSize = timeDiff * 70 * timeSinceExploded / (2.5 - timeSinceExploded);
+      addSize = timeDiff * 140 * timeSinceExploded / (1.6 - timeSinceExploded);
    }
    
 
    addSize += timeDiff;
    if(!isExploded){
+      up->rotate(rotationSpeed * timeDiff, axis);
+      right->rotate(rotationSpeed * timeDiff, axis);
+      forward->rotate(rotationSpeed * timeDiff, axis);
       double newSpeed = velocity->getLength();
       newSpeed -= timeDiff * slowDownPerSecond;
       newSpeed = std::max(0.0, newSpeed);
@@ -292,7 +344,7 @@ void TimedBombShot::update(double timeDiff) {
    // If the bomb should explode this frame and has not already, then explode.
    // If more time has passed than the bomb's timeToExplode, blow it up.
    if ((shouldExplode || doubleTime() - timeFired > timeToExplode) && !isExploded) {
-      timeSinceExploded = 1.5;
+      timeSinceExploded = 1;
       isExploded = true;
       //explode();
       SoundEffect::playSoundEffect("TimedBombExplosion", position, false, 255);

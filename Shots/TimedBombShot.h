@@ -14,6 +14,7 @@ class TimedBombShot : public ExplosiveShot {
       TimedBombShot(Point3D &posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gamestate);
       virtual ~TimedBombShot();
       virtual void draw();
+      virtual void drawGlow();
       virtual void drawExplosion();
       virtual void update(double timeDiff);
       virtual void hitWall(BoundingWall* wall);
