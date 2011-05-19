@@ -891,6 +891,7 @@ void GameState::reset(bool shouldLoad) {
    custodian.clear();
    Particle::Clear();
    MeshFace::Clear();
+   custodian.update();
 
    gameIsRunning = true;
    // The level is not over when we're starting a new game.
@@ -910,12 +911,6 @@ void GameState::reset(bool shouldLoad) {
 
    std::cout << "Resetting." << std::endl;
    
-   if( gsm == ClientMode) {
-      custodian.clear();
-      Particle::Clear();
-      MeshFace::Clear();
-   }
-
    if (gsm == ClientMode) {
       while (udpClient->shipID == -1) {
          std::cout << "udpClient->shipID == -1" << std::endl;

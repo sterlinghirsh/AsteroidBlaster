@@ -766,6 +766,18 @@ void Custodian::update() {
  * to do it. In effect, items are added to a queue of items to add.
  */
 void Custodian::add(Object3D* objectIn) {
+   Object3D* existingObject = (*this)[objectIn->id];
+   if (existingObject != NULL) {
+      printf("Object %d exists already in custodian!\n", objectIn->id);
+      return;
+   }
+   /* Sometimes, if we don't do this, we get weird situations where
+      the client will add its own objects with the same ID as server objects.
+      This should be fixed by never calling custodian->add on the client side.
+      */
+   nextID = std::max(nextID, objectIn->id + 1);
+   objectsByID.insert(std::pair<unsigned, Object3D*>(objectIn->id, objectIn));
+
    objectsToAdd.push_back(objectIn);
 
    Asteroid3D* asteroid = NULL;
@@ -784,8 +796,6 @@ void Custodian::add(Object3D* objectIn) {
    } else if ((ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
       ships.insert(ship);
    }
-
-   objectsByID.insert(std::pair<unsigned, Object3D*>(objectIn->id, objectIn));
 
    // If the gamestate is a server, send it over to all the clients...
    if (gameState->gsm == ServerMode) {
@@ -957,6 +967,8 @@ void Custodian::clear() {
    objectsByMinX.clear();
    objectsByMaxX.clear();
    objectsByID.clear();
+   objectsToAdd.clear();
+   shipsByClientID.clear();
 
    ships.clear();
    asteroids.clear();

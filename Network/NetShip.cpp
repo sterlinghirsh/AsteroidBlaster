@@ -12,6 +12,7 @@ bool NetShip::toObject(GameState* gameState, Object3D*& item) {
       // Add new shard.
       ship = new AsteroidShip(gameState);
       itemCreated = true;
+      printf("Adding ship with id %d.\n", id);
    } else {
       ship = dynamic_cast<AsteroidShip*>(item);
       if (ship == NULL) {
