@@ -32,10 +32,6 @@ struct NetShip : public NetObject3D {
    float color1;
    float color2;
 
-   double yawSpeed;
-   double pitchSpeed;
-   double rollSpeed;
-
    template <class Archive>
     void serialize(Archive & ar, const unsigned int version) {
       ar & boost::serialization::base_object<NetObject3D>(*this);

@@ -478,7 +478,7 @@ void Asteroid3D::update(double timeDiff) {
       health -= timeDiff * damagePerSecond;
    }
    
-   if (health <= 0 && !isExploding) {
+   if (health <= 0 && !isExploding && gameState->gsm != ClientMode) {
       // Get the modelview matrix.
       Matrix4 modelView;
       glPushMatrix();
@@ -560,6 +560,7 @@ void Asteroid3D::update(double timeDiff) {
       
       if (radius > 2) {
          int dimension = rand() % 3;
+         std::cout << "you are in trouble if you are a client" << std::endl;
          custodian->add(makeChild(0, dimension));
          custodian->add(makeChild(1, dimension));
       }
@@ -567,6 +568,9 @@ void Asteroid3D::update(double timeDiff) {
          lastHitShotOwner->score += (int) radius * 10;
       }
       dropRandomItem();
+   } else if (health <= 0 && !isExploding && gameState->gsm == ClientMode) {
+      std::cout << "testestestestest" << std::endl;
+      shouldRemove = true;
    }
 }
 

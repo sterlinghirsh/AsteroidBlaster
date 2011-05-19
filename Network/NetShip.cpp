@@ -43,10 +43,6 @@ bool NetShip::toObject(GameState* gameState, Object3D*& item) {
    ship->color1 = color1;
    ship->color2 = color2;
 
-   ship->yawSpeed = yawSpeed;
-   ship->pitchSpeed = pitchSpeed;
-   ship->rollSpeed = rollSpeed;
-
 
    // Actuall add the members from Object3D.
    item = ship;
@@ -79,10 +75,6 @@ void NetShip::fromObject(AsteroidShip* in) {
 
    color1 = in->color1;
    color2 = in->color2;
-
-   yawSpeed = in->yawSpeed;
-   pitchSpeed = in->pitchSpeed;
-   rollSpeed = in->rollSpeed;
 }
 
 
