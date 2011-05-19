@@ -96,6 +96,7 @@ struct NetObject3D {
       item->radius = radius;
       item->shouldRemove = shouldRemove;
       item->angle = angle;
+      item->rotationSpeed = rotationSpeed;
       
       if (item->acceleration != NULL) {
          *item->acceleration = acceleration;
