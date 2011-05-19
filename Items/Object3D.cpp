@@ -73,9 +73,7 @@ void Object3D::update(double timeDifference) {
 
    if (velocity != NULL && position != NULL)
       velocity->scalarMultiply(timeDifference).movePoint(*position);
-   yaw(yawSpeed * timeDifference);
-   roll(rollSpeed * timeDifference);
-   pitch(pitchSpeed * timeDifference);
+
    updateBoundingBox();
 }
 

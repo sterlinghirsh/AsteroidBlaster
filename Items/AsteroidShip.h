@@ -179,9 +179,9 @@ class AsteroidShip : public Object3D {
       void accelerateUp(int direction);
       void setBrake(bool doBrake);
       void setBoost(bool doBoost);
-      void setYawSpeed(double yawAmountIn);
-      void setRollSpeed(double rollAmount);
-      void setPitchSpeed(double pitchAmount);
+      virtual void setYawSpeed(double yawAmountIn);
+      virtual void setRollSpeed(double rollAmount);
+      virtual void setPitchSpeed(double pitchAmount);
       void fire(bool startFiring);
       void selectWeapon(int weaponType);
       

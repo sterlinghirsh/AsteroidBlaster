@@ -1825,3 +1825,4 @@ void AsteroidShip::stopSounds() {
       weapons[i]->stopSounds();
    }
 }
+
