@@ -2,13 +2,14 @@
 # Uses uname to decide whether it's on Linux or OSX so it can tell which libs to include.
 
 BOOSTINC=/usr/include/boost/
-BOOSTLIB=/home/shirsh/boost/stage/lib
+BOOSTINC=/home/shirsh/boost/
+BOOSTLIB=/home/shirsh/boost/stage/lib/
 
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
    # Linux stuff
    # Use this if you're on a school machine.
-	BOOSTINC=/home/shirsh/boost
+	#BOOSTINC=/home/shirsh/boost
 	# We have to use this version on linux since the -mt version doesn't exist.
 	PSBOOST_LDFLAGS=-lboost_thread
    # Use this if you're on a machine with boost installed natively.
@@ -41,7 +42,7 @@ LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(BOOST_LDFLAGS) -lSDL_mixer -lSD
 # -Wall makes warnings appear
 # -c makes .o files
 
-CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -g
+CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -g -v
 CC=g++
 
 PROGNAME=AsteroidBlaster
