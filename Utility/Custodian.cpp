@@ -34,6 +34,7 @@
 #include "Network/NetShard.h"
 #include "Network/NetAsteroid.h"
 #include "Network/NetShip.h"
+#include "Network/NetBlasterShot.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -817,6 +818,21 @@ void Custodian::add(Object3D* objectIn) {
          int i = NET_OBJ_SHIP;
          oa << i << testNetship;
          gameState->udpServer->sendAll(oss.str());
+      }
+
+      if (shot != NULL) {
+         ProjectileShot* tempShot = NULL;
+         tempShot = dynamic_cast<ProjectileShot*>(shot);
+         if (tempShot) {
+            //std::cout << "creating net ship..." << std::endl;
+            NetBlasterShot testNetBlasterShot;
+            testNetBlasterShot.fromObject(tempShot);
+            std::ostringstream oss;
+            boost::archive::text_oarchive oa(oss);
+            int i = NET_OBJ_BLASTERSHOT;
+            oa << i << testNetBlasterShot;
+            gameState->udpServer->sendAll(oss.str());
+         }
       }
    }
 }
