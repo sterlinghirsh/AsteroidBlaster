@@ -64,7 +64,7 @@ void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
          //printf("AsteroidShip is stuck\n");
          pushOnA->randomMagnitude();
       }
-      pushOnA->setLength(0.1); // Units per sec per sec.
+      pushOnA->setLength(1.0); // Units per sec per sec.
 
       *pushOnB = pushOnA->scalarMultiply(-1);
 
@@ -75,8 +75,8 @@ void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
    Vector3D reflectionAxis(*b->position, *a->position);
    reflectionAxis.normalize();
 
-   double m1 = a->radius; // This Asteroid's Mass.
-   double m2 = b->radius; // Other Asteroid's Mass.
+   double m1 = a->radius; // This Ship's Mass.
+   double m2 = b->radius; // Other Ship's Mass.
 
    Vector3D* newVelocity_a = new Vector3D(*a->velocity);
    Vector3D* newVelocity_b = new Vector3D(*b->velocity);
