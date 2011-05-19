@@ -32,6 +32,10 @@ struct NetShip : public NetObject3D {
    float color1;
    float color2;
 
+   double yawSpeed;
+   double pitchSpeed;
+   double rollSpeed;
+
    template <class Archive>
     void serialize(Archive & ar, const unsigned int version) {
       ar & boost::serialization::base_object<NetObject3D>(*this);
@@ -57,10 +61,14 @@ struct NetShip : public NetObject3D {
 
       ar & color1;
       ar & color2;
+
+      ar & yawSpeed;
+      ar & pitchSpeed;
+      ar & rollSpeed;
    }
 
    virtual bool toObject(GameState* gameState, Object3D*& item);
-   virtual bool fromObject(AsteroidShip* in);
+   virtual void fromObject(AsteroidShip* in);
 };
 
 BOOST_CLASS_EXPORT_KEY(NetShip);

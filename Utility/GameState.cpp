@@ -387,7 +387,37 @@ void GameState::networkUpdate(double timeDiff) {
       
    // SERVER-->CLIENT stuff~~~~~~~~~~~~~~~~~~~~~~
    } else if (gsm == ServerMode){
+      static double tempShipSend = 0.1;
+      tempShipSend += timeDiff;
+      if (tempShipSend >= 0.05) {
+         std::set<AsteroidShip*>::iterator iter = custodian.ships.begin();
+         for (;iter != custodian.ships.end();iter++) {
+            NetShip testNetship;
+            testNetship.fromObject(*iter);
+            std::ostringstream oss;
+            boost::archive::text_oarchive oa(oss);
+            int i = NET_OBJ_SHIP;
+            oa << i << testNetship;
+            udpServer->sendAll(oss.str());
+         }
+         tempShipSend = 0;
+      }
 
+      static double tempAsteroid = 0.1;
+      tempAsteroid += timeDiff;
+      if (tempAsteroid >= 0.1) {
+         std::set<Asteroid3D*>::iterator iter = custodian.asteroids.begin();
+         for (;iter != custodian.asteroids.end();iter++) {
+            NetAsteroid testNetAsteroid;
+            testNetAsteroid.fromObject(*iter);
+            std::ostringstream oss;
+            boost::archive::text_oarchive oa(oss);
+            int i = NET_OBJ_ASTEROID;
+            oa << i << testNetAsteroid;
+            udpServer->sendAll(oss.str());
+         }
+         tempAsteroid = 0;
+      }
    }
 }
 
@@ -865,6 +895,9 @@ void GameState::reset(bool shouldLoad) {
    setLevelTimer();
 
    if( gsm == ClientMode) {
+      custodian.clear();
+      Particle::Clear();
+      MeshFace::Clear();
       udpClient->AllObjFlag = true;
 
       //request NET_ALLOBJ_REQ
@@ -932,7 +965,7 @@ void GameState::nextLevel() {
    printf("Level'd up to %d!\n",curLevel);
    initAsteroids();
 
-   if (curLevel > 1) {
+   if (curLevel > 1 && gsm != ClientMode) {
       addAIPlayer();
    }
 

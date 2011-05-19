@@ -95,6 +95,10 @@ class AsteroidShip : public Object3D {
       float color1;
       float color2;
 
+      double yawSpeed; // Rad/s
+      double pitchSpeed;
+      double rollSpeed;
+
       // A ship has a single flying AI
       // TODO: A ship has a list of shooting AIs rather than just one
       ShootingAI* shooter;
@@ -245,10 +249,6 @@ class AsteroidShip : public Object3D {
       double curForwardAccel; // Units per second^2
       double curRightAccel;
       double curUpAccel;
-
-      double yawSpeed; // Rad/s
-      double pitchSpeed;
-      double rollSpeed;
 
       double targetYawSpeed;
       double targetPitchSpeed;

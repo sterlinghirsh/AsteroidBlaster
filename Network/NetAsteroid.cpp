@@ -31,7 +31,7 @@ bool NetAsteroid::toObject(GameState* gameState, Object3D*& item) {
    return itemCreated;
 }
 
-bool NetAsteroid::fromObject(Asteroid3D* in) {
+void NetAsteroid::fromObject(Asteroid3D* in) {
    NetObject3D::fromObject(in);
 
    health = in->health;

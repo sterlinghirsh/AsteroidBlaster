@@ -24,7 +24,7 @@ struct NetAsteroid : public NetObject3D {
    }
 
    virtual bool toObject(GameState* gameState, Object3D*& item);
-   virtual bool fromObject(Asteroid3D* in);
+   virtual void fromObject(Asteroid3D* in);
 };
 
 BOOST_CLASS_EXPORT_KEY(NetAsteroid);
