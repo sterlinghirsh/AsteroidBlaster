@@ -121,7 +121,7 @@
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -199,6 +199,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Items\Ball.h"
+				>
+			</File>
+			<File
 				RelativePath=".\shots\BeamShot.h"
 				>
 			</File>
@@ -228,6 +232,18 @@
 			</File>
 			<File
 				RelativePath=".\graphics\Camera.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\ClientCommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utility\Collision.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utility\CollisionTypes.h"
 				>
 			</File>
 			<File
@@ -267,7 +283,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Weapons\Energy.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\EnergyShot.h"
+				>
+			</File>
+			<File
 				RelativePath=".\particles\EngineParticle.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\ExplosiveShot.h"
 				>
 			</File>
 			<File
@@ -280,6 +308,10 @@
 			</File>
 			<File
 				RelativePath=".\text\GameMessage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utility\GameSettings.h"
 				>
 			</File>
 			<File
@@ -299,7 +331,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Graphics\Image.h"
+				>
+			</File>
+			<File
 				RelativePath=".\utility\Image.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Text\Input.h"
 				>
 			</File>
 			<File
@@ -335,6 +375,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Graphics\MeshFace.h"
+				>
+			</File>
+			<File
 				RelativePath=".\graphics\MeshImporter.h"
 				>
 			</File>
@@ -347,7 +391,39 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Weapons\Missile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\MissileShot.h"
+				>
+			</File>
+			<File
 				RelativePath=".\utility\Music.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetAsteroid.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetBlasterShot.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetObject3D.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetShard.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetShip.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetShot.h"
 				>
 			</File>
 			<File
@@ -399,7 +475,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Weapons\RemoteBomber.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\RemoteBombShot.h"
+				>
+			</File>
+			<File
 				RelativePath=".\items\Ring.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HUD\Screen.h"
 				>
 			</File>
 			<File
@@ -435,6 +523,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Items\Spring.h"
+				>
+			</File>
+			<File
 				RelativePath=".\graphics\Sprite.h"
 				>
 			</File>
@@ -447,7 +539,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utility\Texture.h"
+				RelativePath=".\Graphics\Texture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Weapons\TimedBomber.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\TimedBombShot.h"
 				>
 			</File>
 			<File
@@ -460,6 +560,14 @@
 			</File>
 			<File
 				RelativePath=".\shots\TractorBeamShot.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\UDP_Client.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\UDP_Server.h"
 				>
 			</File>
 			<File
@@ -476,6 +584,10 @@
 			</File>
 			<File
 				RelativePath=".\items\Weapon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HUD\WeaponDisplay.h"
 				>
 			</File>
 			<File
@@ -507,7 +619,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AsteroidBlaster.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\items\AsteroidShip.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Items\Ball.cpp"
 				>
 			</File>
 			<File
@@ -543,6 +663,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Network\ClientCommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Utility\CollisionTypes.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\menus\CreditsMenu.cpp"
 				>
 			</File>
@@ -575,7 +703,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Weapons\Energy.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\EnergyShot.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\particles\EngineParticle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\ExplosiveShot.cpp"
 				>
 			</File>
 			<File
@@ -584,6 +724,10 @@
 			</File>
 			<File
 				RelativePath=".\text\GameMessage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Utility\GameSettings.cpp"
 				>
 			</File>
 			<File
@@ -607,6 +751,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Graphics\Image.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Text\Input.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\utility\InputManager.cpp"
 				>
 			</File>
@@ -616,10 +768,6 @@
 			</File>
 			<File
 				RelativePath=".\shots\LawnMowerShot.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
@@ -639,6 +787,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Graphics\MeshFace.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\graphics\MeshImporter.cpp"
 				>
 			</File>
@@ -651,7 +803,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Weapons\Missile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\MissileShot.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\utility\Music.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetAsteroid.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetBlasterShot.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetShard.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\NetShip.cpp"
 				>
 			</File>
 			<File
@@ -699,7 +875,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Weapons\RemoteBomber.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\RemoteBombShot.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\items\Ring.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HUD\Screen.cpp"
 				>
 			</File>
 			<File
@@ -735,6 +923,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Items\Spring.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\graphics\Sprite.cpp"
 				>
 			</File>
@@ -747,7 +939,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utility\Texture.cpp"
+				RelativePath=".\Graphics\Texture.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Weapons\TimedBomber.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Shots\TimedBombShot.cpp"
 				>
 			</File>
 			<File
@@ -763,6 +963,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Network\UDP_Client.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Network\UDP_Server.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\utility\Vector3D.cpp"
 				>
 			</File>
@@ -772,6 +980,10 @@
 			</File>
 			<File
 				RelativePath=".\weapons\Weapon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HUD\WeaponDisplay.cpp"
 				>
 			</File>
 		</Filter>

@@ -10,7 +10,7 @@
 
 #include "Weapons/Weapon.h"
 
-struct Point3D;
+class Point3D;
 /* Classter Blaster */
 class Blaster : public Weapon {
    public:

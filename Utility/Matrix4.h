@@ -16,7 +16,7 @@
 #ifndef MATRIX4_H
 #define MATRIX4_H
 
-struct Point3D;
+class Point3D;
 
 struct Matrix4 {
    union {

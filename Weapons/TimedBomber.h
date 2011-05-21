@@ -9,7 +9,7 @@
 
 #include "Weapons/Weapon.h"
 
-struct Point3D;
+class Point3D;
 
 class TimedBomber : public Weapon {
    public:

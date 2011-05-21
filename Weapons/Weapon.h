@@ -17,7 +17,7 @@ class Object3D;
 class AsteroidShip;
 class Custodian;
 class GameState;
-struct Point3D;
+class Point3D;
 
 enum WeaponType {
    PROJECTILE,

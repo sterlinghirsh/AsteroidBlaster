@@ -11,7 +11,7 @@
 #include "Weapons/Weapon.h"
 
 class EnergyShot;
-struct Point3D;
+class Point3D;
 /* Classter Energy */
 class Energy : public Weapon {
    public:
