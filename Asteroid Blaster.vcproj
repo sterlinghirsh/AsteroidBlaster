@@ -331,11 +331,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Graphics\Image.h"
+				RelativePath=".\utility\Image.h"
 				>
 			</File>
 			<File
-				RelativePath=".\utility\Image.h"
+				RelativePath=".\Graphics\Image.h"
 				>
 			</File>
 			<File
@@ -344,14 +344,6 @@
 			</File>
 			<File
 				RelativePath=".\utility\InputManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\weapons\LawnMower.h"
-				>
-			</File>
-			<File
-				RelativePath=".\shots\LawnMowerShot.h"
 				>
 			</File>
 			<File
@@ -379,23 +371,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\graphics\MeshImporter.h"
-				>
-			</File>
-			<File
 				RelativePath=".\graphics\MeshPoint.h"
 				>
 			</File>
 			<File
 				RelativePath=".\hud\Minimap.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Weapons\Missile.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Shots\MissileShot.h"
 				>
 			</File>
 			<File
@@ -439,10 +419,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\items\Player.h"
-				>
-			</File>
-			<File
 				RelativePath=".\utility\Point3D.h"
 				>
 			</File>
@@ -464,14 +440,6 @@
 			</File>
 			<File
 				RelativePath=".\weapons\RailGun.h"
-				>
-			</File>
-			<File
-				RelativePath=".\weapons\Ram.h"
-				>
-			</File>
-			<File
-				RelativePath=".\shots\RamShot.h"
 				>
 			</File>
 			<File
@@ -516,10 +484,6 @@
 			</File>
 			<File
 				RelativePath=".\utility\SoundEffect.h"
-				>
-			</File>
-			<File
-				RelativePath=".\weapons\SpikeBall.h"
 				>
 			</File>
 			<File
@@ -579,11 +543,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\weapons\Weapon.h"
+				RelativePath=".\items\Weapon.h"
 				>
 			</File>
 			<File
-				RelativePath=".\items\Weapon.h"
+				RelativePath=".\weapons\Weapon.h"
 				>
 			</File>
 			<File
@@ -747,11 +711,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utility\Image.cpp"
+				RelativePath=".\Graphics\Image.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Graphics\Image.cpp"
+				RelativePath=".\utility\Image.cpp"
 				>
 			</File>
 			<File
@@ -760,14 +724,6 @@
 			</File>
 			<File
 				RelativePath=".\utility\InputManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\weapons\LawnMower.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\shots\LawnMowerShot.cpp"
 				>
 			</File>
 			<File
@@ -791,23 +747,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\graphics\MeshImporter.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\graphics\MeshPoint.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\hud\Minimap.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Weapons\Missile.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Shots\MissileShot.cpp"
 				>
 			</File>
 			<File
@@ -839,10 +783,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\items\Player.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\utility\Point3D.cpp"
 				>
 			</File>
@@ -864,14 +804,6 @@
 			</File>
 			<File
 				RelativePath=".\weapons\RailGun.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\weapons\Ram.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\shots\RamShot.cpp"
 				>
 			</File>
 			<File
@@ -916,10 +848,6 @@
 			</File>
 			<File
 				RelativePath=".\utility\SoundEffect.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\weapons\SpikeBall.cpp"
 				>
 			</File>
 			<File

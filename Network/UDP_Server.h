@@ -11,6 +11,10 @@
 #ifndef UDP_SERVER_H
 #define UDP_SERVER_H
 
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0501
+#endif 
+
 #include <list>
 #include <map>
 #include <boost/array.hpp>
