@@ -33,12 +33,12 @@ class ViewFrustum {
    private:
       Matrix4 projMatrix;
       Matrix4 modelViewMatrix;
-      Plane* top;
-      Plane* bottom;
-      Plane* left;
-      Plane* right;
-      Plane* near;
-      Plane* far;
+      Plane* topPlane;
+      Plane* bottomPlane;
+      Plane* leftPlane;
+      Plane* rightPlane;
+      Plane* nearPlane;
+      Plane* farPlane;
 
       /** 
        * A modified version of chedDrawableOutside, used by the AI. This stops the

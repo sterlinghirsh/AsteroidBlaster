@@ -12,22 +12,22 @@
 ViewFrustum :: ViewFrustum() {
    // This should not need to be initialized, since it happens when calling culltoViewFrustum.
    //glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat*)&projMatrix);
-   top = new Plane();
-   bottom = new Plane();
-   left = new Plane();
-   right = new Plane();
-   near = new Plane();
-   far = new Plane();
+   topPlane = new Plane();
+   bottomPlane = new Plane();
+   leftPlane = new Plane();
+   rightPlane = new Plane();
+   nearPlane = new Plane();
+   farPlane = new Plane();
 }
 
 // Deconstructor doesn't need to do anything.
 ViewFrustum :: ~ViewFrustum() {
-   delete top;
-   delete bottom;
-   delete left;
-   delete right;
-   delete near;
-   delete far;
+   delete topPlane;
+   delete bottomPlane;
+   delete leftPlane;
+   delete rightPlane;
+   delete nearPlane;
+   delete farPlane;
 }
 
 /** 
@@ -38,9 +38,9 @@ ViewFrustum :: ~ViewFrustum() {
 bool ViewFrustum :: checkTargetableOutside(Drawable* obj) {
    // Decide each of the Results based on obj's min & max x, y, & z.
    return !( 
-      left -> onTargetablePositiveSide(obj) && right -> onTargetablePositiveSide(obj) &&
-      top -> onTargetablePositiveSide(obj) && bottom -> onTargetablePositiveSide(obj) &&
-      near -> onTargetablePositiveSide(obj) && far -> onTargetablePositiveSide(obj)); 
+      leftPlane -> onTargetablePositiveSide(obj) && rightPlane -> onTargetablePositiveSide(obj) &&
+      topPlane -> onTargetablePositiveSide(obj) && bottomPlane -> onTargetablePositiveSide(obj) &&
+      nearPlane -> onTargetablePositiveSide(obj) && farPlane -> onTargetablePositiveSide(obj)); 
 }
 
 /* Returns true if the object3D is completely outside of the view frustum planes.
@@ -49,9 +49,9 @@ bool ViewFrustum :: checkTargetableOutside(Drawable* obj) {
 bool ViewFrustum :: checkDrawableOutside(Drawable* obj) {
    // Decide each of the Results based on obj's min & max x, y, & z.
    return !( 
-      left -> onDrawablePositiveSide(obj) && right -> onDrawablePositiveSide(obj) &&
-      top -> onDrawablePositiveSide(obj) && bottom -> onDrawablePositiveSide(obj) &&
-      near -> onDrawablePositiveSide(obj) && far -> onDrawablePositiveSide(obj)); 
+      leftPlane -> onDrawablePositiveSide(obj) && rightPlane -> onDrawablePositiveSide(obj) &&
+      topPlane -> onDrawablePositiveSide(obj) && bottomPlane -> onDrawablePositiveSide(obj) &&
+      nearPlane -> onDrawablePositiveSide(obj) && farPlane -> onDrawablePositiveSide(obj)); 
 }
 
 // Take in a list of all Drawables, and cull it down to a list of only the Drawables in front.
@@ -77,47 +77,47 @@ std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* a
    glMatrixMode(GL_MODELVIEW);
 
    // Load values for the left clipping plane.
-   left->a = projMatrix._41 + projMatrix._11;
-   left->b = projMatrix._42 + projMatrix._12;
-   left->c = projMatrix._43 + projMatrix._13;
-   left->d = projMatrix._44 + projMatrix._14;
+   leftPlane->a = projMatrix._41 + projMatrix._11;
+   leftPlane->b = projMatrix._42 + projMatrix._12;
+   leftPlane->c = projMatrix._43 + projMatrix._13;
+   leftPlane->d = projMatrix._44 + projMatrix._14;
    
    // Load values for the right clipping plane->
-   right->a = projMatrix._41 - projMatrix._11;
-   right->b = projMatrix._42 - projMatrix._12;
-   right->c = projMatrix._43 - projMatrix._13;
-   right->d = projMatrix._44 - projMatrix._14;
+   rightPlane->a = projMatrix._41 - projMatrix._11;
+   rightPlane->b = projMatrix._42 - projMatrix._12;
+   rightPlane->c = projMatrix._43 - projMatrix._13;
+   rightPlane->d = projMatrix._44 - projMatrix._14;
    
    // Load values for the top clipping plane->
-   top->a = projMatrix._41 - projMatrix._21;
-   top->b = projMatrix._42 - projMatrix._22;
-   top->c = projMatrix._43 - projMatrix._23;
-   top->d = projMatrix._44 - projMatrix._24;
+   topPlane->a = projMatrix._41 - projMatrix._21;
+   topPlane->b = projMatrix._42 - projMatrix._22;
+   topPlane->c = projMatrix._43 - projMatrix._23;
+   topPlane->d = projMatrix._44 - projMatrix._24;
    
    // Load values for the bottom clipping plane->
-   bottom->a = projMatrix._41 + projMatrix._21;
-   bottom->b = projMatrix._42 + projMatrix._22;
-   bottom->c = projMatrix._43 + projMatrix._23;
-   bottom->d = projMatrix._44 + projMatrix._24;
+   bottomPlane->a = projMatrix._41 + projMatrix._21;
+   bottomPlane->b = projMatrix._42 + projMatrix._22;
+   bottomPlane->c = projMatrix._43 + projMatrix._23;
+   bottomPlane->d = projMatrix._44 + projMatrix._24;
    
    // Load values for the near clipping plane->
-   near->a = projMatrix._41 + projMatrix._31;
-   near->b = projMatrix._42 + projMatrix._32;
-   near->c = projMatrix._43 + projMatrix._33;
-   near->d = projMatrix._44 + projMatrix._34;
+   nearPlane->a = projMatrix._41 + projMatrix._31;
+   nearPlane->b = projMatrix._42 + projMatrix._32;
+   nearPlane->c = projMatrix._43 + projMatrix._33;
+   nearPlane->d = projMatrix._44 + projMatrix._34;
    
    // Load values for the far clipping plane->
-   far->a = projMatrix._41 - projMatrix._31;
-   far->b = projMatrix._42 - projMatrix._32;
-   far->c = projMatrix._43 - projMatrix._33;
-   far->d = projMatrix._44 - projMatrix._34;
+   farPlane->a = projMatrix._41 - projMatrix._31;
+   farPlane->b = projMatrix._42 - projMatrix._32;
+   farPlane->c = projMatrix._43 - projMatrix._33;
+   farPlane->d = projMatrix._44 - projMatrix._34;
    
-   left->calcMag();
-   right->calcMag();
-   top->calcMag();
-   bottom->calcMag();
-   near->calcMag();
-   far->calcMag();
+   leftPlane->calcMag();
+   rightPlane->calcMag();
+   topPlane->calcMag();
+   bottomPlane->calcMag();
+   nearPlane->calcMag();
+   farPlane->calcMag();
  
    // As opposed to the checker, the one doing the checking. 
    Object3D* checkee;
@@ -164,47 +164,47 @@ std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* a
    glMatrixMode(GL_MODELVIEW);
 
    // Load values for the left clipping plane.
-   left->a = projMatrix._41 + projMatrix._11;
-   left->b = projMatrix._42 + projMatrix._12;
-   left->c = projMatrix._43 + projMatrix._13;
-   left->d = projMatrix._44 + projMatrix._14;
+   leftPlane->a = projMatrix._41 + projMatrix._11;
+   leftPlane->b = projMatrix._42 + projMatrix._12;
+   leftPlane->c = projMatrix._43 + projMatrix._13;
+   leftPlane->d = projMatrix._44 + projMatrix._14;
    
    // Load values for the right clipping plane->
-   right->a = projMatrix._41 - projMatrix._11;
-   right->b = projMatrix._42 - projMatrix._12;
-   right->c = projMatrix._43 - projMatrix._13;
-   right->d = projMatrix._44 - projMatrix._14;
+   rightPlane->a = projMatrix._41 - projMatrix._11;
+   rightPlane->b = projMatrix._42 - projMatrix._12;
+   rightPlane->c = projMatrix._43 - projMatrix._13;
+   rightPlane->d = projMatrix._44 - projMatrix._14;
    
    // Load values for the top clipping plane->
-   top->a = projMatrix._41 - projMatrix._21;
-   top->b = projMatrix._42 - projMatrix._22;
-   top->c = projMatrix._43 - projMatrix._23;
-   top->d = projMatrix._44 - projMatrix._24;
+   topPlane->a = projMatrix._41 - projMatrix._21;
+   topPlane->b = projMatrix._42 - projMatrix._22;
+   topPlane->c = projMatrix._43 - projMatrix._23;
+   topPlane->d = projMatrix._44 - projMatrix._24;
    
    // Load values for the bottom clipping plane->
-   bottom->a = projMatrix._41 + projMatrix._21;
-   bottom->b = projMatrix._42 + projMatrix._22;
-   bottom->c = projMatrix._43 + projMatrix._23;
-   bottom->d = projMatrix._44 + projMatrix._24;
+   bottomPlane->a = projMatrix._41 + projMatrix._21;
+   bottomPlane->b = projMatrix._42 + projMatrix._22;
+   bottomPlane->c = projMatrix._43 + projMatrix._23;
+   bottomPlane->d = projMatrix._44 + projMatrix._24;
    
    // Load values for the near clipping plane->
-   near->a = projMatrix._41 + projMatrix._31;
-   near->b = projMatrix._42 + projMatrix._32;
-   near->c = projMatrix._43 + projMatrix._33;
-   near->d = projMatrix._44 + projMatrix._34;
+   nearPlane->a = projMatrix._41 + projMatrix._31;
+   nearPlane->b = projMatrix._42 + projMatrix._32;
+   nearPlane->c = projMatrix._43 + projMatrix._33;
+   nearPlane->d = projMatrix._44 + projMatrix._34;
    
    // Load values for the far clipping plane->
-   far->a = projMatrix._41 - projMatrix._31;
-   far->b = projMatrix._42 - projMatrix._32;
-   far->c = projMatrix._43 - projMatrix._33;
-   far->d = projMatrix._44 - projMatrix._34;
+   farPlane->a = projMatrix._41 - projMatrix._31;
+   farPlane->b = projMatrix._42 - projMatrix._32;
+   farPlane->c = projMatrix._43 - projMatrix._33;
+   farPlane->d = projMatrix._44 - projMatrix._34;
    
-   left->calcMag();
-   right->calcMag();
-   top->calcMag();
-   bottom->calcMag();
-   near->calcMag();
-   far->calcMag();
+   leftPlane->calcMag();
+   rightPlane->calcMag();
+   topPlane->calcMag();
+   bottomPlane->calcMag();
+   nearPlane->calcMag();
+   farPlane->calcMag();
  
    // As opposed to the checker, the one doing the checking. 
    Drawable* checkee;
@@ -250,42 +250,42 @@ std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* a
  */
 void ViewFrustum::print() {
    printf("Top plane:\n");
-   top->print();
+   topPlane->print();
    printf("----------\n");
    printf("Bottom plane:\n");
-   bottom->print();
+   bottomPlane->print();
    printf("----------\n");
    printf("Left plane:\n");
-   left->print();
+   leftPlane->print();
    printf("----------\n");
    printf("Right plane:\n");
-   right->print();
+   rightPlane->print();
    printf("----------\n");
    printf("Near plane:\n");
-   near->print();
+   nearPlane->print();
    printf("----------\n");
    printf("Far plane:\n");
-   far->print();
+   farPlane->print();
    printf("----------\n");
    
    printf("NORMALIZED:\n");
    printf("Top plane:\n");
-   top->printNormalized();
+   topPlane->printNormalized();
    printf("----------\n");
    printf("Bottom plane:\n");
-   bottom->printNormalized();
+   bottomPlane->printNormalized();
    printf("----------\n");
    printf("Left plane:\n");
-   left->printNormalized();
+   leftPlane->printNormalized();
    printf("----------\n");
    printf("Right plane:\n");
-   right->printNormalized();
+   rightPlane->printNormalized();
    printf("----------\n");
    printf("Near plane:\n");
-   near->printNormalized();
+   nearPlane->printNormalized();
    printf("----------\n");
    printf("Far plane:\n");
-   far->printNormalized();
+   farPlane->printNormalized();
    printf("----------\n");
 }
 
