@@ -172,7 +172,7 @@ inline double doubleTime() {
 }
 
 inline double clamp(double num, double minVal, double maxVal) {
-   return std::max(minVal, std::min(num, maxVal));
+   return (std::max)(minVal, (std::min)(num, maxVal));
 }
 
 inline double distance3D(double x1, double y1, double z1, double x2,

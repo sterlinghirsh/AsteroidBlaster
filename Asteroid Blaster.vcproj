@@ -62,7 +62,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="glew32.lib glew32s.lib SDL.lib SDL_image.lib SDL_mixer.lib Glu32.lib Opengl32.lib SDL_ttf.lib SDLmain.lib"
-				LinkIncremental="2"
+				LinkIncremental="1"
+				SuppressStartupBanner="false"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\Libraries\Windows\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -138,7 +139,8 @@
 				UseLibraryDependencyInputs="false"
 				AdditionalOptions="/NODEFAULTLIB:library"
 				AdditionalDependencies="glew32.lib glew32s.lib SDL.lib SDL_image.lib SDL_mixer.lib Glu32.lib Opengl32.lib SDL_ttf.lib SDLmain.lib"
-				LinkIncremental="2"
+				LinkIncremental="1"
+				SuppressStartupBanner="false"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\Libraries\Windows\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -183,14 +185,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\weapons\AntiInertia.h"
-				>
-			</File>
-			<File
-				RelativePath=".\shots\AntiInertiaShot.h"
-				>
-			</File>
-			<File
 				RelativePath=".\items\Asteroid3D.h"
 				>
 			</File>
@@ -220,10 +214,6 @@
 			</File>
 			<File
 				RelativePath=".\items\BoundingSpace.h"
-				>
-			</File>
-			<File
-				RelativePath=".\items\BoundingSphere.h"
 				>
 			</File>
 			<File
@@ -259,10 +249,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\HUD\Display.h"
-				>
-			</File>
-			<File
 				RelativePath=".\items\Drawable.h"
 				>
 			</File>
@@ -276,10 +262,6 @@
 			</File>
 			<File
 				RelativePath=".\shots\ElectricityShot.h"
-				>
-			</File>
-			<File
-				RelativePath=".\items\Enemy.h"
 				>
 			</File>
 			<File
@@ -543,11 +525,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\items\Weapon.h"
+				RelativePath=".\weapons\Weapon.h"
 				>
 			</File>
 			<File
-				RelativePath=".\weapons\Weapon.h"
+				RelativePath=".\items\Weapon.h"
 				>
 			</File>
 			<File
@@ -570,14 +552,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\weapons\AntiInertia.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\shots\AntiInertiaShot.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\items\Asteroid3D.cpp"
 				>
@@ -615,10 +589,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\items\BoundingSphere.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\items\BoundingWall.cpp"
 				>
 			</File>
@@ -643,10 +613,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\HUD\Display.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\items\Drawable.cpp"
 				>
 			</File>
@@ -660,10 +626,6 @@
 			</File>
 			<File
 				RelativePath=".\shots\ElectricityShot.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\items\Enemy.cpp"
 				>
 			</File>
 			<File

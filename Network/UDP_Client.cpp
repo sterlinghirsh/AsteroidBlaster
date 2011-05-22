@@ -113,7 +113,7 @@ UDP_Client::~UDP_Client() {
    oa << i;
    socket_.send_to(boost::asio::buffer(oss.str()), serverEndPoint);
 
-   socket_.cancel();
+   //socket_.cancel();
    socket_.close();
 }
 

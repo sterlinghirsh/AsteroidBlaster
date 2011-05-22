@@ -76,23 +76,23 @@ void GameSettings::readIn() {
       return;
 
    if (fscanf(configFile, "bloom %d ", &readInt) > 0) {
-      bloom = (bool) readInt;
+      bloom = (0 != readInt);
    }
 
    if (fscanf(configFile, "useOverlay %d ", &readInt) > 0) {
-      useOverlay = (bool) readInt;
+      useOverlay = (0 != readInt);
    }
 
    if (fscanf(configFile, "fullscreen %d ", &readInt) > 0) {
-      fullscreen = (bool) readInt;
+      fullscreen = (0 != readInt);
    }
 
    if (fscanf(configFile, "musicOn %d ", &readInt) > 0) {
-      musicOn = (bool) readInt;
+      musicOn = (0 != readInt);
    }
 
    if (fscanf(configFile, "soundOn %d ", &readInt) > 0) {
-      soundOn = (bool) readInt;
+      soundOn = (0 != readInt);
    }
 
    if (fscanf(configFile, "windowedGW %d ", &readInt) > 0) {

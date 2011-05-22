@@ -54,7 +54,9 @@
 
 #define SAVEFILENAME "AsteroidBlaster.sav"
 
-
+#ifndef M_PI
+#define M_PI           3.14159265358979323846
+#endif
 
 extern double minimapSizeFactor;
 
@@ -109,7 +111,7 @@ GameState::GameState(GameStateMode _gsm) :
       if (gsm == ClientMode) {
          while (udpClient->shipID == -1) {
             std::cout << "udpClient->shipID == -1" << std::endl;
-            sleep(1);
+            SDL_Delay(1);
          }
          std::cout << "udpClient->shipID != -1" << std::endl;
 
@@ -117,7 +119,7 @@ GameState::GameState(GameStateMode _gsm) :
 
          // Wait until we have a valid ship object from the server.
          while((temp = custodian[udpClient->shipID]) == NULL) {
-            sleep(1);
+            SDL_Delay(1);
          }
 
          ship = dynamic_cast<AsteroidShip*>(temp);
@@ -914,7 +916,7 @@ void GameState::reset(bool shouldLoad) {
    if (gsm == ClientMode) {
       while (udpClient->shipID == -1) {
          std::cout << "udpClient->shipID == -1" << std::endl;
-         sleep(1);
+         SDL_Delay(1);
       }
       std::cout << "udpClient->shipID != -1" << std::endl;
 
@@ -922,7 +924,7 @@ void GameState::reset(bool shouldLoad) {
 
       // Wait until we have a valid ship object from the server.
       while((temp = custodian[udpClient->shipID]) == NULL) {
-         sleep(1);
+         SDL_Delay(1);
       }
 
       ship = dynamic_cast<AsteroidShip*>(temp);

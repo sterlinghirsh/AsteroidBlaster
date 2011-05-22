@@ -33,7 +33,7 @@ UDP_Server::UDP_Server(boost::asio::io_service& io_service, GameState* _GameStat
 
 UDP_Server::~UDP_Server() {
    //std::cout << "UDP_Server destructing..." << std::endl;
-   socket_.cancel();
+   //socket_.cancel();
    socket_.close();
 }
 
@@ -162,7 +162,7 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
             testNetship.fromObject(curShip);
             std::ostringstream oss;
             boost::archive::text_oarchive oa(oss);
-            int i = NET_OBJ_SHIP;
+            unsigned i = NET_OBJ_SHIP;
             oa << i << testNetship;
             sendAll(oss.str());
          }
