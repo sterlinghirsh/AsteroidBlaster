@@ -67,6 +67,7 @@
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\Libraries\Windows\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
+				OptimizeForWindows98="1"
 				EntryPointSymbol=""
 				TargetMachine="1"
 				Profile="false"
@@ -117,6 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="3"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)Libraries\Windows\SDL&quot;;&quot;$(ProjectDir)Libraries\Windows\GL&quot;;&quot;$(ProjectDir)Libraries\Windows\GLEW&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
@@ -146,6 +148,7 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				OptimizeForWindows98="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -525,11 +528,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\weapons\Weapon.h"
+				RelativePath=".\items\Weapon.h"
 				>
 			</File>
 			<File
-				RelativePath=".\items\Weapon.h"
+				RelativePath=".\weapons\Weapon.h"
 				>
 			</File>
 			<File
