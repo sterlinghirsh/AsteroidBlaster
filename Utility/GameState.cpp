@@ -1003,7 +1003,7 @@ void GameState::nextLevel() {
    }
 
    //Add Asteroids
-   if (gsm == SingleMode) {
+   if (gsm == SingleMode || gsm == ServerMode) {
       initAsteroids();
    }
 
