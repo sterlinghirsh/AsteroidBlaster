@@ -70,7 +70,6 @@ class GameState : public InputReceiver {
       
       bool godMode;
       bool gameIsRunning;
-      bool inMenu;
       bool levelOver;
       bool drawGraphics;
    

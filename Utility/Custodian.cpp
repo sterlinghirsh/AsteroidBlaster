@@ -46,7 +46,7 @@ void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
    if (a->isRespawning()) { return;}
    if (b->isRespawning()) { return;}
 
-   if (a->gameState->inMenu)
+   if (a->gameState->gsm == MenuMode)
       return;
 
    double d = a->position->distanceFrom(*b->position);

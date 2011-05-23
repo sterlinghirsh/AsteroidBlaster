@@ -147,7 +147,7 @@ void BoundingWall::draw() {
    Point3D cameraPosition = temp->getEyePoint();
    //cameraPosition.add(*gameState->camera->offset);
    //cameraPosition.subtract(*gameState->camera->forward);
-   if (!gameState->inMenu) {
+   if (!gameState->gsm == MenuMode) {
       switch (wallID) {
       case WALL_TOP:
          if (cameraPosition.y > wallSize) return; break;

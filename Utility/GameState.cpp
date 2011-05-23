@@ -66,25 +66,21 @@ GameState::GameState(GameStateMode _gsm) :
    custodian(this) {
       gsm = _gsm;
       if (gsm == SingleMode) {
-         inMenu = false;
          io = NULL;
          udpClient = NULL;
          udpServer = NULL;
          networkThread = NULL;
       } else if (gsm == MenuMode) {
-         inMenu = true;
          io = NULL;
          udpClient = NULL;
          udpServer = NULL;
          networkThread = NULL;
       } else if (gsm == ClientMode) {
-         inMenu = false;
          io = new boost::asio::io_service();
          udpClient = new UDP_Client(*io, this, ipAddress, portNumber);
          udpServer = NULL;
          networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       } else if (gsm == ServerMode) {
-         inMenu = false;
          io = new boost::asio::io_service();
          udpClient = NULL;
 
@@ -308,24 +304,8 @@ void GameState::update(double timeDiff) {
       nextLevel();
       return;
    }
-   // Determine whether or not the game should continue running
-   //if (gameIsRunning && ship->getHealth() <= 0) {
 
-   //gameIsRunning = false;
-   // Draw the win or lose text
-   /*
-      if (!gameIsRunning && ship->getHealth() <= 0) {
-      std::ostringstream msg;
-      msg << "Game Over!";
-      GameMessage::Add(msg.str(), 30, 5);
-      } else if (!gameIsRunning && ship->getHealth() > 0) {
-      std::ostringstream msg;
-      msg << "Game Won!";
-      GameMessage::Add(msg.str(), 30, 5);
-      }
-      SoundEffect::stopAllSoundEffect();
-      */
-   if (!inMenu && ((gameIsRunning && custodian.asteroidCount == 0 && custodian.shardCount == 0) || (levelTimer.getTimeLeft() <= 6))) {
+   if ((gsm != MenuMode) && ((gameIsRunning && custodian.asteroidCount == 0 && custodian.shardCount == 0) || (levelTimer.getTimeLeft() <= 6))) {
       // Check if it is done waiting until going to the next level
       if (countDown <= 0) {
          levelTimer.reset();
@@ -337,7 +317,7 @@ void GameState::update(double timeDiff) {
          gameMsg << "Next Level In " << (int)countDown;
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
-   } else if (!inMenu && !gameIsRunning){
+   } else if ((gsm != MenuMode) && !gameIsRunning){
       countDown -= timeDiff;
       if (countDown <= 0) {
          mainMenu->menuActive = true;
@@ -453,6 +433,22 @@ void GameState::networkUpdate(double timeDiff) {
          }
          tempAsteroid = 0;
       }
+
+      static double tempShard = 0.1;
+      tempShard += timeDiff;
+      if (tempShard >= 0.1) {
+         std::set<Shard*>::iterator iter = custodian.shards.begin();
+         for (;iter != custodian.shards.end();iter++) {
+            NetShard testNetShard;
+            testNetShard.fromObject(*iter);
+            std::ostringstream oss;
+            boost::archive::text_oarchive oa(oss);
+            int i = NET_OBJ_SHARD;
+            oa << i << testNetShard;
+            udpServer->sendAll(oss.str());
+         }
+         tempAsteroid = 0;
+      }
    }
 }
 
@@ -470,7 +466,7 @@ void GameState::spectatorCameraUpdate(double timeDiff) {
  * Draw objects in the minimap.
  */
 void GameState::drawMinimap() {
-   if (!inMenu && !ship->isRespawning())
+   if ((gsm != MenuMode) && !ship->isRespawning())
       minimap->draw();
 }
 
@@ -528,7 +524,7 @@ void  GameState::draw() {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glPushMatrix();
 
-      if (inMenu) {
+      if (gsm == MenuMode) {
          gluLookAt(0, 0, 20, // Eye at origin + 20.
                0, 0, -1, // X goes right, Z goes away.
                0, 1, 0); // Y goes up.
@@ -549,7 +545,7 @@ void  GameState::draw() {
 
    // Draw the main screen
    glPushMatrix();
-      if (inMenu) {
+      if (gsm == MenuMode) {
          gluLookAt(0, 0, 20, // Eye at origin.
                0, 0, -1, // X goes right, Z goes away.
                0, 1, 0); // Y goes up.
@@ -564,7 +560,7 @@ void  GameState::draw() {
          drawBloom();
       }
 
-      if (!inMenu) {
+      if (gsm != MenuMode) {
          drawHud();
       }
    glPopMatrix();
@@ -576,7 +572,7 @@ void  GameState::draw() {
    drawScreens();
 
    // TODO: Make this clearer. Why not swap when lookAt is true?
-   if (!inMenu) {
+   if (gsm != MenuMode) {
       SDL_GL_SwapBuffers();
    }
    lastDrawTime = doubleTime();
@@ -601,14 +597,14 @@ void GameState::drawObjects(bool drawGlow) {
    }
 
    // If this gameState is not mainGamestate menu, set the camera and shake.
-   if (!inMenu) {
+   if (gsm != MenuMode) {
       currentCamera->setCamera(true);
       shipCamera->shake(ship->getShakeAmount());
    }
    
 
    // Draw the skybox if this gameState is not mainmenu and is glow shading
-   if (!inMenu && !drawGlow) {
+   if ((gsm != MenuMode) && !drawGlow) {
       skybox->draw(currentCamera);
    }
 
@@ -620,13 +616,13 @@ void GameState::drawObjects(bool drawGlow) {
 
    if (!drawGlow) {
       glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
-      if (!inMenu && usingShipCamera)
+      if ((gsm != MenuMode) && usingShipCamera)
          ship->drawCrosshair();
 
       for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
          if (*listIter == NULL) {
             continue;
-         } else if (*listIter == ship && inMenu) {
+         } else if (*listIter == ship && (gsm == MenuMode)) {
             // Don't draw the ship in first Person mode.
          } else {
             (*listIter)->draw();
@@ -643,7 +639,7 @@ void GameState::drawObjects(bool drawGlow) {
          }
       }
 
-      if (!inMenu) {
+      if (gsm != MenuMode) {
          ship->draw();
       }
    }
@@ -835,7 +831,7 @@ void GameState::initAsteroids() {
    /**
     * Don't init asteroids in the menu.
     */
-   if (inMenu) {
+   if (gsm == MenuMode) {
       return;
    }
 
@@ -1000,9 +996,9 @@ void GameState::nextLevel() {
       storeMenu->menuActive = true;
       Music::stopMusic();
       Music::playMusic("8-bit3.ogg");
-   } else {
-      setLevelTimer();
    }
+
+   setLevelTimer();
 
    minimap = new Minimap(ship);
    gameIsRunning = true;
@@ -1013,7 +1009,7 @@ void GameState::nextLevel() {
    numAsteroidsToSpawn = curLevel;
    printf("Level'd up to %d!\n",curLevel);
 
-   if (gsm != ClientMode) {
+   if (gsm == SingleMode) {
       initAsteroids();
 
       if (curLevel > 1) {
