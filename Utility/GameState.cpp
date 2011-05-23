@@ -391,9 +391,16 @@ void GameState::networkUpdate(double timeDiff) {
       
    // SERVER-->CLIENT stuff~~~~~~~~~~~~~~~~~~~~~~
    } else if (gsm == ServerMode){
-      static double tempShipSend = 0.1;
-      tempShipSend += timeDiff;
-      if (tempShipSend >= 0.05) {
+      static double clientCommandTime = 0;
+      static double asteroidTime = 0;
+      static double shardTime = 0;
+
+      clientCommandTime += timeDiff;
+      asteroidTime += timeDiff;
+      shardTime += timeDiff;
+
+
+      if (clientCommandTime >= 0.05) {
          std::set<AsteroidShip*>::iterator iter = custodian.ships.begin();
          for (;iter != custodian.ships.end();iter++) {
             NetShip testNetship;
@@ -404,12 +411,10 @@ void GameState::networkUpdate(double timeDiff) {
             oa << i << testNetship;
             udpServer->sendAll(oss.str());
          }
-         tempShipSend = 0;
+         clientCommandTime = 0;
       }
 
-      static double tempAsteroid = 0.1;
-      tempAsteroid += timeDiff;
-      if (tempAsteroid >= 0.1) {
+      if (asteroidTime >= 0.1) {
          std::set<Asteroid3D*>::iterator iter = custodian.asteroids.begin();
          for (;iter != custodian.asteroids.end();iter++) {
             NetAsteroid testNetAsteroid;
@@ -420,12 +425,10 @@ void GameState::networkUpdate(double timeDiff) {
             oa << i << testNetAsteroid;
             udpServer->sendAll(oss.str());
          }
-         tempAsteroid = 0;
+         asteroidTime = 0;
       }
 
-      static double tempShard = 0.1;
-      tempShard += timeDiff;
-      if (tempShard >= 0.1) {
+      if (shardTime >= 0.1) {
          std::set<Shard*>::iterator iter = custodian.shards.begin();
          for (;iter != custodian.shards.end();iter++) {
             NetShard testNetShard;
@@ -436,7 +439,7 @@ void GameState::networkUpdate(double timeDiff) {
             oa << i << testNetShard;
             udpServer->sendAll(oss.str());
          }
-         tempAsteroid = 0;
+         shardTime = 0;
       }
    }
 }
