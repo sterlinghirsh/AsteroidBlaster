@@ -20,7 +20,7 @@ ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    persist = false;
    minX = minY = minZ = -0.1;
    maxX = maxY = maxZ = 0.1;
-   lifetime = 5;
+   lifetime = 2.5;
    updateBoundingBox();
    static int currentStartingParticleCycle = 0;
    particleNum = currentStartingParticleCycle;

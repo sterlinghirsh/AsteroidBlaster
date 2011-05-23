@@ -199,9 +199,6 @@ GameState::GameState(GameStateMode _gsm) :
       doYaw = 0;
       mouseX = 0;
       mouseY = 0;
-      // The length of the countdown at the end of the level.
-      countDown = 6;
-      isCountingDown = false;
 
       // Make a good formula here for how many seconds a level should last.
       levelDuration = 180;
@@ -298,36 +295,28 @@ void GameState::addScreens() {
  * This is the step function.
  */
 void GameState::update(double timeDiff) {
-   // If the level should be over, let's go to the store menu.
-   if(levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) {
-      levelTimer.reset();
-      nextLevel();
-      return;
-   }
 
-   if ((gsm != MenuMode) && ((gameIsRunning && custodian.asteroidCount == 0 && custodian.shardCount == 0) || (levelTimer.getTimeLeft() <= 6))) {
-      // Check if it is done waiting until going to the next level
-      if (countDown <= 0) {
-         levelTimer.reset();
+   // if it's not in MenuMode
+   if (gsm != MenuMode) {
+      // If the level should be over, let's go to the store menu.
+      if((levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) || 
+               (gameIsRunning && 
+               (gsm == SingleMode) && 
+               custodian.asteroidCount == 0 && 
+               custodian.shardCount == 0) ) {
          nextLevel();
          return;
-      } else {
-         countDown -= timeDiff;
+      }
+
+      // the last 6 seconds of the stage
+      if (levelTimer.getTimeLeft() <= 6) {
+         // Check if it is done waiting until going to the next level
          std::ostringstream gameMsg;
-         gameMsg << "Next Level In " << (int)countDown;
+         gameMsg << "Next Level In " << (int)levelTimer.getTimeLeft();
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
-   } else if ((gsm != MenuMode) && !gameIsRunning){
-      countDown -= timeDiff;
-      if (countDown <= 0) {
-         mainMenu->menuActive = true;
-         SoundEffect::stopAllSoundEffect();
-         Music::stopMusic();
-         Music::playMusic("8-bit3.ogg");
-         reset();
-         mainMenu->firstTime = true;
-      }
    }
+
 
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
    std::set<CollisionBase*, compareByDistance>* collisions;
@@ -894,7 +883,6 @@ void GameState::reset(bool shouldLoad) {
    gameIsRunning = true;
    // The level is not over when we're starting a new game.
    levelOver = false;
-   isCountingDown = false;
 
    curLevel = 1;
    //temp
@@ -1009,19 +997,19 @@ void GameState::nextLevel() {
    numAsteroidsToSpawn = curLevel;
    printf("Level'd up to %d!\n",curLevel);
 
-   if (gsm == SingleMode) {
-      initAsteroids();
-
-      if (curLevel > 1) {
-         addAIPlayer();
-      }
-   } else {
-      custodian.update();
+   //Add AI player
+   if (gsm == SingleMode && (curLevel > 1)) {
+      addAIPlayer();
    }
 
+   //Add Asteroids
+   if (gsm == SingleMode) {
+      initAsteroids();
+   }
+
+   custodian.update();
    GameMessage::Clear();
    addLevelMessage();
-   countDown = 5;
 }
 
 /**
@@ -1261,101 +1249,94 @@ void GameState::keyUp(int key) {
    if(!gameIsRunning || chat->chatActive){ return;}
 
    switch(key) {
-
-      /*
-   case SDLK_r:
-      reset();
-      break;
-      */
-
-   case SDLK_s:
-      isS = false;
-      if(!ship->flyingAI->isEnabled()) {
-         if (isW) {
-            clientCommand.forwardAcceleration = 1;
-         } else {
-            clientCommand.forwardAcceleration = 0;
+      case SDLK_s:
+         isS = false;
+         if(!ship->flyingAI->isEnabled()) {
+            if (isW) {
+               clientCommand.forwardAcceleration = 1;
+            } else {
+               clientCommand.forwardAcceleration = 0;
+            }
          }
-      }
-      break;
+         break;
 
-   case SDLK_w:
-      isW = false;
-      if(!ship->flyingAI->isEnabled()) {
-         if (isS) {
-            clientCommand.forwardAcceleration = -1;
-         } else {
-            clientCommand.forwardAcceleration = 0;
+      case SDLK_w:
+         isW = false;
+         if(!ship->flyingAI->isEnabled()) {
+            if (isS) {
+               clientCommand.forwardAcceleration = -1;
+            } else {
+               clientCommand.forwardAcceleration = 0;
+            }
          }
-      }
-      break;
+         break;
 
-   case SDLK_a:
-      isA = false;
-      if(!ship->flyingAI->isEnabled()) {
-         if (isD) {
-            clientCommand.yawSpeed = -1.0;
-         } else {
-            clientCommand.yawSpeed = 0;
+      case SDLK_a:
+         isA = false;
+         if(!ship->flyingAI->isEnabled()) {
+            if (isD) {
+               clientCommand.yawSpeed = -1.0;
+            } else {
+               clientCommand.yawSpeed = 0;
+            }
          }
-      }
-      break;
+         break;
 
-   case SDLK_d:
-      isD = false;
-      if(!ship->flyingAI->isEnabled()) {
-         if (isA) {
-            clientCommand.yawSpeed = 1.0;
-         } else {
-            clientCommand.yawSpeed = 0;
+      case SDLK_d:
+         isD = false;
+         if(!ship->flyingAI->isEnabled()) {
+            if (isA) {
+               clientCommand.yawSpeed = 1.0;
+            } else {
+               clientCommand.yawSpeed = 0;
+            }
          }
-      }
-      //if(!ship->flyingAI->isEnabled())
-      //ship->setYawSpeed(0);
-      break;
+         //if(!ship->flyingAI->isEnabled())
+         //ship->setYawSpeed(0);
+         break;
 
-   case SDLK_q:
-   case SDLK_e:
-      if(!ship->flyingAI->isEnabled())
-         clientCommand.rightAcceleration = 0;
-      break;
+      case SDLK_q:
+      case SDLK_e:
+         if(!ship->flyingAI->isEnabled())
+            clientCommand.rightAcceleration = 0;
+         break;
 
-   case SDLK_SPACE:
-   case SDLK_LCTRL:
-      if(!ship->flyingAI->isEnabled())
-         clientCommand.upAcceleration = 0;
-      break;
+      case SDLK_SPACE:
+      case SDLK_LCTRL:
+         if(!ship->flyingAI->isEnabled())
+            clientCommand.upAcceleration = 0;
+         break;
 
-      /*
-   case SDLK_LSHIFT:
-      if(!ship->flyingAI->isEnabled())
-         ship->setBoost(false);
-      break;
-*/
+         /*
+      case SDLK_LSHIFT:
+         if(!ship->flyingAI->isEnabled())
+            ship->setBoost(false);
+         break;
+   */
 
-   case SDLK_b:
-      clientCommand.brake = false;
-      break;
-      // Minimap Size
-   case SDLK_1:
-      minimap->adjustDisplaySizeDirection = 0;
-      break;
-   case SDLK_2:
-      minimap->adjustDisplaySizeDirection = 0;
-      break;
-      // Minimap Zoom
-   case SDLK_3:
-      minimap->adjustZoomDirection = 0;
-      break;
-   case SDLK_4:
-      minimap->adjustZoomDirection = 0;
-      break;
+      case SDLK_b:
+         clientCommand.brake = false;
+         break;
+         // Minimap Size
+      case SDLK_1:
+         minimap->adjustDisplaySizeDirection = 0;
+         break;
+      case SDLK_2:
+         minimap->adjustDisplaySizeDirection = 0;
+         break;
+         // Minimap Zoom
+      case SDLK_3:
+         minimap->adjustZoomDirection = 0;
+         break;
+      case SDLK_4:
+         minimap->adjustZoomDirection = 0;
+         break;
 
-      // Camera
-   case SDLK_8:
-   case SDLK_9:
-      ship->setZoomSpeed(0);
-      break;
+         // Camera
+      case SDLK_8:
+      case SDLK_9:
+         ship->setZoomSpeed(0);
+         break;
    }
 }
 

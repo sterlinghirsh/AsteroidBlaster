@@ -106,10 +106,6 @@ class GameState : public InputReceiver {
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;
       int curLevel;
-      // Used for a countdown at the end of each level.
-      double countDown;
-      // Used to tell whether or not we already have a countdown on screen.
-      bool isCountingDown;
 
       // Timer to control how long the level lasts.
       Timer levelTimer;
