@@ -86,6 +86,11 @@ class GameState : public InputReceiver {
 
       GameStateMode gsm;
 
+      int curLevel;
+
+      // Timer to control how long the level lasts.
+      Timer levelTimer;
+
       //server stuff
       UDP_Server* udpServer;
       UDP_Client* udpClient;
@@ -107,10 +112,6 @@ class GameState : public InputReceiver {
       double shipControlX, shipControlY;
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;
-      int curLevel;
-
-      // Timer to control how long the level lasts.
-      Timer levelTimer;
 
       // The number of seconds this level will last.
       double levelDuration;

@@ -15,7 +15,13 @@
 
 
 #include "Utility/GameState.h"
+#include "Utility/Music.h"
+
+#include "Text/Text.h"
+
 #include "Items/AsteroidShip.h"
+
+#include "Menus/StoreMenu.h"
 
 #include "Network/NetShard.h"
 #include "Network/NetAsteroid.h"
@@ -188,6 +194,23 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
       ia >> newNetBeamShot;
       created = newNetBeamShot.toObject(gameState, newObject);
    } 
+
+   else if (receivedPackID == NET_LEVEL_UPDATE) {
+      double currTimer;
+      int tempLevel;
+      ia >> currTimer >> tempLevel;
+      gameState->levelTimer.setCountDown(currTimer);
+      gameState->curLevel = tempLevel;
+      gameState->curLevelText->updateBody(gameState->curLevel);
+   } 
+
+   else if (receivedPackID == NET_ACTIVATE_STOREMENU) {
+      storeMenu->menuActive = true;
+      Music::stopMusic();
+      Music::playMusic("8-bit3.ogg");
+   } 
+
+
 
    else if (receivedPackID == NET_SHIPID_RES) {
       ia >> shipID;

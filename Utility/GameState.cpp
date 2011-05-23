@@ -40,6 +40,7 @@
 
 #include "Network/UDP_Server.h"
 #include "Network/UDP_Client.h"
+#include "Network/NetTimer.h"
 #include "Network/NetShard.h"
 #include "Network/NetAsteroid.h"
 #include "Network/NetShip.h"
@@ -394,10 +395,12 @@ void GameState::networkUpdate(double timeDiff) {
       static double clientCommandTime = 0;
       static double asteroidTime = 0;
       static double shardTime = 0;
+      static double gameStat = 0;
 
       clientCommandTime += timeDiff;
       asteroidTime += timeDiff;
       shardTime += timeDiff;
+      gameStat += timeDiff;
 
 
       if (clientCommandTime >= 0.05) {
@@ -440,6 +443,16 @@ void GameState::networkUpdate(double timeDiff) {
             udpServer->sendAll(oss.str());
          }
          shardTime = 0;
+      }
+
+      if (gameStat >= 3.0) {
+         std::ostringstream oss;
+         boost::archive::text_oarchive oa(oss);
+         int i = NET_LEVEL_UPDATE;
+         double timeLeft = levelTimer.getTimeLeft();
+         oa << i << timeLeft << curLevel;
+         udpServer->sendAll(oss.str());
+         gameStat = 0;
       }
    }
 }
@@ -1010,6 +1023,17 @@ void GameState::nextLevel() {
       initAsteroids();
    }
 
+   // if it's ServerMode, send the next level packet so that
+   // clients go to store menu mode
+   if (gsm == ServerMode) {
+      std::ostringstream oss;
+      boost::archive::text_oarchive oa(oss);
+      int i = NET_ACTIVATE_STOREMENU;
+      oa << i;
+      udpServer->sendAll(oss.str());
+   }
+
+
    custodian.update();
    GameMessage::Clear();
    addLevelMessage();
@@ -1498,6 +1522,15 @@ void GameState::load() {
 }
 
 void GameState::testFunction() {
+   NetTimer test;
+   test.fromObject(levelTimer);
+
+   std::ostringstream oss;
+   boost::archive::text_oarchive oa(oss);
+   int i = NET_OBJ_ASTEROID;
+   oa << i << test;
+
+   std::cout << "NetTimer=" << oss.str() << std::endl;
 
 }
 
