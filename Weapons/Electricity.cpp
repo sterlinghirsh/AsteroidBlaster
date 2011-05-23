@@ -48,6 +48,12 @@ void Electricity::update(double timeDiff) {
 }
 
 void Electricity::fire() {
+   // If it's client mode, wait for the shot packet to arrive, 
+   // and then add to the game.
+   if (ship->gameState->gsm == ClientMode) {
+      return;
+   }
+
    if (!isReady())
       return;
 

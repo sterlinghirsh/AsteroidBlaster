@@ -35,6 +35,7 @@
 #include "Network/NetAsteroid.h"
 #include "Network/NetShip.h"
 #include "Network/NetBlasterShot.h"
+#include "Network/NetBeamShot.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -830,18 +831,32 @@ void Custodian::add(Object3D* objectIn) {
          gameState->udpServer->sendAll(oss.str());
       }
       if (shot != NULL) {
-         BlasterShot* tempShot = NULL;
-         tempShot = dynamic_cast<BlasterShot*>(shot);
-         if (tempShot) {
+         BlasterShot* tempBlasterShot = NULL;
+         tempBlasterShot = dynamic_cast<BlasterShot*>(shot);
+         if (tempBlasterShot) {
             //std::cout << "creating net ship..." << std::endl;
             NetBlasterShot testNetBlasterShot;
-            testNetBlasterShot.fromObject(tempShot);
+            testNetBlasterShot.fromObject(tempBlasterShot);
             std::ostringstream oss;
             boost::archive::text_oarchive oa(oss);
             int i = NET_OBJ_BLASTERSHOT;
             oa << i << testNetBlasterShot;
             gameState->udpServer->sendAll(oss.str());
          }
+
+         BeamShot* tempBeamShot = NULL;
+         tempBeamShot = dynamic_cast<BeamShot*>(shot);
+         if (tempBeamShot) {
+            //std::cout << "creating net ship..." << std::endl;
+            NetBeamShot testNetBeamShot;
+            testNetBeamShot.fromObject(tempBeamShot);
+            std::ostringstream oss;
+            boost::archive::text_oarchive oa(oss);
+            int i = NET_OBJ_BEAMSHOT;
+            oa << i << testNetBeamShot;
+            gameState->udpServer->sendAll(oss.str());
+         }
+
       }
    }
 }

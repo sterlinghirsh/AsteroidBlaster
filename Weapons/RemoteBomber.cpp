@@ -52,6 +52,12 @@ void RemoteBomber::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void RemoteBomber::fire() {
+   // If it's client mode, wait for the shot packet to arrive, 
+   // and then add to the game.
+   if (ship->gameState->gsm == ClientMode) {
+      return;
+   }
+
    static Vector3D randomVariation;
    lastFiredFrame = curFrame;
 
