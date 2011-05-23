@@ -16,4 +16,4 @@ if [ $# -lt 2 ];
    then files="*"; search="${1}";
    else files="${1}"; search="${2}";
 fi; 
-find -P . -name "$files" -a ! -wholename '*/.*' -a ! -wholename '*/Libraries/*' -a ! -name '*.o' -exec grep -Hin ${3} "$search" {} \; ; 
+find -P . -name "$files" -a ! -wholename '*/.*' -a ! -wholename '*/*~' -a ! -wholename '*/Libraries/*' -a ! -name '*.o' -exec grep -Hin ${3} "$search" {} \; ; 
