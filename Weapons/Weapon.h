@@ -20,12 +20,6 @@ class Custodian;
 class GameState;
 class Point3D;
 
-enum WeaponType {
-   PROJECTILE,
-   BEAM,
-   OTHER
-};
-
 class Weapon {
    public:
       Weapon(AsteroidShip* owner, int _index);
@@ -90,7 +84,6 @@ class Weapon {
       virtual void stopSounds();
 
    protected:
-      WeaponType type; // Do we need this?
       double timeLastFired;
       double coolDown;
       double damage;

@@ -4,10 +4,15 @@
  * A randomly generated asteroid object.
  */
 
-#include "Utility/GlobalUtility.h"
-#include "Graphics/Texture.h"
 #include "Items/Asteroid3D.h"
+
+#include "Utility/GlobalUtility.h"
+#include "Utility/SoundEffect.h"
+
 #include "Items/AsteroidShip.h"
+
+#include "Graphics/Texture.h"
+
 #include "Shots/Shot.h"
 #include "Shots/BlasterShot.h"
 #include "Shots/BeamShot.h"
@@ -16,14 +21,12 @@
 #include "Shots/AntiInertiaShot.h"
 #include "Shots/EnergyShot.h"
 
+#include "Particles/ElectricityImpactParticle.h"
+
 #include <time.h>
-#include "Utility/SoundEffect.h"
 #include <algorithm>
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include "Particles/ElectricityImpactParticle.h"
-
-using namespace std;
 
 static double timediff = (double) clock();
 double randomR = 0;
