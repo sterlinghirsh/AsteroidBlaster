@@ -566,7 +566,7 @@ void AsteroidShip::update(double timeDiff) {
       }
    }
    
-   if (timeLeftToRespawn > 0 && !(gameState->gsm == MenuMode)) {
+   if (timeLeftToRespawn > 0 && (gameState->gsm != MenuMode)) {
       if (this == gameState->ship && !isFirstSpawn) {
          std::ostringstream gameMsg;
          gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
@@ -660,7 +660,7 @@ void AsteroidShip::update(double timeDiff) {
       (*iter)->update(timeDiff);
    }
 
-   if ((!gameState->gsm == MenuMode) &&
+   if ((gameState->gsm != MenuMode) &&
          (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
       if (soundHandle == -1)
          soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav", 
