@@ -19,8 +19,10 @@
  * or anything else that has not yet been created. */
 #include "Items/AsteroidShip.h"
 #include "Utility/Point3D.h"
+#include "Utility/Timer.h"
 #include "AI/AI.h"
 #include "Items/Object3D.h"
+
 
 // Incomplete class declaration so we can use pointers.
 class Object3D;

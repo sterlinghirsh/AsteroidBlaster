@@ -11,6 +11,7 @@
 
 #include <string>
 #include "Utility/GlobalUtility.h"
+#include "Utility/Timer.h"
 
 /* Incomplete declaration for pointers. */
 class Object3D;

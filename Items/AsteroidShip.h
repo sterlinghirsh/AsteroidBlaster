@@ -9,13 +9,19 @@
 //#include "Utility/Quaternion.h"
 #include "Utility/Point3D.h"
 #include "Utility/Vector3D.h"
-#include "Shots/Shot.h"
+#include "Utility/Radar.h"
 #include "Utility/GlobalUtility.h"
+#include "Utility/Timer.h"
+
+#include "Shots/Shot.h"
+
+
 #include "Items/Object3D.h"
 #include "Items/Ball.h"
-#include "Utility/Radar.h"
+
 #include "AI/ShootingAI.h"
 #include "AI/FlyingAI.h"
+
 #include "Weapons/Weapon.h"
 #include "Weapons/Blaster.h"
 #include "Weapons/RailGun.h"
@@ -27,6 +33,7 @@
 #include "Weapons/TimedBomber.h"
 #include "Weapons/Energy.h"
 #include "Weapons/RemoteBomber.h"
+
 #include <list>
 
 #define DAMAGER_INDEX_ASTEROID -1
