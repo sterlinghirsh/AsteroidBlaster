@@ -351,7 +351,6 @@ void TimedBombShot::update(double timeDiff) {
    }
    
    timeSinceExploded -= timeDiff;
-      // Find out how projectileShot's are removed.
 }
 
 void TimedBombShot::hitWall(BoundingWall* wall) {

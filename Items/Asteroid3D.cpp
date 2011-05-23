@@ -9,7 +9,7 @@
 #include "Items/Asteroid3D.h"
 #include "Items/AsteroidShip.h"
 #include "Shots/Shot.h"
-#include "Shots/ProjectileShot.h"
+#include "Shots/BlasterShot.h"
 #include "Shots/BeamShot.h"
 #include "Shots/TractorBeamShot.h"
 #include "Shots/ElectricityShot.h"

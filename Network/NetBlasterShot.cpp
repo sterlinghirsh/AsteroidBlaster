@@ -5,7 +5,7 @@ BOOST_CLASS_EXPORT_IMPLEMENT(NetBlasterShot);
 
 bool NetBlasterShot::toObject(GameState* gameState, Object3D*& item) {
    item = gameState->custodian[id];
-   ProjectileShot* projShot;
+   BlasterShot* blastShot;
    bool itemCreated = false;
 
    if (item == NULL) {
@@ -15,23 +15,23 @@ bool NetBlasterShot::toObject(GameState* gameState, Object3D*& item) {
          std::cout << "This owner ID should be an AsteroidShip, but the dynamic cast failed!" << std::endl;
          return false;
       }
-      projShot = new ProjectileShot(position, velocity, weaponIndex, tempShip, gameState);
+      blastShot = new BlasterShot(position, velocity, weaponIndex, tempShip, gameState);
       itemCreated = true;
    } else {
-      projShot = dynamic_cast<ProjectileShot*>(item);
-      if (projShot == NULL) {
-         std::cout << "Item " << id << " is not an projShot, but should be." << std::endl;
+      blastShot = dynamic_cast<BlasterShot*>(item);
+      if (blastShot == NULL) {
+         std::cout << "Item " << id << " is not an blastShot, but should be." << std::endl;
          return false;
       }
    }
 
    // Actuall add the members from Object3D.
-   item = projShot;
+   item = blastShot;
    NetShot::toObject(gameState, item);
    return itemCreated;
 }
 
-void NetBlasterShot::fromObject(ProjectileShot* in) {
+void NetBlasterShot::fromObject(BlasterShot* in) {
    NetShot::fromObject(in);
 }
 

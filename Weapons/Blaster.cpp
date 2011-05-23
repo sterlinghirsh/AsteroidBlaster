@@ -7,7 +7,7 @@
 
 #include "Weapons/Blaster.h"
 #include "Utility/GlobalUtility.h"
-#include "Shots/ProjectileShot.h"
+#include "Shots/BlasterShot.h"
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
 
@@ -47,6 +47,12 @@ void Blaster::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void Blaster::fire() {
+   // If it's client mode, wait for the shot packet to arrive, 
+   // and then add to the game.
+   if (ship->gameState->gsm == ClientMode) {
+      return;
+   }
+
    Vector3D randomVariation;
    if (!isReady())
       return;
@@ -63,7 +69,7 @@ void Blaster::fire() {
 
    ship->shotDirection.movePoint(start, 3);
    ship->setShakeAmount(0.05f);
-   ship->custodian->add(new ProjectileShot(start,
+   ship->custodian->add(new BlasterShot(start,
             shotDirection, index, ship, ship->gameState));
    // Don't play sound effects in godMode b/c there would be too many.
    if (!ship->gameState->godMode) {

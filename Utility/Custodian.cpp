@@ -18,7 +18,7 @@
 #include "Items/Asteroid3D.h"
 #include "Items/Shard.h"
 #include "Shots/BeamShot.h"
-#include "Shots/ProjectileShot.h"
+#include "Shots/BlasterShot.h"
 #include "Shots/TractorBeamShot.h"
 #include "Shots/ElectricityShot.h"
 #include "Shots/AntiInertiaShot.h"
@@ -168,7 +168,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
 }
 
 template<>
-void Collision<AsteroidShip, ProjectileShot>::handleCollision() {
+void Collision<AsteroidShip, BlasterShot>::handleCollision() {
    if (a->isRespawning()) { return;}
    int particlesToEmit = 10;
    if (a != b->owner  && !(a->spawnInvulnerable)) {
@@ -330,7 +330,7 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
  * Asteroid3D collisions========================================================
  */
 template<>
-void Collision<Asteroid3D, ProjectileShot>::handleCollision() {
+void Collision<Asteroid3D, BlasterShot>::handleCollision() {
    const int particlesToEmit = 10;
    
    static Vector3D particleVariation;
@@ -640,7 +640,7 @@ Custodian::Custodian(const GameState* _gameState) :
       collisionHandlers->push_back(new Collision<AsteroidShip, AsteroidShip>);
       collisionHandlers->push_back(new Collision<AsteroidShip, Asteroid3D>);
       collisionHandlers->push_back(new Collision<AsteroidShip, Shard>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, ProjectileShot>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, BlasterShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, BeamShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, ElectricityShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, EnergyShot>);
@@ -648,7 +648,7 @@ Custodian::Custodian(const GameState* _gameState) :
       collisionHandlers->push_back(new Collision<AsteroidShip, ExplosiveShot>);
 
       // Collision for Asteroid3D
-      collisionHandlers->push_back(new Collision<Asteroid3D, ProjectileShot>);
+      collisionHandlers->push_back(new Collision<Asteroid3D, BlasterShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, BeamShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, TractorBeamShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, ElectricityShot>);
@@ -829,10 +829,9 @@ void Custodian::add(Object3D* objectIn) {
          oa << i << testNetship;
          gameState->udpServer->sendAll(oss.str());
       }
-
       if (shot != NULL) {
-         ProjectileShot* tempShot = NULL;
-         tempShot = dynamic_cast<ProjectileShot*>(shot);
+         BlasterShot* tempShot = NULL;
+         tempShot = dynamic_cast<BlasterShot*>(shot);
          if (tempShot) {
             //std::cout << "creating net ship..." << std::endl;
             NetBlasterShot testNetBlasterShot;

@@ -100,8 +100,6 @@ void RemoteBombShot::update(double timeDiff) {
    if (!isExploded && (doubleTime() - timeFired > timeToExplode)) {
       explode();
    }
-   
-      // Find out how projectileShot's are removed.
 }
 
 void RemoteBombShot::hitWall(BoundingWall* wall) {

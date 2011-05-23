@@ -1,10 +1,10 @@
 /**
- * ProjectileShot.cpp
+ * BlasterShot.cpp
  * Blaster Shots!
  * Pew pew pew!
  */
 
-#include "Shots/ProjectileShot.h"
+#include "Shots/BlasterShot.h"
 #include "Particles/BlasterShotParticle.h"
 #include "Particles/BlasterImpactParticle.h"
 #include "Utility/SoundEffect.h"
@@ -15,7 +15,7 @@
 
 const int particleCycle = 100;
 
-ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
+BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
    persist = false;
    minX = minY = minZ = -0.1;
@@ -35,7 +35,7 @@ ProjectileShot::ProjectileShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    collisionType = collisionPoint = new CollisionPoint(*position);
 }
 
-void ProjectileShot::draw() {
+void BlasterShot::draw() {
    Vector3D zVector(0, 0, -1);
    Vector3D axis = zVector.cross(*velocity);
    glPushMatrix();
@@ -52,7 +52,7 @@ void ProjectileShot::draw() {
 }
 
 // Spray particles.
-void ProjectileShot::update(double timeDiff) {
+void BlasterShot::update(double timeDiff) {
    Shot::update(timeDiff);
    const int particlesPerSecond = 4;
    
@@ -75,6 +75,6 @@ void ProjectileShot::update(double timeDiff) {
    }
 }
 
-void ProjectileShot::hitWall(BoundingWall* wall) {
+void BlasterShot::hitWall(BoundingWall* wall) {
    Shot::hitWall(wall);
 }
