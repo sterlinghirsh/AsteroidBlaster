@@ -745,6 +745,7 @@ void GameState::drawOverlay() {
 
       int tex = Texture::getTexture("overlayTex");
       drawScreenQuad(tex);
+      usePerspective();
    glPopMatrix();
 }
 

@@ -28,7 +28,7 @@
 #endif
 
 // Radians/sec
-const double ShootingAI::gunRotSpeed = M_PI / 2.0;
+const double ShootingAI::gunRotSpeed = M_PI / 1.75;
 
 ShootingAI::ShootingAI(AsteroidShip* owner) {
    ship = owner;

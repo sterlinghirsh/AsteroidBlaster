@@ -133,7 +133,6 @@ void Energy::debug() {
  */
 Point3D Energy::project(Object3D* target) {
    Point3D wouldHit;
-   double speed = 80;
    double time = 0, dist = 0;
    int iterations = 0;
 
@@ -145,7 +144,7 @@ Point3D Energy::project(Object3D* target) {
    do {
       // time is the distance from the ship to the target according to the
       // speed of the bullet.
-      time = ship->position->distanceFrom(curTarget) / speed;
+      time = ship->position->distanceFrom(curTarget) / shotSpeed;
 
       // dp is the distance the asteroid traveled in the time it took for our
       // bullet to get to the point we are considering (curTarget).
@@ -162,7 +161,7 @@ Point3D Energy::project(Object3D* target) {
       // now points to where our bullet will be when the asteroid is at
       // its position
 
-      wouldHit = wouldHit.getNormalized() * speed * time + *ship->position;
+      wouldHit = wouldHit.getNormalized() * shotSpeed * time + *ship->position;
 
       // Dist is the distance from where our bullet will be to where
       // the asteroid will be.
