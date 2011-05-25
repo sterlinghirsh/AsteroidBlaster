@@ -158,6 +158,8 @@ GameState::GameState(GameStateMode _gsm) :
       FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
       scoreText = new Text("Score: ", ship->getScore(), "",  hudFont, position);
       shardText = new Text("Shards: ", ship->getShards(), "",  hudFont, position);
+      bankedShardText = new Text("Banked Shards: ", ship->bankedShards, "",  hudFont, position);
+      unbankedShardText = new Text("Unbanked Shards: ", ship->unbankedShards, "",  hudFont, position);
       //ammoText = new Text("Ammo: ", sstream2.str(), "",  hudFont, position);
       //weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  hudFont, position);
       timerText = new Text("", sstream2.str(), "", hudFont, position);
@@ -170,9 +172,13 @@ GameState::GameState(GameStateMode _gsm) :
 
       // Improve the positioning code.
       weaponReadyBar = new ProgressBar(0.75f, 0.05f, -1.2f, -0.3f);
+      
+      shardBankBar = new ProgressBar(0.06f, 0.4f, -1.1f, p2wx(10));
+      shardBankBar->setHorizontal(true);
+
       float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH *
          2.0f * 0.6f;
-      const float healthHeight = 0.18f;
+      const float healthHeight = 0.10f;
       const float weaponBarHeight = 0.3f;
       healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
       healthBar->setHorizontal(true);
@@ -224,6 +230,7 @@ GameState::~GameState() {
    delete spring;
    delete cube;
    delete weaponReadyBar;
+   delete shardBankBar;
    if (udpServer != NULL) {
       delete udpServer;
    }
@@ -366,6 +373,7 @@ void GameState::update(double timeDiff) {
    updateText();
 
    weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
+   shardBankBar->setAmount(ship->bankTimer.isRunning ? ship->bankTimer.getAmountComplete() : 0);
    healthBar->setAmount(((float) ship->health / (float) ship->healthMax));
    cube->update(timeDiff);
    minimap->update(timeDiff);
@@ -710,6 +718,7 @@ void GameState::drawHud() {
       drawAllText();
       if(usingShipCamera && !ship->isRespawning()){
          weaponReadyBar->draw();
+         shardBankBar->draw();
          healthBar->draw();
          weaponBar->draw();
          drawMinimap();
@@ -771,6 +780,16 @@ void GameState::drawAllText() {
 
    position.y = (Sint16) (position.y + positionDifferenceY);
    shardText->setPosition(position);
+   
+   position.y = (Sint16) (position.y + positionDifferenceY);
+   bankedShardText->setPosition(position);
+   
+   position.y = (Sint16) (position.y + positionDifferenceY);
+   unbankedShardText->setPosition(position);
+   
+   position.y = (Sint16) (position.y + positionDifferenceY);
+
+   shardBankBar->y = p2wy(position.y);
 
    // Position all the text on right side
    position.x = (Sint16)(gameSettings->GW - 30);
@@ -784,6 +803,8 @@ void GameState::drawAllText() {
    FPSText->draw();
    scoreText->draw();
    shardText->draw();
+   bankedShardText->draw();
+   unbankedShardText->draw();
 
    // Draw all the text on right side
    timerText->draw();
@@ -800,6 +821,8 @@ void GameState::updateText() {
    FPSText->updateBody((int)curFPS);
    scoreText->updateBody(ship->getScore());
    shardText->updateBody(ship->getShards());
+   bankedShardText->updateBody(ship->bankedShards);
+   unbankedShardText->updateBody(ship->unbankedShards);
    //weaponText->updateBody(ship->getCurrentWeapon()->getName());
    // If the gun has infinite ammo, say so.
    /*if(ship->getCurrentWeapon()->curAmmo == -1)
@@ -1251,7 +1274,7 @@ void GameState::keyDown(int key, int unicode) {
 
    case SDLK_F10:
       ship->nShards += 10;
-      ship->curRoundShards += 10;
+      ship->unbankedShards += 10;
       break;
       // If the user presses F11, give them all of the weapons.
    case SDLK_F11:

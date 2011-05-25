@@ -157,7 +157,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
       a->health = a->healthMax;
 
    a->nShards++;
-   a->curRoundShards++;
+   a->unbankedShards++;
    a->score += 69;
    b->shouldRemove = true;
    

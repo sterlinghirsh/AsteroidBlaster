@@ -30,6 +30,7 @@ int ELECTRICITY_WEAPON_INDEX = 0;
 int TIMEDBOMBER_WEAPON_INDEX = 0;
 int REMOTEBOMBER_WEAPON_INDEX = 0;
 int ENERGY_WEAPON_INDEX = 0;
+int RAM_WEAPON_INDEX = 0;
 
 int NUMBER_OF_WEAPONS = 0;
 
@@ -113,7 +114,9 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    // The number of shard collected. This number is displayed to the screen.
    nShards = 0;
    bankedShards = 0;
-   curRoundShards = 0;
+   unbankedShards = 0;
+   bankPeriod = 10; // Default bank period is 10 seconds.
+   bankTimer.reset();
 
    // The ship's max motion parameters.
    maxForwardAccel = 10;
@@ -544,10 +547,15 @@ void AsteroidShip::update(double timeDiff) {
          }
 
          // Release all the shards.
-         while (curRoundShards > 0) {
+         while (unbankedShards > 0) {
             custodian->add(makeShard());
             --nShards;
-            --curRoundShards;
+            --unbankedShards;
+         }
+
+         // Make a few more for good measure.
+         while(rand() % 2 == 0) {
+            custodian->add(makeShard());
          }
       }
       
@@ -663,6 +671,21 @@ void AsteroidShip::update(double timeDiff) {
       updateShotDirectionVector();
    }
 
+   // Bank shards.
+   if (bankTimer.isRunning) {
+      if (unbankedShards <= 0) {
+         // This is awkward. Recover silently.
+         bankTimer.reset();
+      } else if (bankTimer.getTimeLeft() < 0) {
+         bankTimer.reset();
+         bankedShards++;
+         unbankedShards--;
+         // Probably should play a sound or do a dance.
+      }
+   } else if (unbankedShards > 0) {
+      bankTimer.setCountDown(bankPeriod);
+   }
+
    // Update weapons.
    for (std::vector<Weapon*>::iterator iter = weapons.begin();
          iter != weapons.end(); ++iter) {
@@ -670,7 +693,7 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    if ((gameState->gsm != MenuMode) &&
-         (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
+    (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
       if (soundHandle == -1)
          soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav", 
           position, (this == gameState->ship), DEFAULT_VOLUME, true);
@@ -1819,7 +1842,7 @@ Shard* AsteroidShip::makeShard() {
    shard->position->clone(position);
    randomOffset.movePoint(*shard->position);
    shard->velocity->updateMagnitude(position, shard->position);
-   shard->velocity->scalarMultiplyUpdate(10);
+   shard->velocity->scalarMultiplyUpdate(8 * randdouble());
    return shard;
 }
 
@@ -1846,8 +1869,8 @@ void AsteroidShip::readCommand(ClientCommand& command) {
  * This is called on the ship when the level ends.
  */
 void AsteroidShip::atLevelEnd() {
-   bankedShards += curRoundShards;
-   curRoundShards = 0;
+   bankedShards += unbankedShards;
+   unbankedShards = 0;
    health = healthMax;
    shakeAmount = 0;
    

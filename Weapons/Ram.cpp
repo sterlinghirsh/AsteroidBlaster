@@ -11,7 +11,7 @@
 #include "Utility/SoundEffect.h"
 
 Ram::Ram(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
-   //RAM_WEAPON_INDEX = index;
+   RAM_WEAPON_INDEX = index;
    coolDown = 0;
    name = "Charging Rhino";
    currentFrame = 1; // Start this 1 ahead of lastFiredFame.

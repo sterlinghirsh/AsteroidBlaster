@@ -15,7 +15,7 @@ struct NetShip : public NetObject3D {
 
    int nShards;
    int bankedShards;
-   int curRoundShards;
+   int unbankedShards;
 
    int engineUpgrade;
    int engineMax;
@@ -41,7 +41,7 @@ struct NetShip : public NetObject3D {
 
       ar & nShards;
       ar & bankedShards;
-      ar & curRoundShards;
+      ar & unbankedShards;
 
       ar & engineUpgrade;
       ar & engineMax;

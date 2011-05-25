@@ -49,6 +49,8 @@ class GameState : public InputReceiver {
       Text *FPSText,
            *scoreText,
            *shardText,
+           *bankedShardText,
+           *unbankedShardText,
            //*weaponText,
            //*ammoText,
            *curLevelText,
@@ -77,6 +79,7 @@ class GameState : public InputReceiver {
    
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
+      ProgressBar* shardBankBar;
       WeaponDisplay* weaponBar;
       double curFPS, worldSize;
       double lastDrawTime;

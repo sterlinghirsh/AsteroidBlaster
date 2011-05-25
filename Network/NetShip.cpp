@@ -27,7 +27,7 @@ bool NetShip::toObject(GameState* gameState, Object3D*& item) {
 
    ship->nShards = nShards;
    ship->bankedShards = bankedShards;
-   ship->curRoundShards = curRoundShards;
+   ship->unbankedShards = unbankedShards;
 
    ship->engineUpgrade = engineUpgrade;
    ship->engineMax = engineMax;
@@ -60,7 +60,7 @@ void NetShip::fromObject(AsteroidShip* in) {
 
    nShards = in->nShards;
    bankedShards = in->bankedShards;
-   curRoundShards = in->curRoundShards;
+   unbankedShards = in->unbankedShards;
 
    engineUpgrade = in->engineUpgrade;
    engineMax = in->engineMax;

@@ -59,9 +59,12 @@ class AsteroidShip : public Object3D {
       int kills;
       int deaths;
 
+      // Banking
       int nShards; // Total number of shards the ship has.
       int bankedShards; // Shards that were collected in previous rounds.
-      int curRoundShards; // Shards that were collected this round.
+      int unbankedShards; // Shards that were collected this round.
+      double bankPeriod; // Time it takes for a single shard to bank.
+      Timer bankTimer; // This is set if there are any shards unbanked
 
       int engineUpgrade;
       int engineMax;
@@ -120,6 +123,7 @@ class AsteroidShip : public Object3D {
       
       double isBarrelRollingLeft;
       double isBarrelRollingRight;
+      
       
    //private variables------------------------------
    private:

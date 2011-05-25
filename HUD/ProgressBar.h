@@ -18,12 +18,13 @@ class ProgressBar {
       void setSkew(float _xSkew, float _ySkew);
       void draw();
       void setIcon(std::string _texture);
-   private:
-      // Height, width, x, and y are in world coords.
+      
       float height;
       float width;
       float x;
       float y;
+   private:
+      // Height, width, x, and y are in world coords.
       float amount; // The amount full the progress bar is, from 0 to 1.
       float outerBoxThickness;
       bool hasIcon;
