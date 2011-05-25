@@ -14,7 +14,7 @@ class AsteroidShip;
 
 class Ram : public Weapon {
    public:
-      Ram(AsteroidShip* owner);
+      Ram(AsteroidShip* owner, int _index);
       virtual ~Ram();
       virtual Point3D project(Object3D*);
       virtual bool shouldFire(Point3D*, Point3D*);

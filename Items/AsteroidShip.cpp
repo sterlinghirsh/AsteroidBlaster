@@ -151,11 +151,11 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    weapons.push_back(new RailGun(this, tmpNumberOfWeapons++));
    weapons.push_back(new Electricity(this, tmpNumberOfWeapons++));
    //weapons.push_back(new LawnMower(this, tmpNumberOfWeapons++));
-   //weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
    //weapons.push_back(new AntiInertia(this, tmpNumberOfWeapons++));
    weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
    weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
    weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
+   weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
 
    NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
 
@@ -1037,7 +1037,7 @@ void AsteroidShip::draw_bonerlines() {
    float r, g, b;
    getBrightColor(color2, r, g, b);
    if (curForwardAccel == 10.0) {
-      glLineWidth(3.0);
+      glLineWidth(1.0);
       if (backChange == (backZ - middleZ)) {
          glBegin(GL_LINE_LOOP);
          glColor3d(1, 0, 0);
@@ -1103,7 +1103,7 @@ void AsteroidShip::draw_bonerlines() {
       glVertex3d(middleXY, skew, middleZ);
       glEnd();
    } else {
-      glLineWidth(3.0);
+      glLineWidth(1.0);
       glBegin(GL_LINE_LOOP);
       glColor3d(r, g, b);
       glVertex3d(middleXY, skew, middleZ);

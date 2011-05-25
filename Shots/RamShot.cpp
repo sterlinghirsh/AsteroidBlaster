@@ -19,8 +19,8 @@ static float flashiness = 0;
 static float tracker = 0;
 static int rando = 1;
 
-RamShot::RamShot(Point3D& posIn, Vector3D dirIn, 
- AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, ownerIn, _gameState) {
+RamShot::RamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, 
+ AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
    persist = true;
    angle = M_PI / 360; // Radians from the center
    length = 10;
@@ -75,78 +75,7 @@ void RamShot::update(double timeDiff) {
 /**
  * We want to remove this after drawing it once.
  */
-void RamShot::draw() {
-   
-   /*glUseProgram(elecShader);
-   glPushMatrix();
-   
-      //floats used in loop iteration
-      GLint loc1;
-      float j;
-      float k;
-      float x;
-      float y;
-      float z;
-      
-      //multipliers for randomness in lightning
-      float rot;
-      float srot;
-      
-      //width of inidvidual lightning lines
-      float thickness = 5.0;
-      
-      //density of the lightning in the beam
-      float density = 2;
-      
-      //Width of the lightning shot
-      int elecWidth = 100;
-      
-      //how fast you want the lighting flashing from blue to white. Higher number == faster flash
-      float flash = .7;
-      
-      float lpos[4] = {1.0, 0.5, 1.0, 0.0};	// light postion
-      //glLightfv(GL_LIGHT0, GL_POSITION, lpos);
-      Point3D start(*position);
-      //velocity->movePoint(start);
-      start.glTranslate();
-      
-      glRotate();
-      flashiness = flashiness + flash;
-      if (flashiness >= 360 ) {
-         flashiness = 0;
-      }
-      loc1 = glGetUniformLocation(elecShader,"flash");
-      glUniform1f(loc1,flashiness);
-
-      setMaterial(GreenShiny);
-      glLineWidth(thickness);
-      
-      glBegin(GL_LINES);
-      
-      //Creates the twisted lines whose vertices are sent to the shader to modify
-      for(k = -density/2; k < density/2; k = k+1){
-            x = 0;
-            y = 0;
-            z = length;
-            for(j = 0; j < length ; j = j+(rand() % 10)){
-                  glVertex3f(x, y, z);
-                  
-                  rot = rand() % elecWidth - elecWidth/2;
-                  srot = rand() % elecWidth - elecWidth/2;
-                  glVertex3f(srot * (1 / length), rot  * (1 / length), length - j - 2);
-                  x = srot * (1 / length);
-                  y = rot * (1 / length);
-                  z = length - j - 2;
-            }
-      }
-      glEnd();
-      
-
-   glLineWidth(1.0);
-   glPopMatrix();
-   glUseProgram(0);*/
-   
-   
+void RamShot::draw() {     
    glUseProgram(ramShader);
 
    glPushMatrix();
@@ -201,12 +130,6 @@ void RamShot::draw() {
       glDisable(GL_CULL_FACE);
       glEnable(GL_LIGHTING);
       glBegin(GL_TRIANGLE_FAN);
-      //flashiness = flashiness + flash;
-      //if (flashiness >= 360 ) {
-        // flashiness = 0;
-      //}
-      //loc2 = glGetUniformLocation(ramShader,"poop");
-      //glUniform1f(loc2,flashiness);
 
     // Center of fan is at the origin
     glColor4f(1, 0, 0, 1);

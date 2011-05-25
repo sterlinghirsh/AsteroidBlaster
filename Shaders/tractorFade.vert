@@ -1,8 +1,7 @@
-
-varying float fade;
+varying vec4 vecta;
 
 void main()
 	{	
 		gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-            fade = (gl_Vertex.z) / 55.0;
+		vecta = vec4(gl_Vertex);
 	}

@@ -10,7 +10,8 @@
 #include "Shots/RamShot.h"
 #include "Utility/SoundEffect.h"
 
-Ram::Ram(AsteroidShip* owner) : Weapon(owner) {
+Ram::Ram(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
+   //RAM_WEAPON_INDEX = index;
    coolDown = 0;
    name = "Charging Rhino";
    currentFrame = 1; // Start this 1 ahead of lastFiredFame.
@@ -44,7 +45,7 @@ void Ram::fire() {
    Point3D start = ship->shotOrigin;
    //ship->forward->movePoint(start, 4);
    ship->setShakeAmount(0.0);
-   ship->custodian->add(new RamShot(start, *(ship->forward), ship, ship->gameState));
+   ship->custodian->add(new RamShot(start, *(ship->forward), index, ship, ship->gameState));
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new RamShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;
    if(!ship->gameState->godMode) {
