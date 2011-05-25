@@ -118,6 +118,9 @@ class AsteroidShip : public Object3D {
       int currentWeapon;
       float shakeAmount;
       
+      double isBarrelRollingLeft;
+      double isBarrelRollingRight;
+      
    //private variables------------------------------
    private:
    

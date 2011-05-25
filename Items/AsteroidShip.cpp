@@ -74,6 +74,9 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    backX = 0;
    backY = 0;
    backZ = 1.6;
+   
+   isBarrelRollingLeft = -1;
+   isBarrelRollingRight = -1;
 
    hitX = 0;
    hitY = 0;
@@ -417,7 +420,13 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 
       // Next do right Acceleration.
       if (curRightAccel != 0) {
-         baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
+         if(curRightAccel > 10) {
+            baseParticleAcceleration = right->scalarMultiply(-10 * 0.2);
+         } else if (curRightAccel < -10) {
+            baseParticleAcceleration = right->scalarMultiply(10 * 0.2);
+         } else {
+            baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
+         }
          emitter = *position;
          forward->movePoint(emitter, -0.7);
          addNewParticle(emitter, baseParticleAcceleration, *forward, *up, color2 + colorVariation);
@@ -727,6 +736,17 @@ void AsteroidShip::update(double timeDiff) {
    } else {
       drawHit = false;
    }
+   
+   if (isBarrelRollingLeft > 0) {
+      curRightAccel = -300 * isBarrelRollingLeft + 5;
+      isBarrelRollingLeft -= timeDiff;
+   }
+   
+   if (isBarrelRollingRight > 0) {
+      curRightAccel = 300 * isBarrelRollingRight + 5;
+      isBarrelRollingRight -= timeDiff;
+   }
+   
 
    createEngineParticles(timeDiff);
    if(health < 50) createLowHealthParticles(timeDiff);
@@ -1325,6 +1345,25 @@ void AsteroidShip::draw() {
    glRotate();
    spin+= 2;
    glColor4d(0, 0, 0, 1);
+   if (isBarrelRollingLeft > 0) {
+      if (isBarrelRollingLeft > .5) {
+         glTranslated(0, sin(M_PI * (1 - isBarrelRollingLeft)) * 2, 0);
+      } else {
+         glTranslated(0, sin(M_PI * isBarrelRollingLeft) * 2, 0);
+      }
+      
+      glRotated((1 - isBarrelRollingLeft) * 360, 0, 0, 1);
+   }
+   
+   if (isBarrelRollingRight > 0) {
+      if (isBarrelRollingRight > .5) {
+         glTranslated(0, sin(M_PI * (1 - isBarrelRollingRight)) * 2, 0);
+      } else {
+         glTranslated(0, sin(M_PI * isBarrelRollingRight) * 2, 0);
+      }
+      
+      glRotated((1 - isBarrelRollingRight) * -360, 0, 0, 1);
+   }
    //glRotated(90, 1, 0, 0);
 
    if (drawSpawn && !(gameState->gsm == MenuMode)) {
