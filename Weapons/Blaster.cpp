@@ -29,6 +29,11 @@ Blaster::Blaster(AsteroidShip* owner, int _index)
    r = 1;
    g = 0;
    b = 0;
+
+   currentHeat = 0;
+   overheatLevel = 5;
+   heatPerShot = 0.3;
+   overheated = false;
 }
 
 Blaster::~Blaster() {
@@ -37,10 +42,17 @@ Blaster::~Blaster() {
 
 /**
  * Called every frame.
- * We'll probably keep track of something or other here.
  */
 void Blaster::update(double timeDiff) {
-   // Do nothing, yet
+   if (currentHeat > 0) {
+      currentHeat = std::max(currentHeat - timeDiff, 0.0);
+   }
+
+   if (overheated && currentHeat == 0) {
+      overheated = false;
+   } else if (currentHeat > overheatLevel) {
+      overheated = true;
+   }
 }
 
 /**
@@ -68,11 +80,13 @@ void Blaster::fire() {
    shotDirection.addUpdate(randomVariation);
 
    ship->shotDirection.movePoint(start, 3);
-   ship->setShakeAmount(0.05f);
+   ship->setShakeAmount(0.1f);
    ship->custodian->add(new BlasterShot(start,
             shotDirection, index, ship, ship->gameState));
+
    // Don't play sound effects in godMode b/c there would be too many.
    if (!ship->gameState->godMode) {
+      currentHeat += heatPerShot;
       SoundEffect::playSoundEffect("BlasterShot2.wav", &start);
    }
 }
@@ -142,5 +156,19 @@ bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
    Vector3D targetToShip = *target - ship->shotOrigin;
    targetToShip.normalize();
    return (targetToShip - *aim).magnitude() < 0.6;
+}
+
+/**
+ * This is for the weapon bar.
+ */
+double Blaster::getCoolDownAmount() {
+   return 1 - clamp(currentHeat / overheatLevel, 0, 1);
+}
+
+/**
+ * This is for firing.
+ */
+bool Blaster::isCooledDown() {
+   return Weapon::isCooledDown() && !overheated;
 }
 

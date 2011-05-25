@@ -13,7 +13,7 @@
 Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    ELECTRICITY_WEAPON_INDEX = index;
    shotsFired = 0;
-   shotsPerSec = 30;
+   shotsPerSec = 10;
    coolDown = 0;
    name = "Pikachu's Wrath";
    currentFrame = 1; // Start this 1 ahead of lastFiredFame.
@@ -21,6 +21,11 @@ Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index
    soundPlaying = false;
    curAmmo = -1;
    purchased = false;
+   
+   currentHeat = 0;
+   overheatLevel = 5;
+   heatPerShot = 0.15;
+   overheated = false;
 
    icon = "PikachusWrathIcon";
    r = 1;
@@ -33,6 +38,16 @@ Electricity::~Electricity() {
 }
 
 void Electricity::update(double timeDiff) {
+   if (currentHeat > 0) {
+      currentHeat = std::max(currentHeat - timeDiff, 0.0);
+   }
+
+   if (overheated && currentHeat == 0) {
+      overheated = false;
+   } else if (currentHeat > overheatLevel) {
+      overheated = true;
+   }
+
    if (currentFrame != lastFiredFrame) 
       shotsFired = 0;
    // Stop sound if we're no longer firing.
@@ -75,22 +90,17 @@ void Electricity::fire() {
       }
    }
    
-   /*
-   if(!ship->gameState->godMode && curAmmo <= 0)
-      return;
-      */
-
    Point3D start = ship->shotOrigin;
    ship->setShakeAmount(0.1f);
    ship->custodian->add(new ElectricityShot(start, ship->shotDirection, index, ship, shotsToFire, ship->gameState));
-   //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new ElectricityShot(start, ship->shotDirection, ship));
+
+
    lastFiredFrame = currentFrame;
    shotsFired += shotsToFire;
-   if(!ship->gameState->godMode) {
-      // Take away some ammo
-      /*curAmmo -= shotsToFire; */
-   }
 
+   if(!ship->gameState->godMode) {
+      currentHeat += heatPerShot * shotsToFire;
+   }
 }
 
 void Electricity::debug() {
@@ -111,3 +121,18 @@ void Electricity::stopSounds() {
       soundHandle = -1;
    }
 }
+
+/**
+ * This is for the weapon bar.
+ */
+double Electricity::getCoolDownAmount() {
+   return 1 - clamp(currentHeat / overheatLevel, 0, 1);
+}
+
+/**
+ * This is for firing.
+ */
+bool Electricity::isCooledDown() {
+   return Weapon::isCooledDown() && !overheated;
+}
+

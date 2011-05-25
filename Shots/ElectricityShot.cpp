@@ -60,7 +60,7 @@ ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn, int _weaponInde
    */
    shouldBeCulled = false;
    updateBoundingBox();
-   const double damageBase = 1;
+   const double damageBase = 3;
    damage = damageBase * strengthOfShot; // We might want to change this.
    collisionType = new CollisionRay(length, *velocity, *position);
    hitYet = false;

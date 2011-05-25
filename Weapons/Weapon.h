@@ -82,11 +82,12 @@ class Weapon {
       virtual bool isReady();
 
       virtual void stopSounds();
-
-   protected:
+      
       double timeLastFired;
       double coolDown;
       double damage;
+
+   protected:
       std::string name;
       std::string icon;
 };
