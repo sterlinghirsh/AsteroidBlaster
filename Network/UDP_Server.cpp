@@ -116,7 +116,7 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
                tempEndpointToClientID.erase (tempEndPoint);
             }
          } else {
-            std::cout << "Error! Handshake failed! receivedPackID=" <<  receivedPackID << std::endl;
+            std::cout << "Error while in Handshake! receivedPackID=" <<  receivedPackID << std::endl;
          }
       }
    // It's a client that already has send packets before

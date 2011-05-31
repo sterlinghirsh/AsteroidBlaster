@@ -404,18 +404,18 @@ void GameState::networkUpdate(double timeDiff) {
       
    // SERVER-->CLIENT stuff~~~~~~~~~~~~~~~~~~~~~~
    } else if (gsm == ServerMode){
-      static double clientCommandTime = 0;
+      static double shipTime = 0;
       static double asteroidTime = 0;
       static double shardTime = 0;
       static double gameStat = 0;
 
-      clientCommandTime += timeDiff;
+      shipTime += timeDiff;
       asteroidTime += timeDiff;
       shardTime += timeDiff;
       gameStat += timeDiff;
 
 
-      if (clientCommandTime >= 0.05) {
+      if (shipTime >= 0.1) {
          std::set<AsteroidShip*>::iterator iter = custodian.ships.begin();
          for (;iter != custodian.ships.end();iter++) {
             NetShip testNetship;
@@ -426,7 +426,7 @@ void GameState::networkUpdate(double timeDiff) {
             oa << i << testNetship;
             udpServer->sendAll(oss.str());
          }
-         clientCommandTime = 0;
+         shipTime = 0;
       }
 
       if (asteroidTime >= 0.1) {

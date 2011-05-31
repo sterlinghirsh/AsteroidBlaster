@@ -44,14 +44,27 @@ UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameStat
    boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), _ip, _portNum.c_str());
    serverEndPoint = *resolver.resolve(query);
    
-   // Start handshake-------------------------
-   {
-      // First construct an init packet with packet id of 0 then send it
-      std::ostringstream oss;
-      boost::archive::text_oarchive oa(oss);
-      int packID = NET_HS_REQ;
-      oa << packID;
-      socket_.send_to(boost::asio::buffer(oss.str()), serverEndPoint);
+   int availableBytes = 0;
+   int waitCount = 0;
+   while(availableBytes == 0) {
+      // Start handshake-------------------------
+      {
+         waitCount++;
+         if (waitCount == 6) {
+            std::cerr << "Could not connect to server, quitting." << std::endl;
+            exit(0);
+         }
+         std::cout << "Attempt to get id from server... (" << waitCount << "/5)" << std::endl;
+         // First construct an init packet with packet id of 0 then send it
+         std::ostringstream oss;
+         boost::archive::text_oarchive oa(oss);
+         int packID = NET_HS_REQ;
+         oa << packID;
+         socket_.send_to(boost::asio::buffer(oss.str()), serverEndPoint);
+      }
+
+      sleep(1);
+      availableBytes = socket_.available();
    }
 
    {

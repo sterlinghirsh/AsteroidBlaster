@@ -519,7 +519,6 @@ void AsteroidShip::update(double timeDiff) {
       if (!respawnTimer.isRunning) {
          respawnTimer.setCountDown(respawnTime);
          timeLeftToRespawn = respawnTimer.getTimeLeft();
-
          ++deaths;
          AsteroidShip* lastDamagerShip = dynamic_cast<AsteroidShip*>(lastDamager);
          if (lastDamagerShip != NULL) {
@@ -551,14 +550,14 @@ void AsteroidShip::update(double timeDiff) {
          }
 
          // Release all the shards.
-         while (unbankedShards > 0) {
+         while (gameState->gsm != ClientMode && unbankedShards > 0) {
             custodian->add(makeShard());
             --nShards;
             --unbankedShards;
          }
 
          // Make a few more for good measure.
-         while(rand() % 2 == 0) {
+         while(gameState->gsm != ClientMode && rand() % 2 == 0) {
             custodian->add(makeShard());
          }
       }
