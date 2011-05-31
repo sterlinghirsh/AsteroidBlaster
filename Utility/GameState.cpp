@@ -95,7 +95,11 @@ GameState::GameState(GameStateMode _gsm) :
       godMode = false;
       gameIsRunning = true;
       levelOver = false;
-      usingShipCamera = true;
+      if (gsm == ServerMode) {
+         usingShipCamera = false;
+      } else {
+         usingShipCamera = true;
+      }
 
       /* A view frustum culled list of objects to be used for drawing and by
          the shooting AI.
@@ -193,7 +197,7 @@ GameState::GameState(GameStateMode _gsm) :
       // Spawn one more asteroid for each level.
       numAsteroidsToSpawn = curLevel;
 
-      if (gsm != ClientMode) {
+      if (gsm != ClientMode && gsm != ServerMode) {
          // Set up objects.
          custodian.add(ship);
          // It crashes without this. :/
@@ -269,9 +273,9 @@ void GameState::resumeLevelTimer() {
 
 void GameState::addAIPlayer() {
    AsteroidShip* otherShip = new AsteroidShip(this);
-   double randX = (randdouble() - 0.5)*(worldSize / 2);
-   double randY = (randdouble() - 0.5)*(worldSize / 2);
-   double randZ = (randdouble() - 0.5)*(worldSize / 2);
+   double randX = (randdouble())*(worldSize / 2);
+   double randY = (randdouble())*(worldSize / 2);
+   double randZ = (randdouble())*(worldSize / 2);
    otherShip->position->update(randX, randY, randZ);
    otherShip->flyingAI->enable();
    otherShip->shooter->enable();
@@ -280,9 +284,9 @@ void GameState::addAIPlayer() {
 
 void GameState::addNetworkPlayer(unsigned clientID) {
    AsteroidShip* otherShip = new AsteroidShip(this);
-   double randX = (randdouble() - 0.5)*(worldSize / 2);
-   double randY = (randdouble() - 0.5)*(worldSize / 2);
-   double randZ = (randdouble() - 0.5)*(worldSize / 2);
+   double randX = (randdouble())*(worldSize / 2);
+   double randY = (randdouble())*(worldSize / 2);
+   double randZ = (randdouble())*(worldSize / 2);
    otherShip->position->update(randX, randY, randZ);
    custodian.add(otherShip);
    custodian.shipsByClientID.insert(std::pair<unsigned, AsteroidShip*>(clientID, otherShip));
@@ -601,7 +605,7 @@ void GameState::drawObjects(bool drawGlow) {
 
    // This decides where the camera is, either ship or spectator camera.
    Camera *currentCamera;
-   if (usingShipCamera) {
+   if (usingShipCamera && gsm != ServerMode) {
       currentCamera = shipCamera;
       shipCamera->setViewVector(ship->getViewVector());
       shipCamera->setOffset(*ship->getCameraOffset());
@@ -629,7 +633,7 @@ void GameState::drawObjects(bool drawGlow) {
 
    if (!drawGlow) {
       glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
-      if ((gsm != MenuMode) && usingShipCamera)
+      if ((gsm != MenuMode) && usingShipCamera && gsm != ServerMode)
          ship->drawCrosshair();
 
       for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
@@ -652,7 +656,7 @@ void GameState::drawObjects(bool drawGlow) {
          }
       }
 
-      if (gsm != MenuMode) {
+      if (gsm != MenuMode && gsm != ServerMode) {
          ship->draw();
       }
    }
@@ -716,7 +720,7 @@ void GameState::drawHud() {
       glDisable(GL_LIGHTING);
       glDisable(GL_CULL_FACE);
       drawAllText();
-      if(usingShipCamera && !ship->isRespawning()){
+      if(usingShipCamera && !ship->isRespawning() && gsm != ServerMode){
          weaponReadyBar->draw();
          shardBankBar->draw();
          healthBar->draw();
@@ -801,10 +805,13 @@ void GameState::drawAllText() {
 
    // Draw all the text on left side
    FPSText->draw();
-   scoreText->draw();
-   shardText->draw();
-   bankedShardText->draw();
-   unbankedShardText->draw();
+
+   if (gsm != ServerMode) {
+      scoreText->draw();
+      shardText->draw();
+      bankedShardText->draw();
+      unbankedShardText->draw();
+   }
 
    // Draw all the text on right side
    timerText->draw();
@@ -972,7 +979,7 @@ void GameState::reset(bool shouldLoad) {
    spectatorCamera = new Camera(false);
 
 
-   if (gsm != ClientMode) {
+   if (gsm != ClientMode && gsm != ServerMode) {
       custodian.add(ship);
       // Crashes without this.
       initAsteroids();

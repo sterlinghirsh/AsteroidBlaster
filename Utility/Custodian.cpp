@@ -888,7 +888,8 @@ void Custodian::remove(Object3D* objectIn) {
       ships.erase(ship);
    }
 
-   if(gameState->gsm == ServerMode) {
+   //if(gameState->gsm == ServerMode) {
+   if(false) {
       std::ostringstream oss;
       boost::archive::text_oarchive oa(oss);
       int i = NET_OBJ_REMOVE;

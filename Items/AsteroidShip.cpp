@@ -234,7 +234,11 @@ void AsteroidShip::reInitialize() {
    particlesEmitted = 0;
 
    velocity->updateMagnitude(0, 0, 0);
-   position->updateMagnitude(0, 0, 0);
+
+   double randX = (randdouble())*(gameState->worldSize / 2);
+   double randY = (randdouble())*(gameState->worldSize / 2);
+   double randZ = (randdouble())*(gameState->worldSize / 2);
+   position->updateMagnitude(randX, randY, randZ);
    respawnTimer.reset();
    aliveTimer.countUp();
 }
@@ -567,7 +571,6 @@ void AsteroidShip::update(double timeDiff) {
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
       if (gameState->gameIsRunning && respawnTimer.isRunning && timeLeftToRespawn <= 1.5) {
-         printf("Got to this crucial spot\n");
          timeLeftToRespawn = 1.5;
          reInitialize();
       } else {
