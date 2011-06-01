@@ -267,6 +267,7 @@ void load() {
    hitShader = setShaders( (char *) "./Shaders/shipHit.vert", (char *) "./Shaders/shipHit.frag");
    explosionShader = setShaders( (char *) "./Shaders/bombExplosion.vert", (char *) "./Shaders/bombExplosion.frag");
    ringShader = setShaders( (char *) "./Shaders/ringExplosion.vert", (char *) "./Shaders/ringExplosion.frag");
+   timeBombShader = setShaders( (char *) "./Shaders/timeBombExplosion.vert", (char *) "./Shaders/timeBombExplosion.frag");
 
    //load and start BGM
    Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");

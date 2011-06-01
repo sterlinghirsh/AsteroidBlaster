@@ -25,6 +25,7 @@
 #include "Shots/EnergyShot.h"
 #include "Shots/ExplosiveShot.h"
 #include "Shots/TimedBombShot.h"
+#include "Shots/HomingMissileShot.h"
 
 #include "Particles/ElectricityImpactParticle.h"
 #include "Particles/BlasterImpactParticle.h"
@@ -468,8 +469,39 @@ void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
       double distance = positionToAsteroid.getLength();
       if (distance < b->seekRadius + a->radius) {
          if (distance > b->collisionRadius + a->radius) {
+            Vector3D* attraction = new Vector3D(a->velocity);
+            attraction->setLength(-40.0);
+            //b->addAcceleration(attraction);
+            a->addAcceleration(attraction);
+            attraction = new Vector3D(b->velocity);
+            attraction->setLength(-40.0);
+            b->addAcceleration(attraction);
+         } else {
+            b->shouldExplode = true;
+            SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
+         }
+      }
+   } else {
+      a->health -= b->damage;
+      Vector3D* shotToAsteroid;
+      shotToAsteroid = new Vector3D(*b->position, *a->position);
+      double distance = shotToAsteroid->getLength() - a->radius;
+      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
+      shotToAsteroid->setLength(newSpeed);
+      a->addInstantAcceleration(shotToAsteroid);
+   }
+}
+
+template<>
+void Collision<Asteroid3D, HomingMissileShot>::handleCollision() {
+   a->lastHitShotOwner = b->owner;
+   if (!b->isExploded) {
+      Vector3D positionToAsteroid(*b->position, *a->position);
+      double distance = positionToAsteroid.getLength();
+      if (distance < b->seekRadius + a->radius) {
+         if (distance > b->collisionRadius + a->radius) {
             Vector3D* attraction = new Vector3D(positionToAsteroid);
-            attraction->setLength(20.0);
+            attraction->setLength(40.0);
             b->addAcceleration(attraction);
          } else {
             b->shouldExplode = true;
@@ -617,6 +649,44 @@ void Collision<Shard, ExplosiveShot>::handleCollision() {
 }
 
 template<>
+void Collision<Shard, TimedBombShot>::handleCollision() {
+   if (!b->isExploded) {
+      Vector3D positionToShard(*b->position, *a->position);
+      double distance = positionToShard.getLength();
+      if (distance < b->collisionRadius + a->collisionRadius) {
+         b->shouldExplode = true;
+         SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
+      }
+   } else {
+      Vector3D* shotToShard;
+      shotToShard = new Vector3D(*b->position, *a->position);
+      double distance = shotToShard->getLength();
+      double newSpeed = 100 / ((distance * distance) / b->explodeRadius + 1);
+      shotToShard->setLength(newSpeed);
+      a->addInstantAcceleration(shotToShard);
+   }
+}
+
+template<>
+void Collision<Shard, HomingMissileShot>::handleCollision() {
+   if (!b->isExploded) {
+      Vector3D positionToShard(*b->position, *a->position);
+      double distance = positionToShard.getLength();
+      if (distance < b->collisionRadius + a->collisionRadius) {
+         b->shouldExplode = true;
+         SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
+      }
+   } else {
+      Vector3D* shotToShard;
+      shotToShard = new Vector3D(*b->position, *a->position);
+      double distance = shotToShard->getLength();
+      double newSpeed = 100 / ((distance * distance) / b->explodeRadius + 1);
+      shotToShard->setLength(newSpeed);
+      a->addInstantAcceleration(shotToShard);
+   }
+}
+
+template<>
 void Collision<Shard, Shot>::handleCollision() {
    // Set speed to between the speed of the shot and the current speed.
    double speed = b->velocity->getLength();
@@ -655,12 +725,15 @@ Custodian::Custodian(const GameState* _gameState) :
       collisionHandlers->push_back(new Collision<Asteroid3D, ElectricityShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, EnergyShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, TimedBombShot>);
+      collisionHandlers->push_back(new Collision<Asteroid3D, HomingMissileShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, ExplosiveShot>);
       collisionHandlers->push_back(new Collision<Asteroid3D, Asteroid3D>);
       collisionHandlers->push_back(new Collision<Asteroid3D, Shard>);
 
       collisionHandlers->push_back(new Collision<Shard, TractorBeamShot>);
       collisionHandlers->push_back(new Collision<Shard, BeamShot>);
+      collisionHandlers->push_back(new Collision<Shard, TimedBombShot>);
+      collisionHandlers->push_back(new Collision<Shard, HomingMissileShot>);
       collisionHandlers->push_back(new Collision<Shard, ExplosiveShot>);
       collisionHandlers->push_back(new Collision<Shard, Shot>);
       collisionHandlers->push_back(new Collision<Shard, Shard>);

@@ -33,6 +33,7 @@
 #include "Weapons/TimedBomber.h"
 #include "Weapons/Energy.h"
 #include "Weapons/RemoteBomber.h"
+#include "Weapons/HomingMissile.h"
 
 #include <list>
 

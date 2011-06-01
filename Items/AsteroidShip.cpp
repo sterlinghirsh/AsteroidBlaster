@@ -31,6 +31,7 @@ int TIMEDBOMBER_WEAPON_INDEX = 0;
 int REMOTEBOMBER_WEAPON_INDEX = 0;
 int ENERGY_WEAPON_INDEX = 0;
 int RAM_WEAPON_INDEX = 0;
+int HOMINGMISSILE_WEAPON_INDEX = 0;
 
 int NUMBER_OF_WEAPONS = 0;
 
@@ -158,7 +159,8 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
    weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
    weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
-   weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
+   //weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
+   weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
 
    NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
 

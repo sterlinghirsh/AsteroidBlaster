@@ -65,6 +65,7 @@ extern GLuint backShader;
 extern GLuint hitShader;
 extern GLuint explosionShader;
 extern GLuint ringShader;
+extern GLuint timeBombShader;
 extern GLuint fbo;
 extern GLuint depthbuffer;
 extern SDL_Surface* gDrawSurface;
@@ -92,6 +93,7 @@ extern int TIMEDBOMBER_WEAPON_INDEX;
 extern int REMOTEBOMBER_WEAPON_INDEX;
 extern int ENERGY_WEAPON_INDEX;
 extern int RAM_WEAPON_INDEX;
+extern int HOMINGMISSILE_WEAPON_INDEX;
 
 extern int NUMBER_OF_WEAPONS;
 

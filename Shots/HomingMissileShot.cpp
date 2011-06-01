@@ -1,9 +1,9 @@
 /**
- * TimedBombShot.cpp
- * This bomb lasts for a few seconds before exploding.
+ * HomingMissileShot.cpp
+ * This bomb seeks shit out.
  */
 
-#include "Shots/TimedBombShot.h"
+#include "Shots/HomingMissileShot.h"
 #include "Shots/ExplosiveShot.h"
 #include "Utility/SoundEffect.h"
 #include "Graphics/Sprite.h"
@@ -14,19 +14,19 @@
 #endif
 
 
-TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
    radius = seekRadius;
    minX = minY = minZ = -radius;
    maxX = maxY = maxZ = radius;
    updateBoundingBox();
 
    // Blow up 15 seconds after it's fired.
-   timeToExplode = 5;
+   timeToExplode = 15;
    scaleSize = 0;
    secondScale = 0;
-   explodeRadius = 20;
+   explodeRadius = 8;
    addSize = 0;
-   spin = 0;
+   spin = 90;
    
    rotationSpeed = randdouble() * 10; // Degrees per sec.
    axis = new Vector3D(0, 1, 0);
@@ -51,12 +51,12 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, A
 }
 
 // Needed to avoid obscure vtable compiler error.
-TimedBombShot::~TimedBombShot() {
+HomingMissileShot::~HomingMissileShot() {
 }
 
-void TimedBombShot::draw() {
+void HomingMissileShot::draw() {
    // Don't draw the bomb again if it already exploded.
-   if (timeSinceExploded > 0) {
+   if (isExploded && timeSinceExploded > 0) {
       drawExplosion();
       return;
    } else if (isExploded) {
@@ -209,14 +209,14 @@ void TimedBombShot::draw() {
    glPopMatrix();
 }
 
-void TimedBombShot::drawGlow(){
+void HomingMissileShot::drawGlow(){
    draw();
 }
 
-void TimedBombShot::drawExplosion() {
+void HomingMissileShot::drawExplosion() {
    double xzScale;
    double subtractor = 1.6;
-   double divider = 4.5;
+   double divider = 3.5;
    double ringTime = .6;
    glPushMatrix();
       GLint loc1;
@@ -227,10 +227,28 @@ void TimedBombShot::drawExplosion() {
       glRotate();
       glRotated(90, 1, 0, 0);
 
+      rx += (double) (rand() % 10);
+      ry += (double) (rand() % 20);
+      rz += (double) (rand() % 30);
+      
       float helper = (float) (secondScale * .6);
+
+      if (rx > 100) {
+         rx = 0;
+      }
+      if (ry > 100) {
+         ry = 0;
+      }
+      if (rz > 100) {
+         rz = 0;
+      }
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glUseProgram(explosionShader);
+      glPushMatrix();
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);
+
+      glColor4d(1, .6, 0, timeSinceExploded);
 
       if (scaleSize > 15) {
          scaleSize += addSize / 15;
@@ -246,121 +264,12 @@ void TimedBombShot::drawExplosion() {
          } else {
             glScaled(xzScale, scaleSize, xzScale);
          }
-         
-      glPushMatrix();
-         glColor4d(timeSinceExploded - .8, timeSinceExploded - .5, 1, 1);
-         glRotated(90, 1, 0, 0);
-         glPushMatrix();
-            glTranslated(0, 0, -.05);
-            gluDisk(quadric, 0, .6, 20, 20);
-            glPopMatrix();
-            glPushMatrix();
-            glTranslated(0, 0, .05);
-            gluDisk(quadric, 0, .6, 20, 20);
-            glPopMatrix();
-            glPushMatrix();
-            glTranslated(0, 0, -.05);
-            gluCylinder(quadric, .6, .6, .1, 20, 20);
-         glPopMatrix();
-      glPopMatrix();
-         
-         glUseProgram(timeBombShader);
-         loc1 = glGetUniformLocation(timeBombShader,"zBlue");
-         glUniform1f(loc1,(float)(timeSinceExploded - .5));
-         glPushMatrix();
-            glTranslated(0, .05, 0);
-            glRotated(spin*(2-timeSinceExploded), 0, 1, 0);
-            glBegin(GL_TRIANGLES);
-            glVertex3d(0, 0, .6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, .6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            glEnd();
-         glPopMatrix();
-         
-         glPushMatrix();
-            glTranslated(0, -.05, 0);
-            glRotated(-spin*(2-timeSinceExploded), 0, 1, 0);
-            
-            glBegin(GL_TRIANGLES);
-            glVertex3d(0, 0, .6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, .6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            glEnd();
-         glPopMatrix();
-         
-         glRotated(45, 0, 1, 0);
-         
-         glPushMatrix();
-            glTranslated(0, .05, 0);
-            glRotated(spin*(2-timeSinceExploded), 0, 1, 0);
-            
-            glBegin(GL_TRIANGLES);
-            glVertex3d(0, 0, .6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, .6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            glEnd();
-         glPopMatrix();
-         
-         glPushMatrix();
-            glTranslated(0, -.05, 0);
-            glRotated(-spin*(2-timeSinceExploded), 0, 1, 0);
-            
-            glBegin(GL_TRIANGLES);
-            glVertex3d(0, 0, .6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, .6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            glEnd();
-            glPopMatrix();
+         glRotated(spin, rx, ry, rz);
+         gluSphere(quadric, .6, 20, 20);
          glPopMatrix();
       
+      loc1 = glGetUniformLocation(ringShader,"ratio");
+      glUniform1f(loc1,helper);
 
       if(timeSinceExploded < ringTime) {
          glUseProgram(ringShader);
@@ -370,159 +279,50 @@ void TimedBombShot::drawExplosion() {
          glScaled(secondScale, secondScale, 1);
          glPushMatrix();
          glTranslated(0, 0, -.3);
-         gluDisk(quadric, 0, .6, 20, 20);
+         gluDisk(quadric, .3, .6, 20, 20);
          glPopMatrix();
          glPushMatrix();
          glTranslated(0, 0, .3);
-         gluDisk(quadric, 0, .6, 20, 20);
+         gluDisk(quadric, .3, .6, 20, 20);
          glPopMatrix();
          glPushMatrix();
          glTranslated(0, 0, -.3);
          gluCylinder(quadric, .6, .6, .6, 20, 20);
          glPopMatrix();
          glPopMatrix();
-         glUseProgram(0);
+         glUseProgram(explosionShader);
       }
-      
-         
+
+      glColor4d(1, .6, 0, timeSinceExploded);
          glPushMatrix();
-         
          if(timeSinceExploded > ringTime) {
             glScaled(scaleSize / divider, scaleSize, scaleSize / divider);
          } else {
             glScaled(xzScale, scaleSize, xzScale);
          }
-         
-      glPushMatrix();
-         glUseProgram(0);
-         glColor4d(timeSinceExploded - .8, timeSinceExploded - .5, 1, 1);
-         glRotated(90, 1, 0, 0);
-         glPushMatrix();
-            glTranslated(0, 0, -.05);
-            gluDisk(quadric, 0, .6, 20, 20);
-            glPopMatrix();
-            glPushMatrix();
-            glTranslated(0, 0, .05);
-            gluDisk(quadric, 0, .6, 20, 20);
-            glPopMatrix();
-            glPushMatrix();
-            glTranslated(0, 0, -.05);
-            gluCylinder(quadric, .6, .6, .1, 20, 20);
+         glRotated(spin, rx, ry, rz);
+         gluSphere(quadric, .6, 20, 20);
          glPopMatrix();
+
       glPopMatrix();
-      
-         glUseProgram(timeBombShader);
-         glPushMatrix();
-            glTranslated(0, .05, 0);
-            glRotated(spin*(2-timeSinceExploded), 0, 1, 0);
-            glBegin(GL_TRIANGLES);
-            glVertex3d(0, 0, .6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, .6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            glEnd();
-         glPopMatrix();
-         
-         glPushMatrix();
-            glTranslated(0, -.05, 0);
-            glRotated(-spin*(2-timeSinceExploded), 0, 1, 0);
-            
-            glBegin(GL_TRIANGLES);
-            glVertex3d(0, 0, .6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, .6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            glEnd();
-         glPopMatrix();
-         
-         glRotated(45, 0, 1, 0);
-         
-         glPushMatrix();
-            glTranslated(0, .05, 0);
-            glRotated(spin*(2-timeSinceExploded), 0, 1, 0);
-            
-            glBegin(GL_TRIANGLES);
-            glVertex3d(0, 0, .6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, .6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, .6, 0);
-            glEnd();
-         glPopMatrix();
-         
-         glPushMatrix();
-            glTranslated(0, -.05, 0);
-            glRotated(-spin*(2-timeSinceExploded), 0, 1, 0);
-            
-            glBegin(GL_TRIANGLES);
-            glVertex3d(0, 0, .6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, .6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(-.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            
-            glVertex3d(0, 0, -.6);
-            glVertex3d(.6, 0, 0);
-            glVertex3d(0, -.6, 0);
-            glEnd();
-         glPopMatrix();
-         glPopMatrix();
       glUseProgram(0);
       glEnable(GL_CULL_FACE);
       glEnable(GL_LIGHTING);
    glPopMatrix();
 }
 
-void TimedBombShot::update(double timeDiff) {
+void HomingMissileShot::update(double timeDiff) {
    spin += 200 * timeDiff;
    if(timeSinceExploded > 0) {
       if (timeSinceExploded < .6) {
          secondScale += 100 * timeDiff;
       }
-      addSize = timeDiff * 50 * timeSinceExploded / (3 - timeSinceExploded);
+      addSize = timeDiff * 140 * timeSinceExploded / (1.6 - timeSinceExploded);
    }
    
 
    addSize += timeDiff;
-   if(timeSinceExploded < 0){
+   if(!isExploded){
       up->rotate(rotationSpeed * timeDiff, axis);
       right->rotate(rotationSpeed * timeDiff, axis);
       forward->rotate(rotationSpeed * timeDiff, axis);
@@ -540,23 +340,20 @@ void TimedBombShot::update(double timeDiff) {
    if (isExploded && timeSinceExploded < 0) {
       shouldRemove = true;
    }
-   
-   if (timeSinceExploded > 0 && timeSinceExploded < .6)
-      isExploded = true;
 
    // If the bomb should explode this frame and has not already, then explode.
    // If more time has passed than the bomb's timeToExplode, blow it up.
-   if ((shouldExplode || doubleTime() - timeFired > timeToExplode) && !isExploded && timeSinceExploded < .6) {
-      timeSinceExploded = 2;
-      //isExploded = true;
+   if ((shouldExplode || doubleTime() - timeFired > timeToExplode) && !isExploded) {
+      timeSinceExploded = 1;
+      isExploded = true;
       //explode();
-      SoundEffect::playSoundEffect("TimedBombExplosion", position, false, 255);
+      SoundEffect::playSoundEffect("HomingMissileExplosion", position, false, 255);
    }
    
    timeSinceExploded -= timeDiff;
 }
 
-void TimedBombShot::hitWall(BoundingWall* wall) {
+void HomingMissileShot::hitWall(BoundingWall* wall) {
    // Check to see if we're actually within exploderadius.
    minX = minY = minZ = -collisionRadius;
    maxX = maxY = maxZ = collisionRadius;
@@ -578,7 +375,7 @@ void TimedBombShot::hitWall(BoundingWall* wall) {
  * Make the size of the bomb much bigger so that it will collide with
  * everything it should, and auto-handle the collisions.
  */
-void TimedBombShot::explode() {
+void HomingMissileShot::explode() {
    // Do all the generic exploding actions that every bomb should do.
    ExplosiveShot::explode();
 
