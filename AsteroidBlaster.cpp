@@ -213,10 +213,15 @@ void load() {
    texSize = nextPowerOfTwo(std::max(gameSettings->fullscreenGW, gameSettings->fullscreenGH));
 
    //loading textures
+   Texture::Add(texSize, texSize, "depthTex", true);
    Texture::Add(texSize, texSize, "bloomTex");
    Texture::Add(texSize, texSize, "fboTex");
    Texture::Add(texSize, texSize, "hblurTex");
    Texture::Add(texSize, texSize, "overlayTex");
+   Texture::Add(texSize, texSize, "albedoTex");
+   Texture::Add(texSize, texSize, "normalTex");
+   Texture::Add(texSize, texSize, "noLightTex");
+   Texture::Add(texSize, texSize, "hudTex");
    Texture::Add("Images/Logo.png", "MainLogo");
    Texture::Add("Images/StoreLogo.png", "StoreLogo");
    Texture::Add("Images/AsteroidExplosion.png", "AsteroidExplosion");
@@ -259,14 +264,16 @@ void load() {
    hBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/hblur.frag");
    vBlurShader = setShaders( (char *) "./Shaders/gauss.vert", (char *) "./Shaders/vblur.frag");
    billboardShader = setShaders( (char *) "./Shaders/billboard.vert", (char *) "./Shaders/billboard.frag");
-   //hBlurShader = setShaders( (char *) "./Shaders/old/hblur.vert", (char *) "./Shaders/hblur.frag");
-   //vBlurShader = setShaders( (char *) "./Shaders/old/vblur.vert", (char *) "./Shaders/vblur.frag");
    shipXShader = setShaders( (char *) "./Shaders/ship.vert", (char *) "./Shaders/ship.frag");
    shipYShader = setShaders( (char *) "./Shaders/ship.vert", (char *) "./Shaders/shipY.frag");
    backShader = setShaders( (char *) "./Shaders/ship.vert", (char *) "./Shaders/backship.frag");
    hitShader = setShaders( (char *) "./Shaders/shipHit.vert", (char *) "./Shaders/shipHit.frag");
    explosionShader = setShaders( (char *) "./Shaders/bombExplosion.vert", (char *) "./Shaders/bombExplosion.frag");
    ringShader = setShaders( (char *) "./Shaders/ringExplosion.vert", (char *) "./Shaders/ringExplosion.frag");
+   gBufferShader = setShaders( (char *) "./Shaders/gbuffer.vert", (char *) "./Shaders/gbuffer.frag");
+   lineShader = setShaders( (char *) "./Shaders/gbuffer.vert", (char *) "./Shaders/line.frag");
+   bonerShader = setShaders( (char *) "./Shaders/gbuffer.vert", (char *) "./Shaders/boner.frag");
+   deferShader = setShaders( (char *) "./Shaders/defer.vert", (char *) "./Shaders/defer.frag");
    timeBombShader = setShaders( (char *) "./Shaders/timeBombExplosion.vert", (char *) "./Shaders/timeBombExplosion.frag");
 
    //load and start BGM
@@ -400,6 +407,9 @@ int main(int argc, char* argv[]) {
       updateDoubleTime();
       timeDiff = doubleTime() - lastUpdateTime;
       lastUpdateTime = doubleTime();
+      if (gameSettings->drawDeferred) {
+         clearAllBuffers();
+      }
 
       if (mainMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);

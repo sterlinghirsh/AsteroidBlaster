@@ -40,7 +40,6 @@ class Shard : public Object3D {
       virtual ~Shard();
       void InitShard(double r, double worldSizeIn);
       void draw();
-      void drawGlow();
       void drawShard();
       void update(double timeDiff);
       bool handleHit(std::list<Shard*>& asteroids);

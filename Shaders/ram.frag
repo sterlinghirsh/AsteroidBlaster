@@ -1,11 +1,11 @@
-varying vec4 vecta;
+
+varying float fade;
 varying vec4 thisColor;
 
 uniform float poop;
 
 void main()
 	{	
-	      float fade = 1.2 - vecta.z * .8; 
 	      float flashiness = poop / 10.0;
 	      float flashColor = cos(flashiness);
 	      float otherColor = sin(flashiness);

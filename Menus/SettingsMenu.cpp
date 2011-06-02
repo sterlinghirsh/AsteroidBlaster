@@ -14,12 +14,13 @@
 #define TITLE_INDEX 0
 #define BLOOM_INDEX 2
 #define OVERLAY_INDEX 4
-#define MOUSE_CAPTURE_INDEX 6
-#define FULLSCREEN_INDEX 8
-#define MINIMAP_INDEX 10
-#define CAMERA_VIEW_INDEX 12
-#define MUSIC_INDEX 14
-#define SFX_INDEX 16
+#define DEFER_INDEX 6
+#define MOUSE_CAPTURE_INDEX 8
+#define FULLSCREEN_INDEX 10
+#define MINIMAP_INDEX 12
+#define CAMERA_VIEW_INDEX 14
+#define MUSIC_INDEX 16
+#define SFX_INDEX 18
 #define RETURN_INDEX (menuTexts.size() - 1)
 
 #define TITLE_TYPE 0
@@ -45,6 +46,11 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
    menuTexts.push_back(new Text("Overlay Store:",  menuFont, position));
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getStatus(gameSettings->useOverlay), menuFont, position));
+   types.push_back(RIGHT_TYPE);
+
+   menuTexts.push_back(new Text("Deferred Rendering:",  menuFont, position));
+   types.push_back(LEFT_TYPE);
+   menuTexts.push_back(new Text(getStatus(gameSettings->drawDeferred), menuFont, position));
    types.push_back(RIGHT_TYPE);
 
    menuTexts.push_back(new Text("Mouse Capture:",  menuFont, position));
@@ -90,7 +96,12 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
          menuTexts[i]->alignment = LEFT_ALIGN;
          break;
       case RIGHT_TYPE:
-         menuTexts[i]->selectable = true;
+         if (!gameSettings->goodBuffers &&
+               (i == BLOOM_INDEX || i == OVERLAY_INDEX || i == DEFER_INDEX)) {
+            menuTexts[i]->selectable = false;
+         } else {
+            menuTexts[i]->selectable = true;
+         }
          menuTexts[i]->alignment = RIGHT_ALIGN;
          break;
       case SINGLE_SELECTABLE_TYPE:
@@ -135,6 +146,7 @@ std::string SettingsMenu::getViewStatus(int status) {
 void SettingsMenu::draw() {
    menuTexts[BLOOM_INDEX]->textToDisplay = getStatus(gameSettings->bloom);
    menuTexts[OVERLAY_INDEX]->textToDisplay = getStatus(gameSettings->useOverlay);
+   menuTexts[DEFER_INDEX]->textToDisplay = getStatus(gameSettings->drawDeferred);
    menuTexts[MOUSE_CAPTURE_INDEX]->textToDisplay = getStatus(SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON);
    menuTexts[FULLSCREEN_INDEX]->textToDisplay = getStatus(gameSettings->fullscreen);
    menuTexts[MINIMAP_INDEX]->textToDisplay = getStatus(gameState->minimapOn());
@@ -158,7 +170,8 @@ void SettingsMenu::draw() {
       case RIGHT_TYPE:
          position.x = (Sint16) (gameSettings->GW * 7/8);
          menuTexts[i]->setPosition(position);
-         position.y = (Sint16) (position.y + (gameSettings->GH/12));
+         //position.y = (Sint16) (position.y + (gameSettings->GH/12));
+         position.y = (Sint16) (position.y + (gameSettings->GH/RETURN_INDEX / 0.75));
          break;
       case SINGLE_SELECTABLE_TYPE:
          position.x = (Sint16) (gameSettings->GW/2);
@@ -212,9 +225,13 @@ void SettingsMenu::mouseDown(int button) {
    if (!menuActive) { return; }
 
    if(menuTexts[BLOOM_INDEX]->mouseSelect(x,y)) {
-      gameSettings->bloom = !gameSettings->bloom;
+      gameSettings->bloom = !gameSettings->bloom && gameSettings->goodBuffers;
    } else if(menuTexts[OVERLAY_INDEX]->mouseSelect(x,y)) {
-      gameSettings->useOverlay = !gameSettings->useOverlay;
+      gameSettings->useOverlay = !gameSettings->useOverlay
+         && gameSettings->goodBuffers;
+   } else if(menuTexts[DEFER_INDEX]->mouseSelect(x,y)) {
+      gameSettings->drawDeferred = !gameSettings->drawDeferred
+         && gameSettings->goodBuffers;
    } else if(menuTexts[MOUSE_CAPTURE_INDEX]->mouseSelect(x,y)) {
       toggleGrabMode();
    } else if(menuTexts[FULLSCREEN_INDEX]->mouseSelect(x,y)) {
@@ -257,6 +274,7 @@ void SettingsMenu::mouseMove(int dx, int dy, int _x, int _y) {
    //decide the color for each menu text
    menuTexts[BLOOM_INDEX]->mouseHighlight(x,y);
    menuTexts[OVERLAY_INDEX]->mouseHighlight(x,y);
+   menuTexts[DEFER_INDEX]->mouseHighlight(x,y);
    menuTexts[MOUSE_CAPTURE_INDEX]->mouseHighlight(x,y);
    menuTexts[FULLSCREEN_INDEX]->mouseHighlight(x,y);
    menuTexts[MINIMAP_INDEX]->mouseHighlight(x,y);

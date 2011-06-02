@@ -8,6 +8,7 @@
 
 #include "Graphics/Mesh3D.h"
 #include "Utility/Vector3D.h"
+#include "Graphics/Texture.h"
 #include <time.h>
 
 Mesh3D::Mesh3D() : drawNormals(false) {
@@ -41,47 +42,81 @@ void Mesh3D::setLineColor(float r, float g, float b) {
 }
 
 void Mesh3D::drawTextured(bool drawSmooth, GLuint tex) {
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, tex);
+   glDisable(GL_BLEND);
+
    int nFaces;
-   //if (drawAnim) {
-      //nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
-   //} else {
+   if (drawAnim) {
+      nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
+   } else {
       nFaces = (int)faces.size();
-   //}
+   }
+   if (gameSettings->drawDeferred) {
+      //fboBegin();
+      GLenum buffers[] = {ALBEDO_BUFFER, NORMAL_BUFFER, GLOW_BUFFER, NOLIGHT_BUFFER};
+      glDrawBuffers(4, buffers);
+   }
+
+   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D, tex);
+   glActiveTexture(GL_TEXTURE1);
+   glBindTexture(GL_TEXTURE_2D, Texture::getTexture("depthTex"));
+
+   glUseProgram(gBufferShader);
+   GLint texLoc = glGetUniformLocation(gBufferShader, "texIn");
+   glUniform1i(texLoc, 0);
+   GLint depthLoc = glGetUniformLocation(gBufferShader, "depth");
+   glUniform1i(depthLoc, 1);
+   GLint farLoc = glGetUniformLocation(gBufferShader, "far");
+   //glUniform1f(farLoc, farClip);
+   glUniform1f(farLoc, 100.0);
+
    for (int i = 0; i < nFaces; i++) {
       faces[i]->drawFace(drawSmooth, true);
+      faces[i]->drawLines();
    }
+
+   glUseProgram(0);
+   
    glBindTexture(GL_TEXTURE_2D, 0);
+   glActiveTexture(GL_TEXTURE0);
+
+   if (gameSettings->drawDeferred) {
+      //fboEnd();
+   }
+   glEnable(GL_BLEND);
 }
 
 void Mesh3D::drawLines(bool drawSmooth) {
    glDisable(GL_LIGHTING);
+   if (gameSettings->drawDeferred) {
+      //fboBegin();
+      //GLenum buffers[] = {GL_NONE, GL_NONE, GLOW_BUFFER, NOLIGHT_BUFFER};
+      //glDrawBuffers(4, buffers);
+      GLenum buffers[] = {GLOW_BUFFER, NOLIGHT_BUFFER};
+      glDrawBuffers(2, buffers);
+
+      //glUseProgram(gBufferShader);
+   }
+
    int nFaces;
-   //if (drawAnim) {
-      //nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
-   //} else {
+   if (drawAnim) {
+      nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
+   } else {
       nFaces = (int)faces.size();
-   //}
+   }
    for (int i = 0; i < nFaces; i++) {
       faces[i]->drawLines();
+   }
+
+   if (gameSettings->drawDeferred) {
+      //glUseProgram(0);
+      //fboEnd();
    }
    glEnable(GL_LIGHTING);
 }
 
 void Mesh3D::draw(bool drawSmooth, bool drawTex) {
-   glDisable(GL_LIGHTING);
-   int nFaces;
-   //if (drawAnim) {
-      //nFaces = std::min((int)(tick_time / 0.02), (int)faces.size());
-   //} else {
-      nFaces = (int)faces.size();
-   //}
-   for (int i = 0; i < nFaces; i++) {
-      faces[i]->drawFace(drawSmooth, true);
-      faces[i]->drawLines();
-   }
-   glEnable(GL_LIGHTING);
+   drawTextured(drawSmooth, 0);
 }
 
 /**
@@ -122,6 +157,6 @@ void Mesh3D::addFace(int p1, int p2, int p3, const GameState* _gameState) {
    points[p1 - 1].normal.normalize();
    points[p2 - 1].normal.normalize();
    points[p3 - 1].normal.normalize();
-   
+
    faces.push_back(face);
 }

@@ -21,6 +21,9 @@ GameSettings::GameSettings() {
    musicOn = true;
    mouseCapture = false;
    useOverlay = false;
+   goodBuffers = false;
+   
+   drawDeferred = false;
 
    windowedGW = 800;
    windowedGH = 600;

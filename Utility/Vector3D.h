@@ -77,6 +77,14 @@ class Vector3D {
          glTranslated(length * x, length * y, length * z);
       }
 
+      inline void glColor() {
+         glColor3f(x, y, z);
+      }
+
+      inline void glColor(float alpha) {
+         glColor4f(x, y, z, alpha);
+      }
+
       void reflect(Vector3D& axis);
       Vector3D getNormalVector();
       void negativeX();

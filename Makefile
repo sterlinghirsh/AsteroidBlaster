@@ -1,7 +1,7 @@
 # AsteroidBlaster Makefile by Sterling Hirsh
 # Uses uname to decide whether it's on Linux or OSX so it can tell which libs to include.
 
-BOOSTINC=/usr/include/boost/
+#BOOSTINC=/usr/include/boost/
 BOOSTINC=/home/shirsh/boost/
 BOOSTLIB=/home/shirsh/boost/stage/lib/
 

@@ -16,19 +16,19 @@
 std::list<MeshFace*> MeshFace::independentFaces;
 
 MeshFace::MeshFace(MeshPoint& _p1, MeshPoint& _p2, MeshPoint& _p3, const GameState* _gameState) :
- Drawable(_gameState),
- p1(_p1), p2(_p2), p3(_p3) {
-   setFaceColor(0.0f, 0.0f, 0.0f);
-   setLineColor(1.0f, 1.0f, 1.0f);
-   offsetBy(0.0);
-   texture = 0;
-   textured = false;
-   timeExploded = 0;
-   lifetime = 2;
-   velocity = new Vector3D(0, 0, 0);
-   minX = minY = minZ = -0.5;
-   maxX = maxY = maxZ =  0.5;
-}
+   Drawable(_gameState),
+   p1(_p1), p2(_p2), p3(_p3) {
+      setFaceColor(0.0f, 0.0f, 0.0f);
+      setLineColor(1.0f, 1.0f, 1.0f);
+      offsetBy(0.0);
+      texture = 0;
+      textured = false;
+      timeExploded = 0;
+      lifetime = 2;
+      velocity = new Vector3D(0, 0, 0);
+      minX = minY = minZ = -0.5;
+      maxX = maxY = maxZ =  0.5;
+   }
 
 MeshFace::~MeshFace() {
    // Do nothing.
@@ -59,13 +59,13 @@ void MeshFace::moveBy(Vector3D move) {
 void MeshFace::draw() {
    double shipDist = position->distanceFrom(*gameState->ship->position);
    GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 1);
-   
-   glEnable(GL_COLOR_MATERIAL);
+
+   //glEnable(GL_COLOR_MATERIAL);
    glDisable(GL_CULL_FACE);
-   glDisable(GL_LIGHTING);
-   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-   setMaterial(Rock);
-   glLineWidth(lineW);
+   //glDisable(GL_LIGHTING);
+   //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   //setMaterial(Rock);
+   //glLineWidth(lineW);
    glPolygonOffset(1.0f, 1.0f);
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -79,7 +79,7 @@ void MeshFace::draw() {
 
    // Draw lines
    glEnable(GL_POLYGON_OFFSET_LINE);
-      drawLines();
+   drawLines();
    glDisable(GL_POLYGON_OFFSET_LINE);
 
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -93,17 +93,17 @@ void MeshFace::draw() {
    // Draw fill
    glEnable(GL_POLYGON_OFFSET_FILL);
 
-      // rotate, scale?
-      // Probably more goes here.
-      drawFace(false, true);
+   // rotate, scale?
+   // Probably more goes here.
+   drawFace(true, true);
 
    glPopMatrix();
-   
+
    glDisable(GL_TEXTURE_2D);
    glDisable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   glLineWidth(1);
-   glDisable(GL_COLOR_MATERIAL);
+   //glLineWidth(1);
+   //glDisable(GL_COLOR_MATERIAL);
 }
 
 void MeshFace::draw(bool drawSmooth, bool drawTex) {
@@ -112,15 +112,36 @@ void MeshFace::draw(bool drawSmooth, bool drawTex) {
 }
 
 void MeshFace::drawLines() {
-   float curAlpha = timeExploded == 0 ? 1.0f : 
-    (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
+   double shipDist = p1.distanceFrom(*gameState->ship->position);
+   GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
 
+   float curAlpha = timeExploded == 0 ? 1.0f :
+      (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
+
+   if (timeExploded > 0.0) {
+      //fboBegin();
+      glDisable(GL_CULL_FACE);
+      if (gameSettings->drawDeferred) {
+         GLenum buffers[] = {NOLIGHT_BUFFER, GLOW_BUFFER};
+         glDrawBuffers(2, buffers);
+      }
+   }
+
+   glLineWidth(lineW);
    glColor4f(lineR, lineG, lineB, curAlpha);
+   //if (!gameSettings->drawDeferred) {
+   //normal.glColor(curAlpha);
+   //}
    glBegin(GL_LINE_LOOP);
    p1.draw();
    p2.draw();
    p3.draw();
    glEnd();
+   if (timeExploded > 0.0) {
+      glEnable(GL_CULL_FACE);
+      //fboEnd();
+   }
+   glLineWidth(1.0);
 }
 
 void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
@@ -139,10 +160,26 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    MeshPoint p3_tmp = MeshPoint(p3.x + offset.x,
          p3.y + offset.y,
          p3.z + offset.z);
-   float curAlpha = timeExploded == 0 ? 1.0f : 
-    (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
+   float curAlpha = timeExploded == 0 ? 1.0f :
+      (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
 
-   glColor4f(faceR, faceG, faceB, curAlpha);
+   //if (timeExploded > 0.0 && gameSettings->drawDeferred) {
+   if (timeExploded > 0.0) {
+      //fboBegin();
+      glDisable(GL_CULL_FACE);
+      if (gameSettings->drawDeferred) {
+         GLenum buffers[] = {NOLIGHT_BUFFER, GLOW_BUFFER};
+         glDrawBuffers(2, buffers);
+      }
+   }
+
+   if (drawSmooth)
+      normal.addNormal();
+   if (gameSettings->drawDeferred) {
+      glColor4f(faceR, faceG, faceB, curAlpha);
+   } else {
+      normal.glColor(curAlpha);
+   }
    glBegin(GL_TRIANGLES);
    p1_tmp.draw();
    if (drawTex)
@@ -154,6 +191,10 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    if (drawTex)
       glTexCoord2d(x3, y3);
    glEnd();
+   if (timeExploded > 0.0) {
+      glEnable(GL_CULL_FACE);
+      //fboEnd();
+   }
 }
 
 void MeshFace::nullPointers() {
@@ -183,7 +224,7 @@ void MeshFace::update(double timeDiff) {
 
    gameState->cube->constrain(this);
    velocity->scalarMultiply(timeDiff).movePoint(*position);
-   
+
    minPosition->clone(position);
    maxPosition->clone(position);
    minPosition->offsetBy(minX, minY, minZ);
@@ -197,7 +238,7 @@ void MeshFace::update(double timeDiff) {
 void MeshFace::drawGlow() {
    double shipDist = position->distanceFrom(*gameState->ship->position);
    GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
-   
+
    glEnable(GL_COLOR_MATERIAL);
    glDisable(GL_CULL_FACE);
    glDisable(GL_LIGHTING);
@@ -216,7 +257,7 @@ void MeshFace::drawGlow() {
 
    // Draw lines
    glEnable(GL_POLYGON_OFFSET_LINE);
-      drawLines();
+   drawLines();
    glDisable(GL_POLYGON_OFFSET_LINE);
 
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -231,13 +272,13 @@ void MeshFace::drawGlow() {
    // Draw fill
    glEnable(GL_POLYGON_OFFSET_FILL);
 
-      // rotate, scale?
-      // Probably more goes here.
-      drawFace(false, true);
+   // rotate, scale?
+   // Probably more goes here.
+   drawFace(false, true);
 
-   */
+*/
    glPopMatrix();
-   
+
    glDisable(GL_TEXTURE_2D);
    glDisable(GL_POLYGON_OFFSET_FILL);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -275,7 +316,7 @@ void MeshFace::updateIndependentFaces(double timeDifference) {
 
 void MeshFace::Clear() {
    std::list<MeshFace*>::iterator face = MeshFace::independentFaces.begin();
-   
+
    while(face != MeshFace::independentFaces.end()) {
       delete *face;
       face = MeshFace::independentFaces.erase(face);

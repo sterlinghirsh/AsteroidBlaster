@@ -113,30 +113,15 @@ void Shard::drawOtherOrbiters() {
    }
 }
 
-void Shard::drawGlow() {
-   // Disable materials.
-   glEnable(GL_COLOR_MATERIAL);
-   glPushMatrix();
-   glTranslated(position->x, position->y, position->z);
-   // Push matrix and draw main shard.
-   glPushMatrix();
-   glRotated(angle, axis->x, axis->y, axis->z);
-   glScaled(scalex, scaley, scalez);
-   glDisable(GL_LIGHTING);
-
-   glColor4d(0.3, 0.3, 0.7, 1.0);
-   drawShard();
-
-   glPopMatrix();
-
-   glDisable(GL_COLOR_MATERIAL);
-   glEnable(GL_LIGHTING);
-   glPopMatrix();
-}
-
 void Shard::drawShard() {
    double w = 0.5;
    double h = 2.0;
+   //fboBegin();
+   if (gameSettings->drawDeferred) {
+      GLenum buffers[] = {NORMAL_BUFFER, GL_NONE, ALBEDO_BUFFER, GLOW_BUFFER};
+      glDrawBuffers(4, buffers);
+      glUseProgram(bonerShader);
+   }
    glBegin(GL_TRIANGLE_STRIP);
    for (int i = 0; i < 2; i++) {
       glVertex3d(0.0, h / 2.0, 0.0);
@@ -152,6 +137,10 @@ void Shard::drawShard() {
       h *= -1.0;
    }
    glEnd();
+   if (gameSettings->drawDeferred) {
+      glUseProgram(0);
+   }
+   //fboEnd();
 }
 
 void Shard::draw() {

@@ -35,50 +35,50 @@ materialStruct ballMaterial = {
 };
 
 BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gameState) :
- Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
-   lifetime = 1.0;
-   // In this context, velocity means direction.
-   hitYet = false;
-   hitItem = NULL; // We use this to make sure it hits only one thing.
-   persist = true;
-   lastHitFrame = 0;
-   firstFrame = curFrame;
-   Point3D endPoint1(*position);
-   Point3D endPoint2(*position);
-   // Set endPoint2 140 units away.
-   length = 140;
-   velocity->setLength(length);
-   velocity->movePoint(endPoint2);
-   velocity->normalize();
-   // Correct for position when calculating endpoint1 and 2.
-   Vector3D positionVector(*position);
-   positionVector = positionVector.scalarMultiply(-1);
-   positionVector.movePoint(endPoint1);
-   positionVector.movePoint(endPoint2);
-   // Now set min/max xyz
-   minX = std::min(endPoint1.x, endPoint2.x);
-   maxX = std::max(endPoint1.x, endPoint2.x);
-   minY = std::min(endPoint1.y, endPoint2.y);
-   maxY = std::max(endPoint1.y, endPoint2.y);
-   minZ = std::min(endPoint1.z, endPoint2.z);
-   maxZ = std::max(endPoint1.z, endPoint2.z);
-   timeFired = doubleTime();
-   //shouldConstrain = true;
-   /* Make sure beam shots aren't culled from the view frustum (necessary to make them appear)
-   */
-   shouldBeCulled = false;
-   updateBoundingBox();
+   Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+      lifetime = 1.0;
+      // In this context, velocity means direction.
+      hitYet = false;
+      hitItem = NULL; // We use this to make sure it hits only one thing.
+      persist = true;
+      lastHitFrame = 0;
+      firstFrame = curFrame;
+      Point3D endPoint1(*position);
+      Point3D endPoint2(*position);
+      // Set endPoint2 140 units away.
+      length = 140;
+      velocity->setLength(length);
+      velocity->movePoint(endPoint2);
+      velocity->normalize();
+      // Correct for position when calculating endpoint1 and 2.
+      Vector3D positionVector(*position);
+      positionVector = positionVector.scalarMultiply(-1);
+      positionVector.movePoint(endPoint1);
+      positionVector.movePoint(endPoint2);
+      // Now set min/max xyz
+      minX = std::min(endPoint1.x, endPoint2.x);
+      maxX = std::max(endPoint1.x, endPoint2.x);
+      minY = std::min(endPoint1.y, endPoint2.y);
+      maxY = std::max(endPoint1.y, endPoint2.y);
+      minZ = std::min(endPoint1.z, endPoint2.z);
+      maxZ = std::max(endPoint1.z, endPoint2.z);
+      timeFired = doubleTime();
+      //shouldConstrain = true;
+      /* Make sure beam shots aren't culled from the view frustum (necessary to make them appear)
+      */
+      shouldBeCulled = false;
+      updateBoundingBox();
 
-   forward = new Vector3D(*velocity);
-   up = new Vector3D(*ownerIn->up);
+      forward = new Vector3D(*velocity);
+      up = new Vector3D(*ownerIn->up);
 
-   // This is how long the beam is drawn. It is shortened when hit.
-   drawLength = length;
-   isBeam = true;
-   damage = 50;
+      // This is how long the beam is drawn. It is shortened when hit.
+      drawLength = length;
+      isBeam = true;
+      damage = 50;
 
-   collisionType = new CollisionRay(length, *velocity, *position);
-}
+      collisionType = new CollisionRay(length, *velocity, *position);
+   }
 
 /**
  * Expire after a certain amount of time.
@@ -104,7 +104,7 @@ void BeamShot::drawBeam(bool drawDots) {
    double curTime = doubleTime();
    double timeLeft;
    const double sphereRadius = 0.05;
-   
+
    glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);
 
@@ -151,11 +151,13 @@ void BeamShot::drawBeam(bool drawDots) {
 }
 
 void BeamShot::draw() {
+   //fboBegin();
+   if (gameSettings->drawDeferred) {
+      GLenum buffers[] = {NOLIGHT_BUFFER, GLOW_BUFFER};
+      glDrawBuffers(2, buffers);
+   }
    drawBeam(true);
-}
-
-void BeamShot::drawGlow() {
-   drawBeam(false);
+   //fboEnd();
 }
 
 void BeamShot::debug() {

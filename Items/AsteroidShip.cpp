@@ -44,107 +44,107 @@ const double spawnRate = .5;
 /**
  * Constructor
  */
-AsteroidShip::AsteroidShip(const GameState* _gameState) : 
- Object3D(_gameState) {
+AsteroidShip::AsteroidShip(const GameState* _gameState) :
+   Object3D(_gameState) {
 
-   cullRadius = 12;
-   health = 100;
-   healthMax = 100;
+      cullRadius = 12;
+      health = 100;
+      healthMax = 100;
 
-   // Bounding box stuff.
-   maxX = maxY = maxZ = 3;
-   minX = minY = minZ = -3;
-   radius = 3;
-   updateBoundingBox();
+      // Bounding box stuff.
+      maxX = maxY = maxZ = 3;
+      minX = minY = minZ = -3;
+      radius = 3;
+      updateBoundingBox();
 
-   // Todo: comment these.
-   spin = 90;
-   flashiness = 0;
-   tracker = 0;
-   rando = 1;
+      // Todo: comment these.
+      spin = 90;
+      flashiness = 0;
+      tracker = 0;
+      rando = 1;
 
-   zMove = 2;
-   lineMove = zMove / 4;
-   frontX = 0;
-   frontY = 0;
-   frontZ = 0;
-   cornerX = .2;
-   cornerY = .2;
-   cornerZ = 1.3;
-   middleXY = .15;
-   middleZ = 1;
-   backX = 0;
-   backY = 0;
-   backZ = 1.6;
-   
-   isBarrelRollingLeft = -1;
-   isBarrelRollingRight = -1;
+      zMove = 2;
+      lineMove = zMove / 4;
+      frontX = 0;
+      frontY = 0;
+      frontZ = 0;
+      cornerX = .2;
+      cornerY = .2;
+      cornerZ = 1.3;
+      middleXY = .15;
+      middleZ = 1;
+      backX = 0;
+      backY = 0;
+      backZ = 1.6;
 
-   hitX = 0;
-   hitY = 0;
-   hitZ = 0;
-   
-   spawnInvulnerable = true;
-   invulnerableTime = .25;
-   justGotHit = 0;
-   timeLeftToRespawn = -1;
-   isFirstSpawn = true;
+      isBarrelRollingLeft = -1;
+      isBarrelRollingRight = -1;
 
-   //skew must be set to 0 til I figure out a better way to do things
-   skew = 0;
+      hitX = 0;
+      hitY = 0;
+      hitZ = 0;
 
-   // TODO: Comment these.
-   x2Change = middleXY / 2;
-   y2Change = middleXY / 2;
-   z2Change = (backZ - middleZ) / 2;
-   xChange = 0;
-   yChange = 0;
-   zChange = 0;
-   backChange = 0;
+      spawnInvulnerable = true;
+      invulnerableTime = .25;
+      justGotHit = 0;
+      timeLeftToRespawn = -1;
+      isFirstSpawn = true;
 
-   shotOriginScale = 4;
+      //skew must be set to 0 til I figure out a better way to do things
+      skew = 0;
 
-   // The ship's score. This number is displayed to the screen.
-   score = 0;
-   kills = 0;
-   deaths = 0;
+      // TODO: Comment these.
+      x2Change = middleXY / 2;
+      y2Change = middleXY / 2;
+      z2Change = (backZ - middleZ) / 2;
+      xChange = 0;
+      yChange = 0;
+      zChange = 0;
+      backChange = 0;
 
-   lastDamager = NULL;
-   lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
+      shotOriginScale = 4;
 
-   // The number of shard collected. This number is displayed to the screen.
-   nShards = 0;
-   bankedShards = 0;
-   unbankedShards = 0;
-   bankPeriod = 10; // Default bank period is 10 seconds.
-   bankTimer.reset();
+      // The ship's score. This number is displayed to the screen.
+      score = 0;
+      kills = 0;
+      deaths = 0;
 
-   // The ship's max motion parameters.
-   maxForwardAccel = 10;
-   maxRightAccel = 5;
-   maxUpAccel = 5;
-   maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
+      lastDamager = NULL;
+      lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
 
-   // The ship's health. This number is displayed to the screen.
-   health = 100;
-   healthMax = 100;
-   healthUpgradeAmount = 5;
-   healthUpgradePrice = 5;
-   healthPrice = 2;
-   healthAmount = 10;
+      // The number of shard collected. This number is displayed to the screen.
+      nShards = 0;
+      bankedShards = 0;
+      unbankedShards = 0;
+      bankPeriod = 10; // Default bank period is 10 seconds.
+      bankTimer.reset();
 
-   regenHealthLevel = 0;
-   regenHealthUpgradePrice = 10;
-   regenHealthLevelMax = 10;
+      // The ship's max motion parameters.
+      maxForwardAccel = 10;
+      maxRightAccel = 5;
+      maxUpAccel = 5;
+      maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
 
-   //engine upgrade, terminal speed is raised when leved up
-   engineUpgrade = 0;
-   engineMax = 5;
-   enginePrice = 10;
+      // The ship's health. This number is displayed to the screen.
+      health = 100;
+      healthMax = 100;
+      healthUpgradeAmount = 5;
+      healthUpgradePrice = 5;
+      healthPrice = 2;
+      healthAmount = 10;
 
-   // Create our Radar
-   radar = new Radar(this);
+      regenHealthLevel = 0;
+      regenHealthUpgradePrice = 10;
+      regenHealthLevelMax = 10;
 
+/*
+<<<<<<< .mine
+      //engine upgrade, terminal speed is raised when leved up
+      engineUpgrade = 0;
+      engineMax = 5;
+      enginePrice = 10;
+=======
+*/
    // Add weapons to the list!
    /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE CONSTANTS IN Utility/Constants.h
    */
@@ -162,30 +162,33 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    //weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
    weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
 
-   NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
+      NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
 
-   soundHandle = -1;
+      // Create our Radar
+      radar = new Radar(this);
 
-   cameraOffset = new Vector3D(0, 2, 5);
-   currentView = VIEW_THIRDPERSON_SHIP;
-   zoomFactor = 1.0;
-   zoomSpeed = 0.0;
+      soundHandle = -1;
 
-   shouldDrawInMinimap = true;
+      cameraOffset = new Vector3D(0, 2, 5);
+      currentView = VIEW_THIRDPERSON_SHIP;
+      zoomFactor = 1.0;
+      zoomSpeed = 0.0;
 
-   collisionType = collisionSphere = new CollisionSphere(4, *position);
+      shouldDrawInMinimap = true;
 
-   reInitialize();
+      collisionType = collisionSphere = new CollisionSphere(4, *position);
 
-   /* These must be created last b/c they need the ship / weapons to be
-    * initialized first.
-    */
-   shooter = new ShootingAI(this);
-   flyingAI = new FlyingAI(this);
+      reInitialize();
 
-   color1 = (float) randdouble();
-   color2 = (float) randdouble();
-}
+      /* These must be created last b/c they need the ship / weapons to be
+       * initialized first.
+       */
+      shooter = new ShootingAI(this);
+      flyingAI = new FlyingAI(this);
+
+      color1 = (float) randdouble();
+      color2 = (float) randdouble();
+   }
 
 /**
  * Destructor
@@ -415,9 +418,9 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    double accelerationTime = doubleTime() - accelerationStartTime;
    double colorVariation = 0.2 * randdouble();
    int particlesThisFrame = 0;
-   
+
    while ((double) particlesEmitted / accelerationTime < newParticlesPerSecond &&
-    particlesThisFrame < maxParticlesPerFrame) {
+         particlesThisFrame < maxParticlesPerFrame) {
       //printf("Totally getting here %f\n", particlesThisFrame);
       // First do up Acceleration.
       if (curUpAccel != 0) {
@@ -471,40 +474,40 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
 
    double colorVariation = 0.2 * randdouble();
    int particlesThisFrame = 0;
-   
+
    while (particlesThisFrame < maxParticlesPerFrame && particlesThisFrame < ((50 - health) /5)) {
       // First do up Acceleration.
       //if (curUpAccel != 0) {
-         //printf("Get here\n");
-         baseParticleAcceleration = up->scalarMultiply(.5 * (.5 - randdouble())) + right->scalarMultiply(.5 * (.5 - randdouble()));
-         emitter = *position;
-         forward->movePoint(emitter, -0.5);
-         //up->movePoint(emitter, .1);
-         addNewLowHealthParticle(emitter, baseParticleAcceleration, *forward, *right, color1 + colorVariation);
+      //printf("Get here\n");
+      baseParticleAcceleration = up->scalarMultiply(.5 * (.5 - randdouble())) + right->scalarMultiply(.5 * (.5 - randdouble()));
+      emitter = *position;
+      forward->movePoint(emitter, -0.5);
+      //up->movePoint(emitter, .1);
+      addNewLowHealthParticle(emitter, baseParticleAcceleration, *forward, *right, color1 + colorVariation);
       //}
 
       // Next do right Acceleration.
       /*if (curRightAccel != 0) {
-         baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
-         emitter = *position;
-         forward->movePoint(emitter, -0.7);
-         addNewParticle(emitter, baseParticleAcceleration, *forward, *up, color2 + colorVariation);
-      }
+        baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
+        emitter = *position;
+        forward->movePoint(emitter, -0.7);
+        addNewParticle(emitter, baseParticleAcceleration, *forward, *up, color2 + colorVariation);
+        }
 
       // Next do forward Acceleration.
       if (curForwardAccel != 0) {
-         // We want to do two streams.
-         baseParticleAcceleration = forward->scalarMultiply(-curForwardAccel * 0.05);
-         Point3D initialPoint(*position);
-         forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
+      // We want to do two streams.
+      baseParticleAcceleration = forward->scalarMultiply(-curForwardAccel * 0.05);
+      Point3D initialPoint(*position);
+      forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
 
-         // First do the right side.
-         right->movePoint(initialPoint, 1);
-         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color1 - colorVariation);
+      // First do the right side.
+      right->movePoint(initialPoint, 1);
+      addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color1 - colorVariation);
 
-         // Next do the left side.
-         right->movePoint(initialPoint, -2);
-         addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color2 - colorVariation);
+      // Next do the left side.
+      right->movePoint(initialPoint, -2);
+      addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color2 - colorVariation);
       }*/
 
       //++particlesEmitted;
@@ -563,7 +566,7 @@ void AsteroidShip::update(double timeDiff) {
             custodian->add(makeShard());
          }
       }
-      
+
       timeLeftToRespawn = respawnTimer.getTimeLeft();
 
       if (this == gameState->ship) {
@@ -586,7 +589,7 @@ void AsteroidShip::update(double timeDiff) {
          return;
       }
    }
-   
+
    if (timeLeftToRespawn > 0 && (gameState->gsm != MenuMode)) {
       if (this == gameState->ship && !isFirstSpawn) {
          std::ostringstream gameMsg;
@@ -697,10 +700,10 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    if ((gameState->gsm != MenuMode) &&
-    (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
+         (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
       if (soundHandle == -1)
-         soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav", 
-          position, (this == gameState->ship), DEFAULT_VOLUME, true);
+         soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav",
+               position, (this == gameState->ship), DEFAULT_VOLUME, true);
    } else {
       if (soundHandle != -1) {
          SoundEffect::stopSoundEffect(soundHandle);
@@ -763,17 +766,17 @@ void AsteroidShip::update(double timeDiff) {
    } else {
       drawHit = false;
    }
-   
+
    if (isBarrelRollingLeft > 0) {
       curRightAccel = -300 * isBarrelRollingLeft + 5;
       isBarrelRollingLeft -= timeDiff;
    }
-   
+
    if (isBarrelRollingRight > 0) {
       curRightAccel = 300 * isBarrelRollingRight + 5;
       isBarrelRollingRight -= timeDiff;
    }
-   
+
 
    createEngineParticles(timeDiff);
    if(health < 50) createLowHealthParticles(timeDiff);
@@ -807,207 +810,199 @@ void AsteroidShip::keepFiring() {
 }
 
 void AsteroidShip::draw_frontpanels() {
-   GLfloat lightPos[3] = {0, 0, 0};
-   GLfloat eyePos[3] = {0, 0, 0};
-   
+   //fboBegin();
+   GLenum buffers[] = {ALBEDO_BUFFER, NORMAL_BUFFER, GLOW_BUFFER, NOLIGHT_BUFFER};
+   glDrawBuffers(4, buffers);
+
+   glUseProgram(shipYShader);
+
    float r, g, b;
    getBrightColor(color1, r, g, b);
    glColor3d(r, g, b);
-   
-   eyePos[0] = (float)gameState->spring->item->position->x - 3.0f;
-   eyePos[1] = (float)gameState->spring->item->position->y - 3.0f;
-   eyePos[2] = (float)gameState->spring->item->position->z + 2.0f;
 
-   lightPos[0] = (float)gameState->getWallxMin();
-   lightPos[1] = (float)gameState->getWallyMin();
-   lightPos[2] = (float)gameState->getWallzMin();
-   
-   GLint lightLoc = glGetUniformLocation(shipYShader, "LightPos");
-   GLint eyeLoc = glGetUniformLocation(shipYShader, "EyePos");
    glUseProgram(shipYShader);
-   glUniform3f(lightLoc, lightPos[0], lightPos[1], lightPos[2]);
-   glUniform3f(eyeLoc, eyePos[0], eyePos[1], eyePos[2]);
+
    glBegin(GL_TRIANGLES);
+   // Right panel, top half.
    Point3D p1 = Point3D(frontX, frontY, frontZ);
    Point3D p2 = Point3D(cornerX, cornerY, cornerZ);
    Point3D p3 = Point3D(middleXY, skew, middleZ);
    Vector3D s1 = p1 - p2;
    Vector3D s2 = p3 - p2;
    Vector3D normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, cornerY, cornerZ);
    glVertex3d(middleXY, skew, middleZ);
-   normal.addNormal();
 
+   // Left panel, top half.
    p1 = Point3D(frontX, frontY, frontZ);
    p2 = Point3D(-middleXY, skew, middleZ);
    p3 = Point3D(-cornerX, cornerY, cornerZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
    normal = s1.cross(s2);
+   normal.addNormal();
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-middleXY, skew, middleZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
-   normal.addNormal();
 
+   // Left panel, bottom half.
    p1 = Point3D(frontX, frontY, frontZ);
    p2 = Point3D(-cornerX, -cornerY, cornerZ);
    p3 = Point3D(-middleXY, skew, middleZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
    normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
    glVertex3d(-middleXY, skew, middleZ);
-   normal.addNormal();
 
+   // Right panel, bottom half.
    p1 = Point3D(frontX, frontY, frontZ);
    p2 = Point3D(middleXY, skew, middleZ);
    p3 = Point3D(cornerX, -cornerY, cornerZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
    normal = s1.cross(s2);
+   normal.addNormal();
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(middleXY, skew, middleZ);
    glVertex3d(cornerX, -cornerY, cornerZ);
-   normal.addNormal();
    glEnd();
    glUseProgram(0);
 
-   lightLoc = glGetUniformLocation(shipXShader, "LightPos");
-   eyeLoc = glGetUniformLocation(shipXShader, "EyePos");
    glUseProgram(shipXShader);
-   glUniform3f(lightLoc, lightPos[0], lightPos[1], lightPos[2]);
-   glUniform3f(eyeLoc, eyePos[0], eyePos[1], eyePos[2]);
    glBegin(GL_TRIANGLES);
-   
+
+   // Top panel, right half.
    p1 = Point3D(frontX, frontY, frontZ);
    p2 = Point3D(skew, middleXY, middleZ);
    p3 = Point3D(cornerX, cornerY, cornerZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
-   normal = s1.cross(s2);
+   normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(skew, middleXY, middleZ);
    glVertex3d(cornerX, cornerY, cornerZ);
-   //normal.addNormal();
 
+   // Top panel, left half.
    p1 = Point3D(frontX, frontY, frontZ);
    p2 = Point3D(-cornerX, cornerY, cornerZ);
    p3 = Point3D(skew, middleXY, middleZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
    normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
    glVertex3d(skew, middleXY, middleZ);
-   normal.addNormal();
 
+   // Bottom panel, left half.
    p1 = Point3D(frontX, frontY, frontZ);
    p2 = Point3D(skew, -middleXY, middleZ);
    p3 = Point3D(-cornerX, -cornerY, cornerZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
-   normal = s1.cross(s2);
+   normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(skew, -middleXY, middleZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
-   //normal.addNormal();
 
+   // Bottom panel, right half.
    p1 = Point3D(frontX, frontY, frontZ);
    p2 = Point3D(cornerX, -cornerY, cornerZ);
    p3 = Point3D(skew, -middleXY, middleZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
    normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, -cornerY, cornerZ);
    glVertex3d(skew, -middleXY, middleZ);
-   //normal.addNormal();
    glEnd();
    glUseProgram(0);
-
-   //glPopMatrix();
+   //fboEnd();
 }
 
 void AsteroidShip::draw_backpanels() {
-   GLfloat lightPos[3] = {0, 0, 0};
-   GLfloat eyePos[3] = {0, 0, 0};
-   
    float r, g, b;
    getBrightColor(color2, r, g, b);
    glColor3d(r, g, b);
-   
-   eyePos[0] = (float)gameState->spring->item->position->x - 3.0f;
-   eyePos[1] = (float)gameState->spring->item->position->y - 3.0f;
-   eyePos[2] = (float)gameState->spring->item->position->z + 2.0f;
 
-   /*
-   lightPos[0] = (float)gameState->getWallxMin();
-   lightPos[1] = (float)gameState->getWallyMin();
-   lightPos[2] = (float)gameState->getWallzMin();
-   */
-   lightPos[0] = 0;
-   lightPos[1] = 0;
-   lightPos[2] = 0;
-   
-   
-   
-   GLint lightLoc = glGetUniformLocation(shipYShader, "LightPos");
-   GLint eyeLoc = glGetUniformLocation(shipYShader, "EyePos");
+   //fboBegin();
+   GLenum buffers[] = {ALBEDO_BUFFER, NORMAL_BUFFER, GLOW_BUFFER, NOLIGHT_BUFFER};
+   glDrawBuffers(4, buffers);
+   int tex = 0;
+
    glUseProgram(backShader);
-   glUniform3f(lightLoc, lightPos[0], lightPos[1], lightPos[2]);
-   glUniform3f(eyeLoc, eyePos[0], eyePos[1], eyePos[2]);
    glBegin(GL_TRIANGLES);
 
+   // Top right corner panel.
    Point3D p1 = Point3D(middleXY, skew, middleZ);
    Point3D p2 = Point3D(cornerX, cornerY, cornerZ);
    Point3D p3 = Point3D(skew, middleXY, middleZ);
    Vector3D s1 = p1 - p2;
    Vector3D s2 = p3 - p2;
    Vector3D normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(middleXY, skew, middleZ);
    glVertex3d(cornerX, cornerY, cornerZ);
    glVertex3d(skew, middleXY, middleZ);
-   normal.addNormal();
 
+   // Bottom right corner panel.
    p1 = Point3D(middleXY, skew, middleZ);
    p2 = Point3D(skew, -middleXY, middleZ);
    p3 = Point3D(cornerX, -cornerY, cornerZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
-   normal = s1.cross(s2);
+   normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(middleXY, skew, middleZ);
    glVertex3d(skew, -middleXY, middleZ);
    glVertex3d(cornerX, -cornerY, cornerZ);
-   normal.addNormal();
 
+   // Bottom left corner panel.
    p1 = Point3D(-middleXY, skew, middleZ);
    p2 = Point3D(cornerX, -cornerY, cornerZ);
    p3 = Point3D(skew, -middleXY, middleZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
    normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(-middleXY, skew, middleZ);
    glVertex3d(-cornerX, -cornerY, cornerZ);
    glVertex3d(skew, -middleXY, middleZ);
-   normal.addNormal();
 
+   // Top left corner panel.
    p1 = Point3D(-middleXY, skew, middleZ);
    p2 = Point3D(skew, middleXY, middleZ);
    p3 = Point3D(-cornerX, cornerY, cornerZ);
    s1 = p1 - p2;
    s2 = p3 - p2;
-   normal = s1.cross(s2);
+   normal = s2.cross(s1);
+   normal.addNormal();
    glVertex3d(-middleXY, skew, middleZ);
    glVertex3d(skew, middleXY, middleZ);
    glVertex3d(-cornerX, cornerY, cornerZ);
-   normal.addNormal();
+
    glEnd();
    glUseProgram(0);
+   //fboEnd();
 }
 
 void AsteroidShip::draw_spaceboner() {
+   //fboBegin();
+   if (gameSettings->drawDeferred) {
+      GLenum buffers[] = {NORMAL_BUFFER, ALBEDO_BUFFER, GLOW_BUFFER, NOLIGHT_BUFFER};
+      glDrawBuffers(4, buffers);
+      int tex = 0;
+
+      glUseProgram(bonerShader);
+   }
    glBegin(GL_TRIANGLES);
    if (curForwardAccel == 10.0) {
       glColor4d(1, .4, 0, 1);
@@ -1058,11 +1053,20 @@ void AsteroidShip::draw_spaceboner() {
       glVertex3d(skew, middleXY, middleZ);
    }
    glEnd();
+   if (gameSettings->drawDeferred) {
+      glUseProgram(0);
+   }
+   //fboEnd();
 }
 
 void AsteroidShip::draw_bonerlines() {
    float r, g, b;
    getBrightColor(color2, r, g, b);
+
+   //fboBegin();
+   GLenum buffers[] = {GLOW_BUFFER, NOLIGHT_BUFFER};
+   glDrawBuffers(2, buffers);
+
    if (curForwardAccel == 10.0) {
       glLineWidth(1.0);
       if (backChange == (backZ - middleZ)) {
@@ -1162,11 +1166,17 @@ void AsteroidShip::draw_bonerlines() {
       glEnd();
    }
    glLineWidth(1.0);
+   //fboEnd();
 }
 
 void AsteroidShip::draw_frontlines() {
    float r, g, b;
    getBrightColor(color1, r, g, b);
+
+   //fboBegin();
+   GLenum buffers[] = {ALBEDO_BUFFER, GLOW_BUFFER};
+   glDrawBuffers(2, buffers);
+
    glBegin(GL_LINES);
    glColor3d(r, g, b);
    glVertex3d(frontX, frontY, frontZ);
@@ -1181,9 +1191,15 @@ void AsteroidShip::draw_frontlines() {
    glVertex3d(frontX, frontY, frontZ);
    glVertex3d(cornerX, -cornerY, cornerZ);
    glEnd();
+
+   //fboEnd();
 }
 
 void AsteroidShip::draw_backlines() {
+   //fboBegin();
+   GLenum buffers[] = {ALBEDO_BUFFER, GLOW_BUFFER};
+   glDrawBuffers(2, buffers);
+
    glBegin(GL_LINE_LOOP);
    glVertex3d(middleXY, skew, middleZ);
    glVertex3d(cornerX, cornerY, cornerZ);
@@ -1195,6 +1211,8 @@ void AsteroidShip::draw_backlines() {
    glVertex3d(cornerX, -cornerY, cornerZ);
    glVertex3d(middleXY, skew, middleZ);
    glEnd();
+
+   //fboEnd();
 }
 
 void AsteroidShip::draw_spawn() {
@@ -1227,9 +1245,12 @@ void AsteroidShip::draw_spawn() {
       glPushMatrix();
       glTranslated(0, 0, -4);
       glScaled(7.5, 2.5, 4);
+      //fboBegin();
+      glDrawBuffer(ALBEDO_BUFFER);
       draw_hitEffect();
+      //fboEnd();
       glPopMatrix();
-   } 
+   }
 }
 
 void AsteroidShip::draw_ship() {
@@ -1378,17 +1399,17 @@ void AsteroidShip::draw() {
       } else {
          glTranslated(0, sin(M_PI * isBarrelRollingLeft) * 2, 0);
       }
-      
+
       glRotated((1 - isBarrelRollingLeft) * 360, 0, 0, 1);
    }
-   
+
    if (isBarrelRollingRight > 0) {
       if (isBarrelRollingRight > .5) {
          glTranslated(0, sin(M_PI * (1 - isBarrelRollingRight)) * 2, 0);
       } else {
          glTranslated(0, sin(M_PI * isBarrelRollingRight) * 2, 0);
       }
-      
+
       glRotated((1 - isBarrelRollingRight) * -360, 0, 0, 1);
    }
    //glRotated(90, 1, 0, 0);
@@ -1409,8 +1430,8 @@ void AsteroidShip::draw() {
          draw_hitEffect();
       }
    }
-   if (aliveTimer.getTimeRunning() > (6 * spawnRate)) {   
-         isFirstSpawn = false;
+   if (aliveTimer.getTimeRunning() > (6 * spawnRate)) {
+      isFirstSpawn = false;
    }
 
    glPopMatrix();
@@ -1469,7 +1490,7 @@ void AsteroidShip::drawCrosshair() {
    glColor3f(1, 1, 1);
    useOrtho();
    glDisable(GL_LIGHTING);
-   
+
    if (currentView == VIEW_FIRSTPERSON_SHIP) {
       glTranslatef((GLfloat)getAimX(),(GLfloat) getAimY(),(GLfloat)0.0f);
    }
@@ -1557,8 +1578,8 @@ void AsteroidShip::drawShotDirectionIndicators() {
    drawPoint.draw();
    up->movePoint(drawPoint, boxSize);
    drawPoint.draw();
-   
-   
+
+
    // Move again
    shotDirection.movePoint(drawPoint, distanceIncrement);
    // top right
@@ -1574,8 +1595,8 @@ void AsteroidShip::drawShotDirectionIndicators() {
 
    boxSize -= boxDecrement;
    right->movePoint(drawPoint, boxDecrement / 2.0);
-   
-   
+
+
    // Move again
    shotDirection.movePoint(drawPoint, distanceIncrement);
    // top right
@@ -1591,8 +1612,8 @@ void AsteroidShip::drawShotDirectionIndicators() {
 
    boxSize -= boxDecrement;
    right->movePoint(drawPoint, boxDecrement / 2.0);
-   
-   
+
+
    shotDirection.movePoint(drawPoint, distanceIncrement);
    // top right
    glColor3d(.2, 1, 1);
@@ -1877,7 +1898,7 @@ void AsteroidShip::atLevelEnd() {
    unbankedShards = 0;
    health = healthMax;
    shakeAmount = 0;
-   
+
    //stopSounds();
 }
 

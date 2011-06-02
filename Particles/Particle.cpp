@@ -13,7 +13,7 @@
 #endif
 #ifndef GL_BGRA
 #define GL_BGRA GL_BGRA_EXT
-#endif 
+#endif
 
 
 using namespace std;
@@ -31,7 +31,7 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
 
    position = _position;
    velocity = _velocity;
-   
+
    slowdown = 2.0f;
    shouldRemove = false;
    life = _life;
@@ -78,13 +78,13 @@ void Particle::updateParticles(double timeDifference)
  */
 void Particle::update(double timeDifference)
 {
-   // Move On The X Axis By X Speed 
+   // Move On The X Axis By X Speed
    position->x += velocity->x * timeDifference;
-   // Move On The Y Axis By Y Speed 
+   // Move On The Y Axis By Y Speed
    position->y += velocity->y * timeDifference;
-   // Move On The Z Axis By Z Speed 
+   // Move On The Z Axis By Z Speed
    position->z += velocity->z * timeDifference;
-   
+
    // This will take care of marking shouldRemove as true or not
    if(doubleTime() > (startTime + life)) {
       shouldRemove = true;
@@ -95,11 +95,11 @@ void Particle::draw()
 {
    glPushMatrix();
    /* Draw The Particle Using Our RGB Values,
-   * Fade The Particle Based On It's Life
-   */
-   
+    * Fade The Particle Based On It's Life
+    */
+
    position->glTranslate();
-   
+
 
    // glColor4f clamps alpha to [0, 1].
    glColor4d( r,g,b, getAlpha());
@@ -107,14 +107,20 @@ void Particle::draw()
    GLint sizeLoc = glGetUniformLocation(billboardShader, "size");
    glUniform1f(sizeLoc, (float) size);
 
+   //fboBegin();
+   if (gameSettings->drawDeferred) {
+      GLenum buffers[] = {ALBEDO_BUFFER, GLOW_BUFFER};
+      glDrawBuffers(2, buffers);
+   }
    glCallList(particleDisplayList);
+   //fboEnd();
    glPopMatrix();
 }
 
 void Particle::initDisplayList() {
    particleDisplayList = glGenLists(1);
    glNewList(particleDisplayList, GL_COMPILE);
-   
+
    glBindTexture( GL_TEXTURE_2D, Texture::getTexture("Particle") );
    // TODO: The problem with this  is that particles don't fade out. They snap out.
    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -128,7 +134,7 @@ void Particle::initDisplayList() {
    glEnable(GL_ALPHA_TEST);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
    glBegin(GL_TRIANGLE_FAN);
-   
+
    // Top Left
    glTexCoord2d( 0, 1 );
    glVertex3f( -1, 1, 0.0f );
@@ -142,7 +148,7 @@ void Particle::initDisplayList() {
    glTexCoord2d( 0, 0 );
    glVertex3f( -1, -1, 0.0f );
    glEnd( );
-   
+
    glDisable(GL_TEXTURE_2D);
    glUseProgram(0);
    glDepthMask(true);
@@ -164,5 +170,5 @@ void Particle::Clear() {
 }
 
 double Particle::getAlpha() {
-   return clamp(((startTime + life) - doubleTime()), 0, 1); 
+   return clamp(((startTime + life) - doubleTime()), 0, 1);
 }

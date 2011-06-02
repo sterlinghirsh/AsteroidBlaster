@@ -48,6 +48,10 @@ GLuint backShader = 0;
 GLuint hitShader = 0;
 GLuint explosionShader = 0;
 GLuint ringShader = 0;
+GLuint gBufferShader = 0;
+GLuint lineShader = 0;
+GLuint bonerShader = 0;
+GLuint deferShader = 0;
 GLuint timeBombShader = 0;
 GLuint fbo = 0;
 GLuint depthbuffer = 0;
@@ -619,6 +623,8 @@ void setupVideo() {
 }
 
 void drawScreenQuad(int tex) {
+   glDepthMask(GL_FALSE);
+   glDisable(GL_DEPTH_TEST);
    useOrtho();
    float aspect = (float)gameSettings->GW/(float)gameSettings->GH;
    glPushMatrix();
@@ -628,8 +634,10 @@ void drawScreenQuad(int tex) {
    float maxY = 1.0;
    float minX = -1.0f * aspect;
    float maxX = 1.0f * aspect;
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, tex);
+   if (tex != 0) {
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, tex);
+   }
 
    float texMaxX = (float) gameSettings->GW / (float) texSize;
    float texMaxY = (float) gameSettings->GH / (float) texSize;
@@ -651,39 +659,107 @@ void drawScreenQuad(int tex) {
 
    glColor4f(1.0, 1.0, 1.0, 1.0);
    glBindTexture(GL_TEXTURE_2D, 0);
-   glClear(GL_DEPTH_BUFFER_BIT);
+   //glClear(GL_DEPTH_BUFFER_BIT);
+   glEnable(GL_DEPTH_TEST);
+   glDepthMask(GL_TRUE);
+}
+
+void render(GameState* gameStateIn) {
+   int albedo = Texture::getTexture("albedoTex");
+   int bloom = Texture::getTexture("bloomTex");
+   int nolight = Texture::getTexture("noLightTex");
+   int hud = Texture::getTexture("hudTex");
+   float lightpos[] = {1.0, 1.0, 0.0};
+
+   GLint albedoLoc = glGetUniformLocation(deferShader, "albedo");
+   GLint bloomLoc = glGetUniformLocation(deferShader, "bloom");
+   GLint nolightLoc = glGetUniformLocation(deferShader, "nolight");
+   GLint hudLoc = glGetUniformLocation(deferShader, "hud");
+   GLint lightposLoc = glGetUniformLocation(deferShader, "lightPos");
+   GLint farLoc = glGetUniformLocation(gBufferShader, "far");
+
+   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D, albedo);
+   glActiveTexture(GL_TEXTURE1);
+   glBindTexture(GL_TEXTURE_2D, bloom);
+   glActiveTexture(GL_TEXTURE2);
+   glBindTexture(GL_TEXTURE_2D, nolight);
+   glActiveTexture(GL_TEXTURE3);
+   glBindTexture(GL_TEXTURE_2D, hud);
+
+   //cout << farClip << endl;
+   glUseProgram(deferShader);
+
+   glUniform1f(farLoc, 100.0f);
+   //glUniform1f(farLoc, farClip);
+   glUniform3fv(lightposLoc, 1, lightpos);
+   glUniform1i(albedoLoc, 0);
+   glUniform1i(bloomLoc, 1);
+   glUniform1i(nolightLoc, 2);
+   glUniform1i(hudLoc, 3);
+
+   drawScreenQuad(0);
+   glUseProgram(0);
+   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void initFbo() {
    glGenFramebuffersEXT(1, &fbo);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 
-   glGenRenderbuffersEXT(1, &depthbuffer);
-   glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthbuffer);
-   glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT,
-         texSize, texSize);
-   glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
-         GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthbuffer);
+   /*
+      glGenRenderbuffersEXT(1, &depthbuffer);
+      glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthbuffer);
+      glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT,
+      texSize, texSize);
+      glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+      GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthbuffer);
+      */
+   //glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, DEPTH_BUFFER,
+   //GL_TEXTURE_2D, Texture::getTexture("depthTex"), 0);
+
+
+   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+         GL_TEXTURE_2D, Texture::getTexture("depthTex"), 0);
+   glDrawBuffer(GL_NONE);
+   glReadBuffer(GL_NONE);
+
 
    int maxbuffers;
    glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &maxbuffers);
-   if (maxbuffers < 4) {
-      printf("maxbuffers (%d) less than needed buffers (4). Disabling overlay and bloom.\n", maxbuffers);
+   if (maxbuffers < NUM_BUFFERS) {
+      printf("maxbuffers (%d) less than needed buffers (%d). Disabling overlay and bloom.\n", maxbuffers, NUM_BUFFERS);
       gameSettings->useOverlay = false;
       gameSettings->bloom = false;
+      gameSettings->goodBuffers = false;
+   } else {
+      gameSettings->goodBuffers = true;
    }
 
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GLOW_BUFFER,
          GL_TEXTURE_2D, Texture::getTexture("fboTex"), 0);
 
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT,
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, BLUR_BUFFER,
          GL_TEXTURE_2D, Texture::getTexture("hblurTex"), 0);
 
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT2_EXT,
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, BLOOM_BUFFER,
          GL_TEXTURE_2D, Texture::getTexture("bloomTex"), 0);
 
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT3_EXT,
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, NORMAL_BUFFER,
+         GL_TEXTURE_2D, Texture::getTexture("normalTex"), 0);
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, ALBEDO_BUFFER,
+         GL_TEXTURE_2D, Texture::getTexture("albedoTex"), 0);
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, OVERLAY_BUFFER,
          GL_TEXTURE_2D, Texture::getTexture("overlayTex"), 0);
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, NOLIGHT_BUFFER,
+         GL_TEXTURE_2D, Texture::getTexture("noLightTex"), 0);
+
+   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, HUD_BUFFER,
+         GL_TEXTURE_2D, Texture::getTexture("hudTex"), 0);
 
    GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 
@@ -694,64 +770,25 @@ void initFbo() {
       printf("Framebuffers supported.\n");
    }
 
-   useOrtho();
-   glDisable(GL_LIGHTING);
-
-   float aspect = (float)gameSettings->GW/(float)gameSettings->GH;
-   
-   float minY = -1.0;
-   float maxY = 1.0;
-   float minX = -1.0f * aspect;
-   float maxX = 1.0f * aspect;
-   
-   float texMaxX = (float) gameSettings->GW / (float) texSize;
-   float texMaxY = (float) gameSettings->GH / (float) texSize;
-
-   glColor4f(1.0, 1.0, 1.0, 1.0);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(minX, minY, 0.0);
-   glTexCoord2f(texMaxX, 0.0);
-   glVertex3f(maxX, minY, 0.0);
-   glTexCoord2f(texMaxX, texMaxY);
-   glVertex3f(maxX, maxY, 0.0);
-   glTexCoord2f(0.0, texMaxY);
-   glVertex3f(minX, maxY, 0.0);
-   glEnd();
-
-   glEnable(GL_LIGHTING);
-
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-}
-
-void fboBegin(int buffer) {
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-   glDrawBuffer(buffer);
-}
-
-void fboEnd() {
+   //glClear(GL_DEPTH_BUFFER_BIT);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 
 void fboClear(int buffer) {
-   fboBegin(buffer);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   //glClear(GL_COLOR_BUFFER_BIT);
-   //glClear(GL_DEPTH_BUFFER_BIT);
+   glDrawBuffer(buffer);
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT);
    fboEnd();
 }
 
 void clearAllBuffers() {
-   /*
-   fboClear(GLOW_BUFFER);
-   fboClear(BLUR_BUFFER);
-   fboClear(BLOOM_BUFFER);
-   fboClear(DEPTH_BUFFER);
-   //fboClear(GEOM_BUFFER);
-   fboClear(NORMAL_BUFFER);
-   fboClear(OVERLAY_BUFFER);
-   */
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+   GLenum buffers[] = {ALBEDO_BUFFER, GLOW_BUFFER, NORMAL_BUFFER,
+         NOLIGHT_BUFFER, BLUR_BUFFER, BLOOM_BUFFER, HUD_BUFFER};
+   glDrawBuffers(7, buffers);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   //glClear(GL_COLOR_BUFFER_BIT);
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 
 int nextPowerOfTwo(int num) {
@@ -760,8 +797,7 @@ int nextPowerOfTwo(int num) {
       result *= 2;
    }
    printf("%d -> %d\n", num, result);
-   //return result;
-   return num;
+   return result;
 }
 
 void toggleFullScreen() {

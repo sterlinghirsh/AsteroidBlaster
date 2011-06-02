@@ -24,6 +24,9 @@ class GameSettings {
       int fullscreenGW, fullscreenGH;
       bool mouseCapture;
       bool useOverlay;
+      bool goodBuffers;
+      
+      bool drawDeferred;
 
       void toggleFullScreen();
 

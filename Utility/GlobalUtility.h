@@ -65,6 +65,10 @@ extern GLuint backShader;
 extern GLuint hitShader;
 extern GLuint explosionShader;
 extern GLuint ringShader;
+extern GLuint gBufferShader;
+extern GLuint lineShader;
+extern GLuint bonerShader;
+extern GLuint deferShader;
 extern GLuint timeBombShader;
 extern GLuint fbo;
 extern GLuint depthbuffer;
@@ -121,9 +125,14 @@ void drawCylinder(double radius, double length);
 void getBrightColor(double hue, float& r, float& g, float& b);
 void setupVideo();
 void drawScreenQuad(int tex);
+void render(GameState* gameStateIn);
 void initFbo();
-void fboBegin(int buffer);
-void fboEnd();
+inline void fboBegin() {
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+}
+inline void fboEnd() {
+   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+}
 void fboClear(int buffer);
 void clearAllBuffers();
 int nextPowerOfTwo(int num);

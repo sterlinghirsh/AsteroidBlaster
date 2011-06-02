@@ -38,9 +38,10 @@ void Input::draw() {
    position.x = (Sint16) (gameSettings->GW/8);
    chatText->setPosition(position);
 
-   fboBegin(GL_COLOR_ATTACHMENT3);
+   //fboBegin();
+   glDrawBuffer(HUD_BUFFER);
    // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    //draw the text
    glPushMatrix();
@@ -54,7 +55,7 @@ void Input::draw() {
    glPopMatrix();
 
    glEnable(GL_LIGHTING);
-   fboEnd();
+   //fboEnd();
 
    //SDL_GL_SwapBuffers();
 

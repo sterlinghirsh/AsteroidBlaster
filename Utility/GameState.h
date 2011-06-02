@@ -147,7 +147,7 @@ class GameState : public InputReceiver {
       void networkUpdate(double timeDiff);
 
       // Draw functions of various kinds
-      void drawObjects(bool drawGlow = false);
+      void drawObjects();
       void drawScreens();
       void hBlur();
       void vBlur();

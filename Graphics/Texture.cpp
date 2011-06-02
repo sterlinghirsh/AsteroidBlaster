@@ -115,8 +115,9 @@ void Texture::Add(std::string file, std::string keyName) {
    numOfTextures++;
 }
 
+
 // Should insert a new blank texture.
-void Texture::Add(int width, int height, std::string keyName) {
+void Texture::Add(int width, int height, std::string keyName, bool isDepth) {
    std::map<std::string, unsigned int>::iterator iter = textures.find(keyName);
 
    if (iter != textures.end()) {
@@ -131,16 +132,42 @@ void Texture::Add(int width, int height, std::string keyName) {
    glBindTexture(GL_TEXTURE_2D, texture );
 
    // turn bitmap into texture
-   glTexImage2D(GL_TEXTURE_2D, 0, 3, width,
-         height, 0, GL_RGB,
+   if (!isDepth) {
+      glTexImage2D(GL_TEXTURE_2D, 0, 4, width,
+            height, 0, GL_RGBA,
+            GL_UNSIGNED_BYTE, NULL);
+
+      // set texture filtering
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   } else {
+      /*
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width,
+         height, 0, GL_RGBA,
          GL_UNSIGNED_BYTE, NULL);
-   
-   // set texture filtering
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+         */
+      /*
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width,
+         height, 0, GL_DEPTH_COMPONENT,
+         GL_UNSIGNED_BYTE, NULL);
+
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+         glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+         */
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+      glBindTexture(GL_TEXTURE_2D, 0);
+   }
 
    textures.insert(std::pair<std::string, unsigned int>(keyName,texture));
-     
+
    numOfTextures++;
 }
 

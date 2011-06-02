@@ -19,7 +19,6 @@ class BeamShot : public Shot {
       BeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gameState);
       void drawBeam(bool drawDots);
       virtual void draw();
-      virtual void drawGlow();
       virtual void drawInMinimap();
       virtual void update(double timeDiff);
       virtual void debug();
