@@ -27,7 +27,7 @@ void GameMessage::update(double timeDiff) {
 }
 
 void GameMessage::drawAllMessages() {
-   SDL_Rect position = {(Sint16) (gameSettings->GW / 2), (Sint16) (gameSettings->GH / 2)};
+   SDL_Rect position = {(Sint16) (gameSettings->GW / 2), (Sint16) (gameSettings->GH / 4)};
    int lineHeight = 30;
    std::list<GameMessage*>::iterator listIter = activeMessages.begin();
 

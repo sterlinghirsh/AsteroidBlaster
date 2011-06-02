@@ -31,8 +31,16 @@ BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    normalizedVelocity.normalize();
 
    particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
-   damage = 3;
+   damage = 5;
    collisionType = collisionPoint = new CollisionPoint(*position);
+   
+   soundHandle = SoundEffect::playSoundEffect("BlasterShot2.wav", position, false);
+}
+
+BlasterShot::~BlasterShot() {
+   if (soundHandle != -1) {
+      SoundEffect::stopSoundEffect(soundHandle);
+   }
 }
 
 void BlasterShot::draw() {
@@ -55,6 +63,10 @@ void BlasterShot::draw() {
 void BlasterShot::update(double timeDiff) {
    Shot::update(timeDiff);
    const int particlesPerSecond = 4;
+
+   if (soundHandle != -1) {
+      SoundEffect::updateSource(soundHandle, position, 75);
+   }
    
    //Vector3D normalizedVelocity(*velocity);
    //normalizedVelocity.normalize();

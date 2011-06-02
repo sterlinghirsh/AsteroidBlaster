@@ -28,7 +28,7 @@ class SoundEffect {
       static void stopAllSoundEffect();
       static void resetPosition(int handle);
       static void updatePositions(Object3D* receiver);
-      void updateSource(int handle, Vector3D* source, int volume = DEFAULT_VOLUME);
+      static void updateSource(int handle, Vector3D* source, int volume = DEFAULT_VOLUME);
 
    private:
       static std::map<std::string, Mix_Chunk*> soundEffects;

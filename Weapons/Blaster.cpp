@@ -14,8 +14,8 @@
 Blaster::Blaster(AsteroidShip* owner, int _index)
 : Weapon(owner, _index) {
    BLASTER_WEAPON_INDEX = index;
-   shotSpeed = 70; // Units per second
-   coolDown = 0.15; // Seconds
+   shotSpeed = 100; // Units per second
+   coolDown = 0.20; // Seconds
 
    // Random variations for the ShootingAI and human players.
    randomAIVariationAmount = 4;
@@ -87,7 +87,6 @@ void Blaster::fire() {
    // Don't play sound effects in godMode b/c there would be too many.
    if (!ship->gameState->godMode) {
       currentHeat += heatPerShot;
-      SoundEffect::playSoundEffect("BlasterShot2.wav", &start);
    }
 }
 

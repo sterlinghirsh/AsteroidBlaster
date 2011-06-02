@@ -64,6 +64,7 @@ class AsteroidShip : public Object3D {
       int nShards; // Total number of shards the ship has.
       int bankedShards; // Shards that were collected in previous rounds.
       int unbankedShards; // Shards that were collected this round.
+      int totalBankedShards;
       double bankPeriod; // Time it takes for a single shard to bank.
       Timer bankTimer; // This is set if there are any shards unbanked
 

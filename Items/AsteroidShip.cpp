@@ -15,6 +15,8 @@
 #include "Network/ClientCommand.h"
 #include "Items/Spring.h"
 
+#include <sstream>
+
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
 #endif
@@ -116,6 +118,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       nShards = 0;
       bankedShards = 0;
       unbankedShards = 0;
+      totalBankedShards = 0;
       bankPeriod = 10; // Default bank period is 10 seconds.
       bankTimer.reset();
 
@@ -519,7 +522,8 @@ void AsteroidShip::update(double timeDiff) {
    if (health <= 0) {
       const double respawnTime = 4;
       shakeAmount = 0;
-      //stopSounds();
+      stopSounds();
+
       // Handle respawning.
       if (!respawnTimer.isRunning) {
          respawnTimer.setCountDown(respawnTime);
@@ -686,8 +690,36 @@ void AsteroidShip::update(double timeDiff) {
       } else if (bankTimer.getTimeLeft() < 0) {
          bankTimer.reset();
          bankedShards++;
+         totalBankedShards++;
          unbankedShards--;
-         // Probably should play a sound or do a dance.
+
+         // Play the sound effect only sometimes.
+         // Something else special should happen.
+         std::ostringstream sstream;
+
+         bool showBankedShardsMessage = false;
+
+         switch (totalBankedShards) {
+            case 1: case 5: case 10: case 25: case 50:
+               showBankedShardsMessage = true;
+               break;
+            default:
+               if (totalBankedShards % 100 == 0) {
+                  showBankedShardsMessage = true;
+               }
+         }
+                  
+         if (showBankedShardsMessage) {
+            SoundEffect::playSoundEffect("ShardBank", position, true);
+            if (totalBankedShards == 1) {
+               sstream << "Banked first shard!";
+            } else {
+               sstream << "Banked " << totalBankedShards << " total shards!";
+            }
+
+            GameMessage::Add(sstream.str(), 1, 2);
+         }
+
       }
    } else if (unbankedShards > 0) {
       bankTimer.setCountDown(bankPeriod);
@@ -1894,12 +1926,15 @@ void AsteroidShip::readCommand(ClientCommand& command) {
  * This is called on the ship when the level ends.
  */
 void AsteroidShip::atLevelEnd() {
+   SoundEffect::playSoundEffect("ShardBank", position, true);
    bankedShards += unbankedShards;
+   totalBankedShards += unbankedShards;
+
    unbankedShards = 0;
    health = healthMax;
    shakeAmount = 0;
 
-   //stopSounds();
+   stopSounds();
 }
 
 void AsteroidShip::stopSounds() {
