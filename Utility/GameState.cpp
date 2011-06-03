@@ -583,8 +583,6 @@ void  GameState::draw() {
       glPopMatrix();
    }
 
-   drawMinimap();
-
    if (gameSettings->useOverlay) {
       drawOverlay();
    }
