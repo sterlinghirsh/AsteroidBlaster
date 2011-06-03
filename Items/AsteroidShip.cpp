@@ -110,6 +110,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       score = 0;
       kills = 0;
       deaths = 0;
+      life = 4;
 
       lastDamager = NULL;
       lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
@@ -528,6 +529,9 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
 }
 
 void AsteroidShip::update(double timeDiff) {
+   if (life == 0) {
+      return;
+   }
    if (health <= 0) {
       const double respawnTime = 4;
       shakeAmount = 0;
@@ -538,6 +542,15 @@ void AsteroidShip::update(double timeDiff) {
          respawnTimer.setCountDown(respawnTime);
          timeLeftToRespawn = respawnTimer.getTimeLeft();
          ++deaths;
+         --life;
+         if (life <= 0 && this == gameState->ship) {
+            gameState->gameOver();
+            gameState->usingShipCamera = false;
+            return;
+         } else if (life <= 0) {
+            shouldRemove = true;
+            return;
+         }
          AsteroidShip* lastDamagerShip = dynamic_cast<AsteroidShip*>(lastDamager);
          if (lastDamagerShip != NULL) {
             lastDamagerShip->kills++;
@@ -718,7 +731,7 @@ void AsteroidShip::update(double timeDiff) {
                }
          }
                   
-         if (showBankedShardsMessage) {
+         if (gameState->ship == this && showBankedShardsMessage) {
             SoundEffect::playSoundEffect("ShardBank", position, true);
             if (totalBankedShards == 1) {
                sstream << "Banked first shard!";

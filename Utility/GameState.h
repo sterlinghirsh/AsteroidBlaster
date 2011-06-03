@@ -54,6 +54,7 @@ class GameState : public InputReceiver {
            //*weaponText,
            //*ammoText,
            *curLevelText,
+           *lifeText,
            *timerText,
            *gameOverText,
            *winText;
@@ -76,7 +77,8 @@ class GameState : public InputReceiver {
       bool gameIsRunning;
       bool levelOver;
       bool drawGraphics;
-   
+      bool usingShipCamera;
+
       ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
       ProgressBar* shardBankBar;
@@ -93,6 +95,7 @@ class GameState : public InputReceiver {
 
       // Timer to control how long the level lasts.
       Timer levelTimer;
+      Timer gameOverTimer;
 
       //server stuff
       UDP_Server* udpServer;
@@ -103,8 +106,6 @@ class GameState : public InputReceiver {
    //private variables------------------------------
    private:
    
-      bool usingShipCamera;
-
       Camera* shipCamera;
       Camera* spectatorCamera;
       double spectatorSpeed;
@@ -196,6 +197,7 @@ class GameState : public InputReceiver {
       void load();
 
       void testFunction();
+      void gameOver();
    
    //private functions------------------------------
    private:

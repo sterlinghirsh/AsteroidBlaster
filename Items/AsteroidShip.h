@@ -59,6 +59,7 @@ class AsteroidShip : public Object3D {
       int score;
       int kills;
       int deaths;
+      int life;
 
       // Banking
       int nShards; // Total number of shards the ship has.
