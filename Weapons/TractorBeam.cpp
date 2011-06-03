@@ -19,6 +19,7 @@ TractorBeam::TractorBeam(AsteroidShip* owner, int _index) : Weapon(owner, _index
    purchased = true;
    randomAIVariationAmount = 4;
    range = 40;
+   soundHandle = -1;
 
    icon = "TractorBeamIcon";
    r = 0;
