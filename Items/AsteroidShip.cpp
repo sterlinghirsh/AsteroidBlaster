@@ -140,14 +140,11 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       regenHealthUpgradePrice = 10;
       regenHealthLevelMax = 10;
 
-/*
-<<<<<<< .mine
       //engine upgrade, terminal speed is raised when leved up
       engineUpgrade = 0;
       engineMax = 5;
       enginePrice = 10;
-=======
-*/
+
    // Add weapons to the list!
    /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE CONSTANTS IN Utility/Constants.h
    */

@@ -68,8 +68,11 @@ class AsteroidShip : public Object3D {
       double bankPeriod; // Time it takes for a single shard to bank.
       Timer bankTimer; // This is set if there are any shards unbanked
 
+      // The current level of the engine.
       int engineUpgrade;
+      // The maximum upgrade level of the engine.
       int engineMax;
+      // The price increment per upgrade.
       int enginePrice;
       double health;
       double healthMax;
