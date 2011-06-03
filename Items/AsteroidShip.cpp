@@ -124,7 +124,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
 
       // The ship's max motion parameters.
       maxForwardAccel = 10;
-      maxRightAccel = 5;
+      maxRightAccel = 20;
       maxUpAccel = 5;
       maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
 
@@ -219,12 +219,12 @@ void AsteroidShip::reInitialize() {
    targetYawSpeed = targetRollSpeed = targetPitchSpeed = 0;
    maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
    maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
-   shotOrigin = *position;
+   /*shotOrigin = *position;
    forward->movePoint(shotOrigin, shotOriginScale);
 
    forward->updateMagnitude(0, 0, 1);
    up->updateMagnitude(0, 1, 0);
-   right->updateMagnitude(-1, 0, 0);
+   right->updateMagnitude(-1, 0, 0);*/
 
    // Is the ship firing? Not when it's instantiated.
    isFiring = false;
@@ -239,11 +239,23 @@ void AsteroidShip::reInitialize() {
    particlesEmitted = 0;
 
    velocity->updateMagnitude(0, 0, 0);
+   
+   int posOrNeg = (rand()%2)*2 - 1;
+   int littleBitLessThanHalfOfWorldSize = int(gameState->worldSize / 2) - 4;
 
-   double randX = (randdouble())*(gameState->worldSize / 2);
-   double randY = (randdouble())*(gameState->worldSize / 2);
-   double randZ = (randdouble())*(gameState->worldSize / 2);
+   double randX = posOrNeg*((double)(rand() % littleBitLessThanHalfOfWorldSize));//*(gameState->worldSize / 2);
+   double randY = posOrNeg*((double)(rand() % littleBitLessThanHalfOfWorldSize));//*(gameState->worldSize / 2);
+   double randZ = posOrNeg*((double)(rand() % littleBitLessThanHalfOfWorldSize));//*(gameState->worldSize / 2);
    position->updateMagnitude(randX, randY, randZ);
+   shotOrigin = *position;
+
+   forward->updateMagnitude(-position->x, -position->y, -position->z);
+   forward->normalize();
+   up->updateMagnitude(forward->getNormalVector());
+   up->normalize();
+   right->updateMagnitude(forward->cross(*up));
+   right->normalize();
+   forward->movePoint(shotOrigin, shotOriginScale);
    respawnTimer.reset();
    aliveTimer.countUp();
 }
@@ -795,16 +807,47 @@ void AsteroidShip::update(double timeDiff) {
    } else {
       drawHit = false;
    }
-
+   
+   if (isBarrelRollingLeft == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(-20)));
+   if (isBarrelRollingRight == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(20)));
    if (isBarrelRollingLeft > 0) {
-      curRightAccel = -300 * isBarrelRollingLeft + 5;
+      roll(timeDiff * -2 * M_PI);
+      /*if (isBarrelRollingLeft > .5) {
+         curRightAccel = -300 * isBarrelRollingLeft + 5;
+      } else {
+         curRightAccel = 300 * isBarrelRollingLeft + 5;
+      }*/
       isBarrelRollingLeft -= timeDiff;
    }
 
    if (isBarrelRollingRight > 0) {
-      curRightAccel = 300 * isBarrelRollingRight + 5;
+      roll(timeDiff * 2 * M_PI);
+      /*if (isBarrelRollingRight > .5) {
+         curRightAccel = 300 * isBarrelRollingRight + 5;
+      } else {
+         curRightAccel = -300 * isBarrelRollingRight + 5;
+      }*/
       isBarrelRollingRight -= timeDiff;
    }
+   
+   /*if (isBarrelRollingLeft > 0) {
+      //glRotated((1 - isBarrelRollingLeft) * 360, forward->x, forward->y, forward->z);
+      if (isBarrelRollingLeft > .5) {
+         //glTranslated(sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->x, sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->y, sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->z);
+         shotOrigin.x += 
+      } else {
+         glTranslated(sin(M_PI * isBarrelRollingLeft) * 2 * up->x, sin(M_PI * isBarrelRollingLeft) * 2 * up->y, sin(M_PI * isBarrelRollingLeft) * 2 * up->z);
+      }
+   }
+
+   if (isBarrelRollingRight > 0) {
+      //glRotated((1 - isBarrelRollingRight) * -360, forward->x, forward->y, forward->z);
+      if (isBarrelRollingRight > .5) {
+         glTranslated(sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->x, sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->y, sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->z);
+      } else {
+         glTranslated(sin(M_PI * isBarrelRollingRight) * 2 * up->x, sin(M_PI * isBarrelRollingRight) * 2 * up->y, sin(M_PI * isBarrelRollingRight) * 2 * up->z);
+      }
+   }*/
 
 
    createEngineParticles(timeDiff);
@@ -1422,7 +1465,7 @@ void AsteroidShip::draw() {
    glRotate();
    spin+= 2;
    glColor4d(0, 0, 0, 1);
-   if (isBarrelRollingLeft > 0) {
+   /*if (isBarrelRollingLeft > 0) {
       if (isBarrelRollingLeft > .5) {
          glTranslated(0, sin(M_PI * (1 - isBarrelRollingLeft)) * 2, 0);
       } else {
@@ -1440,7 +1483,7 @@ void AsteroidShip::draw() {
       }
 
       glRotated((1 - isBarrelRollingRight) * -360, 0, 0, 1);
-   }
+   }*/
    //glRotated(90, 1, 0, 0);
 
    if (drawSpawn && !(gameState->gsm == MenuMode)) {
@@ -1555,6 +1598,23 @@ void AsteroidShip::drawShotDirectionIndicators() {
    const double distanceIncrement = shotOriginScale > 0 ? 5 : 1;
 
    glPushMatrix();
+   /*if (isBarrelRollingLeft > 0) {
+      //glRotated((1 - isBarrelRollingLeft) * 360, forward->x, forward->y, forward->z);
+      if (isBarrelRollingLeft > .5) {
+         glTranslated(sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->x, sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->y, sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->z);
+      } else {
+         glTranslated(sin(M_PI * isBarrelRollingLeft) * 2 * up->x, sin(M_PI * isBarrelRollingLeft) * 2 * up->y, sin(M_PI * isBarrelRollingLeft) * 2 * up->z);
+      }
+   }
+
+   if (isBarrelRollingRight > 0) {
+      //glRotated((1 - isBarrelRollingRight) * -360, forward->x, forward->y, forward->z);
+      if (isBarrelRollingRight > .5) {
+         glTranslated(sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->x, sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->y, sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->z);
+      } else {
+         glTranslated(sin(M_PI * isBarrelRollingRight) * 2 * up->x, sin(M_PI * isBarrelRollingRight) * 2 * up->y, sin(M_PI * isBarrelRollingRight) * 2 * up->z);
+      }
+   }*/
    shotDirection.movePoint(drawPoint, distanceIncrement);
    // Start at top right.
    up->movePoint(drawPoint, boxSize / 2);
