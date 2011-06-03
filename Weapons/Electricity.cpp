@@ -21,6 +21,7 @@ Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index
    soundPlaying = false;
    curAmmo = -1;
    purchased = false;
+   soundHandle = -1;
    
    currentHeat = 0;
    overheatLevel = 5;
