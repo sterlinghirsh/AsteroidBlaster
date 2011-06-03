@@ -318,7 +318,9 @@ void ShootingAI::selectWeaponUpdateChosen(int weaponIndex) {
 }
 
 Object3D* ShootingAI::chooseTarget() {
-   // Make the AI choose from a list of Targetable objects instead of Drawable objects, which are inside the view frustum.
+   /* Make the AI choose from a list of Targetable objects instead of Drawable 
+    * objects, which are inside the view frustum.
+    */
    std::list<Object3D*>* targets;
    targets = ship->getRadar()->getTargetableViewFrustumReading();
    std::list<Object3D*>::iterator targets_iterator;
@@ -329,6 +331,11 @@ Object3D* ShootingAI::chooseTarget() {
    const double distWeight = 600;
    const double radiusWeight = 1;
    const double proximityWeight = 2;
+   /* The default weighting multiplier for an enemy ship. This is increased
+    * if the target's kill to death ratio is high, and decreased if it is low.
+    * It's also decreased if this AI's KTD ratio is high, and increased if it's low.
+    */
+   double playerWeight = 1;
    bool isAShip = false;
    bool isAShard = false;
    
@@ -347,15 +354,30 @@ Object3D* ShootingAI::chooseTarget() {
       //printf("starting null check.\n");
       if (*targets_iterator == NULL) {
          //printf("targets_iterator was null!\n\n\n\n");
-         continue;
+      continue;
       }
       
      curWeight = 0.0;
      isAShip = false;
      isAShard = false;
       
-     if((consideredShip = dynamic_cast<AsteroidShip*>(*targets_iterator)) != NULL)
-        isAShip = true;
+     if((consideredShip = dynamic_cast<AsteroidShip*>(*targets_iterator)) != NULL) {
+         isAShip = true;
+         // Reset this to 1 for this target.
+         playerWeight = 1;
+         // Make sure we don't get a divide by 0 error.
+         if(consideredShip->deaths != 0) {
+            playerWeight = consideredShip->kills / consideredShip->deaths;
+            if(playerWeight = 0)
+               playerWeight = 1;
+            // Don't ever add too much of a weight for a player, even if their KTD ratio is high.
+            if(playerWeight > 1.6)
+               playerWeight = 1.6;
+            // Don't ever add too small of a weight for a player, even if they're playing poorly.
+            else if(playerWeight < 0.3)
+               playerWeight = 0.3;
+         }
+     }
 
      else if(dynamic_cast<Shard*>(*targets_iterator) != NULL) {
         curWeight += 35;
@@ -381,7 +403,7 @@ Object3D* ShootingAI::chooseTarget() {
 
         // Only add weight if the considered ship is not our own ship.
         if (consideredShip->id != ship->id) {
-           curWeight += 20;
+           curWeight += playerWeight * 20;
         }
      }
 

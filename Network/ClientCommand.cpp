@@ -12,8 +12,6 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-
-
 ClientCommand::ClientCommand() {
    shipID = 0;
    reset();
