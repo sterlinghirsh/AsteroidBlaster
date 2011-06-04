@@ -319,6 +319,11 @@ void GameState::update(double timeDiff) {
       mainMenu->firstTime = true;
       mainMenu->activate();
       gameOverTimer.reset();
+      custodian.clear();
+      Particle::Clear();
+      MeshFace::Clear();
+      custodian.update();
+      GameMessage::Clear();
    }
 
    // if it's not in MenuMode
