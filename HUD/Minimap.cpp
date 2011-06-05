@@ -184,6 +184,7 @@ void Minimap::draw() {
 
       glEnable(GL_CULL_FACE);
    glPopMatrix();
+   delete objects;
 }
 
 /**
