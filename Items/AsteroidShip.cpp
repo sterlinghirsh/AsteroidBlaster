@@ -1021,7 +1021,6 @@ void AsteroidShip::draw_backpanels() {
    //fboBegin();
    GLenum buffers[] = {ALBEDO_BUFFER, NORMAL_BUFFER, GLOW_BUFFER, NOLIGHT_BUFFER};
    glDrawBuffers(4, buffers);
-   int tex = 0;
 
    glUseProgram(backShader);
    glBegin(GL_TRIANGLES);
@@ -1084,7 +1083,6 @@ void AsteroidShip::draw_spaceboner() {
    if (gameSettings->drawDeferred) {
       GLenum buffers[] = {NORMAL_BUFFER, ALBEDO_BUFFER, GLOW_BUFFER, NOLIGHT_BUFFER};
       glDrawBuffers(4, buffers);
-      int tex = 0;
 
       glUseProgram(bonerShader);
    }

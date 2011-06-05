@@ -227,7 +227,6 @@ void TimedBombShot::drawExplosion() {
       glRotate();
       glRotated(90, 1, 0, 0);
 
-      float helper = (float) (secondScale * .6);
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glDisable(GL_LIGHTING);

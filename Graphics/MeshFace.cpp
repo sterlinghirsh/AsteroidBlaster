@@ -58,7 +58,8 @@ void MeshFace::moveBy(Vector3D move) {
 
 void MeshFace::draw() {
    double shipDist = position->distanceFrom(*gameState->ship->position);
-   GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 1);
+   //unused variable
+   //GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 1);
 
    //glEnable(GL_COLOR_MATERIAL);
    glDisable(GL_CULL_FACE);
