@@ -177,9 +177,9 @@ GameState::GameState(GameStateMode _gsm) :
       sstream2.str("");
 
       // Improve the positioning code.
-      weaponReadyBar = new ProgressBar(0.75f, 0.05f, -1.2f, -0.3f);
+      weaponReadyBar = new ProgressBar(0.75f, 0.05f, p2wx(20), p2wy(200));
 
-      shardBankBar = new ProgressBar(0.06f, 0.4f, -1.1f, p2wx(10));
+      shardBankBar = new ProgressBar(0.06f, 0.4f, p2wx(10), p2wy(10));
       shardBankBar->setHorizontal(true);
 
       float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH *
@@ -189,6 +189,7 @@ GameState::GameState(GameStateMode _gsm) :
       healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
       healthBar->setHorizontal(true);
       healthBar->setSkew(0.0, 0.05f);
+      healthBar->setCentered(true);
       //weaponBar = new WeaponDisplay(healthHeight * 1.5f, 1.0f, 0.0f, -0.9f + (healthHeight * 0.5f), this);
       weaponBar = new WeaponDisplay(weaponBarHeight, weaponBarHeight, 0.0f, -0.9f + (weaponBarHeight * 0.5f), this);
       //healthBar->setIcon("ShieldIcon");
@@ -753,7 +754,15 @@ void GameState::drawHud() {
          fboBegin();
          glDrawBuffer(HUD_BUFFER);
       }
+
+      weaponReadyBar->x = p2wx(20);
+      weaponReadyBar->y = p2wy(200);
+
       weaponReadyBar->draw();
+
+      shardBankBar->x = p2wx(10);
+      shardBankBar->y = p2wy(100);
+
       shardBankBar->draw();
       healthBar->draw();
       weaponBar->draw();

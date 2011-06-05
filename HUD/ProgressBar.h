@@ -17,12 +17,14 @@ class ProgressBar {
       void setHorizontal(bool vert);
       void setSkew(float _xSkew, float _ySkew);
       void draw();
+      void setCentered(bool isCentered);
       void setIcon(std::string _texture);
       
       float height;
       float width;
       float x;
       float y;
+      bool centered;
    private:
       // Height, width, x, and y are in world coords.
       float amount; // The amount full the progress bar is, from 0 to 1.

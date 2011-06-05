@@ -11,6 +11,7 @@
 
 ProgressBar::ProgressBar(float _height, float _width, float _x, float _y) :
    height(_height), width(_width), x(_x), y(_y), amount(0), outerBoxThickness(0.01f), hasIcon(false), isHorizontal(false), xSkew(0.0), ySkew(0.0) {
+      centered = false;
    }
 
 void ProgressBar::setAmount(float _amount) {
@@ -40,6 +41,13 @@ void ProgressBar::draw() {
    float backgroundZOffset = 0.0f; // Some small negative number.
    glPushMatrix();
    glTranslatef(x, y, 0);
+
+   if (!centered) {
+      glTranslatef(width / 2, -height / 2, 0);
+   }
+   
+
+
    glDisable(GL_LIGHTING);
    // Offsets for bottom left (bl), bottom right (br), top left (tl),
    // and top right (tr) corners, based on xSkew and ySkew.
@@ -218,4 +226,8 @@ void ProgressBar::draw() {
 void ProgressBar::setIcon(std::string _texture) {
    hasIcon = true;
    icon = _texture;
+}
+
+void ProgressBar::setCentered(bool isCentered) {
+   centered = isCentered;
 }
