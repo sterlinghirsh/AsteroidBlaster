@@ -384,7 +384,12 @@ int main(int argc, char* argv[]) {
    creditsMenu = new CreditsMenu();
    chat = new Input(gameState);
    //turn the menu on for the inial menu display
-   mainMenu->menuActive = true;
+   if (_gsm != ServerMode && _gsm != ClientMode) {
+      mainMenu->menuActive = true;
+   } else {
+      mainMenu->menuActive = false;
+      gameState->reset();
+   }
 
    //Initialize the input manager
    inputManager = new InputManager();

@@ -980,7 +980,11 @@ void GameState::reset(bool shouldLoad) {
    // The level is not over when we're starting a new game.
    levelOver = false;
 
-   usingShipCamera = true;
+   if (gsm == ServerMode) {
+      usingShipCamera = false;
+   } else {
+      usingShipCamera = true;
+   }
 
    curLevel = 1;
    //temp
@@ -1030,11 +1034,13 @@ void GameState::reset(bool shouldLoad) {
    spectatorCamera = new Camera(false);
 
 
-   if (gsm != ClientMode && gsm != ServerMode) {
+   if (gsm == MenuMode || gsm == SingleMode) {
       custodian.add(ship);
       // Crashes without this.
       initAsteroids();
-   } else {
+   } else if (gsm == ServerMode) {
+      initAsteroids();
+   } else if (gsm == ClientMode) {
       custodian.update();
    }
 
