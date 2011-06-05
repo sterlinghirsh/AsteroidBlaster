@@ -548,7 +548,6 @@ void AsteroidShip::update(double timeDiff) {
             return;
          } else if (life <= 0) {
             shouldRemove = true;
-            return;
          }
          AsteroidShip* lastDamagerShip = dynamic_cast<AsteroidShip*>(lastDamager);
          if (lastDamagerShip != NULL) {
