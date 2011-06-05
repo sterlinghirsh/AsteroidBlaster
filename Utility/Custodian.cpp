@@ -37,6 +37,7 @@
 #include "Network/NetShip.h"
 #include "Network/NetBlasterShot.h"
 #include "Network/NetBeamShot.h"
+#include "Network/NetTractorBeamShot.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -927,6 +928,19 @@ void Custodian::add(Object3D* objectIn) {
             boost::archive::text_oarchive oa(oss);
             int i = NET_OBJ_BEAMSHOT;
             oa << i << testNetBeamShot;
+            gameState->udpServer->sendAll(oss.str());
+         }
+
+         TractorBeamShot* tempTractBeamShot = NULL;
+         tempTractBeamShot = dynamic_cast<TractorBeamShot*>(shot);
+         if (tempTractBeamShot) {
+            //std::cout << "creating net ship..." << std::endl;
+            NetTractorBeamShot testNetTractBeamShot;
+            testNetTractBeamShot.fromObject(tempTractBeamShot);
+            std::ostringstream oss;
+            boost::archive::text_oarchive oa(oss);
+            int i = NET_OBJ_TRACTORBEAMSHOT;
+            oa << i << testNetTractBeamShot;
             gameState->udpServer->sendAll(oss.str());
          }
 

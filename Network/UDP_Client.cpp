@@ -28,6 +28,7 @@
 #include "Network/NetShip.h"
 #include "Network/NetBlasterShot.h"
 #include "Network/NetBeamShot.h"
+#include "Network/NetTractorBeamShot.h"
 
 //Constructor
 UDP_Client::UDP_Client(boost::asio::io_service& io_service, GameState* _GameState, std::string _ip, std::string _portNum)
@@ -206,6 +207,12 @@ void UDP_Client::handle_receive(const boost::system::error_code& error, std::siz
       NetBeamShot newNetBeamShot;
       ia >> newNetBeamShot;
       created = newNetBeamShot.toObject(gameState, newObject);
+   } 
+
+   else if (receivedPackID == NET_OBJ_TRACTORBEAMSHOT) {
+      NetTractorBeamShot newNetTractBeamShot;
+      ia >> newNetTractBeamShot;
+      created = newNetTractBeamShot.toObject(gameState, newObject);
    } 
 
    else if (receivedPackID == NET_LEVEL_UPDATE) {
