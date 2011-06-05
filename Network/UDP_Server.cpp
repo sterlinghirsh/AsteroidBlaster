@@ -11,6 +11,7 @@
 
 #include "Network/UDP_Server.h"
 #include "Network/NetShip.h"
+#include "Network/ClientNode.h"
 
 #include "Utility/GameState.h"
 #include "Utility/Constants.h"
@@ -57,7 +58,7 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
    }
 
    // See if this is a new client or not...
-   std::map<boost::asio::ip::udp::endpoint, unsigned>::iterator realIter = endpointToClientID.find(tempEndPoint);
+   std::map<boost::asio::ip::udp::endpoint, ClientNode*>::iterator realIter = endpointToClientID.find(tempEndPoint);
    
    int receivedPackID;
 
@@ -108,9 +109,12 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
                   oa << packID;
                   send(oss.str(), tempEndPoint);
                }
-               endpointToClientID.insert( std::pair<boost::asio::ip::udp::endpoint, unsigned>(boost::asio::ip::udp::endpoint(tempEndPoint), currentClientID) );
+               ClientNode* tempCleintNode = new ClientNode(tempEndPoint, currentClientID);
+               endpointToClientID.insert( std::pair<boost::asio::ip::udp::endpoint, ClientNode*>(boost::asio::ip::udp::endpoint(tempEndPoint), tempCleintNode) );
                tempEndpointToClientID.erase (tempEndPoint);
                gameState->addNetworkPlayer(currentClientID);
+               std::map<unsigned, AsteroidShip*>::iterator iterShip = gameState->custodian.shipsByClientID.find(currentClientID);
+               tempCleintNode->shipID = iterShip->second->id;
             } else {
                std::cout << "Wrong ID? Removing this ID/Client. tempClientID=" << tempClientID << "|currentClientID=" << currentClientID << std::endl;
                tempEndpointToClientID.erase (tempEndPoint);
@@ -121,7 +125,8 @@ void UDP_Server::handle_receive(const boost::system::error_code& error, std::siz
       }
    // It's a client that already has send packets before
    } else {
-      int currentClientID = realIter->second;
+      int currentClientID = realIter->second->clientID;
+      realIter->second->lastAccessed.reset();
       //std::cout << "old client found, id:" << currentClientID << "| address:" << tempEndPoint << std::endl;
       std::istringstream iss(recv_buffer_.data());
       boost::archive::text_iarchive ia(iss);
@@ -196,7 +201,7 @@ void UDP_Server::send(std::string msg, boost::asio::ip::udp::endpoint dest) {
 void UDP_Server::sendAll(std::string msg) {
    boost::shared_ptr<std::string> message(
        new std::string(msg));
-   std::map<boost::asio::ip::udp::endpoint, unsigned>::iterator iter = endpointToClientID.begin();
+   std::map<boost::asio::ip::udp::endpoint, ClientNode*>::iterator iter = endpointToClientID.begin();
 
    for ( ; iter != endpointToClientID.end(); iter++ ) {
       socket_.async_send_to(boost::asio::buffer(*message), iter->first,

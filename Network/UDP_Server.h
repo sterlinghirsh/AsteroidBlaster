@@ -23,6 +23,7 @@
 #include <boost/asio.hpp>
 
 #include "Utility/Constants.h"
+#include "Network/ClientNode.h"
 
 class GameState;
 
@@ -30,7 +31,7 @@ class UDP_Server {
    //public variables
    public:
       std::map<boost::asio::ip::udp::endpoint, unsigned> tempEndpointToClientID;
-      std::map<boost::asio::ip::udp::endpoint, unsigned> endpointToClientID;
+      std::map<boost::asio::ip::udp::endpoint, ClientNode*> endpointToClientID;
       boost::asio::ip::udp::endpoint tempEndPoint;
       unsigned clientIDCounter;
 
@@ -48,6 +49,8 @@ class UDP_Server {
       //constructor
       UDP_Server(boost::asio::io_service& io_service, GameState* gameState, unsigned _portNumber);
       ~UDP_Server();
+
+      ClientNode* lookupClientNode(boost::asio::ip::udp::endpoint _endpoint);
 
       void send(std::string msg, boost::asio::ip::udp::endpoint dest);
       void sendAll(std::string msg);

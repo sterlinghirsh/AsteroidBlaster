@@ -427,12 +427,13 @@ void GameState::networkUpdate(double timeDiff) {
       static double asteroidTime = 0;
       static double shardTime = 0;
       static double gameStat = 0;
+      static double clientKeepAlive = 0;
 
       shipTime += timeDiff;
       asteroidTime += timeDiff;
       shardTime += timeDiff;
       gameStat += timeDiff;
-
+      clientKeepAlive += timeDiff;
 
       if (shipTime >= 0.1) {
          std::set<AsteroidShip*>::iterator iter = custodian.ships.begin();
@@ -484,6 +485,27 @@ void GameState::networkUpdate(double timeDiff) {
          oa << i << timeLeft << curLevel;
          udpServer->sendAll(oss.str());
          gameStat = 0;
+      }
+
+      if (clientKeepAlive >= 1.0) {
+         clientKeepAlive = 0;
+         std::map<boost::asio::ip::udp::endpoint, ClientNode*>::iterator iter = udpServer->endpointToClientID.begin();
+         //std::map<> endpointToClientID.begin();
+         for (; iter != udpServer->endpointToClientID.end(); iter++) {
+            if (iter->second->lastAccessed.getTimeRunning() >= 3.0) {
+               std::cerr << "Removed clientID:" <<  iter->second->clientID << " (shipID=" << iter->second->shipID << ") for being idle..." << std::endl;
+               custodian[iter->second->shipID]->shouldRemove = true;
+               udpServer->endpointToClientID.erase (iter->second->endpoint);
+               clientKeepAlive = 3.0;
+               break;
+            }
+         }
+         //std::ostringstream oss;
+         //boost::archive::text_oarchive oa(oss);
+         //int i = NET_LEVEL_UPDATE;
+         //double timeLeft = levelTimer.getTimeLeft();
+         //oa << i << timeLeft << curLevel;
+         //udpServer->sendAll(oss.str());
       }
    }
 }
