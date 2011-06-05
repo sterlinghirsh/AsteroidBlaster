@@ -688,7 +688,9 @@ void AsteroidShip::update(double timeDiff) {
             yawSpeed, targetYawSpeed);
    }
 
-   roll(timeDiff * rollSpeed);
+   if (isBarrelRollingLeft <= 0 && isBarrelRollingRight <= 0) {
+      roll(timeDiff * rollSpeed);
+   }
    pitch(timeDiff * pitchSpeed);
    yaw(timeDiff * yawSpeed);
 
