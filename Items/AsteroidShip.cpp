@@ -1857,7 +1857,8 @@ Vector3D* AsteroidShip::getViewVector() {
 Vector3D* AsteroidShip::getCameraOffset() {
    //const double thirdPersonForwardOffset = -12;
    const double thirdPersonForwardOffset = -6;
-   const double thirdPersonUpOffset = 1;
+   // This is in spring.
+   const double thirdPersonUpOffset = 0;
    const double firstPersonForwardOffset = 0.5 * shotOriginScale;
    const double firstPersonUpOffset = 0.5;
    if (currentView == VIEW_THIRDPERSON_SHIP || currentView == VIEW_THIRDPERSON_GUN) {

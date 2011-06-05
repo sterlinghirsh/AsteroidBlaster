@@ -30,6 +30,7 @@ void Spring::update(double ms) {
 
    if (isAttached) {
       Vector3D displace = (anchor->position)->add(*anchor->getCameraOffset());
+      displace.addUpdate(item->up->scalarMultiply(2.5));
       Vector3D springVector = displace.subtract(*item->position);
       double length = springVector.getLength();
       if (length <= 0.001 && length >= -0.001) { return; }
