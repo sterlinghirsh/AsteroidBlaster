@@ -176,7 +176,7 @@ void Collision<AsteroidShip, BlasterShot>::handleCollision() {
    int particlesToEmit = 10;
    if (a != b->owner  && !(a->spawnInvulnerable)) {
       a->health -= b->getDamage(a);
-      a->shakeAmount = 0.85f;
+      a->shakeAmount = 0.7f;
       a->justGotHit = doubleTime();
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       for (int i = 0; i <= particlesToEmit; ++i) {
@@ -198,7 +198,7 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
    if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame  && !(a->spawnInvulnerable)) {
       //TODO addInstantVelocity b->velocity->scalarMultiply(10)
       a->health -= b->getDamage(a);
-      a->shakeAmount = 0.85f;
+      a->shakeAmount = 0.7f;
       b->hitYet = true;
       b->hitItem = a;
       b->lastHitFrame = curFrame;
@@ -233,7 +233,7 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
       if (closestPoint != NULL) {
          b->hitYet = true;
          a->health -= b->getDamage(a);
-         a->shakeAmount = 1;
+         a->shakeAmount = 0.7f;
          a->justGotHit = doubleTime();
          a->lastDamager = b->owner;
          a->lastDamagerWeapon = b->weaponIndex;
@@ -270,7 +270,7 @@ void Collision<AsteroidShip, EnergyShot>::handleCollision() {
       if (b->weapon->chargingShot == b) {
          b->weapon->resetChargingShot();
       }
-      a->shakeAmount = 1;
+      a->shakeAmount = 0.7f;
       a->justGotHit = doubleTime();
       a->lastDamager = b->owner;
       a->lastDamagerWeapon = b->weaponIndex;
@@ -291,7 +291,7 @@ void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
       shotToShip->setLength(newSpeed);
       a->addInstantAcceleration(shotToShip);
       a->health -= b->getDamage(a);
-      a->shakeAmount = 1;
+      a->shakeAmount = 0.7f;
       a->justGotHit = doubleTime();
       a->lastDamager = b->owner;
       a->lastDamagerWeapon = b->weaponIndex;
@@ -322,7 +322,7 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
       double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
       shotToShip->setLength(newSpeed);
       a->addInstantAcceleration(shotToShip);
-      a->shakeAmount = 1;
+      a->shakeAmount = 2;
       a->justGotHit = doubleTime();
       a->lastDamager = b->owner;
       a->lastDamagerWeapon = b->weaponIndex;

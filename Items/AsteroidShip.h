@@ -63,8 +63,10 @@ class AsteroidShip : public Object3D {
 
       // Banking
       int nShards; // Total number of shards the ship has.
-      int bankedShards; // Shards that were collected in previous rounds.
-      int unbankedShards; // Shards that were collected this round.
+      int bankedShards; // Shards that were collected this round.
+      // Shards that were collected in previous rounds.
+      // These will be banked over time.
+      int unbankedShards; 
       int totalBankedShards;
       double bankPeriod; // Time it takes for a single shard to bank.
       Timer bankTimer; // This is set if there are any shards unbanked
@@ -111,8 +113,7 @@ class AsteroidShip : public Object3D {
       float color1;
       float color2;
 
-      // A ship has a single flying AI
-      // TODO: A ship has a list of shooting AIs rather than just one
+      // A ship has one FlyingAI, and one ShootingAI.
       ShootingAI* shooter;
       FlyingAI* flyingAI;
       

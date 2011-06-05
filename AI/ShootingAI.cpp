@@ -380,7 +380,16 @@ Object3D* ShootingAI::chooseTarget() {
      }
 
      else if(dynamic_cast<Shard*>(*targets_iterator) != NULL) {
-        curWeight += 35;
+        /* If we don't have many unbanked shards, we want to provide some 
+         * buffer room. Picking up more shards is important.
+         */
+        if (owner->unbankedShards <= 3)
+           curWeight += 40;
+        /* Otherwise, we've got a solid buffer of unbanked shards waiting 
+         * to be banked, so other targets are higher priority.
+         */
+        else
+           curWeight += 10;
         isAShard = true;
      }
 

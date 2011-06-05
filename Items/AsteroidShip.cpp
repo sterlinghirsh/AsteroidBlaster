@@ -273,14 +273,6 @@ void AsteroidShip::selectWeapon(int weaponType) {
 }
 
 /**
- * Set the AI to take over firing
- *
- void AsteroidShip::setShootingAI( bool ai )
- {
- }
- */
-
-/**
  * Retrieve the ship's health.
  */
 double AsteroidShip::getHealth() {
