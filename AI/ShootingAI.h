@@ -43,6 +43,7 @@ class ShootingAI : public AI {
    Weapon* prevWeapon;
    bool enabled;
    bool needToChooseTarget;
+   bool targetIsAShard;
 
    // These control how fast the AI can switch weapons (in seconds).
    double weaponSwitchSpeed;
@@ -53,13 +54,13 @@ class ShootingAI : public AI {
    Timer targetSwitchTimer;
 
    
-   int aimAt(double dt, Object3D* target);
+   bool aimAt(double dt, Object3D* target);
    /**
     * Called when the AI doesn't have a target. In this case, it should just lock
     * the cursor to the middle of the screen.
     */
    void aimCursorAtMiddle(double dt);
-   void chooseWeapon(Object3D** target);
+   void chooseWeapon(Object3D* target);
    // Helper function, reused by chooseWeapon.
    void selectWeaponUpdateChosen(int weaponIndex);
    Object3D* chooseTarget();

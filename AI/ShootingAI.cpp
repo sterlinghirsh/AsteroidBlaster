@@ -53,6 +53,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    
    // Set the default chosen weapon.
    chosenWeapon = ship->getCurrentWeapon();
+   targetIsAShard = false;
 }
 
 /**
@@ -70,9 +71,9 @@ ShootingAI::~ShootingAI() {
  * be based on its current velocity.
  *
  * @param dt time difference since last frame, for gun turning.
- * @return no idea, really. Just leaving this open in case I think of something
+ * @return Whether or not the ship is ready to fire.
  */
-int ShootingAI::aimAt(double dt, Object3D* target) {
+bool ShootingAI::aimAt(double dt, Object3D* target) {
    Vector3D wouldHit;
    Vector3D randomVariation;
    double ang = 0;
@@ -118,13 +119,14 @@ int ShootingAI::aimAt(double dt, Object3D* target) {
    randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount);
    aim.addUpdate(randomVariation);
    
-   // If the cursor is going outside of the allowable range, choose a new target.
+   /* If the cursor is going outside of the allowable range, choose a new target.
+    * Make sure we don't fire.
+    */
    if(forwardDotAim < minForwardAimAmount) {
       needToChooseTarget = true;
+      shouldFire = false;
    }
-   else ship->fire(shouldFire);
-
-   return 0;
+   return shouldFire;
 }
 
 /**
@@ -171,7 +173,7 @@ void ShootingAI::aimCursorAtMiddle(double dt) {
 }
 
 // Choose the appropriate weapon for this situation.
-void ShootingAI::chooseWeapon(Object3D** target) {
+void ShootingAI::chooseWeapon(Object3D* target) {
    Vector3D vec;
    double curWeight = 0.0;
    double maxWeight = -1.0;
@@ -179,7 +181,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
     * with the highest weight is chosen.
    */
    
-   double weaponWeights[7];
+   double weaponWeights[NUMBER_OF_WEAPONS];
 
    // States whether or not the chosen target is a ship
    bool isAShip = false;
@@ -194,7 +196,7 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    bool considerEnergy = (ship->weapons[ENERGY_WEAPON_INDEX]->purchased && (ship->getWeapon(ENERGY_WEAPON_INDEX)->curAmmo != 0));
 
    // Zero out the list of weapon weights so we can build them up.
-   for(int x = 0; x < 7; x++)
+   for(int x = 0; x < NUMBER_OF_WEAPONS; x++)
       weaponWeights[x] = 0.0;
 
    /*
@@ -207,18 +209,18 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    printf("ConsiderEnergy is %s\n", (considerEnergy)? "true":"false");
    */
 
-   if (dynamic_cast<AsteroidShip*>(*target) != NULL)
+   if (dynamic_cast<AsteroidShip*>(target) != NULL)
       isAShip = true;
 
    // If the target is a shard, only ever choose the tractor beam.
-   if (considerTractor && dynamic_cast<Shard*>(*target) != NULL) {
+   if (considerTractor && dynamic_cast<Shard*>(target) != NULL) {
       selectWeaponUpdateChosen(TRACTOR_WEAPON_INDEX);
       return;
    }
 
    // Objects that are closer should be weighted higher.
    // dist will be used for each distance weighting calculation.
-   vec = (*(*target)->position - *ship->position);
+   vec = (*(target)->position - *ship->position);
    // Make sure dist is positive, so that we don't get a negative weight.
    double dist = vec * vec;
    if (dist < 0.0)
@@ -231,57 +233,55 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    // Only add up weights for the blaster if we're considering it.
    if (considerBlaster) {
       // Consider the target's radius.
-      weaponWeights[BLASTER_WEAPON_INDEX] += 1.75 * (*target)->radius;
+      weaponWeights[BLASTER_WEAPON_INDEX] += 1.75 * target->radius;
 
       // Consider the target's distance.
       weaponWeights[BLASTER_WEAPON_INDEX] += 1.01 * dist;
 
-      // printf("target's velocity was %f\n", (*target)->velocity->magnitude());
-
       // Consider the target's velocity. Slower is better.
-      weaponWeights[BLASTER_WEAPON_INDEX] += 10 / (*target)->velocity->magnitude();
+      weaponWeights[BLASTER_WEAPON_INDEX] += 10 / target->velocity->magnitude();
    }
 
    // Only add up weights for the railgun if we're considering it.
    if (considerRailgun) {
       // Consider the target's radius. Smaller is much better.
-      weaponWeights[RAILGUN_WEAPON_INDEX] += 2 / (*target)->radius;
+      weaponWeights[RAILGUN_WEAPON_INDEX] += 12 / target->radius;
 
       // Consider the target's distance. Further is much better.
-      weaponWeights[RAILGUN_WEAPON_INDEX] += dist;
+      weaponWeights[RAILGUN_WEAPON_INDEX] += 1.01 * dist;
 
       // Consider the target's velocity. Faster is much better.
-      weaponWeights[RAILGUN_WEAPON_INDEX] += (*target)->velocity->magnitude();
+      weaponWeights[RAILGUN_WEAPON_INDEX] += target->velocity->magnitude();
    }
 
    // Only add up weights for the electricity gun if we're considering it.
    if (considerElectricity) {
       // Consider the target's radius.
-      weaponWeights[ELECTRICITY_WEAPON_INDEX] += (*target)->radius;
+      weaponWeights[ELECTRICITY_WEAPON_INDEX] += target->radius;
 
       // Consider the target's distance.
       weaponWeights[ELECTRICITY_WEAPON_INDEX] += 1.5 * dist;
 
       // Consider the target's velocity. Faster is much better.
-      weaponWeights[ELECTRICITY_WEAPON_INDEX] += (*target)->velocity->magnitude();
+      weaponWeights[ELECTRICITY_WEAPON_INDEX] += target->velocity->magnitude();
    }
 
    // Only add up weights for the timed bomber if we're considering it.
    if (considerTimedBomber) {
       // Consider the target's radius.
-      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 1 / (*target)->radius;
+      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 1 / target->radius;
 
       // Consider the target's distance.
       weaponWeights[TIMEDBOMBER_WEAPON_INDEX] +=  2 * dist;
 
       // Consider the target's velocity. Slower is much better.
-      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 300 / (*target)->velocity->magnitude();
+      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 300 / target->velocity->magnitude();
    }
 
    // Only add up weights for the timed bomber if we're considering it.
    if (considerRemoteBomber) {
       // Consider the target's radius. Smaller is better.
-      weaponWeights[REMOTEBOMBER_WEAPON_INDEX] += 1 / (*target)->radius;
+      weaponWeights[REMOTEBOMBER_WEAPON_INDEX] += 1 / target->radius;
 
       // Consider the target's distance. Further is better.
       weaponWeights[REMOTEBOMBER_WEAPON_INDEX] += 2 * dist;
@@ -290,13 +290,13 @@ void ShootingAI::chooseWeapon(Object3D** target) {
    // Only add up weights for the energy weapon if we're considering it.
    if (considerEnergy) {
       // Consider the target's radius.
-      weaponWeights[ENERGY_WEAPON_INDEX] += 1.4 * (*target)->radius;
+      weaponWeights[ENERGY_WEAPON_INDEX] += 1.4 * target->radius;
 
       // Consider the target's distance.
       weaponWeights[ENERGY_WEAPON_INDEX] += dist;
 
       // Consider the target's velocity. Slower is better.
-      weaponWeights[ENERGY_WEAPON_INDEX] += 200 / (*target)->velocity->magnitude();
+      weaponWeights[ENERGY_WEAPON_INDEX] += 200 / target->velocity->magnitude();
    }
    
    for(int i = 0; i < NUMBER_OF_WEAPONS; i++)
@@ -329,7 +329,7 @@ Object3D* ShootingAI::chooseTarget() {
    double curWeight = 0.0;
    double maxWeight = -1.0;
    const double distWeight = 600;
-   const double radiusWeight = 1;
+   const double radiusWeight = 2.2;
    const double proximityWeight = 2;
    /* The default weighting multiplier for an enemy ship. This is increased
     * if the target's kill to death ratio is high, and decreased if it is low.
@@ -380,11 +380,14 @@ Object3D* ShootingAI::chooseTarget() {
      }
 
      else if(dynamic_cast<Shard*>(*targets_iterator) != NULL) {
+        // Shards are more important if the ship is low on health.
+        if (ship->health < 50)
+           curWeight += 15;
         /* If we don't have many unbanked shards, we want to provide some 
          * buffer room. Picking up more shards is important.
          */
         if (ship->unbankedShards <= 3)
-           curWeight += 40;
+           curWeight += 35;
         /* Otherwise, we've got a solid buffer of unbanked shards waiting 
          * to be banked, so other targets are higher priority.
          */
@@ -425,7 +428,7 @@ Object3D* ShootingAI::chooseTarget() {
      */
 
      // Larger objects should have a higher priority.
-     curWeight += 2*((*targets_iterator)->radius);
+     curWeight += radiusWeight *((*targets_iterator)->radius);
 
      // Objects that are closer should be weighted higher.
      vec = (*(*targets_iterator)->position - *ship->position);
@@ -456,6 +459,9 @@ Object3D* ShootingAI::chooseTarget() {
 }
 
 void ShootingAI::think(double dt) {
+   // Whether or not the ship should fire.
+   bool shouldFire = false;
+
    // If the ShootingAI isn't enabled, or there's no gamestate, skip shooting.
    if(!enabled || ship->gameState == NULL) {
       return;
@@ -484,6 +490,11 @@ void ShootingAI::think(double dt) {
       if (target != NULL) {
          targetID = target->id;
          targetSwitchTimer.restartCountDown();
+         // If the chosen target is a Shard, remember that till the next time we choose a target.
+         if (dynamic_cast<Shard*>(target) != NULL)
+            targetIsAShard = true;
+         else
+            targetIsAShard = false;
       }
    }
 
@@ -491,19 +502,32 @@ void ShootingAI::think(double dt) {
    // Don't bother choosing a weapon if target is NULL
    if (target != NULL && weaponSwitchTimer.isRunning && weaponSwitchTimer.getTimeLeft() <= 0) {
       prevWeapon = ship->getCurrentWeapon();
-      chooseWeapon(&target);
+      chooseWeapon(target);
       // If we chose a new weapon, reset the timer so we can't switch again soon.
       if (prevWeapon != chosenWeapon) {
          weaponSwitchTimer.restartCountDown();
       }
    }
 
+   // If we've got an actual target
    if (target != NULL) {
-      aimAt(dt, target);
+      // aimAt aims the cursos and returns whether or not the ship is ready to fire.
+      shouldFire = aimAt(dt, target);
+      // Make sure we don't fire incorrect weapons at shards.
+      if (targetIsAShard) {
+         // If the current weapon is not a tractor beam.
+         if (ship->currentWeapon != TRACTOR_WEAPON_INDEX) {
+            // Don't fire.
+            shouldFire = false;
+         }
+      }
+      ship->fire(shouldFire);
    }
+   // Otherwise we've got no target
    else {
       // Aim the cursor in front of the ship
       aimCursorAtMiddle(dt);
+      // Make sure we stop firing.
       ship->fire(false);
    }
 }

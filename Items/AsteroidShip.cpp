@@ -165,7 +165,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
 
       NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
 
-      // Create our Radar
+      // Create this ship's Radar
       radar = new Radar(this);
 
       soundHandle = -1;
@@ -175,6 +175,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       zoomFactor = 1.0;
       zoomSpeed = 0.0;
 
+      // Ships should be drawn in the minimap
       shouldDrawInMinimap = true;
 
       collisionType = collisionSphere = new CollisionSphere(4, *position);
@@ -186,7 +187,8 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
        */
       shooter = new ShootingAI(this);
       flyingAI = new FlyingAI(this);
-
+      
+      // The two colors of the ship
       color1 = (float) randdouble();
       color2 = (float) randdouble();
    }
@@ -535,6 +537,11 @@ void AsteroidShip::update(double timeDiff) {
          timeLeftToRespawn = respawnTimer.getTimeLeft();
          ++deaths;
          --life;
+
+         // Make sure to stop barrel rolling.
+         isBarrelRollingLeft = -1;
+         isBarrelRollingRight = -1;
+
          if (life <= 0 && this == gameState->ship) {
             gameState->gameOver();
             gameState->usingShipCamera = false;
