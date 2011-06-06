@@ -98,28 +98,45 @@ struct NetObject3D {
       item->angle = angle;
       item->rotationSpeed = rotationSpeed;
       
+
       if (item->acceleration != NULL) {
-         *item->acceleration = acceleration;
+         if (acceleration.getAngleInDegrees(*item->acceleration) >= 1.0) {
+            *item->acceleration = acceleration;
+         }
       }
 
       if (item->axis != NULL) {
-         *item->axis = axis;
+         if (axis.getAngleInDegrees(*item->axis) >= 1.0) {
+            *item->axis = axis;
+         }
       }
 
       if (item->up != NULL) {
-         *item->up = up;
+         if (up.getAngleInDegrees(*item->up) >= 1.0) {
+            *item->up = up;
+         }
       }
       
       if (item->right != NULL) {
-         *item->right = right;
+         if (right.getAngleInDegrees(*item->right) >= 1.0) {
+            *item->right = right;
+         }
       }
       
       if (item->forward != NULL) {
-         *item->forward = forward;
+         if (forward.getAngleInDegrees(*item->forward) >= 1.0) {
+            *item->forward = forward;
+         }
       }
-      
-      *item->position = position;
-      *item->velocity = velocity;
+
+      if (position.distanceFrom(*item->position) >= 1.0) {
+         *item->position = position;
+      }
+
+      if (velocity.getAngleInDegrees(*item->velocity) >= 1.0) {
+         *item->velocity = velocity;
+      }
+
       return false;
    }
 

@@ -1989,6 +1989,15 @@ void AsteroidShip::readCommand(ClientCommand& command) {
 
    // This works as long as VERT_FOV is the same on both sides.
    updateShotDirection(command.mouseX, command.mouseY);
+
+   if (command.rightAcceleration == -1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0){
+      isBarrelRollingLeft = 1;
+   }
+   
+   if (command.rightAcceleration == 1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0) {
+      isBarrelRollingRight = 1;
+   }
+
 }
 
 /**

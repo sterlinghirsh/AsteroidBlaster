@@ -1197,13 +1197,11 @@ void GameState::keyDown(int key, int unicode) {
          break;
 
       case SDLK_q:
-         if (ship->isBarrelRollingLeft < 0 && ship->isBarrelRollingRight < 0) ship->isBarrelRollingLeft = 1;
-         //clientCommand.rightAcceleration = -1;
+         clientCommand.rightAcceleration = -1;
          break;
 
       case SDLK_e:
-         if (ship->isBarrelRollingLeft < 0 && ship->isBarrelRollingRight < 0) ship->isBarrelRollingRight = 1;
-         //clientCommand.rightAcceleration = 1;
+         clientCommand.rightAcceleration = 1;
          break;
 
       case SDLK_SPACE:

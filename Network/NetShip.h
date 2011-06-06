@@ -31,6 +31,8 @@ struct NetShip : public NetObject3D {
 
    float color1;
    float color2;
+   double isBarrelRollingLeft;
+   double isBarrelRollingRight;
 
    template <class Archive>
     void serialize(Archive & ar, const unsigned int version) {
@@ -57,6 +59,9 @@ struct NetShip : public NetObject3D {
 
       ar & color1;
       ar & color2;
+
+      ar & isBarrelRollingLeft;
+      ar & isBarrelRollingRight;
 
       ar & yawSpeed;
       ar & pitchSpeed;
