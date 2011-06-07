@@ -193,6 +193,28 @@ void Collision<AsteroidShip, BlasterShot>::handleCollision() {
 }
 
 template<>
+void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
+   if (a->isRespawning()) { return;}
+   int particlesToEmit = 10;
+   if (a != b->owner  && !(a->spawnInvulnerable)) {
+      a->health -= b->getDamage(a);
+      a->shakeAmount = 0.7f;
+      a->justGotHit = doubleTime();
+      SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
+      for (int i = 0; i <= particlesToEmit; ++i) {
+         Point3D* particleStartPoint = new Point3D(*(b->position));
+         Vector3D* particleDirection = new Vector3D();
+         particleDirection->randomMagnitude();
+         particleDirection->setLength(3);
+         BlasterImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
+      }
+      b->shouldRemove = true;
+      a->lastDamager = b->owner;
+      a->lastDamagerWeapon = b->weaponIndex;
+   }
+}
+
+template<>
 void Collision<AsteroidShip, BeamShot>::handleCollision() {
    if (a->isRespawning()) { return;}
    if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame  && !(a->spawnInvulnerable)) {
@@ -465,24 +487,27 @@ void Collision<Asteroid3D, ExplosiveShot>::handleCollision() {
 template<>
 void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
    a->lastHitShotOwner = b->owner;
+   Vector3D positionToAsteroid(*a->position, *b->position);
+   double distance = positionToAsteroid.getLength();
+   printf("Distance is: %f\n", distance);
    if (!b->isExploded) {
-      Vector3D positionToAsteroid(*b->position, *a->position);
-      double distance = positionToAsteroid.getLength();
-      if (distance < b->seekRadius + a->radius) {
+      //if (distance < b->seekRadius + a->radius) {
          if (distance > b->collisionRadius + a->radius) {
-            Vector3D* attraction = new Vector3D(a->velocity);
-            attraction->setLength(-40.0);
+            //Vector3D* attraction = new Vector3D(positionToAsteroid);
+            //attraction->setLength(5.0);
             //b->addAcceleration(attraction);
-            a->addAcceleration(attraction);
-            attraction = new Vector3D(b->velocity);
-            attraction->setLength(-40.0);
-            b->addAcceleration(attraction);
+            //a->velocity->updateMagnitude(attraction);
+            //attraction = new Vector3D(b->velocity);
+            //attraction->setLength(-100.0);
+            //b->addAcceleration(attraction);
          } else {
             b->shouldExplode = true;
             SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
          }
-      }
-   } else {
+      //}
+   } else if (distance < b->explodeRadius + a->radius) {
+      printf("Explode Radius: %f\n", b->explodeRadius);
+      //printf("Distance is: %f\n", distance);
       a->health -= b->damage;
       Vector3D* shotToAsteroid;
       shotToAsteroid = new Vector3D(*b->position, *a->position);
@@ -501,22 +526,35 @@ void Collision<Asteroid3D, HomingMissileShot>::handleCollision() {
       double distance = positionToAsteroid.getLength();
       if (distance < b->seekRadius + a->radius) {
          if (distance > b->collisionRadius + a->radius) {
-            Vector3D* attraction = new Vector3D(positionToAsteroid);
-            attraction->setLength(40.0);
-            b->addAcceleration(attraction);
+            Vector3D* axisOfRotation = new Vector3D(positionToAsteroid.cross(*(b->forward)));
+            double angleDifference = positionToAsteroid.getAngleInDegrees(*(b->forward));
+            //b->up->rotate(.1, axisOfRotation);
+            //b->right->rotate(.1, axisOfRotation);
+            b->forward->rotateByDegrees(-angleDifference, axisOfRotation);
+            Vector3D* shotAccel;
+            shotAccel = new Vector3D(*(b->forward));
+            //attraction->setLength(40.0);
+            shotAccel->setLength(1);
+            b->addInstantAcceleration(shotAccel);
          } else {
             b->shouldExplode = true;
             SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
          }
       }
    } else {
-      a->health -= b->getDamage(a);
-      Vector3D* shotToAsteroid;
-      shotToAsteroid = new Vector3D(*b->position, *a->position);
-      double distance = shotToAsteroid->getLength() - a->radius;
-      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
-      shotToAsteroid->setLength(newSpeed);
-      a->addInstantAcceleration(shotToAsteroid);
+      Vector3D positionToAsteroid(*b->position, *a->position);
+      double distance = positionToAsteroid.getLength();
+      if (!(b->hasDamaged) && distance < b->collisionRadius + a->radius) {
+         a->health -= 3;
+         Vector3D* shotToAsteroid;
+         shotToAsteroid = new Vector3D(*b->position, *a->position);
+         double distance = shotToAsteroid->getLength() - a->radius;
+         printf("Asteroid's health is: %f\n", a->health);
+         double newSpeed = 1 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
+         shotToAsteroid->setLength(newSpeed);
+         a->addInstantAcceleration(shotToAsteroid);
+         b->hasDamaged = true;
+      }
    }
 }
 
@@ -716,6 +754,7 @@ Custodian::Custodian(const GameState* _gameState) :
       collisionHandlers->push_back(new Collision<AsteroidShip, BeamShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, ElectricityShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, EnergyShot>);
+      collisionHandlers->push_back(new Collision<AsteroidShip, HomingMissileShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, TimedBombShot>);
       collisionHandlers->push_back(new Collision<AsteroidShip, ExplosiveShot>);
 

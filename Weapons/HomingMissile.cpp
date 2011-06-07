@@ -12,10 +12,10 @@
 
 HomingMissile::HomingMissile(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    HOMINGMISSILE_WEAPON_INDEX = index;
-   shotSpeed = 20; // Units per second
-   coolDown = 5.0; // Seconds
+   shotSpeed = 12.5; // Units per second
+   coolDown = .5; // Seconds
    randomVariationAmount = 0.25; // Units
-   name = "Timed Bomber";
+   name = "Homing Missile";
    lastShotPos = new Point3D(0, 1, 0);
    curAmmo = -1; // Infinite ammo
    purchased = false;
@@ -49,23 +49,24 @@ void HomingMissile::fire() {
    if (ship->gameState->gsm == ClientMode) {
       return;
    }
-
    static Vector3D randomVariation;
    if (!isReady())
       return;
-
+   //lastShotRight = !lastShotRight;
+   //printf("Did it shoot right? %d\n", lastShotRight);
    // Update timeLastFired with new current time.
    timeLastFired = doubleTime();
    // Copy the ship's position for the start point.
    Point3D start = ship->shotOrigin;
    // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
-   Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed));
+   shotSpeed *= -1;
+   Vector3D shotDirection(ship->right->scalarMultiply(shotSpeed));
    // Add a random variation to each of the shots.
    randomVariation.randomMagnitude();
    randomVariation.scalarMultiplyUpdate(randomVariationAmount);
    shotDirection.addUpdate(randomVariation);
    ship->shotDirection.movePoint(start);
-   ship->setShakeAmount(0.1f);
+   ship->setShakeAmount(0.01f);
    ship->custodian->add(new HomingMissileShot(start,
             shotDirection, index, ship, ship->gameState));
    // Don't play sound effects in godMode b/c there would be too many.

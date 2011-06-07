@@ -34,6 +34,7 @@ class HomingMissileShot : public ExplosiveShot {
       double seekRadius;
       double slowDownPerSecond;
       double collisionRadius;
+      bool hasDamaged;
 };
 
 #endif

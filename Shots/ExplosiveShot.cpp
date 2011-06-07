@@ -19,7 +19,7 @@ ExplosiveShot::ExplosiveShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
    /* When isExploded becomes true, we check for collisions within the
       explodeRadius. */
-   explodeRadius = 5;
+   explodeRadius = 0;
    lifetime = 30;
    // All ExplosiveShots should start off not yet exploded.
    isExploded = false;

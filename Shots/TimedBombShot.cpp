@@ -21,7 +21,7 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, A
    updateBoundingBox();
 
    // Blow up 15 seconds after it's fired.
-   timeToExplode = 5;
+   timeToExplode = 3;
    scaleSize = 0;
    secondScale = 0;
    explodeRadius = 20;
@@ -45,7 +45,7 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, A
    
    damage = 40;
    slowDownPerSecond = 1.0;
-   seekRadius = 20.0;
+   seekRadius = 100.0;
    collisionRadius = 0.25;
    collisionSphere->updateRadius(seekRadius);
 }

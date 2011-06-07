@@ -13,6 +13,8 @@
 #include "Utility/WindowsMathLib.h"
 #endif
 
+bool shouldChangeY = true;
+bool shouldChangeZ = false;
 
 HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
    radius = seekRadius;
@@ -21,17 +23,21 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
    updateBoundingBox();
 
    // Blow up 15 seconds after it's fired.
-   timeToExplode = 15;
+   timeToExplode = 20;
    scaleSize = 0;
    secondScale = 0;
-   explodeRadius = 8;
+   explodeRadius = 1;
    addSize = 0;
    spin = 90;
    
-   rotationSpeed = randdouble() * 10; // Degrees per sec.
-   axis = new Vector3D(0, 1, 0);
-   axis->randomMagnitude();
-   axis->normalize();
+   hasDamaged = false;
+   
+   timeFired = doubleTime();
+   
+   //rotationSpeed = randdouble() * 10; // Degrees per sec.
+   //axis = new Vector3D(0, 1, 0);
+   //axis->randomMagnitude();
+   //axis->normalize();
    
    rx = 0;
    ry = 0;
@@ -41,11 +47,12 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
    up = new Vector3D(*(owner->up));
    right = new Vector3D(*(owner->right));
    
+   
    timeSinceExploded = -1;
    
-   damage = 40;
-   slowDownPerSecond = 1.0;
-   seekRadius = 20.0;
+   damage = 0;
+   slowDownPerSecond = 40.0;
+   seekRadius = 30.0;
    collisionRadius = 0.25;
    collisionSphere->updateRadius(seekRadius);
 }
@@ -55,6 +62,44 @@ HomingMissileShot::~HomingMissileShot() {
 }
 
 void HomingMissileShot::draw() {
+   /*
+   float rando = (float)(rand() % 420) / 70 - 3;
+   //printf("Random number: %f\n", rando);
+   GLint loc1;
+   GLint loc2;
+   GLint loc3;
+   GLint loc4;
+   glPushMatrix();
+   position->glTranslate();
+   glRotate();
+   
+   glUseProgram(blackHoleShader);
+   loc1 = glGetUniformLocation(blackHoleShader,"randomColor");
+   glUniform1f(loc1,(float)rando);
+   //loc2= glGetUniformLocation(blackHoleShader,"swirlX");
+   //glUniform1f(loc2,(float)rx);
+   loc3 = glGetUniformLocation(blackHoleShader,"swirlY");
+   glUniform1f(loc3,(float)ry);
+   loc4 = glGetUniformLocation(blackHoleShader,"swirlZ");
+   glUniform1f(loc4,(float)rz);
+   
+   glPushMatrix();
+   glDisable(GL_CULL_FACE);
+   glDisable(GL_LIGHTING);
+   glEnable(GL_NORMALIZE);
+   
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glDisable(GL_POLYGON_OFFSET_LINE);
+
+   
+   gluSphere(quadric, 3, 20, 20);
+   
+   
+   glPopMatrix();
+   glUseProgram(0);
+   glPopMatrix();*/
+   
+   
    // Don't draw the bomb again if it already exploded.
    if (isExploded && timeSinceExploded > 0) {
       drawExplosion();
@@ -75,9 +120,11 @@ void HomingMissileShot::draw() {
       position->glTranslate();
       glRotate();
       
-      glTranslated(0, 0, -.75);
+      //glTranslated(0, 0, -.75);
+      glRotated(spin, 0, 0, 1);
+      glRotated(180, 0, 1, 0);
       
-      glPushMatrix();
+      /*glPushMatrix();
       
       gluCylinder(quadric, .35, .35, .2, 30, 30);
       glPushMatrix();
@@ -102,9 +149,9 @@ void HomingMissileShot::draw() {
       
       gluCylinder(quadric, .4, .4, .2, 30, 30);
       
-      glPopMatrix();
+      glPopMatrix();*/
       
-      glLineWidth(2);
+      /*glLineWidth(2);
       glPushMatrix();
       glRotated(spin/2, 0, 0, 1);
       glBegin(GL_LINES);
@@ -195,11 +242,59 @@ void HomingMissileShot::draw() {
       
       glVertex3d(0, -.4, 1.3);
       glEnd();
+      glPopMatrix();*/
+      
+      glPushMatrix();
+      glPushMatrix();
+      glColor4d(1, 0, 0, 1);
+      glPushMatrix();
+      glTranslated(0, .31, 0);
+      glBegin(GL_TRIANGLES);
+         glVertex3d(0, 0, 0);
+         glVertex3d(0, 0, 1);
+         glVertex3d(0, .3, 0);
+      glEnd();
       glPopMatrix();
       
       glPushMatrix();
-      glColor4d(0, 0, 0, 1);
+      glRotated(90, 0, 0, 1);
+      glTranslated(0, .31, 0);
+      glBegin(GL_TRIANGLES);
+         glVertex3d(0, 0, 0);
+         glVertex3d(0, 0, 1);
+         glVertex3d(0, .3, 0);
+      glEnd();
+      glPopMatrix();
+      
+      glPushMatrix();
+      glRotated(180, 0, 0, 1);
+      glTranslated(0, .31, 0);
+      glBegin(GL_TRIANGLES);
+         glVertex3d(0, 0, 0);
+         glVertex3d(0, 0, 1);
+         glVertex3d(0, .3, 0);
+      glEnd();
+      glPopMatrix();
+      
+      glPushMatrix();
+      glRotated(270, 0, 0, 1);
+      glTranslated(0, .31, 0);
+      glBegin(GL_TRIANGLES);
+         glVertex3d(0, 0, 0);
+         glVertex3d(0, 0, 1);
+         glVertex3d(0, .3, 0);
+      glEnd();
+      glPopMatrix();
+      
+      glPushMatrix();
+         glTranslated(0, 0, 1.5);
+         gluCylinder(quadric, .31, 0, .5, 30, 30);
+      glPopMatrix();
+      
+      glPopMatrix();
+      glColor4d(1, 1, 1, 1);
       gluCylinder(quadric, .31, .31, 1.5, 30, 30);
+      gluDisk(quadric, 0, .31, 30, 30);
       glPopMatrix();
 
       glLineWidth(1.0);
@@ -312,24 +407,67 @@ void HomingMissileShot::drawExplosion() {
 }
 
 void HomingMissileShot::update(double timeDiff) {
-   spin += 200 * timeDiff;
+   spin += 300 * timeDiff;
    if(timeSinceExploded > 0) {
       if (timeSinceExploded < .6) {
-         secondScale += 100 * timeDiff;
+         secondScale += 30 * timeDiff;
       }
-      addSize = timeDiff * 140 * timeSinceExploded / (1.6 - timeSinceExploded);
+      addSize = timeDiff * 14 * timeSinceExploded / (1.6 - timeSinceExploded);
    }
+   
+   /*//ry += timeDiff * 3;
+   //rz += timeDiff * 3;
+   //rx += timeDiff * 4;
+   
+   //if(ry > 3 || ry < -3) shouldChangeY = !shouldChangeY;
+   
+   //if(rz > 3 || rz < -3) shouldChangeZ = !shouldChangeZ;
+   
+   //if(ry > 3) ry = -3;
+   //if(rz > 3) rz = -3;
+   
+   if(shouldChangeZ) {
+      rz += timeDiff * 5;
+   } else {
+      rz -= timeDiff * 5;
+   }
+   
+   if(shouldChangeY) {
+      ry += timeDiff * 3;
+   } else {
+      ry -= timeDiff * 3;
+   }*/
    
 
    addSize += timeDiff;
    if(!isExploded){
-      up->rotate(rotationSpeed * timeDiff, axis);
-      right->rotate(rotationSpeed * timeDiff, axis);
-      forward->rotate(rotationSpeed * timeDiff, axis);
-      double newSpeed = velocity->getLength();
+      if (doubleTime() - timeFired > .5) {
+         Vector3D* shotAccel;
+         shotAccel = new Vector3D(*forward);
+         
+         shotAccel->setLength(15 * timeDiff);
+         addInstantAcceleration(shotAccel);
+      } else {
+         Vector3D* shotAccel;
+         shotAccel = new Vector3D(*velocity);
+         
+         shotAccel->setLength(-25 * timeDiff);
+         addInstantAcceleration(shotAccel);
+      } /*else {
+         Vector3D* shotAccel;
+         shotAccel = new Vector3D(*velocity);
+         
+         shotAccel->setLength(25 * timeDiff);
+         addInstantAcceleration(shotAccel);
+      }*/
+      
+      //up->rotate(rotationSpeed * timeDiff, axis);
+      //right->rotate(rotationSpeed * timeDiff * 3, axis);
+      //forward->rotate(rotationSpeed * timeDiff, axis);
+      /*double newSpeed = velocity->getLength();
       newSpeed -= timeDiff * slowDownPerSecond;
       newSpeed = std::max(0.0, newSpeed);
-      velocity->setLength(newSpeed);
+      velocity->setLength(newSpeed);*/
 
       ExplosiveShot::update(timeDiff);
    }
