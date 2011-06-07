@@ -170,7 +170,7 @@ GameState::GameState(GameStateMode _gsm) :
       timerText->alignment = RIGHT_ALIGN;
       curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
       curLevelText->alignment = RIGHT_ALIGN;
-      lifeText = new Text("Life: ", ship->life, "",  hudFont, position);
+      lifeText = new Text("Lives: ", ship->life, "",  hudFont, position);
       lifeText->alignment = RIGHT_ALIGN;
 
       // Clear the sstream2
@@ -880,12 +880,12 @@ void GameState::drawAllText() {
       shardText->draw();
       bankedShardText->draw();
       unbankedShardText->draw();
+      lifeText->draw();
    }
 
    // Draw all the text on right side
    timerText->draw();
    curLevelText->draw();
-   lifeText->draw();
 
    // Draw all messages
    GameMessage::drawAllMessages();
@@ -1636,7 +1636,7 @@ void GameState::load() {
 }
 
 void GameState::testFunction() {
-   NetTimer test;
+   /*NetTimer test;
    test.fromObject(levelTimer);
 
    std::ostringstream oss;
@@ -1644,7 +1644,9 @@ void GameState::testFunction() {
    int i = NET_OBJ_ASTEROID;
    oa << i << test;
 
-   std::cout << "NetTimer=" << oss.str() << std::endl;
+   std::cout << "NetTimer=" << oss.str() << std::endl;*/
+   
+   ship->life++;
 
 }
 
