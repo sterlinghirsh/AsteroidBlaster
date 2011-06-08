@@ -15,6 +15,7 @@ class BlasterShotParticle : public Particle  {
       void update(double timeDifference);
       static void Add(Point3D* pos, Vector3D* vec, const GameState* _gameState);
       static void AddRainbow(Point3D* pos, Vector3D* vec, int particleNum, int particleCycle, const GameState* _gameState);
+      static void AddColor(Point3D* pos, Vector3D* vec, float color, const GameState* _gameState);
 };
 
 #endif

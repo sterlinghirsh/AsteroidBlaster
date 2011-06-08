@@ -194,6 +194,8 @@ void Collision<AsteroidShip, BlasterShot>::handleCollision() {
 
 template<>
 void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
+   //"This is temporary" - Sterling Hirsh
+   return;
    if (a->isRespawning()) { return;}
    int particlesToEmit = 10;
    if (a != b->owner  && !(a->spawnInvulnerable)) {
@@ -526,7 +528,44 @@ void Collision<Asteroid3D, HomingMissileShot>::handleCollision() {
       double distance = positionToAsteroid.getLength();
       if (distance < b->seekRadius + a->radius) {
          if (distance > b->collisionRadius + a->radius) {
-            Vector3D* axisOfRotation = new Vector3D(positionToAsteroid.cross(*(b->forward)));
+            Vector3D toAsteroidNorm(positionToAsteroid);
+            toAsteroidNorm.normalize();         
+           
+            double forwardAmount;
+            
+            forwardAmount = b->forward->dot(toAsteroidNorm);
+
+            if (forwardAmount > .75) {
+               if (b->targetID == -1) {
+                  b->targetID = a->id;
+                  printf("Got here\n");
+               } else {
+                  Object3D* target = a->gameState->custodian[b->targetID];
+
+                  if(target == NULL) {
+                     b->targetID = a->id;
+                  } else {
+                     double existingForwardAmount;
+                     Vector3D positionToExistingAsteroid(*b->position, *(target->position));
+                     Vector3D toExistingAsteroidNorm(positionToExistingAsteroid);
+                     toExistingAsteroidNorm.normalize();
+
+                     existingForwardAmount = b->forward->dot(toExistingAsteroidNorm);
+                     if (forwardAmount > .95 && existingForwardAmount > .95) {
+                        double otherDistance = positionToExistingAsteroid.getLength();
+                        if (distance < otherDistance) {
+                           b->targetID = a->id;
+                        }
+                     } else if (forwardAmount > existingForwardAmount) {
+                        b->targetID = a->id;
+                     }
+                  }
+               }
+            }
+                   
+         
+         
+            /*Vector3D* axisOfRotation = new Vector3D(positionToAsteroid.cross(*(b->forward)));
             double angleDifference = positionToAsteroid.getAngleInDegrees(*(b->forward));
             //b->up->rotate(.1, axisOfRotation);
             //b->right->rotate(.1, axisOfRotation);
@@ -535,10 +574,10 @@ void Collision<Asteroid3D, HomingMissileShot>::handleCollision() {
             shotAccel = new Vector3D(*(b->forward));
             //attraction->setLength(40.0);
             shotAccel->setLength(1);
-            b->addInstantAcceleration(shotAccel);
+            b->addInstantAcceleration(shotAccel);*/
          } else {
             b->shouldExplode = true;
-            SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
+            SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
          }
       }
    } else {

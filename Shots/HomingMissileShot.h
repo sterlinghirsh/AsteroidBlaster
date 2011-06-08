@@ -35,6 +35,11 @@ class HomingMissileShot : public ExplosiveShot {
       double slowDownPerSecond;
       double collisionRadius;
       bool hasDamaged;
+      bool hasTarget;
+      int targetID;
+      int particleNum;
+      Vector3D particleDirection;
+      float particleColor;
 };
 
 #endif

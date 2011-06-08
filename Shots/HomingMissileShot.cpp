@@ -8,6 +8,7 @@
 #include "Utility/SoundEffect.h"
 #include "Graphics/Sprite.h"
 #include "Items/BoundingWall.h"
+#include "Particles/BlasterShotParticle.h"
 
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"
@@ -15,8 +16,10 @@
 
 bool shouldChangeY = true;
 bool shouldChangeZ = false;
+const int particleCycle = 100;
 
 HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+   seekRadius = 80.0;
    radius = seekRadius;
    minX = minY = minZ = -radius;
    maxX = maxY = maxZ = radius;
@@ -29,6 +32,12 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
    explodeRadius = 1;
    addSize = 0;
    spin = 90;
+   
+   particleColor = randdouble();
+   
+   targetID = -1;
+   
+   hasTarget = false;
    
    hasDamaged = false;
    
@@ -43,6 +52,20 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
    ry = 0;
    rz = 0;
    
+   static int currentStartingParticleCycle = 0;
+   particleNum = currentStartingParticleCycle;
+   currentStartingParticleCycle = (currentStartingParticleCycle + 7) % particleCycle;
+   particleDirection = velocity->getNormalVector();
+   
+   Vector3D normalizedVelocity(*velocity);
+   normalizedVelocity.normalize();
+
+   particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
+   
+   rollSpeed = randdouble() * 30 - 15;
+   pitchSpeed = 0;
+   yawSpeed = 0;
+   
    forward = new Vector3D((owner->shotDirection));
    up = new Vector3D(*(owner->up));
    right = new Vector3D(*(owner->right));
@@ -52,7 +75,6 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
    
    damage = 0;
    slowDownPerSecond = 40.0;
-   seekRadius = 30.0;
    collisionRadius = 0.25;
    collisionSphere->updateRadius(seekRadius);
 }
@@ -121,7 +143,7 @@ void HomingMissileShot::draw() {
       glRotate();
       
       //glTranslated(0, 0, -.75);
-      glRotated(spin, 0, 0, 1);
+      //glRotated(spin, 0, 0, 1);
       glRotated(180, 0, 1, 0);
       
       /*glPushMatrix();
@@ -246,7 +268,11 @@ void HomingMissileShot::draw() {
       
       glPushMatrix();
       glPushMatrix();
-      glColor4d(1, 0, 0, 1);
+      if (targetID == -1) {
+         glColor4d(0, 1, 0, 1);
+      } else {
+         glColor4d(1, 0, 0, 1);
+      }
       glPushMatrix();
       glTranslated(0, .31, 0);
       glBegin(GL_TRIANGLES);
@@ -407,7 +433,29 @@ void HomingMissileShot::drawExplosion() {
 }
 
 void HomingMissileShot::update(double timeDiff) {
-   spin += 300 * timeDiff;
+   const int particlesPerSecond = 4;
+   Vector3D* shotAccel;
+   //spin += 500 * timeDiff;
+   roll(rollSpeed * timeDiff);
+   
+   pitch(pitchSpeed * timeDiff);
+   
+   yaw(yawSpeed * timeDiff);
+   
+   shotAccel = new Vector3D(*forward);
+   
+   shotAccel->setLength(15);
+   addAcceleration(shotAccel);
+   
+   double speed = velocity->getLength();
+   if (doubleTime() - timeFired > .3) {
+      velocity->updateMagnitude(forward->scalarMultiply(speed));
+   } else {
+      shotAccel = new Vector3D(*forward);
+   
+      shotAccel->setLength(30);
+      addAcceleration(shotAccel);
+   }
    if(timeSinceExploded > 0) {
       if (timeSinceExploded < .6) {
          secondScale += 30 * timeDiff;
@@ -441,33 +489,72 @@ void HomingMissileShot::update(double timeDiff) {
 
    addSize += timeDiff;
    if(!isExploded){
-      if (doubleTime() - timeFired > .5) {
-         Vector3D* shotAccel;
-         shotAccel = new Vector3D(*forward);
-         
-         shotAccel->setLength(15 * timeDiff);
-         addInstantAcceleration(shotAccel);
-      } else {
-         Vector3D* shotAccel;
-         shotAccel = new Vector3D(*velocity);
-         
-         shotAccel->setLength(-25 * timeDiff);
-         addInstantAcceleration(shotAccel);
-      } /*else {
-         Vector3D* shotAccel;
-         shotAccel = new Vector3D(*velocity);
-         
-         shotAccel->setLength(25 * timeDiff);
-         addInstantAcceleration(shotAccel);
-      }*/
+      if (targetID != -1) {
+         Object3D* target = gameState->custodian[targetID];
+         if (target != NULL) {
+            Vector3D positionToAsteroid(*position, *target->position);
+            double distance = positionToAsteroid.getLength();
+            Vector3D toAsteroidNorm(positionToAsteroid);
+            toAsteroidNorm.normalize();
+            Point3D futurePosition(*(target->position));
       
-      //up->rotate(rotationSpeed * timeDiff, axis);
-      //right->rotate(rotationSpeed * timeDiff * 3, axis);
-      //forward->rotate(rotationSpeed * timeDiff, axis);
-      /*double newSpeed = velocity->getLength();
-      newSpeed -= timeDiff * slowDownPerSecond;
-      newSpeed = std::max(0.0, newSpeed);
-      velocity->setLength(newSpeed);*/
+            //target->velocity->movePoint(futurePosition, distance / std::max(80.0, velocity->getLength()));
+            
+            Vector3D toFuturePositionNorm(*position, futurePosition);
+            toFuturePositionNorm.normalize();
+            
+            
+            double upAmount;
+            double rightAmount;
+            double forwardAmount;
+            
+            upAmount = up->dot(toFuturePositionNorm);
+            rightAmount = right->dot(toFuturePositionNorm);
+            forwardAmount = forward->dot(toFuturePositionNorm);
+            
+            if (forwardAmount > .75) {
+          
+               setPitchSpeed(-15 * upAmount);
+            
+               setYawSpeed(-15 * rightAmount);
+               if (forwardAmount > .98) {
+                  Vector3D* shotAccel;
+                  shotAccel = new Vector3D(*forward);
+                  shotAccel->setLength(100);
+                  addAcceleration(shotAccel);
+               } else if (targetID != -1) {
+                  addAcceleration(new Vector3D(velocity->scalarMultiply(-0.2)));
+               }
+            } else {
+               //rollSpeed = 0;
+               yawSpeed = 0;
+               pitchSpeed = 0;
+               targetID = -1;
+            }
+         } else {
+            targetID = -1;
+         }
+      }
+      
+      
+      for (int i = 0; i <= timeDiff * particlesPerSecond; ++i) {
+         particleNum = (particleNum + 1) % particleCycle;
+         // This is the random way...
+         particleDirection.randomMagnitude();
+         particleDirection.setLength(0.1);
+         
+         BlasterShotParticle::AddColor(new Point3D(*position), 
+          new Vector3D(particleDirection), particleColor, gameState);
+         // Reflect and Duplicate the above for a double helix.
+      }
+      
+      //if (doubleTime() - timeFired > .5) {
+      
+      Vector3D* shotAccel;
+      shotAccel = new Vector3D(*forward);
+      
+      shotAccel->setLength(15);
+      addAcceleration(shotAccel);
 
       ExplosiveShot::update(timeDiff);
    }

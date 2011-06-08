@@ -516,7 +516,7 @@ void TimedBombShot::update(double timeDiff) {
       if (timeSinceExploded < .6) {
          secondScale += 100 * timeDiff;
       }
-      addSize = timeDiff * 50 * timeSinceExploded / (3 - timeSinceExploded);
+      addSize = timeDiff * 150 * timeSinceExploded / (3 - timeSinceExploded);
    }
    
 
@@ -546,7 +546,7 @@ void TimedBombShot::update(double timeDiff) {
    // If the bomb should explode this frame and has not already, then explode.
    // If more time has passed than the bomb's timeToExplode, blow it up.
    if ((shouldExplode || doubleTime() - timeFired > timeToExplode) && !isExploded && timeSinceExploded < .6) {
-      timeSinceExploded = 2;
+      timeSinceExploded = 1;
       //isExploded = true;
       //explode();
       SoundEffect::playSoundEffect("TimedBombExplosion", position, false, 255);
