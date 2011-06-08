@@ -13,7 +13,7 @@
 HomingMissile::HomingMissile(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    HOMINGMISSILE_WEAPON_INDEX = index;
    shotSpeed = 12.5; // Units per second
-   coolDown = .5; // Seconds
+   coolDown = .2; // Seconds
    randomVariationAmount = 0.25; // Units
    name = "Homing Missile";
    lastShotPos = new Point3D(0, 1, 0);
