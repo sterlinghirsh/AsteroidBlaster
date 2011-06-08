@@ -491,7 +491,6 @@ void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
    a->lastHitShotOwner = b->owner;
    Vector3D positionToAsteroid(*a->position, *b->position);
    double distance = positionToAsteroid.getLength();
-   printf("Distance is: %f\n", distance);
    if (!b->isExploded) {
       //if (distance < b->seekRadius + a->radius) {
          if (distance > b->collisionRadius + a->radius) {
@@ -508,7 +507,6 @@ void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
          }
       //}
    } else if (distance < b->explodeRadius + a->radius) {
-      printf("Explode Radius: %f\n", b->explodeRadius);
       //printf("Distance is: %f\n", distance);
       a->health -= b->damage;
       Vector3D* shotToAsteroid;
@@ -531,26 +529,21 @@ void Collision<Asteroid3D, HomingMissileShot>::handleCollision() {
             Vector3D toAsteroidNorm(positionToAsteroid);
             toAsteroidNorm.normalize();         
            
-            double forwardAmount;
-            
-            forwardAmount = b->forward->dot(toAsteroidNorm);
+            double forwardAmount = b->forward->dot(toAsteroidNorm);
 
             if (forwardAmount > .75) {
                if (b->targetID == -1) {
                   b->targetID = a->id;
-                  printf("Got here\n");
                } else {
                   Object3D* target = a->gameState->custodian[b->targetID];
-
                   if(target == NULL) {
                      b->targetID = a->id;
                   } else {
-                     double existingForwardAmount;
                      Vector3D positionToExistingAsteroid(*b->position, *(target->position));
                      Vector3D toExistingAsteroidNorm(positionToExistingAsteroid);
                      toExistingAsteroidNorm.normalize();
 
-                     existingForwardAmount = b->forward->dot(toExistingAsteroidNorm);
+                     double existingForwardAmount = b->forward->dot(toExistingAsteroidNorm);
                      if (forwardAmount > .95 && existingForwardAmount > .95) {
                         double otherDistance = positionToExistingAsteroid.getLength();
                         if (distance < otherDistance) {
