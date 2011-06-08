@@ -62,7 +62,7 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
 
    particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
    
-   rollSpeed = randdouble() * 30 - 15;
+   rollSpeed = randdouble() * 50 - 25;
    pitchSpeed = 0;
    yawSpeed = 0;
    
@@ -75,7 +75,7 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
    
    damage = 0;
    slowDownPerSecond = 40.0;
-   collisionRadius = 0.25;
+   collisionRadius = 0.5;
    collisionSphere->updateRadius(seekRadius);
 }
 
@@ -268,13 +268,14 @@ void HomingMissileShot::draw() {
       
       glPushMatrix();
       glPushMatrix();
-      if (targetID == -1) {
+      /*if (targetID == -1) {
          glColor4d(0, 1, 0, 1);
       } else {
          glColor4d(1, 0, 0, 1);
-      }
+      }*/
+      glColor4d(0, 0, 0, 1);
       glPushMatrix();
-      glTranslated(0, .31, 0);
+      glTranslated(0, .2, 0);
       glBegin(GL_TRIANGLES);
          glVertex3d(0, 0, 0);
          glVertex3d(0, 0, 1);
@@ -284,7 +285,7 @@ void HomingMissileShot::draw() {
       
       glPushMatrix();
       glRotated(90, 0, 0, 1);
-      glTranslated(0, .31, 0);
+      glTranslated(0, .2, 0);
       glBegin(GL_TRIANGLES);
          glVertex3d(0, 0, 0);
          glVertex3d(0, 0, 1);
@@ -294,7 +295,7 @@ void HomingMissileShot::draw() {
       
       glPushMatrix();
       glRotated(180, 0, 0, 1);
-      glTranslated(0, .31, 0);
+      glTranslated(0, .2, 0);
       glBegin(GL_TRIANGLES);
          glVertex3d(0, 0, 0);
          glVertex3d(0, 0, 1);
@@ -304,7 +305,7 @@ void HomingMissileShot::draw() {
       
       glPushMatrix();
       glRotated(270, 0, 0, 1);
-      glTranslated(0, .31, 0);
+      glTranslated(0, .2, 0);
       glBegin(GL_TRIANGLES);
          glVertex3d(0, 0, 0);
          glVertex3d(0, 0, 1);
@@ -314,13 +315,17 @@ void HomingMissileShot::draw() {
       
       glPushMatrix();
          glTranslated(0, 0, 1.5);
-         gluCylinder(quadric, .31, 0, .5, 30, 30);
+         gluCylinder(quadric, .2, 0, .5, 30, 30);
       glPopMatrix();
       
       glPopMatrix();
-      glColor4d(1, 1, 1, 1);
-      gluCylinder(quadric, .31, .31, 1.5, 30, 30);
-      gluDisk(quadric, 0, .31, 30, 30);
+      if (targetID == -1) {
+         glColor4d(0, 1, 0, 1);
+      } else {
+         glColor4d(1, 0, 0, 1);
+      }
+      gluCylinder(quadric, .2, .2, 1.5, 30, 30);
+      gluDisk(quadric, 0, .2, 30, 30);
       glPopMatrix();
 
       glLineWidth(1.0);

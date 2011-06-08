@@ -15,6 +15,7 @@
 
 
 TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+   seekRadius = 20.0;
    radius = seekRadius;
    minX = minY = minZ = -radius;
    maxX = maxY = maxZ = radius;
@@ -45,8 +46,7 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, A
    
    damage = 40;
    slowDownPerSecond = 1.0;
-   seekRadius = 100.0;
-   collisionRadius = 0.25;
+   collisionRadius = 2.0;
    collisionSphere->updateRadius(seekRadius);
 }
 

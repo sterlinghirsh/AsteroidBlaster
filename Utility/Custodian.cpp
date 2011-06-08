@@ -331,16 +331,16 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
       double distance = positionToShip.getLength();
       if (distance < b->seekRadius + a->radius) {
          if (distance > b->collisionRadius + a->radius) {
-            Vector3D* attraction = new Vector3D(positionToShip);
-            attraction->setLength(20.0);
-            b->addAcceleration(attraction);
+            //Vector3D* attraction = new Vector3D(positionToShip);
+            //attraction->setLength(20.0);
+            //b->addAcceleration(attraction);
          } else {
             b->shouldExplode = true;
             SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
          }
       }
    } else {
-      a->health -= b->getDamage(a);
+      a->health -= 40;//b->getDamage(a);
       Vector3D* shotToShip = new Vector3D(*b->position, *a->position);
       double distance = shotToShip->getLength() - a->radius;
       double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
@@ -555,21 +555,10 @@ void Collision<Asteroid3D, HomingMissileShot>::handleCollision() {
                   }
                }
             }
-                   
-         
-         
-            /*Vector3D* axisOfRotation = new Vector3D(positionToAsteroid.cross(*(b->forward)));
-            double angleDifference = positionToAsteroid.getAngleInDegrees(*(b->forward));
-            //b->up->rotate(.1, axisOfRotation);
-            //b->right->rotate(.1, axisOfRotation);
-            b->forward->rotateByDegrees(-angleDifference, axisOfRotation);
-            Vector3D* shotAccel;
-            shotAccel = new Vector3D(*(b->forward));
-            //attraction->setLength(40.0);
-            shotAccel->setLength(1);
-            b->addInstantAcceleration(shotAccel);*/
          } else {
             b->shouldExplode = true;
+            a->health -= 3;
+            b->hasDamaged = true;
             SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
          }
       }
