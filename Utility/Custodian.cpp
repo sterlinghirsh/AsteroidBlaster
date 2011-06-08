@@ -581,7 +581,7 @@ void Collision<Asteroid3D, HomingMissileShot>::handleCollision() {
          Vector3D* shotToAsteroid;
          shotToAsteroid = new Vector3D(*b->position, *a->position);
          double distance = shotToAsteroid->getLength() - a->radius;
-         printf("Asteroid's health is: %f\n", a->health);
+         //printf("Asteroid's health is: %f\n", a->health);
          double newSpeed = 1 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
          shotToAsteroid->setLength(newSpeed);
          a->addInstantAcceleration(shotToAsteroid);

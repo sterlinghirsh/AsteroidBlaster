@@ -572,7 +572,7 @@ void HomingMissileShot::update(double timeDiff) {
       timeSinceExploded = 1;
       isExploded = true;
       //explode();
-      SoundEffect::playSoundEffect("HomingMissileExplosion", position, false, 255);
+      //SoundEffect::playSoundEffect("HomingMissileExplosion", position, false, 255);
    }
    
    timeSinceExploded -= timeDiff;
