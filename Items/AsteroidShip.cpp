@@ -153,7 +153,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       //weapons.push_back(new LawnMower(this, tmpNumberOfWeapons++));
       //weapons.push_back(new AntiInertia(this, tmpNumberOfWeapons++));
       weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
-      weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
+      //weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
       weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
       weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
       weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
@@ -228,7 +228,7 @@ void AsteroidShip::reInitialize() {
    shotPhi = shotTheta = 0;
 
    // The ship's currently selected weapon.
-   currentWeapon = 1; // Blaster
+   currentWeapon = BLASTER_WEAPON_INDEX; // Blaster
 
    health = healthMax;
    
@@ -500,7 +500,7 @@ void AsteroidShip::update(double timeDiff) {
       return;
    }
    if (health <= 0) {
-      const double respawnTime = 4;
+      const double respawnTime = 8;
       shakeAmount = 0;
       stopSounds();
 

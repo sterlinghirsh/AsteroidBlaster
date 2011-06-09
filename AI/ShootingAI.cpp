@@ -56,8 +56,6 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    chosenWeapon = ship->getCurrentWeapon();
    targetIsAShard = false;
 
-   // Initialize the random seed
-   //srand(time(NULL));
    maxDifficulty = 10;
 
    // Make the difficulty a random int from 1 - maxDifficulty.
@@ -215,7 +213,6 @@ void ShootingAI::chooseWeapon(Object3D* target) {
    bool considerRailgun = (ship->weapons[RAILGUN_WEAPON_INDEX]->purchased && (ship->getWeapon(RAILGUN_WEAPON_INDEX)->curAmmo != 0) && ship->getWeapon(RAILGUN_WEAPON_INDEX)->isCooledDown());
    bool considerElectricity = (ship->weapons[ELECTRICITY_WEAPON_INDEX]->purchased && (ship->getWeapon(ELECTRICITY_WEAPON_INDEX)->curAmmo != 0));
    bool considerTimedBomber = (ship->weapons[TIMEDBOMBER_WEAPON_INDEX]->purchased && (ship->getWeapon(TIMEDBOMBER_WEAPON_INDEX)->curAmmo != 0));
-   bool considerRemoteBomber = (ship->weapons[REMOTEBOMBER_WEAPON_INDEX]->purchased && (ship->getWeapon(REMOTEBOMBER_WEAPON_INDEX)->curAmmo != 0));
    bool considerEnergy = (ship->weapons[ENERGY_WEAPON_INDEX]->purchased && (ship->getWeapon(ENERGY_WEAPON_INDEX)->curAmmo != 0));
 
    // Zero out the list of weapon weights so we can build them up.
@@ -274,7 +271,7 @@ void ShootingAI::chooseWeapon(Object3D* target) {
       weaponWeights[RAILGUN_WEAPON_INDEX] += 1.01 * dist;
 
       // Consider the target's velocity. Faster is much better.
-      weaponWeights[RAILGUN_WEAPON_INDEX] += 0.9 * target->velocity->magnitude();
+      weaponWeights[RAILGUN_WEAPON_INDEX] += 0.95 * target->velocity->magnitude();
    }
 
    // Only add up weights for the electricity gun if we're considering it.
@@ -302,15 +299,6 @@ void ShootingAI::chooseWeapon(Object3D* target) {
 
       // The harder the AI is, the less it should use the timed bomber.
       weaponWeights[TIMEDBOMBER_WEAPON_INDEX] -= 3 * (maxDifficulty - difficulty);
-   }
-
-   // Only add up weights for the timed bomber if we're considering it.
-   if (considerRemoteBomber) {
-      // Consider the target's radius. Smaller is better.
-      weaponWeights[REMOTEBOMBER_WEAPON_INDEX] += 1 / target->radius;
-
-      // Consider the target's distance. Further is better.
-      weaponWeights[REMOTEBOMBER_WEAPON_INDEX] += 2 * dist;
    }
 
    // Only add up weights for the energy weapon if we're considering it.
