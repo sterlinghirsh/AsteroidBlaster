@@ -113,6 +113,7 @@ void MainMenu::draw() {
       usePerspective();
    glPopMatrix();
 
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    Image::getImage("MainMenuLogo")->drawImage();
 
    SDL_GL_SwapBuffers();
