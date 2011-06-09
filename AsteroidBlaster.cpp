@@ -309,6 +309,7 @@ void load() {
    SoundEffect::Add("Sounds/ChargeShotFire.wav", "ChargeShotFire");
    SoundEffect::Add("Sounds/TimedBombExplosion.wav", "TimedBombExplosion");
    SoundEffect::Add("Sounds/BankShard.wav", "ShardBank");
+   SoundEffect::Add("Sounds/AsteroidsRocketLaunch.wav", "MissileLaunch");
    std::cout << "Load: finished" << std::endl;
 }
 

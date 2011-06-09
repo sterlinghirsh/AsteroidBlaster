@@ -69,10 +69,6 @@ void HomingMissile::fire() {
    ship->setShakeAmount(0.01f);
    ship->custodian->add(new HomingMissileShot(start,
             shotDirection, index, ship, ship->gameState));
-   // Don't play sound effects in godMode b/c there would be too many.
-   if (!ship->gameState->godMode) {
-      SoundEffect::playSoundEffect("BlasterShot2.wav");
-   }
 }
 
 /**

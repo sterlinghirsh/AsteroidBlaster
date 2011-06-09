@@ -41,6 +41,7 @@ class HomingMissileShot : public ExplosiveShot {
       int particleNum;
       Vector3D particleDirection;
       float particleColor;
+      int soundHandle;
 };
 
 #endif

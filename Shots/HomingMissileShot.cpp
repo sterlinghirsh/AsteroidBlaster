@@ -77,10 +77,16 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
    slowDownPerSecond = 40.0;
    collisionRadius = 0.5;
    collisionSphere->updateRadius(seekRadius);
+
+   soundHandle = SoundEffect::playSoundEffect("MissileLaunch", position, false);
+   
 }
 
 // Needed to avoid obscure vtable compiler error.
 HomingMissileShot::~HomingMissileShot() {
+   if (soundHandle != -1) {
+      SoundEffect::stopSoundEffect(soundHandle);
+   }
 }
 
 void HomingMissileShot::draw() {
@@ -446,6 +452,10 @@ void HomingMissileShot::drawExplosion() {
 }
 
 void HomingMissileShot::update(double timeDiff) {
+   if (soundHandle != -1) {
+      SoundEffect::updateSource(soundHandle, position, 75);
+   }
+
    const int particlesPerSecond = 4;
    Vector3D* shotAccel;
    //spin += 500 * timeDiff;
