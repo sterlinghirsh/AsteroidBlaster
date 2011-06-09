@@ -26,8 +26,6 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    
    x = y = -1;
    
-   scrollWeapon = scrollAmmo = 0;
-   
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT; 
    std::stringstream out;
@@ -138,8 +136,6 @@ void StoreMenu::draw() {
    }
    
    SDL_Rect position;
-   position.x = (Sint16) (gameSettings->GW/3);
-   position.y = (Sint16) (gameSettings->GH/2);
    std::stringstream out;
 
    // Clear the screen
@@ -171,7 +167,7 @@ void StoreMenu::draw() {
    
    //weapons
    position.x = (Sint16) (gameSettings->GW*(1.0/10.0));
-   position.y = (Sint16) (gameSettings->GH*(5.0/10.0));
+   position.y = (Sint16) (gameSettings->GH*(3.5/10.0));
    weaponsText->setPosition(position);
    
    //ammo
@@ -192,7 +188,7 @@ void StoreMenu::draw() {
    
    //initialize the first position
    position.x = (Sint16) (gameSettings->GW*(3.0/10.0));
-   position.y = (Sint16) (gameSettings->GH*(5.0/10.0));
+   position.y = (Sint16) (gameSettings->GH*(3.5/10.0));
    
    //get the list of weapons from ship
    std::vector<Weapon*> weaponList = gameState->ship->getWeapons();
@@ -200,11 +196,10 @@ void StoreMenu::draw() {
    if(menuSelection == WEAPONS) {
       //make the weapons selection blue
       weaponsText->setColor(SDL_BLUE);
-      //add scroll value to the y position
-      position.y = (Sint16) (position.y + (scrollWeapon/1));
       //for each weapon, display the appropriate menu, set the selectability
       for(unsigned int i = 0; i < weaponList.size(); i++) {
-         if(weaponList[i]->purchased && weaponList[i]->level == weaponList[i]->levelMax) {
+         //if the weapon is enabled and the weapon is 
+         if(!weaponList[i]->purchased || weaponList[i]->level == weaponList[i]->levelMax) {
             weaponsTexts[i]->selectable = false;
             weaponsTexts[i]->disabled = true;
             continue; //continue so that this weapon is not included in the y++ calculation
@@ -213,12 +208,12 @@ void StoreMenu::draw() {
             weaponsTexts[i]->disabled = false;
          }
          weaponsTexts[i]->setPosition(position);
-         if((position.y >= (gameSettings->GH/2) + (gameSettings->GH/4) + (gameSettings->GH/8) ) || 
-            (position.y <= (gameSettings->GH/2) - (gameSettings->GH/4) + (gameSettings->GH/8) )) {
-            weaponsTexts[i]->disabled = true;
-         }
+         //if((position.y >= (gameSettings->GH/2) + (gameSettings->GH/4) + (gameSettings->GH/8) ) || 
+         //   (position.y <= (gameSettings->GH/2) - (gameSettings->GH/4) + (gameSettings->GH/8) )) {
+         //   weaponsTexts[i]->disabled = true;
+         //}
          weaponsTexts[i]->updateBody(weaponList[i]->weaponString());
-         position.y = (Sint16) (position.y + (gameSettings->GH/10));
+         position.y = (Sint16) (position.y + (gameSettings->GH/15));
       }
    
       drawTexts(weaponsTexts);
@@ -226,8 +221,6 @@ void StoreMenu::draw() {
    } else if(menuSelection == AMMO) {
       //set menu color
       ammoText->setColor(SDL_BLUE);
-      //add scroll value to the y position
-      position.y = (Sint16) (position.y + (scrollAmmo/1));
       //for each weapon, display the appropriate menu, set the selectability
       for(unsigned int i = 0; i < weaponList.size(); i++) {
          if(weaponList[i]->curAmmo == -1 || !weaponList[i]->purchased) {
@@ -258,15 +251,15 @@ void StoreMenu::draw() {
       //set menu colors
       shipText->setColor(SDL_BLUE);
       
-      position.y = (Sint16) ((gameSettings->GH*(5.0/10.0)));
+      position.y = (Sint16) ((gameSettings->GH*(3.5/10.0)));
       engineShipText->setPosition(position);
-      position.y = (Sint16) ((position.y + (gameSettings->GH/12)));
+      position.y = (Sint16) ((position.y + (gameSettings->GH/15)));
       maxHealthShipText->setPosition(position);
-      position.y = (Sint16) ((position.y + (gameSettings->GH/12)));
+      position.y = (Sint16) ((position.y + (gameSettings->GH/15)));
       regenHealthShipText->setPosition(position);
-      position.y = (Sint16) ((position.y + (gameSettings->GH/12)));
+      position.y = (Sint16) ((position.y + (gameSettings->GH/15)));
       buyOneLifeText->setPosition(position);
-      position.y = (Sint16) ((position.y + (gameSettings->GH/12)));
+      position.y = (Sint16) ((position.y + (gameSettings->GH/15)));
       bankShipText->setPosition(position);
 
 
@@ -291,7 +284,7 @@ void StoreMenu::draw() {
       if (nextHealthMax <= gameState->ship->healthLevelMax()) {
       out << "Upgrade Max Health to " << 
          gameState->ship->healthNextLevelAmount() << " for " << 
-         gameState->ship->healthMaxUpgradePrice() ;
+         gameState->ship->healthMaxUpgradePrice();
          maxHealthShipText->selectable = true;
       } else {
          out << "Can't upgrade max health anymore!";
@@ -530,20 +523,6 @@ void StoreMenu::mouseDown(int button) {
          std::cerr << "Menu selection error! Quitting..." << std::endl;
          exit(1);
       }
-   } else if(button == 4) {
-      if(menuSelection == WEAPONS) {
-         scrollWeapon += 7;
-      } else if(menuSelection == AMMO) {
-         scrollAmmo += 7;
-      }
-      return;
-   } else if(button == 5) {
-      if(menuSelection == WEAPONS) {
-         scrollWeapon -= 7;
-      } else if(menuSelection == AMMO) {
-         scrollAmmo -= 7;
-      }
-      return;
    }
 }
 

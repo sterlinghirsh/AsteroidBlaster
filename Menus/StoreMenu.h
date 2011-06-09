@@ -19,8 +19,6 @@ class StoreMenu : public Menu {
       GameState*& gameState;
       //the current mouse location
       double x, y;
-      int scrollWeapon;
-      int scrollAmmo;
       int menuSelection;
       
       Text *doneText,
