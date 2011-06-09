@@ -179,7 +179,8 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    if (gameSettings->drawDeferred) {
       glColor4f(faceR, faceG, faceB, curAlpha);
    } else {
-      normal.glColor(curAlpha);
+      //normal.glColor(curAlpha);
+      glColor4f(0.0, 0.0, 0.0, 1.0);
    }
    glBegin(GL_TRIANGLES);
    p1_tmp.draw();

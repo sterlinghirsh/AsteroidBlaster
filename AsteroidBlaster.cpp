@@ -157,7 +157,8 @@ void init() {
 
    glEnable(GL_LINE_SMOOTH);
    //glEnable(GL_MULTISAMPLE_ARB);
-   glHint(GL_LINE_SMOOTH_HINT, GL_PERSPECTIVE_CORRECTION_HINT);
+   //glHint(GL_LINE_SMOOTH_HINT, GL_PERSPECTIVE_CORRECTION_HINT);
+   glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
    //glEnable(GL_POLYGON_SMOOTH);
 
    //initialize light

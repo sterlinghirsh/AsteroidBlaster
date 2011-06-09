@@ -17,17 +17,18 @@ void main()
 
    vec4 color = texture2D(texIn, texCoord);
    // Albedo and specular.
-   gl_FragData[0] = color;
+   gl_FragData[0] = gl_Color;
+   /*
    if (color.a == 0.0) {
-      gl_FragData[0] = vec4(normal, 1.0);
+      //gl_FragData[0] = vec4(normal, 1.0);
    }
+   */
    float depth = gl_FragCoord.z;
    depth = pow(depth, 128.0);
    if (normal.z > 0.0) {
       // Depth and normal (if not facing backwards).
       //gl_FragData[1] = vec4(normal, -posv.z / far);
       //normalize(normal);
-      //gl_FragData[1] = vec4(normal, 1.0);
       gl_FragData[1] = vec4(normal, depth);
    }
    // Color (for glow).

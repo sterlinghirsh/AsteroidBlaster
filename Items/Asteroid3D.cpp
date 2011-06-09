@@ -192,63 +192,6 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    collisionType = collisionSphere = new CollisionSphere(radius, *position);
 }
 
-void Asteroid3D::drawGlow() {
-   glDisable(GL_LIGHTING);
-   glEnable(GL_COLOR_MATERIAL);
-   glDisable(GL_CULL_FACE);
-   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-   glPushMatrix();
-   position->glTranslate();
-   glRotated(angle, axis->x, axis->y, axis->z);
-   glScaled(scalex, scaley, scalez);
-   glDepthFunc(GL_LEQUAL);
-
-   glColor3f(0.0, 0.0, 0.0);
-   glPolygonOffset(1.0f, 1.0f);
-   glEnable(GL_POLYGON_OFFSET_FILL);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   mesh.draw(true);
-   //mesh.drawTextured(false, 0);
-   glDisable(GL_POLYGON_OFFSET_FILL);
-   glEnable(GL_CULL_FACE);
-
-   /*
-   double step = (initH - health + 1);
-   double stepR = .004 / initH * step;
-   double stepG = .388 / initH * step;
-   double stepB = 1.0 / initH * step;
-   glColor3f(0.996 + stepR, 0.612 + stepG, 0.0 + stepB);
-   */
-   
-   double step = (initH - health) / initH;
-   double stepR = cyan * step;
-   double stepG = magenta * step;
-   double stepB = yellow * step;
-   //glColor3d(1 - stepR / 2.0, 1 - stepG / 2.0, 1 - stepB / 2.0);
-   // When this explodes, the last values will stick.
-   mesh.setLineColor((float)(1 - stepR / 2.0),
-         (float)(1 - stepG / 2.0),
-         (float)(1 - stepB / 2.0));
-
-   double shipDist = position->distanceFrom(*gameState->ship->position);
-   double lineW = (worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2;
-   //printf("distance: %f, line width: %f\n", shipDist, lineW);
-   //glLineWidth(ASTEROID3D_LINE_W);
-   glLineWidth((GLfloat) lineW);
-   glEnable(GL_POLYGON_OFFSET_LINE);
-   glPolygonOffset(-1.0f, -1.0f);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   //mesh.drawLines(false);
-   glDisable(GL_POLYGON_OFFSET_LINE);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   glLineWidth(1);
-
-   glDisable(GL_COLOR_MATERIAL);
-   glEnable(GL_LIGHTING);
-   //glDepthFunc(GL_LEQUAL);
-   glPopMatrix();
-}
-
 void Asteroid3D::draw() {
    glDisable(GL_CULL_FACE);
    setMaterial(Rock);
@@ -303,7 +246,7 @@ void Asteroid3D::draw() {
    glEnable(GL_POLYGON_OFFSET_LINE);
    glPolygonOffset(-1.0f, -1.0f);
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   mesh.drawLines(false);
+   //mesh.drawLines(false);
    glDisable(GL_POLYGON_OFFSET_LINE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glLineWidth(1);
