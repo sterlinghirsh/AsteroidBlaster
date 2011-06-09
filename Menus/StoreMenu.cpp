@@ -120,19 +120,19 @@ StoreMenu::~StoreMenu() {
 
 void StoreMenu::clearOverlay() {
    if (gameSettings->useOverlay) {
-      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-      glDrawBuffer(GL_COLOR_ATTACHMENT3_EXT);
+      fboBegin();
+      glDrawBuffer(OVERLAY_BUFFER);
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       
-      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+      fboEnd();
    }
 }
 
 void StoreMenu::draw() {
    if (gameSettings->useOverlay) {
-      glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-      glDrawBuffer(GL_COLOR_ATTACHMENT3_EXT);
+      fboBegin();
+      glDrawBuffer(OVERLAY_BUFFER);
    }
    
    SDL_Rect position;
@@ -329,7 +329,7 @@ void StoreMenu::draw() {
    }
    
    Image::getImage("StoreMenuLogo")->drawImage();
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+   fboEnd();
    usePerspective();
 
    // We swap buffers in gameSettings if we're using the overlay.

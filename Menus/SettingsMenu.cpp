@@ -98,8 +98,9 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
       case RIGHT_TYPE:
          if (!gameSettings->goodBuffers &&
                (i == BLOOM_INDEX || i == OVERLAY_INDEX || i == DEFER_INDEX)) {
-            menuTexts[i]->selectable = false;
+            menuTexts[i]->disabled = true;
          } else {
+            menuTexts[i]->disabled = false;
             menuTexts[i]->selectable = true;
          }
          menuTexts[i]->alignment = RIGHT_ALIGN;
@@ -144,8 +145,11 @@ std::string SettingsMenu::getViewStatus(int status) {
 }
 
 void SettingsMenu::draw() {
-   menuTexts[BLOOM_INDEX]->textToDisplay = getStatus(gameSettings->bloom);
-   menuTexts[OVERLAY_INDEX]->textToDisplay = getStatus(gameSettings->useOverlay);
+   menuTexts[BLOOM_INDEX]->textToDisplay =
+      getStatus(gameSettings->bloom && gameSettings->drawDeferred);
+   menuTexts[OVERLAY_INDEX]->textToDisplay =
+      getStatus(gameSettings->useOverlay && gameSettings->drawDeferred);
+   //menuTexts[OVERLAY_INDEX]->textToDisplay = getStatus(gameSettings->useOverlay);
    menuTexts[DEFER_INDEX]->textToDisplay = getStatus(gameSettings->drawDeferred);
    menuTexts[MOUSE_CAPTURE_INDEX]->textToDisplay = getStatus(SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON);
    menuTexts[FULLSCREEN_INDEX]->textToDisplay = getStatus(gameSettings->fullscreen);
@@ -170,7 +174,6 @@ void SettingsMenu::draw() {
       case RIGHT_TYPE:
          position.x = (Sint16) (gameSettings->GW * 7/8);
          menuTexts[i]->setPosition(position);
-         //position.y = (Sint16) (position.y + (gameSettings->GH/12));
          position.y = (Sint16) (position.y + (gameSettings->GH/RETURN_INDEX / 0.75));
          break;
       case SINGLE_SELECTABLE_TYPE:
@@ -223,9 +226,10 @@ void SettingsMenu::keyUp(int key) {
  */
 void SettingsMenu::mouseDown(int button) {
    if (!menuActive) { return; }
-
+   
    if(menuTexts[BLOOM_INDEX]->mouseSelect(x,y)) {
-      gameSettings->bloom = !gameSettings->bloom && gameSettings->goodBuffers;
+      gameSettings->bloom = !gameSettings->bloom
+         && gameSettings->goodBuffers;
    } else if(menuTexts[OVERLAY_INDEX]->mouseSelect(x,y)) {
       gameSettings->useOverlay = !gameSettings->useOverlay
          && gameSettings->goodBuffers;
@@ -256,6 +260,14 @@ void SettingsMenu::mouseDown(int button) {
       menuActive = false;
       mainMenu->menuActive = true;
       x = y = -1;
+   }
+   
+   if (!gameSettings->drawDeferred) {
+      menuTexts[BLOOM_INDEX]->disabled = true;
+      menuTexts[OVERLAY_INDEX]->disabled = true;
+   } else {
+      menuTexts[BLOOM_INDEX]->disabled = false;
+      menuTexts[OVERLAY_INDEX]->disabled = false;
    }
 }
 

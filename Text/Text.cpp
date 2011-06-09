@@ -30,8 +30,6 @@ Text::Text(std::string text, TTF_Font* _font, SDL_Rect _pos) {
    selectable = selected = disabled = false;
 
    alignment = LEFT_ALIGN;
-   pre = "";
-   post = "";
    
 }
 
@@ -149,9 +147,13 @@ void Text::draw() {
    
    SDL_Rect temp = {pos.x, (Sint16) (gameSettings->GH - pos.y - TEXT_INVERT_VALUE)};
 
-   if(!selectable) { selected = false;}
+   if(!selectable) {
+      selected = false;
+   }
 
-   if(selected) {
+   if (disabled) {
+      SDL_GL_RenderText(textToDisplay.c_str(), font, SDL_GREY, &temp);
+   } else if (selected) {
       SDL_GL_RenderText(textToDisplay.c_str(), font, SDL_RED, &temp);
    } else {
       SDL_GL_RenderText(textToDisplay.c_str(), font, color, &temp);
