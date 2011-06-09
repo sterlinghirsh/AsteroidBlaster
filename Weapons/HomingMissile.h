@@ -15,7 +15,7 @@ class HomingMissile : public Weapon {
    public:
       HomingMissile(AsteroidShip* owner, int _index);
       virtual ~HomingMissile();
-      virtual Point3D project(Object3D*);
+      virtual Point3D project(Object3D*, Vector3D);
       virtual void update(double timeDiff);
       virtual bool shouldFire(Point3D*, Point3D*);
       void godMode(bool enabled);

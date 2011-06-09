@@ -21,11 +21,12 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, A
    maxX = maxY = maxZ = radius;
    updateBoundingBox();
 
-   // Blow up 15 seconds after it's fired.
+   // Blow up 3 seconds after it's fired.
    timeToExplode = 3;
    scaleSize = 0;
    secondScale = 0;
-   explodeRadius = 20;
+   // Damage everything within 35 units of the explosion.
+   explodeRadius = 35;
    addSize = 0;
    spin = 0;
    

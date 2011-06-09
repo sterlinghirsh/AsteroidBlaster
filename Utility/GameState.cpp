@@ -161,7 +161,6 @@ GameState::GameState(GameStateMode _gsm) :
       //new all the text class we will be using
       FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
       scoreText = new Text("Score: ", ship->getScore(), "",  hudFont, position);
-      shardText = new Text("Shards: ", ship->getShards(), "",  hudFont, position);
       bankedShardText = new Text("Banked Shards: ", ship->bankedShards, "",  hudFont, position);
       unbankedShardText = new Text("Unbanked Shards: ", ship->unbankedShards, "",  hudFont, position);
       //ammoText = new Text("Ammo: ", sstream2.str(), "",  hudFont, position);
@@ -183,7 +182,7 @@ GameState::GameState(GameStateMode _gsm) :
       shardBankBar->setHorizontal(true);
 
       float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH *
-         2.0f * 0.6f;
+         2.0f * 0.5f;
       const float healthHeight = 0.10f;
       const float weaponBarHeight = 0.3f;
       healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
@@ -849,9 +848,6 @@ void GameState::drawAllText() {
    scoreText->setPosition(position);
 
    position.y = (Sint16) (position.y + positionDifferenceY);
-   shardText->setPosition(position);
-
-   position.y = (Sint16) (position.y + positionDifferenceY);
    bankedShardText->setPosition(position);
 
    position.y = (Sint16) (position.y + positionDifferenceY);
@@ -877,7 +873,6 @@ void GameState::drawAllText() {
 
    if (gsm != ServerMode) {
       scoreText->draw();
-      shardText->draw();
       bankedShardText->draw();
       unbankedShardText->draw();
       lifeText->draw();
@@ -897,7 +892,6 @@ void GameState::drawAllText() {
 void GameState::updateText() {
    FPSText->updateBody((int)curFPS);
    scoreText->updateBody(ship->getScore());
-   shardText->updateBody(ship->getShards());
    bankedShardText->updateBody(ship->bankedShards);
    unbankedShardText->updateBody(ship->unbankedShards);
    lifeText->updateBody(ship->life);

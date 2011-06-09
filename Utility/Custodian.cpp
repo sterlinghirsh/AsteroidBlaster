@@ -176,7 +176,7 @@ void Collision<AsteroidShip, BlasterShot>::handleCollision() {
    int particlesToEmit = 10;
    if (a != b->owner  && !(a->spawnInvulnerable)) {
       a->health -= b->getDamage(a);
-      a->shakeAmount = 0.7f;
+      a->shakeAmount = 0.5f;
       a->justGotHit = doubleTime();
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       for (int i = 0; i <= particlesToEmit; ++i) {
@@ -200,7 +200,7 @@ void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
    int particlesToEmit = 10;
    if (a != b->owner  && !(a->spawnInvulnerable)) {
       a->health -= b->getDamage(a);
-      a->shakeAmount = 0.7f;
+      a->shakeAmount = 0.5f;
       a->justGotHit = doubleTime();
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       for (int i = 0; i <= particlesToEmit; ++i) {
@@ -222,7 +222,7 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
    if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame  && !(a->spawnInvulnerable)) {
       //TODO addInstantVelocity b->velocity->scalarMultiply(10)
       a->health -= b->getDamage(a);
-      a->shakeAmount = 0.7f;
+      a->shakeAmount = 0.75f;
       b->hitYet = true;
       b->hitItem = a;
       b->lastHitFrame = curFrame;
@@ -492,20 +492,19 @@ void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
    Vector3D positionToAsteroid(*a->position, *b->position);
    double distance = positionToAsteroid.getLength();
    if (!b->isExploded) {
-      //if (distance < b->seekRadius + a->radius) {
-         if (distance > b->collisionRadius + a->radius) {
-            //Vector3D* attraction = new Vector3D(positionToAsteroid);
-            //attraction->setLength(5.0);
-            //b->addAcceleration(attraction);
-            //a->velocity->updateMagnitude(attraction);
-            //attraction = new Vector3D(b->velocity);
-            //attraction->setLength(-100.0);
-            //b->addAcceleration(attraction);
-         } else {
-            b->shouldExplode = true;
-            SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
-         }
-      //}
+      if (distance > b->collisionRadius + a->radius) {
+         //Vector3D* attraction = new Vector3D(positionToAsteroid);
+         //attraction->setLength(5.0);
+         //b->addAcceleration(attraction);
+         //a->velocity->updateMagnitude(attraction);
+         //attraction = new Vector3D(b->velocity);
+         //attraction->setLength(-100.0);
+         //b->addAcceleration(attraction);
+      } else {
+         b->shouldExplode = true;
+         // TODO: Use a better sound effect here.
+         SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
+      }
    } else if (distance < b->explodeRadius + a->radius) {
       //printf("Distance is: %f\n", distance);
       a->health -= b->damage;
@@ -1036,7 +1035,6 @@ void Custodian::remove(Object3D* objectIn) {
    }
 
    if(gameState->gsm == ServerMode) {
-   //if(false) {
       std::ostringstream oss;
       boost::archive::text_oarchive oa(oss);
       int i = NET_OBJ_REMOVE;

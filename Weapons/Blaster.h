@@ -16,7 +16,7 @@ class Blaster : public Weapon {
    public:
       Blaster(AsteroidShip* owner, int _index);
       virtual ~Blaster();
-      virtual Point3D project(Object3D*);
+      virtual Point3D project(Object3D* target, Vector3D addOn);
       virtual void update(double timeDiff);
       virtual bool shouldFire(Point3D*, Point3D*);
       void godMode(bool enabled);

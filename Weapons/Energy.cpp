@@ -131,12 +131,13 @@ void Energy::debug() {
  * AI should aim at in order to hit the target with this
  * weapon.
  */
-Point3D Energy::project(Object3D* target) {
+Point3D Energy::project(Object3D* target, Vector3D addOn) {
    Point3D wouldHit;
    double time = 0, dist = 0;
    int iterations = 0;
 
    Point3D targetPos = *target->position;
+   targetPos.addUpdate(addOn);
    Point3D curTarget = targetPos;
    Point3D dp;
 

@@ -19,6 +19,7 @@ class AsteroidShip;
 class Custodian;
 class GameState;
 class Point3D;
+class Vector3D;
 
 class Weapon {
    public:
@@ -35,7 +36,7 @@ class Weapon {
        * Subclasses will override this. For example, Blaster will lead the target and Railgun won't.
        * Returns true when ready to fire.
        */
-      virtual Point3D project(Object3D*)=0;
+      virtual Point3D project(Object3D*, Vector3D)=0;
       virtual bool shouldFire(Point3D*, Point3D*)=0;
 
       /**

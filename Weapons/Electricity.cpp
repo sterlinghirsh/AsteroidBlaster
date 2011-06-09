@@ -108,7 +108,7 @@ void Electricity::debug() {
    printf("Electricity!\n");
 }
 
-Point3D Electricity::project(Object3D* object) {
+Point3D Electricity::project(Object3D* object, Vector3D addOn) {
    return *object->position;
 }
 

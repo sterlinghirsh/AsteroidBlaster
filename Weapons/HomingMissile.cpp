@@ -87,12 +87,13 @@ void HomingMissile::debug() {
  * the targeted object, and return the point that the
  * AI should aim at in order to hit the target with this weapon.
  */
-Point3D HomingMissile::project(Object3D* target) {
+Point3D HomingMissile::project(Object3D* target, Vector3D addOn) {
    Point3D wouldHit;
    double time = 0, dist = 0;
    int iterations = 0;
 
    Point3D targetPos = *target->position;
+   targetPos.addUpdate(addOn);
    Point3D curTarget = targetPos;
    Point3D dp;
 

@@ -17,7 +17,7 @@ class TractorBeam : public Weapon {
    public:
       TractorBeam(AsteroidShip* owner, int _index);
       virtual ~TractorBeam();
-      virtual Point3D project(Object3D*);
+      virtual Point3D project(Object3D* target, Vector3D addOn);
       virtual bool shouldFire(Point3D*, Point3D*);
       virtual void update(double timeDiff);
       virtual void debug();

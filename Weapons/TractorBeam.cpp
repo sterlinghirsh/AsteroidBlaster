@@ -64,8 +64,8 @@ void TractorBeam::debug() {
    printf("TractorBeam!\n");
 }
 
-Point3D TractorBeam::project(Object3D* object) {
-   return *object->position;
+Point3D TractorBeam::project(Object3D* target, Vector3D addOn) {
+   return *target->position;
 }
 
 bool TractorBeam::shouldFire(Point3D* target, Point3D* aim) {

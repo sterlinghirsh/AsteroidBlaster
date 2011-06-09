@@ -48,7 +48,6 @@ class GameState : public InputReceiver {
        */
       Text *FPSText,
            *scoreText,
-           *shardText,
            *bankedShardText,
            *unbankedShardText,
            //*weaponText,

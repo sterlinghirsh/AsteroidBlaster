@@ -70,7 +70,7 @@ void RailGun::debug() {
    printf("RailGun!\n");
 }
 
-Point3D RailGun::project(Object3D* target) {
+Point3D RailGun::project(Object3D* target, Vector3D addOn) {
    return *target->position;
 }
 

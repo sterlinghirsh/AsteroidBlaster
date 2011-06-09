@@ -23,7 +23,6 @@
 #include "AI/AI.h"
 #include "Items/Object3D.h"
 
-
 // Incomplete class declaration so we can use pointers.
 class Object3D;
 class AsteroidShip;
@@ -44,6 +43,12 @@ class ShootingAI : public AI {
    bool enabled;
    bool needToChooseTarget;
    bool targetIsAShard;
+   /* Difficulty affects the accuracy of the AI.
+    * It is a whole number between 1 and maxDifficulty.
+    * 1 is very inaccurate, and near maxDifficulty is very accurate.
+    */
+   int difficulty;
+   int maxDifficulty;
 
    // These control how fast the AI can switch weapons (in seconds).
    double weaponSwitchSpeed;

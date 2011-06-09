@@ -22,6 +22,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Particles/Particle.h"
 #include <math.h>
+#include <time.h> // For random # generation
 
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"
@@ -54,6 +55,13 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    // Set the default chosen weapon.
    chosenWeapon = ship->getCurrentWeapon();
    targetIsAShard = false;
+
+   // Initialize the random seed
+   srand(time(NULL));
+   maxDifficulty = 10;
+
+   // Make the difficulty a random int from 1 - maxDifficulty.
+   difficulty = rand() % maxDifficulty + 1;
 }
 
 /**
@@ -78,10 +86,27 @@ bool ShootingAI::aimAt(double dt, Object3D* target) {
    Vector3D randomVariation;
    double ang = 0;
   
+   //------------------------------
+   // Add a random variation to the aim.
+   // randomVariation is between <-1, -1, -1> and <1, 1, 1>
+   randomVariation.randomMagnitude();
+
+   /* maxDifficulty - difficulty ensures that high difficulty means very 
+    * little is added onto the randomVariation. Low difficulty means that
+    * a large number is added onto the randomVariation.
+    */
+   //randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount + (maxDifficulty - difficulty)/((float)difficulty / 2));
+   randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount + ((maxDifficulty - difficulty)*(maxDifficulty - difficulty)/15));
+   //randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount);
+   //randomVariation.scalarMultiplyUpdate(0);
+   //aim.addUpdate(randomVariation);
+   //-----------------------------
+    
    Point3D aim = lastShotPos;
-   Point3D targetPos = chosenWeapon->project(target);
+   Point3D targetPos = chosenWeapon->project(target, randomVariation);
    Vector3D targetDir = (targetPos - ship->shotOrigin).getNormalized();
-   
+
+
    // This section of code does angle interpolation.
    // Find the angle between our vector and where we want to be.
    ang = acos(aim * targetDir);
@@ -102,8 +127,10 @@ bool ShootingAI::aimAt(double dt, Object3D* target) {
       aim = targetDir;
    }
 
+
    // The aiming should be clamped within a radius
-   double forwardDotAim = aim.dot(*ship->forward);
+   //double forwardDotAim = aim.dot(*ship->forward);
+   double forwardDotAim = targetDir.dot(*ship->forward);
    double upDotAim = aim.dot(*ship->up);
    double rightDotAim = aim.dot(*ship->right);
    // (Root 2)/2 radians
@@ -114,10 +141,6 @@ bool ShootingAI::aimAt(double dt, Object3D* target) {
 
    bool shouldFire = chosenWeapon->shouldFire(&targetPos, &aim);
 
-   // Add a random variation to the aim.
-   randomVariation.randomMagnitude();
-   randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount);
-   aim.addUpdate(randomVariation);
    
    /* If the cursor is going outside of the allowable range, choose a new target.
     * Make sure we don't fire.
@@ -199,6 +222,7 @@ void ShootingAI::chooseWeapon(Object3D* target) {
    for(int x = 0; x < NUMBER_OF_WEAPONS; x++)
       weaponWeights[x] = 0.0;
 
+   considerRailgun = false;
    /*
    printf("ConsiderTractor is %s\n", (considerTractor)? "true":"false");
    printf("ConsiderBlaster is %s\n", (considerBlaster)? "true":"false");
@@ -257,7 +281,7 @@ void ShootingAI::chooseWeapon(Object3D* target) {
    // Only add up weights for the electricity gun if we're considering it.
    if (considerElectricity) {
       // Consider the target's radius.
-      weaponWeights[ELECTRICITY_WEAPON_INDEX] += target->radius;
+      weaponWeights[ELECTRICITY_WEAPON_INDEX] += 100 / target->radius;
 
       // Consider the target's distance.
       weaponWeights[ELECTRICITY_WEAPON_INDEX] += 1.5 * dist;
@@ -268,14 +292,17 @@ void ShootingAI::chooseWeapon(Object3D* target) {
 
    // Only add up weights for the timed bomber if we're considering it.
    if (considerTimedBomber) {
-      // Consider the target's radius.
-      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 1 / target->radius;
+      // Consider the target's radius. Bigger is better.
+      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 2 * target->radius;
 
       // Consider the target's distance.
-      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] +=  2 * dist;
+      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] +=  1.75 * dist;
 
       // Consider the target's velocity. Slower is much better.
-      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 300 / target->velocity->magnitude();
+      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] += 200 / target->velocity->magnitude();
+
+      // The harder the AI is, the less it should use the timed bomber.
+      weaponWeights[TIMEDBOMBER_WEAPON_INDEX] -= 3 * (maxDifficulty - difficulty);
    }
 
    // Only add up weights for the timed bomber if we're considering it.
@@ -349,19 +376,31 @@ Object3D* ShootingAI::chooseTarget() {
    targets_iterator = targets->begin();
    Object3D* closest = NULL;
    AsteroidShip* consideredShip = NULL;
+   Object3D* thisObj = NULL;
 
    for ( ; targets_iterator != targets->end(); ++targets_iterator) {
       //printf("starting null check.\n");
       if (*targets_iterator == NULL) {
          //printf("targets_iterator was null!\n\n\n\n");
-      continue;
+         continue;
+      }
+
+      // Don't consider any target that's too far away from the ship's forward vector
+      Vector3D targetDir = (*(*targets_iterator)->position - ship->shotOrigin).getNormalized();
+
+      double forwardDotAim = targetDir.dot(*ship->forward);
+      const double minForwardAimAmount = 0.707;
+
+      if(forwardDotAim < minForwardAimAmount) {
+         continue;
       }
       
-     curWeight = 0.0;
-     isAShip = false;
-     isAShard = false;
       
-     if((consideredShip = dynamic_cast<AsteroidShip*>(*targets_iterator)) != NULL) {
+      curWeight = 0.0;
+      isAShip = false;
+      isAShard = false;
+
+      if((consideredShip = dynamic_cast<AsteroidShip*>(*targets_iterator)) != NULL) {
          isAShip = true;
          // Reset this to 1 for this target.
          playerWeight = 1;

@@ -17,8 +17,9 @@ Blaster::Blaster(AsteroidShip* owner, int _index)
    shotSpeed = 100; // Units per second
    coolDown = 0.20; // Seconds
 
-   // Random variations for the ShootingAI and human players.
-   randomAIVariationAmount = 4;
+   // An extra random variations for the ShootingAI.
+   randomAIVariationAmount = 0.5;
+   // Random variation applied to every shot.
    randomVariationAmount = 1.2; // Units
 
    name = "Blaster";
@@ -103,12 +104,14 @@ void Blaster::debug() {
  * AI should aim at in order to hit the target with this
  * weapon.
  */
-Point3D Blaster::project(Object3D* target) {
+Point3D Blaster::project(Object3D* target, Vector3D addOn) {
    Point3D wouldHit;
    double time = 0, dist = 0;
    int iterations = 0;
 
-   Point3D targetPos = *target->position;
+   // Add on the extra addOn vector for innacuracy.
+   Point3D targetPos = *(target->position);
+   targetPos.addUpdate(addOn);
    Point3D curTarget = targetPos;
    Point3D dp;
 
