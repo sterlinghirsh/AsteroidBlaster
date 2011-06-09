@@ -2021,6 +2021,8 @@ void AsteroidShip::atLevelEnd() {
    shakeAmount = 0;
 
    stopSounds();
+   respawnTimer.reset();
+   timeLeftToRespawn = -1;
 }
 
 /**

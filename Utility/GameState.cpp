@@ -329,11 +329,11 @@ void GameState::update(double timeDiff) {
    // if it's not in MenuMode
    if (gsm != MenuMode) {
       // If the level should be over, let's go to the store menu.
-      if((levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) ||
+      if(!gameOverTimer.isRunning && ((levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) ||
             (gameIsRunning &&
              (gsm == SingleMode) &&
              custodian.asteroidCount == 0 &&
-             custodian.shardCount == 0) ) {
+             custodian.shardCount == 0)) ) {
          nextLevel();
          return;
       }
