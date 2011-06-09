@@ -1074,9 +1074,25 @@ void GameState::reset(bool shouldLoad) {
 }
 
 void GameState::addLevelMessage() {
+   //add level message
    std::ostringstream levelMessage;
    levelMessage << "Level " << curLevel;
    GameMessage::Add(levelMessage.str(), 30, 5);
+
+   //Add warning mesage
+   if (gsm == SingleMode && (curLevel > 1)) {
+      std::ostringstream gameMsg;
+      int numAIShip = (custodian.ships.size()-1);
+      if (numAIShip == 1) {
+         gameMsg << "WARNING: 1 Enemy Ship Detected";
+      } else {
+         gameMsg << "WARNING: " << numAIShip << " Enemy Ships Detected";
+      }
+      
+      GameMessage::Add(gameMsg.str(), 30, 5);
+      std::cout << "testtest" << std::endl;
+   }
+
 }
 
 void GameState::nextLevel() {
