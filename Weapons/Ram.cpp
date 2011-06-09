@@ -20,6 +20,12 @@ Ram::Ram(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    curAmmo = 2000;
    purchased = false;
    icon = "RamIcon";
+   
+   currentHeat = 0;
+   overheatLevel = 10;
+   heatPerShot = 3.0;
+   overheated = false;
+   
    r = 0.5;
    g = 0;
    b = 0.5;
@@ -30,7 +36,20 @@ Ram::~Ram() {
 }
 
 void Ram::update(double timeDiff) {
-   // Stop sound if we're no longer firing.
+   if(currentFrame == lastFiredFrame) {
+      if (!ship->gameState->godMode) {
+         currentHeat += heatPerShot * timeDiff;
+      }
+   } else if (currentHeat > 0) {
+      currentHeat = std::max(currentHeat - timeDiff, 0.0);
+   }
+
+   if (overheated && currentHeat == 0) {
+      overheated = false;
+   } else if (currentHeat > overheatLevel) {
+      overheated = true;
+   }
+   
    if (currentFrame == lastFiredFrame && !soundPlaying) {
       // We should play sound.
       soundPlaying = true;
@@ -45,7 +64,8 @@ void Ram::update(double timeDiff) {
 void Ram::fire() {
    if(!ship->gameState->godMode && curAmmo <= 0)
       return;
-
+   if (!isReady())
+      return;
    Point3D start = ship->shotOrigin;
    //ship->forward->movePoint(start, 4);
    ship->setShakeAmount(0.0);
@@ -68,4 +88,18 @@ Point3D Ram::project(Object3D* object, Vector3D addOn) {
 
 bool Ram::shouldFire(Point3D* target, Point3D* aim) {
    return true;
+}
+
+/**
+ * This is for the weapon bar.
+ */
+double Ram::getCoolDownAmount() {
+   return 1 - clamp(currentHeat / overheatLevel, 0, 1);
+}
+
+/**
+ * This is for firing.
+ */
+bool Ram::isCooledDown() {
+   return Weapon::isCooledDown() && !overheated;
 }

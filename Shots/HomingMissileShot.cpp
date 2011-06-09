@@ -595,19 +595,24 @@ void HomingMissileShot::update(double timeDiff) {
 
 void HomingMissileShot::hitWall(BoundingWall* wall) {
    // Check to see if we're actually within exploderadius.
-   minX = minY = minZ = -collisionRadius;
-   maxX = maxY = maxZ = collisionRadius;
-   updateBoundingBox();
-
-   ExplosiveShot::hitWall(wall);
    
-   if (wall->actuallyHit) {
-      shouldExplode = true;   
+   if (shouldExplode || isExploded) {
+      wall->actuallyHit = false;
    }
-
-   minX = minY = minZ = -seekRadius;
-   maxX = maxY = maxZ = seekRadius;
-   updateBoundingBox();
+   
+   if (!isExploded) {
+      minX = minY = minZ = -collisionRadius;
+      maxX = maxY = maxZ = collisionRadius;
+      updateBoundingBox();
+      ExplosiveShot::hitWall(wall);
+      if (wall->actuallyHit) {
+         shouldExplode = true;   
+      }
+      minX = minY = minZ = -seekRadius;
+      maxX = maxY = maxZ = seekRadius;
+      updateBoundingBox();
+   } 
+   
 }
 
 /**

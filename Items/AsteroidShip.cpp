@@ -326,8 +326,8 @@ void AsteroidShip::updatePlayerAcceleration() {
                   up->scalarMultiply(curUpAccel))));
    Vector3D normalizedAccel = newAcceleration->getNormalized();
    double topAccelSpeed = maxSpeed + engineUpgrade * 2;
-   if (isFiring && currentWeapon == RAM_WEAPON_INDEX) {
-      topAccelSpeed *= 3;
+   if (isFiring && currentWeapon == RAM_WEAPON_INDEX  && weapons[RAM_WEAPON_INDEX]->isReady()) {
+      topAccelSpeed *= 4;
    }
    if (normalizedAccel.dot(*velocity) < topAccelSpeed) {
       addAcceleration(newAcceleration);
@@ -820,9 +820,9 @@ void AsteroidShip::update(double timeDiff) {
       isBarrelRollingRight -= timeDiff;
    }
 
-   if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode)) {
+   if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode) && weapons[RAM_WEAPON_INDEX]->isReady()) {
       tracker += 20 * timeDiff;
-      flashiness += (float)upOrDown * (float)(rando % 10) * timeDiff * 50;
+      flashiness += (float)upOrDown * (float)(rando % 10) * timeDiff * 500;
    }
 
    createEngineParticles(timeDiff);
@@ -1510,7 +1510,7 @@ void AsteroidShip::draw_ram() {
 
 bool AsteroidShip::isVulnerable() {
    if (!((doubleTime() - justGotHit < invulnerableTime) || spawnInvulnerable ||
-      isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode))) 
+      isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode)  && weapons[RAM_WEAPON_INDEX]->isReady())) 
          return true;
 }
 
@@ -1544,7 +1544,7 @@ void AsteroidShip::draw() {
       if(drawHit) {
          draw_hitEffect();
       }
-      if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode)) {
+      if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode)  && weapons[RAM_WEAPON_INDEX]->isReady()) {
          draw_ram();
       }
    }
