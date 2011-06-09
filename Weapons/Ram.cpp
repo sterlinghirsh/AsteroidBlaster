@@ -19,6 +19,10 @@ Ram::Ram(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    soundPlaying = false;
    curAmmo = 2000;
    purchased = false;
+   icon = "RamIcon";
+   r = 0.5;
+   g = 0;
+   b = 0.5;
 }
 
 Ram::~Ram() {
