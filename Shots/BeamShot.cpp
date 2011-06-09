@@ -75,7 +75,7 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShi
       // This is how long the beam is drawn. It is shortened when hit.
       drawLength = length;
       isBeam = true;
-      damage = 50;
+      damage = 50 + (owner->weapons[RAILGUN_WEAPON_INDEX]->level*10);
 
       collisionType = new CollisionRay(length, *velocity, *position);
    }

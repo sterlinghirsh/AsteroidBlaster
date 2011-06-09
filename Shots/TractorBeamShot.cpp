@@ -22,7 +22,7 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, int _weaponInde
    persist = true;
    angle = M_PI / 20; // Radians from the center
    // The length of the tractor beam shot is the range of the weapon.
-   length = owner->weapons[TRACTOR_WEAPON_INDEX]->range;
+   length = owner->weapons[TRACTOR_WEAPON_INDEX]->range + (owner->weapons[TRACTOR_WEAPON_INDEX]->level * 5);
    farRadius = length * tan(angle);
    framesAlive = 0;
    forward = new Vector3D(*velocity);
