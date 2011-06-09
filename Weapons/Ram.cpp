@@ -58,7 +58,7 @@ void Ram::debug() {
    printf("Ram!\n");
 }
 
-Point3D Ram::project(Object3D* object, Vector3D* addOn) {
+Point3D Ram::project(Object3D* object, Vector3D addOn) {
    return *object->position;
 }
 
