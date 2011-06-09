@@ -244,6 +244,7 @@ void load() {
    Texture::Add("Images/weaponicons/pikachuswrath.png", "PikachusWrathIcon");
    Texture::Add("Images/weaponicons/railgun.png", "RailGunIcon");
    Texture::Add("Images/weaponicons/remotebomb.png", "RemoteBombIcon");
+   Texture::Add("Images/weaponicons/MissileIcon.png", "MissileIcon");
 
    
    Image::Add(Point3D(0.0, 0.2, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("StoreLogo"), "StoreMenuLogo");

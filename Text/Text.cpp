@@ -30,6 +30,8 @@ Text::Text(std::string text, TTF_Font* _font, SDL_Rect _pos) {
    selectable = selected = disabled = false;
 
    alignment = LEFT_ALIGN;
+   pre = "";
+   post = "";
    
 }
 

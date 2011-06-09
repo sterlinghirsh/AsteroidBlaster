@@ -22,10 +22,10 @@ HomingMissile::HomingMissile(AsteroidShip* owner, int _index) : Weapon(owner, _i
 
    fireBackwards = false; // This used to be true for mine layer.
 
-   icon = "MineLayerIcon";
-   r = 1;
-   g = 0;
-   b = 1;
+   icon = "MissileIcon";
+   r = 0.0;
+   g = 0.0;
+   b = 1.0;
 }
 
 HomingMissile::~HomingMissile() {

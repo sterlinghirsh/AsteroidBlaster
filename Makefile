@@ -116,7 +116,7 @@ turnin:
 	handin zwood csc476finalweb asteroidssite/*
 
 valgrind:
-	valgrind --leak-check=yes --track-origins=no --log-file=valgrindOutput ./${PROGNAME}
+	valgrind --leak-check=no --track-origins=yes --log-file=valgrindOutput ./${PROGNAME}
 
 gdb:
 	gdb ./${PROGNAME}
