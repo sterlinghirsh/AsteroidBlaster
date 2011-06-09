@@ -38,12 +38,6 @@
 #include "HUD/Minimap.h"
 #include "HUD/Screen.h"
 
-#include "Network/UDP_Server.h"
-#include "Network/UDP_Client.h"
-#include "Network/NetTimer.h"
-#include "Network/NetShard.h"
-#include "Network/NetAsteroid.h"
-#include "Network/NetShip.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -77,19 +71,19 @@ GameState::GameState(GameStateMode _gsm) :
          udpServer = NULL;
          networkThread = NULL;
       } else if (gsm == ClientMode) {
-         io = new boost::asio::io_service();
-         udpClient = new UDP_Client(*io, this, ipAddress, portNumber);
+         //io = new boost::asio::io_service();
+         //udpClient = new UDP_Client(*io, this, ipAddress, portNumber);
          udpServer = NULL;
-         networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
+         //networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       } else if (gsm == ServerMode) {
-         io = new boost::asio::io_service();
+         //io = new boost::asio::io_service();
          udpClient = NULL;
 
-         std::istringstream iss(portNumber);
-         int tempPortNumber;
-         iss >> tempPortNumber;
-         udpServer = new UDP_Server(*io, this, tempPortNumber);
-         networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
+         //std::istringstream iss(portNumber);
+         //int tempPortNumber;
+         //iss >> tempPortNumber;
+         //udpServer = new UDP_Server(*io, this, tempPortNumber);
+         //networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       }
 
       godMode = false;
@@ -109,30 +103,6 @@ GameState::GameState(GameStateMode _gsm) :
 
       worldSize = WORLD_SIZE;
       skybox = new Skybox();
-      if (gsm == ClientMode) {
-         while (udpClient->shipID == -1) {
-            std::cout << "udpClient->shipID == -1" << std::endl;
-            SDL_Delay(1);
-         }
-         std::cout << "udpClient->shipID != -1" << std::endl;
-
-         Object3D* temp = NULL;
-
-         // Wait until we have a valid ship object from the server.
-         while((temp = custodian[udpClient->shipID]) == NULL) {
-            SDL_Delay(1);
-         }
-
-         ship = dynamic_cast<AsteroidShip*>(temp);
-         if (ship == NULL) {
-            std::cout << "GameState::setShipWithID came up with NULL" << std::endl;
-            exit(1);
-         } else {
-            std::cout << "GameState::reset on client successful! with ship id of " << ship->id << std::endl;
-         }
-      } else {
-         ship = new AsteroidShip(this);
-      }
 
       clientCommand.shipID = ship->id;
 
@@ -236,12 +206,6 @@ GameState::~GameState() {
    delete cube;
    delete weaponReadyBar;
    delete shardBankBar;
-   if (udpServer != NULL) {
-      delete udpServer;
-   }
-   if (udpClient != NULL) {
-      delete udpClient;
-   }
    // Somehow makes it segfault when quitting so commented out
    /*if (io != NULL) {
      io->stop();
@@ -284,13 +248,13 @@ void GameState::addAIPlayer() {
 }
 
 void GameState::addNetworkPlayer(unsigned clientID) {
-   AsteroidShip* otherShip = new AsteroidShip(this);
-   double randX = (randdouble())*(worldSize / 2);
-   double randY = (randdouble())*(worldSize / 2);
-   double randZ = (randdouble())*(worldSize / 2);
-   otherShip->position->update(randX, randY, randZ);
-   custodian.add(otherShip);
-   custodian.shipsByClientID.insert(std::pair<unsigned, AsteroidShip*>(clientID, otherShip));
+   //AsteroidShip* otherShip = new AsteroidShip(this);
+   //double randX = (randdouble())*(worldSize / 2);
+   //double randY = (randdouble())*(worldSize / 2);
+   //double randZ = (randdouble())*(worldSize / 2);
+   //otherShip->position->update(randX, randY, randZ);
+   //custodian.add(otherShip);
+   //custodian.shipsByClientID.insert(std::pair<unsigned, AsteroidShip*>(clientID, otherShip));
 }
 
 /**
@@ -404,108 +368,7 @@ void GameState::update(double timeDiff) {
 }
 
 void GameState::networkUpdate(double timeDiff) {
-   // CLIENT-->SERVER stuff~~~~~~~~~~~~~~~~~~~~~~
-   if (gsm == ClientMode) {
-      // For sending clientcommands to the server
-      static double tempClientSend = 0;
-      tempClientSend += timeDiff;
-      if (tempClientSend >= 0.05) {
-         std::ostringstream oss;
-         boost::archive::text_oarchive oa(oss);
-         int i = NET_CLIENTCOMMAND;
-         oa << i << (const ClientCommand)clientCommand;
-         udpClient->send(oss.str(), udpClient->serverEndPoint);
-         tempClientSend = 0;
-      }
-
-
-      // SERVER-->CLIENT stuff~~~~~~~~~~~~~~~~~~~~~~
-   } else if (gsm == ServerMode){
-      static double shipTime = 0;
-      static double asteroidTime = 0;
-      static double shardTime = 0;
-      static double gameStat = 0;
-      static double clientKeepAlive = 0;
-
-      shipTime += timeDiff;
-      asteroidTime += timeDiff;
-      shardTime += timeDiff;
-      gameStat += timeDiff;
-      clientKeepAlive += timeDiff;
-
-      if (shipTime >= 0.1) {
-         std::set<AsteroidShip*>::iterator iter = custodian.ships.begin();
-         for (;iter != custodian.ships.end();iter++) {
-            NetShip testNetship;
-            testNetship.fromObject(*iter);
-            std::ostringstream oss;
-            boost::archive::text_oarchive oa(oss);
-            int i = NET_OBJ_SHIP;
-            oa << i << testNetship;
-            udpServer->sendAll(oss.str());
-         }
-         shipTime = 0;
-      }
-
-      if (asteroidTime >= 0.1) {
-         std::set<Asteroid3D*>::iterator iter = custodian.asteroids.begin();
-         for (;iter != custodian.asteroids.end();iter++) {
-            NetAsteroid testNetAsteroid;
-            testNetAsteroid.fromObject(*iter);
-            std::ostringstream oss;
-            boost::archive::text_oarchive oa(oss);
-            int i = NET_OBJ_ASTEROID;
-            oa << i << testNetAsteroid;
-            udpServer->sendAll(oss.str());
-         }
-         asteroidTime = 0;
-      }
-
-      if (shardTime >= 0.1) {
-         std::set<Shard*>::iterator iter = custodian.shards.begin();
-         for (;iter != custodian.shards.end();iter++) {
-            NetShard testNetShard;
-            testNetShard.fromObject(*iter);
-            std::ostringstream oss;
-            boost::archive::text_oarchive oa(oss);
-            int i = NET_OBJ_SHARD;
-            oa << i << testNetShard;
-            udpServer->sendAll(oss.str());
-         }
-         shardTime = 0;
-      }
-
-      if (gameStat >= 3.0) {
-         std::ostringstream oss;
-         boost::archive::text_oarchive oa(oss);
-         int i = NET_LEVEL_UPDATE;
-         double timeLeft = levelTimer.getTimeLeft();
-         oa << i << timeLeft << curLevel;
-         udpServer->sendAll(oss.str());
-         gameStat = 0;
-      }
-
-      if (clientKeepAlive >= 1.0) {
-         clientKeepAlive = 0;
-         std::map<boost::asio::ip::udp::endpoint, ClientNode*>::iterator iter = udpServer->endpointToClientID.begin();
-         //std::map<> endpointToClientID.begin();
-         for (; iter != udpServer->endpointToClientID.end(); iter++) {
-            if (iter->second->lastAccessed.getTimeRunning() >= 3.0) {
-               std::cerr << "Removed clientID:" <<  iter->second->clientID << " (shipID=" << iter->second->shipID << ") for being idle..." << std::endl;
-               custodian[iter->second->shipID]->shouldRemove = true;
-               udpServer->endpointToClientID.erase (iter->second->endpoint);
-               clientKeepAlive = 3.0;
-               break;
-            }
-         }
-         //std::ostringstream oss;
-         //boost::archive::text_oarchive oa(oss);
-         //int i = NET_LEVEL_UPDATE;
-         //double timeLeft = levelTimer.getTimeLeft();
-         //oa << i << timeLeft << curLevel;
-         //udpServer->sendAll(oss.str());
-      }
-   }
+   
 }
 
 void GameState::spectatorCameraUpdate(double timeDiff) {
@@ -1014,30 +877,7 @@ void GameState::reset(bool shouldLoad) {
 
    std::cout << "Resetting." << std::endl;
 
-   if (gsm == ClientMode) {
-      while (udpClient->shipID == -1) {
-         std::cout << "udpClient->shipID == -1" << std::endl;
-         SDL_Delay(1);
-      }
-      std::cout << "udpClient->shipID != -1" << std::endl;
-
-      Object3D* temp = NULL;
-
-      // Wait until we have a valid ship object from the server.
-      while((temp = custodian[udpClient->shipID]) == NULL) {
-         SDL_Delay(1);
-      }
-
-      ship = dynamic_cast<AsteroidShip*>(temp);
-      if (ship == NULL) {
-         std::cout << "GameState::setShipWithID came up with NULL" << std::endl;
-         exit(1);
-      } else {
-         std::cout << "GameState::reset on client successful! with ship id of " << ship->id << std::endl;
-      }
-   } else {
-      ship = new AsteroidShip(this);
-   }
+   ship = new AsteroidShip(this);
 
    clientCommand.reset();
    clientCommand.shipID = ship->id;
@@ -1173,15 +1013,6 @@ void GameState::nextLevel() {
       initAsteroids();
    }
 
-   // If it's ServerMode, send the next level packet so that
-   // clients go to the Store Menu
-   if (gsm == ServerMode) {
-      std::ostringstream oss;
-      boost::archive::text_oarchive oa(oss);
-      int i = NET_ACTIVATE_STOREMENU;
-      oa << i;
-      udpServer->sendAll(oss.str());
-   }
 
    custodian.update();
    GameMessage::Clear();

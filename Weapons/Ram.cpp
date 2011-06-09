@@ -38,7 +38,7 @@ Ram::~Ram() {
 void Ram::update(double timeDiff) {
    if(currentFrame == lastFiredFrame) {
       if (!ship->gameState->godMode) {
-         currentHeat += heatPerShot * timeDiff;
+         currentHeat += (heatPerShot/(double)level) * timeDiff;
       }
    } else if (currentHeat > 0) {
       currentHeat = std::max(currentHeat - timeDiff, 0.0);

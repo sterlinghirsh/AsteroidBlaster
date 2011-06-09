@@ -31,13 +31,6 @@
 #include "Particles/BlasterImpactParticle.h"
 #include "Particles/TractorAttractionParticle.h"
 
-#include "Network/UDP_Server.h"
-#include "Network/NetShard.h"
-#include "Network/NetAsteroid.h"
-#include "Network/NetShip.h"
-#include "Network/NetBlasterShot.h"
-#include "Network/NetBeamShot.h"
-#include "Network/NetTractorBeamShot.h"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -989,80 +982,6 @@ void Custodian::add(Object3D* objectIn) {
       ships.insert(ship);
    }
 
-   // If the gamestate is a server, send it over to all the clients...
-   if (gameState->gsm == ServerMode) {
-      if (shard != NULL) {
-         //std::cout << "creating net shard..." << std::endl;
-         NetShard testNetShard;
-         testNetShard.fromObject(shard);
-         std::ostringstream oss;
-         boost::archive::text_oarchive oa(oss);
-         int i = NET_OBJ_SHARD;
-         oa << i << testNetShard;
-         gameState->udpServer->sendAll(oss.str());
-      }
-      if (asteroid != NULL) {
-         //std::cout << "creating net asteroid..." << std::endl;
-         NetAsteroid testNetAsteroid;
-         testNetAsteroid.fromObject(asteroid);
-         std::ostringstream oss;
-         boost::archive::text_oarchive oa(oss);
-         int i = NET_OBJ_ASTEROID;
-         oa << i << testNetAsteroid;
-         gameState->udpServer->sendAll(oss.str());
-      }
-      if (ship != NULL) {
-         //std::cout << "creating net ship..." << std::endl;
-         NetShip testNetship;
-         testNetship.fromObject(ship);
-         std::ostringstream oss;
-         boost::archive::text_oarchive oa(oss);
-         int i = NET_OBJ_SHIP;
-         oa << i << testNetship;
-         gameState->udpServer->sendAll(oss.str());
-      }
-      if (shot != NULL) {
-         BlasterShot* tempBlasterShot = NULL;
-         tempBlasterShot = dynamic_cast<BlasterShot*>(shot);
-         if (tempBlasterShot) {
-            //std::cout << "creating net ship..." << std::endl;
-            NetBlasterShot testNetBlasterShot;
-            testNetBlasterShot.fromObject(tempBlasterShot);
-            std::ostringstream oss;
-            boost::archive::text_oarchive oa(oss);
-            int i = NET_OBJ_BLASTERSHOT;
-            oa << i << testNetBlasterShot;
-            gameState->udpServer->sendAll(oss.str());
-         }
-
-         BeamShot* tempBeamShot = NULL;
-         tempBeamShot = dynamic_cast<BeamShot*>(shot);
-         if (tempBeamShot) {
-            //std::cout << "creating net ship..." << std::endl;
-            NetBeamShot testNetBeamShot;
-            testNetBeamShot.fromObject(tempBeamShot);
-            std::ostringstream oss;
-            boost::archive::text_oarchive oa(oss);
-            int i = NET_OBJ_BEAMSHOT;
-            oa << i << testNetBeamShot;
-            gameState->udpServer->sendAll(oss.str());
-         }
-
-         TractorBeamShot* tempTractBeamShot = NULL;
-         tempTractBeamShot = dynamic_cast<TractorBeamShot*>(shot);
-         if (tempTractBeamShot) {
-            //std::cout << "creating net ship..." << std::endl;
-            NetTractorBeamShot testNetTractBeamShot;
-            testNetTractBeamShot.fromObject(tempTractBeamShot);
-            std::ostringstream oss;
-            boost::archive::text_oarchive oa(oss);
-            int i = NET_OBJ_TRACTORBEAMSHOT;
-            oa << i << testNetTractBeamShot;
-            gameState->udpServer->sendAll(oss.str());
-         }
-
-      }
-   }
 }
 
 /**
@@ -1092,13 +1011,6 @@ void Custodian::remove(Object3D* objectIn) {
       ships.erase(ship);
    }
 
-   if(gameState->gsm == ServerMode) {
-      std::ostringstream oss;
-      boost::archive::text_oarchive oa(oss);
-      int i = NET_OBJ_REMOVE;
-      oa << i << objectIn->id;
-      gameState->udpServer->sendAll(oss.str());
-   }
 
    delete objectIn;
 }

@@ -98,10 +98,10 @@ class GameState : public InputReceiver {
       Timer gameOverTimer;
 
       //server stuff
-      UDP_Server* udpServer;
-      UDP_Client* udpClient;
-      boost::thread* networkThread;
-      boost::asio::io_service* io;
+      void* udpServer;
+      void* udpClient;
+      void* networkThread;
+      void* io;
       
    //private variables------------------------------
    private:
