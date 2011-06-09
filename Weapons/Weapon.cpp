@@ -40,10 +40,12 @@ Weapon::~Weapon() {
  * Returns true if the weapon is ready to be fired.
  */
 bool Weapon::isCooledDown() {
-   if (!ship->gameState->godMode) {
+   if (ship->gameState->godMode) {
+      return doubleTime() > timeLastFired + 0.05;
+   } else {
       return doubleTime() > timeLastFired + (coolDown/((double)level));
    }
-   return doubleTime() > timeLastFired + 0.05;
+   
 }
 
 /**

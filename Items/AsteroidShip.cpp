@@ -113,7 +113,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       score = 0;
       kills = 0;
       deaths = 0;
-      life = 4;
+      life = 3;
 
       lastDamager = NULL;
       lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;

@@ -459,7 +459,7 @@ void HomingMissileShot::update(double timeDiff) {
    
    shotAccel = new Vector3D(*forward);
    
-   shotAccel->setLength(15);
+   shotAccel->setLength(15+ (owner->weapons[HOMINGMISSILE_WEAPON_INDEX]->level*3));
    addAcceleration(shotAccel);
    
    double speed = velocity->getLength();

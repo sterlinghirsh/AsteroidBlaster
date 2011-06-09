@@ -87,7 +87,7 @@ void Blaster::fire() {
 
    // Don't play sound effects in godMode b/c there would be too many.
    if (!ship->gameState->godMode) {
-      currentHeat += heatPerShot;
+      currentHeat += heatPerShot / level;
    }
 }
 
