@@ -73,7 +73,7 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
    
    timeSinceExploded = -1;
    
-   damage = 0;
+   damage = 3;
    slowDownPerSecond = 40.0;
    collisionRadius = 0.5;
    collisionSphere->updateRadius(seekRadius);
@@ -339,6 +339,14 @@ void HomingMissileShot::drawGlow(){
    draw();
 }
 
+double HomingMissileShot::getDamage(Object3D* other) {
+   if (hasDamaged) {
+      return 0;
+   } else {
+      return damage;
+   }
+}
+
 void HomingMissileShot::drawExplosion() {
    double xzScale;
    double subtractor = 1.6;
@@ -441,11 +449,13 @@ void HomingMissileShot::update(double timeDiff) {
    const int particlesPerSecond = 4;
    Vector3D* shotAccel;
    //spin += 500 * timeDiff;
-   roll(rollSpeed * timeDiff);
-   
-   pitch(pitchSpeed * timeDiff);
-   
-   yaw(yawSpeed * timeDiff);
+   if(!isExploded) {
+      roll(rollSpeed * timeDiff);
+      
+      pitch(pitchSpeed * timeDiff);
+      
+      yaw(yawSpeed * timeDiff);
+   }
    
    shotAccel = new Vector3D(*forward);
    

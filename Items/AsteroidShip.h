@@ -105,6 +105,7 @@ class AsteroidShip : public Object3D {
       double timeLeftToRespawn;
       bool spawnInvulnerable;
       bool drawSpawn;
+      int upOrDown;
       CollisionSphere* collisionSphere;
 
       Object3D* lastDamager;
@@ -160,6 +161,7 @@ class AsteroidShip : public Object3D {
       double getAimY();
       void updatePlayerAcceleration();
       void rotate();
+      bool isVulnerable();
       
       // We'll have to update this later so the AI can use it.
       void updateShotDirection(double xOffset, double yOffset);
@@ -199,7 +201,6 @@ class AsteroidShip : public Object3D {
       void accelerateRight(int direction);
       void accelerateUp(int direction);
       void setBrake(bool doBrake);
-      void setBoost(bool doBoost);
       virtual void setYawSpeed(double yawAmountIn);
       virtual void setRollSpeed(double rollAmount);
       virtual void setPitchSpeed(double pitchAmount);
@@ -290,7 +291,6 @@ class AsteroidShip : public Object3D {
       double hitZ;
 
       bool isBraking;
-      bool isBoosting;
       bool isFirstSpawn;
 
       float zoomFactor;
@@ -317,6 +317,7 @@ class AsteroidShip : public Object3D {
       void rightAcceleration(double newAcc);
       void upAcceleration(double newAcc);
       void draw_ship();
+      void draw_ram();
       void draw_frontpanels();
       void draw_backpanels();
       void draw_spaceboner();

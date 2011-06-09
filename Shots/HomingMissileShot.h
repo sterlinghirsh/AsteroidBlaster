@@ -17,6 +17,7 @@ class HomingMissileShot : public ExplosiveShot {
       virtual void drawGlow();
       virtual void drawExplosion();
       virtual void update(double timeDiff);
+      virtual double getDamage(Object3D* other);
       virtual void hitWall(BoundingWall* wall);
       // Called when the shot's isExploded becomes true.
       virtual void explode();

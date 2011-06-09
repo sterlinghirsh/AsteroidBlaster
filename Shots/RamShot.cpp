@@ -53,6 +53,10 @@ RamShot::RamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    maxX += farRadius;
    maxY += farRadius;
    maxZ += farRadius;
+   
+   forward = new Vector3D(*(owner->forward));
+   up = new Vector3D(*(owner->up));
+   right = new Vector3D(*(owner->right));
 
    timeFired = doubleTime();
    shouldConstrain = false;
@@ -75,7 +79,11 @@ void RamShot::update(double timeDiff) {
 /**
  * We want to remove this after drawing it once.
  */
-void RamShot::draw() {     
+void RamShot::draw() {
+   return;
+   if (gameSettings->drawDeferred) {
+      glDrawBuffer(NOLIGHT_BUFFER);
+   } 
    glUseProgram(ramShader);
 
    glPushMatrix();
@@ -134,56 +142,19 @@ void RamShot::draw() {
     // Center of fan is at the origin
     glColor4f(1, 0, 0, 1);
     glVertex3f(0.0f, 0.0f, 0.0);
-    int iPivot = 2;
-    //float x, y, z, 
-    float angle;
-    for(angle = 0.0f; angle < (2.0f*M_PI); angle += (float) (M_PI/8.0f))
+    glVertex3f(.5, .2, 1.5);
+    glVertex3f(-.5, .2, 1.5);
+    glVertex3f(-.5, -.2, 1.5);
+    glVertex3f(.5, -.2, 1.5);
+    glVertex3f(.5, .2, 1.5);
 
-        {
-
-        // Calculate x and y position of the next vertex
-
-        x = (float) (.5 * sin(angle));
-
-        y = (float) (.5 * cos(angle));
-
-        z = 1.5f;
-
-        // Alternate color between red and green
-
-        if((iPivot %2) == 0)
-            //setMaterial(GreenShiny);
-            glColor4f(0.0f, 1.0f, 0.0f, 1.0);
-
-        else
-            //setMaterial(RedShiny);
-            glColor4f(1.0f, 1.0f, 0.0f, 1.0);
-
-
-
-        // Increment pivot to change color next time
-
-        iPivot++;
-
-
-
-        // Specify the next vertex for the triangle fan
-
-        glVertex3f(x, y, z);
-
-        }
-        
-        x = (float) (.5 * sin(angle));
-
-        y = (float) (.5 * cos(angle));
-
-        z = 1.5f;
-        
-        glVertex3f(x, y, z);
-
-
-    // Done drawing the fan that covers the bottom
-
+    glEnd();
+    
+    glBegin(GL_QUADS);
+    glVertex3f(.5, .2, 1.5);
+    glVertex3f(-.5, .2, 1.5);
+    glVertex3f(-.5, -.2, 1.5);
+    glVertex3f(.5, -.2, 1.5);
     glEnd();
       
       glEnable(GL_CULL_FACE);

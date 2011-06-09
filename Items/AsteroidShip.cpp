@@ -62,8 +62,11 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       // Todo: comment these.
       spin = 90;
       flashiness = 0;
+      
+      flashiness = 0;
       tracker = 0;
       rando = 1;
+      upOrDown = 1;
 
       zMove = 2;
       lineMove = zMove / 4;
@@ -160,7 +163,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
    weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
    weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
-   //weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
+   weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
    weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
 
       NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
@@ -213,7 +216,6 @@ void AsteroidShip::reInitialize() {
    shotDirection.updateMagnitude(0, 0, 1);
    /* Currently not braking or acceleration. */
    isBraking = false;
-   isBoosting = false;
    shakeAmount = 0;
    brakeFactor = 2;
    /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
@@ -315,18 +317,22 @@ void AsteroidShip::setRollSpeed(double rollAmountIn) {
 }
 
 void AsteroidShip::updatePlayerAcceleration() {
-   addAcceleration(new Vector3D(
+   Vector3D* newAcceleration = new Vector3D(
             forward->scalarMultiply(curForwardAccel).add(
                right->scalarMultiply(curRightAccel).add(
-                  up->scalarMultiply(curUpAccel)))));
+                  up->scalarMultiply(curUpAccel))));
+   Vector3D normalizedAccel = newAcceleration->getNormalized();
+   double topAccelSpeed = maxSpeed + engineUpgrade * 2;
+   if (isFiring && currentWeapon == RAM_WEAPON_INDEX) {
+      topAccelSpeed *= 3;
+   }
+   if (normalizedAccel.dot(*velocity) < topAccelSpeed) {
+      addAcceleration(newAcceleration);
+   }
 }
 
 void AsteroidShip::setBrake(bool doBrake) {
    isBraking = doBrake;
-}
-
-void AsteroidShip::setBoost(bool doBoost) {
-   isBoosting = doBoost;
 }
 
 /**
@@ -484,40 +490,13 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
 
    while (particlesThisFrame < maxParticlesPerFrame && particlesThisFrame < ((50 - health) /5)) {
       // First do up Acceleration.
-      //if (curUpAccel != 0) {
-      //printf("Get here\n");
+
       baseParticleAcceleration = up->scalarMultiply(.5 * (.5 - randdouble())) + right->scalarMultiply(.5 * (.5 - randdouble()));
       emitter = *position;
       forward->movePoint(emitter, -0.5);
-      //up->movePoint(emitter, .1);
+
       addNewLowHealthParticle(emitter, baseParticleAcceleration, *forward, *right, color1 + colorVariation);
-      //}
 
-      // Next do right Acceleration.
-      /*if (curRightAccel != 0) {
-        baseParticleAcceleration = right->scalarMultiply(-curRightAccel * 0.2);
-        emitter = *position;
-        forward->movePoint(emitter, -0.7);
-        addNewParticle(emitter, baseParticleAcceleration, *forward, *up, color2 + colorVariation);
-        }
-
-      // Next do forward Acceleration.
-      if (curForwardAccel != 0) {
-      // We want to do two streams.
-      baseParticleAcceleration = forward->scalarMultiply(-curForwardAccel * 0.05);
-      Point3D initialPoint(*position);
-      forward->movePoint(initialPoint, -0.7 - (curForwardAccel * 0.02));
-
-      // First do the right side.
-      right->movePoint(initialPoint, 1);
-      addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color1 - colorVariation);
-
-      // Next do the left side.
-      right->movePoint(initialPoint, -2);
-      addNewParticle(initialPoint, baseParticleAcceleration, *right, *up, color2 - colorVariation);
-      }*/
-
-      //++particlesEmitted;
       ++particlesThisFrame;
    }
 }
@@ -564,7 +543,8 @@ void AsteroidShip::update(double timeDiff) {
          }
 
          // Fix all the velocities with anything added from the killer.
-         Object3D::update(timeDiff);
+         Object3D::update(timeDiff);       
+
          // Make some sparkles when you die!~~~
          for (int i = 0; i < 500; ++i) {
             Point3D* particleStartPoint = new Point3D(*position);
@@ -655,20 +635,14 @@ void AsteroidShip::update(double timeDiff) {
       velocity->y -= velocity->y * timeDiff * brakeFactor;
       velocity->z -= velocity->z * timeDiff * brakeFactor;
    }
-   if (isBoosting) {
-      velocity->x += velocity->x * timeDiff * brakeFactor;
-      velocity->y += velocity->y * timeDiff * brakeFactor;
-      velocity->z += velocity->z * timeDiff * brakeFactor;
-   }
 
-   double speed = velocity->getLength();
-   if (!isBoosting && speed > maxSpeed + (engineUpgrade*2)) {
-      velocity->setLength(maxSpeed+ (engineUpgrade*2));
-   } else if (isBoosting && speed > (maxBoostSpeed + (engineUpgrade*2))) {
-      velocity->setLength(maxBoostSpeed + (engineUpgrade*2));
-   }
-
-   Object3D::update(timeDiff);
+   Object3D::update(timeDiff);         
+   
+   if (velocity->getComparisonLength() > 
+    (maxSpeed + engineUpgrade * 2) * (maxSpeed + engineUpgrade * 2)) {
+      Vector3D* slowDown = new Vector3D(velocity->scalarMultiply(-0.8 * timeDiff));
+      velocity->addUpdate(slowDown);
+   }  
 
    if (rollSpeed > targetRollSpeed) {
       rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration),
@@ -821,47 +795,24 @@ void AsteroidShip::update(double timeDiff) {
       drawHit = false;
    }
    
-   if (isBarrelRollingLeft == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(-20)));
-   if (isBarrelRollingRight == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(20)));
+   if (isBarrelRollingLeft == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(-10)));
+   if (isBarrelRollingRight == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(10)));
    if (isBarrelRollingLeft > 0) {
       roll(timeDiff * -2 * M_PI);
-      /*if (isBarrelRollingLeft > .5) {
-         curRightAccel = -300 * isBarrelRollingLeft + 5;
-      } else {
-         curRightAccel = 300 * isBarrelRollingLeft + 5;
-      }*/
+
       isBarrelRollingLeft -= timeDiff;
    }
 
    if (isBarrelRollingRight > 0) {
       roll(timeDiff * 2 * M_PI);
-      /*if (isBarrelRollingRight > .5) {
-         curRightAccel = 300 * isBarrelRollingRight + 5;
-      } else {
-         curRightAccel = -300 * isBarrelRollingRight + 5;
-      }*/
+
       isBarrelRollingRight -= timeDiff;
    }
-   
-   /*if (isBarrelRollingLeft > 0) {
-      //glRotated((1 - isBarrelRollingLeft) * 360, forward->x, forward->y, forward->z);
-      if (isBarrelRollingLeft > .5) {
-         //glTranslated(sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->x, sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->y, sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->z);
-         shotOrigin.x += 
-      } else {
-         glTranslated(sin(M_PI * isBarrelRollingLeft) * 2 * up->x, sin(M_PI * isBarrelRollingLeft) * 2 * up->y, sin(M_PI * isBarrelRollingLeft) * 2 * up->z);
-      }
+
+   if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode)) {
+      tracker += 20 * timeDiff;
+      flashiness += (float)upOrDown * (float)(rando % 10) * timeDiff * 50;
    }
-
-   if (isBarrelRollingRight > 0) {
-      //glRotated((1 - isBarrelRollingRight) * -360, forward->x, forward->y, forward->z);
-      if (isBarrelRollingRight > .5) {
-         glTranslated(sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->x, sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->y, sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->z);
-      } else {
-         glTranslated(sin(M_PI * isBarrelRollingRight) * 2 * up->x, sin(M_PI * isBarrelRollingRight) * 2 * up->y, sin(M_PI * isBarrelRollingRight) * 2 * up->z);
-      }
-   }*/
-
 
    createEngineParticles(timeDiff);
    if(health < 50) createLowHealthParticles(timeDiff);
@@ -1452,50 +1403,120 @@ void AsteroidShip::draw_hitEffect() {
    glUseProgram(0);
 }
 
+void AsteroidShip::draw_ram() {
+   float r1, g1, b1, r2, g2, b2;
+   getBrightColor(color1, r1, g1, b1);
+   getBrightColor(color2, r2, g2, b2);
+   glUseProgram(ramShader);
+
+   glPushMatrix();
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      
+      //floats used in loop iteration
+      GLint loc1;
+      GLint loc2;
+      GLint loc3;
+      GLint loc4;
+      GLint loc5;
+      GLint loc6;
+      GLint loc7;
+
+      glScaled(.3, .4, 1.1);
+      glTranslated(0, 0, .5);
+
+      if (flashiness > 100 || flashiness < -100) {
+         upOrDown *= -1;
+      }
+      if (tracker > 75) {
+            tracker = 0;
+            rando = rand();
+      }
+      
+      //printf("Flashiness: %f\n", flashiness);
+      loc1 = glGetUniformLocation(ramShader,"poop");
+      glUniform1f(loc1,flashiness);
+      loc2 = glGetUniformLocation(ramShader,"r1");
+      glUniform1f(loc2,r1);
+      loc3 = glGetUniformLocation(ramShader,"g1");
+      glUniform1f(loc3,g1);
+      loc4 = glGetUniformLocation(ramShader,"b1");
+      glUniform1f(loc4,b1);
+      loc5 = glGetUniformLocation(ramShader,"r2");
+      glUniform1f(loc5,r2);
+      loc6 = glGetUniformLocation(ramShader,"g2");
+      glUniform1f(loc6,g2);
+      loc7 = glGetUniformLocation(ramShader,"b2");
+      glUniform1f(loc7,b2);
+
+      glDisable(GL_CULL_FACE);
+      glEnable(GL_LIGHTING);
+      glColor4f(1, 0, 0, 1);
+      glBegin(GL_TRIANGLE_FAN);
+
+    // Center of fan is at the origin
+    glVertex3f(0.0f, 0.0f, -1.0);
+    glVertex3f(1, 1, 1.1);
+    glVertex3f(0, .8, 1);
+    glVertex3f(-1, 1, 1.1);
+    glVertex3f(-.8, 0, 1);
+    glVertex3f(-1, -1, 1.1);
+    glVertex3f(0, -.8, 1);
+    glVertex3f(1, -1, 1.1);
+    glVertex3f(.8, 0, 1);
+    glVertex3f(1, 1, 1.1);
+
+    glEnd();
+    
+    glBegin(GL_QUADS);
+    glVertex3f(1, 1, 1.1);
+    glVertex3f(0, .8, 1);
+    glVertex3f(0, 0, .9);
+    glVertex3f(.8, 0, 1);
+    
+    glVertex3f(-1, 1, 1.1);
+    glVertex3f(-.8, 0, 1);
+    glVertex3f(0, 0, .9);
+    glVertex3f(0, .8, 1);
+    
+    glVertex3f(-1, -1, 1.1);
+    glVertex3f(-.8, 0, 1);
+    glVertex3f(0, 0, .9);
+    glVertex3f(0, -.8, 1);
+    
+    glVertex3f(1, -1, 1.1);
+    glVertex3f(.8, 0, 1);
+    glVertex3f(0, 0, .9);
+    glVertex3f(0, -.8, 1);
+    glEnd();
+      
+      glEnable(GL_CULL_FACE);
+   glLineWidth(1.0);
+   glPopMatrix();
+   glUseProgram(0);
+   
+
+}
+
+bool AsteroidShip::isVulnerable() {
+   if (!((doubleTime() - justGotHit < invulnerableTime) || spawnInvulnerable ||
+      isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode))) 
+         return true;
+}
 
 void AsteroidShip::draw() {
    if (getHealth() <= 0)
       return;
 
-   /*
-      GLUquadricObj *quadratic;
-      float ballx, bally, ballz;
-      ballx = 0.0;
-      bally = 0.0;
-      ballz = 2.0;
-      quadratic=gluNewQuadric();
-      gluQuadricNormals(quadratic, GLU_SMOOTH);
-      */
    glPushMatrix();
-   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
    // Translate to the position.
    position->glTranslate();
-   //shotOrigin->glTranslate();
    // Rotate to the current up/right/forward vectors.
 
    glRotate();
+   
    spin+= 2;
    glColor4d(0, 0, 0, 1);
-   /*if (isBarrelRollingLeft > 0) {
-      if (isBarrelRollingLeft > .5) {
-         glTranslated(0, sin(M_PI * (1 - isBarrelRollingLeft)) * 2, 0);
-      } else {
-         glTranslated(0, sin(M_PI * isBarrelRollingLeft) * 2, 0);
-      }
-
-      glRotated((1 - isBarrelRollingLeft) * 360, 0, 0, 1);
-   }
-
-   if (isBarrelRollingRight > 0) {
-      if (isBarrelRollingRight > .5) {
-         glTranslated(0, sin(M_PI * (1 - isBarrelRollingRight)) * 2, 0);
-      } else {
-         glTranslated(0, sin(M_PI * isBarrelRollingRight) * 2, 0);
-      }
-
-      glRotated((1 - isBarrelRollingRight) * -360, 0, 0, 1);
-   }*/
-   //glRotated(90, 1, 0, 0);
 
    if (drawSpawn && !(gameState->gsm == MenuMode)) {
       spawnInvulnerable = true;
@@ -1511,6 +1532,9 @@ void AsteroidShip::draw() {
       draw_ship();
       if(drawHit) {
          draw_hitEffect();
+      }
+      if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode)) {
+         draw_ram();
       }
    }
    if (aliveTimer.getTimeRunning() > (6 * spawnRate)) {
@@ -1609,23 +1633,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
    const double distanceIncrement = shotOriginScale > 0 ? 5 : 1;
 
    glPushMatrix();
-   /*if (isBarrelRollingLeft > 0) {
-      //glRotated((1 - isBarrelRollingLeft) * 360, forward->x, forward->y, forward->z);
-      if (isBarrelRollingLeft > .5) {
-         glTranslated(sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->x, sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->y, sin(M_PI * (1 - isBarrelRollingLeft)) * 2 * up->z);
-      } else {
-         glTranslated(sin(M_PI * isBarrelRollingLeft) * 2 * up->x, sin(M_PI * isBarrelRollingLeft) * 2 * up->y, sin(M_PI * isBarrelRollingLeft) * 2 * up->z);
-      }
-   }
 
-   if (isBarrelRollingRight > 0) {
-      //glRotated((1 - isBarrelRollingRight) * -360, forward->x, forward->y, forward->z);
-      if (isBarrelRollingRight > .5) {
-         glTranslated(sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->x, sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->y, sin(M_PI * (1 - isBarrelRollingRight)) * 2 * up->z);
-      } else {
-         glTranslated(sin(M_PI * isBarrelRollingRight) * 2 * up->x, sin(M_PI * isBarrelRollingRight) * 2 * up->y, sin(M_PI * isBarrelRollingRight) * 2 * up->z);
-      }
-   }*/
    shotDirection.movePoint(drawPoint, distanceIncrement);
    // Start at top right.
    up->movePoint(drawPoint, boxSize / 2);

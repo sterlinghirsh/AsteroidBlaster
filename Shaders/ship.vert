@@ -25,7 +25,7 @@ void main()
    
    //necessary to have this in .vert files
    gl_Position = gl_ModelViewProjectionMatrix * v;
-
+   sideColor = gl_Color;
    gl_FrontColor = gl_Color;
 
    /*

@@ -1231,11 +1231,6 @@ void GameState::keyDown(int key, int unicode) {
          clientCommand.rollSpeed = 0;
          break;
 
-         /*
-            case SDLK_LSHIFT:
-            ship->setBoost(true);
-            break;
-            */
 
       case SDLK_b:
          clientCommand.brake = true;
@@ -1462,12 +1457,6 @@ void GameState::keyUp(int key) {
          clientCommand.upAcceleration = 0;
       break;
 
-      /*
-         case SDLK_LSHIFT:
-         if(!ship->flyingAI->isEnabled())
-         ship->setBoost(false);
-         break;
-         */
 
    case SDLK_b:
       clientCommand.brake = false;

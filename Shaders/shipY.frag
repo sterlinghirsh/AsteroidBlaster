@@ -23,22 +23,33 @@ void main()
    float otherd = 0.0;
    vec4 fragColor = vec4(sideColor);
    //fragColor.a = pixelAlpha;
-   if(abs(vecta.y) + .03 > vecta.z / 6.5){
-      darkness = ((abs(vecta.y) + .03 - (vecta.z / 6.5)) * 90.0) / 3.0;
-      fragColor.g = darkness;
-      fragColor.b = darkness;
+   if(abs(vecta.z) > 1.0) { 
+      otherd = (vecta.z - 1.0) * 3.0; 
+
+      if((abs(vecta.y) + .03 > vecta.z / 6.5)){ 
+         darkness = ((abs(vecta.y) + .03 - (vecta.z / 6.5)) * 90.0) / 3.0; 
+         darkness += otherd; 
+         fragColor.r *= darkness; 
+         fragColor.g *= darkness; 
+         fragColor.b *= darkness; 
+      } else { 
+         fragColor.r *= otherd; 
+         fragColor.g *= otherd; 
+         fragColor.b *= otherd; 
+      } 
+   } else if(abs(vecta.y) + .03 > vecta.z / 6.5) { 
+      darkness = ((abs(vecta.y) + .03 - (vecta.z / 6.5)) * 90.0) / 3.0; 
+      fragColor.r *= darkness; 
+      fragColor.g *= darkness; 
+      fragColor.b *= darkness; 
    }
-   if(abs(vecta.z) > 1.0) {
-      otherd = (vecta.z - 1.0) * 3.0;
-      fragColor.g = otherd;
-      fragColor.b = otherd;
-   }
-   if (abs(vecta.z) > 1.0 && (abs(vecta.y) + 0.03 > vecta.z / 6.5)) {
-      darkness += otherd;
-      fragColor.g = darkness;
-      fragColor.b = darkness;
-   }
-   fragColor.r = 0.0;
+   
+   if(!(abs(vecta.z) > 1.0) && !(abs(vecta.y) + .03 > vecta.z / 6.5)) { 
+      fragColor.r = 0.0; 
+	   fragColor.g = 0.0; 
+      fragColor.b = 0.0; 
+   } 
+   
    clamp(fragColor, 0.0, 1.0);
    
    gl_FragData[0] = fragColor;
