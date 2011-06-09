@@ -73,7 +73,9 @@ void Ram::fire() {
    Point3D start = ship->shotOrigin;
    //ship->forward->movePoint(start, 4);
    ship->setShakeAmount(0.0);
+   /*
    ship->custodian->add(new RamShot(start, *(ship->forward), index, ship, ship->gameState));
+   */
    //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new RamShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;
    if(!ship->gameState->godMode) {

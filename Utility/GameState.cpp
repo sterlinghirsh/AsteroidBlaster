@@ -905,6 +905,7 @@ void GameState::reset(bool shouldLoad) {
 
    setLevelTimer();
 
+   storeMenu->menuActive = false;
 }
 
 /**

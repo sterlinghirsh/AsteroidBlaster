@@ -1504,9 +1504,12 @@ void AsteroidShip::draw_ram() {
 }
 
 bool AsteroidShip::isVulnerable() {
-   if (!((doubleTime() - justGotHit < invulnerableTime) || spawnInvulnerable ||
-      isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode)  && weapons[RAM_WEAPON_INDEX]->isReady())) 
-         return true;
+   return (!(
+      (doubleTime() - justGotHit < invulnerableTime) || 
+      spawnInvulnerable ||
+      (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode) 
+       && weapons[RAM_WEAPON_INDEX]->isReady())));
+
 }
 
 void AsteroidShip::draw() {
