@@ -51,9 +51,9 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    weaponsText->selectable = true;
    menuTexts.push_back(weaponsText);
    
-   ammoText = new Text("Ammo", menuFont, position);
-   ammoText->selectable = true;
-   menuTexts.push_back(ammoText);
+   //ammoText = new Text("Ammo", menuFont, position);
+   //ammoText->selectable = true;
+   //menuTexts.push_back(ammoText);
 
    shipText = new Text("Ship", menuFont, position);
    shipText->selectable = true;
@@ -167,8 +167,8 @@ void StoreMenu::draw() {
    weaponsText->setPosition(position);
    
    //ammo
-   position.y = (Sint16) (position.y + (gameSettings->GH/10));
-   ammoText->setPosition(position);
+   //position.y = (Sint16) (position.y + (gameSettings->GH/10));
+   //ammoText->setPosition(position);
    
    //ship
    position.y = (Sint16) (position.y + (gameSettings->GH/10));
@@ -179,7 +179,7 @@ void StoreMenu::draw() {
    
    //set menu colors to white
    weaponsText->setColor(SDL_WHITE);
-   ammoText->setColor(SDL_WHITE);
+   //ammoText->setColor(SDL_WHITE);
    shipText->setColor(SDL_WHITE);
    
    //initialize the first position
@@ -403,10 +403,10 @@ void StoreMenu::mouseDown(int button) {
          return;
       } 
       // select ammo menu
-      if(ammoText->mouseSelect(x,y)) {
-         menuSelection = AMMO;
-         return;
-      }
+      //if(ammoText->mouseSelect(x,y)) {
+      //   menuSelection = AMMO;
+      //   return;
+      //}
       // select shipupgrade menu
       if(shipText->mouseSelect(x,y)) {
          menuSelection = SHIP;
