@@ -1150,17 +1150,23 @@ void GameState::nextLevel() {
    numAsteroidsToSpawn = curLevel;
    printf("Level'd up to %d!\n",curLevel);
 
-   //Add AI player
+   // Add AI players
    if (gsm == SingleMode && (curLevel > 1)) {
-      addAIPlayer();
+      /* Spawn 1 on level 1, 1 on level 2, 2 on level 3, 2 on level 4.. etc.
+       * Never spawn more than 4 new AI's on any level though, but old AI's
+       * can carry over from previous levels.
+       */
+      for(int tmp = 0; tmp < std::min((int)floor(curLevel/2), 4); tmp++) {
+         addAIPlayer();
+      }
    }
 
-   //Add Asteroids
+   // Add Asteroids
    if (gsm == SingleMode || gsm == ServerMode) {
       initAsteroids();
    }
 
-   // if it's ServerMode, send the next level packet so that
+   // If it's ServerMode, send the next level packet so that
    // clients go to store menu mode
    if (gsm == ServerMode) {
       std::ostringstream oss;

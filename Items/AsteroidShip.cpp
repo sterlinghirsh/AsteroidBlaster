@@ -148,15 +148,15 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       
       weapons.push_back(new TractorBeam(this, tmpNumberOfWeapons++));
       weapons.push_back(new Blaster(this, tmpNumberOfWeapons++));
-      weapons.push_back(new RailGun(this, tmpNumberOfWeapons++));
+      weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
       weapons.push_back(new Electricity(this, tmpNumberOfWeapons++));
+      weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
       //weapons.push_back(new LawnMower(this, tmpNumberOfWeapons++));
       //weapons.push_back(new AntiInertia(this, tmpNumberOfWeapons++));
       weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
       //weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
       weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
-      weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
-      weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
+      weapons.push_back(new RailGun(this, tmpNumberOfWeapons++));
 
       NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
 
