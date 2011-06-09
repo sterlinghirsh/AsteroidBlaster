@@ -59,7 +59,10 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    maxDifficulty = 10;
 
    // Make the difficulty a random int from 1 - maxDifficulty.
-   difficulty = rand() % maxDifficulty + 1;
+   //difficulty = rand() % maxDifficulty + 1;
+   difficulty = ship->gameState->curLevel;
+   if (difficulty > maxDifficulty)
+      difficulty = maxDifficulty;
 }
 
 /**
