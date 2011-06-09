@@ -27,7 +27,7 @@ class GetMin {
 class GlowSquare {
    public:
       double timeLastHit;
-      float alpha;
+      double alpha;
       Color* color;
       Point3D p1, p2, p3, p4;
       Point3D midpoint1, midpoint2, midpoint3, midpoint4;
@@ -35,6 +35,7 @@ class GlowSquare {
       BoundingWall* wall;
       int x, y; // X and Y index in the wall.
       std::priority_queue<double, std::vector<double>, GetMin> flashTimes;
+      double timeSinceLastHit;
 
       void draw();
       void drawGlow();

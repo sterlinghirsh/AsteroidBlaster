@@ -95,11 +95,11 @@ std::list<Object3D*>* Radar :: getTargetableViewFrustumReading() {
  */
 std::list<Drawable*>* Radar :: getViewFrustumReading() {
    // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
-   std::vector<Drawable*> allObjects;
+   std::list<Drawable*>* allObjects = new std::list<Drawable*>();
    
    std::vector<Object3D*>* custodianObjects = (custodian->getListOfObjects());
    for (vectorIter = custodianObjects->begin(); vectorIter != custodianObjects->end(); ++vectorIter) {
-      allObjects.push_back(*vectorIter);
+      allObjects->push_back(*vectorIter);
    }
 
    // Sprite list iterator.
@@ -114,15 +114,15 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
    // Add all of the particles to allObjects.
    for (particleIter = Particle::particles.begin(); particleIter != Particle::particles.end(); ++particleIter) {
       curParticle = *particleIter;
-      allObjects.push_back(curParticle);
+      allObjects->push_back(curParticle);
    }
 
    for (spriteIter = Sprite::sprites.begin(); spriteIter != Sprite::sprites.end(); ++spriteIter) {
-      allObjects.push_back(*spriteIter);
+      allObjects->push_back(*spriteIter);
    }
    
    for (meshFaceIter = MeshFace::independentFaces.begin(); meshFaceIter != MeshFace::independentFaces.end(); ++meshFaceIter) {
-      allObjects.push_back(*meshFaceIter);
+      allObjects->push_back(*meshFaceIter);
    }
 
    // Sterling:
@@ -132,7 +132,7 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
    // it has not been culled.
 
    // Turn the vector of allObjects into a list, & cull it down to only Drawable objects.
-   std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(&allObjects, false);
+   std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(allObjects);
    
    /*
     * Make sure that we are receiving particles back from view frustum culling.

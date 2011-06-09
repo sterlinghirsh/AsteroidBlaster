@@ -11,12 +11,15 @@
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"
 #endif
+   
+const double fadeTime = 0.75;
 
 GlowSquare::GlowSquare(Color* _color,
  float size, float _x, float _y, float _z, BoundingWall* _wall,
  int _xIndex, int _yIndex) : 
  color(_color), wall(_wall), x(_xIndex), y(_yIndex) {
    timeLastHit = 0;
+   timeSinceLastHit = 999;
    if (wall->wallID % 3 == 0) {
       // Top or bottom
       p1.update(_x, _y, _z);
@@ -111,26 +114,15 @@ void GlowSquare::drawGlowingPart() {
 }
 
 void GlowSquare::draw() {
-   double timeDiff;
-   const double fadeTime = 0.75;
-   const double shwobbleAmplitude = 0.5;
-   const int numShwobbles = 1;
-   const double fadeScale = 1 / fadeTime;
-   timeDiff = (doubleTime() - timeLastHit) / fadeTime;
-   
-   // Set the timeLastHit to the latest time that is <= the current time.
-   while (!flashTimes.empty() && flashTimes.top() <= doubleTime()) {
-      timeLastHit = flashTimes.top();
-      flashTimes.pop();
-      timeDiff = (doubleTime() - timeLastHit) / fadeTime;
-   }
-
-
    // This draws the glowing filled in square.
-   if (timeDiff < fadeTime) {
+   if (timeSinceLastHit < fadeTime) {
+      const double shwobbleAmplitude = 0.5;
+      const int numShwobbles = 1;
+      const double fadeScale = 1 / fadeTime;
+
       glPushMatrix();
       // If the timeLastHit is after the current time, consider it not hit yet.
-      alpha = (float) (fadeScale * (fadeTime - clamp(timeDiff, 0, fadeTime)));
+      alpha = (fadeScale * (fadeTime - clamp(timeSinceLastHit, 0, fadeTime)));
       //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
       // Max alpha is 0.5
       color->setColorWithAlpha((float) (alpha * 0.5));
@@ -146,6 +138,16 @@ void GlowSquare::drawGlow() {
 }
 
 void GlowSquare::update(double timeDiff) {
+   // Set the timeLastHit to the latest time that is <= the current time.
+   
+   if (curFrame % 3 == 0) {
+      timeSinceLastHit = (doubleTime() - timeLastHit) / fadeTime;
+      while (!flashTimes.empty() && flashTimes.top() <= doubleTime()) {
+         timeLastHit = flashTimes.top();
+         flashTimes.pop();
+         timeSinceLastHit = (doubleTime() - timeLastHit) / fadeTime;
+      }
+   }
 }
 
 /**

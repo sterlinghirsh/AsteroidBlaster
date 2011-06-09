@@ -142,11 +142,9 @@ std::list<Object3D*>* ViewFrustum :: cullToViewFrustum(std::vector<Object3D*>* a
 }
 
 // Take in a list of all Drawables, and cull it down to a list of only the Drawables in front.
-std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* all, bool skipParticles) {
-   // The culled vector to be returned.
-   std::list<Drawable*>* returnMe = new std::list<Drawable*>;
+std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::list<Drawable*>* all) {
    // Set up an iterator to go over the list.
-   std::vector<Drawable*> :: iterator iter;
+   std::list<Drawable*> :: iterator iter;
 
    // Save a copy of the model view matrix.
    glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&modelViewMatrix);
@@ -210,39 +208,28 @@ std::list<Drawable*>* ViewFrustum :: cullToViewFrustum(std::vector<Drawable*>* a
    Drawable* checkee;
    // call checkOutside() on each of the Drawables in all.
    // Build a new set of Drawables out of each of the ones that got back false.
-   for (iter = all->begin(); iter != all->end(); ++iter) {
+   iter = all->begin();
+   while(iter != all->end()) {
       checkee = *iter;
 
       // Skip this one if it's NULL
-      if(checkee == NULL)
+      if(checkee == NULL) {
+         iter = all->erase(iter);
          continue;
-
-      // If we should be skipping Particles
-      if(skipParticles) {
-         // Only consider adding it to the culled list if it's not a particle
-         if(dynamic_cast<Particle*>(checkee) == NULL) {
-            /**
-             * Only actually add it if it's inside the targetable area
-             * (slightly different than the drawable area).
-             */
-            if(!checkTargetableOutside(checkee) || !checkee->shouldBeCulled) {
-               returnMe->push_back(checkee);
-            }
-         }
       }
-      // Otherwise, we're not skipping particles
-      else {
-         /**
-          * If it's inside the view frustum, or if it just shouldn't be 
-          * culled (ex: Beam Shots)
-          */
-         if(!checkDrawableOutside(checkee) || !checkee->shouldBeCulled) {
-            // Since we're not skipping particles, then just add it.
-            returnMe->push_back(checkee);
-         }
+
+      /**
+       * If it's inside the view frustum, or if it just shouldn't be 
+       * culled (ex: Beam Shots)
+       */
+      if(checkDrawableOutside(checkee) && checkee->shouldBeCulled) {
+         // Since we're not skipping particles, then just add it.
+         iter = all->erase(iter);
+      } else {
+         iter++;
       }
    }
-   return returnMe;
+   return all;
 }
 
 /**
