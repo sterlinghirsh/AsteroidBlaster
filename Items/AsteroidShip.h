@@ -242,11 +242,11 @@ class AsteroidShip : public Object3D {
       int healthNextLevelAmount() { return healthMax+5; }
 
       // Price functions
-      int healthMaxUpgradePrice() { return 5; }
-      int regenUpgradePrice() { return 5; }
-      int engineUpgradePrice() { return 5; }
-      int bankUpgradePrice() { return 5; }
-      int lifePrice() { return 10; }
+      int healthMaxUpgradePrice();
+      int regenUpgradePrice();
+      int engineUpgradePrice();
+      int bankUpgradePrice();
+      int lifePrice();
 
       // Upgrade functions
       void buyLife();

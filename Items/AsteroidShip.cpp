@@ -2076,6 +2076,26 @@ void AsteroidShip::stopSounds() {
    }
 }
 
+// Price functions
+int AsteroidShip::healthMaxUpgradePrice() { 
+   return 5;
+}
+
+int AsteroidShip::regenUpgradePrice() { 
+   return (int)pow(1.6,regenHealthLevel); 
+}
+
+int AsteroidShip::engineUpgradePrice() { 
+   return 10*engineLevel; 
+}
+
+int AsteroidShip::bankUpgradePrice() { 
+   return 2*bankLevel;
+}
+
+int AsteroidShip::lifePrice() { 
+   return 10 * floor((double)gameState->curLevel + (double)(1/3)); 
+}
 
 // Upgrade functions
 void AsteroidShip::healthMaxUpgrade() {

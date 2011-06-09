@@ -274,7 +274,7 @@ void StoreMenu::draw() {
       
       // buy engine upgrade
       out.str(""); 
-      if (nextEngineLevel < gameState->ship->engineMaxLevel()) {
+      if (nextEngineLevel <= gameState->ship->engineMaxLevel()) {
          out << "Buy Engine Lvl " << nextEngineLevel << 
             " for " << gameState->ship->engineUpgradePrice();
          engineShipText->selectable = true;
@@ -284,14 +284,11 @@ void StoreMenu::draw() {
       }
       engineShipText->updateBody(out.str());
 
-
       out.str(""); 
-
-
 
       // buy upgrade max health
       out.str(""); 
-      if (nextHealthMax < gameState->ship->healthLevelMax()) {
+      if (nextHealthMax <= gameState->ship->healthLevelMax()) {
       out << "Upgrade Max Health to " << 
          gameState->ship->healthNextLevelAmount() << " for " << 
          gameState->ship->healthMaxUpgradePrice() ;
@@ -305,7 +302,7 @@ void StoreMenu::draw() {
 
       // buy regen health upgrade
       out.str(""); 
-      if (nextRegenHealthLevel < gameState->ship->regenHealthLevelMax()) {
+      if (nextRegenHealthLevel <= gameState->ship->regenHealthLevelMax()) {
          out << "Buy Regen Health Lvl " << nextRegenHealthLevel << " for " << gameState->ship->regenUpgradePrice();
          regenHealthShipText->selectable = true;
       } else {
@@ -322,7 +319,7 @@ void StoreMenu::draw() {
 
       // buy bank speed upgrade
       out.str(""); 
-      if (nextBankLevel < gameState->ship->bankLevelMax()) {
+      if (nextBankLevel <= gameState->ship->bankLevelMax()) {
          out << "Buy Bank Speed Lvl " << (gameState->ship->bankLevel+1) <<  " for " << gameState->ship->bankUpgradePrice();
          bankShipText->selectable = true;
       } else {
