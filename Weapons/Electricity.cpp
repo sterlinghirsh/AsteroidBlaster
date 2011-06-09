@@ -9,6 +9,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Shots/ElectricityShot.h"
 #include "Utility/SoundEffect.h"
+#include "Text/GameMessage.h"
 
 Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    ELECTRICITY_WEAPON_INDEX = index;
@@ -61,6 +62,9 @@ void Electricity::update(double timeDiff) {
       soundPlaying = false;
    }
    ++currentFrame;
+
+   if (overheated)
+      GameMessage::Add("Electricity overheated!", 30, 0);
 }
 
 void Electricity::fire() {

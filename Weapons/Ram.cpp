@@ -9,6 +9,7 @@
 #include "Utility/GlobalUtility.h"
 #include "Shots/RamShot.h"
 #include "Utility/SoundEffect.h"
+#include "Text/GameMessage.h"
 
 Ram::Ram(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    RAM_WEAPON_INDEX = index;
@@ -59,6 +60,9 @@ void Ram::update(double timeDiff) {
       soundPlaying = false;
    }
    ++currentFrame;
+   
+   if (overheated)
+      GameMessage::Add("Charging Rhino overheated!", 30, 0);
 }
 
 void Ram::fire() {

@@ -10,6 +10,7 @@
 #include "Shots/BlasterShot.h"
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
+#include "Text/GameMessage.h"
 
 Blaster::Blaster(AsteroidShip* owner, int _index)
 : Weapon(owner, _index) {
@@ -54,6 +55,9 @@ void Blaster::update(double timeDiff) {
    } else if (currentHeat > overheatLevel) {
       overheated = true;
    }
+  
+   if (overheated)
+      GameMessage::Add("Blaster overheated!", 30, 0);
 }
 
 /**
