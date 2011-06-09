@@ -1156,7 +1156,11 @@ void GameState::nextLevel() {
 
    custodian.update();
    GameMessage::Clear();
+
    addLevelMessage();
+
+   //reset ship control so that keys don't get stuck
+   clientCommand.reset();
 }
 
 /**
