@@ -183,6 +183,7 @@ class GameState : public InputReceiver {
 
       void menuFunc();
       void nextLevel();
+      int decideNumAsteroidsToSpawn();
       void addWeaponUnlockMessage(Weapon* unlockedWeapon);
       void reset(bool shouldLoad = false);
       

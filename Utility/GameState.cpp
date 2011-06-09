@@ -148,7 +148,6 @@ GameState::GameState(GameStateMode _gsm) :
       spectatorRadius = 120.0;
 
 
-
       cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
       //sphere = new BoundingSphere(worldSize, 0, 0, 0);
       // Set up our text objects to be displayed on screen.
@@ -196,8 +195,8 @@ GameState::GameState(GameStateMode _gsm) :
 
       // Start off at level 1.
       curLevel = 1;
-      // Spawn one more asteroid for each level.
-      numAsteroidsToSpawn = curLevel;
+      // Spawn one more asteroid for each level, to a point..
+      numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
 
       if (gsm != ClientMode && gsm != ServerMode) {
          // Set up objects.
@@ -1008,7 +1007,7 @@ void GameState::reset(bool shouldLoad) {
       load();
    }
 
-   numAsteroidsToSpawn = curLevel;
+   numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
    curLevelText->updateBody(curLevel);
 
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
@@ -1106,6 +1105,14 @@ void GameState::addWeaponUnlockMessage(Weapon* unlockedWeapon) {
    GameMessage::Add(gameMsg.str(), 30, 3);
 }
 
+/**
+ * Spawn one more asteroid per level, up to 8, where it's capped.
+ * Levels 8+ will all spawn only 8 asteroids.
+ */
+int GameState::decideNumAsteroidsToSpawn() {
+   return std::min(curLevel, 8);
+}
+
 void GameState::nextLevel() {
    SoundEffect::stopAllSoundEffect();
 
@@ -1147,7 +1154,7 @@ void GameState::nextLevel() {
    levelOver = true;
    curLevel++;
    curLevelText->updateBody(curLevel);
-   numAsteroidsToSpawn = curLevel;
+   numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
    printf("Level'd up to %d!\n",curLevel);
 
    // Add AI players
@@ -1167,7 +1174,7 @@ void GameState::nextLevel() {
    }
 
    // If it's ServerMode, send the next level packet so that
-   // clients go to store menu mode
+   // clients go to the Store Menu
    if (gsm == ServerMode) {
       std::ostringstream oss;
       boost::archive::text_oarchive oa(oss);
@@ -1182,7 +1189,7 @@ void GameState::nextLevel() {
    addLevelMessage();
    addWarningMessage();
 
-   //reset ship control so that keys don't get stuck
+   // Reset the ship's controls so that the ship isn't stuck moving in a direction
    clientCommand.reset();
 }
 

@@ -441,7 +441,7 @@ Object3D* ShootingAI::chooseTarget() {
 
         // Only add weight if the considered ship is not our own ship.
         if (consideredShip->id != ship->id) {
-           curWeight += playerWeight * 20;
+           curWeight += playerWeight * 22;
         }
      }
 
