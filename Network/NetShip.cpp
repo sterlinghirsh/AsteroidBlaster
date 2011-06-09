@@ -25,21 +25,13 @@ bool NetShip::toObject(GameState* gameState, Object3D*& item) {
    ship->kills = kills;
    ship->deaths = deaths;
 
-   ship->nShards = nShards;
    ship->bankedShards = bankedShards;
    ship->unbankedShards = unbankedShards;
 
-   ship->engineUpgrade = engineUpgrade;
-   ship->engineMax = engineMax;
+   ship->engineLevel = engineLevel;
    ship->health = health;
    ship->healthMax = healthMax;
-   ship->healthUpgradePrice = healthUpgradePrice;
-   ship->healthPrice = healthPrice;
-   ship->healthAmount = healthAmount;
-   ship->healthUpgradeAmount = healthUpgradeAmount;
    ship->regenHealthLevel = regenHealthLevel;
-   ship->regenHealthUpgradePrice = regenHealthUpgradePrice;
-   ship->regenHealthLevelMax = regenHealthLevelMax;
 
    ship->color1 = color1;
    ship->color2 = color2;
@@ -60,21 +52,13 @@ void NetShip::fromObject(AsteroidShip* in) {
    kills = in->kills;
    deaths = in->deaths;
 
-   nShards = in->nShards;
    bankedShards = in->bankedShards;
    unbankedShards = in->unbankedShards;
 
-   engineUpgrade = in->engineUpgrade;
-   engineMax = in->engineMax;
+   engineLevel = in->engineLevel;
    health = in->health;
    healthMax = in->healthMax;
-   healthUpgradePrice = in->healthUpgradePrice;
-   healthPrice = in->healthPrice;
-   healthAmount = in->healthAmount;
-   healthUpgradeAmount = in->healthUpgradeAmount;
    regenHealthLevel = in->regenHealthLevel;
-   regenHealthUpgradePrice = in->regenHealthUpgradePrice;
-   regenHealthLevelMax = in->regenHealthLevelMax;
 
    color1 = in->color1;
    color2 = in->color2;

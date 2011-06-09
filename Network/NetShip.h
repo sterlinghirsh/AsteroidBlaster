@@ -13,21 +13,13 @@ struct NetShip : public NetObject3D {
    int kills;
    int deaths;
 
-   int nShards;
    int bankedShards;
    int unbankedShards;
 
-   int engineUpgrade;
-   int engineMax;
+   int engineLevel;
    double health;
    double healthMax;
-   int healthUpgradePrice;
-   int healthPrice;
-   int healthAmount;
-   int healthUpgradeAmount;
    int regenHealthLevel;
-   int regenHealthUpgradePrice;
-   int regenHealthLevelMax;
 
    float color1;
    float color2;
@@ -41,21 +33,12 @@ struct NetShip : public NetObject3D {
       ar & kills;
       ar & deaths;
 
-      ar & nShards;
       ar & bankedShards;
       ar & unbankedShards;
 
-      ar & engineUpgrade;
-      ar & engineMax;
+      ar & engineLevel;
       ar & health;
-      ar & healthMax;
-      ar & healthUpgradePrice;
-      ar & healthPrice;
-      ar & healthAmount;
-      ar & healthUpgradeAmount;
       ar & regenHealthLevel;
-      ar & regenHealthUpgradePrice;
-      ar & regenHealthLevelMax;
 
       ar & color1;
       ar & color2;

@@ -1370,7 +1370,6 @@ void GameState::keyDown(int key, int unicode) {
       break;
 
    case SDLK_F10:
-      ship->nShards += 10;
       ship->unbankedShards += 10;
       break;
       // If the user presses F11, give them all of the weapons.

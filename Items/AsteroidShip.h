@@ -62,30 +62,25 @@ class AsteroidShip : public Object3D {
       int life;
 
       // Banking
-      int nShards; // Total number of shards the ship has.
       int bankedShards; // Shards that were collected this round.
       // Shards that were collected in previous rounds.
       // These will be banked over time.
       int unbankedShards; 
       int totalBankedShards;
-      double bankPeriod; // Time it takes for a single shard to bank.
       Timer bankTimer; // This is set if there are any shards unbanked
 
-      // The current level of the engine.
-      int engineUpgrade;
-      // The maximum upgrade level of the engine.
-      int engineMax;
-      // The price increment per upgrade.
-      int enginePrice;
+      // Ship's current health
       double health;
+      // Ship's maximum health value
       double healthMax;
-      int healthUpgradePrice;
-      int healthPrice;
-      int healthAmount;
-      int healthUpgradeAmount;
+      // The ship's engine level
+      int engineLevel;
+      // The ship's health regen level
       int regenHealthLevel;
-      int regenHealthUpgradePrice;
-      int regenHealthLevelMax;
+      // The ship's bank level
+      int bankLevel;
+
+
       double shotOriginScale;
       double spin;
       double flashiness;
@@ -182,8 +177,6 @@ class AsteroidShip : public Object3D {
 
       void reInitialize();
       
-      int healthMaxUpgradePrice() { return ((int) healthMax/100)*healthUpgradePrice;}
-      
       /**
        * These are going to be the functions that either the local player
        * or the AI player or the networked player will call.
@@ -236,7 +229,35 @@ class AsteroidShip : public Object3D {
       void readCommand(ClientCommand& command);
 
       void atLevelEnd();
-      
+
+      // shows you what your next max health amount is if you upgrade
+      int healthNextLevelAmount() { return healthMax+5; }
+
+      //Price functions
+      int healthMaxUpgradePrice() { return 5; }
+      int regenUpgradePrice() { return 5; }
+      int engineUpgradePrice() { return 5; }
+      int bankUpgradePrice() { return 5; }
+      int lifePrice() { return 10; }
+
+      // Upgrade functions
+      void buyLife();
+      void bankUpgrade();
+      void engineUpgrade();
+      void regenUpgrade();
+      void healthMaxUpgrade();
+
+      // Max level functions
+      int healthLevelMax() { return 250; }
+      int engineMaxLevel() { return 5; }
+      int bankLevelMax() { return 5; }
+      int regenHealthLevelMax() { return 10; }
+
+      // calculates the correct bank period depending on the bankLevel
+      double getBankPeriod();
+
+
+
    //private functions------------------------------
    private:
    
@@ -307,6 +328,8 @@ class AsteroidShip : public Object3D {
 
       Timer respawnTimer;
       Timer aliveTimer;
+
+      double bankPeriod; // Time it takes for a single shard to bank.
       
       
    //protected functions------------------------------

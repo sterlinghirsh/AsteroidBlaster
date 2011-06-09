@@ -119,7 +119,6 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
 
       // The number of shard collected. This number is displayed to the screen.
-      nShards = 0;
       bankedShards = 0;
       unbankedShards = 0;
       totalBankedShards = 0;
@@ -132,39 +131,32 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       maxUpAccel = 5;
       maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
 
-      // The ship's health. This number is displayed to the screen.
+      // The ship's health
       health = 100;
+      // health max
       healthMax = 100;
-      healthUpgradeAmount = 5;
-      healthUpgradePrice = 5;
-      healthPrice = 2;
-      healthAmount = 10;
 
+      // levels
+      engineLevel = 1;
       regenHealthLevel = 0;
-      regenHealthUpgradePrice = 10;
-      regenHealthLevelMax = 10;
+      bankLevel = 1;
 
-      //engine upgrade, terminal speed is raised when leved up
-      engineUpgrade = 0;
-      engineMax = 5;
-      enginePrice = 10;
-
-   // Add weapons to the list!
-   /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE CONSTANTS IN Utility/Constants.h
-   */
-   int tmpNumberOfWeapons = 0;
-   
-   weapons.push_back(new TractorBeam(this, tmpNumberOfWeapons++));
-   weapons.push_back(new Blaster(this, tmpNumberOfWeapons++));
-   weapons.push_back(new RailGun(this, tmpNumberOfWeapons++));
-   weapons.push_back(new Electricity(this, tmpNumberOfWeapons++));
-   //weapons.push_back(new LawnMower(this, tmpNumberOfWeapons++));
-   //weapons.push_back(new AntiInertia(this, tmpNumberOfWeapons++));
-   weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
-   weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
-   weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
-   weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
-   weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
+      // Add weapons to the list!
+      /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE CONSTANTS IN Utility/Constants.h
+      */
+      int tmpNumberOfWeapons = 0;
+      
+      weapons.push_back(new TractorBeam(this, tmpNumberOfWeapons++));
+      weapons.push_back(new Blaster(this, tmpNumberOfWeapons++));
+      weapons.push_back(new RailGun(this, tmpNumberOfWeapons++));
+      weapons.push_back(new Electricity(this, tmpNumberOfWeapons++));
+      //weapons.push_back(new LawnMower(this, tmpNumberOfWeapons++));
+      //weapons.push_back(new AntiInertia(this, tmpNumberOfWeapons++));
+      weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
+      weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
+      weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
+      weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
+      weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
 
       NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
 
@@ -304,7 +296,7 @@ int AsteroidShip::getScore() {
  * Retrieve the number of shards collected.
  */
 int AsteroidShip::getShards() {
-   return nShards;
+   return bankedShards;
 }
 
 void AsteroidShip::setYawSpeed(double yawAmountIn) {
@@ -325,7 +317,7 @@ void AsteroidShip::updatePlayerAcceleration() {
                right->scalarMultiply(curRightAccel).add(
                   up->scalarMultiply(curUpAccel))));
    Vector3D normalizedAccel = newAcceleration->getNormalized();
-   double topAccelSpeed = maxSpeed + engineUpgrade * 2;
+   double topAccelSpeed = maxSpeed + engineLevel * 2;
    if (isFiring && currentWeapon == RAM_WEAPON_INDEX  && weapons[RAM_WEAPON_INDEX]->isReady()) {
       topAccelSpeed *= 4;
    }
@@ -483,7 +475,6 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
 
 void AsteroidShip::createLowHealthParticles(double timeDiff){
    //add particles in the opposite direction of the acceration
-
    int maxParticlesPerFrame = 8;
    Vector3D baseParticleAcceleration;
    Point3D emitter;
@@ -493,13 +484,13 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
 
    while (particlesThisFrame < maxParticlesPerFrame && particlesThisFrame < ((50 - health) /5)) {
       // First do up Acceleration.
-
       baseParticleAcceleration = up->scalarMultiply(.5 * (.5 - randdouble())) + right->scalarMultiply(.5 * (.5 - randdouble()));
+      
       emitter = *position;
+      
       forward->movePoint(emitter, -0.5);
-
+      
       addNewLowHealthParticle(emitter, baseParticleAcceleration, *forward, *right, color1 + colorVariation);
-
       ++particlesThisFrame;
    }
 }
@@ -556,15 +547,11 @@ void AsteroidShip::update(double timeDiff) {
             particleDirection->setLength(3 * randdouble());
             particleDirection->addUpdate(velocity->scalarMultiply(randdouble()));
             ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
-            // These may crash everything terribly when a ship explodes.
-            //delete particleStartPoint;
-            //delete particleDirection;
          }
 
          // Release all the shards.
          while (gameState->gsm != ClientMode && unbankedShards > 0) {
             custodian->add(makeShard());
-            --nShards;
             --unbankedShards;
          }
 
@@ -642,7 +629,7 @@ void AsteroidShip::update(double timeDiff) {
    Object3D::update(timeDiff);         
    
    if (velocity->getComparisonLength() > 
-    (maxSpeed + engineUpgrade * 2) * (maxSpeed + engineUpgrade * 2)) {
+    (maxSpeed + engineLevel * 2) * (maxSpeed + engineLevel * 2)) {
       Vector3D* slowDown = new Vector3D(velocity->scalarMultiply(-0.8 * timeDiff));
       velocity->addUpdate(slowDown);
    }  
@@ -721,7 +708,7 @@ void AsteroidShip::update(double timeDiff) {
 
       }
    } else if (unbankedShards > 0) {
-      bankTimer.setCountDown(bankPeriod);
+      bankTimer.setCountDown(getBankPeriod());
    }
 
    // Update weapons.
@@ -2046,4 +2033,38 @@ void AsteroidShip::stopSounds() {
       weapons[i]->stopSounds();
    }
 }
+
+
+// Upgrade functions
+void AsteroidShip::healthMaxUpgrade() {
+   bankedShards -= healthMaxUpgradePrice();
+   healthMax += 10;
+}
+
+void AsteroidShip::regenUpgrade() {
+   bankedShards -= regenUpgradePrice();
+   regenHealthLevel += 1;
+}
+
+void AsteroidShip::engineUpgrade() {
+   bankedShards -= engineUpgradePrice();
+   engineLevel += 1;
+}
+
+void AsteroidShip::bankUpgrade() {
+   bankedShards -= bankUpgradePrice();
+   bankLevel += 1;
+}
+
+void AsteroidShip::buyLife() {
+   bankedShards -= lifePrice();
+   life += 1;
+}
+
+// calculates the correct bank period depending on the bankLevel
+double AsteroidShip::getBankPeriod() {
+   return ((double)bankPeriod) / ((double)bankLevel+1);
+}
+
+      
 

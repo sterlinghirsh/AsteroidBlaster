@@ -25,7 +25,8 @@ class StoreMenu : public Menu {
       
       Text *doneText,
            *shardsText,
-           *healthText,
+           *maxHealthText,
+           *lifeText,
            *timerText,
            *weaponsText,
            *ammoText,
@@ -33,7 +34,8 @@ class StoreMenu : public Menu {
            *engineShipText,
            *maxHealthShipText,
            *regenHealthShipText,
-           *buyOneLifeText;
+           *buyOneLifeText,
+           *bankShipText;
       
       //list of strings...
       std::vector<Text*> menuTexts;
