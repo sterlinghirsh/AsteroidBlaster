@@ -228,12 +228,20 @@ class AsteroidShip : public Object3D {
 
       void readCommand(ClientCommand& command);
 
+      // This function is called on the ship when a level ends.
       void atLevelEnd();
 
-      // shows you what your next max health amount is if you upgrade
+      /**
+       * Called when the player exits the Store Menu.
+       * It purchases a new weapon for the player based on what level they're at,
+       * and displays a text message on screen telling them it's available.
+       */
+      void unlockWeapons();
+
+      // Shows you what your next max health amount is if you upgrade
       int healthNextLevelAmount() { return healthMax+5; }
 
-      //Price functions
+      // Price functions
       int healthMaxUpgradePrice() { return 5; }
       int regenUpgradePrice() { return 5; }
       int engineUpgradePrice() { return 5; }
@@ -255,8 +263,6 @@ class AsteroidShip : public Object3D {
 
       // calculates the correct bank period depending on the bankLevel
       double getBankPeriod();
-
-
 
    //private functions------------------------------
    private:

@@ -15,9 +15,9 @@ RailGun::RailGun(AsteroidShip* owner, int _index)
 : Weapon(owner, _index) {
    RAILGUN_WEAPON_INDEX = index;
    coolDown = 2; // Seconds
-   name = "Rail Gun";
+   name = "Railgun";
    curAmmo = -1;
-   purchased = true;
+   purchased = false;
    randomAIVariationAmount = 4.5;
 
    icon = "RailGunIcon";
@@ -67,7 +67,7 @@ void RailGun::fire() {
  * Basic debug function. Just in case!
  */
 void RailGun::debug() {
-   printf("RailGun!\n");
+   printf("Railgun!\n");
 }
 
 Point3D RailGun::project(Object3D* target, Vector3D addOn) {

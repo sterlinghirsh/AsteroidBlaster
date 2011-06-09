@@ -405,18 +405,26 @@ void StoreMenu::keyDown(int key, int unicode) {
    
    switch(key) {
     case SDLK_n:
-      SDL_ShowCursor(SDL_DISABLE);
-      menuActive = false;
-      clearOverlay();
-      // Take care of repeated logic with the level timer.
-      handleLevelTimer();
-
-      Music::playMusic("Asteroids2.ogg");
+       donePressed();
       break;
    case SDLK_F10:
       gameState->ship->bankedShards += 10;
       break;
    }
+}
+
+
+void StoreMenu::donePressed() {
+   SDL_ShowCursor(SDL_DISABLE);
+   menuActive = false;
+   clearOverlay();
+
+   // Take care of repeated logic with the level timer.
+   handleLevelTimer();
+   Music::playMusic("Asteroids2.ogg");
+
+   // Unlock whatever new weapon should be made available.
+   gameState->ship->unlockWeapons();
 }
 
 /**
@@ -437,12 +445,7 @@ void StoreMenu::mouseDown(int button) {
    if(button == 1) {
       //if done was pushed, quit out of the menu
       if(doneText->mouseSelect(x,y)) {
-         SDL_ShowCursor(SDL_DISABLE);
-         menuActive = false;
-         clearOverlay();
-         // Take care of repeated logic with the level timer.
-         handleLevelTimer();
-         Music::playMusic("Asteroids2.ogg");
+         donePressed();
          return;
       }
       // select weapons menu

@@ -37,6 +37,7 @@ class Asteroid3D : public Object3D {
 
       bool isExploding;
       double timeSinceExplode;
+      double rotationSpeedChange;
       
       AsteroidShip* lastHitShotOwner;
 
@@ -49,7 +50,6 @@ class Asteroid3D : public Object3D {
    private:   
       std::vector<Ring> _rList;
       int _nPoints;
-
    
    //public functions------------------------------
    public:

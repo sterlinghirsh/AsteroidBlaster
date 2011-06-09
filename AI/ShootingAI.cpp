@@ -57,7 +57,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    targetIsAShard = false;
 
    // Initialize the random seed
-   srand(time(NULL));
+   //srand(time(NULL));
    maxDifficulty = 10;
 
    // Make the difficulty a random int from 1 - maxDifficulty.
@@ -94,11 +94,11 @@ bool ShootingAI::aimAt(double dt, Object3D* target) {
    /* maxDifficulty - difficulty ensures that high difficulty means very 
     * little is added onto the randomVariation. Low difficulty means that
     * a large number is added onto the randomVariation.
+    * The accuracy scales exponentially. Even a max difficulty AI will have
+    * some small randomIAVariationAmount per weapon.
     */
    //randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount + (maxDifficulty - difficulty)/((float)difficulty / 2));
    randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount + ((maxDifficulty - difficulty)*(maxDifficulty - difficulty)/15));
-   //randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount);
-   //randomVariation.scalarMultiplyUpdate(0);
    //aim.addUpdate(randomVariation);
    //-----------------------------
     
@@ -222,7 +222,6 @@ void ShootingAI::chooseWeapon(Object3D* target) {
    for(int x = 0; x < NUMBER_OF_WEAPONS; x++)
       weaponWeights[x] = 0.0;
 
-   considerRailgun = false;
    /*
    printf("ConsiderTractor is %s\n", (considerTractor)? "true":"false");
    printf("ConsiderBlaster is %s\n", (considerBlaster)? "true":"false");
@@ -275,7 +274,7 @@ void ShootingAI::chooseWeapon(Object3D* target) {
       weaponWeights[RAILGUN_WEAPON_INDEX] += 1.01 * dist;
 
       // Consider the target's velocity. Faster is much better.
-      weaponWeights[RAILGUN_WEAPON_INDEX] += target->velocity->magnitude();
+      weaponWeights[RAILGUN_WEAPON_INDEX] += 0.9 * target->velocity->magnitude();
    }
 
    // Only add up weights for the electricity gun if we're considering it.

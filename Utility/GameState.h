@@ -29,6 +29,7 @@ class WeaponDisplay;
 class Screen;
 class UDP_Server;
 class UDP_Client;
+class Weapon;
 
 enum GameStateMode { SingleMode, MenuMode, ClientMode, ServerMode };
 
@@ -182,6 +183,7 @@ class GameState : public InputReceiver {
 
       void menuFunc();
       void nextLevel();
+      void addWeaponUnlockMessage(Weapon* unlockedWeapon);
       void reset(bool shouldLoad = false);
       
       void setLevelTimer();
@@ -201,6 +203,7 @@ class GameState : public InputReceiver {
    //private functions------------------------------
    private:
       void addLevelMessage();
+      void addWarningMessage();
       void debugPosition();
       void spectatorCameraUpdate(double timeDiff);
 };

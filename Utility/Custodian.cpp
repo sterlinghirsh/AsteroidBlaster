@@ -312,7 +312,7 @@ void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
 
 template<>
 void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
-   if(a == b->owner) 
+   if(a == b->owner || a->isRespawning()) 
       return;
    if (!b->isExploded) {
       Vector3D positionToAsteroid(*b->position, *a->position);
@@ -455,7 +455,18 @@ void Collision<Asteroid3D, BeamShot>::handleCollision() {
 
 template<>
 void Collision<Asteroid3D, TractorBeamShot>::handleCollision() {
-   a->velocity->updateMagnitude(b->owner->velocity);
+   // Slowly match the Asteroid's speed to the ship's speed.
+   // Weight the new velocity towards the ship's velocity.
+   Vector3D* tmp = new Vector3D(*a->velocity + (*b->owner->velocity)*2);
+   // Divide by 3 since there's 3 vectors added together.
+   *tmp /= 3;
+   // This is deleted in Object3D::updateAcceleration
+   Vector3D* newOne = new Vector3D(*tmp - *a->velocity);
+   a->addAcceleration(newOne);
+   
+   // Add a rotationSpeedChange which the Asteroid3D will apply to itself
+   // next frame's update() in a time based manner.
+   a->rotationSpeedChange += 15;
 }
 
 template<>

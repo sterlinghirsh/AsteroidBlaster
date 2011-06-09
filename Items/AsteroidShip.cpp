@@ -90,7 +90,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       hitZ = 0;
 
       spawnInvulnerable = true;
-      invulnerableTime = .25;
+      invulnerableTime = .02;
       justGotHit = 0;
       timeLeftToRespawn = -1;
       isFirstSpawn = true;
@@ -2021,6 +2021,48 @@ void AsteroidShip::atLevelEnd() {
    shakeAmount = 0;
 
    stopSounds();
+}
+
+/**
+ * Called when the player exits the Store Menu.
+ * It purchases a new weapon for the player based on what level they're at,
+ * and displays a text message on screen telling them it's available.
+ */
+void AsteroidShip::unlockWeapons() {
+   switch(gameState->curLevel) {
+      case 2:
+         // Buy the Homing Missile gun on level 2.
+         getWeapon(HOMINGMISSILE_WEAPON_INDEX)->purchased = true;
+         gameState->addWeaponUnlockMessage(getWeapon(HOMINGMISSILE_WEAPON_INDEX));
+         break;
+      case 3:
+         // Buy the Lightning gun on level 3.
+         getWeapon(ELECTRICITY_WEAPON_INDEX)->purchased = true;
+         gameState->addWeaponUnlockMessage(getWeapon(ELECTRICITY_WEAPON_INDEX));
+         break;
+      case 4:
+         // Buy the Ram on level 4.
+         getWeapon(RAM_WEAPON_INDEX)->purchased = true;
+         gameState->addWeaponUnlockMessage(getWeapon(RAM_WEAPON_INDEX));
+         break;
+      case 5:
+         // Buy the Timed Bomb on level 5.
+         getWeapon(TIMEDBOMBER_WEAPON_INDEX)->purchased = true;
+         gameState->addWeaponUnlockMessage(getWeapon(TIMEDBOMBER_WEAPON_INDEX));
+         break;
+      case 6:
+         // Buy the Charge Cannon on level 5.
+         getWeapon(ENERGY_WEAPON_INDEX)->purchased = true;
+         gameState->addWeaponUnlockMessage(getWeapon(ENERGY_WEAPON_INDEX));
+         break;
+      case 7:
+         // Buy the Railgun on level 5.
+         getWeapon(RAILGUN_WEAPON_INDEX)->purchased = true;
+         gameState->addWeaponUnlockMessage(getWeapon(RAILGUN_WEAPON_INDEX));
+         break;
+
+   }
+
 }
 
 void AsteroidShip::stopSounds() {

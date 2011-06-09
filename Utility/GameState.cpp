@@ -1067,26 +1067,43 @@ void GameState::reset(bool shouldLoad) {
 
 }
 
+/**
+ * Add a message at the beginning of each level telling the player
+ * which level it is.
+ */
 void GameState::addLevelMessage() {
    //add level message
    std::ostringstream levelMessage;
    levelMessage << "Level " << curLevel;
    GameMessage::Add(levelMessage.str(), 30, 5);
+}
 
+/**
+ * Add a warning message telling the player that there's enemies
+ * at the beginning of each level.
+ */
+void GameState::addWarningMessage() {
    //Add warning mesage
    if (gsm == SingleMode && (curLevel > 1)) {
       std::ostringstream gameMsg;
-      int numAIShip = (custodian.ships.size()-1);
-      if (numAIShip == 1) {
+      int numAIShips = (custodian.ships.size()-1);
+      if (numAIShips == 1) {
          gameMsg << "WARNING: 1 Enemy Ship Detected";
       } else {
-         gameMsg << "WARNING: " << numAIShip << " Enemy Ships Detected";
+         gameMsg << "WARNING: " << numAIShips << " Enemy Ships Detected";
       }
       
       GameMessage::Add(gameMsg.str(), 30, 5);
-      std::cout << "testtest" << std::endl;
    }
+}
 
+/**
+ * Add a message telling the player that a new weapon has been unlocked.
+ */
+void GameState::addWeaponUnlockMessage(Weapon* unlockedWeapon) {
+   std::ostringstream gameMsg;
+   gameMsg << unlockedWeapon->getName() << " unlocked!";
+   GameMessage::Add(gameMsg.str(), 30, 3);
 }
 
 void GameState::nextLevel() {
@@ -1153,11 +1170,11 @@ void GameState::nextLevel() {
       udpServer->sendAll(oss.str());
    }
 
-
    custodian.update();
    GameMessage::Clear();
 
    addLevelMessage();
+   addWarningMessage();
 
    //reset ship control so that keys don't get stuck
    clientCommand.reset();

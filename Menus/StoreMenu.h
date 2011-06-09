@@ -67,6 +67,8 @@ class StoreMenu : public Menu {
       void handleLevelTimer();
       void drawLogo();
       void drawTexts(std::vector<Text*> texts);
+      // Common function used when the player clicks Done or presses (n)
+      void donePressed();
 };
 
 

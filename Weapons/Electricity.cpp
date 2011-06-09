@@ -15,7 +15,7 @@ Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index
    shotsFired = 0;
    shotsPerSec = 10;
    coolDown = 0;
-   name = "Pikachu's Wrath";
+   name = "Electricity Gun";
    currentFrame = 1; // Start this 1 ahead of lastFiredFame.
    lastFiredFrame = 0; // We use these three to handle the audio.
    soundPlaying = false;

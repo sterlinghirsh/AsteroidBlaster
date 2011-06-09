@@ -83,6 +83,7 @@ void Asteroid3D::InitAsteroid(double r, double worldSizeIn) {
    scalex = scaley = scalez = 1;
 
    rotationSpeed = randdouble() * 100; // Degrees per sec.
+   rotationSpeedChange = 0;
    axis = new Vector3D(0, 1, 0);
    axis->randomMagnitude();
    axis->normalize();
@@ -446,16 +447,14 @@ void Asteroid3D::drawEnergyEffect() {
 void Asteroid3D::update(double timeDiff) {
    if (isExploding) {
       timeSinceExplode += timeDiff;
-      /*
-      for (int i = 0; i < mesh.faces.size(); i++) {
-         mesh.faces[i].offsetBy(timeSinceExplode);
-         // Offset normals.
-      }
-      if (timeSinceExplode >= 1.0) {
-         shouldRemove = true;
-      }
-      */
    }
+
+   /* Apply the rotationSpeedChange that we wanted to this asteroid,
+    * but never make the rotationSpeed beneath 0.
+    */
+   rotationSpeed = std::max(rotationSpeed - rotationSpeedChange * timeDiff, 0.0);
+   rotationSpeedChange = 0;
+   
    Object3D::update(timeDiff);
    mesh.tick(timeDiff);
    if (velocity->getComparisonLength() > 40 * 40) {
