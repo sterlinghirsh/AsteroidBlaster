@@ -199,10 +199,13 @@ void StoreMenu::draw() {
       //for each weapon, display the appropriate menu, set the selectability
       for(unsigned int i = 0; i < weaponList.size(); i++) {
          //if the weapon is enabled and the weapon is 
-         if(!weaponList[i]->purchased || weaponList[i]->level == weaponList[i]->levelMax) {
+         if(!weaponList[i]->purchased) {
             weaponsTexts[i]->selectable = false;
             weaponsTexts[i]->disabled = true;
             continue; //continue so that this weapon is not included in the y++ calculation
+         } else if (weaponList[i]->level == weaponList[i]->levelMax) {
+            weaponsTexts[i]->selectable = false;
+            weaponsTexts[i]->disabled = false;
          } else {
             weaponsTexts[i]->selectable = true;
             weaponsTexts[i]->disabled = false;

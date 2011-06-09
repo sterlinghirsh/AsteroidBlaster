@@ -67,11 +67,12 @@ std::string Weapon::weaponString() {
    std::stringstream ss;
 
    if(!purchased) {
-      ss << "Buy " << name << " for $" << buyPrice();
+      //ss << "Buy " << name << " for $" << buyPrice();
+      ss << "This should never happen!";
    } else if(level < levelMax){
-      ss << "Upgrade " << name << " to level " << (level+1) << " for $" << buyPrice();
+      ss << "Upgrade " << name << " to level " << (level+1) << " for " << buyPrice();
    } else {
-      ss << name << " upgrade level max!(" << level << ")";
+      ss << name << " maxed out!";
    }
 
    return ss.str();
