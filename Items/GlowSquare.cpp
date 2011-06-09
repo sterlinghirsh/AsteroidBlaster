@@ -13,6 +13,9 @@
 #endif
    
 const double fadeTime = 0.75;
+const double shwobbleAmplitude = 0.5;
+const int numShwobbles = 1;
+const double fadeScale = 1 / fadeTime;
 
 GlowSquare::GlowSquare(Color* _color,
  float size, float _x, float _y, float _z, BoundingWall* _wall,
@@ -116,10 +119,6 @@ void GlowSquare::drawGlowingPart() {
 void GlowSquare::draw() {
    // This draws the glowing filled in square.
    if (timeSinceLastHit < fadeTime) {
-      const double shwobbleAmplitude = 0.5;
-      const int numShwobbles = 1;
-      const double fadeScale = 1 / fadeTime;
-
       glPushMatrix();
       // If the timeLastHit is after the current time, consider it not hit yet.
       alpha = (fadeScale * (fadeTime - clamp(timeSinceLastHit, 0, fadeTime)));

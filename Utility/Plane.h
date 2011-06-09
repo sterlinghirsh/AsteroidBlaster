@@ -18,9 +18,7 @@ class Plane {
       float d;
       float mag;
       // Putting the constructor here since it's short.
-      Plane() {
-         a = b = c = d = 0;
-      }
+      Plane() : a(0), b(0), c(0), d(0) {}
       
       void calcMag() {
          mag = (float) sqrt((a*a) + (b*b) + (c*c));

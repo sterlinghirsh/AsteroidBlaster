@@ -388,6 +388,8 @@ void Asteroid3D::drawEnergyEffect() {
 }
 
 void Asteroid3D::update(double timeDiff) {
+   double maxAsteroidSpeed = std::min(gameState->curLevel * 10, 60);
+
    if (isExploding) {
       timeSinceExplode += timeDiff;
    }
@@ -400,9 +402,9 @@ void Asteroid3D::update(double timeDiff) {
    
    Object3D::update(timeDiff);
    mesh.tick(timeDiff);
-   if (velocity->getComparisonLength() > 40 * 40) {
-      // Set a speed limit of 40 u/s.
-      velocity->setLength(40);
+   if (velocity->getComparisonLength() > maxAsteroidSpeed * maxAsteroidSpeed) {
+      // Set a speed limit of 60 u/s.
+      velocity->setLength(maxAsteroidSpeed);
    }
    
    if (energyHitAsteroid) {

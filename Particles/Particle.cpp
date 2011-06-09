@@ -49,12 +49,6 @@ Particle::~Particle() {
 
 void Particle::updateParticles(double timeDifference)
 {
-   while (particles.size() >= MAX_PARTICLES) {
-      // Erase the oldest particle silently.
-      delete particles.front();
-      particles.pop_front();
-   }
-
    list<Particle*>::iterator particle = Particle::particles.begin();
 
    while(particle != Particle::particles.end()) {
@@ -157,6 +151,12 @@ void Particle::initDisplayList() {
 }
 
 void Particle::Add(Particle* newParticle) {
+   if (particles.size() >= MAX_PARTICLES) {
+      // Erase the oldest particle silently.
+      delete particles.front();
+      particles.pop_front();
+   }
+
    particles.push_back(newParticle);
 }
 

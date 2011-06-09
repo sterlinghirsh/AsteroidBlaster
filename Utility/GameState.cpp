@@ -104,6 +104,7 @@ GameState::GameState(GameStateMode _gsm) :
       worldSize = WORLD_SIZE;
       skybox = new Skybox();
 
+      ship = new AsteroidShip(this);
       clientCommand.shipID = ship->id;
 
       spring = new Spring(this);

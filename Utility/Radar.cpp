@@ -78,7 +78,7 @@ std::list<Drawable*>* Radar :: getMinimapReading(float radius, int& totalItems) 
  */
 std::list<Object3D*>* Radar :: getTargetableViewFrustumReading() {
    // Get the custodian out of gameState, and copy its vector of Objects into a new vector.
-   std::vector<Object3D*>* allObjects =custodian->getListOfObjects();
+   std::vector<Object3D*>* allObjects = custodian->getListOfObjects();
 
    // Set the camera temporarily.
    glPushMatrix();
