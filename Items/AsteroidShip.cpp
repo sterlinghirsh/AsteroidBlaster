@@ -239,6 +239,9 @@ void AsteroidShip::reInitialize() {
    currentWeapon = 1; // Blaster
 
    health = healthMax;
+   
+   isBarrelRollingLeft = -1;
+   isBarrelRollingRight = -1;
 
    accelerationStartTime = doubleTime();
    particlesEmitted = 0;
@@ -795,16 +798,24 @@ void AsteroidShip::update(double timeDiff) {
       drawHit = false;
    }
    
-   if (isBarrelRollingLeft == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(-10)));
-   if (isBarrelRollingRight == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(10)));
+   if (isBarrelRollingLeft == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(-20)));
+   if (isBarrelRollingRight == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(20)));
    if (isBarrelRollingLeft > 0) {
-      roll(timeDiff * -2 * M_PI);
-
+      if (isBarrelRollingLeft < timeDiff) {
+         roll(isBarrelRollingLeft * -2 * M_PI);
+      } else {
+         roll(timeDiff * -2 * M_PI);
+      }
+      
       isBarrelRollingLeft -= timeDiff;
    }
 
    if (isBarrelRollingRight > 0) {
-      roll(timeDiff * 2 * M_PI);
+      if (isBarrelRollingRight < timeDiff) {
+         roll(isBarrelRollingRight * 2 * M_PI);
+      } else {
+         roll(timeDiff * 2 * M_PI);
+      }
 
       isBarrelRollingRight -= timeDiff;
    }
@@ -1629,7 +1640,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
    // The coords of the boxes.
    Point3D drawPoint = shotOrigin;
    double boxSize = shotOriginScale > 0 ? 1.0 : 0.6;
-   const double boxDecrement = 0.2;
+   const double boxDecrement = 0.15;
    const double distanceIncrement = shotOriginScale > 0 ? 5 : 1;
 
    glPushMatrix();
@@ -1687,6 +1698,8 @@ void AsteroidShip::drawShotDirectionIndicators() {
    up->movePoint(drawPoint, boxSize);
    drawPoint.draw();
 
+   boxSize -= boxDecrement;
+   right->movePoint(drawPoint, boxDecrement / 2.0);
 
    // Move again
    shotDirection.movePoint(drawPoint, distanceIncrement);
@@ -1982,7 +1995,7 @@ Shard* AsteroidShip::makeShard() {
 
 void AsteroidShip::readCommand(ClientCommand& command) {
    accelerateForward(command.forwardAcceleration);
-   accelerateRight(command.rightAcceleration);
+   //accelerateRight(command.rightAcceleration);
    accelerateUp(command.upAcceleration);
 
    setYawSpeed(command.yawSpeed);
