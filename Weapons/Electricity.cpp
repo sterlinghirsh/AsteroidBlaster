@@ -63,7 +63,7 @@ void Electricity::update(double timeDiff) {
    }
    ++currentFrame;
 
-   if (overheated)
+   if (overheated && this->ship == ship->gameState->ship)
       GameMessage::Add("Electricity overheated!", 30, 0);
 }
 

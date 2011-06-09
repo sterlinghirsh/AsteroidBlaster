@@ -511,6 +511,10 @@ void AsteroidShip::update(double timeDiff) {
          ++deaths;
          --life;
 
+         if (this == gameState->ship) {
+            gameState->usingShipCamera = false;
+         }
+
          // Make sure to stop barrel rolling.
          isBarrelRollingLeft = -1;
          isBarrelRollingRight = -1;
@@ -568,7 +572,11 @@ void AsteroidShip::update(double timeDiff) {
          gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
+
       if (gameState->gameIsRunning && respawnTimer.isRunning && timeLeftToRespawn <= 1.5) {
+         if (this == gameState->ship) {
+            gameState->usingShipCamera = true;
+         }
          timeLeftToRespawn = 1.5;
          reInitialize();
       } else {

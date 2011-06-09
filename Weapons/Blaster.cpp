@@ -56,7 +56,7 @@ void Blaster::update(double timeDiff) {
       overheated = true;
    }
   
-   if (overheated)
+   if (overheated && this->ship == ship->gameState->ship)
       GameMessage::Add("Blaster overheated!", 30, 0);
 }
 

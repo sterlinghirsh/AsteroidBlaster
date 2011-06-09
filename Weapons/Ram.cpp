@@ -61,7 +61,7 @@ void Ram::update(double timeDiff) {
    }
    ++currentFrame;
    
-   if (overheated)
+   if (overheated && this->ship == ship->gameState->ship)
       GameMessage::Add("Charging Rhino overheated!", 30, 0);
 }
 
