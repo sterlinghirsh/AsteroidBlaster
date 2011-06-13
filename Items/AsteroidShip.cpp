@@ -63,7 +63,6 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       spin = 90;
       flashiness = 0;
       
-      flashiness = 0;
       tracker = 0;
       rando = 1;
       upOrDown = 1;

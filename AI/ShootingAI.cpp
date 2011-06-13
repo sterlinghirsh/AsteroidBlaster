@@ -38,6 +38,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    target = NULL;
    prevWeapon = NULL;
    targetID = -1;
+
    // Start the AI as disabled
    enabled = false;
    needToChooseTarget = false;
