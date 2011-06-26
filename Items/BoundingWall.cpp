@@ -165,26 +165,32 @@ void BoundingWall::draw() {
    }
 
    glCallList(linesDisplayList);
-   std::vector<GlowSquare*>::iterator square;
-   for (square = squares.begin(); square != squares.end();
+   std::list<GlowSquare*>::iterator square;
+   for (square = activeSquares.begin(); square != activeSquares.end();
          ++square) {
       (*square)->draw();
    }
 }
 
 void BoundingWall::drawGlow() {
-   std::vector<GlowSquare*>::iterator square;
-   for (square = squares.begin(); square != squares.end();
+   std::list<GlowSquare*>::iterator square;
+   for (square = activeSquares.begin(); square != activeSquares.end();
          ++square) {
       (*square)->draw();
    }
 }
 
 void BoundingWall::update(double timeDiff) {
-   std::vector<GlowSquare*>::iterator square;
-   for (square = squares.begin(); square != squares.end();
-         ++square) {
+   std::list<GlowSquare*>::iterator square;
+   square = activeSquares.begin(); 
+   while(square != activeSquares.end()) {
       (*square)->update(timeDiff);
+      
+      if ((*square)->active) {
+         ++square;
+      } else {
+         square = activeSquares.erase(square);
+      }
    }
 }
 

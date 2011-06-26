@@ -36,6 +36,7 @@ class GlowSquare {
       int x, y; // X and Y index in the wall.
       std::priority_queue<double, std::vector<double>, GetMin> flashTimes;
       double timeSinceLastHit;
+      bool active;
 
       void draw();
       void drawGlow();

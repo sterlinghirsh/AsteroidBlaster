@@ -19,6 +19,7 @@
 #include "Items/GlowSquare.h"
 #include "Items/Drawable.h"
 #include <vector>
+#include <list>
 
 class Object3D;
 class GlowSquare;
@@ -32,6 +33,7 @@ class BoundingWall {
       Color* wallColor;
       int wallID;
       std::vector<GlowSquare*> squares;
+      std::list<GlowSquare*> activeSquares;
       int numSquares;
       int squaresPerSide;
 
@@ -49,6 +51,7 @@ class BoundingWall {
       virtual void initDisplayList(); // Set up the displayList.
       Vector3D normal;
       bool actuallyHit;
+      
    private:
       int linesDisplayList;
       const GameState* gameState;

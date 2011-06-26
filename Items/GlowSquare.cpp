@@ -22,6 +22,7 @@ GlowSquare::GlowSquare(Color* _color,
  int _xIndex, int _yIndex) : 
  color(_color), wall(_wall), x(_xIndex), y(_yIndex) {
    timeLastHit = 0;
+   active = false;
    timeSinceLastHit = 999;
    if (wall->wallID % 3 == 0) {
       // Top or bottom
@@ -146,6 +147,11 @@ void GlowSquare::update(double timeDiff) {
          flashTimes.pop();
          timeSinceLastHit = (doubleTime() - timeLastHit) / fadeTime;
       }
+
+      if (flashTimes.empty() && timeSinceLastHit > fadeTime) {
+         // Deactive the square.
+         active = false;
+      }
    }
 }
 
@@ -177,6 +183,12 @@ void GlowSquare::hit(int distanceLimit, double delay) {
       // distance = xDist + yDist;
       if (distance <= distanceLimit) {
          (*iter)->flashTimes.push(timeLastHit + (distance * delay));
+
+         // Activate the square.
+         if (!(*iter)->active) {
+            (*iter)->active = true;
+            wall->activeSquares.push_back(*iter);
+         }
       }
    }
 
