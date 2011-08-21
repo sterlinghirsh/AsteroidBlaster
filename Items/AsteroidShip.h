@@ -103,7 +103,7 @@ class AsteroidShip : public Object3D {
       int upOrDown;
       CollisionSphere* collisionSphere;
 
-      Object3D* lastDamager;
+      unsigned lastDamagerId;
       int lastDamagerWeapon;
       
       float color1;

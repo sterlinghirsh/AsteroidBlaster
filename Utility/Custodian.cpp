@@ -139,7 +139,7 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
       b->addInstantAcceleration(new Vector3D(*(a->velocity)));
       b->addInstantAcceleration(new Vector3D(*a->position, *b->position));
 
-      a->lastDamager = b;
+      a->lastDamagerId = b->id;
       a->lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
    } else {
       const double minHealthDeduction = 50;
@@ -188,7 +188,7 @@ void Collision<AsteroidShip, BlasterShot>::handleCollision() {
          BlasterImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
       }
       b->shouldRemove = true;
-      a->lastDamager = b->owner;
+      a->lastDamagerId = b->owner->id;
       a->lastDamagerWeapon = b->weaponIndex;
    }
 }
@@ -211,7 +211,7 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
       b->velocity->scalarMultiply(10).print();
 
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
-      a->lastDamager = b->owner;
+      a->lastDamagerId = b->owner->id;
       a->lastDamagerWeapon = b->weaponIndex;
 
    }
@@ -238,7 +238,7 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
          a->health -= b->getDamage(a);
          a->shakeAmount = 0.7f;
          a->justGotHit = doubleTime();
-         a->lastDamager = b->owner;
+         a->lastDamagerId = b->owner->id;
          a->lastDamagerWeapon = b->weaponIndex;
       
          b->length = hitDistance;
@@ -276,7 +276,7 @@ void Collision<AsteroidShip, EnergyShot>::handleCollision() {
       }
       a->shakeAmount = 0.7f;
       a->justGotHit = doubleTime();
-      a->lastDamager = b->owner;
+      a->lastDamagerId = b->owner->id;
       a->lastDamagerWeapon = b->weaponIndex;
    }
 }
@@ -298,7 +298,7 @@ void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
       a->health -= b->getDamage(a);
       a->shakeAmount = 0.7f;
       a->justGotHit = doubleTime();
-      a->lastDamager = b->owner;
+      a->lastDamagerId = b->owner->id;
       a->lastDamagerWeapon = b->weaponIndex;
    }
 }
@@ -390,7 +390,7 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
       a->addInstantAcceleration(shotToShip);
       a->shakeAmount = 2;
       a->justGotHit = doubleTime();
-      a->lastDamager = b->owner;
+      a->lastDamagerId = b->owner->id;
       a->lastDamagerWeapon = b->weaponIndex;
    }
 }
