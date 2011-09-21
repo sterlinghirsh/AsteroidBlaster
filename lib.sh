@@ -14,7 +14,7 @@ then
    tar -xf SDL_ttf-2.0.10.tar
    #deleting gunziped file
    rm SDL_ttf-2.0.10.tar
-   svn revert SDL_ttf-2.0.10.tar.gz
+   git checkout -- SDL_ttf-2.0.10.tar.gz
    cd SDL_ttf-2.0.10
    echo "Configuring.."
    ./configure || exit
@@ -31,7 +31,7 @@ then
    tar -xf SDL_mixer-1.2.11.tar
    #deleting gunziped file
    rm SDL_mixer-1.2.11.tar
-   svn revert SDL_mixer-1.2.11.tar.gz
+   git checkout -- SDL_mixer-1.2.11.tar.gz
    cd SDL_mixer-1.2.11
    echo "Configuring.."
    ./configure || exit
@@ -48,7 +48,7 @@ then
    tar -xf SDL_image-1.2.10.tar
    #deleting gunziped file
    rm SDL_image-1.2.10.tar
-   svn revert SDL_image-1.2.10.tar.gz
+   git checkout -- SDL_image-1.2.10.tar.gz
    cd SDL_image-1.2.10
    echo "Configuring.."
    ./configure || exit
@@ -65,7 +65,7 @@ then
    tar -xf glew-1.5.8.tar
    #deleting gunziped file
    rm glew-1.5.8.tar
-   svn revert glew-1.5.8.tar.gz
+   git checkout -- glew-1.5.8.tar.gz
    cd glew-1.5.8
    echo "Making.."
    make -j 3 || exit
@@ -91,7 +91,7 @@ then
    #glew--------------------
    echo "Cleaning GLEW..."
    rm -rf glew-1.5.8
-   svn revert * 
+   git checkout -- * 
 else
    echo "Usage: lib [make | clean]"
 fi

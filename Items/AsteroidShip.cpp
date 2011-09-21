@@ -114,7 +114,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       deaths = 0;
       life = 3;
 
-      lastDamager = NULL;
+      lastDamagerId = -1;
       lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
 
       // The number of shard collected. This number is displayed to the screen.
@@ -524,12 +524,17 @@ void AsteroidShip::update(double timeDiff) {
          } else if (life <= 0) {
             shouldRemove = true;
          }
-         AsteroidShip* lastDamagerShip = dynamic_cast<AsteroidShip*>(lastDamager);
-         if (lastDamagerShip != NULL) {
-            lastDamagerShip->kills++;
-            std::cout << lastDamagerShip->id << " killed " << id << " with a " << weapons[lastDamagerWeapon]->getName() << "." << std::endl;
-         } else {
-            std::cout << id << " was killed by an asteroid." << std::endl;
+
+         Object3D* lastDamager = (*custodian)[lastDamagerId];
+         if (lastDamager != NULL) {
+            AsteroidShip* lastDamagerShip = dynamic_cast<AsteroidShip*>(lastDamager);
+            if (lastDamagerShip != NULL) {
+               lastDamagerShip->kills++;
+               std::cout << lastDamagerShip->id << " killed " << id << " with a " 
+                << weapons[lastDamagerWeapon]->getName() << "." << std::endl;
+            } else {
+               std::cout << id << " was killed by an asteroid." << std::endl;
+            }
          }
 
          // Update weapons one last time.
