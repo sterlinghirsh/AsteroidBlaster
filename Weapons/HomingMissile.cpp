@@ -9,11 +9,12 @@
 #include "Shots/HomingMissileShot.h"
 #include "Utility/Point3D.h"
 #include "Utility/SoundEffect.h"
+#include "Text/GameMessage.h"
 
 HomingMissile::HomingMissile(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    HOMINGMISSILE_WEAPON_INDEX = index;
    shotSpeed = 12.5; // Units per second
-   coolDown = .25; // Seconds
+   coolDown = .2; // Seconds
    randomVariationAmount = 0.25; // Units
    name = "Homing Missiles";
    lastShotPos = new Point3D(0, 1, 0);
@@ -21,6 +22,9 @@ HomingMissile::HomingMissile(AsteroidShip* owner, int _index) : Weapon(owner, _i
    purchased = false;
 
    fireBackwards = false; // This used to be true for mine layer.
+
+   overheatLevel = 3;
+   heatPerShot = 0.5;
 
    icon = "MissileIcon";
    r = 0.0;
@@ -34,10 +38,11 @@ HomingMissile::~HomingMissile() {
 
 /**
  * Called every frame.
- * We'll probably keep track of something or other here.
  */
 void HomingMissile::update(double timeDiff) {
-   // Do nothing, yet
+   Weapon::update(timeDiff);
+   if (isOverheated() && this->ship == ship->gameState->ship)
+      GameMessage::Add("Homing Missiles overheated!", 30, 0);
 }
 
 /**
@@ -69,6 +74,7 @@ void HomingMissile::fire() {
    ship->setShakeAmount(0.01f);
    ship->custodian->add(new HomingMissileShot(start,
             shotDirection, index, ship, ship->gameState));
+   addHeat(heatPerShot / level);
 }
 
 /**
@@ -134,5 +140,12 @@ Point3D HomingMissile::project(Object3D* target, Vector3D addOn) {
  */
 bool HomingMissile::shouldFire(Point3D* target, Point3D* aim) {
    return ((*target - ship->shotOrigin).getNormalized() - *aim).magnitude() < 0.5;
+}
+
+/**
+ * This is for the weapon bar.
+ */
+double HomingMissile::getCoolDownAmount() {
+   return 1 - clamp(currentHeat / overheatLevel, 0, 1);
 }
 

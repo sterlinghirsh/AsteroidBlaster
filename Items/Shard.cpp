@@ -14,7 +14,6 @@
 #include "Shots/BeamShot.h"
 #include "Shots/TractorBeamShot.h"
 #include "Shots/ElectricityShot.h"
-#include "Shots/AntiInertiaShot.h"
 #include <algorithm>
 #include <math.h>
 #include "Utility/SoundEffect.h"

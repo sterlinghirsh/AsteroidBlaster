@@ -32,10 +32,9 @@ RailGun::~RailGun() {
 
 /**
  * Called every frame.
- * We'll probably keep track of something or other here.
  */
 void RailGun::update(double timeDiff) {
-   // Do nothing.
+   Weapon::update(timeDiff);
 }
 
 /**

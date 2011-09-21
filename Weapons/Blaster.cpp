@@ -31,11 +31,8 @@ Blaster::Blaster(AsteroidShip* owner, int _index)
    r = 1;
    g = 0;
    b = 0;
-
-   currentHeat = 0;
    overheatLevel = 5;
    heatPerShot = 0.3;
-   overheated = false;
 }
 
 Blaster::~Blaster() {
@@ -46,16 +43,7 @@ Blaster::~Blaster() {
  * Called every frame.
  */
 void Blaster::update(double timeDiff) {
-   if (currentHeat > 0) {
-      currentHeat = std::max(currentHeat - timeDiff, 0.0);
-   }
-
-   if (overheated && currentHeat == 0) {
-      overheated = false;
-   } else if (currentHeat > overheatLevel) {
-      overheated = true;
-   }
-  
+   Weapon::update(timeDiff);
    if (overheated && this->ship == ship->gameState->ship)
       GameMessage::Add("Blaster overheated!", 30, 0);
 }
@@ -89,10 +77,7 @@ void Blaster::fire() {
    ship->custodian->add(new BlasterShot(start,
             shotDirection, index, ship, ship->gameState));
 
-   // Don't play sound effects in godMode b/c there would be too many.
-   if (!ship->gameState->godMode) {
-      currentHeat += heatPerShot / level;
-   }
+   addHeat(heatPerShot / level);
 }
 
 /**
@@ -170,11 +155,3 @@ bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
 double Blaster::getCoolDownAmount() {
    return 1 - clamp(currentHeat / overheatLevel, 0, 1);
 }
-
-/**
- * This is for firing.
- */
-bool Blaster::isCooledDown() {
-   return Weapon::isCooledDown() && !overheated;
-}
-

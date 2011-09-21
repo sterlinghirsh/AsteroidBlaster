@@ -146,7 +146,6 @@ GameState::GameState(GameStateMode _gsm) :
       sstream2.str("");
 
       // Improve the positioning code.
-      weaponReadyBar = new ProgressBar(0.75f, 0.05f, p2wx(20), p2wy(200));
 
       shardBankBar = new ProgressBar(0.06f, 0.4f, p2wx(10), p2wy(10));
       shardBankBar->setHorizontal(true);
@@ -162,7 +161,6 @@ GameState::GameState(GameStateMode _gsm) :
       //weaponBar = new WeaponDisplay(healthHeight * 1.5f, 1.0f, 0.0f, -0.9f + (healthHeight * 0.5f), this);
       weaponBar = new WeaponDisplay(weaponBarHeight, weaponBarHeight, 0.0f, -0.9f + (weaponBarHeight * 0.5f), this);
       //healthBar->setIcon("ShieldIcon");
-      weaponReadyBar->setIcon("ShotIcon");
 
       // Start off at level 1.
       curLevel = 1;
@@ -205,7 +203,6 @@ GameState::~GameState() {
    delete spectatorCamera;
    delete spring;
    delete cube;
-   delete weaponReadyBar;
    delete shardBankBar;
    // Somehow makes it segfault when quitting so commented out
    /*if (io != NULL) {
@@ -358,7 +355,6 @@ void GameState::update(double timeDiff) {
    // Update all of the text seen on screen.
    updateText();
 
-   weaponReadyBar->setAmount(ship->getCurrentWeaponCoolDown());
    shardBankBar->setAmount(ship->bankTimer.isRunning ? ship->bankTimer.getAmountComplete() : 0);
    healthBar->setAmount(((float) ship->health / (float) ship->healthMax));
    cube->update(timeDiff);
@@ -638,11 +634,6 @@ void GameState::drawHud() {
          fboBegin();
          glDrawBuffer(HUD_BUFFER);
       }
-
-      weaponReadyBar->x = p2wx(20);
-      weaponReadyBar->y = p2wy(200);
-
-      weaponReadyBar->draw();
 
       shardBankBar->x = p2wx(10);
       shardBankBar->y = p2wy(100);

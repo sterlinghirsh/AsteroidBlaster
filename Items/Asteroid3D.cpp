@@ -18,7 +18,6 @@
 #include "Shots/BeamShot.h"
 #include "Shots/TractorBeamShot.h"
 #include "Shots/ElectricityShot.h"
-#include "Shots/AntiInertiaShot.h"
 #include "Shots/EnergyShot.h"
 
 #include "Particles/ElectricityImpactParticle.h"

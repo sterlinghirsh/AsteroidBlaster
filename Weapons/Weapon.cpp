@@ -29,11 +29,45 @@ Weapon::Weapon(AsteroidShip* owner, int _index)
    range = 9999;
 
    r = g = b = 0;
+
+   currentHeat = 0;
+   overheatLevel = 5;
+   heatPerShot = 0.3; // Blaster default.
+   overheated = false;
+
    activationTimer.reset();
 }
 
 Weapon::~Weapon() {
    // Do nothing.
+}
+
+void Weapon::update(double timeDiff) {
+   if (currentHeat > 0) {
+      currentHeat = std::max(currentHeat - timeDiff, 0.0);
+   }
+
+   if (overheated && currentHeat == 0) {
+      overheated = false;
+   } else if (currentHeat > overheatLevel) {
+      overheated = true;
+   }
+}
+
+/**
+ * Increase currentHeat by heatPerShot / level by default.
+ */
+void Weapon::addHeat(double newHeat) {
+   if (!ship->gameState->godMode) {
+      currentHeat += newHeat;
+   }
+}
+
+/**
+ * Returns true if the weapon is temporarily disabled.
+ */
+bool Weapon::isOverheated() {
+   return overheated;
 }
 
 /**
@@ -43,7 +77,8 @@ bool Weapon::isCooledDown() {
    if (ship->gameState->godMode) {
       return doubleTime() > timeLastFired + 0.05;
    } else {
-      return doubleTime() > timeLastFired + (coolDown/((double)level));
+      return !isOverheated() &&
+       (doubleTime() > timeLastFired + (coolDown/((double)level)));
    }
    
 }

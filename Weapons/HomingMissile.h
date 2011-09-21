@@ -21,6 +21,7 @@ class HomingMissile : public Weapon {
       void godMode(bool enabled);
       virtual void debug();
       virtual void fire();
+      virtual double getCoolDownAmount();
    
    protected:
       double shotSpeed;

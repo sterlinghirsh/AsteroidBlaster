@@ -79,7 +79,6 @@ class GameState : public InputReceiver {
       bool drawGraphics;
       bool usingShipCamera;
 
-      ProgressBar* weaponReadyBar;
       ProgressBar* healthBar;
       ProgressBar* shardBankBar;
       WeaponDisplay* weaponBar;

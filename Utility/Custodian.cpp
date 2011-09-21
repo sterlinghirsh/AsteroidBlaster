@@ -21,7 +21,6 @@
 #include "Shots/BlasterShot.h"
 #include "Shots/TractorBeamShot.h"
 #include "Shots/ElectricityShot.h"
-#include "Shots/AntiInertiaShot.h"
 #include "Shots/EnergyShot.h"
 #include "Shots/ExplosiveShot.h"
 #include "Shots/TimedBombShot.h"

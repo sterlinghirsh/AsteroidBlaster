@@ -22,10 +22,8 @@ Ram::Ram(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    purchased = false;
    icon = "RamIcon";
    
-   currentHeat = 0;
    overheatLevel = 10;
-   heatPerShot = 3.0;
-   overheated = false;
+   heatPerShot = 2.9;
    
    r = 0.5;
    g = 0;
@@ -37,18 +35,12 @@ Ram::~Ram() {
 }
 
 void Ram::update(double timeDiff) {
-   if(currentFrame == lastFiredFrame) {
-      if (!ship->gameState->godMode) {
-         currentHeat += (heatPerShot/(double)level) * timeDiff;
-      }
-   } else if (currentHeat > 0) {
-      currentHeat = std::max(currentHeat - timeDiff, 0.0);
-   }
+   Weapon::update(timeDiff);
 
-   if (overheated && currentHeat == 0) {
-      overheated = false;
-   } else if (currentHeat > overheatLevel) {
-      overheated = true;
+   if(currentFrame == lastFiredFrame && !isOverheated()) {
+      if (!ship->gameState->godMode) {
+         addHeat((heatPerShot / (double) level) * timeDiff);
+      }
    }
    
    if (currentFrame == lastFiredFrame && !soundPlaying) {
@@ -61,7 +53,7 @@ void Ram::update(double timeDiff) {
    }
    ++currentFrame;
    
-   if (overheated && this->ship == ship->gameState->ship)
+   if (isOverheated() && this->ship == ship->gameState->ship)
       GameMessage::Add("Charging Rhino overheated!", 30, 0);
 }
 
@@ -73,15 +65,7 @@ void Ram::fire() {
    Point3D start = ship->shotOrigin;
    //ship->forward->movePoint(start, 4);
    ship->setShakeAmount(0.0);
-   /*
-   ship->custodian->add(new RamShot(start, *(ship->forward), index, ship, ship->gameState));
-   */
-   //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new RamShot(start, ship->shotDirection, ship));
    lastFiredFrame = currentFrame;
-   if(!ship->gameState->godMode) {
-      // Take away some ammo
-      curAmmo--;
-   }
 }
 
 void Ram::debug() {
@@ -101,11 +85,4 @@ bool Ram::shouldFire(Point3D* target, Point3D* aim) {
  */
 double Ram::getCoolDownAmount() {
    return 1 - clamp(currentHeat / overheatLevel, 0, 1);
-}
-
-/**
- * This is for firing.
- */
-bool Ram::isCooledDown() {
-   return Weapon::isCooledDown() && !overheated;
 }

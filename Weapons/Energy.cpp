@@ -41,6 +41,7 @@ Energy::~Energy() {
  * We'll probably keep track of something or other here.
  */
 void Energy::update(double timeDiff) {
+   Weapon::update(timeDiff);
    // Fire when the trigger is released.
    static Vector3D randomVariation;
 

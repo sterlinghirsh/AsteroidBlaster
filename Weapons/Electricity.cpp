@@ -24,10 +24,8 @@ Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index
    purchased = false;
    soundHandle = -1;
    
-   currentHeat = 0;
    overheatLevel = 5;
    heatPerShot = 0.15;
-   overheated = false;
 
    icon = "PikachusWrathIcon";
    r = 1;
@@ -40,15 +38,7 @@ Electricity::~Electricity() {
 }
 
 void Electricity::update(double timeDiff) {
-   if (currentHeat > 0) {
-      currentHeat = std::max(currentHeat - timeDiff, 0.0);
-   }
-
-   if (overheated && currentHeat == 0) {
-      overheated = false;
-   } else if (currentHeat > overheatLevel) {
-      overheated = true;
-   }
+   Weapon::update(timeDiff);
 
    if (currentFrame != lastFiredFrame) 
       shotsFired = 0;
@@ -63,7 +53,7 @@ void Electricity::update(double timeDiff) {
    }
    ++currentFrame;
 
-   if (overheated && this->ship == ship->gameState->ship)
+   if (isOverheated() && this->ship == ship->gameState->ship)
       GameMessage::Add("Electricity overheated!", 30, 0);
 }
 
@@ -103,9 +93,7 @@ void Electricity::fire() {
    lastFiredFrame = currentFrame;
    shotsFired += shotsToFire;
 
-   if(!ship->gameState->godMode) {
-      currentHeat += heatPerShot * shotsToFire;
-   }
+   addHeat(heatPerShot * shotsToFire);
 }
 
 void Electricity::debug() {
@@ -133,11 +121,3 @@ void Electricity::stopSounds() {
 double Electricity::getCoolDownAmount() {
    return 1 - clamp(currentHeat / overheatLevel, 0, 1);
 }
-
-/**
- * This is for firing.
- */
-bool Electricity::isCooledDown() {
-   return Weapon::isCooledDown() && !overheated;
-}
-

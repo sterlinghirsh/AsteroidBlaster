@@ -27,7 +27,8 @@ class Weapon {
       virtual ~Weapon();
       virtual void fire()=0;
       virtual void debug()=0;
-      virtual bool isCooledDown();
+      virtual bool isCooledDown(); // Cooldown as in refire rate
+      virtual bool isOverheated(); // Overheat as in too many shots too fast
       virtual double getCoolDownAmount();
 
       /**
@@ -42,7 +43,7 @@ class Weapon {
       /**
        * Called every frame.
        */
-      virtual void update(double timeDiff)=0;
+      virtual void update(double timeDiff);
 
       // owner of this weapon
       AsteroidShip* ship;
@@ -83,12 +84,19 @@ class Weapon {
       virtual bool isReady();
 
       virtual void stopSounds();
+
+      virtual void addHeat(double newHeat); // Not called by default.
       
       double timeLastFired;
       double coolDown;
       double damage;
 
    protected:
+      double currentHeat; // Measured in seconds.
+      double overheatLevel; // Also in seconds. When currentHeat hits this, we overheat.
+      double heatPerShot; // Added to currentHeat every shot.
+      bool overheated;
+
       std::string name;
       std::string icon;
 };

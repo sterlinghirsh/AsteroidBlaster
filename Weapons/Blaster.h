@@ -23,12 +23,6 @@ class Blaster : public Weapon {
       virtual void debug();
       virtual void fire();
       virtual double getCoolDownAmount();
-      virtual bool isCooledDown();
-      
-      double currentHeat; // Measured in seconds.
-      double overheatLevel; // Also in seconds. When currentHeat hits this, we overheat.
-      double heatPerShot; // Added to currentHeat every shot.
-      bool overheated;
 
    protected:
       double shotSpeed;

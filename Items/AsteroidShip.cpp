@@ -151,7 +151,6 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       weapons.push_back(new Electricity(this, tmpNumberOfWeapons++));
       weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
       //weapons.push_back(new LawnMower(this, tmpNumberOfWeapons++));
-      //weapons.push_back(new AntiInertia(this, tmpNumberOfWeapons++));
       weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
       //weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
       weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
@@ -1622,7 +1621,6 @@ void AsteroidShip::drawCrosshair() {
    glPopMatrix();
 }
 
-
 /**
  * Draw the double crosshair, starfox style.
  */
@@ -1640,112 +1638,66 @@ void AsteroidShip::drawShotDirectionIndicators() {
    const double boxDecrement = 0.15;
    const double distanceIncrement = shotOriginScale > 0 ? 5 : 1;
 
-   glPushMatrix();
+   Color boxColor(1.0f, 1.0f, 1.0f);
+   Color hotColor(1.0f, 0, 0);
+   Color midColor(1.0f, 0, 0);
+   const int numBoxes = 6;
+   
+   double heatAmount = (1 - getCurrentWeaponCoolDown()) * numBoxes;
 
-   shotDirection.movePoint(drawPoint, distanceIncrement);
+   double numHotBoxes = 0;
+   double curFade = 0;
+
+   bool overheated = getCurrentWeapon()->isOverheated();
+
+   if (overheated) {
+      curFade = (sin(doubleTime() * M_PI * 4) + 1) / 2;
+   } else {
+      curFade = modf(heatAmount, &numHotBoxes);
+   }
+   
+
+   glPushMatrix();
+   
    // Start at top right.
    up->movePoint(drawPoint, boxSize / 2);
    right->movePoint(drawPoint, boxSize / 2);
    glDisable(GL_LIGHTING);
-   glDisable(GL_CULL_FACE);
-   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-   setMaterial(WhiteTransparent);
 
    glLineWidth(3.0);
-   glBegin(GL_QUADS);
-   // top right
-   glColor3d(0.2, 1, 0.0);
-   drawPoint.draw();
-   up->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   right->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-
-   boxSize -= boxDecrement;
-   right->movePoint(drawPoint, boxDecrement / 2.0);
-
-   // Move again
-   shotDirection.movePoint(drawPoint, distanceIncrement);
-   // top right
-   glColor3d(1, 0.2, 0.0);
-   right->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   right->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-
-   boxSize -= boxDecrement;
-   right->movePoint(drawPoint, boxDecrement / 2.0);
-
-   // Move again
-   shotDirection.movePoint(drawPoint, distanceIncrement);
-   // top right
-   glColor3d(0, 0.2, 1);
-   right->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   right->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-
-   boxSize -= boxDecrement;
-   right->movePoint(drawPoint, boxDecrement / 2.0);
-
-   // Move again
-   shotDirection.movePoint(drawPoint, distanceIncrement);
-   // top right
-   glColor3d(1, 1, 0.2);
-   right->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   right->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-
-   boxSize -= boxDecrement;
-   right->movePoint(drawPoint, boxDecrement / 2.0);
 
 
-   // Move again
-   shotDirection.movePoint(drawPoint, distanceIncrement);
-   // top right
-   glColor3d(1, 0.2, 1.0);
-   right->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   right->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
+   for (int i = 0; i < numBoxes; ++i) {
+      if (overheated) {
+         hotColor.g = curFade;
+         hotColor.b = curFade;
+         hotColor.setColor();
+      } else if (i < numHotBoxes) {
+         hotColor.setColor();
+      } else if (i == numHotBoxes) {
+         midColor.g = 1 - curFade;
+         midColor.b = 1 - curFade;
+         midColor.setColor();
+      } else {
+         boxColor.setColor();
+      }
 
-   boxSize -= boxDecrement;
-   right->movePoint(drawPoint, boxDecrement / 2.0);
+      glBegin(GL_LINE_LOOP);
+      // top right
+      shotDirection.movePoint(drawPoint, distanceIncrement);
+      drawPoint.draw();
+      up->movePoint(drawPoint, -boxSize);
+      drawPoint.draw();
+      right->movePoint(drawPoint, -boxSize);
+      drawPoint.draw();
+      up->movePoint(drawPoint, boxSize);
+      drawPoint.draw();
+      glEnd();
 
+      boxSize -= boxDecrement;
+      right->movePoint(drawPoint, (boxDecrement / 2.0) + boxSize);
+   }
 
-   shotDirection.movePoint(drawPoint, distanceIncrement);
-   // top right
-   glColor3d(.2, 1, 1);
-   right->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   right->movePoint(drawPoint, -boxSize);
-   drawPoint.draw();
-   up->movePoint(drawPoint, boxSize);
-   drawPoint.draw();
-
-   glEnd();
-   glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
    glLineWidth(1.0);
    glEnable(GL_LIGHTING);
    glEnable(GL_CULL_FACE);
