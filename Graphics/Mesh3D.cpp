@@ -50,18 +50,24 @@ void Mesh3D::drawTextured(bool drawSmooth, GLuint tex) {
    } else {
       nFaces = (int)faces.size();
    }
+   /*
    if (gameSettings->drawDeferred) {
       //fboBegin();
       GLenum buffers[] = {ALBEDO_BUFFER, NORMAL_BUFFER, GLOW_BUFFER, NOLIGHT_BUFFER};
       glDrawBuffers(4, buffers);
    }
+   */
 
-   glActiveTexture(GL_TEXTURE0);
+   glUseProgram(0);
+   glEnable(GL_TEXTURE_2D);
+   
+   //glActiveTexture(GL_TEXTURE0);
    glBindTexture(GL_TEXTURE_2D, tex);
-   glActiveTexture(GL_TEXTURE1);
-   glBindTexture(GL_TEXTURE_2D, Texture::getTexture("depthTex"));
+   //glActiveTexture(GL_TEXTURE1);
+   //glBindTexture(GL_TEXTURE_2D, Texture::getTexture("depthTex"));
 
-   glUseProgram(gBufferShader);
+   //glUseProgram(gBufferShader);
+   /*
    GLint texLoc = glGetUniformLocation(gBufferShader, "texIn");
    glUniform1i(texLoc, 0);
    GLint depthLoc = glGetUniformLocation(gBufferShader, "depth");
@@ -69,20 +75,17 @@ void Mesh3D::drawTextured(bool drawSmooth, GLuint tex) {
    GLint farLoc = glGetUniformLocation(gBufferShader, "far");
    //glUniform1f(farLoc, farClip);
    glUniform1f(farLoc, 100.0);
+   */
 
    for (int i = 0; i < nFaces; i++) {
       faces[i]->drawFace(drawSmooth, true);
       faces[i]->drawLines();
    }
+   glDisable(GL_TEXTURE_2D);
 
-   glUseProgram(0);
-   
-   glBindTexture(GL_TEXTURE_2D, 0);
-   glActiveTexture(GL_TEXTURE0);
+   //glBindTexture(GL_TEXTURE_2D, 0);
+   //glActiveTexture(GL_TEXTURE0);
 
-   if (gameSettings->drawDeferred) {
-      //fboEnd();
-   }
    glEnable(GL_BLEND);
 }
 

@@ -59,16 +59,15 @@ void MeshFace::moveBy(Vector3D move) {
 void MeshFace::draw() {
    double shipDist = position->distanceFrom(*gameState->ship->position);
    //unused variable
-   //GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 1);
+   GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 1);
 
-   //glEnable(GL_COLOR_MATERIAL);
+   glDisable(GL_LIGHTING);
+   glEnable(GL_COLOR_MATERIAL);
    glDisable(GL_CULL_FACE);
-   //glDisable(GL_LIGHTING);
-   //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-   //setMaterial(Rock);
-   //glLineWidth(lineW);
+   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   glLineWidth(lineW);
+   setMaterial(Rock);
    glPolygonOffset(1.0f, 1.0f);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
    glPushMatrix();
    position->glTranslate();
@@ -83,13 +82,10 @@ void MeshFace::draw() {
    drawLines();
    glDisable(GL_POLYGON_OFFSET_LINE);
 
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glPolygonOffset(-1.0f, -1.0f);
 
    glEnable(GL_TEXTURE_2D);
-   if (textured) {
-      glBindTexture(GL_TEXTURE_2D, texture);
-   }
+   glBindTexture(GL_TEXTURE_2D, texture);
 
    // Draw fill
    glEnable(GL_POLYGON_OFFSET_FILL);
@@ -102,9 +98,8 @@ void MeshFace::draw() {
 
    glDisable(GL_TEXTURE_2D);
    glDisable(GL_POLYGON_OFFSET_FILL);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   //glLineWidth(1);
-   //glDisable(GL_COLOR_MATERIAL);
+   glLineWidth(1);
+   glDisable(GL_COLOR_MATERIAL);
 }
 
 void MeshFace::draw(bool drawSmooth, bool drawTex) {
@@ -113,6 +108,8 @@ void MeshFace::draw(bool drawSmooth, bool drawTex) {
 }
 
 void MeshFace::drawLines() {
+   // TODO: Make this the ship position.
+   glDisable(GL_TEXTURE_2D);
    double shipDist = p1.distanceFrom(*gameState->ship->position);
    GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
 
@@ -122,10 +119,12 @@ void MeshFace::drawLines() {
    if (timeExploded > 0.0) {
       //fboBegin();
       glDisable(GL_CULL_FACE);
+      /*
       if (gameSettings->drawDeferred) {
          GLenum buffers[] = {NOLIGHT_BUFFER, GLOW_BUFFER};
          glDrawBuffers(2, buffers);
       }
+      */
    }
 
    glLineWidth(lineW);
@@ -143,6 +142,7 @@ void MeshFace::drawLines() {
       //fboEnd();
    }
    glLineWidth(1.0);
+   glEnable(GL_TEXTURE_2D);
 }
 
 void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
@@ -152,6 +152,7 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    double y1 = 0.0;
    double y2 = 1.0;
    double y3 = 0.0;
+
    MeshPoint p1_tmp = MeshPoint(p1.x + offset.x,
          p1.y + offset.y,
          p1.z + offset.z);
@@ -164,38 +165,28 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    float curAlpha = timeExploded == 0 ? 1.0f :
       (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
 
-   //if (timeExploded > 0.0 && gameSettings->drawDeferred) {
    if (timeExploded > 0.0) {
-      //fboBegin();
       glDisable(GL_CULL_FACE);
-      if (gameSettings->drawDeferred) {
-         GLenum buffers[] = {NOLIGHT_BUFFER, GLOW_BUFFER};
-         glDrawBuffers(2, buffers);
-      }
+      glEnable(GL_TEXTURE_2D);
    }
 
    if (drawSmooth)
       normal.addNormal();
-   if (gameSettings->drawDeferred) {
-      glColor4f(faceR, faceG, faceB, curAlpha);
-   } else {
-      //normal.glColor(curAlpha);
-      glColor4f(0.0, 0.0, 0.0, 1.0);
-   }
+   
+   glColor4f(0.2, 0.2, 0.2, 1.0);
+
    glBegin(GL_TRIANGLES);
+   glTexCoord2d(x1, y1);
    p1_tmp.draw();
-   if (drawTex)
-      glTexCoord2d(x1, y1);
+   glTexCoord2d(x2, y2);
    p2_tmp.draw();
-   if (drawTex)
-      glTexCoord2d(x2, y2);
+   glTexCoord2d(x3, y3);
    p3_tmp.draw();
-   if (drawTex)
-      glTexCoord2d(x3, y3);
    glEnd();
+
    if (timeExploded > 0.0) {
       glEnable(GL_CULL_FACE);
-      //fboEnd();
+      glDisable(GL_TEXTURE_2D);
    }
 }
 
@@ -248,7 +239,6 @@ void MeshFace::drawGlow() {
    setMaterial(Rock);
    glLineWidth(lineW);
    glPolygonOffset(1.0f, 1.0f);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
    glPushMatrix();
    position->glTranslate();
@@ -262,7 +252,6 @@ void MeshFace::drawGlow() {
    drawLines();
    glDisable(GL_POLYGON_OFFSET_LINE);
 
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glPolygonOffset(-1.0f, -1.0f);
 
    glEnable(GL_TEXTURE_2D);
@@ -283,7 +272,6 @@ void MeshFace::drawGlow() {
 
    glDisable(GL_TEXTURE_2D);
    glDisable(GL_POLYGON_OFFSET_FILL);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glLineWidth(1);
    glDisable(GL_COLOR_MATERIAL);
 }

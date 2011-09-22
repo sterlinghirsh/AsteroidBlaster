@@ -220,8 +220,8 @@ void Asteroid3D::draw() {
    if (gameState->godMode) {
       mesh.drawTextured(true, Texture::getTexture("ZoeRedEyes"));
    } else {
-      //mesh.drawTextured(true, Texture::getTexture("AsteroidSurface"));
-      mesh.drawTextured(true, 0);
+      mesh.drawTextured(true, Texture::getTexture("AsteroidSurface"));
+      //mesh.drawTextured(true, 0);
    }
    glDisable(GL_POLYGON_OFFSET_FILL);
 
