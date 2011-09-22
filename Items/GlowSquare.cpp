@@ -163,35 +163,54 @@ void GlowSquare::hit(int distanceLimit, double delay) {
    timeLastHit = doubleTime();
 
    // Now trigger neighbors
-   std::vector<GlowSquare*>::iterator iter = wall->squares.begin();
+   GlowSquare* otherSquare;
 
    delay = clamp(delay, 0.1, 0.2);
 
    int distance;
-   //const double delay = 0.1;
    int xDist, yDist;
-   for (; iter != wall->squares.end(); ++iter) {
-      xDist = abs((*iter)->x - x);
-      yDist = abs((*iter)->y - y);
-      // Weird
-      //distance = sqrt(xDist * xDist * xDist + yDist * yDist * yDist);
-      // Circle
-      distance = (int) sqrt((double)(xDist * xDist + yDist * yDist));
-      // Box
-      //distance = std::max(xDist, yDist);
-      // Diamond
-      // distance = xDist + yDist;
-      if (distance <= distanceLimit) {
-         (*iter)->flashTimes.push(timeLastHit + (distance * delay));
+   
+   int maxX = x + distanceLimit;
+   int maxY = y + distanceLimit;
 
-         // Activate the square.
-         if (!(*iter)->active) {
-            (*iter)->active = true;
-            wall->activeSquares.push_back(*iter);
+   // Iterate over just the squares we need so we don't wate time.
+   for (int curX = x - distanceLimit; curX <= maxX; ++curX) {
+      if (curX < 0)
+         continue;
+      if (curX > wall->squaresPerSide)
+         break;
+
+      for (int curY = y - distanceLimit; curY <= maxY; ++curY) {
+         if (curY < 0)
+            continue;
+         if (curY > wall->squaresPerSide)
+            break;
+
+         otherSquare = wall->getSquareByCoords(curX, curY);
+         if (otherSquare == NULL) {
+            continue;
+         }
+         xDist = abs(otherSquare->x - x);
+         yDist = abs(otherSquare->y - y);
+         // Weird
+         //distance = sqrt(xDist * xDist * xDist + yDist * yDist * yDist);
+         // Circle
+         distance = (int) sqrt((double)(xDist * xDist + yDist * yDist));
+         // Box
+         //distance = std::max(xDist, yDist);
+         // Diamond
+         // distance = xDist + yDist;
+         if (distance <= distanceLimit) {
+            otherSquare->flashTimes.push(timeLastHit + (distance * delay));
+
+            // Activate the square.
+            if (!otherSquare->active) {
+               otherSquare->active = true;
+               wall->activeSquares.push_back(otherSquare);
+            }
          }
       }
    }
-
 }
 
 void GlowSquare::initDisplayList() {

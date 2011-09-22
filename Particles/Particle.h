@@ -18,6 +18,7 @@ class Particle : public Drawable {
       virtual ~Particle();
       
       static std::list<Particle*> particles;
+      static unsigned numParticles;
       static void updateParticles(double timeDifference);
 
       static void Add(Particle* newParticle);

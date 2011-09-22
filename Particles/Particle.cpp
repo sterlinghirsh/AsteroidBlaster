@@ -20,6 +20,7 @@ using namespace std;
 
 list<Particle*> Particle::particles;
 int Particle::particleDisplayList;
+unsigned Particle::numParticles = 0;
 
 Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _r, float _g, float _b, const GameState* _gameState) :
    Drawable(_gameState)
@@ -57,6 +58,7 @@ void Particle::updateParticles(double timeDifference)
          if ((*particle)->shouldRemove) {
             delete *particle;
             particle = Particle::particles.erase(particle);
+            --Particle::numParticles;
          } else {
             ++particle;
          }
@@ -70,8 +72,7 @@ void Particle::updateParticles(double timeDifference)
 /**
  * Sets the particle's shouldRemove to true if the particle has outlived its lifespan.
  */
-void Particle::update(double timeDifference)
-{
+void Particle::update(double timeDifference) {
    // Move On The X Axis By X Speed
    position->x += velocity->x * timeDifference;
    // Move On The Y Axis By Y Speed
@@ -80,20 +81,16 @@ void Particle::update(double timeDifference)
    position->z += velocity->z * timeDifference;
 
    // This will take care of marking shouldRemove as true or not
-   if(doubleTime() > (startTime + life)) {
-      shouldRemove = true;
-   };
+   shouldRemove = (doubleTime() > (startTime + life));
 }
 
-void Particle::draw()
-{
+void Particle::draw() {
    glPushMatrix();
    /* Draw The Particle Using Our RGB Values,
     * Fade The Particle Based On It's Life
     */
 
    position->glTranslate();
-
 
    // glColor4f clamps alpha to [0, 1].
    glColor4d( r,g,b, getAlpha());
@@ -151,10 +148,13 @@ void Particle::initDisplayList() {
 }
 
 void Particle::Add(Particle* newParticle) {
-   if (particles.size() >= MAX_PARTICLES) {
+   if (numParticles >= MAX_PARTICLES) {
       // Erase the oldest particle silently.
       delete particles.front();
       particles.pop_front();
+   } else {
+      // Only increment the number if we didn't just erase one.
+      ++numParticles;
    }
 
    particles.push_back(newParticle);
@@ -167,6 +167,8 @@ void Particle::Clear() {
       delete *particle;
       particle = Particle::particles.erase(particle);
    }
+
+   numParticles = 0;
 }
 
 double Particle::getAlpha() {
