@@ -17,6 +17,7 @@ const int particleCycle = 100;
 
 BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+   type = TYPE_BLASTERSHOT;
    persist = false;
    minX = minY = minZ = -0.1;
    maxX = maxY = maxZ = 0.1;

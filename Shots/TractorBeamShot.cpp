@@ -19,6 +19,7 @@ static float spin = 0;
 
 TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, const GameState* _gameState) : Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+   type = TYPE_TRACTORBEAMSHOT;
    persist = true;
    angle = M_PI / 20; // Radians from the center
    // The length of the tractor beam shot is the range of the weapon.

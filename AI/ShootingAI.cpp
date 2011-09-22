@@ -42,7 +42,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    // Start the AI as disabled
    enabled = false;
    needToChooseTarget = false;
-   
+
    // These control how fast the AI can switch weapons (in seconds).
    weaponSwitchSpeed = 2.0;
    weaponSwitchTimer.reset();
@@ -52,7 +52,7 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    targetSwitchSpeed = 0.25;
    targetSwitchTimer.reset();
    targetSwitchTimer.setCountDown(targetSwitchSpeed);
-   
+
    // Set the default chosen weapon.
    chosenWeapon = ship->getCurrentWeapon();
    targetIsAShard = false;
@@ -87,7 +87,7 @@ bool ShootingAI::aimAt(double dt, Object3D* target) {
    Vector3D wouldHit;
    Vector3D randomVariation;
    double ang = 0;
-  
+
    //------------------------------
    // Add a random variation to the aim.
    // randomVariation is between <-1, -1, -1> and <1, 1, 1>
@@ -103,7 +103,7 @@ bool ShootingAI::aimAt(double dt, Object3D* target) {
    randomVariation.scalarMultiplyUpdate(chosenWeapon->randomAIVariationAmount + ((maxDifficulty - difficulty)*(maxDifficulty - difficulty)/15));
    //aim.addUpdate(randomVariation);
    //-----------------------------
-    
+
    Point3D aim = lastShotPos;
    Point3D targetPos = chosenWeapon->project(target, randomVariation);
    Vector3D targetDir = (targetPos - ship->shotOrigin).getNormalized();
@@ -143,7 +143,7 @@ bool ShootingAI::aimAt(double dt, Object3D* target) {
 
    bool shouldFire = chosenWeapon->shouldFire(&targetPos, &aim);
 
-   
+
    /* If the cursor is going outside of the allowable range, choose a new target.
     * Make sure we don't fire.
     */
@@ -192,7 +192,7 @@ void ShootingAI::aimCursorAtMiddle(double dt) {
    else {
       aim = targetDir;
    }
-   
+
    ship->updateShotDirection(aim);
    lastShotPos = aim;
 }
@@ -204,8 +204,8 @@ void ShootingAI::chooseWeapon(Object3D* target) {
    double maxWeight = -1.0;
    /* Stores the weight of each weapon. At the end of the function, the weapon
     * with the highest weight is chosen.
-   */
-   
+    */
+
    double weaponWeights[NUMBER_OF_WEAPONS];
 
    // States whether or not the chosen target is a ship
@@ -224,20 +224,19 @@ void ShootingAI::chooseWeapon(Object3D* target) {
       weaponWeights[x] = 0.0;
 
    /*
-   printf("ConsiderTractor is %s\n", (considerTractor)? "true":"false");
-   printf("ConsiderBlaster is %s\n", (considerBlaster)? "true":"false");
-   printf("ConsiderRailgun is %s\n", (considerRailgun)? "true":"false");
-   printf("ConsiderElectricity %s\n", (considerElectricity)? "true":"false");
-   printf("ConsiderTimedBomber is %s\n", (considerTimedBomber)? "true":"false");
-   printf("ConsiderRemoteBomber is %s\n", (considerRemoteBomber)? "true":"false");
-   printf("ConsiderEnergy is %s\n", (considerEnergy)? "true":"false");
-   */
+      printf("ConsiderTractor is %s\n", (considerTractor)? "true":"false");
+      printf("ConsiderBlaster is %s\n", (considerBlaster)? "true":"false");
+      printf("ConsiderRailgun is %s\n", (considerRailgun)? "true":"false");
+      printf("ConsiderElectricity %s\n", (considerElectricity)? "true":"false");
+      printf("ConsiderTimedBomber is %s\n", (considerTimedBomber)? "true":"false");
+      printf("ConsiderRemoteBomber is %s\n", (considerRemoteBomber)? "true":"false");
+      printf("ConsiderEnergy is %s\n", (considerEnergy)? "true":"false");
+    */
 
-   if (dynamic_cast<AsteroidShip*>(target) != NULL)
+   if (target->type == TYPE_ASTEROIDSHIP) {
       isAShip = true;
-
-   // If the target is a shard, only ever choose the tractor beam.
-   if (considerTractor && dynamic_cast<Shard*>(target) != NULL) {
+   } else if (considerTractor && target->type == TYPE_SHARD) {
+      // If the target is a shard, only ever choose the tractor beam.
       selectWeaponUpdateChosen(TRACTOR_WEAPON_INDEX);
       return;
    }
@@ -248,7 +247,7 @@ void ShootingAI::chooseWeapon(Object3D* target) {
    // Make sure dist is positive, so that we don't get a negative weight.
    double dist = vec * vec;
    if (dist < 0.0)
-     dist *= -1;
+      dist *= -1;
 
    /* We would consider the tractor beam here, but it's already definitively
     * chosen up above, if the target is a shard.
@@ -316,12 +315,12 @@ void ShootingAI::chooseWeapon(Object3D* target) {
       // Consider the target's velocity. Slower is better.
       weaponWeights[ENERGY_WEAPON_INDEX] += 200 / target->velocity->magnitude();
    }
-   
+
    for(int i = 0; i < NUMBER_OF_WEAPONS; i++)
       //printf("weapons[%d] was weighted as: %f\n", i, weaponWeights[i]);
 
-   // Select the weapon index which has the highest weight.
-   selectWeaponUpdateChosen(maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS));
+      // Select the weapon index which has the highest weight.
+      selectWeaponUpdateChosen(maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS));
 
    int ndx =  maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS);
 
@@ -356,7 +355,7 @@ Object3D* ShootingAI::chooseTarget() {
    double playerWeight = 1;
    bool isAShip = false;
    bool isAShard = false;
-   
+
    // printf("size of targets list is: %d\n", targets->size());
    // If the list of targets from the viewFrustum does not exist, give the AI no target.
    if(targets == NULL) {
@@ -385,13 +384,14 @@ Object3D* ShootingAI::chooseTarget() {
       if(forwardDotAim < minForwardAimAmount) {
          continue;
       }
-      
-      
+
+
       curWeight = 0.0;
       isAShip = false;
       isAShard = false;
 
-      if((consideredShip = dynamic_cast<AsteroidShip*>(*targets_iterator)) != NULL) {
+      if((*targets_iterator)->type == TYPE_ASTEROIDSHIP && 
+       (consideredShip = static_cast<AsteroidShip*>(*targets_iterator)) != NULL) {
          isAShip = true;
          // Reset this to 1 for this target.
          playerWeight = 1;
@@ -407,81 +407,69 @@ Object3D* ShootingAI::chooseTarget() {
             else if(playerWeight < 0.3)
                playerWeight = 0.3;
          }
-     }
-
-     else if(dynamic_cast<Shard*>(*targets_iterator) != NULL) {
-        // Shards are more important if the ship is low on health.
-        if (ship->health < 50)
-           curWeight += 15;
-        /* If we don't have many unbanked shards, we want to provide some 
-         * buffer room. Picking up more shards is important.
-         */
-        if (ship->unbankedShards <= 3)
-           curWeight += 35;
-        /* Otherwise, we've got a solid buffer of unbanked shards waiting 
-         * to be banked, so other targets are higher priority.
-         */
-        else
-           curWeight += 10;
-        isAShard = true;
-     }
-
-     // If the target is not an asteroid, shard, or ship, skip it.
-     if (dynamic_cast<Asteroid3D*>(*targets_iterator) == NULL && !isAShard && !isAShip) {
+      } else if((*targets_iterator)->type == TYPE_SHARD) {
+         // Shards are more important if the ship is low on health.
+         if (ship->health < 50)
+            curWeight += 15;
+         /* If we don't have many unbanked shards, we want to provide some 
+          * buffer room. Picking up more shards is important.
+          */
+         if (ship->unbankedShards <= 3)
+            curWeight += 35;
+         /* Otherwise, we've got a solid buffer of unbanked shards waiting 
+          * to be banked, so other targets are higher priority.
+          */
+         else
+            curWeight += 10;
+         isAShard = true;
+      } else if ((*targets_iterator)->type != TYPE_ASTEROID3D) {
+         // If the target is not an asteroid, shard, or ship, skip it.
          continue;
       }
 
-     // If it's a shard and it's further than 30 units away, skip it.
-     if (isAShard && (*targets_iterator)->position->distanceFrom(*ship_position) > ship->weapons[TRACTOR_WEAPON_INDEX]->range)
-        continue;
+      // If it's a shard and it's further than 30 units away, skip it.
+      if (isAShard && (*targets_iterator)->position->distanceFrom(*ship_position) > ship->weapons[TRACTOR_WEAPON_INDEX]->range)
+         continue;
 
-     if (isAShip) {
-        /* Don't shoot at myself, or the enemy if it's respawning, or if they just spawned.
-         * This is to avoid spawn camping.
-         */
-        if (consideredShip->id == ship->id || consideredShip->isRespawning() || consideredShip->getAliveTime() < 3) {
-           continue;
-        }
+      if (isAShip) {
+         /* Don't shoot at myself, or the enemy if it's respawning, or if they just spawned.
+          * This is to avoid spawn camping.
+          */
+         if (consideredShip->id == ship->id || consideredShip->isRespawning() || consideredShip->getAliveTime() < 3) {
+            continue;
+         }
 
-        // Only add weight if the considered ship is not our own ship.
-        if (consideredShip->id != ship->id) {
-           curWeight += playerWeight * 22;
-        }
-     }
+         // Only add weight if the considered ship is not our own ship.
+         if (consideredShip->id != ship->id) {
+            curWeight += playerWeight * 22;
+         }
+      }
 
-     //printf("curWeight started at %f\n", curWeight);
-     /*curWeight = radiusWeight / ((*targets_iterator)->radius);
-     vec = (*(*targets_iterator)->position - *ship->position);
-     curWeight += distWeight / (vec * vec);
-     vec.normalize();
-     curWeight += vec * lastShotPos * proximityWeight;
-     */
+      // Larger objects should have a higher priority.
+      curWeight += radiusWeight *((*targets_iterator)->radius);
 
-     // Larger objects should have a higher priority.
-     curWeight += radiusWeight *((*targets_iterator)->radius);
+      // Objects that are closer should be weighted higher.
+      vec = (*(*targets_iterator)->position - *ship->position);
+      // Make sure vec is positive, so that we don't get a negative curWeight.
+      double tmp = vec * vec;
+      if (tmp < 0.0)
+         tmp *= -1;
+      curWeight += distWeight / (tmp);
+      curWeight += vec * lastShotPos * proximityWeight;
 
-     // Objects that are closer should be weighted higher.
-     vec = (*(*targets_iterator)->position - *ship->position);
-     // Make sure vec is positive, so that we don't get a negative curWeight.
-     double tmp = vec * vec;
-     if (tmp < 0.0)
-        tmp *= -1;
-     curWeight += distWeight / (tmp);
-     curWeight += vec * lastShotPos * proximityWeight;
-      
-     //printf("curweight summed up to %f\n", curWeight);
+      //printf("curweight summed up to %f\n", curWeight);
 
-     if (isAShard)
-        curWeight *= ship->getWeapon(TRACTOR_WEAPON_INDEX)->curAmmo != 0;
-      
-     if (maxWeight < 0 || curWeight > maxWeight) {
-        maxWeight = curWeight;
-        closest = dynamic_cast<Object3D*> (*targets_iterator);
-     }
+      if (isAShard)
+         curWeight *= ship->getWeapon(TRACTOR_WEAPON_INDEX)->curAmmo != 0;
+
+      if (maxWeight < 0 || curWeight > maxWeight) {
+         maxWeight = curWeight;
+         closest = *targets_iterator;
+      }
    }
 
    delete targets;
-   
+
    // No need to choose a new target any more
    needToChooseTarget = false;
 
@@ -496,7 +484,7 @@ void ShootingAI::think(double dt) {
    if(!enabled || ship->gameState == NULL) {
       return;
    }
-   
+
    /* Also, do we want to try and rechoose a target every think (ie frame)?
     * If not, it would make the shooter a little quicker, but may end up
     * shooting at bad targets (if the gun is pointed in the opposite direction,
@@ -509,7 +497,7 @@ void ShootingAI::think(double dt) {
    if (targetID != -1) {
       target = ship->gameState->custodian[targetID];
    }
-   
+
    /* If there is no target, or we need to choose a target b/c the old one
     * went off screen, or if the timer is up and we're allowed to switch
     * targets.
@@ -521,7 +509,7 @@ void ShootingAI::think(double dt) {
          targetID = target->id;
          targetSwitchTimer.restartCountDown();
          // If the chosen target is a Shard, remember that till the next time we choose a target.
-         if (dynamic_cast<Shard*>(target) != NULL)
+         if (target->type == TYPE_SHARD)
             targetIsAShard = true;
          else
             targetIsAShard = false;

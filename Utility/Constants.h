@@ -1,6 +1,6 @@
 /**
  * Constants.h
- * Holds constants that is respected by all classes.
+ * Holds global constants.
  * @author Ryuho Kudo
  * @date 3-16-11
  */
@@ -14,6 +14,21 @@
 #define LEFT_ALIGN 0
 #define CENTERED 1
 #define RIGHT_ALIGN 2
+
+// Object Types
+#define TYPE_ASTEROID3D 1
+#define TYPE_ASTEROIDSHIP 2
+#define TYPE_SHARD 4
+#define TYPE_BEAMSHOT 8
+#define TYPE_BLASTERSHOT 0x10
+#define TYPE_ELECTRICITYSHOT 0x20
+#define TYPE_ENERGYSHOT 0x40
+#define TYPE_HOMINGMISSILESHOT 0x80
+#define TYPE_TIMEDBOMBSHOT 0x100
+#define TYPE_TRACTORBEAMSHOT 0x200
+
+#define IS_SHOT(t) (t >= TYPE_BEAMSHOT && t <= TYPE_TRACTORBEAMSHOT)
+
 
 // This should probably be an enum.
 #define VIEW_COUNT 4

@@ -31,6 +31,7 @@ class Drawable {
       GameState* gameState;
       Custodian* custodian;
       
+      unsigned type;
       double radius; // TODO
       bool shouldRemove; // True when custodian should remove this.
       double cullRadius; // TODO

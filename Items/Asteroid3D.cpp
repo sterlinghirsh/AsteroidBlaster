@@ -36,6 +36,7 @@ double energyDamageTime = 5.0;
 Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState, bool isFirst) :
    Object3D(_gameState),
    worldSize(worldSizeIn) {
+      type = TYPE_ASTEROID3D;
       shouldDrawInMinimap = true;
 
       initH = (int)(r * r);

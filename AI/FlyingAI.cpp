@@ -61,46 +61,17 @@ FlyingAI::~FlyingAI() {
    
 }
 
-/**
- * Grabs a list of asteroids from the game radar.
- */
-std::list<Asteroid3D*>* FlyingAI :: getAsteroidList() {
-   // TODO: get list of Asteroid3Ds, instead of all objects
-   std::vector<Object3D*>* targets = ship->custodian->getListOfObjects();
-   if (targets == NULL) {
-      return NULL;
-   }
-
-   std::list<Asteroid3D*>* asteroids = new std::list<Asteroid3D*>();
-   std::vector<Object3D*>::iterator targets_iterator = targets->begin();
-   Asteroid3D* asteroid;
-   
-   for ( ; targets_iterator != targets->end(); targets_iterator++) {
-      if (*targets_iterator == NULL || (asteroid = dynamic_cast<Asteroid3D*>(*targets_iterator)) == NULL) {
-         continue;
-      }      
-      asteroids->push_front(asteroid);
-   }
-   
-   return asteroids;
-}
-
-
 Point3D* FlyingAI :: getClosestShard() {
    
    float shortestDist = 9999, tempDist = 9999;
    Point3D* closestShard = new Point3D(0,0,0);
    Point3D temp;
-   // TODO: Use the list of Shards, instead of list of all objects.
-   std::vector<Object3D*>* targets = ship->custodian->getListOfObjects();
-   std::vector<Object3D*>::iterator iter;
+   std::set<Shard*>* targets = &ship->custodian->shards;
+   std::set<Shard*>::iterator iter;
    
    iter = targets->begin();
    
    for ( ; iter != targets->end(); iter++) {
-      if (*iter == NULL || (dynamic_cast<Shard*>(*iter) == NULL)) {
-         continue;
-      }  
       // TODO: 2?
       tempDist = (float) (
         ((*iter)->position->x - ship->position->x, 2) *
@@ -134,8 +105,8 @@ Vector3D* FlyingAI :: getFlyDirection() {
    const double Max_Dist = 40;  
    double dist = 0;
    
-   std::list<Asteroid3D*>* asteroids = getAsteroidList();
-   std::list<Asteroid3D*>::iterator i;
+   std::set<Asteroid3D*>* asteroids = &ship->custodian->asteroids;
+   std::set<Asteroid3D*>::iterator i;
 
    Vector3D *sum = new Vector3D();   
    Vector3D v;
@@ -209,10 +180,6 @@ Vector3D* FlyingAI :: getFlyDirection() {
    //sum->scalarMultiplyUpdate( 2.5 / Max_Dist );
    sum->normalize();
    
-   // clean up
-   if(asteroids != NULL)
-      delete asteroids;
-   
    return sum;
 }
 
@@ -227,8 +194,8 @@ Vector3D* FlyingAI :: getPointDirection() {
 
    const double Max_Dist = 50;  // Max dist an asteroid will affect the trajectory
    
-   std::list<Asteroid3D*>* asteroids = getAsteroidList();
-   std::list<Asteroid3D*>::iterator i;
+   std::set<Asteroid3D*>* asteroids = &ship->custodian->asteroids;
+   std::set<Asteroid3D*>::iterator i;
    Vector3D *sum = new Vector3D();
    
    
@@ -262,10 +229,6 @@ Vector3D* FlyingAI :: getPointDirection() {
    }
    
    sum->normalize();
-   
-   // clean up
-   if(asteroids != NULL)
-      delete asteroids;
    
    return sum;
 }

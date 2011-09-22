@@ -8,7 +8,6 @@ SDL 1.2 or above
 GNU make
 gcc/g++
 
-The first time you run this on any machine, compile libraries with 'make lib'. This should only be necessary once per hardware configuration.
 Compile with 'make'. If your machine supports multithreading, use 'make -j'.
 Run with 'make run'.
 
@@ -16,5 +15,46 @@ After the first time you run the game, you can change your configuration setting
 
 This should work on Linux or OSX. It may compile on windows, but it currently does not run correctly.
 
-Detailed information and commentary about the program and its code can be found in the accompanying website:
-http://users.csc.calpoly.edu/~zwood/teaching/csc476/final11/Asteroids/
+
+========
+Ideas
+
+We should start making the game run on 1/20 of a second cycles.
+
+The game is a 1 on 1 game.
+You and the AI play against each other.
+Your colors are the same as your ship's. You have two colors.
+
+Fuck Shit Up. Collect Minerals. Customize your ship. 
+
+Item: Mineral Amplifier
+
+Team colors will work where each player has a different color, and the player's other color will be the team's color. This will allow not only multi player across two teams, but will make 3+ multiplayer possible. Allow users to choose from a good variety of colors. Perhaps enforce brightness limits. We're basically making an HSV color picker. 
+
+Make the rail gun be prettier. Just a particle system?
+
+Make a weapon whose effect is a particle system that uses toroids or disks or something.
+
+Make particles collideable. Give them a radius, and have them be stuck in space. Make other things push them around. They should follow the contours of things as things drive through them. Give them a medium amount of friction. Enough that if you flew your ship through a cloud of it, it would leave a noticeable trail.
+
+In the game, you can pick your starting level. But high scores count no matter where you start from, so 
+
+Trading powerups with teammates? Could be fun! Enforce only fair trades. If a trade is unfair, the 
+
+Booster shield is a droppable! As in, the Asteroid could drop a booster shield *or* a shard. Also do *or* a health powerup?
+
+Direction indicator with arrow pointing somewhere onscreen and an arrow appearing in your minimap.
+
+Call first person mode Targeting Computer? Block off edges of the screen and give gauge readouts like speedometer, Get more futuristic looking cursor. Use glow and your ship's colors. One for the outer circle, one for the inner. Use the size / shape of the outer ring to show which weapon you have selected. Use cross, maybe, with railgun and zoom in to make it like the sniper rifle. This makes it a good long range gun, but it's not over powered close up. You can still use it zoom out in third person mode. 
+
+Make increase/decrease minimap size buttons be analog inputs. You hold it and it opens or closes with the amount of time squared. So the longer you hold the button, the faster the zoom and/or minimap size gets bigger and smaller.
+
+Not working because it should be sorting using the dot product of the vector from the item to the camera and the vector from the item , not the distance from the ship
+
+Make everything set its useProgram to 0 or whatever it needs to be.
+
+Particles don't need to collide with other particles. They just need to collide with other items.
+
+Maybe you unlock guns with more crystals you collect? We would print a thing that says Collect 2 crystails to unlock tractor beam. Then in the store you level up the guns you already have? This lets you get weapons in the middle of a game.
+
+Multiple Starting Ships

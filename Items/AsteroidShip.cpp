@@ -48,6 +48,7 @@ const double spawnRate = .5;
  */
 AsteroidShip::AsteroidShip(const GameState* _gameState) :
    Object3D(_gameState) {
+      type = TYPE_ASTEROIDSHIP;
 
       cullRadius = 12;
       health = 100;
@@ -527,8 +528,8 @@ void AsteroidShip::update(double timeDiff) {
 
          Object3D* lastDamager = (*custodian)[lastDamagerId];
          if (lastDamager != NULL) {
-            AsteroidShip* lastDamagerShip = dynamic_cast<AsteroidShip*>(lastDamager);
-            if (lastDamagerShip != NULL) {
+            if (lastDamager->type == TYPE_ASTEROIDSHIP) {
+               AsteroidShip* lastDamagerShip = static_cast<AsteroidShip*>(lastDamager);
                lastDamagerShip->kills++;
                std::cout << lastDamagerShip->id << " killed " << id << " with a " 
                 << weapons[lastDamagerWeapon]->getName() << "." << std::endl;

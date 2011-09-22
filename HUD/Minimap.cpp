@@ -75,11 +75,11 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
             objectPosition = modelViewMatrix * (objectPosition); // Rotate about the ship
             radius2D = distance2D(objectPosition.x, objectPosition.z);
 
-            if (NULL != dynamic_cast<Asteroid3D*>(*listIter)) {
+            if ((*listIter)->type == TYPE_ASTEROID3D) {
                glColor3f(1, 0, 0);
-            } else if (NULL != dynamic_cast<Shard*>(*listIter)) {
+            } else if ((*listIter)->type == TYPE_SHARD) {
                glColor3f(0, 1, 0);
-            } else if (NULL != dynamic_cast<AsteroidShip*>(*listIter)) {
+            } else if ((*listIter)->type == TYPE_ASTEROIDSHIP) {
                glColor3f(0, 0, 1);
             }
 

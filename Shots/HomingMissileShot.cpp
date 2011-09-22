@@ -19,6 +19,7 @@ bool shouldChangeZ = false;
 const int particleCycle = 100;
 
 HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn, const GameState* _gameState) : ExplosiveShot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+   type = TYPE_HOMINGMISSILESHOT;
    seekRadius = 80.0;
    radius = seekRadius;
    minX = minY = minZ = -radius;

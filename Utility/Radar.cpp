@@ -134,16 +134,6 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
    // Turn the vector of allObjects into a list, & cull it down to only Drawable objects.
    std::list<Drawable*>* culledList = curFrustum->cullToViewFrustum(allObjects);
    
-   /*
-    * Make sure that we are receiving particles back from view frustum culling.
-    *
-   for(listIter = culledList->begin(); listIter != culledList->end(); ++listIter) {
-      Particle* part; 
-      if( (part = dynamic_cast<Particle*>(*listIter)) != NULL)
-         printf("particle was pushed back successfully!\n");
-   }
-   */
-    
    /* We need to set the camera position which will be used to compare the distances
     * of the two drawable objects.
     */

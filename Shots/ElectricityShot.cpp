@@ -20,6 +20,7 @@ static float flashiness = 0;
 ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, double strengthOfShot, const GameState* _gameState) : 
  Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+   type = TYPE_ELECTRICITYSHOT;
    persist = true;
    angle = M_PI / 360; // Radians from the center
    length = 80;

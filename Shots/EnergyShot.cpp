@@ -24,6 +24,7 @@ const double baseDamagePerSecond = 1;
 EnergyShot::EnergyShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, Energy* const weaponIn, const GameState* _gameState) : Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState),
 weapon(weaponIn) {
+   type = TYPE_ENERGYSHOT;
    persist = false;
    radius = baseRadius;
    minX = minY = minZ = -radius;

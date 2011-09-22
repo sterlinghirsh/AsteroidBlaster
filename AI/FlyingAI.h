@@ -56,7 +56,6 @@ class FlyingAI : public AI {
    void printMatrix( Matrix4 *m) ;
    Vector3D* getFlyDirection();
    Vector3D* getPointDirection();
-   std::list<Asteroid3D*>* getAsteroidList();
    Vector3D calcProjection( Vector3D *w, Vector3D *u1, Vector3D *u2);
    FlyMode chooseMode(void);
    

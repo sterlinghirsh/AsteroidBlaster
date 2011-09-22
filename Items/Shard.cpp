@@ -28,6 +28,7 @@ using namespace std;
  */
 Shard::Shard(double r, double worldSizeIn, const GameState* _gameState) :
    Object3D(_gameState) {
+      type = TYPE_SHARD;
       shouldDrawInMinimap = true;
       worldSize = worldSizeIn;
 

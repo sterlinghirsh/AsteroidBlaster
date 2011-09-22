@@ -281,28 +281,6 @@ void Collision<AsteroidShip, EnergyShot>::handleCollision() {
 }
 
 template<>
-void Collision<AsteroidShip, ExplosiveShot>::handleCollision() {
-   if (!(a->isVulnerable())) { return;}
-   if (a->isRespawning()) { return;}
-
-   if (!b->isExploded && a != b->owner) {
-      b->shouldExplode = true;
-      SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
-   } else {
-      Vector3D* shotToShip = new Vector3D(*b->position, *a->position);
-      double distance = shotToShip->getLength() - a->radius;
-      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
-      shotToShip->setLength(newSpeed);
-      a->addInstantAcceleration(shotToShip);
-      a->health -= b->getDamage(a);
-      a->shakeAmount = 0.7f;
-      a->justGotHit = doubleTime();
-      a->lastDamagerId = b->owner->id;
-      a->lastDamagerWeapon = b->weaponIndex;
-   }
-}
-
-template<>
 void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
    if(a == b->owner || a->isRespawning()) 
       return;
@@ -522,23 +500,6 @@ void Collision<Asteroid3D, EnergyShot>::handleCollision() {
 }
 
 template<>
-void Collision<Asteroid3D, ExplosiveShot>::handleCollision() {
-   a->lastHitShotOwner = b->owner;
-   if (!b->isExploded) {
-      b->shouldExplode = true;
-      SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
-   } else {
-      Vector3D* shotToAsteroid;
-      shotToAsteroid = new Vector3D(*b->position, *a->position);
-      double distance = shotToAsteroid->getLength() - a->radius;
-      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
-      shotToAsteroid->setLength(newSpeed);
-      a->addInstantAcceleration(shotToAsteroid);
-      a->health -= b->getDamage(a);
-   }
-}
-
-template<>
 void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
    a->lastHitShotOwner = b->owner;
    Vector3D positionToAsteroid(*a->position, *b->position);
@@ -744,20 +705,6 @@ void Collision<Shard, Shard>::handleCollision() {
 }
 
 template<>
-void Collision<Shard, ExplosiveShot>::handleCollision() {
-   Vector3D* shotToShard;
-   if (!b->isExploded) {
-      b->shouldExplode = true;
-   } else {
-      shotToShard = new Vector3D(*b->position, *a->position);
-      double distance = shotToShard->getLength();
-      double newSpeed = 100 / ((distance * distance) / b->explodeRadius + 1);
-      shotToShard->setLength(newSpeed);
-      a->addInstantAcceleration(shotToShard);
-   }
-}
-
-template<>
 void Collision<Shard, TimedBombShot>::handleCollision() {
    if (!b->isExploded) {
       Vector3D positionToShard(*b->position, *a->position);
@@ -795,18 +742,7 @@ void Collision<Shard, HomingMissileShot>::handleCollision() {
    }
 }
 
-template<>
-void Collision<Shard, Shot>::handleCollision() {
-   // Set speed to between the speed of the shot and the current speed.
-   double speed = b->velocity->getLength();
-   speed += a->velocity->getLength() * 2;
-   speed = speed / 3;
-   a->velocity->updateMagnitude(*b->position, *a->position);
-   a->velocity->setLength(speed);
-   b->shouldRemove = true;
-}
-
-static std::vector<CollisionBase*>* collisionHandlers = NULL;
+static std::map<unsigned, CollisionBase*>* collisionHandlers = NULL;
 
 Custodian::Custodian(const GameState* _gameState) :
  gameState(_gameState) {
@@ -814,39 +750,40 @@ Custodian::Custodian(const GameState* _gameState) :
    nextID = 0;
    
    if (collisionHandlers == NULL) {
-      collisionHandlers = new std::vector<CollisionBase*>();
+      unsigned key;
+      collisionHandlers = new std::map<unsigned, CollisionBase*>();
+      // Just to make syntax nicer.
+      std::map<unsigned, CollisionBase*>& ch = *collisionHandlers;
       
       // Collision for AsteroidShip
-      collisionHandlers->push_back(new Collision<AsteroidShip, AsteroidShip>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, Asteroid3D>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, Shard>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, BlasterShot>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, BeamShot>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, ElectricityShot>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, EnergyShot>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, HomingMissileShot>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, TimedBombShot>);
-      collisionHandlers->push_back(new Collision<AsteroidShip, ExplosiveShot>);
+      ch[TYPE_ASTEROIDSHIP] = new Collision<AsteroidShip, AsteroidShip>;
+      ch[TYPE_ASTEROIDSHIP | TYPE_ASTEROID3D] = new Collision<AsteroidShip, Asteroid3D>;
+      ch[TYPE_ASTEROIDSHIP | TYPE_SHARD] = new Collision<AsteroidShip, Shard>;
+      ch[TYPE_ASTEROIDSHIP | TYPE_BLASTERSHOT] = new Collision<AsteroidShip, BlasterShot>;
+      ch[TYPE_ASTEROIDSHIP | TYPE_BEAMSHOT] = new Collision<AsteroidShip, BeamShot>;
+      ch[TYPE_ASTEROIDSHIP | TYPE_ELECTRICITYSHOT] = new Collision<AsteroidShip, ElectricityShot>;
+      ch[TYPE_ASTEROIDSHIP | TYPE_ENERGYSHOT] = new Collision<AsteroidShip, EnergyShot>;
+      ch[TYPE_ASTEROIDSHIP | TYPE_HOMINGMISSILESHOT] = new Collision<AsteroidShip, HomingMissileShot>;
+      ch[TYPE_ASTEROIDSHIP | TYPE_TIMEDBOMBSHOT] = new Collision<AsteroidShip, TimedBombShot>;
 
       // Collision for Asteroid3D
-      collisionHandlers->push_back(new Collision<Asteroid3D, BlasterShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, BeamShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, TractorBeamShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, ElectricityShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, EnergyShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, TimedBombShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, HomingMissileShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, ExplosiveShot>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, Asteroid3D>);
-      collisionHandlers->push_back(new Collision<Asteroid3D, Shard>);
+      ch[TYPE_ASTEROID3D] = new Collision<Asteroid3D, Asteroid3D>;
+      ch[TYPE_ASTEROID3D | TYPE_BLASTERSHOT] = new Collision<Asteroid3D, BlasterShot>;
+      ch[TYPE_ASTEROID3D | TYPE_BEAMSHOT] = new Collision<Asteroid3D, BeamShot>;
+      ch[TYPE_ASTEROID3D | TYPE_TRACTORBEAMSHOT] = new Collision<Asteroid3D, TractorBeamShot>;
+      ch[TYPE_ASTEROID3D | TYPE_ELECTRICITYSHOT] = new Collision<Asteroid3D, ElectricityShot>;
+      ch[TYPE_ASTEROID3D | TYPE_ENERGYSHOT] = new Collision<Asteroid3D, EnergyShot>;
+      ch[TYPE_ASTEROID3D | TYPE_TIMEDBOMBSHOT] = new Collision<Asteroid3D, TimedBombShot>;
+      ch[TYPE_ASTEROID3D | TYPE_HOMINGMISSILESHOT] = new Collision<Asteroid3D, HomingMissileShot>;
+      ch[TYPE_ASTEROID3D | TYPE_SHARD] = new Collision<Asteroid3D, Shard>;
 
-      collisionHandlers->push_back(new Collision<Shard, TractorBeamShot>);
-      collisionHandlers->push_back(new Collision<Shard, BeamShot>);
-      collisionHandlers->push_back(new Collision<Shard, TimedBombShot>);
-      collisionHandlers->push_back(new Collision<Shard, HomingMissileShot>);
-      collisionHandlers->push_back(new Collision<Shard, ExplosiveShot>);
-      collisionHandlers->push_back(new Collision<Shard, Shot>);
-      collisionHandlers->push_back(new Collision<Shard, Shard>);
+      // Collisions for Shard
+      ch[TYPE_SHARD] = new Collision<Shard, Shard>;
+      ch[TYPE_SHARD | TYPE_TRACTORBEAMSHOT] = new Collision<Shard, TractorBeamShot>;
+      ch[TYPE_SHARD | TYPE_BEAMSHOT] = new Collision<Shard, BeamShot>;
+      ch[TYPE_SHARD | TYPE_TIMEDBOMBSHOT] = new Collision<Shard, TimedBombShot>;
+      ch[TYPE_SHARD | TYPE_HOMINGMISSILESHOT] = new Collision<Shard, HomingMissileShot>;
+      // Used to have a generic shot handler.
    }
 }
 
@@ -969,15 +906,18 @@ void Custodian::add(Object3D* objectIn) {
    Shot* shot = NULL;
    AsteroidShip* ship = NULL;
 
-   if ((asteroid = dynamic_cast<Asteroid3D*>(objectIn)) != NULL) {
+   if (IS_SHOT(objectIn->type) && (shot = dynamic_cast<Shot*>(objectIn)) != NULL) {
+      shots.insert(shot);
+   } else if (objectIn->type == TYPE_ASTEROID3D &&
+    (asteroid = dynamic_cast<Asteroid3D*>(objectIn)) != NULL) {
       asteroidCount++;
       asteroids.insert(asteroid);
-   } else if ((shard = dynamic_cast<Shard*>(objectIn)) != NULL) {
+   } else if (objectIn->type == TYPE_SHARD &&
+    (shard = dynamic_cast<Shard*>(objectIn)) != NULL) {
       shardCount++;
       shards.insert(shard);
-   } else if ((shot = dynamic_cast<Shot*>(objectIn)) != NULL) {
-      shots.insert(shot);
-   } else if ((ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
+   } else if (objectIn->type == TYPE_ASTEROIDSHIP &&
+    (ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
       ships.insert(ship);
    }
 
@@ -998,18 +938,21 @@ void Custodian::remove(Object3D* objectIn) {
    Shot* shot;
    AsteroidShip* ship;
 
-   if ((asteroid = dynamic_cast<Asteroid3D*>(objectIn)) != NULL) {
+   if (IS_SHOT(objectIn->type) &&
+    (shot = dynamic_cast<Shot*>(objectIn)) != NULL) {
+      shots.erase(shot);
+   } else if (objectIn->type == TYPE_ASTEROID3D && 
+    (asteroid = dynamic_cast<Asteroid3D*>(objectIn)) != NULL) {
       asteroidCount--;
       asteroids.erase(asteroid);
-   } else if ((shard = dynamic_cast<Shard*>(objectIn)) != NULL) {
+   } else if (objectIn->type == TYPE_SHARD && 
+    (shard = dynamic_cast<Shard*>(objectIn)) != NULL) {
       shardCount--;
       shards.erase(shard);
-   } else if ((shot = dynamic_cast<Shot*>(objectIn)) != NULL) {
-      shots.erase(shot);
-   } else if ((ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
+   } else if (objectIn->type == TYPE_ASTEROIDSHIP &&
+    (ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
       ships.erase(ship);
    }
-
 
    delete objectIn;
 }
@@ -1020,12 +963,13 @@ void Custodian::remove(Object3D* objectIn) {
  */
 std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Object3D* item, bool searchBackwards) {
 
+   unsigned collisionHandlerKey;
    compareByDistance::curObject = item;
    // TODO: Order this by distance.
    std::set<CollisionBase*, compareByDistance >* sublist = new std::set<CollisionBase*, compareByDistance>();
    
    CollisionBase* curCollision;
-   std::vector<CollisionBase*>::iterator curCollisionHandler;
+   std::map<unsigned, CollisionBase*>::iterator curCollisionHandler;
 
    // If we were passed a null pointer, don't worry about it, just return an empty list.
    if (item == NULL)
@@ -1046,13 +990,12 @@ std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Object3D*
          if (other->maxPosition->x >= item->minPosition->x) {
             curCollision = NULL;
 
-            for (curCollisionHandler = collisionHandlers->begin(); 
-             curCollisionHandler != collisionHandlers->end();
-             ++curCollisionHandler) {
-               curCollision = (*curCollisionHandler)->tryExecute(item, other);
+            collisionHandlerKey = item->type | other->type;
+            curCollisionHandler = collisionHandlers->find(collisionHandlerKey);
+            if (curCollisionHandler != collisionHandlers->end()) {
+               curCollision = curCollisionHandler->second->tryExecute(item, other);
                if (curCollision != NULL) {
                   sublist->insert(curCollision);
-                  break;
                }
             }
          }
@@ -1070,14 +1013,13 @@ std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Object3D*
 
       if (other->minPosition->x <= item->maxPosition->x) {
          curCollision = NULL;
-
-         for (curCollisionHandler = collisionHandlers->begin(); 
-          curCollisionHandler != collisionHandlers->end();
-          ++curCollisionHandler) {
-            curCollision = (*curCollisionHandler)->tryExecute(item, other);
+            
+         collisionHandlerKey = item->type | other->type;
+         curCollisionHandler = collisionHandlers->find(collisionHandlerKey);
+         if (curCollisionHandler != collisionHandlers->end()) {
+            curCollision = curCollisionHandler->second->tryExecute(item, other);
             if (curCollision != NULL) {
                sublist->insert(curCollision);
-               break;
             }
          }
       } else {
