@@ -141,7 +141,8 @@ bool ShootingAI::aimAt(double dt, Object3D* target) {
    ship->updateShotDirection(aim);
    lastShotPos = aim;
 
-   bool shouldFire = chosenWeapon->shouldFire(&targetPos, &aim);
+   bool shouldFire = !chosenWeapon->isOverheated() && 
+    chosenWeapon->shouldFire(&targetPos, &aim);
 
 
    /* If the cursor is going outside of the allowable range, choose a new target.

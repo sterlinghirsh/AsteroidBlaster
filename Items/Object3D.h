@@ -14,8 +14,6 @@
 #include "Utility/GlobalUtility.h"
 #include <queue>
 #include <iostream>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/export.hpp>
 
 class Object3D : public Drawable {
    //public variables------------------------------

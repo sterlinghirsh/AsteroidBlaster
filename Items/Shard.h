@@ -12,8 +12,6 @@
 #include "Items/Object3D.h"
 #include <list>
 #include <vector>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/export.hpp>
 
 #define SPINS_PER_SEC 0.5
 #define NUM_ORBITERS 1

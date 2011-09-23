@@ -31,8 +31,8 @@ Blaster::Blaster(AsteroidShip* owner, int _index)
    r = 1;
    g = 0;
    b = 0;
-   overheatLevel = 5;
-   heatPerShot = 0.3;
+   overheatLevel = 2;
+   heatPerShot = 0.5;
    lastFiredFrame = 0;
 }
 
@@ -158,6 +158,10 @@ bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
     minRefireWaitTime;
 
    if (doubleTime() - timeLastFired < randomRefireWaitTime) {
+      // Don't fire if we just fired. Not fun when AI fires too fast.
+      return false;
+   } else if (randdouble() < 0.1) {
+      // 10% chance per frame of deciding not to fire.
       return false;
    }
    Vector3D targetToShip = *target - ship->shotOrigin;

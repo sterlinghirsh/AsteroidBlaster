@@ -43,9 +43,6 @@
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
-#include <boost/thread.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 
 #define SAVEFILENAME "AsteroidBlaster.sav"
 

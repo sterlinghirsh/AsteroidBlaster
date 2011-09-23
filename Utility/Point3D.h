@@ -15,8 +15,6 @@
 
 struct Matrix4;
 
-#include <boost/serialization/base_object.hpp>
-
 class Point3D : public Vector3D {
    public:
       Point3D(double xIn = 0, double yIn = 0, double zIn = 0) :
@@ -36,10 +34,12 @@ class Point3D : public Vector3D {
       
    // Serialization
    public:
+      /*
       template<class Archive> 
             void serialize(Archive & ar, const unsigned int version) {
          ar & boost::serialization::base_object<Vector3D>(*this);
       }
+      */
 };
 
 #endif
