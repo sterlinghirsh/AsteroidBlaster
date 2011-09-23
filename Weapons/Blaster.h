@@ -23,12 +23,14 @@ class Blaster : public Weapon {
       virtual void debug();
       virtual void fire();
       virtual double getCoolDownAmount();
+      virtual bool isReady();
 
    protected:
       double shotSpeed;
       double turnSpeed;
       double randomVariationAmount;
       Point3D* lastShotPos;
+      unsigned long lastFiredFrame;
 };
 
 #endif

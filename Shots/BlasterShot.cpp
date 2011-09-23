@@ -32,7 +32,7 @@ BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    normalizedVelocity.normalize();
 
    particleDirection.rotate(randdouble() * 2 * M_PI, normalizedVelocity);
-   damage = 5;
+   damage = 4;
    collisionType = collisionPoint = new CollisionPoint(*position);
    
    soundHandle = SoundEffect::playSoundEffect("BlasterShot2.wav", position, false);

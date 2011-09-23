@@ -16,7 +16,7 @@ Blaster::Blaster(AsteroidShip* owner, int _index)
 : Weapon(owner, _index) {
    BLASTER_WEAPON_INDEX = index;
    shotSpeed = 100; // Units per second
-   coolDown = 0.20; // Seconds
+   coolDown = 0.02; // Seconds
 
    // An extra random variations for the ShootingAI.
    randomAIVariationAmount = 0.5;
@@ -33,6 +33,7 @@ Blaster::Blaster(AsteroidShip* owner, int _index)
    b = 0;
    overheatLevel = 5;
    heatPerShot = 0.3;
+   lastFiredFrame = 0;
 }
 
 Blaster::~Blaster() {
@@ -52,15 +53,19 @@ void Blaster::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void Blaster::fire() {
+   Vector3D randomVariation;
    // If it's client mode, wait for the shot packet to arrive, 
    // and then add to the game.
-   if (ship->gameState->gsm == ClientMode) {
+   if (ship->gameState->gsm == ClientMode || !isReady()) {
+      // We want the gun to be semi auto.
+      // However, we need update lastFiredFrame to show 
+      // that the user tried to fire this frame.
+      lastFiredFrame = curFrame;
       return;
    }
 
-   Vector3D randomVariation;
-   if (!isReady())
-      return;
+   // Update lastFiredFrame since we're firing now.
+   lastFiredFrame = curFrame;
    // Update timeLastFired with new current time.
    timeLastFired = doubleTime();
    // Copy the ship's position for the start point.
@@ -144,6 +149,17 @@ Point3D Blaster::project(Object3D* target, Vector3D addOn) {
  * This leads to the AI leading it shots.
  */
 bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
+   const double maxRefireWaitTime = 1; // seconds
+   const double minRefireWaitTime = 0.10; // seconds
+   double randNum = randdouble();
+   randNum = 1 - (randNum * randNum * randNum); // Weight towards high numbers.
+   double randomRefireWaitTime = (randNum * 
+    (maxRefireWaitTime - minRefireWaitTime)) + 
+    minRefireWaitTime;
+
+   if (doubleTime() - timeLastFired < randomRefireWaitTime) {
+      return false;
+   }
    Vector3D targetToShip = *target - ship->shotOrigin;
    targetToShip.normalize();
    return (targetToShip - *aim).magnitude() < 0.6;
@@ -154,4 +170,8 @@ bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
  */
 double Blaster::getCoolDownAmount() {
    return 1 - clamp(currentHeat / overheatLevel, 0, 1);
+}
+
+bool Blaster::isReady() {
+   return Weapon::isReady() && lastFiredFrame <= curFrame - 2;
 }
