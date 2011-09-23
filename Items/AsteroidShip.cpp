@@ -90,7 +90,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       hitZ = 0;
 
       spawnInvulnerable = true;
-      invulnerableTime = .02;
+      drawShieldTime = 0.4; // Seconds
       justGotHit = 0;
       timeLeftToRespawn = -1;
       isFirstSpawn = true;
@@ -791,7 +791,7 @@ void AsteroidShip::update(double timeDiff) {
       }
    }
 
-   if (doubleTime() - justGotHit < invulnerableTime) {
+   if (doubleTime() - justGotHit < drawShieldTime) {
       drawHit = true;
    } else {
       drawHit = false;
@@ -1508,9 +1508,7 @@ void AsteroidShip::draw_ram() {
 }
 
 bool AsteroidShip::isVulnerable() {
-   return (!(
-      (doubleTime() - justGotHit < invulnerableTime) || 
-      spawnInvulnerable ||
+   return (!(spawnInvulnerable ||
       (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode) 
        && weapons[RAM_WEAPON_INDEX]->isReady())));
 

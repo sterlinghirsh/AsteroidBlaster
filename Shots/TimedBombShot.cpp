@@ -6,7 +6,6 @@
 #include "Shots/TimedBombShot.h"
 #include "Shots/ExplosiveShot.h"
 #include "Utility/SoundEffect.h"
-#include "Graphics/Sprite.h"
 #include "Items/BoundingWall.h"
 
 #ifdef WIN32

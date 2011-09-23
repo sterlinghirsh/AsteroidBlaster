@@ -95,7 +95,7 @@ class AsteroidShip : public Object3D {
       double lineMove;
       double zMove;
       double justGotHit;
-      double invulnerableTime;
+      double drawShieldTime;
       double timeLeftToRespawn;
       bool spawnInvulnerable;
       bool drawSpawn;

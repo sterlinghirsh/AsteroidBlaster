@@ -6,7 +6,6 @@
 #include "Shots/HomingMissileShot.h"
 #include "Shots/ExplosiveShot.h"
 #include "Utility/SoundEffect.h"
-#include "Graphics/Sprite.h"
 #include "Items/BoundingWall.h"
 #include "Particles/BlasterShotParticle.h"
 

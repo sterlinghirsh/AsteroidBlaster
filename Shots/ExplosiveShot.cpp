@@ -7,7 +7,6 @@
 #include "Particles/BlasterShotParticle.h"
 #include "Particles/BlasterImpactParticle.h"
 #include "Utility/SoundEffect.h"
-#include "Graphics/Sprite.h"
 
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"
@@ -52,10 +51,6 @@ void ExplosiveShot::explode() {
    isExploded = true;
 
    shouldConstrain = false;
-
-   // Play an explosion animation.
-   Sprite::sprites.push_back(
-         new Sprite(Texture::getTexture("AsteroidExplosion"), 4, 5, 20, *position, explodeRadius * 3, explodeRadius * 3, gameState));
 }
 
 void ExplosiveShot::hitWall(BoundingWall* wall) {

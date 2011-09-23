@@ -279,8 +279,9 @@ void Collision<AsteroidShip, EnergyShot>::handleCollision() {
 
 template<>
 void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
-   if(a == b->owner || a->isRespawning()) 
+   if(a == b->owner || !a->isVulnerable()) 
       return;
+
    if (!b->isExploded) {
       Vector3D positionToAsteroid(*b->position, *a->position);
       double distance = positionToAsteroid.getLength();
@@ -318,11 +319,13 @@ void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
          } else {
             b->shouldExplode = true;
             a->health -= b->getDamage(a);
+            a->justGotHit = doubleTime();
             b->hasDamaged = true;
             SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
          }
       }
    } else {
+      // Seek
       Vector3D positionToAsteroid(*b->position, *a->position);
       double distance = positionToAsteroid.getLength();
       if (!(b->hasDamaged) && distance < b->collisionRadius + a->radius) {
