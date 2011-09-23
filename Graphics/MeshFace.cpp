@@ -85,7 +85,10 @@ void MeshFace::draw() {
    glPolygonOffset(-1.0f, -1.0f);
 
    glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, texture);
+
+   if (textured) {
+      glBindTexture(GL_TEXTURE_2D, texture);
+   }
 
    // Draw fill
    glEnable(GL_POLYGON_OFFSET_FILL);
@@ -110,6 +113,7 @@ void MeshFace::draw(bool drawSmooth, bool drawTex) {
 void MeshFace::drawLines() {
    // TODO: Make this the ship position.
    glDisable(GL_TEXTURE_2D);
+   glBindTexture(GL_TEXTURE_2D, 0);
    double shipDist = p1.distanceFrom(*gameState->ship->position);
    GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
 
@@ -119,12 +123,12 @@ void MeshFace::drawLines() {
    if (timeExploded > 0.0) {
       //fboBegin();
       glDisable(GL_CULL_FACE);
-      /*
-      if (gameSettings->drawDeferred) {
-         GLenum buffers[] = {NOLIGHT_BUFFER, GLOW_BUFFER};
-         glDrawBuffers(2, buffers);
-      }
-      */
+
+   }
+   if (gameSettings->drawDeferred) {
+      GLenum buffers[] = {NOLIGHT_BUFFER, GL_NONE, GLOW_BUFFER, GL_NONE};
+      glDrawBuffers(4, buffers);
+      glUseProgram(gBufferShader);
    }
 
    glLineWidth(lineW);
@@ -168,6 +172,11 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    if (timeExploded > 0.0) {
       glDisable(GL_CULL_FACE);
       glEnable(GL_TEXTURE_2D);
+   }
+
+   if (gameSettings->drawDeferred) {
+      GLenum buffers[] = {ALBEDO_BUFFER, NORMAL_BUFFER, GLOW_BUFFER, NOLIGHT_BUFFER};
+      glDrawBuffers(4, buffers);
    }
 
    if (drawSmooth)

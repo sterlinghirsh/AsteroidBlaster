@@ -27,7 +27,7 @@ void ShardParticle::Add(Point3D* pos, Vector3D* vec, const GameState* _gameState
    float _g = (float) (0.9 + (randdouble() * 0.1));
    float _b = (float) (0.9 + (randdouble() * 0.1));
 
-   particles.push_back(new ShardParticle(pos, vec, _fade, _r, _g, _b, _gameState));
+   Particle::Add(new ShardParticle(pos, vec, _fade, _r, _g, _b, _gameState));
 }
 
 double ShardParticle::getAlpha() {

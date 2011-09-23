@@ -17,7 +17,14 @@ void main()
 
    vec4 color = texture2D(texIn, texCoord);
    // Albedo and specular.
-   gl_FragData[0] = gl_Color;
+   gl_FragData[0] = color;
+   /*
+   if (texIn != 0) {
+      gl_FragData[0] = color;
+   } else {
+      glFragData[0] = gl_Color;
+   }
+   */
    /*
    if (color.a == 0.0) {
       //gl_FragData[0] = vec4(normal, 1.0);

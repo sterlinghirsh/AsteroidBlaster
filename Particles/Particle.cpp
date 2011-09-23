@@ -48,8 +48,7 @@ Particle::Particle(Point3D* _position, Vector3D* _velocity, float _life, float _
 Particle::~Particle() {
 }
 
-void Particle::updateParticles(double timeDifference)
-{
+void Particle::updateParticles(double timeDifference) {
    list<Particle*>::iterator particle = Particle::particles.begin();
 
    while(particle != Particle::particles.end()) {
@@ -99,10 +98,12 @@ void Particle::draw() {
    glUniform1f(sizeLoc, (float) size);
 
    //fboBegin();
+   /*
    if (gameSettings->drawDeferred) {
       GLenum buffers[] = {ALBEDO_BUFFER, GLOW_BUFFER};
       glDrawBuffers(2, buffers);
    }
+   */
    glCallList(particleDisplayList);
    //fboEnd();
    glPopMatrix();
@@ -148,13 +149,13 @@ void Particle::initDisplayList() {
 }
 
 void Particle::Add(Particle* newParticle) {
-   if (numParticles >= MAX_PARTICLES) {
+   if (Particle::numParticles >= MAX_PARTICLES) {
       // Erase the oldest particle silently.
       delete particles.front();
       particles.pop_front();
    } else {
       // Only increment the number if we didn't just erase one.
-      ++numParticles;
+      ++Particle::numParticles;
    }
 
    particles.push_back(newParticle);
@@ -168,7 +169,7 @@ void Particle::Clear() {
       particle = Particle::particles.erase(particle);
    }
 
-   numParticles = 0;
+   Particle::numParticles = 0;
 }
 
 double Particle::getAlpha() {
