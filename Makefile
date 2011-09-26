@@ -1,6 +1,8 @@
 # AsteroidBlaster Makefile by Sterling Hirsh
 # Uses uname to decide whether it's on Linux or OSX so it can tell which libs to include.
 
+FMODLIB_PATH          = Libraries/fmod
+
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
    # Linux stuff
@@ -10,23 +12,24 @@ ifeq ($(UNAME), Linux)
    SDL_CFLAGS=$(shell "sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_image-1.2.10 
 
-   PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs  -lGL -lGLU -lSDL -lGLEW -lpthread
+   PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs $(FMODLIB_PATH)/libfmodex.so  -lGL -lGLU -lSDL -lGLEW -lpthread
+   FMODLIB_NAME_RELEASE  = libfmodex.so
+   FMODLIB_NAME_LOGGING  = libfmodexL.so
 else
    # Mac stuff
    SDL_LIBS=$(shell "/sw/bin/sdl-config" "--libs")
    SDL_CFLAGS=$(shell "/sw/bin/sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=-I /opt/local/include
-   PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -Wl
+   PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -Wl -L$(FMODLIB_PATH) -lfmodex
+   FMODLIB_NAME_RELEASE  = libfmodex.dylib
+   FMODLIB_NAME_LOGGING  = libfmodexL.dylib
 endif
 
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) -lSDL_image -lSDL_ttf -g -O0 -LLibraries/fmod -lfmodex
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) -lSDL_image -lSDL_ttf -g -O0
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
 
-FMODLIB_PATH          = Libraries/fmod
-FMODLIB_NAME_RELEASE  = libfmodex.dylib
-FMODLIB_NAME_LOGGING  = libfmodexL.dylib
 
 CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -g -O0
 CC=g++
