@@ -39,9 +39,7 @@ BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
 }
 
 BlasterShot::~BlasterShot() {
-   if (soundHandle != -1) {
-      SoundEffect::stopSoundEffect(soundHandle);
-   }
+   // Used to stop sound. Now we don't because that sucks.
 }
 
 void BlasterShot::draw() {
@@ -65,9 +63,7 @@ void BlasterShot::update(double timeDiff) {
    Shot::update(timeDiff);
    const int particlesPerSecond = 4;
 
-   if (soundHandle != -1) {
-      SoundEffect::updateSource(soundHandle, position, 75);
-   }
+   SoundEffect::updateSource(soundHandle, position, velocity);
    
    //Vector3D normalizedVelocity(*velocity);
    //normalizedVelocity.normalize();

@@ -6,161 +6,198 @@
 #include <iostream>
 #include <map>
 #include "Utility/Vector3D.h"
+#include "fmod/fmod.hpp"
+#include "fmod/fmod_errors.h"
 
-// Hold a position and a sound handle.
-struct SoundEffectHolder {
-   bool playing;
-   bool internal;
-   int volume;
-   Vector3D position;
-};
 
-SoundEffectHolder channels[CHANNEL_MAX];
+FMOD::System *fmodSystem;
+FMOD::Sound *sound;
+FMOD_RESULT result;
+static SoundChannel* curMusic;
+static std::string currPlay;
 
-std::map<std::string, Mix_Chunk*> SoundEffect::soundEffects;
-int SoundEffect::numChannels = CHANNEL_MAX;
-int SoundEffect::currChannel = 0;
+// Crazy high channel max for fmod. <3
+#define CHANNEL_MAX 1000
+
+std::map<std::string, FMOD::Sound*> soundEffects;
+
+struct SoundChannel : FMOD::Channel {};
+
+void Vector3DToFMOD_VECTOR(Vector3D* in, FMOD_VECTOR* out) {
+   if (in != NULL) {
+      out->x = in->x;
+      out->y = in->y;
+      out->z = in->z;
+   } else {
+      out->x = out->y = out->z = 0;
+   }
+}
+
+/**
+ * From fmod examples/playsound/main.cpp
+ */
+void ERRCHECK(FMOD_RESULT result) {
+   if (result != FMOD_OK) {
+      printf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
+      exit(-1);
+   }
+}
 
 void SoundEffect::Init() {
-   for (int i = 0; i < CHANNEL_MAX; ++i) {
-      channels[i].internal = true;
-      channels[i].volume = DEFAULT_VOLUME;
-      channels[i].position.x = 0;
-      channels[i].position.y = 0;
-      channels[i].position.z = 0;
-      channels[i].playing = false;
+   unsigned int      version;
+   
+   result = FMOD::System_Create(&fmodSystem);
+   ERRCHECK(result);
+
+   result = fmodSystem->getVersion(&version);
+   ERRCHECK(result);
+
+   if (version < FMOD_VERSION) {
+      printf("Error!  You are using an old version of FMOD %08x.  This program requires %08x\n", version, FMOD_VERSION);
+      exit( EXIT_FAILURE);
    }
+
+   // dopplerscale, distancefactor, rollofscale
+   result = fmodSystem->set3DSettings(1.0f, 2.0f, 0.3f);
+   ERRCHECK(result);
+
+   result = fmodSystem->init(CHANNEL_MAX, FMOD_INIT_3D_RIGHTHANDED, NULL);
+   ERRCHECK(result);
 }
 
 void SoundEffect::FreeAll() {
-   std::map<std::string, Mix_Chunk*>::iterator it = SoundEffect::soundEffects.begin();
-   for (; it != SoundEffect::soundEffects.end(); ++it ) {
-      Mix_FreeChunk(it->second);
+   std::map<std::string, FMOD::Sound*>::iterator it = soundEffects.begin();
+   for (; it != soundEffects.end(); ++it ) {
+      it->second->release();
    }
+   result = fmodSystem->release();
+   ERRCHECK(result);
 }
 
-void SoundEffect::Add(std::string file, std::string keyName) {
-   Mix_Chunk *temp;
-   
-	if(!(temp=Mix_LoadWAV(file.c_str()))) {
-	   std::cerr << "Mix_LoadWAV: " << Mix_GetError() << std::endl;
-		exit(1);
+void SoundEffect::Add(std::string file, std::string keyName, bool isMusic) {
+   if (isMusic) {
+      result = fmodSystem->createSound(file.c_str(), FMOD_2D | FMOD_CREATESTREAM, 0, &sound);
+   } else {
+      result = fmodSystem->createSound(file.c_str(), FMOD_3D, 0, &sound);
    }
+   ERRCHECK(result);
    
-   soundEffects.insert( std::pair<std::string, Mix_Chunk*>(keyName,temp) );
+   soundEffects.insert( std::pair<std::string, FMOD::Sound*>(keyName, sound) );
 }
-
 
 /**
  * loop defaults to false.
  */
-int SoundEffect::playSoundEffect(std::string file, Vector3D* source, bool internal, int volume, bool loop) {
-   std::map<std::string, Mix_Chunk*>::iterator iter = soundEffects.find(file);
-
-   if (iter == soundEffects.end()) {
-      std::cerr << "failed to find: " << file << " in SoundEffect::soundEffects." << std::endl;
-      return -1;
-   }
-   
-   int handle = Mix_PlayChannel(-1, iter->second, loop ? -1 : 0);
-   
-	if(handle == -1) {
-	   //std::cerr << "Failed to play " << file << "\r";
-		//exit(0);
-   }
-   if (handle >= 0 && handle < CHANNEL_MAX) {
-      channels[handle].volume = volume;
-      if (source == NULL) {
-         channels[handle].internal = true;
-      } else {
-         channels[handle].position = *source;
-         // Set internal to true if internal is true or source is null.
-         channels[handle].internal = internal;
-      }
-      channels[handle].playing = true;
-   }
-
-   Mix_Volume(handle, volume);
-
-   if (!gameSettings->soundOn) {
-      Mix_Pause(handle);
-   }
-   
-   return handle;
-}
-
-void SoundEffect::pauseSoundEffect(int handle) {
+SoundChannel* SoundEffect::playSoundEffect(std::string file, Vector3D* source, 
+ Vector3D* velocity, bool internal, int volume, bool loop) {
+   FMOD::Channel* channel = NULL;
+   SoundChannel* soundChannel = NULL;
    if (gameSettings->soundOn) {
-      Mix_Pause(handle);
+      std::map<std::string, FMOD::Sound*>::iterator iter = soundEffects.find(file);
+
+      if (iter == soundEffects.end()) {
+         std::cerr << "failed to find: " << file << " in soundEffects." << std::endl;
+         return NULL;
+      }
+
+      result = fmodSystem->playSound(FMOD_CHANNEL_FREE, iter->second, false, &channel);
+      ERRCHECK(result);
+      
+      soundChannel = static_cast<SoundChannel*>(channel);
+
+      if (loop) {
+         soundChannel->setMode(FMOD_LOOP_NORMAL);
+         soundChannel->setLoopCount(-1);
+         ERRCHECK(result);
+      }
+
+      if (internal) {
+         soundChannel->setMode(FMOD_2D);
+         // Probably don't have to set it back to worldrelative, right?
+      }
+
+      if (!internal) {
+         updateSource(soundChannel, source, velocity);
+      }
    }
+   
+   return soundChannel;
 }
 
-void SoundEffect::resumeSoundEffect(int handle) {
-   if (!gameSettings->soundOn) {
-      Mix_Resume(handle);
-   }
-}
-
-void SoundEffect::stopSoundEffect(int handle) {
-   Mix_HaltChannel(handle);
-}
-
-int SoundEffect::currentlyPlaying(int handle) {
-   return Mix_Playing(handle);
+void SoundEffect::stopSoundEffect(SoundChannel* channel) {
+   channel->stop();
 }
 
 void SoundEffect::stopAllSoundEffect(){
-   Mix_HaltChannel(-1);
-}
-
-void SoundEffect::resetPosition(int handle) {
-   Mix_SetPosition(handle, 0, 0);
+   FMOD::ChannelGroup* group;
+   result = fmodSystem->getMasterChannelGroup(&group);
+   ERRCHECK(result);
+   group->stop();
 }
 
 void SoundEffect::updatePositions(Object3D* receiver) {
-   for (int i = 0; i < CHANNEL_MAX; ++i) {
-      if (channels[i].playing) {
-         if (channels[i].internal) {
-            resetPosition(i);
-         } else {
-            setPosition(i, &(channels[i].position), receiver);
-         }
-         Mix_Volume(i, channels[i].volume);
-      }
-   }
-}
-
-void SoundEffect::updateSource(int handle, Vector3D* source, int volume) {
-   channels[handle].position.clone(source);
-   channels[handle].volume = volume;
-}
-
-// This is how we set the position of sounds.
-void SoundEffect::setPosition(int handle, Vector3D* position, Object3D* receiver) {
-   Sint16 angle;
-   Uint8 distance;
-
-   Vector3D receiverToSource(receiver->position, position);
-   const double maxSoundDistance = 80;
-   distance = (Uint8) (255 * clamp(receiverToSource.getLength() / maxSoundDistance, 0, 1)); 
+   FMOD_VECTOR pos, vel, forward, up;
+   Vector3DToFMOD_VECTOR(receiver->position, &pos);
+   Vector3DToFMOD_VECTOR(receiver->velocity, &vel);
+   Vector3DToFMOD_VECTOR(receiver->up, &up);
+   Vector3DToFMOD_VECTOR(receiver->forward, &forward);
    
-   double upDownAmount = receiver->up->dot(receiverToSource);
-   receiverToSource.subtractUpdate(receiver->up->scalarMultiply(upDownAmount));
-
-   receiverToSource.normalize();
-   double leftRightAmount = receiver->right->dot(receiverToSource);
-   double forwardBackwardAmount = receiver->forward->dot(receiverToSource);
-
-   // Calculate how much the forward contribution should be.
-   // This gives a number from 0 (directly ahead) to 180 (directly behind).
-   angle = (Sint16) ((1 - forwardBackwardAmount) * 90);
-
-   // If it's on the left, make it from 360 (directly ahead) to 180 (directly behind).
-   if (leftRightAmount < 0) {
-      angle = (Sint16) (360 - angle);
-   }
-
-   Mix_SetPosition(handle, angle, distance);
+   fmodSystem->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+   fmodSystem->update();
 }
 
+void SoundEffect::updateSource(SoundChannel* channel, Vector3D* position, Vector3D* velocity) {
+   FMOD_VECTOR pos, vel;
+   Vector3DToFMOD_VECTOR(position, &pos);
+   Vector3DToFMOD_VECTOR(velocity, &vel);
+   channel->set3DAttributes(&pos, &vel);
+}
 
+// Music functions.
+void SoundEffect::playMusic(std::string keyName) {
+   if (!gameSettings->musicOn) {
+      return;
+   }
+
+   if (currPlay == keyName) {
+      std::cout << keyName << " is already playing!" << std::endl;
+   } else if (currPlay != "\0" && curMusic != NULL) {
+      //Mix_HaltMusic();
+      curMusic->stop();
+   }
+
+   curMusic = playSoundEffect(keyName, NULL, NULL, true, 255, true);
+   currPlay = keyName;
+}
+
+void SoundEffect::pauseMusic() {
+   if (curMusic != NULL)
+      curMusic->setPaused(true);
+}
+
+void SoundEffect::resumeMusic() {
+   if (curMusic != NULL && gameSettings->musicOn)
+      curMusic->setPaused(false);
+}
+
+void SoundEffect::stopMusic() {
+   if (curMusic != NULL) {
+      curMusic->stop();
+      curMusic = NULL;
+   }
+   currPlay != "\0";
+}
+
+std::string SoundEffect::currentlyPlaying() {
+   return currPlay;
+}
+
+bool SoundEffect::musicPlaying() {
+   bool paused;
+   if (curMusic == NULL)
+      return false;
+
+   result = curMusic->getPaused(&paused);
+   ERRCHECK(result);
+   return !paused;
+}

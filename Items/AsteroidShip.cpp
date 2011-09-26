@@ -162,7 +162,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
       // Create this ship's Radar
       radar = new Radar(this);
 
-      soundHandle = -1;
+      soundHandle = NULL;
 
       cameraOffset = new Vector3D(0, 2, 5);
       currentView = VIEW_THIRDPERSON_SHIP;
@@ -708,7 +708,7 @@ void AsteroidShip::update(double timeDiff) {
          }
                   
          if (gameState->ship == this && showBankedShardsMessage) {
-            SoundEffect::playSoundEffect("ShardBank", position, true);
+            SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true);
             if (totalBankedShards == 1) {
                sstream << "Banked first shard!";
             } else {
@@ -731,13 +731,16 @@ void AsteroidShip::update(double timeDiff) {
 
    if ((gameState->gsm != MenuMode) &&
          (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
-      if (soundHandle == -1)
+      if (soundHandle == NULL) {
          soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav",
-               position, (this == gameState->ship), DEFAULT_VOLUME, true);
+               position, velocity, (this == gameState->ship), DEFAULT_VOLUME, true);
+      } else {
+         SoundEffect::updateSource(soundHandle, position, velocity);
+      }
    } else {
-      if (soundHandle != -1) {
+      if (soundHandle != NULL) {
          SoundEffect::stopSoundEffect(soundHandle);
-         soundHandle = -1;
+         soundHandle = NULL;
       }
    }
 
@@ -1978,7 +1981,7 @@ void AsteroidShip::readCommand(ClientCommand& command) {
  * This is called on the ship when the level ends.
  */
 void AsteroidShip::atLevelEnd() {
-   SoundEffect::playSoundEffect("ShardBank", position, true);
+   SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true);
    bankedShards += unbankedShards;
    totalBankedShards += unbankedShards;
 
@@ -2034,9 +2037,9 @@ void AsteroidShip::unlockWeapons() {
 }
 
 void AsteroidShip::stopSounds() {
-   if (soundHandle != -1) {
+   if (soundHandle != NULL) {
       SoundEffect::stopSoundEffect(soundHandle);
-      soundHandle = -1;
+      soundHandle = NULL;
    }
 
    for (unsigned i = 0; i < weapons.size(); ++i) {

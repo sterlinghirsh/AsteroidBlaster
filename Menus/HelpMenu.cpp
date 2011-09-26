@@ -6,7 +6,6 @@
 #include "Menus/HelpMenu.h"
 #include "Graphics/Texture.h"
 #include "Text/Text.h"
-#include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Menus/MainMenu.h"
 
@@ -205,11 +204,11 @@ void HelpMenu::activate() {
    SDL_ShowCursor(SDL_ENABLE);
    menuActive = true;
    SoundEffect::stopAllSoundEffect();
-   Music::playMusic("8-bit3.ogg");
+   SoundEffect::playMusic("8-bit3.ogg");
 }
 
 void HelpMenu::deactivate() {
    SDL_ShowCursor(SDL_DISABLE);
    menuActive = false;
-   Music::playMusic("Asteroids2.ogg");
+   SoundEffect::playMusic("Asteroids2.ogg");
 }

@@ -550,7 +550,7 @@ void TimedBombShot::update(double timeDiff) {
       timeSinceExploded = 1;
       //isExploded = true;
       //explode();
-      SoundEffect::playSoundEffect("TimedBombExplosion", position, false, 255);
+      SoundEffect::playSoundEffect("TimedBombExplosion", position, NULL, false, 255);
    }
    
    timeSinceExploded -= timeDiff;

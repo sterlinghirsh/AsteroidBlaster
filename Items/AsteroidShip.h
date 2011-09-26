@@ -268,7 +268,7 @@ class AsteroidShip : public Object3D {
    
    //protected variables------------------------------
    protected:
-      int soundHandle;
+      SoundChannel* soundHandle;
       Radar* radar; // This is the ship's radar that it should query for information about its surroundings
 
       double brakeFactor;

@@ -9,7 +9,6 @@
 #include "Utility/GameState.h"
 
 #include "Utility/Matrix4.h"
-#include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Utility/Collision.h"
 #include "Utility/GlobalUtility.h"
@@ -972,8 +971,8 @@ void GameState::nextLevel() {
 
    if (!ship->shooter->isEnabled() && !ship->flyingAI->isEnabled()) {
       storeMenu->menuActive = true;
-      Music::stopMusic();
-      Music::playMusic("8-bit3.ogg");
+      SoundEffect::stopMusic();
+      SoundEffect::playMusic("8-bit3.ogg");
    }
 
    setLevelTimer();
@@ -1182,10 +1181,10 @@ void GameState::keyDown(int key, int unicode) {
 
       // Audio and Video settings
    case SDLK_KP_ENTER:
-      if (Mix_PausedMusic()) {
-         Music::resumeMusic();
+      if (SoundEffect::musicPlaying()) {
+         SoundEffect::pauseMusic();
       } else {
-         Music::pauseMusic();
+         SoundEffect::resumeMusic();
       }
       break;
 

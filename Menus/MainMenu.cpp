@@ -11,7 +11,6 @@
 #include "Menus/CreditsMenu.h"
 
 #include "Graphics/Image.h"
-#include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Items/AsteroidShip.h"
 #include "Text/Text.h"
@@ -184,7 +183,7 @@ void MainMenu::mouseDown(int button) {
    } else if(creditsText->mouseSelect(x,y)) {
       menuActive = false;
       creditsMenu->menuActive = true;
-      Music::playMusic("Careless_Whisper.ogg");
+      SoundEffect::playMusic("Careless_Whisper.ogg");
    } else if(quitText->mouseSelect(x,y)) {
       running = false;
    }
@@ -218,7 +217,7 @@ void MainMenu::activate() {
    SDL_ShowCursor(SDL_ENABLE);
    menuActive = true;
    SoundEffect::stopAllSoundEffect();
-   Music::playMusic("8-bit3.ogg");
+   SoundEffect::playMusic("8-bit3.ogg");
 
    setupShips();
 }
@@ -226,7 +225,7 @@ void MainMenu::activate() {
 void MainMenu::deactivate() {
    SDL_ShowCursor(SDL_DISABLE);
    menuActive = false;
-   Music::playMusic("Asteroids2.ogg");
+   SoundEffect::playMusic("Asteroids2.ogg");
 }
 
 void MainMenu::gameDeactivate(bool shouldLoad) {

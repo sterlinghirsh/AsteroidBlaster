@@ -22,7 +22,6 @@
 #include "Utility/GameState.h"
 #include "Utility/InputManager.h"
 #include "Utility/Matrix4.h"
-#include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Graphics/Texture.h"
 #include "Graphics/Image.h"
@@ -35,7 +34,6 @@
 #include "Text/Input.h"
 
 #include "SDL.h"
-#include "SDL_mixer.h"
 
 GameState* gameState;
 // the absolute time update was last called
@@ -63,15 +61,6 @@ void init() {
 
    if (TTF_Init()) {
       std::cerr << TTF_GetError() << std::endl;
-      exit(1);
-   }
-
-   //allocate  32 channels for sound effects
-   SoundEffect::numChannels = Mix_AllocateChannels(CHANNEL_MAX);
-   printf("Allocated %d channels.\n", SoundEffect::numChannels);
-
-   if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,1024)<0) {
-      std::cerr << "Mix_OpenAudio Failed!" << std::endl;
       exit(1);
    }
 
@@ -280,11 +269,10 @@ void load() {
    timeBombShader = setShaders( (char *) "./Shaders/timeBombExplosion.vert", (char *) "./Shaders/timeBombExplosion.frag");
 
    //load and start BGM
-   Music::Add("Sounds/8-bit3.ogg","8-bit3.ogg");
-   Music::Add("Sounds/Asteroids2.ogg", "Asteroids2.ogg");
-   Music::Add("Sounds/Careless_Whisper.ogg","Careless_Whisper.ogg");
-   Music::playMusic("8-bit3.ogg");
-   //Music::playMusic("Asteroids2.ogg");
+   SoundEffect::Add("Sounds/8-bit3.ogg","8-bit3.ogg", true);
+   SoundEffect::Add("Sounds/Asteroids2.ogg", "Asteroids2.ogg", true);
+   SoundEffect::Add("Sounds/Careless_Whisper.ogg","Careless_Whisper.ogg", true);
+   SoundEffect::playMusic("8-bit3.ogg");
 
    //load sound effects
    //SoundEffect::Add("Sounds/blaster1.wav");
@@ -482,7 +470,6 @@ int main(int argc, char* argv[]) {
    delete creditsMenu;
    delete inputManager;
    delete chat;
-   Music::FreeAll();
    SoundEffect::FreeAll();
 
    return 0;

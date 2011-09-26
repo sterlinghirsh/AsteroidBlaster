@@ -20,6 +20,7 @@ class Custodian;
 class GameState;
 class Point3D;
 class Vector3D;
+struct SoundChannel;
 
 class Weapon {
    public:

@@ -36,7 +36,7 @@ class Energy : public Weapon {
       double chargeStartTime;
 
       bool chargingSoundPlaying;
-      int soundHandle;
+      SoundChannel* soundHandle;
 };
 
 #endif

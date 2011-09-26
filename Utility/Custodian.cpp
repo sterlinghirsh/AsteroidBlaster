@@ -160,10 +160,11 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
    b->shouldRemove = true;
    
    Point3D* soundSource = NULL;
-   if (a != a->gameState->ship) {
-      soundSource = a->position;
+   if (a = a->gameState->ship) {
+      SoundEffect::playSoundEffect("CrystalCollect.wav", NULL, NULL, true);
+   } else {
+      SoundEffect::playSoundEffect("CrystalCollect.wav", a->position);
    }
-   SoundEffect::playSoundEffect("CrystalCollect.wav", soundSource);
 }
 
 template<>

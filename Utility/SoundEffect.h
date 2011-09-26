@@ -1,39 +1,32 @@
-
 #ifndef __SOUNDEFFECT_H__
 #define __SOUNDEFFECT_H__
 
 #include <list>
 #include <map>
 #include <iostream>
-#include "SDL_mixer.h"
 
-#define CHANNEL_MAX 32
 #define DEFAULT_VOLUME 48
 
 class Object3D;
 class Vector3D;
+struct SoundChannel;
 
 class SoundEffect {
    public:
       static void FreeAll();
-      static int numChannels;
-      
       static void Init();
-      static void Add(std::string file, std::string keyName);
-      static int playSoundEffect(std::string file, Vector3D* source = NULL, bool internal = false, int volume = DEFAULT_VOLUME, bool loop = false);
-      static void pauseSoundEffect(int handle);
-      static void resumeSoundEffect(int handle);
-      static void stopSoundEffect(int handle);
-      static int currentlyPlaying(int handle);
+      static void Add(std::string file, std::string keyName, bool isMusic = false);
+      static SoundChannel* playSoundEffect(std::string file, Vector3D* source = NULL, Vector3D* velocity = NULL, bool internal = false, int volume = DEFAULT_VOLUME, bool loop = false);
+      static void stopSoundEffect(SoundChannel* channel);
       static void stopAllSoundEffect();
-      static void resetPosition(int handle);
       static void updatePositions(Object3D* receiver);
-      static void updateSource(int handle, Vector3D* source, int volume = DEFAULT_VOLUME);
-
-   private:
-      static std::map<std::string, Mix_Chunk*> soundEffects;
-      static int currChannel;
-      static void setPosition(int handle, Vector3D* source, Object3D* receiver);
+      static void updateSource(SoundChannel* channel, Vector3D* position, Vector3D* velocity);
+      static void playMusic(std::string file);
+      static void pauseMusic();
+      static void resumeMusic();
+      static void stopMusic();
+      static std::string currentlyPlaying();
+      static bool musicPlaying();
 };
 
 #endif

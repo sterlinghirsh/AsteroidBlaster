@@ -26,7 +26,7 @@ class TractorBeam : public Weapon {
    private:
       long unsigned int lastFiredFrame;
       bool soundPlaying;
-      int soundHandle;
+      SoundChannel* soundHandle;
 };
 
 #endif

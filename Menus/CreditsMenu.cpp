@@ -7,7 +7,6 @@
 #include "Menus/MainMenu.h"
 #include "Graphics/Texture.h"
 #include "Text/Text.h"
-#include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 
 #define TITLE_STRING_INDEX 0
@@ -271,7 +270,7 @@ void CreditsMenu::mouseDown(int button) {
       firstDrawn = false;
       mainMenu->menuActive = true;
       x = y = -1;
-      Music::playMusic("8-bit3.ogg");
+      SoundEffect::playMusic("8-bit3.ogg");
    }
 }
 

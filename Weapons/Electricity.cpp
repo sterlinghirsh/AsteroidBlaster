@@ -22,7 +22,7 @@ Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index
    soundPlaying = false;
    curAmmo = -1;
    purchased = false;
-   soundHandle = -1;
+   soundHandle = NULL;
    
    overheatLevel = 5;
    heatPerShot = 0.15;
@@ -46,7 +46,7 @@ void Electricity::update(double timeDiff) {
    if (currentFrame == lastFiredFrame && !soundPlaying) {
       // We should play sound.
       soundPlaying = true;
-      soundHandle = SoundEffect::playSoundEffect("ElectricitySound", ship->position, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
+      soundHandle = SoundEffect::playSoundEffect("ElectricitySound", ship->position, ship->velocity, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
    } else if (currentFrame != lastFiredFrame && soundPlaying) {
       SoundEffect::stopSoundEffect(soundHandle);
       soundPlaying = false;
@@ -109,9 +109,10 @@ bool Electricity::shouldFire(Point3D* target, Point3D* aim) {
 }
 
 void Electricity::stopSounds() {
-   if (soundHandle != -1) {
+   if (soundHandle != NULL) {
       SoundEffect::stopSoundEffect(soundHandle);
-      soundHandle = -1;
+      soundHandle = NULL;
+      soundPlaying = false;
    }
 }
 

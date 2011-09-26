@@ -6,7 +6,6 @@
 #include "Menus/SettingsMenu.h"
 #include "Graphics/Texture.h"
 #include "Text/Text.h"
-#include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Items/AsteroidShip.h"
 #include "Menus/MainMenu.h"
@@ -250,11 +249,11 @@ void SettingsMenu::mouseDown(int button) {
       if (gameSettings->musicOn) {
          printf("Disabling music.\n");
          gameSettings->musicOn = false;
-         Music::stopMusic();
+         SoundEffect::stopMusic();
       } else {
          printf("Enabling music.\n");
          gameSettings->musicOn = true;
-         Music::playMusic("8-bit3.ogg");
+         SoundEffect::playMusic("8-bit3.ogg");
       }
    } else if(menuTexts[RETURN_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
@@ -301,13 +300,13 @@ void SettingsMenu::activate() {
    SDL_ShowCursor(SDL_ENABLE);
    menuActive = true;
    SoundEffect::stopAllSoundEffect();
-   Music::playMusic("8-bit3.ogg");
+   SoundEffect::playMusic("8-bit3.ogg");
 }
 
 void SettingsMenu::deactivate() {
    SDL_ShowCursor(SDL_DISABLE);
    menuActive = false;
-   Music::playMusic("Asteroids2.ogg");
+   SoundEffect::playMusic("Asteroids2.ogg");
 }
 
 

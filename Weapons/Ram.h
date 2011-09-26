@@ -26,7 +26,7 @@ class Ram : public Weapon {
       int currentFrame;
       int lastFiredFrame;
       bool soundPlaying;
-      int soundHandle;
+      SoundChannel* soundHandle;
 };
 
 #endif

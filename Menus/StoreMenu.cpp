@@ -6,7 +6,6 @@
 #include "Menus/MainMenu.h"
 #include "Graphics/Texture.h"
 #include "Items/AsteroidShip.h"
-#include "Utility/Music.h"
 #include "Utility/SoundEffect.h"
 #include "Graphics/Image.h"
 #include "Text/Text.h"
@@ -383,13 +382,13 @@ void StoreMenu::keyDown(int key, int unicode) {
          menuActive = false;
          clearOverlay();
          SoundEffect::stopAllSoundEffect();
-         Music::playMusic("Asteroids2.ogg");
+         SoundEffect::playMusic("Asteroids2.ogg");
          // Take care of repeated logic with the level timer.
          handleLevelTimer();
       } else {
          menuActive = true;
          SoundEffect::stopAllSoundEffect();
-         Music::playMusic("8-bit3.ogg");
+         SoundEffect::playMusic("8-bit3.ogg");
          // Pause the level timer.
          gameState->pauseLevelTimer();
       }
@@ -414,7 +413,7 @@ void StoreMenu::donePressed() {
 
    // Take care of repeated logic with the level timer.
    handleLevelTimer();
-   Music::playMusic("Asteroids2.ogg");
+   SoundEffect::playMusic("Asteroids2.ogg");
 
    // Unlock whatever new weapon should be made available.
    gameState->ship->unlockWeapons();

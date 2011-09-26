@@ -19,7 +19,7 @@ TractorBeam::TractorBeam(AsteroidShip* owner, int _index) : Weapon(owner, _index
    purchased = true;
    randomAIVariationAmount = 4;
    range = 40;
-   soundHandle = -1;
+   soundHandle = NULL;
 
    icon = "TractorBeamIcon";
    r = 0;
@@ -56,7 +56,7 @@ void TractorBeam::fire() {
    // We should play sound.
    if (!soundPlaying) {
       soundPlaying = true;
-      soundHandle = SoundEffect::playSoundEffect("TractorBeam.wav", ship->position, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
+      soundHandle = SoundEffect::playSoundEffect("TractorBeam.wav", ship->position, ship->velocity, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
    }
 }
 
@@ -73,8 +73,9 @@ bool TractorBeam::shouldFire(Point3D* target, Point3D* aim) {
 }
 
 void TractorBeam::stopSounds() {
-   if (soundHandle != -1) {
+   if (soundHandle != NULL) {
       SoundEffect::stopSoundEffect(soundHandle);
-      soundHandle = -1;
+      soundHandle = NULL;
+      soundPlaying = false;
    }
 }

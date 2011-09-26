@@ -17,7 +17,7 @@ class BlasterShot : public Shot {
       Vector3D particleDirection;
       virtual void hitWall(BoundingWall* wall);
       CollisionPoint* collisionPoint;
-      int soundHandle;
+      SoundChannel* soundHandle;
 };
 
 #endif

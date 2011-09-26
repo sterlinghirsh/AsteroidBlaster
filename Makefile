@@ -1,55 +1,39 @@
 # AsteroidBlaster Makefile by Sterling Hirsh
 # Uses uname to decide whether it's on Linux or OSX so it can tell which libs to include.
 
-#BOOSTINC=/usr/include/boost/
-#BOOSTINC=/home/shirsh/boost/
-#BOOSTLIB=/home/shirsh/boost/stage/lib/
-
 UNAME=$(shell uname)
 ifeq ($(UNAME), Linux)
    # Linux stuff
    # Use this if you're on a school machine.
-	#BOOSTINC=/home/shirsh/boost
 	# We have to use this version on linux since the -mt version doesn't exist.
-	PSBOOST_LDFLAGS=-lboost_thread
-   # Use this if you're on a machine with boost installed natively.
-   #BOOSTLIB=/usr/lib
    SDL_LIBS=$(shell "sdl-config" "--libs")
    SDL_CFLAGS=$(shell "sdl-config" "--cflags")
-   PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_mixer-1.2.11 -I./Libraries/SDL_image-1.2.10 
-#-I$(BOOSTINC)
-   PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_mixer-1.2.11/build/.libs/ -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_mixer-1.2.11/build/.libs/ -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs  -lGL -lGLU -lSDL -lGLEW -lpthread
+   PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_image-1.2.10 
+
+   PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs  -lGL -lGLU -lSDL -lGLEW -lpthread
 else
    # Mac stuff
-   BOOSTLIB=/opt/local/lib
-	# We use the -mt version on mac since the non-mt doesn't exist.
-	PSBOOST_LDFLAGS=-lboost_thread-mt
    SDL_LIBS=$(shell "/sw/bin/sdl-config" "--libs")
    SDL_CFLAGS=$(shell "/sw/bin/sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=-I /opt/local/include
-   PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB)
+   PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -Wl
 endif
-   
-# failed BOOST_LDFLAGS attempts. Keeping them around jic just in case.
-#BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt $(BOOSTLIB)/libboost_serialization.a $(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_iostreams.a
-#BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) -Bstatic -lboost_iostreams-mt -lboost_system-mt -lboost_serialization-mt -lboost_thread-mt -t
-#BOOST_LDFLAGS=$(BOOSTLIB)/libboost_system.a $(BOOSTLIB)/libboost_filesystem.a $(BOOSTLIB)/libboost_iostreams.a $(BOOSTLIB)/libboost_thread.a $(BOOSTLIB)/libboost_serialization.a 
 
-# include the previous ld flags.
-BOOST_LDFLAGS=-L$(BOOSTLIB) -Wl,-rpath,$(BOOSTLIB) #$(PSBOOST_LDFLAGS)
-#-Bstatic -lboost_iostreams -lboost_system -lboost_serialization
-
-LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(BOOST_LDFLAGS) -lSDL_mixer -lSDL_image -lSDL_ttf -g -O0
+LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) -lSDL_image -lSDL_ttf -g -O0 -LLibraries/fmod -lfmodex
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
+
+FMODLIB_PATH          = Libraries/fmod
+FMODLIB_NAME_RELEASE  = libfmodex.dylib
+FMODLIB_NAME_LOGGING  = libfmodexL.dylib
 
 CFLAGS=$(PLATFORMSPECIFICCFLAGS) -I. -c $(SDL_CFLAGS) -g -O0
 CC=g++
 
 PROGNAME=AsteroidBlaster
 
-UTILITYFILES=Utility/Vector3D.cpp Utility/GameState.cpp Utility/Custodian.cpp Utility/InputManager.cpp Utility/Point3D.cpp Utility/Radar.cpp Utility/Quaternion.cpp Utility/ViewFrustum.cpp Utility/Matrix4.cpp Utility/GlobalUtility.cpp Utility/Music.cpp Utility/SoundEffect.cpp Utility/GameSettings.cpp Utility/CollisionTypes.cpp Utility/Timer.cpp
+UTILITYFILES=Utility/Vector3D.cpp Utility/GameState.cpp Utility/Custodian.cpp Utility/InputManager.cpp Utility/Point3D.cpp Utility/Radar.cpp Utility/Quaternion.cpp Utility/ViewFrustum.cpp Utility/Matrix4.cpp Utility/GlobalUtility.cpp Utility/SoundEffect.cpp Utility/GameSettings.cpp Utility/CollisionTypes.cpp Utility/Timer.cpp
 
 MENUFILES=Menus/Menu.cpp Menus/MainMenu.cpp Menus/StoreMenu.cpp Menus/CreditsMenu.cpp Menus/SettingsMenu.cpp Menus/HelpMenu.cpp
 
@@ -82,17 +66,9 @@ all: $(FILES) AsteroidBlaster
 
 AsteroidBlaster: AsteroidBlaster.o $(OBJECTS)
 	$(CC) $(LDFLAGS) AsteroidBlaster.o $(OBJECTS) -o $@
+	install_name_tool -change ./${FMODLIB_NAME_RELEASE} ${FMODLIB_PATH}/${FMODLIB_NAME_RELEASE} AsteroidBlaster
+
 AsteroidBlaster.o: AsteroidBlaster.cpp
-	$(CC) $(CFLAGS) $< -o $@
-
-Client: Client.o Network/ClientCommand.o
-	$(CC) $(LDFLAGS) Client.o $(OBJECTS) -o $@
-Client.o: Client.cpp
-	$(CC) $(CFLAGS) $< -o $@
-
-Server: Server.o $(OBJECTS)
-	$(CC) $(LDFLAGS) Server.o $(OBJECTS) -o $@
-Server.o: Server.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
 .cpp.o:
@@ -113,10 +89,6 @@ lib:
 
 libClean:
 	./lib.sh clean
-
-turnin:
-	handin zwood csc476final ${FILES}
-	handin zwood csc476finalweb asteroidssite/*
 
 valgrind:
 	valgrind --leak-check=no --track-origins=yes --log-file=valgrindOutput ./${PROGNAME}

@@ -24,7 +24,7 @@ Energy::Energy(AsteroidShip* owner, int _index)
    lastFiredFrame = 0;
    chargeStartTime = 0;
    chargingShot = NULL;
-   soundHandle = -1;
+   soundHandle = NULL;
    chargingSoundPlaying = false;
    icon = "ChargeCannonIcon";
    r = 0;
@@ -52,13 +52,13 @@ void Energy::update(double timeDiff) {
       
       if (chargingSoundPlaying && doubleTime() - chargeStartTime > 5.0) {
          SoundEffect::stopSoundEffect(soundHandle);
-         soundHandle = SoundEffect::playSoundEffect("ChargeShotLoop", ship->position, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
+         soundHandle = SoundEffect::playSoundEffect("ChargeShotLoop", ship->position, ship->velocity, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
          chargingSoundPlaying = false;
       }
 
-   } else if (soundHandle != -1) {
+   } else if (soundHandle != NULL) {
       SoundEffect::stopSoundEffect(soundHandle);
-      soundHandle = -1;
+      soundHandle = NULL;
    }
    
    // If user has stopped charging a shot.
@@ -74,9 +74,9 @@ void Energy::update(double timeDiff) {
 
       // Don't play sound effects in godMode b/c there would be too many.
       SoundEffect::stopSoundEffect(soundHandle);
-      soundHandle = -1;
+      soundHandle = NULL;
       if (!ship->gameState->godMode) {
-         SoundEffect::playSoundEffect("ChargeShotFire", ship->position, ship == ship->gameState->ship);
+         SoundEffect::playSoundEffect("ChargeShotFire", ship->position, ship->velocity, ship == ship->gameState->ship);
       }
       
       ship->setShakeAmount((float) std::min((doubleTime() - chargeStartTime) * 0.3, 0.5));
@@ -113,7 +113,7 @@ void Energy::fire() {
       chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, index, ship, this, ship->gameState);
       ship->custodian->add(chargingShot);
 
-      soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position);
+      soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position, ship->velocity, ship == ship->gameState->ship);
       chargingSoundPlaying = true;
    }
 
@@ -186,8 +186,8 @@ bool Energy::shouldFire(Point3D* target, Point3D* aim) {
 }
 
 void Energy::stopSounds() {
-   if (soundHandle != -1) {
+   if (soundHandle != NULL) {
       SoundEffect::stopSoundEffect(soundHandle);
-      soundHandle = -1;
+      soundHandle = NULL;
    }
 }

@@ -15,6 +15,8 @@
 #include <queue>
 #include <iostream>
 
+struct SoundChannel;
+
 class Object3D : public Drawable {
    //public variables------------------------------
    public:
