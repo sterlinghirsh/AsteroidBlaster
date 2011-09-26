@@ -32,7 +32,7 @@ Blaster::Blaster(AsteroidShip* owner, int _index)
    g = 0;
    b = 0;
    overheatLevel = 2;
-   heatPerShot = 0.5;
+   heatPerShot = 0.3;
    lastFiredFrame = 0;
 }
 
