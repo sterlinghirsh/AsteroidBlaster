@@ -15,6 +15,7 @@ ifeq ($(UNAME), Linux)
    PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs $(FMODLIB_PATH)/libfmodex.so  -lGL -lGLU -lSDL -lGLEW -lpthread
    FMODLIB_NAME_RELEASE  = libfmodex.so
    FMODLIB_NAME_LOGGING  = libfmodexL.so
+   INSTALL_NAME_TOOL_LINE = 
 else
    # Mac stuff
    SDL_LIBS=$(shell "/sw/bin/sdl-config" "--libs")
@@ -23,6 +24,7 @@ else
    PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -Wl -L$(FMODLIB_PATH) -lfmodex
    FMODLIB_NAME_RELEASE  = libfmodex.dylib
    FMODLIB_NAME_LOGGING  = libfmodexL.dylib
+   INSTALL_NAME_TOOL_LINE = install_name_tool -change ./${FMODLIB_NAME_RELEASE} ${FMODLIB_PATH}/${FMODLIB_NAME_RELEASE} AsteroidBlaster
 endif
 
 LDFLAGS=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) -lSDL_image -lSDL_ttf -g -O0
@@ -69,7 +71,7 @@ all: $(FILES) AsteroidBlaster
 
 AsteroidBlaster: AsteroidBlaster.o $(OBJECTS)
 	$(CC) $(LDFLAGS) AsteroidBlaster.o $(OBJECTS) -o $@
-	install_name_tool -change ./${FMODLIB_NAME_RELEASE} ${FMODLIB_PATH}/${FMODLIB_NAME_RELEASE} AsteroidBlaster
+	$(INSTALL_NAME_TOOL_LINE)
 
 AsteroidBlaster.o: AsteroidBlaster.cpp
 	$(CC) $(CFLAGS) $< -o $@
