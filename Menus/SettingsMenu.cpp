@@ -253,7 +253,7 @@ void SettingsMenu::mouseDown(int button) {
       } else {
          printf("Enabling music.\n");
          gameSettings->musicOn = true;
-         SoundEffect::playMusic("8-bit3.ogg");
+         SoundEffect::playMusic("AsteroidsMenu2");
       }
    } else if(menuTexts[RETURN_INDEX]->mouseSelect(x,y)) {
       menuActive = false;
@@ -300,7 +300,7 @@ void SettingsMenu::activate() {
    SDL_ShowCursor(SDL_ENABLE);
    menuActive = true;
    SoundEffect::stopAllSoundEffect();
-   SoundEffect::playMusic("8-bit3.ogg");
+   SoundEffect::playMusic("AsteroidsMenu2");
 }
 
 void SettingsMenu::deactivate() {

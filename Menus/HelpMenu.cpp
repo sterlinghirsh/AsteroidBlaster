@@ -204,7 +204,7 @@ void HelpMenu::activate() {
    SDL_ShowCursor(SDL_ENABLE);
    menuActive = true;
    SoundEffect::stopAllSoundEffect();
-   SoundEffect::playMusic("8-bit3.ogg");
+   SoundEffect::playMusic("AsteroidsMenu2");
 }
 
 void HelpMenu::deactivate() {

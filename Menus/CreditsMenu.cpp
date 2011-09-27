@@ -270,7 +270,7 @@ void CreditsMenu::mouseDown(int button) {
       firstDrawn = false;
       mainMenu->menuActive = true;
       x = y = -1;
-      SoundEffect::playMusic("8-bit3.ogg");
+      SoundEffect::playMusic("AsteroidsMenu2");
    }
 }
 

@@ -272,7 +272,8 @@ void load() {
    SoundEffect::Add("Sounds/8-bit3.ogg","8-bit3.ogg", true);
    SoundEffect::Add("Sounds/Asteroids2.ogg", "Asteroids2.ogg", true);
    SoundEffect::Add("Sounds/Careless_Whisper.ogg","Careless_Whisper.ogg", true);
-   SoundEffect::playMusic("8-bit3.ogg");
+   SoundEffect::Add("Sounds/AsteroidsMenu2.ogg","AsteroidsMenu2", true);
+   SoundEffect::playMusic("AsteroidsMenu2");
 
    //load sound effects
    //SoundEffect::Add("Sounds/blaster1.wav");
