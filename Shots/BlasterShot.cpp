@@ -35,7 +35,7 @@ BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    damage = 4;
    collisionType = collisionPoint = new CollisionPoint(*position);
    
-   soundHandle = SoundEffect::playSoundEffect("BlasterShot2.wav", position, false);
+   soundHandle = SoundEffect::playSoundEffect("BlasterShot2.wav", position, velocity, false);
 }
 
 BlasterShot::~BlasterShot() {
