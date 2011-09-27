@@ -85,5 +85,6 @@ void BlasterShot::update(double timeDiff) {
 }
 
 void BlasterShot::hitWall(BoundingWall* wall) {
+   SoundEffect::playSoundEffect("BlasterShotWallBounce", position, NULL, false);
    Shot::hitWall(wall);
 }
