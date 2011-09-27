@@ -3,6 +3,7 @@
 #include "Utility/SoundEffect.h"
 #include "Utility/GlobalUtility.h"
 #include "Items/Object3D.h"
+#include "Graphics/Camera.h"
 #include <iostream>
 #include <map>
 #include "Utility/Vector3D.h"
@@ -135,14 +136,15 @@ void SoundEffect::stopAllSoundEffect(){
    group->stop();
 }
 
-void SoundEffect::updatePositions(Object3D* receiver) {
-   FMOD_VECTOR pos, vel, forward, up;
-   Vector3DToFMOD_VECTOR(receiver->position, &pos);
-   Vector3DToFMOD_VECTOR(receiver->velocity, &vel);
-   Vector3DToFMOD_VECTOR(receiver->up, &up);
-   Vector3DToFMOD_VECTOR(receiver->forward, &forward);
+void SoundEffect::updatePositions(Vector3D* position,
+ Vector3D* velocity, Vector3D* forward, Vector3D* up) {
+   FMOD_VECTOR pos, vel, fwd, newUp;
+   Vector3DToFMOD_VECTOR(position, &pos);
+   Vector3DToFMOD_VECTOR(velocity, &vel);
+   Vector3DToFMOD_VECTOR(up, &newUp);
+   Vector3DToFMOD_VECTOR(forward, &fwd);
    
-   fmodSystem->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+   fmodSystem->set3DListenerAttributes(0, &pos, &vel, &fwd, &newUp);
    fmodSystem->update();
 }
 

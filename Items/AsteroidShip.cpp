@@ -1835,7 +1835,7 @@ Vector3D* AsteroidShip::getCameraOffset() {
    // This is in spring.
    const double thirdPersonUpOffset = 0;
    const double firstPersonForwardOffset = 0.5 * shotOriginScale;
-   const double firstPersonUpOffset = 0.5;
+   const double firstPersonUpOffset = 0.0; //0.5;
    if (currentView == VIEW_THIRDPERSON_SHIP || currentView == VIEW_THIRDPERSON_GUN) {
       cameraOffset->updateMagnitude(getViewVector()->scalarMultiply(thirdPersonForwardOffset));
       cameraOffset->addUpdate(up->scalarMultiply(thirdPersonUpOffset));

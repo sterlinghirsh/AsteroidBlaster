@@ -24,21 +24,24 @@ void Spring::attach(AsteroidShip* anchorIn, Camera* itemIn) {
 
 void Spring::update(double ms) {
    // Connect the positions with a spring force.
-   bool doSpring = anchor->getCurrentView() == VIEW_THIRDPERSON_SHIP
-         || anchor->getCurrentView() == VIEW_THIRDPERSON_GUN;
-   doSpring &= isAttached;
+   bool firstPerson = anchor->getCurrentView() == VIEW_FIRSTPERSON_SHIP;
 
    if (isAttached) {
       Vector3D displace = (anchor->position)->add(*anchor->getCameraOffset());
-      displace.addUpdate(item->up->scalarMultiply(2.5));
-      Vector3D springVector = displace.subtract(*item->position);
-      double length = springVector.getLength();
-      if (length <= 0.001 && length >= -0.001) { return; }
-      Vector3D forceVector = springVector.scalarMultiply(ms * POS_FORCE_SCALE);
-      item->position->addUpdate(forceVector);
+      if (firstPerson) {
+         item->position->updateMagnitude(displace);
+      } else {
+         displace.addUpdate(item->up->scalarMultiply(2.5));
+         Vector3D springVector = displace.subtract(*item->position);
+         double length = springVector.getLength();
+         if (length <= 0.001 && length >= -0.001) { return; }
+         Vector3D forceVector = springVector.scalarMultiply(ms * POS_FORCE_SCALE);
+         item->position->addUpdate(forceVector);
+      }
    }
    // Connect the up vectors with a spring force.
-   if (isAttached && (anchor->isBarrelRollingLeft <= 0 && anchor->isBarrelRollingRight <= 0)) {
+   if (isAttached && firstPerson ||
+    (anchor->isBarrelRollingLeft <= 0 && anchor->isBarrelRollingRight <= 0)) {
       Vector3D displace = *anchor->up;
       Vector3D springVector = displace.subtract(*item->up);
       double length = springVector.getLength();
