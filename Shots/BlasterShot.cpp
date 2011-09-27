@@ -21,7 +21,7 @@ BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    persist = false;
    minX = minY = minZ = -0.1;
    maxX = maxY = maxZ = 0.1;
-   lifetime = 2.5;
+   lifetime = 2.285; // Length of the BlasterDrone loop.
    updateBoundingBox();
    static int currentStartingParticleCycle = 0;
    particleNum = currentStartingParticleCycle;
@@ -35,11 +35,12 @@ BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    damage = 4;
    collisionType = collisionPoint = new CollisionPoint(*position);
    
-   soundHandle = SoundEffect::playSoundEffect("BlasterShot2.wav", position, false);
+   soundHandle = SoundEffect::playSoundEffect("BlasterDrone", position, velocity, false, -1, true);
 }
 
 BlasterShot::~BlasterShot() {
-   // Used to stop sound. Now we don't because that sucks.
+   SoundEffect::stopSoundEffect(soundHandle);
+   SoundEffect::playSoundEffect("BlasterEnd", position, velocity);
 }
 
 void BlasterShot::draw() {

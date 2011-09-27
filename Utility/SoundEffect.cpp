@@ -58,7 +58,7 @@ void SoundEffect::Init() {
    }
 
    // dopplerscale, distancefactor, rollofscale
-   result = fmodSystem->set3DSettings(1.0f, 2.0f, 0.3f);
+   result = fmodSystem->set3DSettings(1.0f, 2.0f, 0.5f);
    ERRCHECK(result);
 
    result = fmodSystem->init(CHANNEL_MAX, FMOD_INIT_3D_RIGHTHANDED, NULL);
