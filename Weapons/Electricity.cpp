@@ -46,7 +46,7 @@ void Electricity::update(double timeDiff) {
    if (currentFrame == lastFiredFrame && !soundPlaying) {
       // We should play sound.
       soundPlaying = true;
-      soundHandle = SoundEffect::playSoundEffect("ElectricitySound", ship->position, ship->velocity, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
+      soundHandle = SoundEffect::playSoundEffect("ElectricitySound", ship->position, ship->velocity, ship == ship->gameState->ship, 0.5f, true);
    } else if (currentFrame != lastFiredFrame && soundPlaying) {
       SoundEffect::stopSoundEffect(soundHandle);
       soundPlaying = false;

@@ -56,7 +56,7 @@ void TractorBeam::fire() {
    // We should play sound.
    if (!soundPlaying) {
       soundPlaying = true;
-      soundHandle = SoundEffect::playSoundEffect("TractorBeam.wav", ship->position, ship->velocity, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
+      soundHandle = SoundEffect::playSoundEffect("TractorBeam.wav", ship->position, ship->velocity, ship == ship->gameState->ship, 0.2f, true);
    }
 }
 

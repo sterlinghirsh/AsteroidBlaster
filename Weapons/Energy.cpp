@@ -11,6 +11,8 @@
 #include "Utility/SoundEffect.h"
 #include "Shots/EnergyShot.h"
 
+#define ENERGY_SOUND_VOLUME 0.1f
+
 Energy::Energy(AsteroidShip* owner, int _index)
 : Weapon(owner, _index) {
    ENERGY_WEAPON_INDEX = index;
@@ -52,7 +54,7 @@ void Energy::update(double timeDiff) {
       
       if (chargingSoundPlaying && doubleTime() - chargeStartTime > 5.0) {
          SoundEffect::stopSoundEffect(soundHandle);
-         soundHandle = SoundEffect::playSoundEffect("ChargeShotLoop", ship->position, ship->velocity, ship == ship->gameState->ship, DEFAULT_VOLUME, true);
+         soundHandle = SoundEffect::playSoundEffect("ChargeShotLoop", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME, true);
          chargingSoundPlaying = false;
       }
 
@@ -76,7 +78,7 @@ void Energy::update(double timeDiff) {
       SoundEffect::stopSoundEffect(soundHandle);
       soundHandle = NULL;
       if (!ship->gameState->godMode) {
-         SoundEffect::playSoundEffect("ChargeShotFire", ship->position, ship->velocity, ship == ship->gameState->ship);
+         SoundEffect::playSoundEffect("ChargeShotFire", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME);
       }
       
       ship->setShakeAmount((float) std::min((doubleTime() - chargeStartTime) * 0.3, 0.5));
@@ -113,7 +115,7 @@ void Energy::fire() {
       chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, index, ship, this, ship->gameState);
       ship->custodian->add(chargingShot);
 
-      soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position, ship->velocity, ship == ship->gameState->ship);
+      soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME);
       chargingSoundPlaying = true;
    }
 

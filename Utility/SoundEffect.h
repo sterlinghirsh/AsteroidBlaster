@@ -5,7 +5,7 @@
 #include <map>
 #include <iostream>
 
-#define DEFAULT_VOLUME 48
+#define DEFAULT_VOLUME 1.0f
 
 class Camera;
 class Vector3D;
@@ -16,7 +16,7 @@ class SoundEffect {
       static void FreeAll();
       static void Init();
       static void Add(std::string file, std::string keyName, bool isMusic = false);
-      static SoundChannel* playSoundEffect(std::string file, Vector3D* source = NULL, Vector3D* velocity = NULL, bool internal = false, int volume = DEFAULT_VOLUME, bool loop = false);
+      static SoundChannel* playSoundEffect(std::string file, Vector3D* source = NULL, Vector3D* velocity = NULL, bool internal = false, float volume = DEFAULT_VOLUME, bool loop = false, bool isMusic = false);
       static void stopSoundEffect(SoundChannel* channel);
       static void stopAllSoundEffect();
       static void updatePositions(Camera* receiver);

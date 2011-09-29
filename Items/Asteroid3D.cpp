@@ -496,7 +496,7 @@ void Asteroid3D::update(double timeDiff) {
          MeshFace::Add(newFace);
       }
 
-      SoundEffect::playSoundEffect("Explosion1.wav");
+      SoundEffect::playSoundEffect("Explosion1.wav", position, velocity);
       shouldRemove = true;
       //timeSinceExplode = 0.0;
       isExploding = true;
@@ -576,11 +576,11 @@ void Asteroid3D::dropRandomItem() {
    double whichItem = randdouble();
    if (whichItem < 0.6) {
       custodian->add(makeShard(0));
-      SoundEffect::playSoundEffect("CrystalRelease");
+      SoundEffect::playSoundEffect("CrystalRelease", position);
       //printf("YOU JUST SHARDED\n");
    } else if (whichItem < 0.7) {
       // Don't play the sound effect twice on top of itself.
-      SoundEffect::playSoundEffect("DoubleCrystalRelease");
+      SoundEffect::playSoundEffect("DoubleCrystalRelease", position);
       custodian->add(makeShard(0));
       custodian->add(makeShard(0));
    }

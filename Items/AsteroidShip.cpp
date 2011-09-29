@@ -708,7 +708,7 @@ void AsteroidShip::update(double timeDiff) {
          }
                   
          if (gameState->ship == this && showBankedShardsMessage) {
-            SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true);
+            SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true, 0.3f);
             if (totalBankedShards == 1) {
                sstream << "Banked first shard!";
             } else {
@@ -733,7 +733,7 @@ void AsteroidShip::update(double timeDiff) {
          (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
       if (soundHandle == NULL) {
          soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav",
-               position, velocity, (this == gameState->ship), DEFAULT_VOLUME, true);
+               position, velocity, (this == gameState->ship), 0.05f, true);
       } else {
          SoundEffect::updateSource(soundHandle, position, velocity);
       }
@@ -1981,7 +1981,7 @@ void AsteroidShip::readCommand(ClientCommand& command) {
  * This is called on the ship when the level ends.
  */
 void AsteroidShip::atLevelEnd() {
-   SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true);
+   SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true, 0.8f);
    bankedShards += unbankedShards;
    totalBankedShards += unbankedShards;
 

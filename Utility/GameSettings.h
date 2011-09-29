@@ -28,6 +28,9 @@ class GameSettings {
       
       bool drawDeferred;
 
+      float musicVolume;
+      float soundEffectVolume;
+
       void toggleFullScreen();
 
       void writeOut();

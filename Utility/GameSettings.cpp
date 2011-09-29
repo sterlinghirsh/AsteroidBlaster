@@ -7,6 +7,7 @@
  */
 
 #include "Utility/GameSettings.h"
+#include "Utility/GlobalUtility.h"
 
 #define CONFIG_FILE "config.cfg"
 
@@ -30,6 +31,9 @@ GameSettings::GameSettings() {
 
    fullscreenGW = 1280;
    fullscreenGH = 1024;
+
+   musicVolume = 0.2f;
+   soundEffectVolume = 1.0f;
 
    readIn();
 
@@ -55,10 +59,14 @@ void GameSettings::writeOut() {
       printf("Writing config...\n");
    }
    fprintf(configFile, "bloom %d\n", (int) bloom);
+   fprintf(configFile, "drawDeferred %d\n", (int) drawDeferred);
    fprintf(configFile, "useOverlay %d\n", (int) useOverlay);
    fprintf(configFile, "fullscreen %d\n", (int) fullscreen);
    fprintf(configFile, "musicOn %d\n", (int) musicOn);
    fprintf(configFile, "soundOn %d\n", (int) soundOn);
+   
+   fprintf(configFile, "musicVolume %f\n", musicVolume);
+   fprintf(configFile, "soundEffectVolume %f\n", soundEffectVolume);
 
    fprintf(configFile, "windowedGW %d\n", windowedGW);
    fprintf(configFile, "windowedGH %d\n", windowedGH);
@@ -73,6 +81,7 @@ void GameSettings::writeOut() {
  */
 void GameSettings::readIn() {
    int readInt;
+   float readFloat;
    FILE* configFile = fopen(CONFIG_FILE, "r");
 
    if (configFile == NULL)
@@ -80,6 +89,10 @@ void GameSettings::readIn() {
 
    if (fscanf(configFile, "bloom %d ", &readInt) > 0) {
       bloom = (0 != readInt);
+   }
+   
+   if (fscanf(configFile, "drawDeferred %d ", &readInt) > 0) {
+      drawDeferred = (0 != readInt);
    }
 
    if (fscanf(configFile, "useOverlay %d ", &readInt) > 0) {
@@ -96,6 +109,14 @@ void GameSettings::readIn() {
 
    if (fscanf(configFile, "soundOn %d ", &readInt) > 0) {
       soundOn = (0 != readInt);
+   }
+   
+   if (fscanf(configFile, "musicVolume %f ", &readFloat) > 0) {
+      musicVolume = clamp(readFloat, 0.0, 1.0);
+   }
+   
+   if (fscanf(configFile, "soundEffectVolume %f ", &readFloat) > 0) {
+      soundEffectVolume = clamp(readFloat, 0.0, 1.0);
    }
 
    if (fscanf(configFile, "windowedGW %d ", &readInt) > 0) {

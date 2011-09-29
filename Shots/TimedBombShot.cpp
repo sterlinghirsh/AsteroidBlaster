@@ -550,7 +550,7 @@ void TimedBombShot::update(double timeDiff) {
       timeSinceExploded = 1;
       //isExploded = true;
       //explode();
-      SoundEffect::playSoundEffect("TimedBombExplosion", position, NULL, false, 255);
+      SoundEffect::playSoundEffect("TimedBombExplosion", position, NULL, false, 1.0f);
    }
    
    timeSinceExploded -= timeDiff;
@@ -581,9 +581,4 @@ void TimedBombShot::hitWall(BoundingWall* wall) {
 void TimedBombShot::explode() {
    // Do all the generic exploding actions that every bomb should do.
    ExplosiveShot::explode();
-
-   // Play a sound
-   SoundEffect::playSoundEffect("Explosion1.wav");
-
-   // set it as not collidable
 }

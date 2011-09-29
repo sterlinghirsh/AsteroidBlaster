@@ -630,7 +630,6 @@ void HomingMissileShot::explode() {
    ExplosiveShot::explode();
 
    // Play a sound
-   // TODO: remove the (Vector3D*) when finished with SoundEffect.
    SoundEffect::playSoundEffect("Explosion1.wav", position, NULL);
 
    // set it as not collidable

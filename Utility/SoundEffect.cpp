@@ -90,7 +90,7 @@ void SoundEffect::Add(std::string file, std::string keyName, bool isMusic) {
  * loop defaults to false.
  */
 SoundChannel* SoundEffect::playSoundEffect(std::string file, Vector3D* source, 
- Vector3D* velocity, bool internal, int volume, bool loop) {
+ Vector3D* velocity, bool internal, float volume, bool loop, bool isMusic) {
    FMOD::Channel* channel = NULL;
    SoundChannel* soundChannel = NULL;
    if (gameSettings->soundOn) {
@@ -115,11 +115,16 @@ SoundChannel* SoundEffect::playSoundEffect(std::string file, Vector3D* source,
       if (internal) {
          soundChannel->setMode(FMOD_2D);
          // Probably don't have to set it back to worldrelative, right?
-      }
-
-      if (!internal) {
+      } else {
          updateSource(soundChannel, source, velocity);
       }
+
+      // Always set music to musicVolume, but multiply soundEffects by soundEffectVolume.
+      // Note: when music is playing, volume should be set to 1.0f.
+      result = soundChannel->setVolume(isMusic ? 
+       volume * gameSettings->musicVolume : 
+       volume * gameSettings->soundEffectVolume);
+      ERRCHECK(result);
    }
    
    return soundChannel;
@@ -168,7 +173,8 @@ void SoundEffect::playMusic(std::string keyName) {
       curMusic->stop();
    }
 
-   curMusic = playSoundEffect(keyName, NULL, NULL, true, 255, true);
+   // Volume 1.0f gets multiplied by gameSettings->musicVolume.
+   curMusic = playSoundEffect(keyName, NULL, NULL, true, 1.0f, true, true);
    currPlay = keyName;
 }
 
