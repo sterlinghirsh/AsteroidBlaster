@@ -290,7 +290,7 @@ void load() {
    SoundEffect::Add("Sounds/GameOver.wav", "GameOver.wav");
    SoundEffect::Add("Sounds/ShipHit.wav", "ShipHit.wav");
    SoundEffect::Add("Sounds/BlasterHit.wav", "BlasterHit.wav");
-   SoundEffect::Add("Sounds/Pulse.ogg", "Pulse");
+   SoundEffect::Add("Sounds/Ram.wav", "Ram");
    SoundEffect::Add("Sounds/CrystalRelease.wav", "CrystalRelease");
    SoundEffect::Add("Sounds/DoubleCrystalRelease.wav", "DoubleCrystalRelease");
    SoundEffect::Add("Sounds/ChargeShotCharge.ogg", "ChargeShotCharge");
