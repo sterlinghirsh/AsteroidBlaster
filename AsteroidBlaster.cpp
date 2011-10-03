@@ -267,6 +267,10 @@ void load() {
    bonerShader = setShaders( (char *) "./Shaders/gbuffer.vert", (char *) "./Shaders/boner.frag");
    deferShader = setShaders( (char *) "./Shaders/defer.vert", (char *) "./Shaders/defer.frag");
    timeBombShader = setShaders( (char *) "./Shaders/timeBombExplosion.vert", (char *) "./Shaders/timeBombExplosion.frag");
+   
+   // Initialize drawBloom to 1.
+   GLint drawBloomLoc = glGetUniformLocation(gBufferShader, "drawBloom");
+   glUniform1i(drawBloomLoc, 1);
 
    //load and start BGM
    SoundEffect::Add("Sounds/8-bit3.ogg","8-bit3.ogg", true);

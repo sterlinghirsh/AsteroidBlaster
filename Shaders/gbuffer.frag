@@ -7,6 +7,7 @@ uniform float far;
 uniform float spec;
 uniform sampler2D texIn;
 uniform sampler2D depth;
+uniform int drawBloom;
 
 void main()
 {
@@ -39,6 +40,10 @@ void main()
       gl_FragData[1] = vec4(normal, depth);
    }
    // Color (for glow).
-   gl_FragData[2] = gl_Color;
+   if (drawBloom > 0) {
+      gl_FragData[2] = gl_Color;
+   } else {
+      gl_FragData[2] = vec4(0.0, 0.0, 0.0, 1.0);
+   }
    gl_FragData[3] = vec4(0.0, 0.0, 0.0, 1.0);
 }

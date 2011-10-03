@@ -173,8 +173,11 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
       glDisable(GL_CULL_FACE);
       glEnable(GL_TEXTURE_2D);
    }
+   
+   GLint drawBloomLoc = glGetUniformLocation(gBufferShader, "drawBloom");
 
    if (gameSettings->drawDeferred) {
+      glUniform1i(drawBloomLoc, 0);
       GLenum buffers[] = {ALBEDO_BUFFER, NORMAL_BUFFER, GLOW_BUFFER, NOLIGHT_BUFFER};
       glDrawBuffers(4, buffers);
    }
@@ -196,6 +199,9 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    if (timeExploded > 0.0) {
       glEnable(GL_CULL_FACE);
       glDisable(GL_TEXTURE_2D);
+   }
+   if (gameSettings->drawDeferred) {
+      glUniform1i(drawBloomLoc, 1);
    }
 }
 
