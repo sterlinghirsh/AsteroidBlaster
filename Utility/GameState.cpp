@@ -186,7 +186,6 @@ GameState::GameState(GameStateMode _gsm) :
       isW = isA = isS = isD = false;
 
       drawGraphics = true;
-
    }
 
 /**
@@ -299,7 +298,7 @@ void GameState::update(double timeDiff) {
       if (levelTimer.getTimeLeft() <= 6) {
          // Check if it is done waiting until going to the next level
          std::ostringstream gameMsg;
-         gameMsg << "Next Level In " << (int)levelTimer.getTimeLeft();
+         gameMsg << "Entering store in " << (int)levelTimer.getTimeLeft() << "...";
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
    }
@@ -422,7 +421,10 @@ void  GameState::draw() {
    setCurFPS(1 / timeDiff);
 
    // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   if (gsm == MenuMode) {
+      glClear(GL_COLOR_BUFFER_BIT);
+   }
+   glClear(GL_DEPTH_BUFFER_BIT);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    usePerspective();
 
