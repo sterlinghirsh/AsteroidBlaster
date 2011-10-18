@@ -37,6 +37,8 @@
 #include "HUD/Minimap.h"
 #include "HUD/Screen.h"
 
+#include "Network/gamestate.pb.h"
+
 
 #include <math.h>
 #include <stdio.h>
@@ -844,6 +846,7 @@ void GameState::reset(bool shouldLoad) {
    Particle::Clear();
    MeshFace::Clear();
    custodian.update();
+   clientCommand.reset();
 
    gameIsRunning = true;
    // The level is not over when we're starting a new game.
@@ -856,21 +859,30 @@ void GameState::reset(bool shouldLoad) {
    }
 
    curLevel = 1;
+   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    //temp
    if(shouldLoad) {
       load();
+   } else {
+      numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
+      curLevelText->updateBody(curLevel);
+      
+      std::cout << "Resetting." << std::endl;
+
+      ship = new AsteroidShip(this);
+
+
+      if (gsm == MenuMode || gsm == SingleMode) {
+         custodian.add(ship);
+         // Crashes without this.
+         initAsteroids();
+      } else if (gsm == ServerMode) {
+         initAsteroids();
+      } else if (gsm == ClientMode) {
+         custodian.update();
+      }
+
    }
-
-   numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
-   curLevelText->updateBody(curLevel);
-
-   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
-
-   std::cout << "Resetting." << std::endl;
-
-   ship = new AsteroidShip(this);
-
-   clientCommand.reset();
    clientCommand.shipID = ship->id;
    spring = new Spring(this);
    cube->constrain(ship);
@@ -878,24 +890,13 @@ void GameState::reset(bool shouldLoad) {
    shipCamera = new Camera(ship);
    spring->attach(ship, shipCamera);
    spectatorCamera = new Camera(false);
-
-
-   if (gsm == MenuMode || gsm == SingleMode) {
-      custodian.add(ship);
-      // Crashes without this.
-      initAsteroids();
-   } else if (gsm == ServerMode) {
-      initAsteroids();
-   } else if (gsm == ClientMode) {
-      custodian.update();
-   }
-
+  
+   storeMenu->menuActive = false;
+   
    GameMessage::Clear();
    addLevelMessage();
 
    setLevelTimer();
-
-   storeMenu->menuActive = false;
 }
 
 /**
@@ -1473,18 +1474,55 @@ void GameState::debugPosition() {
 }
 
 void GameState::save() {
+   ast::GameState gs; // The outgoing protobuf gamestate.
+   // TODO: Make the typeids be sequential and do 1 << type when hashing for collisions.
    std::ofstream ofs(SAVEFILENAME);
-   ofs << "GameState: " << curLevel;
-   ofs.close();
+   
+   gs.set_curtime(doubleTime());
+   gs.set_playership(ship->id);
+   
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
+   std::vector<Object3D*>::iterator iter = objects->begin();
+
+   ast::Entity* ent;
+
+   for (; iter != objects->end(); ++iter) {
+      ent = gs.add_entity();
+      (*iter)->save(ent);
+      std::cout << "ID: " << ent->id() << " Type: " << ent->type() << std::endl;
+   }
+
+   if (!gs.SerializeToOstream(&ofs)) {
+      std::cerr << "Failed to write gameState." << std::endl;
+   }
+
    std::cout << "Saved GameState" << std::endl;
 }
 
 void GameState::load() {
+   ast::GameState gs; // The incoming protobuf gamestate.
    std::ifstream ifs(SAVEFILENAME);
 
-   std::string temp;
-   ifs >> temp;
-   ifs >> curLevel;
+   // if (!ifs) No file. Oh well :/
+
+   if (!gs.ParseFromIstream(&ifs)) {
+      std::cerr << "Failed to read gameState." << std::endl;
+   }
+
+   for (int i = 0; i < gs.entity_size(); ++i) {
+      const ast::Entity& ent = gs.entity(i);
+      custodian.updateObjectFromEntity(ent);
+      std::cout << "ID: " << ent.id() << " Type: " << ent.type() << std::endl;
+   }
+
+   std::cout << "Playership id: " << gs.playership() << std::endl;
+   AsteroidShip* tmpShip = dynamic_cast<AsteroidShip*>(custodian[gs.playership()]);
+   if (tmpShip == NULL) {
+      std::cerr << "ERROR no ship found!" << std::endl;
+      exit(EXIT_FAILURE);
+   } else {
+      ship = tmpShip;
+   }
 
    ifs.close();
    std::cout << "Loaded GameState" << std::endl;

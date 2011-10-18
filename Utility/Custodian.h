@@ -32,6 +32,10 @@ struct compareByDistance {
    bool operator() (CollisionBase* const& lhs, CollisionBase* const& rhs) const;
 };
 
+namespace ast {
+   class Entity;
+}
+
 class Custodian {
    //public variables------------------------------
    public:
@@ -42,7 +46,7 @@ class Custodian {
       std::set<Shard*> shards;
       std::set<Shot*> shots;
       std::set<AsteroidShip*> ships;
-
+      Object3D* updateObjectFromEntity(const ast::Entity& ent);
 
    //private variables------------------------------
    private:

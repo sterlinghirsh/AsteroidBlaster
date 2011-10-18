@@ -30,6 +30,10 @@
 #include "Particles/BlasterImpactParticle.h"
 #include "Particles/TractorAttractionParticle.h"
 
+#include "Network/gamestate.pb.h"
+
+const unsigned defaultNextID = 1;
+
 /**
  * AsteroidShip collisions======================================================
  */
@@ -748,7 +752,7 @@ static std::map<unsigned, CollisionBase*>* collisionHandlers = NULL;
 Custodian::Custodian(const GameState* _gameState) :
  gameState(_gameState) {
    shardCount = asteroidCount = 0;
-   nextID = 0;
+   nextID = defaultNextID;
    
    if (collisionHandlers == NULL) {
       unsigned key;
@@ -1049,6 +1053,7 @@ void Custodian::clear() {
 
    asteroidCount = 0;
    shardCount = 0;
+   nextID = defaultNextID;
 }
 
 /**
@@ -1070,4 +1075,36 @@ Object3D* Custodian::operator[] (unsigned i) {
       return NULL;
    else
       return iter->second;
+}
+
+/**
+ * Pass in a pointer to an entity (protocol buffer style).
+ * This should update what's already in the list or make a new 
+ * item with the given properties.
+ */
+Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
+   unsigned id = ent.id();
+   unsigned type = ent.type();
+   Object3D* obj = (*this)[id];
+   if (obj == NULL) {
+      std::cout << "Item not found.\n";
+      switch (type) {
+         case TYPE_ASTEROID3D:
+            obj = new Asteroid3D(ent.radius(), gameState->worldSize, gameState, false);
+            obj->load(ent);
+         break;
+         case TYPE_ASTEROIDSHIP:
+            obj = new AsteroidShip(gameState);
+            obj->load(ent);
+            std::cout << "Found Ship.\n";
+         break;
+         default:
+         std::cout << "Found other object.\n";
+      }
+      if (obj != NULL)
+         add(obj);
+   } else {
+      std::cout << "Item found.\n";
+   }
+   std::cout << "ID: " << id << std::endl;
 }

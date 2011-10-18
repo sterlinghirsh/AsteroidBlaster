@@ -14,6 +14,7 @@
 #include "Text/GameMessage.h"
 #include "Network/ClientCommand.h"
 #include "Items/Spring.h"
+#include "Network/gamestate.pb.h"
 
 #include <sstream>
 
@@ -2099,5 +2100,17 @@ double AsteroidShip::getBankPeriod() {
    return ((double)bankPeriod) / ((double)bankLevel+1);
 }
 
-      
+void AsteroidShip::save(ast::Entity* ent) {
+   Object3D::save(ent);
+   up->save(ent->mutable_up());
+   forward->save(ent->mutable_forward());
+   right->save(ent->mutable_right());
+}
+
+void AsteroidShip::load(const ast::Entity& ent) {
+   Object3D::load(ent);
+   forward->load(ent.forward());
+   right->load(ent.right());
+   up->load(ent.up());
+}
 

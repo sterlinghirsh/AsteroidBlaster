@@ -22,6 +22,8 @@
 
 #include "Particles/ElectricityImpactParticle.h"
 
+#include "Network/gamestate.pb.h"
+
 #include <time.h>
 #include <algorithm>
 #define _USE_MATH_DEFINES
@@ -592,4 +594,18 @@ void Asteroid3D::serialize(std::ostream &oss) {
 
 void Asteroid3D::deserialize(std::istream &iss) {
    iss >> radius;
+}
+
+void Asteroid3D::save(ast::Entity* ent) {
+   Object3D::save(ent);
+   ent->set_radius(radius);
+   ent->set_health(health);
+   ent->set_healthmax(initH);
+}
+
+void Asteroid3D::load(const ast::Entity& ent) {
+   Object3D::load(ent);
+   radius = ent.radius();
+   health = ent.health();
+   initH = ent.healthmax();
 }

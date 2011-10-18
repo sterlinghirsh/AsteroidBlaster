@@ -172,6 +172,7 @@ extern materialStruct CrystalMaterial;
 
 void setMaterial(materialStruct material);
 void updateDoubleTime();
+void updateStartTime();
 void toggleGrabMode();
 void toggleFullScreen();
 

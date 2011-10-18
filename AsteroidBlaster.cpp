@@ -349,6 +349,7 @@ int main(int argc, char* argv[]) {
    // This sets up defaults and reads in any necessary settings.
    gameSettings = new GameSettings();
 
+   updateStartTime();
    updateDoubleTime();
 
    lastUpdateTime = doubleTime();

@@ -262,6 +262,9 @@ class AsteroidShip : public Object3D {
 
       // calculates the correct bank period depending on the bankLevel
       double getBankPeriod();
+      
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
 
    //private functions------------------------------
    private:
