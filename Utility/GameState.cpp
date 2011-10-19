@@ -84,6 +84,12 @@ GameState::GameState(GameStateMode _gsm) :
          //networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       }
 
+      levelTimer.setGameState(this);
+      gameOverTimer.setGameState(this);
+
+      gameTime = 0;
+      levelStartTime = 0;
+
       godMode = false;
       gameIsRunning = true;
       levelOver = false;
@@ -272,6 +278,7 @@ void GameState::addScreens() {
  * This is the step function.
  */
 void GameState::update(double timeDiff) {
+   updateGameTime(timeDiff);
    // if the game over timer is set, and is over
    if (gameOverTimer.isRunning && gameOverTimer.getTimeLeft() < 0) {
       mainMenu->firstTime = true;
@@ -848,6 +855,8 @@ void GameState::reset(bool shouldLoad) {
    custodian.update();
    clientCommand.reset();
 
+   setLevelTimer();
+
    gameIsRunning = true;
    // The level is not over when we're starting a new game.
    levelOver = false;
@@ -895,8 +904,6 @@ void GameState::reset(bool shouldLoad) {
    
    GameMessage::Clear();
    addLevelMessage();
-
-   setLevelTimer();
 }
 
 /**
@@ -1478,8 +1485,9 @@ void GameState::save() {
    // TODO: Make the typeids be sequential and do 1 << type when hashing for collisions.
    std::ofstream ofs(SAVEFILENAME);
    
-   gs.set_curtime(doubleTime());
+   gs.set_gametime(getGameTime());
    gs.set_playership(ship->id);
+   gs.set_levelstarttime(levelTimer.timeStarted);
    
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
    std::vector<Object3D*>::iterator iter = objects->begin();
@@ -1508,6 +1516,9 @@ void GameState::load() {
    if (!gs.ParseFromIstream(&ifs)) {
       std::cerr << "Failed to read gameState." << std::endl;
    }
+
+   gameTime = gs.gametime();
+   levelTimer.timeStarted = gs.levelstarttime();
 
    for (int i = 0; i < gs.entity_size(); ++i) {
       const ast::Entity& ent = gs.entity(i);
@@ -1552,3 +1563,10 @@ void GameState::gameOver() {
    gameOverTimer.setCountDown(5);
 }
 
+double GameState::getGameTime() {
+   return gameTime;
+}
+
+void GameState::updateGameTime(double timeDiff) {
+   gameTime += timeDiff;
+}

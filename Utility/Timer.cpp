@@ -1,26 +1,32 @@
 
 #include "Utility/Timer.h"
 #include "Utility/GlobalUtility.h"
+#include "Utility/GameState.h"
 
 
-Timer::Timer() : timeStarted(0), 
+Timer::Timer(GameState* _gameState) : timeStarted(0), 
                   countDownTime(0), 
                   timePaused(0), 
                   isPaused(false), 
-                  isRunning(false) {
+                  isRunning(false),
+                  gameState(_gameState) {
 
+}
+
+void Timer::setGameState(GameState* _gameState) {
+   gameState = _gameState;
 }
 
 void Timer::countUp() {
    isRunning = true;
-   timeStarted = doubleTime();
+   timeStarted = getCurTime();
    isPaused = false;
    countDownTime = 0;
    timePaused = 0;
 }
 
 void Timer::reset() {
-   timeStarted = doubleTime();
+   timeStarted = getCurTime();
    countDownTime = 0;
    timePaused = 0;
    isPaused = false;
@@ -28,7 +34,7 @@ void Timer::reset() {
 }
 
 void Timer::setCountDown(double _countDownTime) {
-   timeStarted = doubleTime();
+   timeStarted = getCurTime();
    timePaused = 0;
    isPaused = false;
    countDownTime = _countDownTime;
@@ -39,7 +45,7 @@ void Timer::setCountDown(double _countDownTime) {
  * Set the count down to its last value.
  */
 void Timer::restartCountDown() {
-   timeStarted = doubleTime();
+   timeStarted = getCurTime();
    isRunning = true;
 }
 
@@ -48,7 +54,7 @@ double Timer::getTimeLeft() {
 }
 
 double Timer::getTimeRunning() {
-   return doubleTime() - timeStarted;
+   return getCurTime() - timeStarted;
 }
 
 /**
@@ -74,7 +80,7 @@ void Timer::pause() {
    if (!getIsPaused()) {
       isPaused = true;
       isRunning = false;
-      timePaused = doubleTime();
+      timePaused = getCurTime();
    }
 }
 
@@ -86,7 +92,7 @@ void Timer::resume() {
    if (getIsPaused()) {
       isPaused = false;
       isRunning = true;
-      timeStarted += doubleTime() - timePaused;
+      timeStarted += getCurTime() - timePaused;
    }
 }
 
@@ -94,3 +100,10 @@ bool Timer::getIsPaused() {
    return isPaused;
 }
 
+double Timer::getCurTime() {
+   if (gameState == NULL) {
+      return doubleTime();
+   } else {
+      return gameState->getGameTime();
+   }
+}

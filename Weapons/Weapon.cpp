@@ -16,6 +16,7 @@
  */
 Weapon::Weapon(AsteroidShip* owner, int _index)
 : ship(owner), index(_index), timeLastFired(0), icon("ZoeRedEyes") {
+   activationTimer.setGameState(owner->gameState);
    level = 1;
    levelMax = 5;
    purchased = false;

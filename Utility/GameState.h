@@ -125,12 +125,18 @@ class GameState : public InputReceiver {
       std::vector<Screen> screens;
 
       std::list<Object3D*> objects;
+
+      double gameTime; // Starts at 0.
+      double levelStartTime;
    
    
    //public functions------------------------------
    public:
       GameState(GameStateMode _gsm);
       virtual ~GameState();
+
+      double getGameTime();
+      void updateGameTime(double timeDiff);
       
       // virtual functions required by InputReciever
       virtual void keyUp(int key);

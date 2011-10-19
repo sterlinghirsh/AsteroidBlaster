@@ -594,12 +594,19 @@ class GameState : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 playership() const;
   inline void set_playership(::google::protobuf::uint32 value);
   
-  // required double curTime = 2;
-  inline bool has_curtime() const;
-  inline void clear_curtime();
-  static const int kCurTimeFieldNumber = 2;
-  inline double curtime() const;
-  inline void set_curtime(double value);
+  // required double gameTime = 2;
+  inline bool has_gametime() const;
+  inline void clear_gametime();
+  static const int kGameTimeFieldNumber = 2;
+  inline double gametime() const;
+  inline void set_gametime(double value);
+  
+  // optional double levelStartTime = 4;
+  inline bool has_levelstarttime() const;
+  inline void clear_levelstarttime();
+  static const int kLevelStartTimeFieldNumber = 4;
+  inline double levelstarttime() const;
+  inline void set_levelstarttime(double value);
   
   // repeated .ast.Entity entity = 1;
   inline int entity_size() const;
@@ -617,17 +624,20 @@ class GameState : public ::google::protobuf::Message {
  private:
   inline void set_has_playership();
   inline void clear_has_playership();
-  inline void set_has_curtime();
-  inline void clear_has_curtime();
+  inline void set_has_gametime();
+  inline void clear_has_gametime();
+  inline void set_has_levelstarttime();
+  inline void clear_has_levelstarttime();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  double curtime_;
+  double gametime_;
+  double levelstarttime_;
   ::google::protobuf::RepeatedPtrField< ::ast::Entity > entity_;
   ::google::protobuf::uint32 playership_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -1912,26 +1922,48 @@ inline void GameState::set_playership(::google::protobuf::uint32 value) {
   playership_ = value;
 }
 
-// required double curTime = 2;
-inline bool GameState::has_curtime() const {
+// required double gameTime = 2;
+inline bool GameState::has_gametime() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void GameState::set_has_curtime() {
+inline void GameState::set_has_gametime() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void GameState::clear_has_curtime() {
+inline void GameState::clear_has_gametime() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void GameState::clear_curtime() {
-  curtime_ = 0;
-  clear_has_curtime();
+inline void GameState::clear_gametime() {
+  gametime_ = 0;
+  clear_has_gametime();
 }
-inline double GameState::curtime() const {
-  return curtime_;
+inline double GameState::gametime() const {
+  return gametime_;
 }
-inline void GameState::set_curtime(double value) {
-  set_has_curtime();
-  curtime_ = value;
+inline void GameState::set_gametime(double value) {
+  set_has_gametime();
+  gametime_ = value;
+}
+
+// optional double levelStartTime = 4;
+inline bool GameState::has_levelstarttime() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void GameState::set_has_levelstarttime() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void GameState::clear_has_levelstarttime() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void GameState::clear_levelstarttime() {
+  levelstarttime_ = 0;
+  clear_has_levelstarttime();
+}
+inline double GameState::levelstarttime() const {
+  return levelstarttime_;
+}
+inline void GameState::set_levelstarttime(double value) {
+  set_has_levelstarttime();
+  levelstarttime_ = value;
 }
 
 // repeated .ast.Entity entity = 1;

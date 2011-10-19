@@ -51,6 +51,10 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    Object3D(_gameState) {
       type = TYPE_ASTEROIDSHIP;
 
+      bankTimer.setGameState(gameState);
+      respawnTimer.setGameState(gameState);
+      aliveTimer.setGameState(gameState);
+
       cullRadius = 12;
       health = 100;
       healthMax = 100;

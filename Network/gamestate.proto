@@ -57,7 +57,8 @@ message Entity {
 // Just a timestamp and an entity list.
 message GameState {
    optional uint32 playerShip = 3;
-   required double curTime = 2;
+   required double gameTime = 2;
+   optional double levelStartTime = 4;
    repeated Entity entity = 1;
 }
 

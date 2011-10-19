@@ -43,6 +43,9 @@ ShootingAI::ShootingAI(AsteroidShip* owner) {
    enabled = false;
    needToChooseTarget = false;
 
+   weaponSwitchTimer.setGameState(owner->gameState);
+   targetSwitchTimer.setGameState(owner->gameState);
+
    // These control how fast the AI can switch weapons (in seconds).
    weaponSwitchSpeed = 2.0;
    weaponSwitchTimer.reset();

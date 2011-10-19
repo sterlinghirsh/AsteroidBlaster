@@ -111,9 +111,10 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Entity));
   GameState_descriptor_ = file->message_type(2);
-  static const int GameState_offsets_[3] = {
+  static const int GameState_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, playership_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, curtime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, gametime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, levelstarttime_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, entity_),
   };
   GameState_reflection_ =
@@ -270,19 +271,20 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "Left\030( \001(\002\022\034\n\024isBarrelRollingRight\030) \001(\002"
     "\022\027\n\017curForwardAccel\030* \001(\002\022\025\n\rcurRightAcc"
     "el\030+ \001(\002\022\022\n\ncurUpAccel\030, \001(\002\022\021\n\tisBrakin"
-    "g\030- \001(\010\022\022\n\nbankPeriod\030. \001(\002\"M\n\tGameState"
-    "\022\022\n\nplayerShip\030\003 \001(\r\022\017\n\007curTime\030\002 \002(\001\022\033\n"
-    "\006entity\030\001 \003(\0132\013.ast.Entity\"^\n\020CollisionM"
-    "essage\022\021\n\tmessageid\030\004 \001(\r\022\021\n\ttimestamp\030\001"
-    " \001(\001\022\021\n\tobjectId1\030\002 \001(\r\022\021\n\tobjectId2\030\003 \001"
-    "(\r\"-\n\013ChatMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004t"
-    "ext\030\002 \001(\t\"Q\n\023CreateEntityMessage\022\035\n\025crea"
-    "teEntityMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132"
-    "\013.ast.Entity\"\270\001\n\016ServerToClient\022\013\n\003seq\030\003"
-    " \001(\004\022\013\n\003ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022!\n\t"
-    "gameState\030\021 \001(\0132\016.ast.GameState\022/\n\020colli"
-    "sionMessage\030\001 \003(\0132\025.ast.CollisionMessage"
-    "\022%\n\013chatMessage\030\002 \003(\0132\020.ast.ChatMessage", 1279);
+    "g\030- \001(\010\022\022\n\nbankPeriod\030. \001(\002\"f\n\tGameState"
+    "\022\022\n\nplayerShip\030\003 \001(\r\022\020\n\010gameTime\030\002 \002(\001\022\026"
+    "\n\016levelStartTime\030\004 \001(\001\022\033\n\006entity\030\001 \003(\0132\013"
+    ".ast.Entity\"^\n\020CollisionMessage\022\021\n\tmessa"
+    "geid\030\004 \001(\r\022\021\n\ttimestamp\030\001 \001(\001\022\021\n\tobjectI"
+    "d1\030\002 \001(\r\022\021\n\tobjectId2\030\003 \001(\r\"-\n\013ChatMessa"
+    "ge\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\"Q\n\023Cr"
+    "eateEntityMessage\022\035\n\025createEntityMessage"
+    "id\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast.Entity\"\270\001"
+    "\n\016ServerToClient\022\013\n\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001"
+    "(\004\022\021\n\ttimestamp\030\005 \001(\001\022!\n\tgameState\030\021 \001(\013"
+    "2\016.ast.GameState\022/\n\020collisionMessage\030\001 \003"
+    "(\0132\025.ast.CollisionMessage\022%\n\013chatMessage"
+    "\030\002 \003(\0132\020.ast.ChatMessage", 1304);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -2041,7 +2043,8 @@ void Entity::Swap(Entity* other) {
 
 #ifndef _MSC_VER
 const int GameState::kPlayerShipFieldNumber;
-const int GameState::kCurTimeFieldNumber;
+const int GameState::kGameTimeFieldNumber;
+const int GameState::kLevelStartTimeFieldNumber;
 const int GameState::kEntityFieldNumber;
 #endif  // !_MSC_VER
 
@@ -2062,7 +2065,8 @@ GameState::GameState(const GameState& from)
 void GameState::SharedCtor() {
   _cached_size_ = 0;
   playership_ = 0u;
-  curtime_ = 0;
+  gametime_ = 0;
+  levelstarttime_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2098,7 +2102,8 @@ GameState* GameState::New() const {
 void GameState::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     playership_ = 0u;
-    curtime_ = 0;
+    gametime_ = 0;
+    levelstarttime_ = 0;
   }
   entity_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2122,19 +2127,19 @@ bool GameState::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(10)) goto parse_entity;
-        if (input->ExpectTag(17)) goto parse_curTime;
+        if (input->ExpectTag(17)) goto parse_gameTime;
         break;
       }
       
-      // required double curTime = 2;
+      // required double gameTime = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-         parse_curTime:
+         parse_gameTime:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, &curtime_)));
-          set_has_curtime();
+                 input, &gametime_)));
+          set_has_gametime();
         } else {
           goto handle_uninterpreted;
         }
@@ -2151,6 +2156,22 @@ bool GameState::MergePartialFromCodedStream(
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &playership_)));
           set_has_playership();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(33)) goto parse_levelStartTime;
+        break;
+      }
+      
+      // optional double levelStartTime = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_levelStartTime:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &levelstarttime_)));
+          set_has_levelstarttime();
         } else {
           goto handle_uninterpreted;
         }
@@ -2182,14 +2203,19 @@ void GameState::SerializeWithCachedSizes(
       1, this->entity(i), output);
   }
   
-  // required double curTime = 2;
-  if (has_curtime()) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->curtime(), output);
+  // required double gameTime = 2;
+  if (has_gametime()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->gametime(), output);
   }
   
   // optional uint32 playerShip = 3;
   if (has_playership()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->playership(), output);
+  }
+  
+  // optional double levelStartTime = 4;
+  if (has_levelstarttime()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(4, this->levelstarttime(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -2207,14 +2233,19 @@ void GameState::SerializeWithCachedSizes(
         1, this->entity(i), target);
   }
   
-  // required double curTime = 2;
-  if (has_curtime()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->curtime(), target);
+  // required double gameTime = 2;
+  if (has_gametime()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->gametime(), target);
   }
   
   // optional uint32 playerShip = 3;
   if (has_playership()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->playership(), target);
+  }
+  
+  // optional double levelStartTime = 4;
+  if (has_levelstarttime()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(4, this->levelstarttime(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -2235,8 +2266,13 @@ int GameState::ByteSize() const {
           this->playership());
     }
     
-    // required double curTime = 2;
-    if (has_curtime()) {
+    // required double gameTime = 2;
+    if (has_gametime()) {
+      total_size += 1 + 8;
+    }
+    
+    // optional double levelStartTime = 4;
+    if (has_levelstarttime()) {
       total_size += 1 + 8;
     }
     
@@ -2279,8 +2315,11 @@ void GameState::MergeFrom(const GameState& from) {
     if (from.has_playership()) {
       set_playership(from.playership());
     }
-    if (from.has_curtime()) {
-      set_curtime(from.curtime());
+    if (from.has_gametime()) {
+      set_gametime(from.gametime());
+    }
+    if (from.has_levelstarttime()) {
+      set_levelstarttime(from.levelstarttime());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2310,7 +2349,8 @@ bool GameState::IsInitialized() const {
 void GameState::Swap(GameState* other) {
   if (other != this) {
     std::swap(playership_, other->playership_);
-    std::swap(curtime_, other->curtime_);
+    std::swap(gametime_, other->gametime_);
+    std::swap(levelstarttime_, other->levelstarttime_);
     entity_.Swap(&other->entity_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
