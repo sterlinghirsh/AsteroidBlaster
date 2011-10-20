@@ -2,6 +2,7 @@
 #include "Utility/Timer.h"
 #include "Utility/GlobalUtility.h"
 #include "Utility/GameState.h"
+#include "Network/gamestate.pb.h"
 
 
 Timer::Timer(GameState* _gameState) : timeStarted(0), 
@@ -106,4 +107,46 @@ double Timer::getCurTime() {
    } else {
       return gameState->getGameTime();
    }
+}
+
+void Timer::load(const ast::Timer& t) {
+   if (t.has_timestarted()) {
+      timeStarted = t.timestarted();
+      std::cout << " setting timestarted to " << timeStarted <<"\n";
+   }
+
+   if (t.has_countdowntime()) {
+      countDownTime = t.countdowntime();
+      std::cout << " setting countdowntime to " << countDownTime <<"\n";
+   }
+
+   if (t.has_timepaused()) {
+      timePaused = t.timepaused();
+      std::cout << " setting time paused to " << timePaused <<"\n";
+   }
+
+   if (t.has_ispaused()) {
+      isPaused = t.ispaused();
+      std::cout << " setting is paused to " << isPaused <<"\n";
+   }
+
+   if (t.has_isrunning()) {
+      isRunning = t.isrunning();
+      std::cout << " setting is running to " << isRunning <<"\n";
+   }
+   std::cout << "Loaded ";
+}
+
+void Timer::save(ast::Timer* t) {
+   t->set_timestarted(timeStarted);
+   t->set_countdowntime(countDownTime);
+   t->set_timepaused(timePaused);
+   t->set_ispaused(isPaused);
+   t->set_isrunning(isRunning);
+   std::cout << "Saved ";
+}
+
+void Timer::debug() {
+   std::cout << "Timer " << timeStarted << " " << countDownTime << " "
+      << timePaused << " " << isPaused << " " << isRunning << std::endl;
 }

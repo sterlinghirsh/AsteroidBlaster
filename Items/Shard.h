@@ -71,6 +71,8 @@ class Shard : public Object3D {
          ar & sizeZ;
          ar & collisionRadius;
       }
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
 };
 
 //BOOST_CLASS_EXPORT(Shard);

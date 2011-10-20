@@ -34,6 +34,7 @@ void protobuf_ShutdownFile_Network_2fgamestate_2eproto();
 
 class Vector;
 class Entity;
+class Timer;
 class GameState;
 class CollisionMessage;
 class ChatMessage;
@@ -422,6 +423,100 @@ class Entity : public ::google::protobuf::Message {
   inline float bankperiod() const;
   inline void set_bankperiod(float value);
   
+  // optional bool flyingAIEnabled = 47;
+  inline bool has_flyingaienabled() const;
+  inline void clear_flyingaienabled();
+  static const int kFlyingAIEnabledFieldNumber = 47;
+  inline bool flyingaienabled() const;
+  inline void set_flyingaienabled(bool value);
+  
+  // optional bool shootingAIEnabled = 48;
+  inline bool has_shootingaienabled() const;
+  inline void clear_shootingaienabled();
+  static const int kShootingAIEnabledFieldNumber = 48;
+  inline bool shootingaienabled() const;
+  inline void set_shootingaienabled(bool value);
+  
+  // optional .ast.Timer bankTimer = 49;
+  inline bool has_banktimer() const;
+  inline void clear_banktimer();
+  static const int kBankTimerFieldNumber = 49;
+  inline const ::ast::Timer& banktimer() const;
+  inline ::ast::Timer* mutable_banktimer();
+  inline ::ast::Timer* release_banktimer();
+  
+  // optional .ast.Timer aliveTimer = 50;
+  inline bool has_alivetimer() const;
+  inline void clear_alivetimer();
+  static const int kAliveTimerFieldNumber = 50;
+  inline const ::ast::Timer& alivetimer() const;
+  inline ::ast::Timer* mutable_alivetimer();
+  inline ::ast::Timer* release_alivetimer();
+  
+  // optional .ast.Timer respawnTimer = 51;
+  inline bool has_respawntimer() const;
+  inline void clear_respawntimer();
+  static const int kRespawnTimerFieldNumber = 51;
+  inline const ::ast::Timer& respawntimer() const;
+  inline ::ast::Timer* mutable_respawntimer();
+  inline ::ast::Timer* release_respawntimer();
+  
+  // optional float timeLeftToRespawn = 52;
+  inline bool has_timelefttorespawn() const;
+  inline void clear_timelefttorespawn();
+  static const int kTimeLeftToRespawnFieldNumber = 52;
+  inline float timelefttorespawn() const;
+  inline void set_timelefttorespawn(float value);
+  
+  // optional int32 score = 53;
+  inline bool has_score() const;
+  inline void clear_score();
+  static const int kScoreFieldNumber = 53;
+  inline ::google::protobuf::int32 score() const;
+  inline void set_score(::google::protobuf::int32 value);
+  
+  // optional int32 kills = 54;
+  inline bool has_kills() const;
+  inline void clear_kills();
+  static const int kKillsFieldNumber = 54;
+  inline ::google::protobuf::int32 kills() const;
+  inline void set_kills(::google::protobuf::int32 value);
+  
+  // optional int32 deaths = 55;
+  inline bool has_deaths() const;
+  inline void clear_deaths();
+  static const int kDeathsFieldNumber = 55;
+  inline ::google::protobuf::int32 deaths() const;
+  inline void set_deaths(::google::protobuf::int32 value);
+  
+  // optional int32 life = 56;
+  inline bool has_life() const;
+  inline void clear_life();
+  static const int kLifeFieldNumber = 56;
+  inline ::google::protobuf::int32 life() const;
+  inline void set_life(::google::protobuf::int32 value);
+  
+  // optional int32 bankedShards = 57;
+  inline bool has_bankedshards() const;
+  inline void clear_bankedshards();
+  static const int kBankedShardsFieldNumber = 57;
+  inline ::google::protobuf::int32 bankedshards() const;
+  inline void set_bankedshards(::google::protobuf::int32 value);
+  
+  // optional int32 unbankedShards = 58;
+  inline bool has_unbankedshards() const;
+  inline void clear_unbankedshards();
+  static const int kUnbankedShardsFieldNumber = 58;
+  inline ::google::protobuf::int32 unbankedshards() const;
+  inline void set_unbankedshards(::google::protobuf::int32 value);
+  
+  // optional int32 totalBankedShards = 59;
+  inline bool has_totalbankedshards() const;
+  inline void clear_totalbankedshards();
+  static const int kTotalBankedShardsFieldNumber = 59;
+  inline ::google::protobuf::int32 totalbankedshards() const;
+  inline void set_totalbankedshards(::google::protobuf::int32 value);
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -486,6 +581,32 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_isbraking();
   inline void set_has_bankperiod();
   inline void clear_has_bankperiod();
+  inline void set_has_flyingaienabled();
+  inline void clear_has_flyingaienabled();
+  inline void set_has_shootingaienabled();
+  inline void clear_has_shootingaienabled();
+  inline void set_has_banktimer();
+  inline void clear_has_banktimer();
+  inline void set_has_alivetimer();
+  inline void clear_has_alivetimer();
+  inline void set_has_respawntimer();
+  inline void clear_has_respawntimer();
+  inline void set_has_timelefttorespawn();
+  inline void clear_has_timelefttorespawn();
+  inline void set_has_score();
+  inline void clear_has_score();
+  inline void set_has_kills();
+  inline void clear_has_kills();
+  inline void set_has_deaths();
+  inline void clear_has_deaths();
+  inline void set_has_life();
+  inline void clear_has_life();
+  inline void set_has_bankedshards();
+  inline void clear_has_bankedshards();
+  inline void set_has_unbankedshards();
+  inline void clear_has_unbankedshards();
+  inline void set_has_totalbankedshards();
+  inline void clear_has_totalbankedshards();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -497,9 +618,9 @@ class Entity : public ::google::protobuf::Message {
   float radius_;
   float angle_;
   ::ast::Vector* up_;
+  ::ast::Vector* right_;
   float rotationspeed_;
   float targetyawspeed_;
-  ::ast::Vector* right_;
   ::ast::Vector* forward_;
   float targetpitchspeed_;
   float targetrollspeed_;
@@ -514,15 +635,28 @@ class Entity : public ::google::protobuf::Message {
   ::google::protobuf::int32 currentweapon_;
   float isbarrelrollingleft_;
   float isbarrelrollingright_;
-  bool isfiring_;
-  bool isbraking_;
   float curforwardaccel_;
   float currightaccel_;
   float curupaccel_;
+  bool isfiring_;
+  bool isbraking_;
+  bool flyingaienabled_;
+  bool shootingaienabled_;
+  ::ast::Timer* banktimer_;
   float bankperiod_;
+  float timelefttorespawn_;
+  ::ast::Timer* alivetimer_;
+  ::ast::Timer* respawntimer_;
+  ::google::protobuf::int32 score_;
+  ::google::protobuf::int32 kills_;
+  ::google::protobuf::int32 deaths_;
+  ::google::protobuf::int32 life_;
+  ::google::protobuf::int32 bankedshards_;
+  ::google::protobuf::int32 unbankedshards_;
+  ::google::protobuf::int32 totalbankedshards_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(31 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(44 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -530,6 +664,128 @@ class Entity : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static Entity* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Timer : public ::google::protobuf::Message {
+ public:
+  Timer();
+  virtual ~Timer();
+  
+  Timer(const Timer& from);
+  
+  inline Timer& operator=(const Timer& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Timer& default_instance();
+  
+  void Swap(Timer* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Timer* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Timer& from);
+  void MergeFrom(const Timer& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // optional float timeStarted = 1;
+  inline bool has_timestarted() const;
+  inline void clear_timestarted();
+  static const int kTimeStartedFieldNumber = 1;
+  inline float timestarted() const;
+  inline void set_timestarted(float value);
+  
+  // optional float countDownTime = 2;
+  inline bool has_countdowntime() const;
+  inline void clear_countdowntime();
+  static const int kCountDownTimeFieldNumber = 2;
+  inline float countdowntime() const;
+  inline void set_countdowntime(float value);
+  
+  // optional float timePaused = 3;
+  inline bool has_timepaused() const;
+  inline void clear_timepaused();
+  static const int kTimePausedFieldNumber = 3;
+  inline float timepaused() const;
+  inline void set_timepaused(float value);
+  
+  // optional bool isPaused = 4;
+  inline bool has_ispaused() const;
+  inline void clear_ispaused();
+  static const int kIsPausedFieldNumber = 4;
+  inline bool ispaused() const;
+  inline void set_ispaused(bool value);
+  
+  // optional bool isRunning = 5;
+  inline bool has_isrunning() const;
+  inline void clear_isrunning();
+  static const int kIsRunningFieldNumber = 5;
+  inline bool isrunning() const;
+  inline void set_isrunning(bool value);
+  
+  // @@protoc_insertion_point(class_scope:ast.Timer)
+ private:
+  inline void set_has_timestarted();
+  inline void clear_has_timestarted();
+  inline void set_has_countdowntime();
+  inline void clear_has_countdowntime();
+  inline void set_has_timepaused();
+  inline void clear_has_timepaused();
+  inline void set_has_ispaused();
+  inline void clear_has_ispaused();
+  inline void set_has_isrunning();
+  inline void clear_has_isrunning();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  float timestarted_;
+  float countdowntime_;
+  float timepaused_;
+  bool ispaused_;
+  bool isrunning_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_ShutdownFile_Network_2fgamestate_2eproto();
+  
+  void InitAsDefaultInstance();
+  static Timer* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -601,12 +857,13 @@ class GameState : public ::google::protobuf::Message {
   inline double gametime() const;
   inline void set_gametime(double value);
   
-  // optional double levelStartTime = 4;
-  inline bool has_levelstarttime() const;
-  inline void clear_levelstarttime();
-  static const int kLevelStartTimeFieldNumber = 4;
-  inline double levelstarttime() const;
-  inline void set_levelstarttime(double value);
+  // optional .ast.Timer levelTimer = 4;
+  inline bool has_leveltimer() const;
+  inline void clear_leveltimer();
+  static const int kLevelTimerFieldNumber = 4;
+  inline const ::ast::Timer& leveltimer() const;
+  inline ::ast::Timer* mutable_leveltimer();
+  inline ::ast::Timer* release_leveltimer();
   
   // repeated .ast.Entity entity = 1;
   inline int entity_size() const;
@@ -620,24 +877,34 @@ class GameState : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ast::Entity >*
       mutable_entity();
   
+  // optional int32 curLevel = 5;
+  inline bool has_curlevel() const;
+  inline void clear_curlevel();
+  static const int kCurLevelFieldNumber = 5;
+  inline ::google::protobuf::int32 curlevel() const;
+  inline void set_curlevel(::google::protobuf::int32 value);
+  
   // @@protoc_insertion_point(class_scope:ast.GameState)
  private:
   inline void set_has_playership();
   inline void clear_has_playership();
   inline void set_has_gametime();
   inline void clear_has_gametime();
-  inline void set_has_levelstarttime();
-  inline void clear_has_levelstarttime();
+  inline void set_has_leveltimer();
+  inline void clear_has_leveltimer();
+  inline void set_has_curlevel();
+  inline void clear_has_curlevel();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
   double gametime_;
-  double levelstarttime_;
-  ::google::protobuf::RepeatedPtrField< ::ast::Entity > entity_;
+  ::ast::Timer* leveltimer_;
   ::google::protobuf::uint32 playership_;
+  ::google::protobuf::int32 curlevel_;
+  ::google::protobuf::RepeatedPtrField< ::ast::Entity > entity_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -1896,6 +2163,427 @@ inline void Entity::set_bankperiod(float value) {
   bankperiod_ = value;
 }
 
+// optional bool flyingAIEnabled = 47;
+inline bool Entity::has_flyingaienabled() const {
+  return (_has_bits_[0] & 0x80000000u) != 0;
+}
+inline void Entity::set_has_flyingaienabled() {
+  _has_bits_[0] |= 0x80000000u;
+}
+inline void Entity::clear_has_flyingaienabled() {
+  _has_bits_[0] &= ~0x80000000u;
+}
+inline void Entity::clear_flyingaienabled() {
+  flyingaienabled_ = false;
+  clear_has_flyingaienabled();
+}
+inline bool Entity::flyingaienabled() const {
+  return flyingaienabled_;
+}
+inline void Entity::set_flyingaienabled(bool value) {
+  set_has_flyingaienabled();
+  flyingaienabled_ = value;
+}
+
+// optional bool shootingAIEnabled = 48;
+inline bool Entity::has_shootingaienabled() const {
+  return (_has_bits_[1] & 0x00000001u) != 0;
+}
+inline void Entity::set_has_shootingaienabled() {
+  _has_bits_[1] |= 0x00000001u;
+}
+inline void Entity::clear_has_shootingaienabled() {
+  _has_bits_[1] &= ~0x00000001u;
+}
+inline void Entity::clear_shootingaienabled() {
+  shootingaienabled_ = false;
+  clear_has_shootingaienabled();
+}
+inline bool Entity::shootingaienabled() const {
+  return shootingaienabled_;
+}
+inline void Entity::set_shootingaienabled(bool value) {
+  set_has_shootingaienabled();
+  shootingaienabled_ = value;
+}
+
+// optional .ast.Timer bankTimer = 49;
+inline bool Entity::has_banktimer() const {
+  return (_has_bits_[1] & 0x00000002u) != 0;
+}
+inline void Entity::set_has_banktimer() {
+  _has_bits_[1] |= 0x00000002u;
+}
+inline void Entity::clear_has_banktimer() {
+  _has_bits_[1] &= ~0x00000002u;
+}
+inline void Entity::clear_banktimer() {
+  if (banktimer_ != NULL) banktimer_->::ast::Timer::Clear();
+  clear_has_banktimer();
+}
+inline const ::ast::Timer& Entity::banktimer() const {
+  return banktimer_ != NULL ? *banktimer_ : *default_instance_->banktimer_;
+}
+inline ::ast::Timer* Entity::mutable_banktimer() {
+  set_has_banktimer();
+  if (banktimer_ == NULL) banktimer_ = new ::ast::Timer;
+  return banktimer_;
+}
+inline ::ast::Timer* Entity::release_banktimer() {
+  clear_has_banktimer();
+  ::ast::Timer* temp = banktimer_;
+  banktimer_ = NULL;
+  return temp;
+}
+
+// optional .ast.Timer aliveTimer = 50;
+inline bool Entity::has_alivetimer() const {
+  return (_has_bits_[1] & 0x00000004u) != 0;
+}
+inline void Entity::set_has_alivetimer() {
+  _has_bits_[1] |= 0x00000004u;
+}
+inline void Entity::clear_has_alivetimer() {
+  _has_bits_[1] &= ~0x00000004u;
+}
+inline void Entity::clear_alivetimer() {
+  if (alivetimer_ != NULL) alivetimer_->::ast::Timer::Clear();
+  clear_has_alivetimer();
+}
+inline const ::ast::Timer& Entity::alivetimer() const {
+  return alivetimer_ != NULL ? *alivetimer_ : *default_instance_->alivetimer_;
+}
+inline ::ast::Timer* Entity::mutable_alivetimer() {
+  set_has_alivetimer();
+  if (alivetimer_ == NULL) alivetimer_ = new ::ast::Timer;
+  return alivetimer_;
+}
+inline ::ast::Timer* Entity::release_alivetimer() {
+  clear_has_alivetimer();
+  ::ast::Timer* temp = alivetimer_;
+  alivetimer_ = NULL;
+  return temp;
+}
+
+// optional .ast.Timer respawnTimer = 51;
+inline bool Entity::has_respawntimer() const {
+  return (_has_bits_[1] & 0x00000008u) != 0;
+}
+inline void Entity::set_has_respawntimer() {
+  _has_bits_[1] |= 0x00000008u;
+}
+inline void Entity::clear_has_respawntimer() {
+  _has_bits_[1] &= ~0x00000008u;
+}
+inline void Entity::clear_respawntimer() {
+  if (respawntimer_ != NULL) respawntimer_->::ast::Timer::Clear();
+  clear_has_respawntimer();
+}
+inline const ::ast::Timer& Entity::respawntimer() const {
+  return respawntimer_ != NULL ? *respawntimer_ : *default_instance_->respawntimer_;
+}
+inline ::ast::Timer* Entity::mutable_respawntimer() {
+  set_has_respawntimer();
+  if (respawntimer_ == NULL) respawntimer_ = new ::ast::Timer;
+  return respawntimer_;
+}
+inline ::ast::Timer* Entity::release_respawntimer() {
+  clear_has_respawntimer();
+  ::ast::Timer* temp = respawntimer_;
+  respawntimer_ = NULL;
+  return temp;
+}
+
+// optional float timeLeftToRespawn = 52;
+inline bool Entity::has_timelefttorespawn() const {
+  return (_has_bits_[1] & 0x00000010u) != 0;
+}
+inline void Entity::set_has_timelefttorespawn() {
+  _has_bits_[1] |= 0x00000010u;
+}
+inline void Entity::clear_has_timelefttorespawn() {
+  _has_bits_[1] &= ~0x00000010u;
+}
+inline void Entity::clear_timelefttorespawn() {
+  timelefttorespawn_ = 0;
+  clear_has_timelefttorespawn();
+}
+inline float Entity::timelefttorespawn() const {
+  return timelefttorespawn_;
+}
+inline void Entity::set_timelefttorespawn(float value) {
+  set_has_timelefttorespawn();
+  timelefttorespawn_ = value;
+}
+
+// optional int32 score = 53;
+inline bool Entity::has_score() const {
+  return (_has_bits_[1] & 0x00000020u) != 0;
+}
+inline void Entity::set_has_score() {
+  _has_bits_[1] |= 0x00000020u;
+}
+inline void Entity::clear_has_score() {
+  _has_bits_[1] &= ~0x00000020u;
+}
+inline void Entity::clear_score() {
+  score_ = 0;
+  clear_has_score();
+}
+inline ::google::protobuf::int32 Entity::score() const {
+  return score_;
+}
+inline void Entity::set_score(::google::protobuf::int32 value) {
+  set_has_score();
+  score_ = value;
+}
+
+// optional int32 kills = 54;
+inline bool Entity::has_kills() const {
+  return (_has_bits_[1] & 0x00000040u) != 0;
+}
+inline void Entity::set_has_kills() {
+  _has_bits_[1] |= 0x00000040u;
+}
+inline void Entity::clear_has_kills() {
+  _has_bits_[1] &= ~0x00000040u;
+}
+inline void Entity::clear_kills() {
+  kills_ = 0;
+  clear_has_kills();
+}
+inline ::google::protobuf::int32 Entity::kills() const {
+  return kills_;
+}
+inline void Entity::set_kills(::google::protobuf::int32 value) {
+  set_has_kills();
+  kills_ = value;
+}
+
+// optional int32 deaths = 55;
+inline bool Entity::has_deaths() const {
+  return (_has_bits_[1] & 0x00000080u) != 0;
+}
+inline void Entity::set_has_deaths() {
+  _has_bits_[1] |= 0x00000080u;
+}
+inline void Entity::clear_has_deaths() {
+  _has_bits_[1] &= ~0x00000080u;
+}
+inline void Entity::clear_deaths() {
+  deaths_ = 0;
+  clear_has_deaths();
+}
+inline ::google::protobuf::int32 Entity::deaths() const {
+  return deaths_;
+}
+inline void Entity::set_deaths(::google::protobuf::int32 value) {
+  set_has_deaths();
+  deaths_ = value;
+}
+
+// optional int32 life = 56;
+inline bool Entity::has_life() const {
+  return (_has_bits_[1] & 0x00000100u) != 0;
+}
+inline void Entity::set_has_life() {
+  _has_bits_[1] |= 0x00000100u;
+}
+inline void Entity::clear_has_life() {
+  _has_bits_[1] &= ~0x00000100u;
+}
+inline void Entity::clear_life() {
+  life_ = 0;
+  clear_has_life();
+}
+inline ::google::protobuf::int32 Entity::life() const {
+  return life_;
+}
+inline void Entity::set_life(::google::protobuf::int32 value) {
+  set_has_life();
+  life_ = value;
+}
+
+// optional int32 bankedShards = 57;
+inline bool Entity::has_bankedshards() const {
+  return (_has_bits_[1] & 0x00000200u) != 0;
+}
+inline void Entity::set_has_bankedshards() {
+  _has_bits_[1] |= 0x00000200u;
+}
+inline void Entity::clear_has_bankedshards() {
+  _has_bits_[1] &= ~0x00000200u;
+}
+inline void Entity::clear_bankedshards() {
+  bankedshards_ = 0;
+  clear_has_bankedshards();
+}
+inline ::google::protobuf::int32 Entity::bankedshards() const {
+  return bankedshards_;
+}
+inline void Entity::set_bankedshards(::google::protobuf::int32 value) {
+  set_has_bankedshards();
+  bankedshards_ = value;
+}
+
+// optional int32 unbankedShards = 58;
+inline bool Entity::has_unbankedshards() const {
+  return (_has_bits_[1] & 0x00000400u) != 0;
+}
+inline void Entity::set_has_unbankedshards() {
+  _has_bits_[1] |= 0x00000400u;
+}
+inline void Entity::clear_has_unbankedshards() {
+  _has_bits_[1] &= ~0x00000400u;
+}
+inline void Entity::clear_unbankedshards() {
+  unbankedshards_ = 0;
+  clear_has_unbankedshards();
+}
+inline ::google::protobuf::int32 Entity::unbankedshards() const {
+  return unbankedshards_;
+}
+inline void Entity::set_unbankedshards(::google::protobuf::int32 value) {
+  set_has_unbankedshards();
+  unbankedshards_ = value;
+}
+
+// optional int32 totalBankedShards = 59;
+inline bool Entity::has_totalbankedshards() const {
+  return (_has_bits_[1] & 0x00000800u) != 0;
+}
+inline void Entity::set_has_totalbankedshards() {
+  _has_bits_[1] |= 0x00000800u;
+}
+inline void Entity::clear_has_totalbankedshards() {
+  _has_bits_[1] &= ~0x00000800u;
+}
+inline void Entity::clear_totalbankedshards() {
+  totalbankedshards_ = 0;
+  clear_has_totalbankedshards();
+}
+inline ::google::protobuf::int32 Entity::totalbankedshards() const {
+  return totalbankedshards_;
+}
+inline void Entity::set_totalbankedshards(::google::protobuf::int32 value) {
+  set_has_totalbankedshards();
+  totalbankedshards_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Timer
+
+// optional float timeStarted = 1;
+inline bool Timer::has_timestarted() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Timer::set_has_timestarted() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Timer::clear_has_timestarted() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Timer::clear_timestarted() {
+  timestarted_ = 0;
+  clear_has_timestarted();
+}
+inline float Timer::timestarted() const {
+  return timestarted_;
+}
+inline void Timer::set_timestarted(float value) {
+  set_has_timestarted();
+  timestarted_ = value;
+}
+
+// optional float countDownTime = 2;
+inline bool Timer::has_countdowntime() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Timer::set_has_countdowntime() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Timer::clear_has_countdowntime() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Timer::clear_countdowntime() {
+  countdowntime_ = 0;
+  clear_has_countdowntime();
+}
+inline float Timer::countdowntime() const {
+  return countdowntime_;
+}
+inline void Timer::set_countdowntime(float value) {
+  set_has_countdowntime();
+  countdowntime_ = value;
+}
+
+// optional float timePaused = 3;
+inline bool Timer::has_timepaused() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Timer::set_has_timepaused() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Timer::clear_has_timepaused() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Timer::clear_timepaused() {
+  timepaused_ = 0;
+  clear_has_timepaused();
+}
+inline float Timer::timepaused() const {
+  return timepaused_;
+}
+inline void Timer::set_timepaused(float value) {
+  set_has_timepaused();
+  timepaused_ = value;
+}
+
+// optional bool isPaused = 4;
+inline bool Timer::has_ispaused() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Timer::set_has_ispaused() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Timer::clear_has_ispaused() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Timer::clear_ispaused() {
+  ispaused_ = false;
+  clear_has_ispaused();
+}
+inline bool Timer::ispaused() const {
+  return ispaused_;
+}
+inline void Timer::set_ispaused(bool value) {
+  set_has_ispaused();
+  ispaused_ = value;
+}
+
+// optional bool isRunning = 5;
+inline bool Timer::has_isrunning() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Timer::set_has_isrunning() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Timer::clear_has_isrunning() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Timer::clear_isrunning() {
+  isrunning_ = false;
+  clear_has_isrunning();
+}
+inline bool Timer::isrunning() const {
+  return isrunning_;
+}
+inline void Timer::set_isrunning(bool value) {
+  set_has_isrunning();
+  isrunning_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // GameState
@@ -1944,26 +2632,33 @@ inline void GameState::set_gametime(double value) {
   gametime_ = value;
 }
 
-// optional double levelStartTime = 4;
-inline bool GameState::has_levelstarttime() const {
+// optional .ast.Timer levelTimer = 4;
+inline bool GameState::has_leveltimer() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void GameState::set_has_levelstarttime() {
+inline void GameState::set_has_leveltimer() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void GameState::clear_has_levelstarttime() {
+inline void GameState::clear_has_leveltimer() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void GameState::clear_levelstarttime() {
-  levelstarttime_ = 0;
-  clear_has_levelstarttime();
+inline void GameState::clear_leveltimer() {
+  if (leveltimer_ != NULL) leveltimer_->::ast::Timer::Clear();
+  clear_has_leveltimer();
 }
-inline double GameState::levelstarttime() const {
-  return levelstarttime_;
+inline const ::ast::Timer& GameState::leveltimer() const {
+  return leveltimer_ != NULL ? *leveltimer_ : *default_instance_->leveltimer_;
 }
-inline void GameState::set_levelstarttime(double value) {
-  set_has_levelstarttime();
-  levelstarttime_ = value;
+inline ::ast::Timer* GameState::mutable_leveltimer() {
+  set_has_leveltimer();
+  if (leveltimer_ == NULL) leveltimer_ = new ::ast::Timer;
+  return leveltimer_;
+}
+inline ::ast::Timer* GameState::release_leveltimer() {
+  clear_has_leveltimer();
+  ::ast::Timer* temp = leveltimer_;
+  leveltimer_ = NULL;
+  return temp;
 }
 
 // repeated .ast.Entity entity = 1;
@@ -1989,6 +2684,28 @@ GameState::entity() const {
 inline ::google::protobuf::RepeatedPtrField< ::ast::Entity >*
 GameState::mutable_entity() {
   return &entity_;
+}
+
+// optional int32 curLevel = 5;
+inline bool GameState::has_curlevel() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void GameState::set_has_curlevel() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void GameState::clear_has_curlevel() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void GameState::clear_curlevel() {
+  curlevel_ = 0;
+  clear_has_curlevel();
+}
+inline ::google::protobuf::int32 GameState::curlevel() const {
+  return curlevel_;
+}
+inline void GameState::set_curlevel(::google::protobuf::int32 value) {
+  set_has_curlevel();
+  curlevel_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -2109,12 +2109,144 @@ void AsteroidShip::save(ast::Entity* ent) {
    up->save(ent->mutable_up());
    forward->save(ent->mutable_forward());
    right->save(ent->mutable_right());
+
+   ent->set_targetrollspeed(targetRollSpeed);
+   ent->set_targetyawspeed(targetYawSpeed);
+   ent->set_targetpitchspeed(targetPitchSpeed);
+
+   ent->set_health(health);
+   ent->set_healthmax(healthMax);
+
+   ent->set_enginelevel(engineLevel);
+   ent->set_regenhealthlevel(regenHealthLevel);
+   ent->set_banklevel(bankLevel);
+   ent->set_color1(color1);
+   ent->set_color2(color2);
+   
+   shotDirection.save(ent->mutable_shotdirection());
+   ent->set_isfiring(isFiring);
+   ent->set_currentweapon(currentWeapon);
+   ent->set_isbarrelrollingleft(isBarrelRollingLeft);
+   ent->set_isbarrelrollingright(isBarrelRollingRight);
+   ent->set_curforwardaccel(curForwardAccel);
+   ent->set_curupaccel(curUpAccel);
+   ent->set_currightaccel(curRightAccel);
+
+   ent->set_bankperiod(bankPeriod);
+
+   ent->set_flyingaienabled(flyingAI->isEnabled());
+   ent->set_shootingaienabled(shooter->isEnabled());
+
+   bankTimer.save(ent->mutable_banktimer());
+   aliveTimer.save(ent->mutable_alivetimer());
+   respawnTimer.save(ent->mutable_respawntimer());
+
+   ent->set_timelefttorespawn(timeLeftToRespawn);
+
+   ent->set_score(score);
+   ent->set_kills(kills);
+   ent->set_deaths(deaths);
+   ent->set_life(life);
+   ent->set_bankedshards(bankedShards);
+   ent->set_unbankedshards(unbankedShards);
+   ent->set_totalbankedshards(totalBankedShards);
 }
 
 void AsteroidShip::load(const ast::Entity& ent) {
    Object3D::load(ent);
-   forward->load(ent.forward());
-   right->load(ent.right());
-   up->load(ent.up());
+
+   if (ent.has_forward())
+      forward->load(ent.forward());
+   if (ent.has_right())
+      right->load(ent.right());
+   if (ent.has_up())
+      up->load(ent.up());
+
+   if (ent.has_health())
+      health = ent.health();
+
+   if (ent.has_healthmax())
+      healthMax = ent.healthmax();
+
+   if (ent.has_targetrollspeed())
+      targetRollSpeed = ent.targetrollspeed();
+   if (ent.has_targetyawspeed())
+      targetYawSpeed = ent.targetyawspeed();
+   if (ent.has_targetpitchspeed())
+      targetPitchSpeed = ent.targetpitchspeed();
+
+   if (ent.has_enginelevel())
+      engineLevel = ent.enginelevel();
+
+   if (ent.has_regenhealthlevel())
+      regenHealthLevel = ent.regenhealthlevel();
+
+   if (ent.has_banklevel())
+      bankLevel = ent.banklevel();
+
+   if (ent.has_color1())
+      color1 = ent.color1();
+
+   if (ent.has_color2())
+      color2 = ent.color2();
+
+   if (ent.has_shotdirection())
+      shotDirection.load(ent.shotdirection());
+
+   if (ent.has_isfiring())
+      isFiring = ent.isfiring();
+
+   if (ent.has_currentweapon())
+      currentWeapon = ent.currentweapon();
+
+   if (ent.has_isbarrelrollingleft())
+      isBarrelRollingLeft = ent.isbarrelrollingleft();
+   if (ent.has_isbarrelrollingright())
+      isBarrelRollingRight = ent.isbarrelrollingright();
+
+   if (ent.has_curforwardaccel())
+      curForwardAccel = ent.curforwardaccel();
+   if (ent.has_curupaccel())
+      curUpAccel = ent.curupaccel();
+   if (ent.has_currightaccel())
+      curRightAccel = ent.currightaccel();
+
+   if (ent.has_isbraking())
+      isBraking = ent.isbraking();
+
+   if (ent.has_bankperiod())
+      bankPeriod = ent.bankperiod();
+
+   if (ent.flyingaienabled())
+      flyingAI->enable();
+   
+   if (ent.shootingaienabled())
+      shooter->enable();
+
+   if (ent.has_banktimer())
+      bankTimer.load(ent.banktimer());
+   if (ent.has_alivetimer())
+      aliveTimer.load(ent.alivetimer());
+   if (ent.has_respawntimer())
+      respawnTimer.load(ent.respawntimer());
+
+   if (ent.has_timelefttorespawn())
+      timeLeftToRespawn = ent.timelefttorespawn();
+
+   if (ent.has_score())
+      score = ent.score();
+   if (ent.has_kills())
+      kills = ent.kills();
+   if (ent.has_deaths())
+      deaths = ent.deaths();
+   if (ent.has_life())
+      life = ent.life();
+   if (ent.has_bankedshards())
+      bankedShards = ent.bankedshards();
+   if (ent.has_unbankedshards())
+      unbankedShards = ent.unbankedshards();
+   if (ent.has_totalbankedshards())
+      totalBankedShards = ent.totalbankedshards();
+
 }
 

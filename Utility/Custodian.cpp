@@ -1092,12 +1092,17 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
          case TYPE_ASTEROID3D:
             obj = new Asteroid3D(ent.radius(), gameState->worldSize, gameState, false);
             obj->load(ent);
+            std::cout << "Found Asteroid.\n";
          break;
          case TYPE_ASTEROIDSHIP:
             obj = new AsteroidShip(gameState);
             obj->load(ent);
             std::cout << "Found Ship.\n";
          break;
+         case TYPE_SHARD:
+            obj = new Shard(0.5, gameState->worldSize, gameState);
+            obj->load(ent);
+            std::cout << "Found Shard.\n";
          default:
          std::cout << "Found other object.\n";
       }

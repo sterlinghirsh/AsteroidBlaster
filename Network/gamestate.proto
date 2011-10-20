@@ -50,16 +50,40 @@ message Entity {
    optional float curUpAccel = 44;
    optional bool isBraking = 45;
    optional float bankPeriod = 46;
+   optional bool flyingAIEnabled = 47;
+   optional bool shootingAIEnabled = 48;
+   optional Timer bankTimer = 49;
+   optional Timer aliveTimer = 50;
+   optional Timer respawnTimer = 51;
+   optional float timeLeftToRespawn = 52;
+
+   optional int32 score = 53;
+   optional int32 kills = 54;
+   optional int32 deaths = 55;
+   optional int32 life = 56;
+   optional int32 bankedShards = 57;
+   optional int32 unbankedShards = 58;
+   optional int32 totalBankedShards = 59;
+
 
    // Should we include weapons?
+}
+
+message Timer {
+   optional float timeStarted = 1;
+   optional float countDownTime = 2;
+   optional float timePaused = 3;
+   optional bool isPaused = 4;
+   optional bool isRunning = 5;
 }
 
 // Just a timestamp and an entity list.
 message GameState {
    optional uint32 playerShip = 3;
    required double gameTime = 2;
-   optional double levelStartTime = 4;
+   optional Timer levelTimer = 4;
    repeated Entity entity = 1;
+   optional int32 curLevel = 5;
 }
 
 message CollisionMessage {

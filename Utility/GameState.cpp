@@ -874,7 +874,6 @@ void GameState::reset(bool shouldLoad) {
       load();
    } else {
       numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
-      curLevelText->updateBody(curLevel);
       
       std::cout << "Resetting." << std::endl;
 
@@ -899,6 +898,7 @@ void GameState::reset(bool shouldLoad) {
    shipCamera = new Camera(ship);
    spring->attach(ship, shipCamera);
    spectatorCamera = new Camera(false);
+   curLevelText->updateBody(curLevel);
   
    storeMenu->menuActive = false;
    
@@ -1487,7 +1487,8 @@ void GameState::save() {
    
    gs.set_gametime(getGameTime());
    gs.set_playership(ship->id);
-   gs.set_levelstarttime(levelTimer.timeStarted);
+   levelTimer.save(gs.mutable_leveltimer());
+   gs.set_curlevel(curLevel);
    
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
    std::vector<Object3D*>::iterator iter = objects->begin();
@@ -1518,7 +1519,12 @@ void GameState::load() {
    }
 
    gameTime = gs.gametime();
-   levelTimer.timeStarted = gs.levelstarttime();
+
+   if (gs.has_leveltimer())
+      levelTimer.load(gs.leveltimer());
+
+   if (gs.has_curlevel())
+      curLevel = gs.curlevel();
 
    for (int i = 0; i < gs.entity_size(); ++i) {
       const ast::Entity& ent = gs.entity(i);

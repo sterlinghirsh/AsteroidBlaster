@@ -9,6 +9,10 @@
 
 class GameState;
 
+namespace ast {
+   class Timer;
+}
+
 class Timer {
    //public variables------------------------------
    public:
@@ -28,6 +32,8 @@ class Timer {
       //Constructor
       Timer(GameState* _gameState = 0); // Null default.
 
+      void save(ast::Timer* t);
+      void load(const ast::Timer& t);
 
       void setGameState(GameState* _gameState);
       void countUp();
@@ -40,6 +46,7 @@ class Timer {
       void pause();
       void resume();
       bool getIsPaused();
+      void debug();
 
    //private functions------------------------------
    private:

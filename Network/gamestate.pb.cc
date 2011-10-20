@@ -23,6 +23,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Entity_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Entity_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Timer_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Timer_reflection_ = NULL;
 const ::google::protobuf::Descriptor* GameState_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   GameState_reflection_ = NULL;
@@ -66,7 +69,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector));
   Entity_descriptor_ = file->message_type(1);
-  static const int Entity_offsets_[31] = {
+  static const int Entity_offsets_[44] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, position_),
@@ -98,6 +101,19 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, curupaccel_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, isbraking_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, bankperiod_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, flyingaienabled_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, shootingaienabled_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, banktimer_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, alivetimer_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, respawntimer_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, timelefttorespawn_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, score_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, kills_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, deaths_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, life_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, bankedshards_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, unbankedshards_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, totalbankedshards_),
   };
   Entity_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -110,12 +126,32 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Entity));
-  GameState_descriptor_ = file->message_type(2);
-  static const int GameState_offsets_[4] = {
+  Timer_descriptor_ = file->message_type(2);
+  static const int Timer_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, timestarted_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, countdowntime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, timepaused_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, ispaused_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, isrunning_),
+  };
+  Timer_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Timer_descriptor_,
+      Timer::default_instance_,
+      Timer_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Timer));
+  GameState_descriptor_ = file->message_type(3);
+  static const int GameState_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, playership_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, gametime_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, levelstarttime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, leveltimer_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, entity_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, curlevel_),
   };
   GameState_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -128,7 +164,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GameState));
-  CollisionMessage_descriptor_ = file->message_type(3);
+  CollisionMessage_descriptor_ = file->message_type(4);
   static const int CollisionMessage_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, messageid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, timestamp_),
@@ -146,7 +182,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CollisionMessage));
-  ChatMessage_descriptor_ = file->message_type(4);
+  ChatMessage_descriptor_ = file->message_type(5);
   static const int ChatMessage_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ChatMessage, sourceid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ChatMessage, text_),
@@ -162,7 +198,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ChatMessage));
-  CreateEntityMessage_descriptor_ = file->message_type(5);
+  CreateEntityMessage_descriptor_ = file->message_type(6);
   static const int CreateEntityMessage_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateEntityMessage, createentitymessageid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateEntityMessage, entity_),
@@ -178,7 +214,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateEntityMessage));
-  ServerToClient_descriptor_ = file->message_type(6);
+  ServerToClient_descriptor_ = file->message_type(7);
   static const int ServerToClient_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerToClient, seq_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerToClient, ack_),
@@ -215,6 +251,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Entity_descriptor_, &Entity::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Timer_descriptor_, &Timer::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     GameState_descriptor_, &GameState::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     CollisionMessage_descriptor_, &CollisionMessage::default_instance());
@@ -233,6 +271,8 @@ void protobuf_ShutdownFile_Network_2fgamestate_2eproto() {
   delete Vector_reflection_;
   delete Entity::default_instance_;
   delete Entity_reflection_;
+  delete Timer::default_instance_;
+  delete Timer_reflection_;
   delete GameState::default_instance_;
   delete GameState_reflection_;
   delete CollisionMessage::default_instance_;
@@ -253,7 +293,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027Network/gamestate.proto\022\003ast\")\n\006Vector"
-    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\307\005\n\006En"
+    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\374\007\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
     "\013.ast.Vector\022\016\n\006radius\030\023 \001(\002\022\031\n\004axis\030\025 \001"
@@ -271,24 +311,36 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "Left\030( \001(\002\022\034\n\024isBarrelRollingRight\030) \001(\002"
     "\022\027\n\017curForwardAccel\030* \001(\002\022\025\n\rcurRightAcc"
     "el\030+ \001(\002\022\022\n\ncurUpAccel\030, \001(\002\022\021\n\tisBrakin"
-    "g\030- \001(\010\022\022\n\nbankPeriod\030. \001(\002\"f\n\tGameState"
-    "\022\022\n\nplayerShip\030\003 \001(\r\022\020\n\010gameTime\030\002 \002(\001\022\026"
-    "\n\016levelStartTime\030\004 \001(\001\022\033\n\006entity\030\001 \003(\0132\013"
-    ".ast.Entity\"^\n\020CollisionMessage\022\021\n\tmessa"
-    "geid\030\004 \001(\r\022\021\n\ttimestamp\030\001 \001(\001\022\021\n\tobjectI"
-    "d1\030\002 \001(\r\022\021\n\tobjectId2\030\003 \001(\r\"-\n\013ChatMessa"
-    "ge\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\"Q\n\023Cr"
-    "eateEntityMessage\022\035\n\025createEntityMessage"
-    "id\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast.Entity\"\270\001"
-    "\n\016ServerToClient\022\013\n\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001"
-    "(\004\022\021\n\ttimestamp\030\005 \001(\001\022!\n\tgameState\030\021 \001(\013"
-    "2\016.ast.GameState\022/\n\020collisionMessage\030\001 \003"
-    "(\0132\025.ast.CollisionMessage\022%\n\013chatMessage"
-    "\030\002 \003(\0132\020.ast.ChatMessage", 1304);
+    "g\030- \001(\010\022\022\n\nbankPeriod\030. \001(\002\022\027\n\017flyingAIE"
+    "nabled\030/ \001(\010\022\031\n\021shootingAIEnabled\0300 \001(\010\022"
+    "\035\n\tbankTimer\0301 \001(\0132\n.ast.Timer\022\036\n\naliveT"
+    "imer\0302 \001(\0132\n.ast.Timer\022 \n\014respawnTimer\0303"
+    " \001(\0132\n.ast.Timer\022\031\n\021timeLeftToRespawn\0304 "
+    "\001(\002\022\r\n\005score\0305 \001(\005\022\r\n\005kills\0306 \001(\005\022\016\n\006dea"
+    "ths\0307 \001(\005\022\014\n\004life\0308 \001(\005\022\024\n\014bankedShards\030"
+    "9 \001(\005\022\026\n\016unbankedShards\030: \001(\005\022\031\n\021totalBa"
+    "nkedShards\030; \001(\005\"l\n\005Timer\022\023\n\013timeStarted"
+    "\030\001 \001(\002\022\025\n\rcountDownTime\030\002 \001(\002\022\022\n\ntimePau"
+    "sed\030\003 \001(\002\022\020\n\010isPaused\030\004 \001(\010\022\021\n\tisRunning"
+    "\030\005 \001(\010\"\200\001\n\tGameState\022\022\n\nplayerShip\030\003 \001(\r"
+    "\022\020\n\010gameTime\030\002 \002(\001\022\036\n\nlevelTimer\030\004 \001(\0132\n"
+    ".ast.Timer\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity\022"
+    "\020\n\010curLevel\030\005 \001(\005\"^\n\020CollisionMessage\022\021\n"
+    "\tmessageid\030\004 \001(\r\022\021\n\ttimestamp\030\001 \001(\001\022\021\n\to"
+    "bjectId1\030\002 \001(\r\022\021\n\tobjectId2\030\003 \001(\r\"-\n\013Cha"
+    "tMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t"
+    "\"Q\n\023CreateEntityMessage\022\035\n\025createEntityM"
+    "essageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast.Ent"
+    "ity\"\270\001\n\016ServerToClient\022\013\n\003seq\030\003 \001(\004\022\013\n\003a"
+    "ck\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022!\n\tgameState"
+    "\030\021 \001(\0132\016.ast.GameState\022/\n\020collisionMessa"
+    "ge\030\001 \003(\0132\025.ast.CollisionMessage\022%\n\013chatM"
+    "essage\030\002 \003(\0132\020.ast.ChatMessage", 1750);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
   Entity::default_instance_ = new Entity();
+  Timer::default_instance_ = new Timer();
   GameState::default_instance_ = new GameState();
   CollisionMessage::default_instance_ = new CollisionMessage();
   ChatMessage::default_instance_ = new ChatMessage();
@@ -296,6 +348,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
   ServerToClient::default_instance_ = new ServerToClient();
   Vector::default_instance_->InitAsDefaultInstance();
   Entity::default_instance_->InitAsDefaultInstance();
+  Timer::default_instance_->InitAsDefaultInstance();
   GameState::default_instance_->InitAsDefaultInstance();
   CollisionMessage::default_instance_->InitAsDefaultInstance();
   ChatMessage::default_instance_->InitAsDefaultInstance();
@@ -628,6 +681,19 @@ const int Entity::kCurRightAccelFieldNumber;
 const int Entity::kCurUpAccelFieldNumber;
 const int Entity::kIsBrakingFieldNumber;
 const int Entity::kBankPeriodFieldNumber;
+const int Entity::kFlyingAIEnabledFieldNumber;
+const int Entity::kShootingAIEnabledFieldNumber;
+const int Entity::kBankTimerFieldNumber;
+const int Entity::kAliveTimerFieldNumber;
+const int Entity::kRespawnTimerFieldNumber;
+const int Entity::kTimeLeftToRespawnFieldNumber;
+const int Entity::kScoreFieldNumber;
+const int Entity::kKillsFieldNumber;
+const int Entity::kDeathsFieldNumber;
+const int Entity::kLifeFieldNumber;
+const int Entity::kBankedShardsFieldNumber;
+const int Entity::kUnbankedShardsFieldNumber;
+const int Entity::kTotalBankedShardsFieldNumber;
 #endif  // !_MSC_VER
 
 Entity::Entity()
@@ -643,6 +709,9 @@ void Entity::InitAsDefaultInstance() {
   right_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   forward_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   shotdirection_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
+  banktimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
+  alivetimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
+  respawntimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
 }
 
 Entity::Entity(const Entity& from)
@@ -684,6 +753,19 @@ void Entity::SharedCtor() {
   curupaccel_ = 0;
   isbraking_ = false;
   bankperiod_ = 0;
+  flyingaienabled_ = false;
+  shootingaienabled_ = false;
+  banktimer_ = NULL;
+  alivetimer_ = NULL;
+  respawntimer_ = NULL;
+  timelefttorespawn_ = 0;
+  score_ = 0;
+  kills_ = 0;
+  deaths_ = 0;
+  life_ = 0;
+  bankedshards_ = 0;
+  unbankedshards_ = 0;
+  totalbankedshards_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -700,6 +782,9 @@ void Entity::SharedDtor() {
     delete right_;
     delete forward_;
     delete shotdirection_;
+    delete banktimer_;
+    delete alivetimer_;
+    delete respawntimer_;
   }
 }
 
@@ -776,6 +861,29 @@ void Entity::Clear() {
     curupaccel_ = 0;
     isbraking_ = false;
     bankperiod_ = 0;
+    flyingaienabled_ = false;
+  }
+  if (_has_bits_[32 / 32] & (0xffu << (32 % 32))) {
+    shootingaienabled_ = false;
+    if (has_banktimer()) {
+      if (banktimer_ != NULL) banktimer_->::ast::Timer::Clear();
+    }
+    if (has_alivetimer()) {
+      if (alivetimer_ != NULL) alivetimer_->::ast::Timer::Clear();
+    }
+    if (has_respawntimer()) {
+      if (respawntimer_ != NULL) respawntimer_->::ast::Timer::Clear();
+    }
+    timelefttorespawn_ = 0;
+    score_ = 0;
+    kills_ = 0;
+    deaths_ = 0;
+  }
+  if (_has_bits_[40 / 32] & (0xffu << (40 % 32))) {
+    life_ = 0;
+    bankedshards_ = 0;
+    unbankedshards_ = 0;
+    totalbankedshards_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1264,6 +1372,208 @@ bool Entity::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(376)) goto parse_flyingAIEnabled;
+        break;
+      }
+      
+      // optional bool flyingAIEnabled = 47;
+      case 47: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_flyingAIEnabled:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &flyingaienabled_)));
+          set_has_flyingaienabled();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(384)) goto parse_shootingAIEnabled;
+        break;
+      }
+      
+      // optional bool shootingAIEnabled = 48;
+      case 48: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_shootingAIEnabled:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &shootingaienabled_)));
+          set_has_shootingaienabled();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(394)) goto parse_bankTimer;
+        break;
+      }
+      
+      // optional .ast.Timer bankTimer = 49;
+      case 49: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_bankTimer:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_banktimer()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(402)) goto parse_aliveTimer;
+        break;
+      }
+      
+      // optional .ast.Timer aliveTimer = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_aliveTimer:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_alivetimer()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(410)) goto parse_respawnTimer;
+        break;
+      }
+      
+      // optional .ast.Timer respawnTimer = 51;
+      case 51: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_respawnTimer:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_respawntimer()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(421)) goto parse_timeLeftToRespawn;
+        break;
+      }
+      
+      // optional float timeLeftToRespawn = 52;
+      case 52: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_timeLeftToRespawn:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &timelefttorespawn_)));
+          set_has_timelefttorespawn();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(424)) goto parse_score;
+        break;
+      }
+      
+      // optional int32 score = 53;
+      case 53: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_score:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &score_)));
+          set_has_score();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(432)) goto parse_kills;
+        break;
+      }
+      
+      // optional int32 kills = 54;
+      case 54: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_kills:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &kills_)));
+          set_has_kills();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(440)) goto parse_deaths;
+        break;
+      }
+      
+      // optional int32 deaths = 55;
+      case 55: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_deaths:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &deaths_)));
+          set_has_deaths();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(448)) goto parse_life;
+        break;
+      }
+      
+      // optional int32 life = 56;
+      case 56: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_life:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &life_)));
+          set_has_life();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(456)) goto parse_bankedShards;
+        break;
+      }
+      
+      // optional int32 bankedShards = 57;
+      case 57: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_bankedShards:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &bankedshards_)));
+          set_has_bankedshards();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(464)) goto parse_unbankedShards;
+        break;
+      }
+      
+      // optional int32 unbankedShards = 58;
+      case 58: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_unbankedShards:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &unbankedshards_)));
+          set_has_unbankedshards();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(472)) goto parse_totalBankedShards;
+        break;
+      }
+      
+      // optional int32 totalBankedShards = 59;
+      case 59: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_totalBankedShards:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &totalbankedshards_)));
+          set_has_totalbankedshards();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1448,6 +1758,74 @@ void Entity::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(46, this->bankperiod(), output);
   }
   
+  // optional bool flyingAIEnabled = 47;
+  if (has_flyingaienabled()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(47, this->flyingaienabled(), output);
+  }
+  
+  // optional bool shootingAIEnabled = 48;
+  if (has_shootingaienabled()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(48, this->shootingaienabled(), output);
+  }
+  
+  // optional .ast.Timer bankTimer = 49;
+  if (has_banktimer()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      49, this->banktimer(), output);
+  }
+  
+  // optional .ast.Timer aliveTimer = 50;
+  if (has_alivetimer()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      50, this->alivetimer(), output);
+  }
+  
+  // optional .ast.Timer respawnTimer = 51;
+  if (has_respawntimer()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      51, this->respawntimer(), output);
+  }
+  
+  // optional float timeLeftToRespawn = 52;
+  if (has_timelefttorespawn()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(52, this->timelefttorespawn(), output);
+  }
+  
+  // optional int32 score = 53;
+  if (has_score()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(53, this->score(), output);
+  }
+  
+  // optional int32 kills = 54;
+  if (has_kills()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(54, this->kills(), output);
+  }
+  
+  // optional int32 deaths = 55;
+  if (has_deaths()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(55, this->deaths(), output);
+  }
+  
+  // optional int32 life = 56;
+  if (has_life()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(56, this->life(), output);
+  }
+  
+  // optional int32 bankedShards = 57;
+  if (has_bankedshards()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(57, this->bankedshards(), output);
+  }
+  
+  // optional int32 unbankedShards = 58;
+  if (has_unbankedshards()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(58, this->unbankedshards(), output);
+  }
+  
+  // optional int32 totalBankedShards = 59;
+  if (has_totalbankedshards()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(59, this->totalbankedshards(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1623,6 +2001,77 @@ void Entity::SerializeWithCachedSizes(
   // optional float bankPeriod = 46;
   if (has_bankperiod()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(46, this->bankperiod(), target);
+  }
+  
+  // optional bool flyingAIEnabled = 47;
+  if (has_flyingaienabled()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(47, this->flyingaienabled(), target);
+  }
+  
+  // optional bool shootingAIEnabled = 48;
+  if (has_shootingaienabled()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(48, this->shootingaienabled(), target);
+  }
+  
+  // optional .ast.Timer bankTimer = 49;
+  if (has_banktimer()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        49, this->banktimer(), target);
+  }
+  
+  // optional .ast.Timer aliveTimer = 50;
+  if (has_alivetimer()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        50, this->alivetimer(), target);
+  }
+  
+  // optional .ast.Timer respawnTimer = 51;
+  if (has_respawntimer()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        51, this->respawntimer(), target);
+  }
+  
+  // optional float timeLeftToRespawn = 52;
+  if (has_timelefttorespawn()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(52, this->timelefttorespawn(), target);
+  }
+  
+  // optional int32 score = 53;
+  if (has_score()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(53, this->score(), target);
+  }
+  
+  // optional int32 kills = 54;
+  if (has_kills()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(54, this->kills(), target);
+  }
+  
+  // optional int32 deaths = 55;
+  if (has_deaths()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(55, this->deaths(), target);
+  }
+  
+  // optional int32 life = 56;
+  if (has_life()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(56, this->life(), target);
+  }
+  
+  // optional int32 bankedShards = 57;
+  if (has_bankedshards()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(57, this->bankedshards(), target);
+  }
+  
+  // optional int32 unbankedShards = 58;
+  if (has_unbankedshards()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(58, this->unbankedshards(), target);
+  }
+  
+  // optional int32 totalBankedShards = 59;
+  if (has_totalbankedshards()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(59, this->totalbankedshards(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -1823,6 +2272,95 @@ int Entity::ByteSize() const {
       total_size += 2 + 4;
     }
     
+    // optional bool flyingAIEnabled = 47;
+    if (has_flyingaienabled()) {
+      total_size += 2 + 1;
+    }
+    
+  }
+  if (_has_bits_[32 / 32] & (0xffu << (32 % 32))) {
+    // optional bool shootingAIEnabled = 48;
+    if (has_shootingaienabled()) {
+      total_size += 2 + 1;
+    }
+    
+    // optional .ast.Timer bankTimer = 49;
+    if (has_banktimer()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->banktimer());
+    }
+    
+    // optional .ast.Timer aliveTimer = 50;
+    if (has_alivetimer()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->alivetimer());
+    }
+    
+    // optional .ast.Timer respawnTimer = 51;
+    if (has_respawntimer()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->respawntimer());
+    }
+    
+    // optional float timeLeftToRespawn = 52;
+    if (has_timelefttorespawn()) {
+      total_size += 2 + 4;
+    }
+    
+    // optional int32 score = 53;
+    if (has_score()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->score());
+    }
+    
+    // optional int32 kills = 54;
+    if (has_kills()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->kills());
+    }
+    
+    // optional int32 deaths = 55;
+    if (has_deaths()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->deaths());
+    }
+    
+  }
+  if (_has_bits_[40 / 32] & (0xffu << (40 % 32))) {
+    // optional int32 life = 56;
+    if (has_life()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->life());
+    }
+    
+    // optional int32 bankedShards = 57;
+    if (has_bankedshards()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->bankedshards());
+    }
+    
+    // optional int32 unbankedShards = 58;
+    if (has_unbankedshards()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->unbankedshards());
+    }
+    
+    // optional int32 totalBankedShards = 59;
+    if (has_totalbankedshards()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->totalbankedshards());
+    }
+    
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -1949,6 +2487,49 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_bankperiod()) {
       set_bankperiod(from.bankperiod());
     }
+    if (from.has_flyingaienabled()) {
+      set_flyingaienabled(from.flyingaienabled());
+    }
+  }
+  if (from._has_bits_[32 / 32] & (0xffu << (32 % 32))) {
+    if (from.has_shootingaienabled()) {
+      set_shootingaienabled(from.shootingaienabled());
+    }
+    if (from.has_banktimer()) {
+      mutable_banktimer()->::ast::Timer::MergeFrom(from.banktimer());
+    }
+    if (from.has_alivetimer()) {
+      mutable_alivetimer()->::ast::Timer::MergeFrom(from.alivetimer());
+    }
+    if (from.has_respawntimer()) {
+      mutable_respawntimer()->::ast::Timer::MergeFrom(from.respawntimer());
+    }
+    if (from.has_timelefttorespawn()) {
+      set_timelefttorespawn(from.timelefttorespawn());
+    }
+    if (from.has_score()) {
+      set_score(from.score());
+    }
+    if (from.has_kills()) {
+      set_kills(from.kills());
+    }
+    if (from.has_deaths()) {
+      set_deaths(from.deaths());
+    }
+  }
+  if (from._has_bits_[40 / 32] & (0xffu << (40 % 32))) {
+    if (from.has_life()) {
+      set_life(from.life());
+    }
+    if (from.has_bankedshards()) {
+      set_bankedshards(from.bankedshards());
+    }
+    if (from.has_unbankedshards()) {
+      set_unbankedshards(from.unbankedshards());
+    }
+    if (from.has_totalbankedshards()) {
+      set_totalbankedshards(from.totalbankedshards());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2024,7 +2605,21 @@ void Entity::Swap(Entity* other) {
     std::swap(curupaccel_, other->curupaccel_);
     std::swap(isbraking_, other->isbraking_);
     std::swap(bankperiod_, other->bankperiod_);
+    std::swap(flyingaienabled_, other->flyingaienabled_);
+    std::swap(shootingaienabled_, other->shootingaienabled_);
+    std::swap(banktimer_, other->banktimer_);
+    std::swap(alivetimer_, other->alivetimer_);
+    std::swap(respawntimer_, other->respawntimer_);
+    std::swap(timelefttorespawn_, other->timelefttorespawn_);
+    std::swap(score_, other->score_);
+    std::swap(kills_, other->kills_);
+    std::swap(deaths_, other->deaths_);
+    std::swap(life_, other->life_);
+    std::swap(bankedshards_, other->bankedshards_);
+    std::swap(unbankedshards_, other->unbankedshards_);
+    std::swap(totalbankedshards_, other->totalbankedshards_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
+    std::swap(_has_bits_[1], other->_has_bits_[1]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
@@ -2042,10 +2637,368 @@ void Entity::Swap(Entity* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int Timer::kTimeStartedFieldNumber;
+const int Timer::kCountDownTimeFieldNumber;
+const int Timer::kTimePausedFieldNumber;
+const int Timer::kIsPausedFieldNumber;
+const int Timer::kIsRunningFieldNumber;
+#endif  // !_MSC_VER
+
+Timer::Timer()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void Timer::InitAsDefaultInstance() {
+}
+
+Timer::Timer(const Timer& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void Timer::SharedCtor() {
+  _cached_size_ = 0;
+  timestarted_ = 0;
+  countdowntime_ = 0;
+  timepaused_ = 0;
+  ispaused_ = false;
+  isrunning_ = false;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Timer::~Timer() {
+  SharedDtor();
+}
+
+void Timer::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Timer::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Timer::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Timer_descriptor_;
+}
+
+const Timer& Timer::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_Network_2fgamestate_2eproto();  return *default_instance_;
+}
+
+Timer* Timer::default_instance_ = NULL;
+
+Timer* Timer::New() const {
+  return new Timer;
+}
+
+void Timer::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    timestarted_ = 0;
+    countdowntime_ = 0;
+    timepaused_ = 0;
+    ispaused_ = false;
+    isrunning_ = false;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Timer::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional float timeStarted = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &timestarted_)));
+          set_has_timestarted();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(21)) goto parse_countDownTime;
+        break;
+      }
+      
+      // optional float countDownTime = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_countDownTime:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &countdowntime_)));
+          set_has_countdowntime();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(29)) goto parse_timePaused;
+        break;
+      }
+      
+      // optional float timePaused = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_timePaused:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &timepaused_)));
+          set_has_timepaused();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_isPaused;
+        break;
+      }
+      
+      // optional bool isPaused = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_isPaused:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &ispaused_)));
+          set_has_ispaused();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_isRunning;
+        break;
+      }
+      
+      // optional bool isRunning = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_isRunning:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &isrunning_)));
+          set_has_isrunning();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void Timer::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional float timeStarted = 1;
+  if (has_timestarted()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->timestarted(), output);
+  }
+  
+  // optional float countDownTime = 2;
+  if (has_countdowntime()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->countdowntime(), output);
+  }
+  
+  // optional float timePaused = 3;
+  if (has_timepaused()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->timepaused(), output);
+  }
+  
+  // optional bool isPaused = 4;
+  if (has_ispaused()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->ispaused(), output);
+  }
+  
+  // optional bool isRunning = 5;
+  if (has_isrunning()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->isrunning(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* Timer::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional float timeStarted = 1;
+  if (has_timestarted()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->timestarted(), target);
+  }
+  
+  // optional float countDownTime = 2;
+  if (has_countdowntime()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->countdowntime(), target);
+  }
+  
+  // optional float timePaused = 3;
+  if (has_timepaused()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->timepaused(), target);
+  }
+  
+  // optional bool isPaused = 4;
+  if (has_ispaused()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->ispaused(), target);
+  }
+  
+  // optional bool isRunning = 5;
+  if (has_isrunning()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->isrunning(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int Timer::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional float timeStarted = 1;
+    if (has_timestarted()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional float countDownTime = 2;
+    if (has_countdowntime()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional float timePaused = 3;
+    if (has_timepaused()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional bool isPaused = 4;
+    if (has_ispaused()) {
+      total_size += 1 + 1;
+    }
+    
+    // optional bool isRunning = 5;
+    if (has_isrunning()) {
+      total_size += 1 + 1;
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Timer::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Timer* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Timer*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Timer::MergeFrom(const Timer& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_timestarted()) {
+      set_timestarted(from.timestarted());
+    }
+    if (from.has_countdowntime()) {
+      set_countdowntime(from.countdowntime());
+    }
+    if (from.has_timepaused()) {
+      set_timepaused(from.timepaused());
+    }
+    if (from.has_ispaused()) {
+      set_ispaused(from.ispaused());
+    }
+    if (from.has_isrunning()) {
+      set_isrunning(from.isrunning());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Timer::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Timer::CopyFrom(const Timer& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Timer::IsInitialized() const {
+  
+  return true;
+}
+
+void Timer::Swap(Timer* other) {
+  if (other != this) {
+    std::swap(timestarted_, other->timestarted_);
+    std::swap(countdowntime_, other->countdowntime_);
+    std::swap(timepaused_, other->timepaused_);
+    std::swap(ispaused_, other->ispaused_);
+    std::swap(isrunning_, other->isrunning_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Timer::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Timer_descriptor_;
+  metadata.reflection = Timer_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int GameState::kPlayerShipFieldNumber;
 const int GameState::kGameTimeFieldNumber;
-const int GameState::kLevelStartTimeFieldNumber;
+const int GameState::kLevelTimerFieldNumber;
 const int GameState::kEntityFieldNumber;
+const int GameState::kCurLevelFieldNumber;
 #endif  // !_MSC_VER
 
 GameState::GameState()
@@ -2054,6 +3007,7 @@ GameState::GameState()
 }
 
 void GameState::InitAsDefaultInstance() {
+  leveltimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
 }
 
 GameState::GameState(const GameState& from)
@@ -2066,7 +3020,8 @@ void GameState::SharedCtor() {
   _cached_size_ = 0;
   playership_ = 0u;
   gametime_ = 0;
-  levelstarttime_ = 0;
+  leveltimer_ = NULL;
+  curlevel_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2076,6 +3031,7 @@ GameState::~GameState() {
 
 void GameState::SharedDtor() {
   if (this != default_instance_) {
+    delete leveltimer_;
   }
 }
 
@@ -2103,7 +3059,10 @@ void GameState::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     playership_ = 0u;
     gametime_ = 0;
-    levelstarttime_ = 0;
+    if (has_leveltimer()) {
+      if (leveltimer_ != NULL) leveltimer_->::ast::Timer::Clear();
+    }
+    curlevel_ = 0;
   }
   entity_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2159,19 +3118,33 @@ bool GameState::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(33)) goto parse_levelStartTime;
+        if (input->ExpectTag(34)) goto parse_levelTimer;
         break;
       }
       
-      // optional double levelStartTime = 4;
+      // optional .ast.Timer levelTimer = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-         parse_levelStartTime:
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_levelTimer:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_leveltimer()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_curLevel;
+        break;
+      }
+      
+      // optional int32 curLevel = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_curLevel:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, &levelstarttime_)));
-          set_has_levelstarttime();
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &curlevel_)));
+          set_has_curlevel();
         } else {
           goto handle_uninterpreted;
         }
@@ -2213,9 +3186,15 @@ void GameState::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->playership(), output);
   }
   
-  // optional double levelStartTime = 4;
-  if (has_levelstarttime()) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(4, this->levelstarttime(), output);
+  // optional .ast.Timer levelTimer = 4;
+  if (has_leveltimer()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      4, this->leveltimer(), output);
+  }
+  
+  // optional int32 curLevel = 5;
+  if (has_curlevel()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->curlevel(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -2243,9 +3222,16 @@ void GameState::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->playership(), target);
   }
   
-  // optional double levelStartTime = 4;
-  if (has_levelstarttime()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(4, this->levelstarttime(), target);
+  // optional .ast.Timer levelTimer = 4;
+  if (has_leveltimer()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        4, this->leveltimer(), target);
+  }
+  
+  // optional int32 curLevel = 5;
+  if (has_curlevel()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->curlevel(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -2271,9 +3257,18 @@ int GameState::ByteSize() const {
       total_size += 1 + 8;
     }
     
-    // optional double levelStartTime = 4;
-    if (has_levelstarttime()) {
-      total_size += 1 + 8;
+    // optional .ast.Timer levelTimer = 4;
+    if (has_leveltimer()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->leveltimer());
+    }
+    
+    // optional int32 curLevel = 5;
+    if (has_curlevel()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->curlevel());
     }
     
   }
@@ -2318,8 +3313,11 @@ void GameState::MergeFrom(const GameState& from) {
     if (from.has_gametime()) {
       set_gametime(from.gametime());
     }
-    if (from.has_levelstarttime()) {
-      set_levelstarttime(from.levelstarttime());
+    if (from.has_leveltimer()) {
+      mutable_leveltimer()->::ast::Timer::MergeFrom(from.leveltimer());
+    }
+    if (from.has_curlevel()) {
+      set_curlevel(from.curlevel());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2350,8 +3348,9 @@ void GameState::Swap(GameState* other) {
   if (other != this) {
     std::swap(playership_, other->playership_);
     std::swap(gametime_, other->gametime_);
-    std::swap(levelstarttime_, other->levelstarttime_);
+    std::swap(leveltimer_, other->leveltimer_);
     entity_.Swap(&other->entity_);
+    std::swap(curlevel_, other->curlevel_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

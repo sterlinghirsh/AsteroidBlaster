@@ -214,3 +214,11 @@ void Shard::debug() {
    velocity->print();
    printf("--\n");
 }
+
+void Shard::save(ast::Entity* ent) {
+   Object3D::save(ent);
+}
+
+void Shard::load(const ast::Entity& ent) {
+   Object3D::load(ent);
+}
