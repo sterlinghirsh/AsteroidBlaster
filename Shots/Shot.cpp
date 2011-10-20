@@ -26,6 +26,7 @@ Shot::Shot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    //velocity->setLength(40.0);
    timeFired = gameState->getGameTime();
    isBeam = false;
+   ownerid = ownerIn->id;
 }
 
 Shot::~Shot() {
@@ -95,10 +96,33 @@ double Shot::getDamage(Object3D* collidedObject) {
 
 void Shot::save(ast::Entity* ent) {
    Object3D::save(ent);
+   ent->set_ownerid(ownerid);
+   ent->set_lifetime(lifetime);
+   ent->set_timefired(timeFired);
+   ent->set_weaponindex(weaponIndex);
+   ent->set_damage(damage);
 
 }
 
 void Shot::load(const ast::Entity& ent) {
    Object3D::load(ent);
+
+   if (ent.has_ownerid()) {
+      ownerid = ent.ownerid();
+      owner = dynamic_cast<AsteroidShip*>(
+       gameState->custodian[ownerid]);
+   }
+
+   if (ent.has_lifetime())
+      lifetime = ent.lifetime();
+
+   if (ent.has_timefired())
+      timeFired = ent.timefired();
+
+   if (ent.has_weaponindex())
+      weaponIndex = ent.weaponindex();
+
+   if (ent.has_damage())
+      damage = ent.damage();
 
 }

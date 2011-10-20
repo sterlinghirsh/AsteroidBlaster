@@ -26,6 +26,7 @@ class Shot : public Object3D {
       bool persist;
       static double frequency; // Shots per sec
       AsteroidShip* owner; // Who fired the shot?
+      unsigned ownerid;
       Shot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* ownerIn, const GameState* _gameState);
       virtual ~Shot();
 

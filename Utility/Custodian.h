@@ -73,6 +73,8 @@ class Custodian {
       int asteroidCount;
       int shardCount;
       unsigned getNextID();
+      const std::map<unsigned, Object3D*>& getObjectsByID();
+      
 
 
    //private functions------------------------------

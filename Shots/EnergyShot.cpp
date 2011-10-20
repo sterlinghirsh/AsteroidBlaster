@@ -8,6 +8,7 @@
 #include "Particles/BlasterShotParticle.h"
 #include "Particles/BlasterImpactParticle.h"
 #include "Utility/SoundEffect.h"
+#include "Network/gamestate.pb.h"
 
 #include <algorithm>
 
@@ -188,3 +189,20 @@ void EnergyShot::updateChargeTime(double newChargeTime) {
 
    damagePerSecond = baseDamagePerSecond + baseDamagePerSecond * cappedSquaredChargeTime;
 }
+
+void EnergyShot::save(ast::Entity* ent) {
+   Shot::save(ent);
+   ent->set_chargetime(chargeTime);
+   ent->set_damagepersecond(damagePerSecond);
+}
+
+void EnergyShot::load(const ast::Entity& ent) {
+   Shot::load(ent);
+
+   if (ent.has_chargetime())
+      chargeTime = ent.chargetime();
+   
+   if (ent.has_damagepersecond())
+      damagePerSecond = ent.damagepersecond();
+}
+

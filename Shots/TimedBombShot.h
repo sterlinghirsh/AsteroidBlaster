@@ -34,6 +34,9 @@ class TimedBombShot : public ExplosiveShot {
       double seekRadius;
       double slowDownPerSecond;
       double collisionRadius;
+      
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
 };
 
 #endif

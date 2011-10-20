@@ -55,7 +55,6 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, int _weaponInde
    maxY += farRadius;
    maxZ += farRadius;
 
-   timeFired = doubleTime();
    shouldConstrain = false;
    /* Make sure tractor beam shots aren't culled from the view frustum (necessary to make them appear)
     */

@@ -925,7 +925,6 @@ void Custodian::add(Object3D* objectIn) {
     (ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
       ships.insert(ship);
    }
-
 }
 
 /**
@@ -1088,6 +1087,22 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
    Object3D* obj = (*this)[id];
    if (obj == NULL) {
       std::cout << "Item not found.\n";
+      AsteroidShip* owner = NULL;
+      if (IS_SHOT(type)) {
+         
+         if (ent.has_ownerid()) {
+            owner = dynamic_cast<AsteroidShip*>((*this)[ent.ownerid()]);
+            std::cout << "Ownerid: " << ent.ownerid();
+         } else {
+            std::cout << "No owner specified!\n";
+         }
+
+         if (owner == NULL) {
+            std::cout << "Could not find shot's owner!\n";
+            exit(EXIT_FAILURE);
+         }
+      }
+
       switch (type) {
          case TYPE_ASTEROID3D:
             obj = new Asteroid3D(ent.radius(), gameState->worldSize, gameState, false);
@@ -1103,13 +1118,73 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             obj = new Shard(0.5, gameState->worldSize, gameState);
             obj->load(ent);
             std::cout << "Found Shard.\n";
+         break;
+         case TYPE_BEAMSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+
+            obj = new BeamShot(pos, dir, ent.weaponindex(), owner, gameState);
+            obj->load(ent);
+            std::cout << "Found Beamshot.\n";
+         }
+         break;
+         case TYPE_ELECTRICITYSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+            
+            obj = new ElectricityShot(pos, dir, ent.weaponindex(), owner, 1.0, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Electricity shot.\n";
+         }
+         break;
+         case TYPE_BLASTERSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+
+            pos.print();
+            dir.print();
+
+            obj = new BlasterShot(pos, dir, ent.weaponindex(), owner, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Blastershot. weaponindex: " << ent.weaponindex() << "\n";
+         }
+         break;
+         /*
+         case TYPE_ENERGYSHOT:
+         {
+
+            obj->load(ent);
+            std::cout << "Found Beamshot.\n";
+         }
+         break;
+         */
          default:
          std::cout << "Found other object.\n";
       }
-      if (obj != NULL)
+      if (obj != NULL) {
          add(obj);
+         std::cout << "Adding object.\n";
+      } else {
+         std::cout << "NULL OBJECT!\n";
+      }
    } else {
       std::cout << "Item found.\n";
    }
    std::cout << "ID: " << id << std::endl;
+   return obj;
+}
+
+const std::map<unsigned, Object3D*>& Custodian::getObjectsByID() {
+   return objectsByID;
 }

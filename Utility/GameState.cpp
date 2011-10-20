@@ -872,6 +872,7 @@ void GameState::reset(bool shouldLoad) {
    //temp
    if(shouldLoad) {
       load();
+      custodian.update();
    } else {
       numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
       
@@ -1499,14 +1500,16 @@ void GameState::save() {
    levelTimer.save(gs.mutable_leveltimer());
    gs.set_curlevel(curLevel);
    
-   std::vector<Object3D*>* objects = custodian.getListOfObjects();
-   std::vector<Object3D*>::iterator iter = objects->begin();
+   const std::map<unsigned, Object3D*>& objects = custodian.getObjectsByID();
+   std::map<unsigned, Object3D*>::const_iterator iter = objects.begin();
 
    ast::Entity* ent;
+   Object3D* obj = NULL;
 
-   for (; iter != objects->end(); ++iter) {
+   for (; iter != objects.end(); ++iter) {
+      obj = (*iter).second;
       ent = gs.add_entity();
-      (*iter)->save(ent);
+      obj->save(ent);
       std::cout << "ID: " << ent->id() << " Type: " << ent->type() << std::endl;
    }
 

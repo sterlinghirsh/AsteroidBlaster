@@ -517,12 +517,61 @@ class Entity : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 totalbankedshards() const;
   inline void set_totalbankedshards(::google::protobuf::int32 value);
   
-  // optional int32 owner = 60;
-  inline bool has_owner() const;
-  inline void clear_owner();
-  static const int kOwnerFieldNumber = 60;
-  inline ::google::protobuf::int32 owner() const;
-  inline void set_owner(::google::protobuf::int32 value);
+  // optional uint32 ownerid = 60;
+  inline bool has_ownerid() const;
+  inline void clear_ownerid();
+  static const int kOwneridFieldNumber = 60;
+  inline ::google::protobuf::uint32 ownerid() const;
+  inline void set_ownerid(::google::protobuf::uint32 value);
+  
+  // optional float lifetime = 61;
+  inline bool has_lifetime() const;
+  inline void clear_lifetime();
+  static const int kLifetimeFieldNumber = 61;
+  inline float lifetime() const;
+  inline void set_lifetime(float value);
+  
+  // optional float timeFired = 62;
+  inline bool has_timefired() const;
+  inline void clear_timefired();
+  static const int kTimeFiredFieldNumber = 62;
+  inline float timefired() const;
+  inline void set_timefired(float value);
+  
+  // optional int32 weaponIndex = 63;
+  inline bool has_weaponindex() const;
+  inline void clear_weaponindex();
+  static const int kWeaponIndexFieldNumber = 63;
+  inline ::google::protobuf::int32 weaponindex() const;
+  inline void set_weaponindex(::google::protobuf::int32 value);
+  
+  // optional float damage = 64;
+  inline bool has_damage() const;
+  inline void clear_damage();
+  static const int kDamageFieldNumber = 64;
+  inline float damage() const;
+  inline void set_damage(float value);
+  
+  // optional float chargeTime = 65;
+  inline bool has_chargetime() const;
+  inline void clear_chargetime();
+  static const int kChargeTimeFieldNumber = 65;
+  inline float chargetime() const;
+  inline void set_chargetime(float value);
+  
+  // optional float damagePerSecond = 66;
+  inline bool has_damagepersecond() const;
+  inline void clear_damagepersecond();
+  static const int kDamagePerSecondFieldNumber = 66;
+  inline float damagepersecond() const;
+  inline void set_damagepersecond(float value);
+  
+  // optional float timeSinceExploded = 67;
+  inline bool has_timesinceexploded() const;
+  inline void clear_timesinceexploded();
+  static const int kTimeSinceExplodedFieldNumber = 67;
+  inline float timesinceexploded() const;
+  inline void set_timesinceexploded(float value);
   
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
@@ -614,8 +663,22 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_unbankedshards();
   inline void set_has_totalbankedshards();
   inline void clear_has_totalbankedshards();
-  inline void set_has_owner();
-  inline void clear_has_owner();
+  inline void set_has_ownerid();
+  inline void clear_has_ownerid();
+  inline void set_has_lifetime();
+  inline void clear_has_lifetime();
+  inline void set_has_timefired();
+  inline void clear_has_timefired();
+  inline void set_has_weaponindex();
+  inline void clear_has_weaponindex();
+  inline void set_has_damage();
+  inline void clear_has_damage();
+  inline void set_has_chargetime();
+  inline void clear_has_chargetime();
+  inline void set_has_damagepersecond();
+  inline void clear_has_damagepersecond();
+  inline void set_has_timesinceexploded();
+  inline void clear_has_timesinceexploded();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -651,9 +714,9 @@ class Entity : public ::google::protobuf::Message {
   bool isbraking_;
   bool flyingaienabled_;
   bool shootingaienabled_;
-  ::ast::Timer* banktimer_;
   float bankperiod_;
   float timelefttorespawn_;
+  ::ast::Timer* banktimer_;
   ::ast::Timer* alivetimer_;
   ::ast::Timer* respawntimer_;
   ::google::protobuf::int32 score_;
@@ -663,10 +726,17 @@ class Entity : public ::google::protobuf::Message {
   ::google::protobuf::int32 bankedshards_;
   ::google::protobuf::int32 unbankedshards_;
   ::google::protobuf::int32 totalbankedshards_;
-  ::google::protobuf::int32 owner_;
+  ::google::protobuf::uint32 ownerid_;
+  float lifetime_;
+  float timefired_;
+  ::google::protobuf::int32 weaponindex_;
+  float damage_;
+  float chargetime_;
+  float damagepersecond_;
+  float timesinceexploded_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(45 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(52 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -2480,26 +2550,180 @@ inline void Entity::set_totalbankedshards(::google::protobuf::int32 value) {
   totalbankedshards_ = value;
 }
 
-// optional int32 owner = 60;
-inline bool Entity::has_owner() const {
+// optional uint32 ownerid = 60;
+inline bool Entity::has_ownerid() const {
   return (_has_bits_[1] & 0x00001000u) != 0;
 }
-inline void Entity::set_has_owner() {
+inline void Entity::set_has_ownerid() {
   _has_bits_[1] |= 0x00001000u;
 }
-inline void Entity::clear_has_owner() {
+inline void Entity::clear_has_ownerid() {
   _has_bits_[1] &= ~0x00001000u;
 }
-inline void Entity::clear_owner() {
-  owner_ = 0;
-  clear_has_owner();
+inline void Entity::clear_ownerid() {
+  ownerid_ = 0u;
+  clear_has_ownerid();
 }
-inline ::google::protobuf::int32 Entity::owner() const {
-  return owner_;
+inline ::google::protobuf::uint32 Entity::ownerid() const {
+  return ownerid_;
 }
-inline void Entity::set_owner(::google::protobuf::int32 value) {
-  set_has_owner();
-  owner_ = value;
+inline void Entity::set_ownerid(::google::protobuf::uint32 value) {
+  set_has_ownerid();
+  ownerid_ = value;
+}
+
+// optional float lifetime = 61;
+inline bool Entity::has_lifetime() const {
+  return (_has_bits_[1] & 0x00002000u) != 0;
+}
+inline void Entity::set_has_lifetime() {
+  _has_bits_[1] |= 0x00002000u;
+}
+inline void Entity::clear_has_lifetime() {
+  _has_bits_[1] &= ~0x00002000u;
+}
+inline void Entity::clear_lifetime() {
+  lifetime_ = 0;
+  clear_has_lifetime();
+}
+inline float Entity::lifetime() const {
+  return lifetime_;
+}
+inline void Entity::set_lifetime(float value) {
+  set_has_lifetime();
+  lifetime_ = value;
+}
+
+// optional float timeFired = 62;
+inline bool Entity::has_timefired() const {
+  return (_has_bits_[1] & 0x00004000u) != 0;
+}
+inline void Entity::set_has_timefired() {
+  _has_bits_[1] |= 0x00004000u;
+}
+inline void Entity::clear_has_timefired() {
+  _has_bits_[1] &= ~0x00004000u;
+}
+inline void Entity::clear_timefired() {
+  timefired_ = 0;
+  clear_has_timefired();
+}
+inline float Entity::timefired() const {
+  return timefired_;
+}
+inline void Entity::set_timefired(float value) {
+  set_has_timefired();
+  timefired_ = value;
+}
+
+// optional int32 weaponIndex = 63;
+inline bool Entity::has_weaponindex() const {
+  return (_has_bits_[1] & 0x00008000u) != 0;
+}
+inline void Entity::set_has_weaponindex() {
+  _has_bits_[1] |= 0x00008000u;
+}
+inline void Entity::clear_has_weaponindex() {
+  _has_bits_[1] &= ~0x00008000u;
+}
+inline void Entity::clear_weaponindex() {
+  weaponindex_ = 0;
+  clear_has_weaponindex();
+}
+inline ::google::protobuf::int32 Entity::weaponindex() const {
+  return weaponindex_;
+}
+inline void Entity::set_weaponindex(::google::protobuf::int32 value) {
+  set_has_weaponindex();
+  weaponindex_ = value;
+}
+
+// optional float damage = 64;
+inline bool Entity::has_damage() const {
+  return (_has_bits_[1] & 0x00010000u) != 0;
+}
+inline void Entity::set_has_damage() {
+  _has_bits_[1] |= 0x00010000u;
+}
+inline void Entity::clear_has_damage() {
+  _has_bits_[1] &= ~0x00010000u;
+}
+inline void Entity::clear_damage() {
+  damage_ = 0;
+  clear_has_damage();
+}
+inline float Entity::damage() const {
+  return damage_;
+}
+inline void Entity::set_damage(float value) {
+  set_has_damage();
+  damage_ = value;
+}
+
+// optional float chargeTime = 65;
+inline bool Entity::has_chargetime() const {
+  return (_has_bits_[1] & 0x00020000u) != 0;
+}
+inline void Entity::set_has_chargetime() {
+  _has_bits_[1] |= 0x00020000u;
+}
+inline void Entity::clear_has_chargetime() {
+  _has_bits_[1] &= ~0x00020000u;
+}
+inline void Entity::clear_chargetime() {
+  chargetime_ = 0;
+  clear_has_chargetime();
+}
+inline float Entity::chargetime() const {
+  return chargetime_;
+}
+inline void Entity::set_chargetime(float value) {
+  set_has_chargetime();
+  chargetime_ = value;
+}
+
+// optional float damagePerSecond = 66;
+inline bool Entity::has_damagepersecond() const {
+  return (_has_bits_[1] & 0x00040000u) != 0;
+}
+inline void Entity::set_has_damagepersecond() {
+  _has_bits_[1] |= 0x00040000u;
+}
+inline void Entity::clear_has_damagepersecond() {
+  _has_bits_[1] &= ~0x00040000u;
+}
+inline void Entity::clear_damagepersecond() {
+  damagepersecond_ = 0;
+  clear_has_damagepersecond();
+}
+inline float Entity::damagepersecond() const {
+  return damagepersecond_;
+}
+inline void Entity::set_damagepersecond(float value) {
+  set_has_damagepersecond();
+  damagepersecond_ = value;
+}
+
+// optional float timeSinceExploded = 67;
+inline bool Entity::has_timesinceexploded() const {
+  return (_has_bits_[1] & 0x00080000u) != 0;
+}
+inline void Entity::set_has_timesinceexploded() {
+  _has_bits_[1] |= 0x00080000u;
+}
+inline void Entity::clear_has_timesinceexploded() {
+  _has_bits_[1] &= ~0x00080000u;
+}
+inline void Entity::clear_timesinceexploded() {
+  timesinceexploded_ = 0;
+  clear_has_timesinceexploded();
+}
+inline float Entity::timesinceexploded() const {
+  return timesinceexploded_;
+}
+inline void Entity::set_timesinceexploded(float value) {
+  set_has_timesinceexploded();
+  timesinceexploded_ = value;
 }
 
 // -------------------------------------------------------------------

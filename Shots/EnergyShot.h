@@ -22,6 +22,9 @@ class EnergyShot : public Shot {
       double damagePerSecond;
       Energy* weapon;
       CollisionSphere* collisionSphere;
+      
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
 };
 
 #endif

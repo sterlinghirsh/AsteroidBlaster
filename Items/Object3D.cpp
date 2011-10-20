@@ -294,5 +294,8 @@ void Object3D::load(const ast::Entity& ent) {
    if (ent.has_velocity()) {
       velocity->load(ent.velocity());
    }
+
+   // Does this need to be here?
+   updateBoundingBox();
 }
 

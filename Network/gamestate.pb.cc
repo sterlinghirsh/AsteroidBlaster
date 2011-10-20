@@ -69,7 +69,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector));
   Entity_descriptor_ = file->message_type(1);
-  static const int Entity_offsets_[45] = {
+  static const int Entity_offsets_[52] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, position_),
@@ -114,7 +114,14 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, bankedshards_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, unbankedshards_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, totalbankedshards_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, owner_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, ownerid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, lifetime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, timefired_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, weaponindex_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, damage_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, chargetime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, damagepersecond_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, timesinceexploded_),
   };
   Entity_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -294,7 +301,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027Network/gamestate.proto\022\003ast\")\n\006Vector"
-    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\213\010\n\006En"
+    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\237\t\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
     "\013.ast.Vector\022\016\n\006radius\030\023 \001(\002\022\031\n\004axis\030\025 \001"
@@ -320,24 +327,27 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "\001(\002\022\r\n\005score\0305 \001(\005\022\r\n\005kills\0306 \001(\005\022\016\n\006dea"
     "ths\0307 \001(\005\022\014\n\004life\0308 \001(\005\022\024\n\014bankedShards\030"
     "9 \001(\005\022\026\n\016unbankedShards\030: \001(\005\022\031\n\021totalBa"
-    "nkedShards\030; \001(\005\022\r\n\005owner\030< \001(\005\"l\n\005Timer"
-    "\022\023\n\013timeStarted\030\001 \001(\002\022\025\n\rcountDownTime\030\002"
-    " \001(\002\022\022\n\ntimePaused\030\003 \001(\002\022\020\n\010isPaused\030\004 \001"
-    "(\010\022\021\n\tisRunning\030\005 \001(\010\"\200\001\n\tGameState\022\022\n\np"
-    "layerShip\030\003 \001(\r\022\020\n\010gameTime\030\002 \002(\001\022\036\n\nlev"
-    "elTimer\030\004 \001(\0132\n.ast.Timer\022\033\n\006entity\030\001 \003("
-    "\0132\013.ast.Entity\022\020\n\010curLevel\030\005 \001(\005\"^\n\020Coll"
-    "isionMessage\022\021\n\tmessageid\030\004 \001(\r\022\021\n\ttimes"
-    "tamp\030\001 \001(\001\022\021\n\tobjectId1\030\002 \001(\r\022\021\n\tobjectI"
-    "d2\030\003 \001(\r\"-\n\013ChatMessage\022\020\n\010sourceid\030\001 \001("
-    "\r\022\014\n\004text\030\002 \001(\t\"Q\n\023CreateEntityMessage\022\035"
-    "\n\025createEntityMessageid\030\001 \001(\r\022\033\n\006entity\030"
-    "\002 \003(\0132\013.ast.Entity\"\270\001\n\016ServerToClient\022\013\n"
-    "\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001"
-    "(\001\022!\n\tgameState\030\021 \001(\0132\016.ast.GameState\022/\n"
-    "\020collisionMessage\030\001 \003(\0132\025.ast.CollisionM"
-    "essage\022%\n\013chatMessage\030\002 \003(\0132\020.ast.ChatMe"
-    "ssage", 1765);
+    "nkedShards\030; \001(\005\022\017\n\007ownerid\030< \001(\r\022\020\n\010lif"
+    "etime\030= \001(\002\022\021\n\ttimeFired\030> \001(\002\022\023\n\013weapon"
+    "Index\030\? \001(\005\022\016\n\006damage\030@ \001(\002\022\022\n\nchargeTim"
+    "e\030A \001(\002\022\027\n\017damagePerSecond\030B \001(\002\022\031\n\021time"
+    "SinceExploded\030C \001(\002\"l\n\005Timer\022\023\n\013timeStar"
+    "ted\030\001 \001(\002\022\025\n\rcountDownTime\030\002 \001(\002\022\022\n\ntime"
+    "Paused\030\003 \001(\002\022\020\n\010isPaused\030\004 \001(\010\022\021\n\tisRunn"
+    "ing\030\005 \001(\010\"\200\001\n\tGameState\022\022\n\nplayerShip\030\003 "
+    "\001(\r\022\020\n\010gameTime\030\002 \002(\001\022\036\n\nlevelTimer\030\004 \001("
+    "\0132\n.ast.Timer\022\033\n\006entity\030\001 \003(\0132\013.ast.Enti"
+    "ty\022\020\n\010curLevel\030\005 \001(\005\"^\n\020CollisionMessage"
+    "\022\021\n\tmessageid\030\004 \001(\r\022\021\n\ttimestamp\030\001 \001(\001\022\021"
+    "\n\tobjectId1\030\002 \001(\r\022\021\n\tobjectId2\030\003 \001(\r\"-\n\013"
+    "ChatMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 "
+    "\001(\t\"Q\n\023CreateEntityMessage\022\035\n\025createEnti"
+    "tyMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast."
+    "Entity\"\270\001\n\016ServerToClient\022\013\n\003seq\030\003 \001(\004\022\013"
+    "\n\003ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022!\n\tgameSt"
+    "ate\030\021 \001(\0132\016.ast.GameState\022/\n\020collisionMe"
+    "ssage\030\001 \003(\0132\025.ast.CollisionMessage\022%\n\013ch"
+    "atMessage\030\002 \003(\0132\020.ast.ChatMessage", 1913);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -696,7 +706,14 @@ const int Entity::kLifeFieldNumber;
 const int Entity::kBankedShardsFieldNumber;
 const int Entity::kUnbankedShardsFieldNumber;
 const int Entity::kTotalBankedShardsFieldNumber;
-const int Entity::kOwnerFieldNumber;
+const int Entity::kOwneridFieldNumber;
+const int Entity::kLifetimeFieldNumber;
+const int Entity::kTimeFiredFieldNumber;
+const int Entity::kWeaponIndexFieldNumber;
+const int Entity::kDamageFieldNumber;
+const int Entity::kChargeTimeFieldNumber;
+const int Entity::kDamagePerSecondFieldNumber;
+const int Entity::kTimeSinceExplodedFieldNumber;
 #endif  // !_MSC_VER
 
 Entity::Entity()
@@ -769,7 +786,14 @@ void Entity::SharedCtor() {
   bankedshards_ = 0;
   unbankedshards_ = 0;
   totalbankedshards_ = 0;
-  owner_ = 0;
+  ownerid_ = 0u;
+  lifetime_ = 0;
+  timefired_ = 0;
+  weaponindex_ = 0;
+  damage_ = 0;
+  chargetime_ = 0;
+  damagepersecond_ = 0;
+  timesinceexploded_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -888,7 +912,16 @@ void Entity::Clear() {
     bankedshards_ = 0;
     unbankedshards_ = 0;
     totalbankedshards_ = 0;
-    owner_ = 0;
+    ownerid_ = 0u;
+    lifetime_ = 0;
+    timefired_ = 0;
+    weaponindex_ = 0;
+  }
+  if (_has_bits_[48 / 32] & (0xffu << (48 % 32))) {
+    damage_ = 0;
+    chargetime_ = 0;
+    damagepersecond_ = 0;
+    timesinceexploded_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1579,19 +1612,131 @@ bool Entity::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(480)) goto parse_owner;
+        if (input->ExpectTag(480)) goto parse_ownerid;
         break;
       }
       
-      // optional int32 owner = 60;
+      // optional uint32 ownerid = 60;
       case 60: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_owner:
+         parse_ownerid:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &ownerid_)));
+          set_has_ownerid();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(493)) goto parse_lifetime;
+        break;
+      }
+      
+      // optional float lifetime = 61;
+      case 61: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_lifetime:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &lifetime_)));
+          set_has_lifetime();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(501)) goto parse_timeFired;
+        break;
+      }
+      
+      // optional float timeFired = 62;
+      case 62: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_timeFired:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &timefired_)));
+          set_has_timefired();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(504)) goto parse_weaponIndex;
+        break;
+      }
+      
+      // optional int32 weaponIndex = 63;
+      case 63: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_weaponIndex:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &owner_)));
-          set_has_owner();
+                 input, &weaponindex_)));
+          set_has_weaponindex();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(517)) goto parse_damage;
+        break;
+      }
+      
+      // optional float damage = 64;
+      case 64: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_damage:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &damage_)));
+          set_has_damage();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(525)) goto parse_chargeTime;
+        break;
+      }
+      
+      // optional float chargeTime = 65;
+      case 65: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_chargeTime:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &chargetime_)));
+          set_has_chargetime();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(533)) goto parse_damagePerSecond;
+        break;
+      }
+      
+      // optional float damagePerSecond = 66;
+      case 66: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_damagePerSecond:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &damagepersecond_)));
+          set_has_damagepersecond();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(541)) goto parse_timeSinceExploded;
+        break;
+      }
+      
+      // optional float timeSinceExploded = 67;
+      case 67: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_timeSinceExploded:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &timesinceexploded_)));
+          set_has_timesinceexploded();
         } else {
           goto handle_uninterpreted;
         }
@@ -1847,9 +1992,44 @@ void Entity::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(59, this->totalbankedshards(), output);
   }
   
-  // optional int32 owner = 60;
-  if (has_owner()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(60, this->owner(), output);
+  // optional uint32 ownerid = 60;
+  if (has_ownerid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(60, this->ownerid(), output);
+  }
+  
+  // optional float lifetime = 61;
+  if (has_lifetime()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(61, this->lifetime(), output);
+  }
+  
+  // optional float timeFired = 62;
+  if (has_timefired()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(62, this->timefired(), output);
+  }
+  
+  // optional int32 weaponIndex = 63;
+  if (has_weaponindex()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(63, this->weaponindex(), output);
+  }
+  
+  // optional float damage = 64;
+  if (has_damage()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(64, this->damage(), output);
+  }
+  
+  // optional float chargeTime = 65;
+  if (has_chargetime()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(65, this->chargetime(), output);
+  }
+  
+  // optional float damagePerSecond = 66;
+  if (has_damagepersecond()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(66, this->damagepersecond(), output);
+  }
+  
+  // optional float timeSinceExploded = 67;
+  if (has_timesinceexploded()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(67, this->timesinceexploded(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -2100,9 +2280,44 @@ void Entity::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(59, this->totalbankedshards(), target);
   }
   
-  // optional int32 owner = 60;
-  if (has_owner()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(60, this->owner(), target);
+  // optional uint32 ownerid = 60;
+  if (has_ownerid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(60, this->ownerid(), target);
+  }
+  
+  // optional float lifetime = 61;
+  if (has_lifetime()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(61, this->lifetime(), target);
+  }
+  
+  // optional float timeFired = 62;
+  if (has_timefired()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(62, this->timefired(), target);
+  }
+  
+  // optional int32 weaponIndex = 63;
+  if (has_weaponindex()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(63, this->weaponindex(), target);
+  }
+  
+  // optional float damage = 64;
+  if (has_damage()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(64, this->damage(), target);
+  }
+  
+  // optional float chargeTime = 65;
+  if (has_chargetime()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(65, this->chargetime(), target);
+  }
+  
+  // optional float damagePerSecond = 66;
+  if (has_damagepersecond()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(66, this->damagepersecond(), target);
+  }
+  
+  // optional float timeSinceExploded = 67;
+  if (has_timesinceexploded()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(67, this->timesinceexploded(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -2392,11 +2607,50 @@ int Entity::ByteSize() const {
           this->totalbankedshards());
     }
     
-    // optional int32 owner = 60;
-    if (has_owner()) {
+    // optional uint32 ownerid = 60;
+    if (has_ownerid()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->ownerid());
+    }
+    
+    // optional float lifetime = 61;
+    if (has_lifetime()) {
+      total_size += 2 + 4;
+    }
+    
+    // optional float timeFired = 62;
+    if (has_timefired()) {
+      total_size += 2 + 4;
+    }
+    
+    // optional int32 weaponIndex = 63;
+    if (has_weaponindex()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->owner());
+          this->weaponindex());
+    }
+    
+  }
+  if (_has_bits_[48 / 32] & (0xffu << (48 % 32))) {
+    // optional float damage = 64;
+    if (has_damage()) {
+      total_size += 2 + 4;
+    }
+    
+    // optional float chargeTime = 65;
+    if (has_chargetime()) {
+      total_size += 2 + 4;
+    }
+    
+    // optional float damagePerSecond = 66;
+    if (has_damagepersecond()) {
+      total_size += 2 + 4;
+    }
+    
+    // optional float timeSinceExploded = 67;
+    if (has_timesinceexploded()) {
+      total_size += 2 + 4;
     }
     
   }
@@ -2568,8 +2822,31 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_totalbankedshards()) {
       set_totalbankedshards(from.totalbankedshards());
     }
-    if (from.has_owner()) {
-      set_owner(from.owner());
+    if (from.has_ownerid()) {
+      set_ownerid(from.ownerid());
+    }
+    if (from.has_lifetime()) {
+      set_lifetime(from.lifetime());
+    }
+    if (from.has_timefired()) {
+      set_timefired(from.timefired());
+    }
+    if (from.has_weaponindex()) {
+      set_weaponindex(from.weaponindex());
+    }
+  }
+  if (from._has_bits_[48 / 32] & (0xffu << (48 % 32))) {
+    if (from.has_damage()) {
+      set_damage(from.damage());
+    }
+    if (from.has_chargetime()) {
+      set_chargetime(from.chargetime());
+    }
+    if (from.has_damagepersecond()) {
+      set_damagepersecond(from.damagepersecond());
+    }
+    if (from.has_timesinceexploded()) {
+      set_timesinceexploded(from.timesinceexploded());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2659,7 +2936,14 @@ void Entity::Swap(Entity* other) {
     std::swap(bankedshards_, other->bankedshards_);
     std::swap(unbankedshards_, other->unbankedshards_);
     std::swap(totalbankedshards_, other->totalbankedshards_);
-    std::swap(owner_, other->owner_);
+    std::swap(ownerid_, other->ownerid_);
+    std::swap(lifetime_, other->lifetime_);
+    std::swap(timefired_, other->timefired_);
+    std::swap(weaponindex_, other->weaponindex_);
+    std::swap(damage_, other->damage_);
+    std::swap(chargetime_, other->chargetime_);
+    std::swap(damagepersecond_, other->damagepersecond_);
+    std::swap(timesinceexploded_, other->timesinceexploded_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_has_bits_[1], other->_has_bits_[1]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
