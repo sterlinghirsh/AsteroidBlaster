@@ -65,6 +65,9 @@ message Entity {
    optional int32 unbankedShards = 58;
    optional int32 totalBankedShards = 59;
 
+   // Shots
+   optional int32 owner = 60;
+
 
    // Should we include weapons?
 }

@@ -41,6 +41,9 @@ class Shot : public Object3D {
 
       Point3D getWallIntersectionPoint(BoundingWall* wall);
       virtual double getDamage(Object3D* collidedObject);
+      
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
 };
 
 #endif

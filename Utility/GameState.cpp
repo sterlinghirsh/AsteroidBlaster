@@ -904,6 +904,15 @@ void GameState::reset(bool shouldLoad) {
    
    GameMessage::Clear();
    addLevelMessage();
+
+   if (levelTimer.getIsPaused()) {
+      printf("LT was paused.\n");
+      levelTimer.resume();
+      if (levelTimer.isRunning) {
+         printf("LT now running with %f seconds left.\n",
+               levelTimer.getTimeLeft());
+      }
+   }
 }
 
 /**

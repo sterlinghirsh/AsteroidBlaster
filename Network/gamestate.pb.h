@@ -517,6 +517,13 @@ class Entity : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 totalbankedshards() const;
   inline void set_totalbankedshards(::google::protobuf::int32 value);
   
+  // optional int32 owner = 60;
+  inline bool has_owner() const;
+  inline void clear_owner();
+  static const int kOwnerFieldNumber = 60;
+  inline ::google::protobuf::int32 owner() const;
+  inline void set_owner(::google::protobuf::int32 value);
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -607,6 +614,8 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_unbankedshards();
   inline void set_has_totalbankedshards();
   inline void clear_has_totalbankedshards();
+  inline void set_has_owner();
+  inline void clear_has_owner();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -654,9 +663,10 @@ class Entity : public ::google::protobuf::Message {
   ::google::protobuf::int32 bankedshards_;
   ::google::protobuf::int32 unbankedshards_;
   ::google::protobuf::int32 totalbankedshards_;
+  ::google::protobuf::int32 owner_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(44 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(45 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -2468,6 +2478,28 @@ inline ::google::protobuf::int32 Entity::totalbankedshards() const {
 inline void Entity::set_totalbankedshards(::google::protobuf::int32 value) {
   set_has_totalbankedshards();
   totalbankedshards_ = value;
+}
+
+// optional int32 owner = 60;
+inline bool Entity::has_owner() const {
+  return (_has_bits_[1] & 0x00001000u) != 0;
+}
+inline void Entity::set_has_owner() {
+  _has_bits_[1] |= 0x00001000u;
+}
+inline void Entity::clear_has_owner() {
+  _has_bits_[1] &= ~0x00001000u;
+}
+inline void Entity::clear_owner() {
+  owner_ = 0;
+  clear_has_owner();
+}
+inline ::google::protobuf::int32 Entity::owner() const {
+  return owner_;
+}
+inline void Entity::set_owner(::google::protobuf::int32 value) {
+  set_has_owner();
+  owner_ = value;
 }
 
 // -------------------------------------------------------------------

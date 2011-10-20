@@ -6,6 +6,7 @@
 
 #include "Shots/Shot.h"
 #include "Items/BoundingWall.h"
+#include "Network/gamestate.pb.h"
 #include <iostream>
 
 materialStruct ShotMaterial = {
@@ -23,7 +24,7 @@ Shot::Shot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    *position = posIn;
    velocity = new Vector3D(dirIn);
    //velocity->setLength(40.0);
-   timeFired = doubleTime();
+   timeFired = gameState->getGameTime();
    isBeam = false;
 }
 
@@ -33,7 +34,7 @@ Shot::~Shot() {
 
 void Shot::update(double timeDiff) {
    Object3D::update(timeDiff);
-   if (doubleTime() - timeFired > lifetime) {
+   if (gameState->getGameTime() - timeFired > lifetime) {
       shouldRemove = true;
    }
 }
@@ -90,4 +91,14 @@ Point3D Shot::getWallIntersectionPoint(BoundingWall* wall) {
 
 double Shot::getDamage(Object3D* collidedObject) {
    return damage;
+}
+
+void Shot::save(ast::Entity* ent) {
+   Object3D::save(ent);
+
+}
+
+void Shot::load(const ast::Entity& ent) {
+   Object3D::load(ent);
+
 }

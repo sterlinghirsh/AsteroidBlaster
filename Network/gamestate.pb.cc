@@ -69,7 +69,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector));
   Entity_descriptor_ = file->message_type(1);
-  static const int Entity_offsets_[44] = {
+  static const int Entity_offsets_[45] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, position_),
@@ -114,6 +114,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, bankedshards_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, unbankedshards_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, totalbankedshards_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, owner_),
   };
   Entity_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -293,7 +294,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027Network/gamestate.proto\022\003ast\")\n\006Vector"
-    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\374\007\n\006En"
+    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\213\010\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
     "\013.ast.Vector\022\016\n\006radius\030\023 \001(\002\022\031\n\004axis\030\025 \001"
@@ -319,23 +320,24 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "\001(\002\022\r\n\005score\0305 \001(\005\022\r\n\005kills\0306 \001(\005\022\016\n\006dea"
     "ths\0307 \001(\005\022\014\n\004life\0308 \001(\005\022\024\n\014bankedShards\030"
     "9 \001(\005\022\026\n\016unbankedShards\030: \001(\005\022\031\n\021totalBa"
-    "nkedShards\030; \001(\005\"l\n\005Timer\022\023\n\013timeStarted"
-    "\030\001 \001(\002\022\025\n\rcountDownTime\030\002 \001(\002\022\022\n\ntimePau"
-    "sed\030\003 \001(\002\022\020\n\010isPaused\030\004 \001(\010\022\021\n\tisRunning"
-    "\030\005 \001(\010\"\200\001\n\tGameState\022\022\n\nplayerShip\030\003 \001(\r"
-    "\022\020\n\010gameTime\030\002 \002(\001\022\036\n\nlevelTimer\030\004 \001(\0132\n"
-    ".ast.Timer\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity\022"
-    "\020\n\010curLevel\030\005 \001(\005\"^\n\020CollisionMessage\022\021\n"
-    "\tmessageid\030\004 \001(\r\022\021\n\ttimestamp\030\001 \001(\001\022\021\n\to"
-    "bjectId1\030\002 \001(\r\022\021\n\tobjectId2\030\003 \001(\r\"-\n\013Cha"
-    "tMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t"
-    "\"Q\n\023CreateEntityMessage\022\035\n\025createEntityM"
-    "essageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast.Ent"
-    "ity\"\270\001\n\016ServerToClient\022\013\n\003seq\030\003 \001(\004\022\013\n\003a"
-    "ck\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022!\n\tgameState"
-    "\030\021 \001(\0132\016.ast.GameState\022/\n\020collisionMessa"
-    "ge\030\001 \003(\0132\025.ast.CollisionMessage\022%\n\013chatM"
-    "essage\030\002 \003(\0132\020.ast.ChatMessage", 1750);
+    "nkedShards\030; \001(\005\022\r\n\005owner\030< \001(\005\"l\n\005Timer"
+    "\022\023\n\013timeStarted\030\001 \001(\002\022\025\n\rcountDownTime\030\002"
+    " \001(\002\022\022\n\ntimePaused\030\003 \001(\002\022\020\n\010isPaused\030\004 \001"
+    "(\010\022\021\n\tisRunning\030\005 \001(\010\"\200\001\n\tGameState\022\022\n\np"
+    "layerShip\030\003 \001(\r\022\020\n\010gameTime\030\002 \002(\001\022\036\n\nlev"
+    "elTimer\030\004 \001(\0132\n.ast.Timer\022\033\n\006entity\030\001 \003("
+    "\0132\013.ast.Entity\022\020\n\010curLevel\030\005 \001(\005\"^\n\020Coll"
+    "isionMessage\022\021\n\tmessageid\030\004 \001(\r\022\021\n\ttimes"
+    "tamp\030\001 \001(\001\022\021\n\tobjectId1\030\002 \001(\r\022\021\n\tobjectI"
+    "d2\030\003 \001(\r\"-\n\013ChatMessage\022\020\n\010sourceid\030\001 \001("
+    "\r\022\014\n\004text\030\002 \001(\t\"Q\n\023CreateEntityMessage\022\035"
+    "\n\025createEntityMessageid\030\001 \001(\r\022\033\n\006entity\030"
+    "\002 \003(\0132\013.ast.Entity\"\270\001\n\016ServerToClient\022\013\n"
+    "\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001"
+    "(\001\022!\n\tgameState\030\021 \001(\0132\016.ast.GameState\022/\n"
+    "\020collisionMessage\030\001 \003(\0132\025.ast.CollisionM"
+    "essage\022%\n\013chatMessage\030\002 \003(\0132\020.ast.ChatMe"
+    "ssage", 1765);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -694,6 +696,7 @@ const int Entity::kLifeFieldNumber;
 const int Entity::kBankedShardsFieldNumber;
 const int Entity::kUnbankedShardsFieldNumber;
 const int Entity::kTotalBankedShardsFieldNumber;
+const int Entity::kOwnerFieldNumber;
 #endif  // !_MSC_VER
 
 Entity::Entity()
@@ -766,6 +769,7 @@ void Entity::SharedCtor() {
   bankedshards_ = 0;
   unbankedshards_ = 0;
   totalbankedshards_ = 0;
+  owner_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -884,6 +888,7 @@ void Entity::Clear() {
     bankedshards_ = 0;
     unbankedshards_ = 0;
     totalbankedshards_ = 0;
+    owner_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1574,6 +1579,22 @@ bool Entity::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(480)) goto parse_owner;
+        break;
+      }
+      
+      // optional int32 owner = 60;
+      case 60: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_owner:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &owner_)));
+          set_has_owner();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1826,6 +1847,11 @@ void Entity::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(59, this->totalbankedshards(), output);
   }
   
+  // optional int32 owner = 60;
+  if (has_owner()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(60, this->owner(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2072,6 +2098,11 @@ void Entity::SerializeWithCachedSizes(
   // optional int32 totalBankedShards = 59;
   if (has_totalbankedshards()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(59, this->totalbankedshards(), target);
+  }
+  
+  // optional int32 owner = 60;
+  if (has_owner()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(60, this->owner(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -2361,6 +2392,13 @@ int Entity::ByteSize() const {
           this->totalbankedshards());
     }
     
+    // optional int32 owner = 60;
+    if (has_owner()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->owner());
+    }
+    
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -2530,6 +2568,9 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_totalbankedshards()) {
       set_totalbankedshards(from.totalbankedshards());
     }
+    if (from.has_owner()) {
+      set_owner(from.owner());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2618,6 +2659,7 @@ void Entity::Swap(Entity* other) {
     std::swap(bankedshards_, other->bankedshards_);
     std::swap(unbankedshards_, other->unbankedshards_);
     std::swap(totalbankedshards_, other->totalbankedshards_);
+    std::swap(owner_, other->owner_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_has_bits_[1], other->_has_bits_[1]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

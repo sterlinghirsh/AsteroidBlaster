@@ -76,7 +76,7 @@ void Shard::InitShard(double r, double worldSizeIn) {
 }
 
 void Shard::drawOtherOrbiters() {
-   double curTime = doubleTime();
+   double curTime = gameState->getGameTime();
    const int numBalls = 1; // This is the number of balls per ring, so x3
 
    // Make it so balls will draw evenly spaced.

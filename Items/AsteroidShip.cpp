@@ -239,7 +239,7 @@ void AsteroidShip::reInitialize() {
    isBarrelRollingLeft = -1;
    isBarrelRollingRight = -1;
 
-   accelerationStartTime = doubleTime();
+   accelerationStartTime = gameState->getGameTime();
    particlesEmitted = 0;
 
    velocity->updateMagnitude(0, 0, 0);
@@ -339,7 +339,7 @@ void AsteroidShip::setBrake(bool doBrake) {
  */
 void AsteroidShip::accelerateForward(int dir) {
    if (curForwardAccel == 0 && dir != 0) {
-      accelerationStartTime = doubleTime();
+      accelerationStartTime = gameState->getGameTime();
       particlesEmitted = 0;
    }
 
@@ -349,7 +349,7 @@ void AsteroidShip::accelerateForward(int dir) {
 
 void AsteroidShip::accelerateUp(int dir) {
    if (curUpAccel == 0 && dir != 0) {
-      accelerationStartTime = doubleTime();
+      accelerationStartTime = gameState->getGameTime();
       particlesEmitted = 0;
    }
 
@@ -359,7 +359,7 @@ void AsteroidShip::accelerateUp(int dir) {
 
 void AsteroidShip::accelerateRight(int dir) {
    if (curRightAccel == 0 && dir != 0) {
-      accelerationStartTime = doubleTime();
+      accelerationStartTime = gameState->getGameTime();
       particlesEmitted = 0;
    }
 
@@ -427,7 +427,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    Vector3D baseParticleAcceleration;
    Point3D emitter;
 
-   double accelerationTime = doubleTime() - accelerationStartTime;
+   double accelerationTime = gameState->getGameTime() - accelerationStartTime;
    double colorVariation = 0.2 * randdouble();
    int particlesThisFrame = 0;
 
@@ -799,7 +799,7 @@ void AsteroidShip::update(double timeDiff) {
       }
    }
 
-   if (doubleTime() - justGotHit < drawShieldTime) {
+   if (gameState->getGameTime() - justGotHit < drawShieldTime) {
       drawHit = true;
    } else {
       drawHit = false;
@@ -1663,7 +1663,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
    bool overheated = getCurrentWeapon()->isOverheated();
 
    if (overheated) {
-      curFade = (sin(doubleTime() * M_PI * 4) + 1) / 2;
+      curFade = (sin(gameState->getGameTime() * M_PI * 4) + 1) / 2;
    } else {
       curFade = modf(heatAmount, &numHotBoxes);
    }
