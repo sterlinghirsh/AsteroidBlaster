@@ -23,8 +23,9 @@ const double baseRadius = 0.2;
 const double baseDamagePerSecond = 1;
 
 EnergyShot::EnergyShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
- AsteroidShip* const ownerIn, Energy* const weaponIn, const GameState* _gameState) : Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState),
-weapon(weaponIn) {
+ AsteroidShip* const ownerIn, const GameState* _gameState) : 
+ Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+   weapon = static_cast<Energy*>(owner->weapons[weaponIndex]);
    type = TYPE_ENERGYSHOT;
    persist = false;
    radius = baseRadius;
@@ -194,6 +195,7 @@ void EnergyShot::save(ast::Entity* ent) {
    Shot::save(ent);
    ent->set_chargetime(chargeTime);
    ent->set_damagepersecond(damagePerSecond);
+   ent->set_radius(radius);
 }
 
 void EnergyShot::load(const ast::Entity& ent) {
@@ -204,5 +206,8 @@ void EnergyShot::load(const ast::Entity& ent) {
    
    if (ent.has_damagepersecond())
       damagePerSecond = ent.damagepersecond();
+
+   if (ent.has_radius())
+      radius = ent.radius();
 }
 

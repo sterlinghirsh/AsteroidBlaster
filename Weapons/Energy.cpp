@@ -112,7 +112,7 @@ void Energy::fire() {
    if (chargeStartTime == 0 && chargingShot == NULL) {
       chargeStartTime = doubleTime();  
       Vector3D zeroVelocity(0, 0, 0);
-      chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, index, ship, this, ship->gameState);
+      chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, index, ship, ship->gameState);
       ship->custodian->add(chargingShot);
 
       soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME);

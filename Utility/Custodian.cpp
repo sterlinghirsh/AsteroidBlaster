@@ -1091,7 +1091,8 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
       if (IS_SHOT(type)) {
          
          if (ent.has_ownerid()) {
-            owner = dynamic_cast<AsteroidShip*>((*this)[ent.ownerid()]);
+            // Should this be dynamic cast?
+            owner = static_cast<AsteroidShip*>((*this)[ent.ownerid()]);
             std::cout << "Ownerid: " << ent.ownerid();
          } else {
             std::cout << "No owner specified!\n";
@@ -1131,6 +1132,19 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             std::cout << "Found Beamshot.\n";
          }
          break;
+         case TYPE_BLASTERSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+
+            obj = new BlasterShot(pos, dir, ent.weaponindex(), owner, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Blastershot.\n";
+         }
+         break;
          case TYPE_ELECTRICITYSHOT:
          {
             Point3D pos;
@@ -1144,31 +1158,58 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             std::cout << "Found Electricity shot.\n";
          }
          break;
-         case TYPE_BLASTERSHOT:
+         case TYPE_ENERGYSHOT:
          {
             Point3D pos;
             Vector3D dir;
             pos.load(ent.position());
             dir.load(ent.velocity());
-
-            pos.print();
-            dir.print();
-
-            obj = new BlasterShot(pos, dir, ent.weaponindex(), owner, gameState);
+            
+            obj = new EnergyShot(pos, dir, ent.weaponindex(), owner, gameState);
 
             obj->load(ent);
-            std::cout << "Found Blastershot. weaponindex: " << ent.weaponindex() << "\n";
+            std::cout << "Found Energyshot.\n";
          }
          break;
-         /*
-         case TYPE_ENERGYSHOT:
+         case TYPE_HOMINGMISSILESHOT:
          {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+            
+            obj = new HomingMissileShot(pos, dir, ent.weaponindex(), owner, gameState);
 
             obj->load(ent);
-            std::cout << "Found Beamshot.\n";
+            std::cout << "Found Homing Missile shot.\n";
          }
          break;
-         */
+         case TYPE_TIMEDBOMBSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+            
+            obj = new TimedBombShot(pos, dir, ent.weaponindex(), owner, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Timed Bomb shot.\n";
+         }
+         break;
+         case TYPE_TRACTORBEAMSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+            
+            obj = new TractorBeamShot(pos, dir, ent.weaponindex(), owner, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Tractor Beam shot.\n";
+         }
+         break;
          default:
          std::cout << "Found other object.\n";
       }
