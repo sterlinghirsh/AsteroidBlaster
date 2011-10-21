@@ -410,7 +410,7 @@ void Asteroid3D::update(double timeDiff) {
    }
    
    if (energyHitAsteroid) {
-      if (doubleTime() - timeLastHitByEnergy > 5) {
+      if (gameState->getGameTime() - timeLastHitByEnergy > 5) {
          energyHitAsteroid = false;
          velocity->updateMagnitude(newVelocity);
          acceleration->updateMagnitude(newAcceleration);         
@@ -451,7 +451,7 @@ void Asteroid3D::update(double timeDiff) {
          newFace->setTexture(gameState->godMode ? 
           Texture::getTexture("ZoeRedEyes") :
           Texture::getTexture("AsteroidSurface"));
-         newFace->timeExploded = doubleTime();
+         newFace->timeExploded = gameState->getGameTime();
 
          // NULL out the pointers that will get copied.
          oldFace->nullPointers();

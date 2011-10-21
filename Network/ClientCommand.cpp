@@ -3,6 +3,11 @@
  * This is what gets sent from the client to the server to tell the ship how to move around.
  * Sterling Hirsh
  * 5/9/11
+ ****
+ 
+TODO: Finish replacing ClientCommand with ast::clientcommand.
+
+ ***
  */
 
 #include "Network/ClientCommand.h"

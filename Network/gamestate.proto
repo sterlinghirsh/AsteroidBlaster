@@ -110,6 +110,21 @@ message Weapon {
 
 }
 
+message ClientCommand {
+   required uint32 shipID = 1;
+   optional sint32 forwardAcceleration = 2;
+   optional sint32 rightAcceleration = 3;
+   optional sint32 upAcceleration = 4;
+   optional bool brake = 5;
+   optional float yawSpeed = 6;
+   optional float rollSpeed = 7;
+   optional float pitchSpeed = 8;
+   optional bool fire = 9;
+   optional uint32 curWeapon = 10;
+   optional float mouseX = 11;
+   optional float mouseY = 12;
+}
+
 message Timer {
    optional float timeStarted = 1;
    optional float countDownTime = 2;

@@ -54,9 +54,14 @@
 extern double minimapSizeFactor;
 
 std::ostringstream sstream2; // TODO: Better name plz.
+ast::ClientCommand localClientCommand;
 
 GameState::GameState(GameStateMode _gsm) :
-   custodian(this) {
+   clientCommand(localClientCommand),
+   custodian(this),
+   levelTimer(this),
+   gameOverTimer(this) {
+      clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
       gsm = _gsm;
       if (gsm == SingleMode) {
          io = NULL;
@@ -84,9 +89,6 @@ GameState::GameState(GameStateMode _gsm) :
          //networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       }
 
-      levelTimer.setGameState(this);
-      gameOverTimer.setGameState(this);
-
       gameTime = 0;
       levelStartTime = 0;
 
@@ -109,7 +111,7 @@ GameState::GameState(GameStateMode _gsm) :
       skybox = new Skybox();
 
       ship = new AsteroidShip(this);
-      clientCommand.shipID = ship->id;
+      clientCommand.set_shipid(ship->id);
 
       spring = new Spring(this);
       minimap = new Minimap(ship);
@@ -320,7 +322,7 @@ void GameState::update(double timeDiff) {
    // Keep items in the box.
    // cube->constrain(ship); why did we do this twice?
 
-   if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
+   if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled() && gsm != MenuMode) {
       ship->readCommand(clientCommand);
    }
 
@@ -838,6 +840,12 @@ void GameState::setCurFPS(double fpsIn) {
    curFPS = fpsIn;
 }
 
+void GameState::resetClientCommand() {
+   // Do stuff.
+   clientCommand.clear_forwardacceleration();
+   // TODO: More of this.
+}
+
 /**
  * Reset everything in the game to play again
  */
@@ -853,7 +861,7 @@ void GameState::reset(bool shouldLoad) {
    Particle::Clear();
    MeshFace::Clear();
    custodian.update();
-   clientCommand.reset();
+   resetClientCommand();
 
    setLevelTimer();
 
@@ -892,7 +900,7 @@ void GameState::reset(bool shouldLoad) {
       }
 
    }
-   clientCommand.shipID = ship->id;
+   clientCommand.set_shipid(ship->id);
    spring = new Spring(this);
    cube->constrain(ship);
    minimap = new Minimap(ship);
@@ -1031,7 +1039,7 @@ void GameState::nextLevel() {
    addWarningMessage();
 
    // Reset the ship's controls so that the ship isn't stuck moving in a direction
-   clientCommand.reset();
+   resetClientCommand();
 }
 
 /**
@@ -1048,63 +1056,63 @@ void GameState::keyDown(int key, int unicode) {
       case SDLK_w:
          isW = true;
          if (isS) {
-            clientCommand.forwardAcceleration = 0;
+            clientCommand.set_forwardacceleration(0);
          } else {
-            clientCommand.forwardAcceleration = 1;
+            clientCommand.set_forwardacceleration(1);
          }
          break;
 
       case SDLK_s:
          isS = true;
          if (isW) {
-            clientCommand.forwardAcceleration = 0;
+            clientCommand.set_forwardacceleration(0);
          } else {
-            clientCommand.forwardAcceleration = -1;
+            clientCommand.set_forwardacceleration(-1);
          }
          break;
 
       case SDLK_a:
          isA = true;
          if (isD) {
-            clientCommand.yawSpeed = 0;
+            clientCommand.set_yawspeed(0);
          } else {
-            clientCommand.yawSpeed = 1.0;
+            clientCommand.set_yawspeed(1.0);
          }
          break;
 
       case SDLK_d:
          isD = true;
          if (isA) {
-            clientCommand.yawSpeed = 0.0;
+            clientCommand.set_yawspeed(0);
          } else {
-            clientCommand.yawSpeed = -1.0;
+            clientCommand.set_yawspeed(-1.0);
          }
          break;
 
       case SDLK_q:
-         clientCommand.rightAcceleration = -1;
+         clientCommand.set_rightacceleration(-1);
          break;
 
       case SDLK_e:
-         clientCommand.rightAcceleration = 1;
+         clientCommand.set_rightacceleration(1);
          break;
 
       case SDLK_SPACE:
-         clientCommand.upAcceleration = 1;
+         clientCommand.set_upacceleration(1);
          break;
 
       case SDLK_LCTRL:
-         clientCommand.upAcceleration = -1;
+         clientCommand.set_upacceleration(-1);
          break;
 
       case SDLK_RSHIFT:
          doYaw = !doYaw;
-         clientCommand.rollSpeed = 0;
+         clientCommand.set_rollspeed(0);
          break;
 
 
       case SDLK_b:
-         clientCommand.brake = true;
+         clientCommand.set_brake(true);
          break;
       }
 
@@ -1151,10 +1159,10 @@ void GameState::keyDown(int key, int unicode) {
       // When you disable the flyingAI, stop accelerating the ship.
       if(ship->flyingAI->isEnabled()) {
          ship->flyingAI->disable();
-         clientCommand.reset();
+         resetClientCommand();
       } else {
          // Stop accelerating the ship when turning on the flyingAI as well.
-         clientCommand.reset();
+         resetClientCommand();
          ship->flyingAI->enable();
       }
       break;
@@ -1163,12 +1171,12 @@ void GameState::keyDown(int key, int unicode) {
       //switch weapons
    case SDLK_v:
       // Keep scrolling through weapons as long as they're not purchased.
-      clientCommand.currentWeapon = ship->getPrevWeaponID();
+      clientCommand.set_curweapon(ship->getPrevWeaponID());
       break;
 
    case SDLK_z:
       // Keep scrolling through weapons as long as they're not purchased.
-      clientCommand.currentWeapon = ship->getNextWeaponID();
+      clientCommand.set_curweapon(ship->getNextWeaponID());
       break;
 
       // Enable chat.
@@ -1273,9 +1281,9 @@ void GameState::keyUp(int key) {
       isS = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isW) {
-            clientCommand.forwardAcceleration = 1;
+            clientCommand.set_forwardacceleration(1);
          } else {
-            clientCommand.forwardAcceleration = 0;
+            clientCommand.set_forwardacceleration(0);
          }
       }
       break;
@@ -1284,9 +1292,9 @@ void GameState::keyUp(int key) {
       isW = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isS) {
-            clientCommand.forwardAcceleration = -1;
+            clientCommand.set_forwardacceleration(-1);
          } else {
-            clientCommand.forwardAcceleration = 0;
+            clientCommand.set_forwardacceleration(0);
          }
       }
       break;
@@ -1295,9 +1303,9 @@ void GameState::keyUp(int key) {
       isA = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isD) {
-            clientCommand.yawSpeed = -1.0;
+            clientCommand.set_yawspeed(-1.0);
          } else {
-            clientCommand.yawSpeed = 0;
+            clientCommand.set_yawspeed(0);
          }
       }
       break;
@@ -1306,30 +1314,28 @@ void GameState::keyUp(int key) {
       isD = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isA) {
-            clientCommand.yawSpeed = 1.0;
+            clientCommand.set_yawspeed(1.0);
          } else {
-            clientCommand.yawSpeed = 0;
+            clientCommand.set_yawspeed(0);
          }
       }
-      //if(!ship->flyingAI->isEnabled())
-      //ship->setYawSpeed(0);
       break;
 
    case SDLK_q:
    case SDLK_e:
       if(!ship->flyingAI->isEnabled())
-         clientCommand.rightAcceleration = 0;
+         clientCommand.set_rightacceleration(0);
       break;
 
    case SDLK_SPACE:
    case SDLK_LCTRL:
       if(!ship->flyingAI->isEnabled())
-         clientCommand.upAcceleration = 0;
+         clientCommand.set_upacceleration(0);
       break;
 
 
    case SDLK_b:
-      clientCommand.brake = false;
+      clientCommand.set_brake(false);
       break;
       // Minimap Size
    case SDLK_1:
@@ -1364,22 +1370,22 @@ void GameState::mouseDown(int button) {
    switch(button) {
       // Left mouse down
    case 1:
-      clientCommand.fire = true;
+      clientCommand.set_fire(true);
       break;
 
       // Right mouse down
    case 3:
       doYaw = !doYaw;
-      clientCommand.rollSpeed = 0;
-      clientCommand.yawSpeed = 0;
+      clientCommand.set_rollspeed(0);
+      clientCommand.set_yawspeed(0);
       break;
 
       // Scroll
    case 4:
-      clientCommand.currentWeapon = ship->getPrevWeaponID();
+      clientCommand.set_curweapon(ship->getPrevWeaponID());
       break;
    case 5:
-      clientCommand.currentWeapon = ship->getNextWeaponID();
+      clientCommand.set_curweapon(ship->getNextWeaponID());
       break;
    }
 }
@@ -1394,13 +1400,13 @@ void GameState::mouseUp(int button) {
    switch (button) {
       // Left mouse up
    case 1:
-      clientCommand.fire = false;
+      clientCommand.set_fire(false);
       break;
       // Right mouse up
    case 3:
       doYaw = !doYaw;
-      clientCommand.rollSpeed = 0;
-      clientCommand.yawSpeed = 0;
+      clientCommand.set_rollspeed(0);
+      clientCommand.set_yawspeed(0);
       break;
    }
 }
@@ -1416,8 +1422,8 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    mouseX = shipControlX;
    mouseY = shipControlY;
 
-   clientCommand.mouseX = (float) mouseX;
-   clientCommand.mouseY = (float) mouseY;
+   clientCommand.set_mousex(mouseX);
+   clientCommand.set_mousey(mouseY);
 
    shipControlX = shipControlX / p2wx(gameSettings->GW);
    shipControlY = shipControlY / p2wy(0);
@@ -1427,12 +1433,12 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 
    if(!ship->flyingAI->isEnabled()) {
       if (doYaw) {
-         clientCommand.yawSpeed = (float) -shipControlX;
+         clientCommand.set_yawspeed(-shipControlX);
       } else {
-         clientCommand.rollSpeed = (float) shipControlX;
+         clientCommand.set_rollspeed(shipControlX);
       }
 
-      clientCommand.pitchSpeed = (float) shipControlY;
+      clientCommand.set_pitchspeed(shipControlY);
    }
 }
 

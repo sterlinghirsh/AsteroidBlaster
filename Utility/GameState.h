@@ -13,8 +13,6 @@
 #include "Utility/InputManager.h"
 #include "Utility/Timer.h"
 
-#include "Network/ClientCommand.h"
-
 #include <list>
 
 class Camera;
@@ -39,6 +37,10 @@ namespace boost {
    namespace asio {
       class io_service;
    }
+}
+
+namespace ast {
+   class ClientCommand;
 }
 
 class GameState : public InputReceiver {
@@ -84,7 +86,7 @@ class GameState : public InputReceiver {
       WeaponDisplay* weaponBar;
       double curFPS, worldSize;
       double lastDrawTime;
-      ClientCommand clientCommand;
+      ast::ClientCommand& clientCommand;
       
       BoundingSpace* cube;
 
@@ -191,6 +193,7 @@ class GameState : public InputReceiver {
       int decideNumAsteroidsToSpawn();
       void addWeaponUnlockMessage(Weapon* unlockedWeapon);
       void reset(bool shouldLoad = false);
+      void resetClientCommand();
       
       void setLevelTimer();
       

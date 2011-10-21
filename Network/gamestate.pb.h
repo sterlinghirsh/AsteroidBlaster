@@ -35,6 +35,7 @@ void protobuf_ShutdownFile_Network_2fgamestate_2eproto();
 class Vector;
 class Entity;
 class Weapon;
+class ClientCommand;
 class Timer;
 class GameState;
 class CollisionMessage;
@@ -981,6 +982,198 @@ class Weapon : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static Weapon* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ClientCommand : public ::google::protobuf::Message {
+ public:
+  ClientCommand();
+  virtual ~ClientCommand();
+  
+  ClientCommand(const ClientCommand& from);
+  
+  inline ClientCommand& operator=(const ClientCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ClientCommand& default_instance();
+  
+  void Swap(ClientCommand* other);
+  
+  // implements Message ----------------------------------------------
+  
+  ClientCommand* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ClientCommand& from);
+  void MergeFrom(const ClientCommand& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required uint32 shipID = 1;
+  inline bool has_shipid() const;
+  inline void clear_shipid();
+  static const int kShipIDFieldNumber = 1;
+  inline ::google::protobuf::uint32 shipid() const;
+  inline void set_shipid(::google::protobuf::uint32 value);
+  
+  // optional sint32 forwardAcceleration = 2;
+  inline bool has_forwardacceleration() const;
+  inline void clear_forwardacceleration();
+  static const int kForwardAccelerationFieldNumber = 2;
+  inline ::google::protobuf::int32 forwardacceleration() const;
+  inline void set_forwardacceleration(::google::protobuf::int32 value);
+  
+  // optional sint32 rightAcceleration = 3;
+  inline bool has_rightacceleration() const;
+  inline void clear_rightacceleration();
+  static const int kRightAccelerationFieldNumber = 3;
+  inline ::google::protobuf::int32 rightacceleration() const;
+  inline void set_rightacceleration(::google::protobuf::int32 value);
+  
+  // optional sint32 upAcceleration = 4;
+  inline bool has_upacceleration() const;
+  inline void clear_upacceleration();
+  static const int kUpAccelerationFieldNumber = 4;
+  inline ::google::protobuf::int32 upacceleration() const;
+  inline void set_upacceleration(::google::protobuf::int32 value);
+  
+  // optional bool brake = 5;
+  inline bool has_brake() const;
+  inline void clear_brake();
+  static const int kBrakeFieldNumber = 5;
+  inline bool brake() const;
+  inline void set_brake(bool value);
+  
+  // optional float yawSpeed = 6;
+  inline bool has_yawspeed() const;
+  inline void clear_yawspeed();
+  static const int kYawSpeedFieldNumber = 6;
+  inline float yawspeed() const;
+  inline void set_yawspeed(float value);
+  
+  // optional float rollSpeed = 7;
+  inline bool has_rollspeed() const;
+  inline void clear_rollspeed();
+  static const int kRollSpeedFieldNumber = 7;
+  inline float rollspeed() const;
+  inline void set_rollspeed(float value);
+  
+  // optional float pitchSpeed = 8;
+  inline bool has_pitchspeed() const;
+  inline void clear_pitchspeed();
+  static const int kPitchSpeedFieldNumber = 8;
+  inline float pitchspeed() const;
+  inline void set_pitchspeed(float value);
+  
+  // optional bool fire = 9;
+  inline bool has_fire() const;
+  inline void clear_fire();
+  static const int kFireFieldNumber = 9;
+  inline bool fire() const;
+  inline void set_fire(bool value);
+  
+  // optional uint32 curWeapon = 10;
+  inline bool has_curweapon() const;
+  inline void clear_curweapon();
+  static const int kCurWeaponFieldNumber = 10;
+  inline ::google::protobuf::uint32 curweapon() const;
+  inline void set_curweapon(::google::protobuf::uint32 value);
+  
+  // optional float mouseX = 11;
+  inline bool has_mousex() const;
+  inline void clear_mousex();
+  static const int kMouseXFieldNumber = 11;
+  inline float mousex() const;
+  inline void set_mousex(float value);
+  
+  // optional float mouseY = 12;
+  inline bool has_mousey() const;
+  inline void clear_mousey();
+  static const int kMouseYFieldNumber = 12;
+  inline float mousey() const;
+  inline void set_mousey(float value);
+  
+  // @@protoc_insertion_point(class_scope:ast.ClientCommand)
+ private:
+  inline void set_has_shipid();
+  inline void clear_has_shipid();
+  inline void set_has_forwardacceleration();
+  inline void clear_has_forwardacceleration();
+  inline void set_has_rightacceleration();
+  inline void clear_has_rightacceleration();
+  inline void set_has_upacceleration();
+  inline void clear_has_upacceleration();
+  inline void set_has_brake();
+  inline void clear_has_brake();
+  inline void set_has_yawspeed();
+  inline void clear_has_yawspeed();
+  inline void set_has_rollspeed();
+  inline void clear_has_rollspeed();
+  inline void set_has_pitchspeed();
+  inline void clear_has_pitchspeed();
+  inline void set_has_fire();
+  inline void clear_has_fire();
+  inline void set_has_curweapon();
+  inline void clear_has_curweapon();
+  inline void set_has_mousex();
+  inline void clear_has_mousex();
+  inline void set_has_mousey();
+  inline void clear_has_mousey();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::uint32 shipid_;
+  ::google::protobuf::int32 forwardacceleration_;
+  ::google::protobuf::int32 rightacceleration_;
+  ::google::protobuf::int32 upacceleration_;
+  float yawspeed_;
+  float rollspeed_;
+  bool brake_;
+  bool fire_;
+  float pitchspeed_;
+  ::google::protobuf::uint32 curweapon_;
+  float mousex_;
+  float mousey_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_ShutdownFile_Network_2fgamestate_2eproto();
+  
+  void InitAsDefaultInstance();
+  static ClientCommand* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -3327,6 +3520,274 @@ inline float Weapon::heatpershot() const {
 inline void Weapon::set_heatpershot(float value) {
   set_has_heatpershot();
   heatpershot_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ClientCommand
+
+// required uint32 shipID = 1;
+inline bool ClientCommand::has_shipid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ClientCommand::set_has_shipid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ClientCommand::clear_has_shipid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ClientCommand::clear_shipid() {
+  shipid_ = 0u;
+  clear_has_shipid();
+}
+inline ::google::protobuf::uint32 ClientCommand::shipid() const {
+  return shipid_;
+}
+inline void ClientCommand::set_shipid(::google::protobuf::uint32 value) {
+  set_has_shipid();
+  shipid_ = value;
+}
+
+// optional sint32 forwardAcceleration = 2;
+inline bool ClientCommand::has_forwardacceleration() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ClientCommand::set_has_forwardacceleration() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ClientCommand::clear_has_forwardacceleration() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ClientCommand::clear_forwardacceleration() {
+  forwardacceleration_ = 0;
+  clear_has_forwardacceleration();
+}
+inline ::google::protobuf::int32 ClientCommand::forwardacceleration() const {
+  return forwardacceleration_;
+}
+inline void ClientCommand::set_forwardacceleration(::google::protobuf::int32 value) {
+  set_has_forwardacceleration();
+  forwardacceleration_ = value;
+}
+
+// optional sint32 rightAcceleration = 3;
+inline bool ClientCommand::has_rightacceleration() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ClientCommand::set_has_rightacceleration() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ClientCommand::clear_has_rightacceleration() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ClientCommand::clear_rightacceleration() {
+  rightacceleration_ = 0;
+  clear_has_rightacceleration();
+}
+inline ::google::protobuf::int32 ClientCommand::rightacceleration() const {
+  return rightacceleration_;
+}
+inline void ClientCommand::set_rightacceleration(::google::protobuf::int32 value) {
+  set_has_rightacceleration();
+  rightacceleration_ = value;
+}
+
+// optional sint32 upAcceleration = 4;
+inline bool ClientCommand::has_upacceleration() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ClientCommand::set_has_upacceleration() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ClientCommand::clear_has_upacceleration() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ClientCommand::clear_upacceleration() {
+  upacceleration_ = 0;
+  clear_has_upacceleration();
+}
+inline ::google::protobuf::int32 ClientCommand::upacceleration() const {
+  return upacceleration_;
+}
+inline void ClientCommand::set_upacceleration(::google::protobuf::int32 value) {
+  set_has_upacceleration();
+  upacceleration_ = value;
+}
+
+// optional bool brake = 5;
+inline bool ClientCommand::has_brake() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ClientCommand::set_has_brake() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ClientCommand::clear_has_brake() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ClientCommand::clear_brake() {
+  brake_ = false;
+  clear_has_brake();
+}
+inline bool ClientCommand::brake() const {
+  return brake_;
+}
+inline void ClientCommand::set_brake(bool value) {
+  set_has_brake();
+  brake_ = value;
+}
+
+// optional float yawSpeed = 6;
+inline bool ClientCommand::has_yawspeed() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ClientCommand::set_has_yawspeed() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ClientCommand::clear_has_yawspeed() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ClientCommand::clear_yawspeed() {
+  yawspeed_ = 0;
+  clear_has_yawspeed();
+}
+inline float ClientCommand::yawspeed() const {
+  return yawspeed_;
+}
+inline void ClientCommand::set_yawspeed(float value) {
+  set_has_yawspeed();
+  yawspeed_ = value;
+}
+
+// optional float rollSpeed = 7;
+inline bool ClientCommand::has_rollspeed() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ClientCommand::set_has_rollspeed() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ClientCommand::clear_has_rollspeed() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ClientCommand::clear_rollspeed() {
+  rollspeed_ = 0;
+  clear_has_rollspeed();
+}
+inline float ClientCommand::rollspeed() const {
+  return rollspeed_;
+}
+inline void ClientCommand::set_rollspeed(float value) {
+  set_has_rollspeed();
+  rollspeed_ = value;
+}
+
+// optional float pitchSpeed = 8;
+inline bool ClientCommand::has_pitchspeed() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void ClientCommand::set_has_pitchspeed() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void ClientCommand::clear_has_pitchspeed() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void ClientCommand::clear_pitchspeed() {
+  pitchspeed_ = 0;
+  clear_has_pitchspeed();
+}
+inline float ClientCommand::pitchspeed() const {
+  return pitchspeed_;
+}
+inline void ClientCommand::set_pitchspeed(float value) {
+  set_has_pitchspeed();
+  pitchspeed_ = value;
+}
+
+// optional bool fire = 9;
+inline bool ClientCommand::has_fire() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void ClientCommand::set_has_fire() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void ClientCommand::clear_has_fire() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void ClientCommand::clear_fire() {
+  fire_ = false;
+  clear_has_fire();
+}
+inline bool ClientCommand::fire() const {
+  return fire_;
+}
+inline void ClientCommand::set_fire(bool value) {
+  set_has_fire();
+  fire_ = value;
+}
+
+// optional uint32 curWeapon = 10;
+inline bool ClientCommand::has_curweapon() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void ClientCommand::set_has_curweapon() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void ClientCommand::clear_has_curweapon() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void ClientCommand::clear_curweapon() {
+  curweapon_ = 0u;
+  clear_has_curweapon();
+}
+inline ::google::protobuf::uint32 ClientCommand::curweapon() const {
+  return curweapon_;
+}
+inline void ClientCommand::set_curweapon(::google::protobuf::uint32 value) {
+  set_has_curweapon();
+  curweapon_ = value;
+}
+
+// optional float mouseX = 11;
+inline bool ClientCommand::has_mousex() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void ClientCommand::set_has_mousex() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void ClientCommand::clear_has_mousex() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void ClientCommand::clear_mousex() {
+  mousex_ = 0;
+  clear_has_mousex();
+}
+inline float ClientCommand::mousex() const {
+  return mousex_;
+}
+inline void ClientCommand::set_mousex(float value) {
+  set_has_mousex();
+  mousex_ = value;
+}
+
+// optional float mouseY = 12;
+inline bool ClientCommand::has_mousey() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void ClientCommand::set_has_mousey() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void ClientCommand::clear_has_mousey() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void ClientCommand::clear_mousey() {
+  mousey_ = 0;
+  clear_has_mousey();
+}
+inline float ClientCommand::mousey() const {
+  return mousey_;
+}
+inline void ClientCommand::set_mousey(float value) {
+  set_has_mousey();
+  mousey_ = value;
 }
 
 // -------------------------------------------------------------------

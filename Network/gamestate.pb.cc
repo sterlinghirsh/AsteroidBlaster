@@ -26,6 +26,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Weapon_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Weapon_reflection_ = NULL;
+const ::google::protobuf::Descriptor* ClientCommand_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  ClientCommand_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Timer_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Timer_reflection_ = NULL;
@@ -167,7 +170,33 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Weapon));
-  Timer_descriptor_ = file->message_type(3);
+  ClientCommand_descriptor_ = file->message_type(3);
+  static const int ClientCommand_offsets_[12] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, shipid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, forwardacceleration_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, rightacceleration_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, upacceleration_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, brake_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, yawspeed_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, rollspeed_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, pitchspeed_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, fire_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, curweapon_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, mousex_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, mousey_),
+  };
+  ClientCommand_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      ClientCommand_descriptor_,
+      ClientCommand::default_instance_,
+      ClientCommand_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(ClientCommand));
+  Timer_descriptor_ = file->message_type(4);
   static const int Timer_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, timestarted_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, countdowntime_),
@@ -186,7 +215,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Timer));
-  GameState_descriptor_ = file->message_type(4);
+  GameState_descriptor_ = file->message_type(5);
   static const int GameState_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, playership_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, gametime_),
@@ -205,7 +234,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GameState));
-  CollisionMessage_descriptor_ = file->message_type(5);
+  CollisionMessage_descriptor_ = file->message_type(6);
   static const int CollisionMessage_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, messageid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, timestamp_),
@@ -223,7 +252,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CollisionMessage));
-  ChatMessage_descriptor_ = file->message_type(6);
+  ChatMessage_descriptor_ = file->message_type(7);
   static const int ChatMessage_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ChatMessage, sourceid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ChatMessage, text_),
@@ -239,7 +268,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ChatMessage));
-  CreateEntityMessage_descriptor_ = file->message_type(7);
+  CreateEntityMessage_descriptor_ = file->message_type(8);
   static const int CreateEntityMessage_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateEntityMessage, createentitymessageid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateEntityMessage, entity_),
@@ -255,7 +284,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateEntityMessage));
-  ServerToClient_descriptor_ = file->message_type(8);
+  ServerToClient_descriptor_ = file->message_type(9);
   static const int ServerToClient_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerToClient, seq_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerToClient, ack_),
@@ -294,6 +323,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Weapon_descriptor_, &Weapon::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    ClientCommand_descriptor_, &ClientCommand::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Timer_descriptor_, &Timer::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     GameState_descriptor_, &GameState::default_instance());
@@ -316,6 +347,8 @@ void protobuf_ShutdownFile_Network_2fgamestate_2eproto() {
   delete Entity_reflection_;
   delete Weapon::default_instance_;
   delete Weapon_reflection_;
+  delete ClientCommand::default_instance_;
+  delete ClientCommand_reflection_;
   delete Timer::default_instance_;
   delete Timer_reflection_;
   delete GameState::default_instance_;
@@ -377,28 +410,35 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "shotid\030\t \001(\005\022\021\n\tpurchased\030\020 \001(\010\022\023\n\013weapo"
     "nPrice\030\021 \001(\005\022\r\n\005level\030\022 \001(\005\022\r\n\005range\030\023 \001"
     "(\002\022\025\n\roverheatLevel\030\024 \001(\002\022\023\n\013heatPerShot"
-    "\030\025 \001(\002\"l\n\005Timer\022\023\n\013timeStarted\030\001 \001(\002\022\025\n\r"
-    "countDownTime\030\002 \001(\002\022\022\n\ntimePaused\030\003 \001(\002\022"
-    "\020\n\010isPaused\030\004 \001(\010\022\021\n\tisRunning\030\005 \001(\010\"\200\001\n"
-    "\tGameState\022\022\n\nplayerShip\030\003 \001(\r\022\020\n\010gameTi"
-    "me\030\002 \002(\001\022\036\n\nlevelTimer\030\004 \001(\0132\n.ast.Timer"
-    "\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity\022\020\n\010curLeve"
-    "l\030\005 \001(\005\"^\n\020CollisionMessage\022\021\n\tmessageid"
-    "\030\004 \001(\r\022\021\n\ttimestamp\030\001 \001(\001\022\021\n\tobjectId1\030\002"
-    " \001(\r\022\021\n\tobjectId2\030\003 \001(\r\"-\n\013ChatMessage\022\020"
-    "\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\"Q\n\023Create"
-    "EntityMessage\022\035\n\025createEntityMessageid\030\001"
-    " \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast.Entity\"\270\001\n\016Se"
-    "rverToClient\022\013\n\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001(\004\022\021"
-    "\n\ttimestamp\030\005 \001(\001\022!\n\tgameState\030\021 \001(\0132\016.a"
-    "st.GameState\022/\n\020collisionMessage\030\001 \003(\0132\025"
-    ".ast.CollisionMessage\022%\n\013chatMessage\030\002 \003"
-    "(\0132\020.ast.ChatMessage", 2260);
+    "\030\025 \001(\002\"\370\001\n\rClientCommand\022\016\n\006shipID\030\001 \002(\r"
+    "\022\033\n\023forwardAcceleration\030\002 \001(\021\022\031\n\021rightAc"
+    "celeration\030\003 \001(\021\022\026\n\016upAcceleration\030\004 \001(\021"
+    "\022\r\n\005brake\030\005 \001(\010\022\020\n\010yawSpeed\030\006 \001(\002\022\021\n\trol"
+    "lSpeed\030\007 \001(\002\022\022\n\npitchSpeed\030\010 \001(\002\022\014\n\004fire"
+    "\030\t \001(\010\022\021\n\tcurWeapon\030\n \001(\r\022\016\n\006mouseX\030\013 \001("
+    "\002\022\016\n\006mouseY\030\014 \001(\002\"l\n\005Timer\022\023\n\013timeStarte"
+    "d\030\001 \001(\002\022\025\n\rcountDownTime\030\002 \001(\002\022\022\n\ntimePa"
+    "used\030\003 \001(\002\022\020\n\010isPaused\030\004 \001(\010\022\021\n\tisRunnin"
+    "g\030\005 \001(\010\"\200\001\n\tGameState\022\022\n\nplayerShip\030\003 \001("
+    "\r\022\020\n\010gameTime\030\002 \002(\001\022\036\n\nlevelTimer\030\004 \001(\0132"
+    "\n.ast.Timer\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity"
+    "\022\020\n\010curLevel\030\005 \001(\005\"^\n\020CollisionMessage\022\021"
+    "\n\tmessageid\030\004 \001(\r\022\021\n\ttimestamp\030\001 \001(\001\022\021\n\t"
+    "objectId1\030\002 \001(\r\022\021\n\tobjectId2\030\003 \001(\r\"-\n\013Ch"
+    "atMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 \001("
+    "\t\"Q\n\023CreateEntityMessage\022\035\n\025createEntity"
+    "Messageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast.En"
+    "tity\"\270\001\n\016ServerToClient\022\013\n\003seq\030\003 \001(\004\022\013\n\003"
+    "ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022!\n\tgameStat"
+    "e\030\021 \001(\0132\016.ast.GameState\022/\n\020collisionMess"
+    "age\030\001 \003(\0132\025.ast.CollisionMessage\022%\n\013chat"
+    "Message\030\002 \003(\0132\020.ast.ChatMessage", 2511);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
   Entity::default_instance_ = new Entity();
   Weapon::default_instance_ = new Weapon();
+  ClientCommand::default_instance_ = new ClientCommand();
   Timer::default_instance_ = new Timer();
   GameState::default_instance_ = new GameState();
   CollisionMessage::default_instance_ = new CollisionMessage();
@@ -408,6 +448,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
   Vector::default_instance_->InitAsDefaultInstance();
   Entity::default_instance_->InitAsDefaultInstance();
   Weapon::default_instance_->InitAsDefaultInstance();
+  ClientCommand::default_instance_->InitAsDefaultInstance();
   Timer::default_instance_->InitAsDefaultInstance();
   GameState::default_instance_->InitAsDefaultInstance();
   CollisionMessage::default_instance_->InitAsDefaultInstance();
@@ -3808,6 +3849,646 @@ void Weapon::Swap(Weapon* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = Weapon_descriptor_;
   metadata.reflection = Weapon_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int ClientCommand::kShipIDFieldNumber;
+const int ClientCommand::kForwardAccelerationFieldNumber;
+const int ClientCommand::kRightAccelerationFieldNumber;
+const int ClientCommand::kUpAccelerationFieldNumber;
+const int ClientCommand::kBrakeFieldNumber;
+const int ClientCommand::kYawSpeedFieldNumber;
+const int ClientCommand::kRollSpeedFieldNumber;
+const int ClientCommand::kPitchSpeedFieldNumber;
+const int ClientCommand::kFireFieldNumber;
+const int ClientCommand::kCurWeaponFieldNumber;
+const int ClientCommand::kMouseXFieldNumber;
+const int ClientCommand::kMouseYFieldNumber;
+#endif  // !_MSC_VER
+
+ClientCommand::ClientCommand()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void ClientCommand::InitAsDefaultInstance() {
+}
+
+ClientCommand::ClientCommand(const ClientCommand& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void ClientCommand::SharedCtor() {
+  _cached_size_ = 0;
+  shipid_ = 0u;
+  forwardacceleration_ = 0;
+  rightacceleration_ = 0;
+  upacceleration_ = 0;
+  brake_ = false;
+  yawspeed_ = 0;
+  rollspeed_ = 0;
+  pitchspeed_ = 0;
+  fire_ = false;
+  curweapon_ = 0u;
+  mousex_ = 0;
+  mousey_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+ClientCommand::~ClientCommand() {
+  SharedDtor();
+}
+
+void ClientCommand::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void ClientCommand::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* ClientCommand::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ClientCommand_descriptor_;
+}
+
+const ClientCommand& ClientCommand::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_Network_2fgamestate_2eproto();  return *default_instance_;
+}
+
+ClientCommand* ClientCommand::default_instance_ = NULL;
+
+ClientCommand* ClientCommand::New() const {
+  return new ClientCommand;
+}
+
+void ClientCommand::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    shipid_ = 0u;
+    forwardacceleration_ = 0;
+    rightacceleration_ = 0;
+    upacceleration_ = 0;
+    brake_ = false;
+    yawspeed_ = 0;
+    rollspeed_ = 0;
+    pitchspeed_ = 0;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    fire_ = false;
+    curweapon_ = 0u;
+    mousex_ = 0;
+    mousey_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool ClientCommand::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required uint32 shipID = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &shipid_)));
+          set_has_shipid();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_forwardAcceleration;
+        break;
+      }
+      
+      // optional sint32 forwardAcceleration = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_forwardAcceleration:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_SINT32>(
+                 input, &forwardacceleration_)));
+          set_has_forwardacceleration();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_rightAcceleration;
+        break;
+      }
+      
+      // optional sint32 rightAcceleration = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_rightAcceleration:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_SINT32>(
+                 input, &rightacceleration_)));
+          set_has_rightacceleration();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_upAcceleration;
+        break;
+      }
+      
+      // optional sint32 upAcceleration = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_upAcceleration:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_SINT32>(
+                 input, &upacceleration_)));
+          set_has_upacceleration();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_brake;
+        break;
+      }
+      
+      // optional bool brake = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_brake:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &brake_)));
+          set_has_brake();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(53)) goto parse_yawSpeed;
+        break;
+      }
+      
+      // optional float yawSpeed = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_yawSpeed:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &yawspeed_)));
+          set_has_yawspeed();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(61)) goto parse_rollSpeed;
+        break;
+      }
+      
+      // optional float rollSpeed = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_rollSpeed:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &rollspeed_)));
+          set_has_rollspeed();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(69)) goto parse_pitchSpeed;
+        break;
+      }
+      
+      // optional float pitchSpeed = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_pitchSpeed:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &pitchspeed_)));
+          set_has_pitchspeed();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(72)) goto parse_fire;
+        break;
+      }
+      
+      // optional bool fire = 9;
+      case 9: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_fire:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &fire_)));
+          set_has_fire();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(80)) goto parse_curWeapon;
+        break;
+      }
+      
+      // optional uint32 curWeapon = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_curWeapon:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &curweapon_)));
+          set_has_curweapon();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(93)) goto parse_mouseX;
+        break;
+      }
+      
+      // optional float mouseX = 11;
+      case 11: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_mouseX:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &mousex_)));
+          set_has_mousex();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(101)) goto parse_mouseY;
+        break;
+      }
+      
+      // optional float mouseY = 12;
+      case 12: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_mouseY:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &mousey_)));
+          set_has_mousey();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void ClientCommand::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required uint32 shipID = 1;
+  if (has_shipid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->shipid(), output);
+  }
+  
+  // optional sint32 forwardAcceleration = 2;
+  if (has_forwardacceleration()) {
+    ::google::protobuf::internal::WireFormatLite::WriteSInt32(2, this->forwardacceleration(), output);
+  }
+  
+  // optional sint32 rightAcceleration = 3;
+  if (has_rightacceleration()) {
+    ::google::protobuf::internal::WireFormatLite::WriteSInt32(3, this->rightacceleration(), output);
+  }
+  
+  // optional sint32 upAcceleration = 4;
+  if (has_upacceleration()) {
+    ::google::protobuf::internal::WireFormatLite::WriteSInt32(4, this->upacceleration(), output);
+  }
+  
+  // optional bool brake = 5;
+  if (has_brake()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->brake(), output);
+  }
+  
+  // optional float yawSpeed = 6;
+  if (has_yawspeed()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(6, this->yawspeed(), output);
+  }
+  
+  // optional float rollSpeed = 7;
+  if (has_rollspeed()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(7, this->rollspeed(), output);
+  }
+  
+  // optional float pitchSpeed = 8;
+  if (has_pitchspeed()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->pitchspeed(), output);
+  }
+  
+  // optional bool fire = 9;
+  if (has_fire()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(9, this->fire(), output);
+  }
+  
+  // optional uint32 curWeapon = 10;
+  if (has_curweapon()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(10, this->curweapon(), output);
+  }
+  
+  // optional float mouseX = 11;
+  if (has_mousex()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(11, this->mousex(), output);
+  }
+  
+  // optional float mouseY = 12;
+  if (has_mousey()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(12, this->mousey(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* ClientCommand::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required uint32 shipID = 1;
+  if (has_shipid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->shipid(), target);
+  }
+  
+  // optional sint32 forwardAcceleration = 2;
+  if (has_forwardacceleration()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteSInt32ToArray(2, this->forwardacceleration(), target);
+  }
+  
+  // optional sint32 rightAcceleration = 3;
+  if (has_rightacceleration()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteSInt32ToArray(3, this->rightacceleration(), target);
+  }
+  
+  // optional sint32 upAcceleration = 4;
+  if (has_upacceleration()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteSInt32ToArray(4, this->upacceleration(), target);
+  }
+  
+  // optional bool brake = 5;
+  if (has_brake()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->brake(), target);
+  }
+  
+  // optional float yawSpeed = 6;
+  if (has_yawspeed()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(6, this->yawspeed(), target);
+  }
+  
+  // optional float rollSpeed = 7;
+  if (has_rollspeed()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(7, this->rollspeed(), target);
+  }
+  
+  // optional float pitchSpeed = 8;
+  if (has_pitchspeed()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->pitchspeed(), target);
+  }
+  
+  // optional bool fire = 9;
+  if (has_fire()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(9, this->fire(), target);
+  }
+  
+  // optional uint32 curWeapon = 10;
+  if (has_curweapon()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(10, this->curweapon(), target);
+  }
+  
+  // optional float mouseX = 11;
+  if (has_mousex()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(11, this->mousex(), target);
+  }
+  
+  // optional float mouseY = 12;
+  if (has_mousey()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(12, this->mousey(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int ClientCommand::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required uint32 shipID = 1;
+    if (has_shipid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->shipid());
+    }
+    
+    // optional sint32 forwardAcceleration = 2;
+    if (has_forwardacceleration()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::SInt32Size(
+          this->forwardacceleration());
+    }
+    
+    // optional sint32 rightAcceleration = 3;
+    if (has_rightacceleration()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::SInt32Size(
+          this->rightacceleration());
+    }
+    
+    // optional sint32 upAcceleration = 4;
+    if (has_upacceleration()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::SInt32Size(
+          this->upacceleration());
+    }
+    
+    // optional bool brake = 5;
+    if (has_brake()) {
+      total_size += 1 + 1;
+    }
+    
+    // optional float yawSpeed = 6;
+    if (has_yawspeed()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional float rollSpeed = 7;
+    if (has_rollspeed()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional float pitchSpeed = 8;
+    if (has_pitchspeed()) {
+      total_size += 1 + 4;
+    }
+    
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional bool fire = 9;
+    if (has_fire()) {
+      total_size += 1 + 1;
+    }
+    
+    // optional uint32 curWeapon = 10;
+    if (has_curweapon()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->curweapon());
+    }
+    
+    // optional float mouseX = 11;
+    if (has_mousex()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional float mouseY = 12;
+    if (has_mousey()) {
+      total_size += 1 + 4;
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ClientCommand::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const ClientCommand* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ClientCommand*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void ClientCommand::MergeFrom(const ClientCommand& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_shipid()) {
+      set_shipid(from.shipid());
+    }
+    if (from.has_forwardacceleration()) {
+      set_forwardacceleration(from.forwardacceleration());
+    }
+    if (from.has_rightacceleration()) {
+      set_rightacceleration(from.rightacceleration());
+    }
+    if (from.has_upacceleration()) {
+      set_upacceleration(from.upacceleration());
+    }
+    if (from.has_brake()) {
+      set_brake(from.brake());
+    }
+    if (from.has_yawspeed()) {
+      set_yawspeed(from.yawspeed());
+    }
+    if (from.has_rollspeed()) {
+      set_rollspeed(from.rollspeed());
+    }
+    if (from.has_pitchspeed()) {
+      set_pitchspeed(from.pitchspeed());
+    }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_fire()) {
+      set_fire(from.fire());
+    }
+    if (from.has_curweapon()) {
+      set_curweapon(from.curweapon());
+    }
+    if (from.has_mousex()) {
+      set_mousex(from.mousex());
+    }
+    if (from.has_mousey()) {
+      set_mousey(from.mousey());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void ClientCommand::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ClientCommand::CopyFrom(const ClientCommand& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ClientCommand::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+  
+  return true;
+}
+
+void ClientCommand::Swap(ClientCommand* other) {
+  if (other != this) {
+    std::swap(shipid_, other->shipid_);
+    std::swap(forwardacceleration_, other->forwardacceleration_);
+    std::swap(rightacceleration_, other->rightacceleration_);
+    std::swap(upacceleration_, other->upacceleration_);
+    std::swap(brake_, other->brake_);
+    std::swap(yawspeed_, other->yawspeed_);
+    std::swap(rollspeed_, other->rollspeed_);
+    std::swap(pitchspeed_, other->pitchspeed_);
+    std::swap(fire_, other->fire_);
+    std::swap(curweapon_, other->curweapon_);
+    std::swap(mousex_, other->mousex_);
+    std::swap(mousey_, other->mousey_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata ClientCommand::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = ClientCommand_descriptor_;
+  metadata.reflection = ClientCommand_reflection_;
   return metadata;
 }
 

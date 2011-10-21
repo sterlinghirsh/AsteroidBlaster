@@ -73,8 +73,8 @@ void MeshFace::draw() {
    position->glTranslate();
    glRotated(angle, axis->x, axis->y, axis->z);
 
-   //double scaleAmount = sqrt((lifetime - (doubleTime() - timeExploded)) / lifetime);
-   double scaleAmount = clamp(2.0 * (lifetime - (doubleTime() - timeExploded)) / lifetime, 0, 1);
+   //double scaleAmount = sqrt((lifetime - (gameState->getGameTime() - timeExploded)) / lifetime);
+   double scaleAmount = clamp(2.0 * (lifetime - (gameState->getGameTime() - timeExploded)) / lifetime, 0, 1);
    glScaled(scaleAmount, scaleAmount, scaleAmount);
 
    // Draw lines
@@ -118,7 +118,7 @@ void MeshFace::drawLines() {
    GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
 
    float curAlpha = timeExploded == 0 ? 1.0f :
-      (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
+      (GLfloat) sqrt((lifetime - (gameState->getGameTime() - timeExploded)));
 
    if (timeExploded > 0.0) {
       //fboBegin();
@@ -167,7 +167,7 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
          p3.y + offset.y,
          p3.z + offset.z);
    float curAlpha = timeExploded == 0 ? 1.0f :
-      (GLfloat) sqrt((lifetime - (doubleTime() - timeExploded)));
+      (GLfloat) sqrt((lifetime - (gameState->getGameTime() - timeExploded)));
 
    if (timeExploded > 0.0) {
       glDisable(GL_CULL_FACE);
@@ -238,7 +238,7 @@ void MeshFace::update(double timeDiff) {
    minPosition->offsetBy(minX, minY, minZ);
    maxPosition->offsetBy(maxX, maxY, maxZ);
 
-   if (doubleTime() - timeExploded > lifetime) {
+   if (gameState->getGameTime() - timeExploded > lifetime) {
       shouldRemove = true;
    }
 }
@@ -259,7 +259,7 @@ void MeshFace::drawGlow() {
    position->glTranslate();
    glRotated(angle, axis->x, axis->y, axis->z);
 
-   double scaleAmount = clamp(2.0 * (lifetime - (doubleTime() - timeExploded)) / lifetime, 0, 1);
+   double scaleAmount = clamp(2.0 * (lifetime - (gameState->getGameTime() - timeExploded)) / lifetime, 0, 1);
    glScaled(scaleAmount, scaleAmount, scaleAmount);
 
    // Draw lines

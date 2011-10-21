@@ -12,7 +12,6 @@
 #include "Particles/EngineParticle.h"
 #include "Particles/ElectricityImpactParticle.h"
 #include "Text/GameMessage.h"
-#include "Network/ClientCommand.h"
 #include "Items/Spring.h"
 #include "Network/gamestate.pb.h"
 
@@ -1954,29 +1953,29 @@ Shard* AsteroidShip::makeShard() {
    return shard;
 }
 
-void AsteroidShip::readCommand(ClientCommand& command) {
-   accelerateForward(command.forwardAcceleration);
+void AsteroidShip::readCommand(const ast::ClientCommand& command) {
+   accelerateForward(command.forwardacceleration());
    //accelerateRight(command.rightAcceleration);
-   accelerateUp(command.upAcceleration);
+   accelerateUp(command.upacceleration());
 
-   setYawSpeed(command.yawSpeed);
-   setRollSpeed(command.rollSpeed);
-   setPitchSpeed(command.pitchSpeed);
+   setYawSpeed(command.yawspeed());
+   setRollSpeed(command.rollspeed());
+   setPitchSpeed(command.pitchspeed());
 
-   fire(command.fire);
+   fire(command.fire());
 
-   setBrake(command.brake);
+   setBrake(command.brake());
 
-   selectWeapon(command.currentWeapon);
+   selectWeapon(command.curweapon());
 
    // This works as long as VERT_FOV is the same on both sides.
-   updateShotDirection(command.mouseX, command.mouseY);
+   updateShotDirection(command.mousex(), command.mousey());
 
-   if (command.rightAcceleration == -1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0){
+   if (command.rightacceleration() == -1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0){
       isBarrelRollingLeft = 1;
    }
    
-   if (command.rightAcceleration == 1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0) {
+   if (command.rightacceleration() == 1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0) {
       isBarrelRollingRight = 1;
    }
 
