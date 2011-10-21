@@ -63,7 +63,7 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShi
       maxY = std::max(endPoint1.y, endPoint2.y);
       minZ = std::min(endPoint1.z, endPoint2.z);
       maxZ = std::max(endPoint1.z, endPoint2.z);
-      timeFired = doubleTime();
+      timeFired = gameState->getGameTime();
       //shouldConstrain = true;
       /* Make sure beam shots aren't culled from the view frustum (necessary to make them appear)
       */
@@ -87,11 +87,11 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShi
 void BeamShot::update(double timeDiff) {
    if (!gameState->godMode) {
 
-      if (doubleTime() - timeFired > lifetime) {
+      if (gameState->getGameTime() - timeFired > lifetime) {
          shouldRemove = true;
       }
    } else {
-      if (doubleTime() - timeFired > 0.1) {
+      if (gameState->getGameTime() - timeFired > 0.1) {
          shouldRemove = true;
       }
    }
@@ -102,7 +102,7 @@ void BeamShot::drawBeam(bool drawDots) {
    const double ballOffset = 0.4;
    const double angleDiff = 40; // Degrees per unit of ball helix.
    double beamRadius = 0.2;
-   double curTime = doubleTime();
+   double curTime = gameState->getGameTime();
    double timeLeft;
    const double sphereRadius = 0.05;
 

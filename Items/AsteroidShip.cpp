@@ -12,8 +12,8 @@
 #include "Particles/EngineParticle.h"
 #include "Particles/ElectricityImpactParticle.h"
 #include "Text/GameMessage.h"
-#include "Network/ClientCommand.h"
 #include "Items/Spring.h"
+#include "Network/gamestate.pb.h"
 
 #include <sstream>
 
@@ -49,6 +49,10 @@ const double spawnRate = .5;
 AsteroidShip::AsteroidShip(const GameState* _gameState) :
    Object3D(_gameState) {
       type = TYPE_ASTEROIDSHIP;
+
+      bankTimer.setGameState(gameState);
+      respawnTimer.setGameState(gameState);
+      aliveTimer.setGameState(gameState);
 
       cullRadius = 12;
       health = 100;
@@ -234,7 +238,7 @@ void AsteroidShip::reInitialize() {
    isBarrelRollingLeft = -1;
    isBarrelRollingRight = -1;
 
-   accelerationStartTime = doubleTime();
+   accelerationStartTime = gameState->getGameTime();
    particlesEmitted = 0;
 
    velocity->updateMagnitude(0, 0, 0);
@@ -334,7 +338,7 @@ void AsteroidShip::setBrake(bool doBrake) {
  */
 void AsteroidShip::accelerateForward(int dir) {
    if (curForwardAccel == 0 && dir != 0) {
-      accelerationStartTime = doubleTime();
+      accelerationStartTime = gameState->getGameTime();
       particlesEmitted = 0;
    }
 
@@ -344,7 +348,7 @@ void AsteroidShip::accelerateForward(int dir) {
 
 void AsteroidShip::accelerateUp(int dir) {
    if (curUpAccel == 0 && dir != 0) {
-      accelerationStartTime = doubleTime();
+      accelerationStartTime = gameState->getGameTime();
       particlesEmitted = 0;
    }
 
@@ -354,7 +358,7 @@ void AsteroidShip::accelerateUp(int dir) {
 
 void AsteroidShip::accelerateRight(int dir) {
    if (curRightAccel == 0 && dir != 0) {
-      accelerationStartTime = doubleTime();
+      accelerationStartTime = gameState->getGameTime();
       particlesEmitted = 0;
    }
 
@@ -422,7 +426,7 @@ void AsteroidShip::createEngineParticles(double timeDiff) {
    Vector3D baseParticleAcceleration;
    Point3D emitter;
 
-   double accelerationTime = doubleTime() - accelerationStartTime;
+   double accelerationTime = gameState->getGameTime() - accelerationStartTime;
    double colorVariation = 0.2 * randdouble();
    int particlesThisFrame = 0;
 
@@ -794,7 +798,7 @@ void AsteroidShip::update(double timeDiff) {
       }
    }
 
-   if (doubleTime() - justGotHit < drawShieldTime) {
+   if (gameState->getGameTime() - justGotHit < drawShieldTime) {
       drawHit = true;
    } else {
       drawHit = false;
@@ -1658,7 +1662,7 @@ void AsteroidShip::drawShotDirectionIndicators() {
    bool overheated = getCurrentWeapon()->isOverheated();
 
    if (overheated) {
-      curFade = (sin(doubleTime() * M_PI * 4) + 1) / 2;
+      curFade = (sin(gameState->getGameTime() * M_PI * 4) + 1) / 2;
    } else {
       curFade = modf(heatAmount, &numHotBoxes);
    }
@@ -1949,29 +1953,29 @@ Shard* AsteroidShip::makeShard() {
    return shard;
 }
 
-void AsteroidShip::readCommand(ClientCommand& command) {
-   accelerateForward(command.forwardAcceleration);
+void AsteroidShip::readCommand(const ast::ClientCommand& command) {
+   accelerateForward(command.forwardacceleration());
    //accelerateRight(command.rightAcceleration);
-   accelerateUp(command.upAcceleration);
+   accelerateUp(command.upacceleration());
 
-   setYawSpeed(command.yawSpeed);
-   setRollSpeed(command.rollSpeed);
-   setPitchSpeed(command.pitchSpeed);
+   setYawSpeed(command.yawspeed());
+   setRollSpeed(command.rollspeed());
+   setPitchSpeed(command.pitchspeed());
 
-   fire(command.fire);
+   fire(command.fire());
 
-   setBrake(command.brake);
+   setBrake(command.brake());
 
-   selectWeapon(command.currentWeapon);
+   selectWeapon(command.curweapon());
 
    // This works as long as VERT_FOV is the same on both sides.
-   updateShotDirection(command.mouseX, command.mouseY);
+   updateShotDirection(command.mousex(), command.mousey());
 
-   if (command.rightAcceleration == -1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0){
+   if (command.rightacceleration() == -1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0){
       isBarrelRollingLeft = 1;
    }
    
-   if (command.rightAcceleration == 1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0) {
+   if (command.rightacceleration() == 1 && isBarrelRollingLeft < 0 && isBarrelRollingRight < 0) {
       isBarrelRollingRight = 1;
    }
 
@@ -2099,5 +2103,163 @@ double AsteroidShip::getBankPeriod() {
    return ((double)bankPeriod) / ((double)bankLevel+1);
 }
 
-      
+void AsteroidShip::save(ast::Entity* ent) {
+   Object3D::save(ent);
+   up->save(ent->mutable_up());
+   forward->save(ent->mutable_forward());
+   right->save(ent->mutable_right());
+   
+   ast::Weapon* weap;
+   for (int i = 0; i < NUMBER_OF_WEAPONS; ++i) {
+      weap = ent->add_weapon();
+      getWeapon(i)->save(weap);
+   }
+
+   ent->set_targetrollspeed(targetRollSpeed);
+   ent->set_targetyawspeed(targetYawSpeed);
+   ent->set_targetpitchspeed(targetPitchSpeed);
+
+   ent->set_health(health);
+   ent->set_healthmax(healthMax);
+
+   ent->set_enginelevel(engineLevel);
+   ent->set_regenhealthlevel(regenHealthLevel);
+   ent->set_banklevel(bankLevel);
+   ent->set_color1(color1);
+   ent->set_color2(color2);
+   
+   shotDirection.save(ent->mutable_shotdirection());
+   ent->set_isfiring(isFiring);
+   ent->set_currentweapon(currentWeapon);
+   ent->set_isbarrelrollingleft(isBarrelRollingLeft);
+   ent->set_isbarrelrollingright(isBarrelRollingRight);
+   ent->set_curforwardaccel(curForwardAccel);
+   ent->set_curupaccel(curUpAccel);
+   ent->set_currightaccel(curRightAccel);
+
+   ent->set_bankperiod(bankPeriod);
+
+   ent->set_flyingaienabled(flyingAI->isEnabled());
+   ent->set_shootingaienabled(shooter->isEnabled());
+
+   bankTimer.save(ent->mutable_banktimer());
+   aliveTimer.save(ent->mutable_alivetimer());
+   respawnTimer.save(ent->mutable_respawntimer());
+
+   ent->set_timelefttorespawn(timeLeftToRespawn);
+
+   ent->set_score(score);
+   ent->set_kills(kills);
+   ent->set_deaths(deaths);
+   ent->set_life(life);
+   ent->set_bankedshards(bankedShards);
+   ent->set_unbankedshards(unbankedShards);
+   ent->set_totalbankedshards(totalBankedShards);
+}
+
+void AsteroidShip::load(const ast::Entity& ent) {
+   Object3D::load(ent);
+
+   // Load weapons.
+   for (int i = 0; i < ent.weapon_size(); ++i) {
+      const ast::Weapon& weap = ent.weapon(i);
+      unsigned index = weap.index();
+      getWeapon(index)->load(weap);
+   }
+
+
+   if (ent.has_forward())
+      forward->load(ent.forward());
+   if (ent.has_right())
+      right->load(ent.right());
+   if (ent.has_up())
+      up->load(ent.up());
+
+   if (ent.has_health())
+      health = ent.health();
+
+   if (ent.has_healthmax())
+      healthMax = ent.healthmax();
+
+   if (ent.has_targetrollspeed())
+      targetRollSpeed = ent.targetrollspeed();
+   if (ent.has_targetyawspeed())
+      targetYawSpeed = ent.targetyawspeed();
+   if (ent.has_targetpitchspeed())
+      targetPitchSpeed = ent.targetpitchspeed();
+
+   if (ent.has_enginelevel())
+      engineLevel = ent.enginelevel();
+
+   if (ent.has_regenhealthlevel())
+      regenHealthLevel = ent.regenhealthlevel();
+
+   if (ent.has_banklevel())
+      bankLevel = ent.banklevel();
+
+   if (ent.has_color1())
+      color1 = ent.color1();
+
+   if (ent.has_color2())
+      color2 = ent.color2();
+
+   if (ent.has_shotdirection())
+      shotDirection.load(ent.shotdirection());
+
+   if (ent.has_isfiring())
+      isFiring = ent.isfiring();
+
+   if (ent.has_currentweapon())
+      currentWeapon = ent.currentweapon();
+
+   if (ent.has_isbarrelrollingleft())
+      isBarrelRollingLeft = ent.isbarrelrollingleft();
+   if (ent.has_isbarrelrollingright())
+      isBarrelRollingRight = ent.isbarrelrollingright();
+
+   if (ent.has_curforwardaccel())
+      curForwardAccel = ent.curforwardaccel();
+   if (ent.has_curupaccel())
+      curUpAccel = ent.curupaccel();
+   if (ent.has_currightaccel())
+      curRightAccel = ent.currightaccel();
+
+   if (ent.has_isbraking())
+      isBraking = ent.isbraking();
+
+   if (ent.has_bankperiod())
+      bankPeriod = ent.bankperiod();
+
+   if (ent.flyingaienabled())
+      flyingAI->enable();
+   
+   if (ent.shootingaienabled())
+      shooter->enable();
+
+   if (ent.has_banktimer())
+      bankTimer.load(ent.banktimer());
+   if (ent.has_alivetimer())
+      aliveTimer.load(ent.alivetimer());
+   if (ent.has_respawntimer())
+      respawnTimer.load(ent.respawntimer());
+
+   if (ent.has_timelefttorespawn())
+      timeLeftToRespawn = ent.timelefttorespawn();
+
+   if (ent.has_score())
+      score = ent.score();
+   if (ent.has_kills())
+      kills = ent.kills();
+   if (ent.has_deaths())
+      deaths = ent.deaths();
+   if (ent.has_life())
+      life = ent.life();
+   if (ent.has_bankedshards())
+      bankedShards = ent.bankedshards();
+   if (ent.has_unbankedshards())
+      unbankedShards = ent.unbankedshards();
+   if (ent.has_totalbankedshards())
+      totalBankedShards = ent.totalbankedshards();
+
+}
 

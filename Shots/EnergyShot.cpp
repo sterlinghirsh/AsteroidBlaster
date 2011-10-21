@@ -8,6 +8,7 @@
 #include "Particles/BlasterShotParticle.h"
 #include "Particles/BlasterImpactParticle.h"
 #include "Utility/SoundEffect.h"
+#include "Network/gamestate.pb.h"
 
 #include <algorithm>
 
@@ -22,8 +23,9 @@ const double baseRadius = 0.2;
 const double baseDamagePerSecond = 1;
 
 EnergyShot::EnergyShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
- AsteroidShip* const ownerIn, Energy* const weaponIn, const GameState* _gameState) : Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState),
-weapon(weaponIn) {
+ AsteroidShip* const ownerIn, const GameState* _gameState) : 
+ Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
+   weapon = static_cast<Energy*>(owner->weapons[weaponIndex]);
    type = TYPE_ENERGYSHOT;
    persist = false;
    radius = baseRadius;
@@ -163,14 +165,14 @@ void EnergyShot::update(double timeDiff) {
    }
    
    if (shouldRemove) {
-      if (weapon->chargingShot == this)
+      if (weapon->chargingShotid == id)
          weapon->resetChargingShot();
    }
 }
 
 void EnergyShot::hitWall(BoundingWall* wall) {
    shouldRemove = true;
-   if (weapon->chargingShot == this)
+   if (weapon->chargingShotid == id)
       weapon->resetChargingShot();
 }
 
@@ -188,3 +190,24 @@ void EnergyShot::updateChargeTime(double newChargeTime) {
 
    damagePerSecond = baseDamagePerSecond + baseDamagePerSecond * cappedSquaredChargeTime;
 }
+
+void EnergyShot::save(ast::Entity* ent) {
+   Shot::save(ent);
+   ent->set_chargetime(chargeTime);
+   ent->set_damagepersecond(damagePerSecond);
+   ent->set_radius(radius);
+}
+
+void EnergyShot::load(const ast::Entity& ent) {
+   Shot::load(ent);
+
+   if (ent.has_chargetime())
+      chargeTime = ent.chargetime();
+   
+   if (ent.has_damagepersecond())
+      damagePerSecond = ent.damagepersecond();
+
+   if (ent.has_radius())
+      radius = ent.radius();
+}
+

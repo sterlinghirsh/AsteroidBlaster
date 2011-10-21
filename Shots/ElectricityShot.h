@@ -22,6 +22,7 @@ class ElectricityShot : public Shot {
       virtual void drawShot(bool isGlow);
       virtual void update(double timeDiff);
       int framesAlive;
+      // TODO: Looks like this still has some cone logic. Remove.
       double angle;
       double length;
       double farRadius;

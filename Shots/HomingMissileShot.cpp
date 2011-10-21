@@ -13,6 +13,8 @@
 #include "Utility/WindowsMathLib.h"
 #endif
 
+#include "Network/gamestate.pb.h"
+
 bool shouldChangeY = true;
 bool shouldChangeZ = false;
 const int particleCycle = 100;
@@ -40,8 +42,6 @@ HomingMissileShot::HomingMissileShot(Point3D& posIn, Vector3D dirIn, int _weapon
    hasTarget = false;
    
    hasDamaged = false;
-   
-   timeFired = doubleTime();
    
    //rotationSpeed = randdouble() * 10; // Degrees per sec.
    //axis = new Vector3D(0, 1, 0);
@@ -468,7 +468,7 @@ void HomingMissileShot::update(double timeDiff) {
    addAcceleration(shotAccel);
    
    double speed = velocity->getLength();
-   if (doubleTime() - timeFired > .3) {
+   if (gameState->getGameTime() - timeFired > .3) {
       velocity->updateMagnitude(forward->scalarMultiply(speed));
    } else {
       shotAccel = new Vector3D(*forward);
@@ -568,8 +568,6 @@ void HomingMissileShot::update(double timeDiff) {
          // Reflect and Duplicate the above for a double helix.
       }
       
-      //if (doubleTime() - timeFired > .5) {
-      
       Vector3D* shotAccel;
       shotAccel = new Vector3D(*forward);
       
@@ -588,7 +586,7 @@ void HomingMissileShot::update(double timeDiff) {
 
    // If the bomb should explode this frame and has not already, then explode.
    // If more time has passed than the bomb's timeToExplode, blow it up.
-   if ((shouldExplode || doubleTime() - timeFired > timeToExplode) && !isExploded) {
+   if ((shouldExplode || gameState->getGameTime() - timeFired > timeToExplode) && !isExploded) {
       timeSinceExploded = 1;
       isExploded = true;
       //explode();
@@ -633,4 +631,23 @@ void HomingMissileShot::explode() {
    SoundEffect::playSoundEffect("Explosion1.wav", position, NULL);
 
    // set it as not collidable
+}
+
+void HomingMissileShot::save(ast::Entity* ent) {
+   Shot::save(ent);
+   
+   up->save(ent->mutable_up());
+   forward->save(ent->mutable_forward());
+   right->save(ent->mutable_right());
+}
+
+void HomingMissileShot::load(const ast::Entity& ent) {
+   Shot::load(ent);
+
+   if (ent.has_forward())
+      forward->load(ent.forward());
+   if (ent.has_right())
+      right->load(ent.right());
+   if (ent.has_up())
+      up->load(ent.up());
 }

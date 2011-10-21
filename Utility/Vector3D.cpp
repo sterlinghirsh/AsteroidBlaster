@@ -2,6 +2,7 @@
 #include <math.h>
 #include <algorithm>
 #include "Vector3D.h"
+#include "Network/gamestate.pb.h"
 
 
 /** Doubles have a lot of precision.
@@ -344,4 +345,16 @@ const Vector3D Vector3D::getNormalized() const {
    Vector3D normalized(*this);
    normalized.normalize();
    return normalized;
+}
+
+void Vector3D::save(ast::Vector* vec) {
+   vec->set_x(x);
+   vec->set_y(y);
+   vec->set_z(z);
+}
+
+void Vector3D::load(const ast::Vector& vec) {
+   x = vec.x();
+   y = vec.y();
+   z = vec.z();
 }

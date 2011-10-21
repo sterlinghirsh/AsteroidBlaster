@@ -9,6 +9,10 @@
 #include <stdio.h>
 #include "Utility/GlobalUtility.h"
 
+namespace ast {
+   class Vector;
+}
+
 class Vector3D {
    public:
       double x, y, z;
@@ -121,6 +125,8 @@ class Vector3D {
          ar & z;
       }
 
+      void save(ast::Vector* vec);
+      void load(const ast::Vector& vec);
 };
 
 #endif

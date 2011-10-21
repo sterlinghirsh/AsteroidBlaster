@@ -67,7 +67,7 @@ void Blaster::fire() {
    // Update lastFiredFrame since we're firing now.
    lastFiredFrame = curFrame;
    // Update timeLastFired with new current time.
-   timeLastFired = doubleTime();
+   timeLastFired = ship->gameState->getGameTime();
    // Copy the ship's position for the start point.
    Point3D start = ship->shotOrigin;
    // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
@@ -157,7 +157,7 @@ bool Blaster::shouldFire(Point3D* target, Point3D* aim) {
     (maxRefireWaitTime - minRefireWaitTime)) + 
     minRefireWaitTime;
 
-   if (doubleTime() - timeLastFired < randomRefireWaitTime) {
+   if (ship->gameState->getGameTime() - timeLastFired < randomRefireWaitTime) {
       // Don't fire if we just fired. Not fun when AI fires too fast.
       return false;
    } else if (randdouble() < 0.1) {

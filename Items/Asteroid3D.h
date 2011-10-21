@@ -35,10 +35,11 @@ class Asteroid3D : public Object3D {
       double timeLastHitByEnergy;
       double damagePerSecond;
 
-      bool isExploding;
+      bool isExploding; // TODO: Is this used?
       double timeSinceExplode;
       double rotationSpeedChange;
       
+      // Make this an id.
       AsteroidShip* lastHitShotOwner;
 
       CollisionSphere* collisionSphere;
@@ -71,6 +72,9 @@ class Asteroid3D : public Object3D {
       
       void serialize(std::ostream &os);
       void deserialize(std::istream &is);   
+      
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
       
    //private functions------------------------------
    private:

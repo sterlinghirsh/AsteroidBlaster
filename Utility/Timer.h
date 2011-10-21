@@ -7,6 +7,11 @@
 #ifndef __TIMER_H__
 #define __TIMER_H__
 
+class GameState;
+
+namespace ast {
+   class Timer;
+}
 
 class Timer {
    //public variables------------------------------
@@ -17,17 +22,20 @@ class Timer {
       bool isPaused;
       bool isRunning;
 
-
    //private variables------------------------------
    private:
+      GameState* gameState;
 
 
    //public functions------------------------------
    public:
       //Constructor
-      Timer();
+      Timer(GameState* _gameState = 0); // Null default.
 
+      void save(ast::Timer* t);
+      void load(const ast::Timer& t);
 
+      void setGameState(GameState* _gameState);
       void countUp();
       void reset();
       void setCountDown(double _countDownTime);
@@ -38,11 +46,11 @@ class Timer {
       void pause();
       void resume();
       bool getIsPaused();
+      void debug();
 
    //private functions------------------------------
    private:
-
-
+      double getCurTime();
 };
 
 #endif

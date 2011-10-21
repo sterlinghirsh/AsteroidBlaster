@@ -8,6 +8,8 @@
 #include "Utility/SoundEffect.h"
 #include "Items/BoundingWall.h"
 
+#include "Network/gamestate.pb.h"
+
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"
 #endif
@@ -546,7 +548,9 @@ void TimedBombShot::update(double timeDiff) {
 
    // If the bomb should explode this frame and has not already, then explode.
    // If more time has passed than the bomb's timeToExplode, blow it up.
-   if ((shouldExplode || doubleTime() - timeFired > timeToExplode) && !isExploded && timeSinceExploded < .6) {
+   if ((shouldExplode || 
+     gameState->getGameTime() - timeFired > timeToExplode) && 
+    !isExploded && timeSinceExploded < .6) {
       timeSinceExploded = 1;
       //isExploded = true;
       //explode();
@@ -581,4 +585,18 @@ void TimedBombShot::hitWall(BoundingWall* wall) {
 void TimedBombShot::explode() {
    // Do all the generic exploding actions that every bomb should do.
    ExplosiveShot::explode();
+}
+
+void TimedBombShot::save(ast::Entity* ent) {
+   Shot::save(ent);
+
+   ent->set_timesinceexploded(timeSinceExploded);
+}
+
+void TimedBombShot::load(const ast::Entity& ent) {
+   Shot::load(ent);
+
+   if (ent.has_timesinceexploded()) {
+      timeSinceExploded = ent.timesinceexploded();
+   }
 }

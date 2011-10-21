@@ -76,7 +76,7 @@ void Shard::InitShard(double r, double worldSizeIn) {
 }
 
 void Shard::drawOtherOrbiters() {
-   double curTime = doubleTime();
+   double curTime = gameState->getGameTime();
    const int numBalls = 1; // This is the number of balls per ring, so x3
 
    // Make it so balls will draw evenly spaced.
@@ -213,4 +213,12 @@ void Shard::debug() {
    maxPosition->print();
    velocity->print();
    printf("--\n");
+}
+
+void Shard::save(ast::Entity* ent) {
+   Object3D::save(ent);
+}
+
+void Shard::load(const ast::Entity& ent) {
+   Object3D::load(ent);
 }

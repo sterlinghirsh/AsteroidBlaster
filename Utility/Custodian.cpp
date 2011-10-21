@@ -30,6 +30,10 @@
 #include "Particles/BlasterImpactParticle.h"
 #include "Particles/TractorAttractionParticle.h"
 
+#include "Network/gamestate.pb.h"
+
+const unsigned defaultNextID = 1;
+
 /**
  * AsteroidShip collisions======================================================
  */
@@ -129,7 +133,7 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
 
       SoundEffect::playSoundEffect("ShipHit.wav", &collisionPoint);
 
-      a->justGotHit = doubleTime();
+      a->justGotHit = a->gameState->getGameTime();
       a->addInstantAcceleration(new Vector3D(*(b->velocity)));
       a->addInstantAcceleration(new Vector3D(*b->position, *a->position));
       b->addInstantAcceleration(new Vector3D(*(a->velocity)));
@@ -175,7 +179,7 @@ void Collision<AsteroidShip, BlasterShot>::handleCollision() {
    if (a != b->owner  && !(a->spawnInvulnerable)) {
       a->health -= b->getDamage(a);
       a->shakeAmount = 0.5f;
-      a->justGotHit = doubleTime();
+      a->justGotHit = a->gameState->getGameTime();
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       for (int i = 0; i <= particlesToEmit; ++i) {
          Point3D* particleStartPoint = new Point3D(*(b->position));
@@ -203,7 +207,7 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
       b->lastHitFrame = curFrame;
       b->owner->score += (int) a->radius * 10;
       b->drawLength = a->position->distanceFrom(*b->position);
-      a->justGotHit = doubleTime();
+      a->justGotHit = a->gameState->getGameTime();
       a->addInstantAcceleration(new Vector3D(b->velocity->scalarMultiply(20)));
       b->velocity->scalarMultiply(10).print();
 
@@ -234,7 +238,7 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
          b->hitYet = true;
          a->health -= b->getDamage(a);
          a->shakeAmount = 0.7f;
-         a->justGotHit = doubleTime();
+         a->justGotHit = a->gameState->getGameTime();
          a->lastDamagerId = b->owner->id;
          a->lastDamagerWeapon = b->weaponIndex;
       
@@ -268,11 +272,11 @@ void Collision<AsteroidShip, EnergyShot>::handleCollision() {
 
       b->shouldRemove = true;
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
-      if (b->weapon->chargingShot == b) {
+      if (b->weapon->chargingShotid == b->id) {
          b->weapon->resetChargingShot();
       }
       a->shakeAmount = 0.7f;
-      a->justGotHit = doubleTime();
+      a->justGotHit = a->gameState->getGameTime();
       a->lastDamagerId = b->owner->id;
       a->lastDamagerWeapon = b->weaponIndex;
    }
@@ -320,7 +324,7 @@ void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
          } else {
             b->shouldExplode = true;
             a->health -= b->getDamage(a);
-            a->justGotHit = doubleTime();
+            a->justGotHit = a->gameState->getGameTime();
             b->hasDamaged = true;
             SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
          }
@@ -367,7 +371,7 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
       shotToShip->setLength(newSpeed);
       a->addInstantAcceleration(shotToShip);
       a->shakeAmount = 2;
-      a->justGotHit = doubleTime();
+      a->justGotHit = a->gameState->getGameTime();
       a->lastDamagerId = b->owner->id;
       a->lastDamagerWeapon = b->weaponIndex;
    }
@@ -483,10 +487,10 @@ void Collision<Asteroid3D, EnergyShot>::handleCollision() {
    // TODO: 5.0 is the time damage is dealt. We may want to put this in energyshot.
 
    const double energyDamageTime = 5.0;
-   double damageTimeLeft = clamp(doubleTime() - a->timeLastHitByEnergy, 0.0, energyDamageTime);
+   double damageTimeLeft = clamp(a->gameState->getGameTime() - a->timeLastHitByEnergy, 0.0, energyDamageTime);
    double damageLeft = a->damagePerSecond * damageTimeLeft;
    a->damagePerSecond = (damageLeft / energyDamageTime) + b->damagePerSecond;
-   a->timeLastHitByEnergy = doubleTime();
+   a->timeLastHitByEnergy = a->gameState->getGameTime();
    a->newVelocity->updateMagnitude(a->velocity);
    a->newAcceleration->updateMagnitude(a->acceleration);
    
@@ -495,7 +499,7 @@ void Collision<Asteroid3D, EnergyShot>::handleCollision() {
 
    b->shouldRemove = true;
    SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
-   if (b->weapon->chargingShot == b) {
+   if (b->weapon->chargingShotid == b->id) {
       b->weapon->resetChargingShot();
    }
 }
@@ -748,7 +752,7 @@ static std::map<unsigned, CollisionBase*>* collisionHandlers = NULL;
 Custodian::Custodian(const GameState* _gameState) :
  gameState(_gameState) {
    shardCount = asteroidCount = 0;
-   nextID = 0;
+   nextID = defaultNextID;
    
    if (collisionHandlers == NULL) {
       unsigned key;
@@ -921,7 +925,6 @@ void Custodian::add(Object3D* objectIn) {
     (ship = dynamic_cast<AsteroidShip*>(objectIn)) != NULL) {
       ships.insert(ship);
    }
-
 }
 
 /**
@@ -1049,6 +1052,7 @@ void Custodian::clear() {
 
    asteroidCount = 0;
    shardCount = 0;
+   nextID = defaultNextID;
 }
 
 /**
@@ -1070,4 +1074,158 @@ Object3D* Custodian::operator[] (unsigned i) {
       return NULL;
    else
       return iter->second;
+}
+
+/**
+ * Pass in a pointer to an entity (protocol buffer style).
+ * This should update what's already in the list or make a new 
+ * item with the given properties.
+ */
+Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
+   unsigned id = ent.id();
+   unsigned type = ent.type();
+   Object3D* obj = (*this)[id];
+   if (obj == NULL) {
+      std::cout << "Item not found.\n";
+      AsteroidShip* owner = NULL;
+      if (IS_SHOT(type)) {
+         
+         if (ent.has_ownerid()) {
+            // Should this be dynamic cast?
+            owner = static_cast<AsteroidShip*>((*this)[ent.ownerid()]);
+            std::cout << "Ownerid: " << ent.ownerid();
+         } else {
+            std::cout << "No owner specified!\n";
+         }
+
+         if (owner == NULL) {
+            std::cout << "Could not find shot's owner!\n";
+            exit(EXIT_FAILURE);
+         }
+      }
+
+      switch (type) {
+         case TYPE_ASTEROID3D:
+            obj = new Asteroid3D(ent.radius(), gameState->worldSize, gameState, false);
+            obj->load(ent);
+            std::cout << "Found Asteroid.\n";
+         break;
+         case TYPE_ASTEROIDSHIP:
+            obj = new AsteroidShip(gameState);
+            obj->load(ent);
+            std::cout << "Found Ship.\n";
+         break;
+         case TYPE_SHARD:
+            obj = new Shard(0.5, gameState->worldSize, gameState);
+            obj->load(ent);
+            std::cout << "Found Shard.\n";
+         break;
+         case TYPE_BEAMSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+
+            obj = new BeamShot(pos, dir, ent.weaponindex(), owner, gameState);
+            obj->load(ent);
+            std::cout << "Found Beamshot.\n";
+         }
+         break;
+         case TYPE_BLASTERSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+
+            obj = new BlasterShot(pos, dir, ent.weaponindex(), owner, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Blastershot.\n";
+         }
+         break;
+         case TYPE_ELECTRICITYSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+            
+            obj = new ElectricityShot(pos, dir, ent.weaponindex(), owner, 1.0, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Electricity shot.\n";
+         }
+         break;
+         case TYPE_ENERGYSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+            
+            obj = new EnergyShot(pos, dir, ent.weaponindex(), owner, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Energyshot.\n";
+         }
+         break;
+         case TYPE_HOMINGMISSILESHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+            
+            obj = new HomingMissileShot(pos, dir, ent.weaponindex(), owner, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Homing Missile shot.\n";
+         }
+         break;
+         case TYPE_TIMEDBOMBSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+            
+            obj = new TimedBombShot(pos, dir, ent.weaponindex(), owner, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Timed Bomb shot.\n";
+         }
+         break;
+         case TYPE_TRACTORBEAMSHOT:
+         {
+            Point3D pos;
+            Vector3D dir;
+            pos.load(ent.position());
+            dir.load(ent.velocity());
+            
+            obj = new TractorBeamShot(pos, dir, ent.weaponindex(), owner, gameState);
+
+            obj->load(ent);
+            std::cout << "Found Tractor Beam shot.\n";
+         }
+         break;
+         default:
+         std::cout << "Found other object.\n";
+      }
+      if (obj != NULL) {
+         add(obj);
+         std::cout << "Adding object.\n";
+      } else {
+         std::cout << "NULL OBJECT!\n";
+      }
+   } else {
+      std::cout << "Item found.\n";
+   }
+   std::cout << "ID: " << id << std::endl;
+   return obj;
+}
+
+const std::map<unsigned, Object3D*>& Custodian::getObjectsByID() {
+   return objectsByID;
 }

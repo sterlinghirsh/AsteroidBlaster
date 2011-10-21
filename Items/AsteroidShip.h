@@ -50,7 +50,10 @@ class Shot;
 class Radar;
 class ShootingAI;
 class FlyingAI;
-class ClientCommand;
+
+namespace ast {
+   class ClientCommand;
+}
 
 class AsteroidShip : public Object3D {
    //public variables------------------------------
@@ -225,7 +228,7 @@ class AsteroidShip : public Object3D {
       Weapon* getWeapon(int wep);
       std::vector<Weapon*> getWeapons(){ return weapons; }
 
-      void readCommand(ClientCommand& command);
+      void readCommand(const ast::ClientCommand& command);
 
       // This function is called on the ship when a level ends.
       void atLevelEnd();
@@ -262,6 +265,9 @@ class AsteroidShip : public Object3D {
 
       // calculates the correct bank period depending on the bankLevel
       double getBankPeriod();
+      
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
 
    //private functions------------------------------
    private:

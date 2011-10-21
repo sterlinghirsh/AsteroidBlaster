@@ -10,6 +10,7 @@
 #include "Shots/ElectricityShot.h"
 #include "Utility/SoundEffect.h"
 #include "Text/GameMessage.h"
+#include "Network/gamestate.pb.h"
 
 Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    ELECTRICITY_WEAPON_INDEX = index;
@@ -68,10 +69,10 @@ void Electricity::fire() {
       return;
 
    if (shotsFired == 0) {
-      timeStartedFiring = doubleTime();
+      timeStartedFiring = ship->gameState->getGameTime();
    }
    
-   double curTime = doubleTime();
+   double curTime = ship->gameState->getGameTime();
    double timeFired = curTime - timeStartedFiring;
    int shotsToFire = 0;
    //printf("Time fired: %f\n", timeStartedFiring);
@@ -122,3 +123,18 @@ void Electricity::stopSounds() {
 double Electricity::getCoolDownAmount() {
    return 1 - clamp(currentHeat / overheatLevel, 0, 1);
 }
+
+void Electricity::save(ast::Weapon* weap) {
+   Weapon::save(weap);
+   weap->set_shotsfired(shotsFired);
+   weap->set_timestartedfiring(timeStartedFiring);
+}
+
+void Electricity::load(const ast::Weapon& weap) {
+   Weapon::load(weap);
+   if (weap.has_shotsfired())
+      shotsFired = weap.shotsfired();
+   if (weap.has_timestartedfiring())
+      timeStartedFiring = weap.timestartedfiring();
+}
+

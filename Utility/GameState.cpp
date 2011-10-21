@@ -37,6 +37,8 @@
 #include "HUD/Minimap.h"
 #include "HUD/Screen.h"
 
+#include "Network/gamestate.pb.h"
+
 
 #include <math.h>
 #include <stdio.h>
@@ -52,9 +54,14 @@
 extern double minimapSizeFactor;
 
 std::ostringstream sstream2; // TODO: Better name plz.
+ast::ClientCommand localClientCommand;
 
 GameState::GameState(GameStateMode _gsm) :
-   custodian(this) {
+   clientCommand(localClientCommand),
+   custodian(this),
+   levelTimer(this),
+   gameOverTimer(this) {
+      clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
       gsm = _gsm;
       if (gsm == SingleMode) {
          io = NULL;
@@ -82,6 +89,9 @@ GameState::GameState(GameStateMode _gsm) :
          //networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
       }
 
+      gameTime = 0;
+      levelStartTime = 0;
+
       godMode = false;
       gameIsRunning = true;
       levelOver = false;
@@ -101,7 +111,7 @@ GameState::GameState(GameStateMode _gsm) :
       skybox = new Skybox();
 
       ship = new AsteroidShip(this);
-      clientCommand.shipID = ship->id;
+      clientCommand.set_shipid(ship->id);
 
       spring = new Spring(this);
       minimap = new Minimap(ship);
@@ -270,6 +280,7 @@ void GameState::addScreens() {
  * This is the step function.
  */
 void GameState::update(double timeDiff) {
+   updateGameTime(timeDiff);
    // if the game over timer is set, and is over
    if (gameOverTimer.isRunning && gameOverTimer.getTimeLeft() < 0) {
       mainMenu->firstTime = true;
@@ -311,7 +322,7 @@ void GameState::update(double timeDiff) {
    // Keep items in the box.
    // cube->constrain(ship); why did we do this twice?
 
-   if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
+   if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled() && gsm != MenuMode) {
       ship->readCommand(clientCommand);
    }
 
@@ -826,6 +837,12 @@ void GameState::setCurFPS(double fpsIn) {
    curFPS = fpsIn;
 }
 
+void GameState::resetClientCommand() {
+   // Do stuff.
+   clientCommand.clear_forwardacceleration();
+   // TODO: More of this.
+}
+
 /**
  * Reset everything in the game to play again
  */
@@ -841,6 +858,9 @@ void GameState::reset(bool shouldLoad) {
    Particle::Clear();
    MeshFace::Clear();
    custodian.update();
+   resetClientCommand();
+
+   setLevelTimer();
 
    gameIsRunning = true;
    // The level is not over when we're starting a new game.
@@ -853,46 +873,52 @@ void GameState::reset(bool shouldLoad) {
    }
 
    curLevel = 1;
+   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    //temp
    if(shouldLoad) {
       load();
+      custodian.update();
+   } else {
+      numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
+      
+      std::cout << "Resetting." << std::endl;
+
+      ship = new AsteroidShip(this);
+
+
+      if (gsm == MenuMode || gsm == SingleMode) {
+         custodian.add(ship);
+         // Crashes without this.
+         initAsteroids();
+      } else if (gsm == ServerMode) {
+         initAsteroids();
+      } else if (gsm == ClientMode) {
+         custodian.update();
+      }
+
    }
-
-   numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
-   curLevelText->updateBody(curLevel);
-
-   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
-
-   std::cout << "Resetting." << std::endl;
-
-   ship = new AsteroidShip(this);
-
-   clientCommand.reset();
-   clientCommand.shipID = ship->id;
+   clientCommand.set_shipid(ship->id);
    spring = new Spring(this);
    cube->constrain(ship);
    minimap = new Minimap(ship);
    shipCamera = new Camera(ship);
    spring->attach(ship, shipCamera);
    spectatorCamera = new Camera(false);
-
-
-   if (gsm == MenuMode || gsm == SingleMode) {
-      custodian.add(ship);
-      // Crashes without this.
-      initAsteroids();
-   } else if (gsm == ServerMode) {
-      initAsteroids();
-   } else if (gsm == ClientMode) {
-      custodian.update();
-   }
-
+   curLevelText->updateBody(curLevel);
+  
+   storeMenu->menuActive = false;
+   
    GameMessage::Clear();
    addLevelMessage();
 
-   setLevelTimer();
-
-   storeMenu->menuActive = false;
+   if (levelTimer.getIsPaused()) {
+      printf("LT was paused.\n");
+      levelTimer.resume();
+      if (levelTimer.isRunning) {
+         printf("LT now running with %f seconds left.\n",
+               levelTimer.getTimeLeft());
+      }
+   }
 }
 
 /**
@@ -1010,7 +1036,7 @@ void GameState::nextLevel() {
    addWarningMessage();
 
    // Reset the ship's controls so that the ship isn't stuck moving in a direction
-   clientCommand.reset();
+   resetClientCommand();
 }
 
 /**
@@ -1027,63 +1053,63 @@ void GameState::keyDown(int key, int unicode) {
       case SDLK_w:
          isW = true;
          if (isS) {
-            clientCommand.forwardAcceleration = 0;
+            clientCommand.set_forwardacceleration(0);
          } else {
-            clientCommand.forwardAcceleration = 1;
+            clientCommand.set_forwardacceleration(1);
          }
          break;
 
       case SDLK_s:
          isS = true;
          if (isW) {
-            clientCommand.forwardAcceleration = 0;
+            clientCommand.set_forwardacceleration(0);
          } else {
-            clientCommand.forwardAcceleration = -1;
+            clientCommand.set_forwardacceleration(-1);
          }
          break;
 
       case SDLK_a:
          isA = true;
          if (isD) {
-            clientCommand.yawSpeed = 0;
+            clientCommand.set_yawspeed(0);
          } else {
-            clientCommand.yawSpeed = 1.0;
+            clientCommand.set_yawspeed(1.0);
          }
          break;
 
       case SDLK_d:
          isD = true;
          if (isA) {
-            clientCommand.yawSpeed = 0.0;
+            clientCommand.set_yawspeed(0);
          } else {
-            clientCommand.yawSpeed = -1.0;
+            clientCommand.set_yawspeed(-1.0);
          }
          break;
 
       case SDLK_q:
-         clientCommand.rightAcceleration = -1;
+         clientCommand.set_rightacceleration(-1);
          break;
 
       case SDLK_e:
-         clientCommand.rightAcceleration = 1;
+         clientCommand.set_rightacceleration(1);
          break;
 
       case SDLK_SPACE:
-         clientCommand.upAcceleration = 1;
+         clientCommand.set_upacceleration(1);
          break;
 
       case SDLK_LCTRL:
-         clientCommand.upAcceleration = -1;
+         clientCommand.set_upacceleration(-1);
          break;
 
       case SDLK_RSHIFT:
          doYaw = !doYaw;
-         clientCommand.rollSpeed = 0;
+         clientCommand.set_rollspeed(0);
          break;
 
 
       case SDLK_b:
-         clientCommand.brake = true;
+         clientCommand.set_brake(true);
          break;
       }
 
@@ -1130,10 +1156,10 @@ void GameState::keyDown(int key, int unicode) {
       // When you disable the flyingAI, stop accelerating the ship.
       if(ship->flyingAI->isEnabled()) {
          ship->flyingAI->disable();
-         clientCommand.reset();
+         resetClientCommand();
       } else {
          // Stop accelerating the ship when turning on the flyingAI as well.
-         clientCommand.reset();
+         resetClientCommand();
          ship->flyingAI->enable();
       }
       break;
@@ -1142,12 +1168,12 @@ void GameState::keyDown(int key, int unicode) {
       //switch weapons
    case SDLK_v:
       // Keep scrolling through weapons as long as they're not purchased.
-      clientCommand.currentWeapon = ship->getPrevWeaponID();
+      clientCommand.set_curweapon(ship->getPrevWeaponID());
       break;
 
    case SDLK_z:
       // Keep scrolling through weapons as long as they're not purchased.
-      clientCommand.currentWeapon = ship->getNextWeaponID();
+      clientCommand.set_curweapon(ship->getNextWeaponID());
       break;
 
       // Enable chat.
@@ -1252,9 +1278,9 @@ void GameState::keyUp(int key) {
       isS = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isW) {
-            clientCommand.forwardAcceleration = 1;
+            clientCommand.set_forwardacceleration(1);
          } else {
-            clientCommand.forwardAcceleration = 0;
+            clientCommand.set_forwardacceleration(0);
          }
       }
       break;
@@ -1263,9 +1289,9 @@ void GameState::keyUp(int key) {
       isW = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isS) {
-            clientCommand.forwardAcceleration = -1;
+            clientCommand.set_forwardacceleration(-1);
          } else {
-            clientCommand.forwardAcceleration = 0;
+            clientCommand.set_forwardacceleration(0);
          }
       }
       break;
@@ -1274,9 +1300,9 @@ void GameState::keyUp(int key) {
       isA = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isD) {
-            clientCommand.yawSpeed = -1.0;
+            clientCommand.set_yawspeed(-1.0);
          } else {
-            clientCommand.yawSpeed = 0;
+            clientCommand.set_yawspeed(0);
          }
       }
       break;
@@ -1285,30 +1311,28 @@ void GameState::keyUp(int key) {
       isD = false;
       if(!ship->flyingAI->isEnabled()) {
          if (isA) {
-            clientCommand.yawSpeed = 1.0;
+            clientCommand.set_yawspeed(1.0);
          } else {
-            clientCommand.yawSpeed = 0;
+            clientCommand.set_yawspeed(0);
          }
       }
-      //if(!ship->flyingAI->isEnabled())
-      //ship->setYawSpeed(0);
       break;
 
    case SDLK_q:
    case SDLK_e:
       if(!ship->flyingAI->isEnabled())
-         clientCommand.rightAcceleration = 0;
+         clientCommand.set_rightacceleration(0);
       break;
 
    case SDLK_SPACE:
    case SDLK_LCTRL:
       if(!ship->flyingAI->isEnabled())
-         clientCommand.upAcceleration = 0;
+         clientCommand.set_upacceleration(0);
       break;
 
 
    case SDLK_b:
-      clientCommand.brake = false;
+      clientCommand.set_brake(false);
       break;
       // Minimap Size
    case SDLK_1:
@@ -1343,22 +1367,22 @@ void GameState::mouseDown(int button) {
    switch(button) {
       // Left mouse down
    case 1:
-      clientCommand.fire = true;
+      clientCommand.set_fire(true);
       break;
 
       // Right mouse down
    case 3:
       doYaw = !doYaw;
-      clientCommand.rollSpeed = 0;
-      clientCommand.yawSpeed = 0;
+      clientCommand.set_rollspeed(0);
+      clientCommand.set_yawspeed(0);
       break;
 
       // Scroll
    case 4:
-      clientCommand.currentWeapon = ship->getPrevWeaponID();
+      clientCommand.set_curweapon(ship->getPrevWeaponID());
       break;
    case 5:
-      clientCommand.currentWeapon = ship->getNextWeaponID();
+      clientCommand.set_curweapon(ship->getNextWeaponID());
       break;
    }
 }
@@ -1373,13 +1397,13 @@ void GameState::mouseUp(int button) {
    switch (button) {
       // Left mouse up
    case 1:
-      clientCommand.fire = false;
+      clientCommand.set_fire(false);
       break;
       // Right mouse up
    case 3:
       doYaw = !doYaw;
-      clientCommand.rollSpeed = 0;
-      clientCommand.yawSpeed = 0;
+      clientCommand.set_rollspeed(0);
+      clientCommand.set_yawspeed(0);
       break;
    }
 }
@@ -1395,8 +1419,8 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    mouseX = shipControlX;
    mouseY = shipControlY;
 
-   clientCommand.mouseX = (float) mouseX;
-   clientCommand.mouseY = (float) mouseY;
+   clientCommand.set_mousex(mouseX);
+   clientCommand.set_mousey(mouseY);
 
    shipControlX = shipControlX / p2wx(gameSettings->GW);
    shipControlY = shipControlY / p2wy(0);
@@ -1406,12 +1430,12 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 
    if(!ship->flyingAI->isEnabled()) {
       if (doYaw) {
-         clientCommand.yawSpeed = (float) -shipControlX;
+         clientCommand.set_yawspeed(-shipControlX);
       } else {
-         clientCommand.rollSpeed = (float) shipControlX;
+         clientCommand.set_rollspeed(shipControlX);
       }
 
-      clientCommand.pitchSpeed = (float) shipControlY;
+      clientCommand.set_pitchspeed(shipControlY);
    }
 }
 
@@ -1470,18 +1494,67 @@ void GameState::debugPosition() {
 }
 
 void GameState::save() {
+   ast::GameState gs; // The outgoing protobuf gamestate.
+   // TODO: Make the typeids be sequential and do 1 << type when hashing for collisions.
    std::ofstream ofs(SAVEFILENAME);
-   ofs << "GameState: " << curLevel;
-   ofs.close();
+   
+   gs.set_gametime(getGameTime());
+   gs.set_playership(ship->id);
+   levelTimer.save(gs.mutable_leveltimer());
+   gs.set_curlevel(curLevel);
+   
+   const std::map<unsigned, Object3D*>& objects = custodian.getObjectsByID();
+   std::map<unsigned, Object3D*>::const_iterator iter = objects.begin();
+
+   ast::Entity* ent;
+   Object3D* obj = NULL;
+
+   for (; iter != objects.end(); ++iter) {
+      obj = (*iter).second;
+      ent = gs.add_entity();
+      obj->save(ent);
+      std::cout << "ID: " << ent->id() << " Type: " << ent->type() << std::endl;
+   }
+
+   if (!gs.SerializeToOstream(&ofs)) {
+      std::cerr << "Failed to write gameState." << std::endl;
+   }
+
    std::cout << "Saved GameState" << std::endl;
 }
 
 void GameState::load() {
+   ast::GameState gs; // The incoming protobuf gamestate.
    std::ifstream ifs(SAVEFILENAME);
 
-   std::string temp;
-   ifs >> temp;
-   ifs >> curLevel;
+   // if (!ifs) No file. Oh well :/
+
+   if (!gs.ParseFromIstream(&ifs)) {
+      std::cerr << "Failed to read gameState." << std::endl;
+   }
+
+   gameTime = gs.gametime();
+
+   if (gs.has_leveltimer())
+      levelTimer.load(gs.leveltimer());
+
+   if (gs.has_curlevel())
+      curLevel = gs.curlevel();
+
+   for (int i = 0; i < gs.entity_size(); ++i) {
+      const ast::Entity& ent = gs.entity(i);
+      custodian.updateObjectFromEntity(ent);
+      std::cout << "ID: " << ent.id() << " Type: " << ent.type() << std::endl;
+   }
+
+   std::cout << "Playership id: " << gs.playership() << std::endl;
+   AsteroidShip* tmpShip = dynamic_cast<AsteroidShip*>(custodian[gs.playership()]);
+   if (tmpShip == NULL) {
+      std::cerr << "ERROR no ship found!" << std::endl;
+      exit(EXIT_FAILURE);
+   } else {
+      ship = tmpShip;
+   }
 
    ifs.close();
    std::cout << "Loaded GameState" << std::endl;
@@ -1511,3 +1584,10 @@ void GameState::gameOver() {
    gameOverTimer.setCountDown(5);
 }
 
+double GameState::getGameTime() {
+   return gameTime;
+}
+
+void GameState::updateGameTime(double timeDiff) {
+   gameTime += timeDiff;
+}

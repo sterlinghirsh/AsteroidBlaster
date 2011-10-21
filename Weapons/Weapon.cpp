@@ -11,11 +11,14 @@
 #include <sstream>
 #include "Graphics/Texture.h"
 
+#include "Network/gamestate.pb.h"
+
 /**
  * Initialize the ship and timeLastFired.
  */
 Weapon::Weapon(AsteroidShip* owner, int _index)
 : ship(owner), index(_index), timeLastFired(0), icon("ZoeRedEyes") {
+   activationTimer.setGameState(owner->gameState);
    level = 1;
    levelMax = 5;
    purchased = false;
@@ -198,4 +201,46 @@ bool Weapon::isReady() {
 
 void Weapon::stopSounds() {
    // Do nothing.
+}
+
+void Weapon::save(ast::Weapon* weap) {
+   weap->set_index(index);
+   activationTimer.save(weap->mutable_activationtimer());
+   weap->set_timelastfired(timeLastFired);
+   weap->set_cooldown(coolDown);
+   weap->set_damage(damage);
+   weap->set_currentheat(currentHeat);
+
+   weap->set_purchased(purchased);
+   weap->set_weaponprice(weaponPrice);
+   weap->set_level(level);
+   weap->set_range(range);
+   weap->set_overheatlevel(overheatLevel);
+   weap->set_heatpershot(heatPerShot);
+}
+
+void Weapon::load(const ast::Weapon& weap) {
+   // Don't read in index. This object will already exist.
+   if (weap.has_activationtimer())
+      activationTimer.load(weap.activationtimer());
+   if (weap.has_timelastfired())
+      timeLastFired = weap.timelastfired();
+   if (weap.has_cooldown())
+      coolDown = weap.cooldown();
+   if (weap.has_damage())
+      damage = weap.damage();
+   if (weap.has_currentheat())
+      currentHeat = weap.currentheat();
+   if (weap.has_purchased())
+      purchased = weap.purchased();
+   if (weap.has_weaponprice())
+      weaponPrice = weap.weaponprice();
+   if (weap.has_level())
+      level = weap.level();
+   if (weap.has_range())
+      range = weap.range();
+   if (weap.has_overheatlevel())
+      overheatLevel = weap.overheatlevel();
+   if (weap.has_heatpershot())
+      heatPerShot = weap.heatpershot();
 }

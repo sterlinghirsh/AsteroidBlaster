@@ -16,6 +16,9 @@
 #include <iostream>
 
 struct SoundChannel;
+namespace ast {
+   class Entity;
+}
 
 class Object3D : public Drawable {
    //public variables------------------------------
@@ -100,6 +103,8 @@ class Object3D : public Drawable {
          ar & pitchSpeed;
          ar & rollSpeed;
       }
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
 };
 
 //BOOST_CLASS_EXPORT(Object3D);

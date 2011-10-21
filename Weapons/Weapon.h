@@ -22,6 +22,10 @@ class Point3D;
 class Vector3D;
 struct SoundChannel;
 
+namespace ast {
+   class Weapon;
+}
+
 class Weapon {
    public:
       Weapon(AsteroidShip* owner, int _index);
@@ -91,6 +95,9 @@ class Weapon {
       double timeLastFired;
       double coolDown;
       double damage;
+
+      virtual void save(ast::Weapon* weap);
+      virtual void load(const ast::Weapon& weap);
 
    protected:
       double currentHeat; // Measured in seconds.

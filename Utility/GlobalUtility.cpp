@@ -58,6 +58,7 @@ GLuint depthbuffer = 0;
 SDL_Surface* gDrawSurface = NULL;
 const SDL_VideoInfo* vidinfo = NULL;
 double currentTime = -1;
+double startTime = -1;
 
 // Inputmanager used by all the main classes
 InputManager* inputManager = NULL;
@@ -167,7 +168,7 @@ void useOrtho() {
    reshape(gameSettings->GW, gameSettings->GH);
 }
 
-void updateDoubleTime() {
+double getRealTime() {
    double answer = 0;
 #ifdef WIN32
    SYSTEMTIME st;
@@ -178,8 +179,15 @@ void updateDoubleTime() {
    gettimeofday(&tp, NULL);
    answer = (double)(tp.tv_sec) + ((double)(tp.tv_usec) / 1000000.0);
 #endif
-   currentTime = answer;
+   return answer;
+}
 
+void updateDoubleTime() {
+   currentTime = getRealTime() - startTime;
+}
+
+void updateStartTime() {
+   startTime = getRealTime();
 }
 
 /**

@@ -42,6 +42,9 @@ class HomingMissileShot : public ExplosiveShot {
       Vector3D particleDirection;
       float particleColor;
       SoundChannel* soundHandle;
+      
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
 };
 
 #endif

@@ -1,0 +1,171 @@
+package ast;
+
+message Vector {
+   required double x = 1;
+   required double y = 2;
+   required double z = 3;
+}
+
+// All items will live in this type.
+message Entity {
+   // All items must have id and type.
+   optional uint32 id = 1;
+   optional uint32 type = 2;
+
+   // Probably all items will have pos/vel.
+   optional Vector position = 3;
+   optional Vector velocity = 4;
+
+
+   // Some items have a radius etc.
+   optional float radius = 19;
+   optional Vector axis = 21;
+   optional float angle = 25;
+   optional float rotationSpeed = 26;
+
+   // Mostly for the ship
+   optional Vector up = 22;
+   optional Vector right = 23;
+   optional Vector forward = 24;
+   optional float targetYawSpeed = 27;
+   optional float targetPitchSpeed = 28;
+   optional float targetRollSpeed = 29;
+   repeated Weapon weapon = 5;
+
+   // Ship + Asteroid
+   optional float health = 30;
+   optional float healthMax = 31;
+
+   // Just the ship
+   optional int32 engineLevel = 32;
+   optional int32 regenHealthLevel = 33;
+   optional int32 bankLevel = 34;
+   optional float color1 = 35;
+   optional float color2 = 36;
+   optional Vector shotDirection = 37;
+   optional bool isFiring = 38;
+   optional int32 currentWeapon = 39;
+   optional float isBarrelRollingLeft = 40;
+   optional float isBarrelRollingRight = 41;
+   optional float curForwardAccel = 42;
+   optional float curRightAccel = 43;
+   optional float curUpAccel = 44;
+   optional bool isBraking = 45;
+   optional float bankPeriod = 46;
+   optional bool flyingAIEnabled = 47;
+   optional bool shootingAIEnabled = 48;
+   optional Timer bankTimer = 49;
+   optional Timer aliveTimer = 50;
+   optional Timer respawnTimer = 51;
+   optional float timeLeftToRespawn = 52;
+
+   optional int32 score = 53;
+   optional int32 kills = 54;
+   optional int32 deaths = 55;
+   optional int32 life = 56;
+   optional int32 bankedShards = 57;
+   optional int32 unbankedShards = 58;
+   optional int32 totalBankedShards = 59;
+
+   // Shots
+   optional uint32 ownerid = 60;
+   optional float lifetime = 61;
+   optional float timeFired = 62;
+   optional int32 weaponIndex = 63;
+   optional float damage = 64;
+
+   // Energy shot
+   optional float chargeTime = 65;
+   optional float damagePerSecond = 66;
+
+   // Timed Bomb Shot
+   optional float timeSinceExploded = 67;
+}
+
+message Weapon {
+   required uint32 index = 1;
+
+   // Frequently updated values.
+   optional Timer activationTimer = 2;
+   optional float timeLastFired = 3;
+   optional float coolDown = 4;
+   optional float damage = 5;
+   optional float currentHeat = 6;
+   
+   // Electricity
+   optional int32 shotsFired = 7;
+   optional float timeStartedFiring = 8;
+
+   // Energy
+   optional int32 shotid = 9;
+
+
+   // Less frequently updated values (these change only during the end of the level).
+   optional bool purchased = 16;
+   optional int32 weaponPrice = 17;
+   optional int32 level = 18;
+   optional float range = 19;
+   optional float overheatLevel = 20;
+   optional float heatPerShot = 21;
+
+}
+
+message ClientCommand {
+   required uint32 shipID = 1;
+   optional sint32 forwardAcceleration = 2;
+   optional sint32 rightAcceleration = 3;
+   optional sint32 upAcceleration = 4;
+   optional bool brake = 5;
+   optional float yawSpeed = 6;
+   optional float rollSpeed = 7;
+   optional float pitchSpeed = 8;
+   optional bool fire = 9;
+   optional uint32 curWeapon = 10;
+   optional float mouseX = 11;
+   optional float mouseY = 12;
+}
+
+message Timer {
+   optional float timeStarted = 1;
+   optional float countDownTime = 2;
+   optional float timePaused = 3;
+   optional bool isPaused = 4;
+   optional bool isRunning = 5;
+}
+
+// Just a timestamp and an entity list.
+message GameState {
+   optional uint32 playerShip = 3;
+   required double gameTime = 2;
+   optional Timer levelTimer = 4;
+   repeated Entity entity = 1;
+   optional int32 curLevel = 5;
+}
+
+message CollisionMessage {
+   optional uint32 messageid = 4;
+   optional double timestamp = 1;
+   optional uint32 objectId1 = 2;
+   optional uint32 objectId2 = 3;
+}
+
+message ChatMessage {
+   optional uint32 sourceid = 1;
+   optional string text = 2;
+}
+
+message CreateEntityMessage {
+   optional uint32 createEntityMessageid = 1;
+   // Should this be optional instead?
+   repeated Entity entity = 2;
+}
+
+message ServerToClient {
+   optional uint64 seq = 3;
+   optional uint64 ack = 4;
+   optional double timestamp = 5;
+   optional GameState gameState = 17;
+   repeated CollisionMessage collisionMessage = 1;
+   repeated ChatMessage chatMessage = 2;
+
+}

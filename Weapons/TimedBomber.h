@@ -24,7 +24,6 @@ class TimedBomber : public Weapon {
    
    protected:
       double shotSpeed;
-      double turnSpeed;
       double randomVariationAmount;
       Point3D* lastShotPos;
 };

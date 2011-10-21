@@ -216,6 +216,9 @@ void Text::SDL_GL_RenderText(const char *text,
 	
 	/* Use SDL_TTF to render our text */
 	initial = TTF_RenderText_Blended(font, text, color);
+
+   if (initial == NULL)
+      return;
 	
 	/* Convert the rendered text to a known format */
 	w = (int)(pow(2,ceil(log((double)initial->w) / log(2.0)) + 0.5));

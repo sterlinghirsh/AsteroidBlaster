@@ -1,26 +1,33 @@
 
 #include "Utility/Timer.h"
 #include "Utility/GlobalUtility.h"
+#include "Utility/GameState.h"
+#include "Network/gamestate.pb.h"
 
 
-Timer::Timer() : timeStarted(0), 
+Timer::Timer(GameState* _gameState) : timeStarted(0), 
                   countDownTime(0), 
                   timePaused(0), 
                   isPaused(false), 
-                  isRunning(false) {
+                  isRunning(false),
+                  gameState(_gameState) {
 
+}
+
+void Timer::setGameState(GameState* _gameState) {
+   gameState = _gameState;
 }
 
 void Timer::countUp() {
    isRunning = true;
-   timeStarted = doubleTime();
+   timeStarted = getCurTime();
    isPaused = false;
    countDownTime = 0;
    timePaused = 0;
 }
 
 void Timer::reset() {
-   timeStarted = doubleTime();
+   timeStarted = getCurTime();
    countDownTime = 0;
    timePaused = 0;
    isPaused = false;
@@ -28,7 +35,7 @@ void Timer::reset() {
 }
 
 void Timer::setCountDown(double _countDownTime) {
-   timeStarted = doubleTime();
+   timeStarted = getCurTime();
    timePaused = 0;
    isPaused = false;
    countDownTime = _countDownTime;
@@ -39,7 +46,7 @@ void Timer::setCountDown(double _countDownTime) {
  * Set the count down to its last value.
  */
 void Timer::restartCountDown() {
-   timeStarted = doubleTime();
+   timeStarted = getCurTime();
    isRunning = true;
 }
 
@@ -48,7 +55,7 @@ double Timer::getTimeLeft() {
 }
 
 double Timer::getTimeRunning() {
-   return doubleTime() - timeStarted;
+   return getCurTime() - timeStarted;
 }
 
 /**
@@ -74,7 +81,7 @@ void Timer::pause() {
    if (!getIsPaused()) {
       isPaused = true;
       isRunning = false;
-      timePaused = doubleTime();
+      timePaused = getCurTime();
    }
 }
 
@@ -86,7 +93,7 @@ void Timer::resume() {
    if (getIsPaused()) {
       isPaused = false;
       isRunning = true;
-      timeStarted += doubleTime() - timePaused;
+      timeStarted += getCurTime() - timePaused;
    }
 }
 
@@ -94,3 +101,52 @@ bool Timer::getIsPaused() {
    return isPaused;
 }
 
+double Timer::getCurTime() {
+   if (gameState == NULL) {
+      return doubleTime();
+   } else {
+      return gameState->getGameTime();
+   }
+}
+
+void Timer::load(const ast::Timer& t) {
+   if (t.has_timestarted()) {
+      timeStarted = t.timestarted();
+      std::cout << " setting timestarted to " << timeStarted <<"\n";
+   }
+
+   if (t.has_countdowntime()) {
+      countDownTime = t.countdowntime();
+      std::cout << " setting countdowntime to " << countDownTime <<"\n";
+   }
+
+   if (t.has_timepaused()) {
+      timePaused = t.timepaused();
+      std::cout << " setting time paused to " << timePaused <<"\n";
+   }
+
+   if (t.has_ispaused()) {
+      isPaused = t.ispaused();
+      std::cout << " setting is paused to " << isPaused <<"\n";
+   }
+
+   if (t.has_isrunning()) {
+      isRunning = t.isrunning();
+      std::cout << " setting is running to " << isRunning <<"\n";
+   }
+   std::cout << "Loaded ";
+}
+
+void Timer::save(ast::Timer* t) {
+   t->set_timestarted(timeStarted);
+   t->set_countdowntime(countDownTime);
+   t->set_timepaused(timePaused);
+   t->set_ispaused(isPaused);
+   t->set_isrunning(isRunning);
+   std::cout << "Saved ";
+}
+
+void Timer::debug() {
+   std::cout << "Timer " << timeStarted << " " << countDownTime << " "
+      << timePaused << " " << isPaused << " " << isRunning << std::endl;
+}

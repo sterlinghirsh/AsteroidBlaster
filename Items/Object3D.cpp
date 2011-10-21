@@ -11,6 +11,7 @@
 #include "Utility/Matrix4.h"
 #include "Utility/Custodian.h"
 #include <string>
+#include "Network/gamestate.pb.h"
 
 
 Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState) {
@@ -274,5 +275,27 @@ void Object3D::nullPointers() {
 // serialize 
 std::string Object3D::serialize() {
    return "Object3D\n";
+}
+
+void Object3D::save(ast::Entity* ent) {
+   ent->set_id(id);
+   ent->set_type(type);
+   position->save(ent->mutable_position());
+   velocity->save(ent->mutable_velocity());
+}
+
+void Object3D::load(const ast::Entity& ent) {
+   id = ent.id();
+   type = ent.type();
+   if (ent.has_position()) {
+      position->load(ent.position());
+   }
+
+   if (ent.has_velocity()) {
+      velocity->load(ent.velocity());
+   }
+
+   // Does this need to be here?
+   updateBoundingBox();
 }
 
