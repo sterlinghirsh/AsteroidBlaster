@@ -8,7 +8,7 @@
 #include "Radar.h"
 #include "Items/AsteroidShip.h"
 #include "Particles/Particle.h"
-#include "Graphics/Sprite.h"
+//#include "Graphics/Sprite.h"
 #include "Graphics/MeshFace.h"
 #include "Items/Drawable.h"
 
@@ -103,7 +103,7 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
    }
 
    // Sprite list iterator.
-   std::list<Sprite*>::iterator spriteIter;
+   //std::list<Sprite*>::iterator spriteIter;
    // Set up a particle list iterator.
    std::list<Particle*>::iterator particleIter;
    // Set up a meshface list iterator.
@@ -117,9 +117,11 @@ std::list<Drawable*>* Radar :: getViewFrustumReading() {
       allObjects->push_back(curParticle);
    }
 
+   /*
    for (spriteIter = Sprite::sprites.begin(); spriteIter != Sprite::sprites.end(); ++spriteIter) {
       allObjects->push_back(*spriteIter);
    }
+   */
    
    for (meshFaceIter = MeshFace::independentFaces.begin(); meshFaceIter != MeshFace::independentFaces.end(); ++meshFaceIter) {
       allObjects->push_back(*meshFaceIter);

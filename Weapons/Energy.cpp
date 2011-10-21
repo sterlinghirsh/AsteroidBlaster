@@ -54,9 +54,9 @@ void Energy::update(double timeDiff) {
    // Update the position of the charging shot.
    if (chargingShot != NULL) {
       chargingShot->position->updateMagnitude(ship->shotOrigin);
-      chargingShot->updateChargeTime(doubleTime() - chargeStartTime);
+      chargingShot->updateChargeTime(ship->gameState->getGameTime() - chargeStartTime);
       
-      if (chargingSoundPlaying && doubleTime() - chargeStartTime > 5.0) {
+      if (chargingSoundPlaying && ship->gameState->getGameTime() - chargeStartTime > 5.0) {
          SoundEffect::stopSoundEffect(soundHandle);
          soundHandle = SoundEffect::playSoundEffect("ChargeShotLoop", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME, true);
          chargingSoundPlaying = false;
@@ -70,7 +70,7 @@ void Energy::update(double timeDiff) {
    // If user has stopped charging a shot.
    if (chargingShot != NULL && (lastFiredFrame == curFrame - 2 || ship->isRespawning() )) {
       // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
-      Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed / (1 + std::min(doubleTime() - chargeStartTime, 3.0))));
+      Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed / (1 + std::min(ship->gameState->getGameTime() - chargeStartTime, 3.0))));
 
       // Add a random variation to each of the shots.
       randomVariation.randomMagnitude();
@@ -85,7 +85,7 @@ void Energy::update(double timeDiff) {
          SoundEffect::playSoundEffect("ChargeShotFire", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME);
       }
       
-      ship->setShakeAmount((float) std::min((doubleTime() - chargeStartTime) * 0.3, 0.5));
+      ship->setShakeAmount((float) std::min((ship->gameState->getGameTime() - chargeStartTime) * 0.3, 0.5));
       resetChargingShot();
    }
 }
@@ -95,7 +95,7 @@ void Energy::resetChargingShot() {
    chargingShot = NULL;
    chargingShotid = 0;
    // Update timeLastFired with new current time.
-   timeLastFired = doubleTime();
+   timeLastFired = ship->gameState->getGameTime();
 }
 
 /**
@@ -116,7 +116,7 @@ void Energy::fire() {
 
    // If we haven't started a shot yet...
    if (chargeStartTime == 0 && chargingShot == NULL) {
-      chargeStartTime = doubleTime();  
+      chargeStartTime = ship->gameState->getGameTime();  
       Vector3D zeroVelocity(0, 0, 0);
       chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, index, ship, ship->gameState);
       ship->custodian->add(chargingShot);

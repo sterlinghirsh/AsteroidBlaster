@@ -14,6 +14,7 @@ SDL_Rect DefaultSDLRect = {0, 0};
 GameMessage::GameMessage(std::string _text, double _size, double _lifetime) : Text(_text, menuFont, DefaultSDLRect) {
    lifetime = _lifetime;
    alignment = CENTERED;
+   // This is a good place to use doubletime.
    timeCreated = doubleTime();
    shouldRemove = false;
 }
@@ -23,6 +24,7 @@ GameMessage::~GameMessage() {
 }
 
 void GameMessage::update(double timeDiff) {
+   // This is a good place to use doubletime.
    shouldRemove = doubleTime() > (timeCreated + lifetime);
 }
 

@@ -19,6 +19,8 @@ ifeq ($(UNAME), Linux)
    FMODLIB_NAME_RELEASE  = libfmodex.so
    FMODLIB_NAME_LOGGING  = libfmodexL.so
    INSTALL_NAME_TOOL_LINE = 
+   PROTOBUF_CFLAGS:=$(shell "pkg-config" "--cflags" "protobuf")
+   PROTOBUF_LIBS:=-Wl,-Bstatic $(shell "pkg-config" "--libs" "protobuf") -Wl,-Bdynamic
 else
    # Mac stuff
    SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--libs")
@@ -28,12 +30,10 @@ else
    FMODLIB_NAME_RELEASE  = libfmodex.dylib
    FMODLIB_NAME_LOGGING  = libfmodexL.dylib
    INSTALL_NAME_TOOL_LINE = install_name_tool -change ./${FMODLIB_NAME_RELEASE} ${FMODLIB_PATH}/${FMODLIB_NAME_RELEASE} AsteroidBlaster
+   PROTOBUF_CFLAGS:=-I/usr/local/include
+   PROTOBUF_LIBS:=-L/usr/local/lib -lprotobuf -lz
 endif
 
-PROTOBUF_CFLAGS:=`$(DOEXPORT) ; pkg-config --cflags protobuf`
-PROTOBUF_CFLAGS:=-I/usr/local/include
-PROTOBUF_LIBS:=`$(DOEXPORT) ; pkg-config --libs protobuf`
-PROTOBUF_LIBS:=-L/usr/local/lib -lprotobuf -lz
 
 
 LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf -g -O3
@@ -51,12 +51,11 @@ UTILITYFILES:=Utility/Vector3D.cpp Utility/GameState.cpp Utility/Custodian.cpp U
 
 MENUFILES:=Menus/Menu.cpp Menus/MainMenu.cpp Menus/StoreMenu.cpp Menus/CreditsMenu.cpp Menus/SettingsMenu.cpp Menus/HelpMenu.cpp
 
-GRAPHICSFILES:=Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Texture.cpp Graphics/Sprite.cpp Graphics/Camera.cpp Graphics/MeshFace.cpp Graphics/Image.cpp
+GRAPHICSFILES:=Graphics/Mesh3D.cpp Graphics/MeshPoint.cpp Graphics/Skybox.cpp Graphics/Texture.cpp Graphics/Camera.cpp Graphics/MeshFace.cpp Graphics/Image.cpp
 
 ITEMSFILES:=Items/Drawable.cpp Items/Object3D.cpp Items/Asteroid3D.cpp Items/AsteroidShip.cpp Items/BoundingSpace.cpp Items/Ring.cpp Items/Shard.cpp Items/GlowSquare.cpp Items/BoundingWall.cpp Items/Ball.cpp Items/Spring.cpp
 
-SHOTSFILES:=Shots/Shot.cpp Shots/BeamShot.cpp Shots/BlasterShot.cpp Shots/TractorBeamShot.cpp Shots/ElectricityShot.cpp Shots/ExplosiveShot.cpp Shots/EnergyShot.cpp Shots/TimedBombShot.cpp Shots/RemoteBombShot.cpp Shots/HomingMissileShot.cpp Shots/RamShot.cpp
-# UNUSED: Shots/RamShot.cpp
+SHOTSFILES:=Shots/Shot.cpp Shots/BeamShot.cpp Shots/BlasterShot.cpp Shots/TractorBeamShot.cpp Shots/ElectricityShot.cpp Shots/ExplosiveShot.cpp Shots/EnergyShot.cpp Shots/TimedBombShot.cpp Shots/RemoteBombShot.cpp Shots/HomingMissileShot.cpp
 
 AIFILES:=AI/FlyingAI.cpp AI/ShootingAI.cpp 
 
@@ -82,7 +81,7 @@ PROTOBUF_HEADER:=Network/gamestate.pb.h
 all: Network/gamestate.pb.h $(FILES) AsteroidBlaster
 
 AsteroidBlaster: AsteroidBlaster.o $(OBJECTS)
-	$(CC) $(LDFLAGS) AsteroidBlaster.o $(OBJECTS) -o $@
+	$(CC) AsteroidBlaster.o $(OBJECTS) -o $@ $(LDFLAGS)
 	$(INSTALL_NAME_TOOL_LINE)
 
 AsteroidBlaster.o: AsteroidBlaster.cpp

@@ -342,7 +342,7 @@ void GameState::update(double timeDiff) {
    objects = custodian.getListOfObjects();
 
    Particle::updateParticles(timeDiff);
-   Sprite::updateSprites(timeDiff);
+   //Sprite::updateSprites(timeDiff);
    MeshFace::updateIndependentFaces(timeDiff);
    GameMessage::updateAllMessages(timeDiff);
 

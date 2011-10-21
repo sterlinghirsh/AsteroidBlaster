@@ -49,7 +49,7 @@ void RailGun::fire() {
 
    if (!isReady())
       return;
-   timeLastFired = doubleTime();
+   timeLastFired = ship->gameState->getGameTime();
    Point3D start = ship->shotOrigin;
    // Move start point by the shotDirection vector, multiplied by a scalar
    ship->setShakeAmount(5.0);

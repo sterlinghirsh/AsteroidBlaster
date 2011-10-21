@@ -7,7 +7,6 @@
 
 #include "Weapons/Ram.h"
 #include "Utility/GlobalUtility.h"
-#include "Shots/RamShot.h"
 #include "Utility/SoundEffect.h"
 #include "Text/GameMessage.h"
 

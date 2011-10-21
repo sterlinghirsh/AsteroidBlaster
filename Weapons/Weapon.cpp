@@ -78,10 +78,10 @@ bool Weapon::isOverheated() {
  */
 bool Weapon::isCooledDown() {
    if (ship->gameState->godMode) {
-      return doubleTime() > timeLastFired + 0.05;
+      return ship->gameState->getGameTime() > timeLastFired + 0.05;
    } else {
       return !isOverheated() &&
-       (doubleTime() > timeLastFired + (coolDown/((double)level)));
+       (ship->gameState->getGameTime() > timeLastFired + (coolDown/((double)level)));
    }
    
 }
@@ -100,7 +100,7 @@ std::string Weapon::getName() {
 double Weapon::getCoolDownAmount() {
    if (coolDown == 0)
       return 1;
-   return clamp((doubleTime() - timeLastFired) / (coolDown/((double)level)), 0, 1);
+   return clamp((ship->gameState->getGameTime() - timeLastFired) / (coolDown/((double)level)), 0, 1);
 }
 
 std::string Weapon::weaponString() {

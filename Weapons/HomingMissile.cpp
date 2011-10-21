@@ -60,7 +60,7 @@ void HomingMissile::fire() {
    //lastShotRight = !lastShotRight;
    //printf("Did it shoot right? %d\n", lastShotRight);
    // Update timeLastFired with new current time.
-   timeLastFired = doubleTime();
+   timeLastFired = ship->gameState->getGameTime();
    // Copy the ship's position for the start point.
    Point3D start = ship->shotOrigin;
    // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
