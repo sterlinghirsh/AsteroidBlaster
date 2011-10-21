@@ -34,6 +34,7 @@ void protobuf_ShutdownFile_Network_2fgamestate_2eproto();
 
 class Vector;
 class Entity;
+class Weapon;
 class Timer;
 class GameState;
 class CollisionMessage;
@@ -302,6 +303,18 @@ class Entity : public ::google::protobuf::Message {
   static const int kTargetRollSpeedFieldNumber = 29;
   inline float targetrollspeed() const;
   inline void set_targetrollspeed(float value);
+  
+  // repeated .ast.Weapon weapon = 5;
+  inline int weapon_size() const;
+  inline void clear_weapon();
+  static const int kWeaponFieldNumber = 5;
+  inline const ::ast::Weapon& weapon(int index) const;
+  inline ::ast::Weapon* mutable_weapon(int index);
+  inline ::ast::Weapon* add_weapon();
+  inline const ::google::protobuf::RepeatedPtrField< ::ast::Weapon >&
+      weapon() const;
+  inline ::google::protobuf::RepeatedPtrField< ::ast::Weapon >*
+      mutable_weapon();
   
   // optional float health = 30;
   inline bool has_health() const;
@@ -696,6 +709,7 @@ class Entity : public ::google::protobuf::Message {
   ::ast::Vector* forward_;
   float targetpitchspeed_;
   float targetrollspeed_;
+  ::google::protobuf::RepeatedPtrField< ::ast::Weapon > weapon_;
   float health_;
   float healthmax_;
   ::google::protobuf::int32 enginelevel_;
@@ -736,7 +750,7 @@ class Entity : public ::google::protobuf::Message {
   float timesinceexploded_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(52 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(53 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -744,6 +758,229 @@ class Entity : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static Entity* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Weapon : public ::google::protobuf::Message {
+ public:
+  Weapon();
+  virtual ~Weapon();
+  
+  Weapon(const Weapon& from);
+  
+  inline Weapon& operator=(const Weapon& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Weapon& default_instance();
+  
+  void Swap(Weapon* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Weapon* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Weapon& from);
+  void MergeFrom(const Weapon& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required uint32 index = 1;
+  inline bool has_index() const;
+  inline void clear_index();
+  static const int kIndexFieldNumber = 1;
+  inline ::google::protobuf::uint32 index() const;
+  inline void set_index(::google::protobuf::uint32 value);
+  
+  // optional .ast.Timer activationTimer = 2;
+  inline bool has_activationtimer() const;
+  inline void clear_activationtimer();
+  static const int kActivationTimerFieldNumber = 2;
+  inline const ::ast::Timer& activationtimer() const;
+  inline ::ast::Timer* mutable_activationtimer();
+  inline ::ast::Timer* release_activationtimer();
+  
+  // optional float timeLastFired = 3;
+  inline bool has_timelastfired() const;
+  inline void clear_timelastfired();
+  static const int kTimeLastFiredFieldNumber = 3;
+  inline float timelastfired() const;
+  inline void set_timelastfired(float value);
+  
+  // optional float coolDown = 4;
+  inline bool has_cooldown() const;
+  inline void clear_cooldown();
+  static const int kCoolDownFieldNumber = 4;
+  inline float cooldown() const;
+  inline void set_cooldown(float value);
+  
+  // optional float damage = 5;
+  inline bool has_damage() const;
+  inline void clear_damage();
+  static const int kDamageFieldNumber = 5;
+  inline float damage() const;
+  inline void set_damage(float value);
+  
+  // optional float currentHeat = 6;
+  inline bool has_currentheat() const;
+  inline void clear_currentheat();
+  static const int kCurrentHeatFieldNumber = 6;
+  inline float currentheat() const;
+  inline void set_currentheat(float value);
+  
+  // optional int32 shotsFired = 7;
+  inline bool has_shotsfired() const;
+  inline void clear_shotsfired();
+  static const int kShotsFiredFieldNumber = 7;
+  inline ::google::protobuf::int32 shotsfired() const;
+  inline void set_shotsfired(::google::protobuf::int32 value);
+  
+  // optional float timeStartedFiring = 8;
+  inline bool has_timestartedfiring() const;
+  inline void clear_timestartedfiring();
+  static const int kTimeStartedFiringFieldNumber = 8;
+  inline float timestartedfiring() const;
+  inline void set_timestartedfiring(float value);
+  
+  // optional int32 shotid = 9;
+  inline bool has_shotid() const;
+  inline void clear_shotid();
+  static const int kShotidFieldNumber = 9;
+  inline ::google::protobuf::int32 shotid() const;
+  inline void set_shotid(::google::protobuf::int32 value);
+  
+  // optional bool purchased = 16;
+  inline bool has_purchased() const;
+  inline void clear_purchased();
+  static const int kPurchasedFieldNumber = 16;
+  inline bool purchased() const;
+  inline void set_purchased(bool value);
+  
+  // optional int32 weaponPrice = 17;
+  inline bool has_weaponprice() const;
+  inline void clear_weaponprice();
+  static const int kWeaponPriceFieldNumber = 17;
+  inline ::google::protobuf::int32 weaponprice() const;
+  inline void set_weaponprice(::google::protobuf::int32 value);
+  
+  // optional int32 level = 18;
+  inline bool has_level() const;
+  inline void clear_level();
+  static const int kLevelFieldNumber = 18;
+  inline ::google::protobuf::int32 level() const;
+  inline void set_level(::google::protobuf::int32 value);
+  
+  // optional float range = 19;
+  inline bool has_range() const;
+  inline void clear_range();
+  static const int kRangeFieldNumber = 19;
+  inline float range() const;
+  inline void set_range(float value);
+  
+  // optional float overheatLevel = 20;
+  inline bool has_overheatlevel() const;
+  inline void clear_overheatlevel();
+  static const int kOverheatLevelFieldNumber = 20;
+  inline float overheatlevel() const;
+  inline void set_overheatlevel(float value);
+  
+  // optional float heatPerShot = 21;
+  inline bool has_heatpershot() const;
+  inline void clear_heatpershot();
+  static const int kHeatPerShotFieldNumber = 21;
+  inline float heatpershot() const;
+  inline void set_heatpershot(float value);
+  
+  // @@protoc_insertion_point(class_scope:ast.Weapon)
+ private:
+  inline void set_has_index();
+  inline void clear_has_index();
+  inline void set_has_activationtimer();
+  inline void clear_has_activationtimer();
+  inline void set_has_timelastfired();
+  inline void clear_has_timelastfired();
+  inline void set_has_cooldown();
+  inline void clear_has_cooldown();
+  inline void set_has_damage();
+  inline void clear_has_damage();
+  inline void set_has_currentheat();
+  inline void clear_has_currentheat();
+  inline void set_has_shotsfired();
+  inline void clear_has_shotsfired();
+  inline void set_has_timestartedfiring();
+  inline void clear_has_timestartedfiring();
+  inline void set_has_shotid();
+  inline void clear_has_shotid();
+  inline void set_has_purchased();
+  inline void clear_has_purchased();
+  inline void set_has_weaponprice();
+  inline void clear_has_weaponprice();
+  inline void set_has_level();
+  inline void clear_has_level();
+  inline void set_has_range();
+  inline void clear_has_range();
+  inline void set_has_overheatlevel();
+  inline void clear_has_overheatlevel();
+  inline void set_has_heatpershot();
+  inline void clear_has_heatpershot();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::ast::Timer* activationtimer_;
+  ::google::protobuf::uint32 index_;
+  float timelastfired_;
+  float cooldown_;
+  float damage_;
+  float currentheat_;
+  ::google::protobuf::int32 shotsfired_;
+  float timestartedfiring_;
+  ::google::protobuf::int32 shotid_;
+  bool purchased_;
+  ::google::protobuf::int32 weaponprice_;
+  ::google::protobuf::int32 level_;
+  float range_;
+  float overheatlevel_;
+  float heatpershot_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(15 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_ShutdownFile_Network_2fgamestate_2eproto();
+  
+  void InitAsDefaultInstance();
+  static Weapon* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1862,15 +2099,40 @@ inline void Entity::set_targetrollspeed(float value) {
   targetrollspeed_ = value;
 }
 
+// repeated .ast.Weapon weapon = 5;
+inline int Entity::weapon_size() const {
+  return weapon_.size();
+}
+inline void Entity::clear_weapon() {
+  weapon_.Clear();
+}
+inline const ::ast::Weapon& Entity::weapon(int index) const {
+  return weapon_.Get(index);
+}
+inline ::ast::Weapon* Entity::mutable_weapon(int index) {
+  return weapon_.Mutable(index);
+}
+inline ::ast::Weapon* Entity::add_weapon() {
+  return weapon_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::ast::Weapon >&
+Entity::weapon() const {
+  return weapon_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::ast::Weapon >*
+Entity::mutable_weapon() {
+  return &weapon_;
+}
+
 // optional float health = 30;
 inline bool Entity::has_health() const {
-  return (_has_bits_[0] & 0x00004000u) != 0;
+  return (_has_bits_[0] & 0x00008000u) != 0;
 }
 inline void Entity::set_has_health() {
-  _has_bits_[0] |= 0x00004000u;
+  _has_bits_[0] |= 0x00008000u;
 }
 inline void Entity::clear_has_health() {
-  _has_bits_[0] &= ~0x00004000u;
+  _has_bits_[0] &= ~0x00008000u;
 }
 inline void Entity::clear_health() {
   health_ = 0;
@@ -1886,13 +2148,13 @@ inline void Entity::set_health(float value) {
 
 // optional float healthMax = 31;
 inline bool Entity::has_healthmax() const {
-  return (_has_bits_[0] & 0x00008000u) != 0;
+  return (_has_bits_[0] & 0x00010000u) != 0;
 }
 inline void Entity::set_has_healthmax() {
-  _has_bits_[0] |= 0x00008000u;
+  _has_bits_[0] |= 0x00010000u;
 }
 inline void Entity::clear_has_healthmax() {
-  _has_bits_[0] &= ~0x00008000u;
+  _has_bits_[0] &= ~0x00010000u;
 }
 inline void Entity::clear_healthmax() {
   healthmax_ = 0;
@@ -1908,13 +2170,13 @@ inline void Entity::set_healthmax(float value) {
 
 // optional int32 engineLevel = 32;
 inline bool Entity::has_enginelevel() const {
-  return (_has_bits_[0] & 0x00010000u) != 0;
+  return (_has_bits_[0] & 0x00020000u) != 0;
 }
 inline void Entity::set_has_enginelevel() {
-  _has_bits_[0] |= 0x00010000u;
+  _has_bits_[0] |= 0x00020000u;
 }
 inline void Entity::clear_has_enginelevel() {
-  _has_bits_[0] &= ~0x00010000u;
+  _has_bits_[0] &= ~0x00020000u;
 }
 inline void Entity::clear_enginelevel() {
   enginelevel_ = 0;
@@ -1930,13 +2192,13 @@ inline void Entity::set_enginelevel(::google::protobuf::int32 value) {
 
 // optional int32 regenHealthLevel = 33;
 inline bool Entity::has_regenhealthlevel() const {
-  return (_has_bits_[0] & 0x00020000u) != 0;
+  return (_has_bits_[0] & 0x00040000u) != 0;
 }
 inline void Entity::set_has_regenhealthlevel() {
-  _has_bits_[0] |= 0x00020000u;
+  _has_bits_[0] |= 0x00040000u;
 }
 inline void Entity::clear_has_regenhealthlevel() {
-  _has_bits_[0] &= ~0x00020000u;
+  _has_bits_[0] &= ~0x00040000u;
 }
 inline void Entity::clear_regenhealthlevel() {
   regenhealthlevel_ = 0;
@@ -1952,13 +2214,13 @@ inline void Entity::set_regenhealthlevel(::google::protobuf::int32 value) {
 
 // optional int32 bankLevel = 34;
 inline bool Entity::has_banklevel() const {
-  return (_has_bits_[0] & 0x00040000u) != 0;
+  return (_has_bits_[0] & 0x00080000u) != 0;
 }
 inline void Entity::set_has_banklevel() {
-  _has_bits_[0] |= 0x00040000u;
+  _has_bits_[0] |= 0x00080000u;
 }
 inline void Entity::clear_has_banklevel() {
-  _has_bits_[0] &= ~0x00040000u;
+  _has_bits_[0] &= ~0x00080000u;
 }
 inline void Entity::clear_banklevel() {
   banklevel_ = 0;
@@ -1974,13 +2236,13 @@ inline void Entity::set_banklevel(::google::protobuf::int32 value) {
 
 // optional float color1 = 35;
 inline bool Entity::has_color1() const {
-  return (_has_bits_[0] & 0x00080000u) != 0;
+  return (_has_bits_[0] & 0x00100000u) != 0;
 }
 inline void Entity::set_has_color1() {
-  _has_bits_[0] |= 0x00080000u;
+  _has_bits_[0] |= 0x00100000u;
 }
 inline void Entity::clear_has_color1() {
-  _has_bits_[0] &= ~0x00080000u;
+  _has_bits_[0] &= ~0x00100000u;
 }
 inline void Entity::clear_color1() {
   color1_ = 0;
@@ -1996,13 +2258,13 @@ inline void Entity::set_color1(float value) {
 
 // optional float color2 = 36;
 inline bool Entity::has_color2() const {
-  return (_has_bits_[0] & 0x00100000u) != 0;
+  return (_has_bits_[0] & 0x00200000u) != 0;
 }
 inline void Entity::set_has_color2() {
-  _has_bits_[0] |= 0x00100000u;
+  _has_bits_[0] |= 0x00200000u;
 }
 inline void Entity::clear_has_color2() {
-  _has_bits_[0] &= ~0x00100000u;
+  _has_bits_[0] &= ~0x00200000u;
 }
 inline void Entity::clear_color2() {
   color2_ = 0;
@@ -2018,13 +2280,13 @@ inline void Entity::set_color2(float value) {
 
 // optional .ast.Vector shotDirection = 37;
 inline bool Entity::has_shotdirection() const {
-  return (_has_bits_[0] & 0x00200000u) != 0;
+  return (_has_bits_[0] & 0x00400000u) != 0;
 }
 inline void Entity::set_has_shotdirection() {
-  _has_bits_[0] |= 0x00200000u;
+  _has_bits_[0] |= 0x00400000u;
 }
 inline void Entity::clear_has_shotdirection() {
-  _has_bits_[0] &= ~0x00200000u;
+  _has_bits_[0] &= ~0x00400000u;
 }
 inline void Entity::clear_shotdirection() {
   if (shotdirection_ != NULL) shotdirection_->::ast::Vector::Clear();
@@ -2047,13 +2309,13 @@ inline ::ast::Vector* Entity::release_shotdirection() {
 
 // optional bool isFiring = 38;
 inline bool Entity::has_isfiring() const {
-  return (_has_bits_[0] & 0x00400000u) != 0;
+  return (_has_bits_[0] & 0x00800000u) != 0;
 }
 inline void Entity::set_has_isfiring() {
-  _has_bits_[0] |= 0x00400000u;
+  _has_bits_[0] |= 0x00800000u;
 }
 inline void Entity::clear_has_isfiring() {
-  _has_bits_[0] &= ~0x00400000u;
+  _has_bits_[0] &= ~0x00800000u;
 }
 inline void Entity::clear_isfiring() {
   isfiring_ = false;
@@ -2069,13 +2331,13 @@ inline void Entity::set_isfiring(bool value) {
 
 // optional int32 currentWeapon = 39;
 inline bool Entity::has_currentweapon() const {
-  return (_has_bits_[0] & 0x00800000u) != 0;
+  return (_has_bits_[0] & 0x01000000u) != 0;
 }
 inline void Entity::set_has_currentweapon() {
-  _has_bits_[0] |= 0x00800000u;
+  _has_bits_[0] |= 0x01000000u;
 }
 inline void Entity::clear_has_currentweapon() {
-  _has_bits_[0] &= ~0x00800000u;
+  _has_bits_[0] &= ~0x01000000u;
 }
 inline void Entity::clear_currentweapon() {
   currentweapon_ = 0;
@@ -2091,13 +2353,13 @@ inline void Entity::set_currentweapon(::google::protobuf::int32 value) {
 
 // optional float isBarrelRollingLeft = 40;
 inline bool Entity::has_isbarrelrollingleft() const {
-  return (_has_bits_[0] & 0x01000000u) != 0;
+  return (_has_bits_[0] & 0x02000000u) != 0;
 }
 inline void Entity::set_has_isbarrelrollingleft() {
-  _has_bits_[0] |= 0x01000000u;
+  _has_bits_[0] |= 0x02000000u;
 }
 inline void Entity::clear_has_isbarrelrollingleft() {
-  _has_bits_[0] &= ~0x01000000u;
+  _has_bits_[0] &= ~0x02000000u;
 }
 inline void Entity::clear_isbarrelrollingleft() {
   isbarrelrollingleft_ = 0;
@@ -2113,13 +2375,13 @@ inline void Entity::set_isbarrelrollingleft(float value) {
 
 // optional float isBarrelRollingRight = 41;
 inline bool Entity::has_isbarrelrollingright() const {
-  return (_has_bits_[0] & 0x02000000u) != 0;
+  return (_has_bits_[0] & 0x04000000u) != 0;
 }
 inline void Entity::set_has_isbarrelrollingright() {
-  _has_bits_[0] |= 0x02000000u;
+  _has_bits_[0] |= 0x04000000u;
 }
 inline void Entity::clear_has_isbarrelrollingright() {
-  _has_bits_[0] &= ~0x02000000u;
+  _has_bits_[0] &= ~0x04000000u;
 }
 inline void Entity::clear_isbarrelrollingright() {
   isbarrelrollingright_ = 0;
@@ -2135,13 +2397,13 @@ inline void Entity::set_isbarrelrollingright(float value) {
 
 // optional float curForwardAccel = 42;
 inline bool Entity::has_curforwardaccel() const {
-  return (_has_bits_[0] & 0x04000000u) != 0;
+  return (_has_bits_[0] & 0x08000000u) != 0;
 }
 inline void Entity::set_has_curforwardaccel() {
-  _has_bits_[0] |= 0x04000000u;
+  _has_bits_[0] |= 0x08000000u;
 }
 inline void Entity::clear_has_curforwardaccel() {
-  _has_bits_[0] &= ~0x04000000u;
+  _has_bits_[0] &= ~0x08000000u;
 }
 inline void Entity::clear_curforwardaccel() {
   curforwardaccel_ = 0;
@@ -2157,13 +2419,13 @@ inline void Entity::set_curforwardaccel(float value) {
 
 // optional float curRightAccel = 43;
 inline bool Entity::has_currightaccel() const {
-  return (_has_bits_[0] & 0x08000000u) != 0;
+  return (_has_bits_[0] & 0x10000000u) != 0;
 }
 inline void Entity::set_has_currightaccel() {
-  _has_bits_[0] |= 0x08000000u;
+  _has_bits_[0] |= 0x10000000u;
 }
 inline void Entity::clear_has_currightaccel() {
-  _has_bits_[0] &= ~0x08000000u;
+  _has_bits_[0] &= ~0x10000000u;
 }
 inline void Entity::clear_currightaccel() {
   currightaccel_ = 0;
@@ -2179,13 +2441,13 @@ inline void Entity::set_currightaccel(float value) {
 
 // optional float curUpAccel = 44;
 inline bool Entity::has_curupaccel() const {
-  return (_has_bits_[0] & 0x10000000u) != 0;
+  return (_has_bits_[0] & 0x20000000u) != 0;
 }
 inline void Entity::set_has_curupaccel() {
-  _has_bits_[0] |= 0x10000000u;
+  _has_bits_[0] |= 0x20000000u;
 }
 inline void Entity::clear_has_curupaccel() {
-  _has_bits_[0] &= ~0x10000000u;
+  _has_bits_[0] &= ~0x20000000u;
 }
 inline void Entity::clear_curupaccel() {
   curupaccel_ = 0;
@@ -2201,13 +2463,13 @@ inline void Entity::set_curupaccel(float value) {
 
 // optional bool isBraking = 45;
 inline bool Entity::has_isbraking() const {
-  return (_has_bits_[0] & 0x20000000u) != 0;
+  return (_has_bits_[0] & 0x40000000u) != 0;
 }
 inline void Entity::set_has_isbraking() {
-  _has_bits_[0] |= 0x20000000u;
+  _has_bits_[0] |= 0x40000000u;
 }
 inline void Entity::clear_has_isbraking() {
-  _has_bits_[0] &= ~0x20000000u;
+  _has_bits_[0] &= ~0x40000000u;
 }
 inline void Entity::clear_isbraking() {
   isbraking_ = false;
@@ -2223,13 +2485,13 @@ inline void Entity::set_isbraking(bool value) {
 
 // optional float bankPeriod = 46;
 inline bool Entity::has_bankperiod() const {
-  return (_has_bits_[0] & 0x40000000u) != 0;
+  return (_has_bits_[0] & 0x80000000u) != 0;
 }
 inline void Entity::set_has_bankperiod() {
-  _has_bits_[0] |= 0x40000000u;
+  _has_bits_[0] |= 0x80000000u;
 }
 inline void Entity::clear_has_bankperiod() {
-  _has_bits_[0] &= ~0x40000000u;
+  _has_bits_[0] &= ~0x80000000u;
 }
 inline void Entity::clear_bankperiod() {
   bankperiod_ = 0;
@@ -2245,13 +2507,13 @@ inline void Entity::set_bankperiod(float value) {
 
 // optional bool flyingAIEnabled = 47;
 inline bool Entity::has_flyingaienabled() const {
-  return (_has_bits_[0] & 0x80000000u) != 0;
+  return (_has_bits_[1] & 0x00000001u) != 0;
 }
 inline void Entity::set_has_flyingaienabled() {
-  _has_bits_[0] |= 0x80000000u;
+  _has_bits_[1] |= 0x00000001u;
 }
 inline void Entity::clear_has_flyingaienabled() {
-  _has_bits_[0] &= ~0x80000000u;
+  _has_bits_[1] &= ~0x00000001u;
 }
 inline void Entity::clear_flyingaienabled() {
   flyingaienabled_ = false;
@@ -2267,13 +2529,13 @@ inline void Entity::set_flyingaienabled(bool value) {
 
 // optional bool shootingAIEnabled = 48;
 inline bool Entity::has_shootingaienabled() const {
-  return (_has_bits_[1] & 0x00000001u) != 0;
+  return (_has_bits_[1] & 0x00000002u) != 0;
 }
 inline void Entity::set_has_shootingaienabled() {
-  _has_bits_[1] |= 0x00000001u;
+  _has_bits_[1] |= 0x00000002u;
 }
 inline void Entity::clear_has_shootingaienabled() {
-  _has_bits_[1] &= ~0x00000001u;
+  _has_bits_[1] &= ~0x00000002u;
 }
 inline void Entity::clear_shootingaienabled() {
   shootingaienabled_ = false;
@@ -2289,13 +2551,13 @@ inline void Entity::set_shootingaienabled(bool value) {
 
 // optional .ast.Timer bankTimer = 49;
 inline bool Entity::has_banktimer() const {
-  return (_has_bits_[1] & 0x00000002u) != 0;
+  return (_has_bits_[1] & 0x00000004u) != 0;
 }
 inline void Entity::set_has_banktimer() {
-  _has_bits_[1] |= 0x00000002u;
+  _has_bits_[1] |= 0x00000004u;
 }
 inline void Entity::clear_has_banktimer() {
-  _has_bits_[1] &= ~0x00000002u;
+  _has_bits_[1] &= ~0x00000004u;
 }
 inline void Entity::clear_banktimer() {
   if (banktimer_ != NULL) banktimer_->::ast::Timer::Clear();
@@ -2318,13 +2580,13 @@ inline ::ast::Timer* Entity::release_banktimer() {
 
 // optional .ast.Timer aliveTimer = 50;
 inline bool Entity::has_alivetimer() const {
-  return (_has_bits_[1] & 0x00000004u) != 0;
+  return (_has_bits_[1] & 0x00000008u) != 0;
 }
 inline void Entity::set_has_alivetimer() {
-  _has_bits_[1] |= 0x00000004u;
+  _has_bits_[1] |= 0x00000008u;
 }
 inline void Entity::clear_has_alivetimer() {
-  _has_bits_[1] &= ~0x00000004u;
+  _has_bits_[1] &= ~0x00000008u;
 }
 inline void Entity::clear_alivetimer() {
   if (alivetimer_ != NULL) alivetimer_->::ast::Timer::Clear();
@@ -2347,13 +2609,13 @@ inline ::ast::Timer* Entity::release_alivetimer() {
 
 // optional .ast.Timer respawnTimer = 51;
 inline bool Entity::has_respawntimer() const {
-  return (_has_bits_[1] & 0x00000008u) != 0;
+  return (_has_bits_[1] & 0x00000010u) != 0;
 }
 inline void Entity::set_has_respawntimer() {
-  _has_bits_[1] |= 0x00000008u;
+  _has_bits_[1] |= 0x00000010u;
 }
 inline void Entity::clear_has_respawntimer() {
-  _has_bits_[1] &= ~0x00000008u;
+  _has_bits_[1] &= ~0x00000010u;
 }
 inline void Entity::clear_respawntimer() {
   if (respawntimer_ != NULL) respawntimer_->::ast::Timer::Clear();
@@ -2376,13 +2638,13 @@ inline ::ast::Timer* Entity::release_respawntimer() {
 
 // optional float timeLeftToRespawn = 52;
 inline bool Entity::has_timelefttorespawn() const {
-  return (_has_bits_[1] & 0x00000010u) != 0;
+  return (_has_bits_[1] & 0x00000020u) != 0;
 }
 inline void Entity::set_has_timelefttorespawn() {
-  _has_bits_[1] |= 0x00000010u;
+  _has_bits_[1] |= 0x00000020u;
 }
 inline void Entity::clear_has_timelefttorespawn() {
-  _has_bits_[1] &= ~0x00000010u;
+  _has_bits_[1] &= ~0x00000020u;
 }
 inline void Entity::clear_timelefttorespawn() {
   timelefttorespawn_ = 0;
@@ -2398,13 +2660,13 @@ inline void Entity::set_timelefttorespawn(float value) {
 
 // optional int32 score = 53;
 inline bool Entity::has_score() const {
-  return (_has_bits_[1] & 0x00000020u) != 0;
+  return (_has_bits_[1] & 0x00000040u) != 0;
 }
 inline void Entity::set_has_score() {
-  _has_bits_[1] |= 0x00000020u;
+  _has_bits_[1] |= 0x00000040u;
 }
 inline void Entity::clear_has_score() {
-  _has_bits_[1] &= ~0x00000020u;
+  _has_bits_[1] &= ~0x00000040u;
 }
 inline void Entity::clear_score() {
   score_ = 0;
@@ -2420,13 +2682,13 @@ inline void Entity::set_score(::google::protobuf::int32 value) {
 
 // optional int32 kills = 54;
 inline bool Entity::has_kills() const {
-  return (_has_bits_[1] & 0x00000040u) != 0;
+  return (_has_bits_[1] & 0x00000080u) != 0;
 }
 inline void Entity::set_has_kills() {
-  _has_bits_[1] |= 0x00000040u;
+  _has_bits_[1] |= 0x00000080u;
 }
 inline void Entity::clear_has_kills() {
-  _has_bits_[1] &= ~0x00000040u;
+  _has_bits_[1] &= ~0x00000080u;
 }
 inline void Entity::clear_kills() {
   kills_ = 0;
@@ -2442,13 +2704,13 @@ inline void Entity::set_kills(::google::protobuf::int32 value) {
 
 // optional int32 deaths = 55;
 inline bool Entity::has_deaths() const {
-  return (_has_bits_[1] & 0x00000080u) != 0;
+  return (_has_bits_[1] & 0x00000100u) != 0;
 }
 inline void Entity::set_has_deaths() {
-  _has_bits_[1] |= 0x00000080u;
+  _has_bits_[1] |= 0x00000100u;
 }
 inline void Entity::clear_has_deaths() {
-  _has_bits_[1] &= ~0x00000080u;
+  _has_bits_[1] &= ~0x00000100u;
 }
 inline void Entity::clear_deaths() {
   deaths_ = 0;
@@ -2464,13 +2726,13 @@ inline void Entity::set_deaths(::google::protobuf::int32 value) {
 
 // optional int32 life = 56;
 inline bool Entity::has_life() const {
-  return (_has_bits_[1] & 0x00000100u) != 0;
+  return (_has_bits_[1] & 0x00000200u) != 0;
 }
 inline void Entity::set_has_life() {
-  _has_bits_[1] |= 0x00000100u;
+  _has_bits_[1] |= 0x00000200u;
 }
 inline void Entity::clear_has_life() {
-  _has_bits_[1] &= ~0x00000100u;
+  _has_bits_[1] &= ~0x00000200u;
 }
 inline void Entity::clear_life() {
   life_ = 0;
@@ -2486,13 +2748,13 @@ inline void Entity::set_life(::google::protobuf::int32 value) {
 
 // optional int32 bankedShards = 57;
 inline bool Entity::has_bankedshards() const {
-  return (_has_bits_[1] & 0x00000200u) != 0;
+  return (_has_bits_[1] & 0x00000400u) != 0;
 }
 inline void Entity::set_has_bankedshards() {
-  _has_bits_[1] |= 0x00000200u;
+  _has_bits_[1] |= 0x00000400u;
 }
 inline void Entity::clear_has_bankedshards() {
-  _has_bits_[1] &= ~0x00000200u;
+  _has_bits_[1] &= ~0x00000400u;
 }
 inline void Entity::clear_bankedshards() {
   bankedshards_ = 0;
@@ -2508,13 +2770,13 @@ inline void Entity::set_bankedshards(::google::protobuf::int32 value) {
 
 // optional int32 unbankedShards = 58;
 inline bool Entity::has_unbankedshards() const {
-  return (_has_bits_[1] & 0x00000400u) != 0;
+  return (_has_bits_[1] & 0x00000800u) != 0;
 }
 inline void Entity::set_has_unbankedshards() {
-  _has_bits_[1] |= 0x00000400u;
+  _has_bits_[1] |= 0x00000800u;
 }
 inline void Entity::clear_has_unbankedshards() {
-  _has_bits_[1] &= ~0x00000400u;
+  _has_bits_[1] &= ~0x00000800u;
 }
 inline void Entity::clear_unbankedshards() {
   unbankedshards_ = 0;
@@ -2530,13 +2792,13 @@ inline void Entity::set_unbankedshards(::google::protobuf::int32 value) {
 
 // optional int32 totalBankedShards = 59;
 inline bool Entity::has_totalbankedshards() const {
-  return (_has_bits_[1] & 0x00000800u) != 0;
+  return (_has_bits_[1] & 0x00001000u) != 0;
 }
 inline void Entity::set_has_totalbankedshards() {
-  _has_bits_[1] |= 0x00000800u;
+  _has_bits_[1] |= 0x00001000u;
 }
 inline void Entity::clear_has_totalbankedshards() {
-  _has_bits_[1] &= ~0x00000800u;
+  _has_bits_[1] &= ~0x00001000u;
 }
 inline void Entity::clear_totalbankedshards() {
   totalbankedshards_ = 0;
@@ -2552,13 +2814,13 @@ inline void Entity::set_totalbankedshards(::google::protobuf::int32 value) {
 
 // optional uint32 ownerid = 60;
 inline bool Entity::has_ownerid() const {
-  return (_has_bits_[1] & 0x00001000u) != 0;
+  return (_has_bits_[1] & 0x00002000u) != 0;
 }
 inline void Entity::set_has_ownerid() {
-  _has_bits_[1] |= 0x00001000u;
+  _has_bits_[1] |= 0x00002000u;
 }
 inline void Entity::clear_has_ownerid() {
-  _has_bits_[1] &= ~0x00001000u;
+  _has_bits_[1] &= ~0x00002000u;
 }
 inline void Entity::clear_ownerid() {
   ownerid_ = 0u;
@@ -2574,13 +2836,13 @@ inline void Entity::set_ownerid(::google::protobuf::uint32 value) {
 
 // optional float lifetime = 61;
 inline bool Entity::has_lifetime() const {
-  return (_has_bits_[1] & 0x00002000u) != 0;
+  return (_has_bits_[1] & 0x00004000u) != 0;
 }
 inline void Entity::set_has_lifetime() {
-  _has_bits_[1] |= 0x00002000u;
+  _has_bits_[1] |= 0x00004000u;
 }
 inline void Entity::clear_has_lifetime() {
-  _has_bits_[1] &= ~0x00002000u;
+  _has_bits_[1] &= ~0x00004000u;
 }
 inline void Entity::clear_lifetime() {
   lifetime_ = 0;
@@ -2596,13 +2858,13 @@ inline void Entity::set_lifetime(float value) {
 
 // optional float timeFired = 62;
 inline bool Entity::has_timefired() const {
-  return (_has_bits_[1] & 0x00004000u) != 0;
+  return (_has_bits_[1] & 0x00008000u) != 0;
 }
 inline void Entity::set_has_timefired() {
-  _has_bits_[1] |= 0x00004000u;
+  _has_bits_[1] |= 0x00008000u;
 }
 inline void Entity::clear_has_timefired() {
-  _has_bits_[1] &= ~0x00004000u;
+  _has_bits_[1] &= ~0x00008000u;
 }
 inline void Entity::clear_timefired() {
   timefired_ = 0;
@@ -2618,13 +2880,13 @@ inline void Entity::set_timefired(float value) {
 
 // optional int32 weaponIndex = 63;
 inline bool Entity::has_weaponindex() const {
-  return (_has_bits_[1] & 0x00008000u) != 0;
+  return (_has_bits_[1] & 0x00010000u) != 0;
 }
 inline void Entity::set_has_weaponindex() {
-  _has_bits_[1] |= 0x00008000u;
+  _has_bits_[1] |= 0x00010000u;
 }
 inline void Entity::clear_has_weaponindex() {
-  _has_bits_[1] &= ~0x00008000u;
+  _has_bits_[1] &= ~0x00010000u;
 }
 inline void Entity::clear_weaponindex() {
   weaponindex_ = 0;
@@ -2640,13 +2902,13 @@ inline void Entity::set_weaponindex(::google::protobuf::int32 value) {
 
 // optional float damage = 64;
 inline bool Entity::has_damage() const {
-  return (_has_bits_[1] & 0x00010000u) != 0;
+  return (_has_bits_[1] & 0x00020000u) != 0;
 }
 inline void Entity::set_has_damage() {
-  _has_bits_[1] |= 0x00010000u;
+  _has_bits_[1] |= 0x00020000u;
 }
 inline void Entity::clear_has_damage() {
-  _has_bits_[1] &= ~0x00010000u;
+  _has_bits_[1] &= ~0x00020000u;
 }
 inline void Entity::clear_damage() {
   damage_ = 0;
@@ -2662,13 +2924,13 @@ inline void Entity::set_damage(float value) {
 
 // optional float chargeTime = 65;
 inline bool Entity::has_chargetime() const {
-  return (_has_bits_[1] & 0x00020000u) != 0;
+  return (_has_bits_[1] & 0x00040000u) != 0;
 }
 inline void Entity::set_has_chargetime() {
-  _has_bits_[1] |= 0x00020000u;
+  _has_bits_[1] |= 0x00040000u;
 }
 inline void Entity::clear_has_chargetime() {
-  _has_bits_[1] &= ~0x00020000u;
+  _has_bits_[1] &= ~0x00040000u;
 }
 inline void Entity::clear_chargetime() {
   chargetime_ = 0;
@@ -2684,13 +2946,13 @@ inline void Entity::set_chargetime(float value) {
 
 // optional float damagePerSecond = 66;
 inline bool Entity::has_damagepersecond() const {
-  return (_has_bits_[1] & 0x00040000u) != 0;
+  return (_has_bits_[1] & 0x00080000u) != 0;
 }
 inline void Entity::set_has_damagepersecond() {
-  _has_bits_[1] |= 0x00040000u;
+  _has_bits_[1] |= 0x00080000u;
 }
 inline void Entity::clear_has_damagepersecond() {
-  _has_bits_[1] &= ~0x00040000u;
+  _has_bits_[1] &= ~0x00080000u;
 }
 inline void Entity::clear_damagepersecond() {
   damagepersecond_ = 0;
@@ -2706,13 +2968,13 @@ inline void Entity::set_damagepersecond(float value) {
 
 // optional float timeSinceExploded = 67;
 inline bool Entity::has_timesinceexploded() const {
-  return (_has_bits_[1] & 0x00080000u) != 0;
+  return (_has_bits_[1] & 0x00100000u) != 0;
 }
 inline void Entity::set_has_timesinceexploded() {
-  _has_bits_[1] |= 0x00080000u;
+  _has_bits_[1] |= 0x00100000u;
 }
 inline void Entity::clear_has_timesinceexploded() {
-  _has_bits_[1] &= ~0x00080000u;
+  _has_bits_[1] &= ~0x00100000u;
 }
 inline void Entity::clear_timesinceexploded() {
   timesinceexploded_ = 0;
@@ -2724,6 +2986,347 @@ inline float Entity::timesinceexploded() const {
 inline void Entity::set_timesinceexploded(float value) {
   set_has_timesinceexploded();
   timesinceexploded_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Weapon
+
+// required uint32 index = 1;
+inline bool Weapon::has_index() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Weapon::set_has_index() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Weapon::clear_has_index() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Weapon::clear_index() {
+  index_ = 0u;
+  clear_has_index();
+}
+inline ::google::protobuf::uint32 Weapon::index() const {
+  return index_;
+}
+inline void Weapon::set_index(::google::protobuf::uint32 value) {
+  set_has_index();
+  index_ = value;
+}
+
+// optional .ast.Timer activationTimer = 2;
+inline bool Weapon::has_activationtimer() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Weapon::set_has_activationtimer() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Weapon::clear_has_activationtimer() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Weapon::clear_activationtimer() {
+  if (activationtimer_ != NULL) activationtimer_->::ast::Timer::Clear();
+  clear_has_activationtimer();
+}
+inline const ::ast::Timer& Weapon::activationtimer() const {
+  return activationtimer_ != NULL ? *activationtimer_ : *default_instance_->activationtimer_;
+}
+inline ::ast::Timer* Weapon::mutable_activationtimer() {
+  set_has_activationtimer();
+  if (activationtimer_ == NULL) activationtimer_ = new ::ast::Timer;
+  return activationtimer_;
+}
+inline ::ast::Timer* Weapon::release_activationtimer() {
+  clear_has_activationtimer();
+  ::ast::Timer* temp = activationtimer_;
+  activationtimer_ = NULL;
+  return temp;
+}
+
+// optional float timeLastFired = 3;
+inline bool Weapon::has_timelastfired() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Weapon::set_has_timelastfired() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Weapon::clear_has_timelastfired() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Weapon::clear_timelastfired() {
+  timelastfired_ = 0;
+  clear_has_timelastfired();
+}
+inline float Weapon::timelastfired() const {
+  return timelastfired_;
+}
+inline void Weapon::set_timelastfired(float value) {
+  set_has_timelastfired();
+  timelastfired_ = value;
+}
+
+// optional float coolDown = 4;
+inline bool Weapon::has_cooldown() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Weapon::set_has_cooldown() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Weapon::clear_has_cooldown() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Weapon::clear_cooldown() {
+  cooldown_ = 0;
+  clear_has_cooldown();
+}
+inline float Weapon::cooldown() const {
+  return cooldown_;
+}
+inline void Weapon::set_cooldown(float value) {
+  set_has_cooldown();
+  cooldown_ = value;
+}
+
+// optional float damage = 5;
+inline bool Weapon::has_damage() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Weapon::set_has_damage() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Weapon::clear_has_damage() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Weapon::clear_damage() {
+  damage_ = 0;
+  clear_has_damage();
+}
+inline float Weapon::damage() const {
+  return damage_;
+}
+inline void Weapon::set_damage(float value) {
+  set_has_damage();
+  damage_ = value;
+}
+
+// optional float currentHeat = 6;
+inline bool Weapon::has_currentheat() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Weapon::set_has_currentheat() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Weapon::clear_has_currentheat() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Weapon::clear_currentheat() {
+  currentheat_ = 0;
+  clear_has_currentheat();
+}
+inline float Weapon::currentheat() const {
+  return currentheat_;
+}
+inline void Weapon::set_currentheat(float value) {
+  set_has_currentheat();
+  currentheat_ = value;
+}
+
+// optional int32 shotsFired = 7;
+inline bool Weapon::has_shotsfired() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Weapon::set_has_shotsfired() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Weapon::clear_has_shotsfired() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Weapon::clear_shotsfired() {
+  shotsfired_ = 0;
+  clear_has_shotsfired();
+}
+inline ::google::protobuf::int32 Weapon::shotsfired() const {
+  return shotsfired_;
+}
+inline void Weapon::set_shotsfired(::google::protobuf::int32 value) {
+  set_has_shotsfired();
+  shotsfired_ = value;
+}
+
+// optional float timeStartedFiring = 8;
+inline bool Weapon::has_timestartedfiring() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void Weapon::set_has_timestartedfiring() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void Weapon::clear_has_timestartedfiring() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void Weapon::clear_timestartedfiring() {
+  timestartedfiring_ = 0;
+  clear_has_timestartedfiring();
+}
+inline float Weapon::timestartedfiring() const {
+  return timestartedfiring_;
+}
+inline void Weapon::set_timestartedfiring(float value) {
+  set_has_timestartedfiring();
+  timestartedfiring_ = value;
+}
+
+// optional int32 shotid = 9;
+inline bool Weapon::has_shotid() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Weapon::set_has_shotid() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Weapon::clear_has_shotid() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Weapon::clear_shotid() {
+  shotid_ = 0;
+  clear_has_shotid();
+}
+inline ::google::protobuf::int32 Weapon::shotid() const {
+  return shotid_;
+}
+inline void Weapon::set_shotid(::google::protobuf::int32 value) {
+  set_has_shotid();
+  shotid_ = value;
+}
+
+// optional bool purchased = 16;
+inline bool Weapon::has_purchased() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void Weapon::set_has_purchased() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void Weapon::clear_has_purchased() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void Weapon::clear_purchased() {
+  purchased_ = false;
+  clear_has_purchased();
+}
+inline bool Weapon::purchased() const {
+  return purchased_;
+}
+inline void Weapon::set_purchased(bool value) {
+  set_has_purchased();
+  purchased_ = value;
+}
+
+// optional int32 weaponPrice = 17;
+inline bool Weapon::has_weaponprice() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void Weapon::set_has_weaponprice() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void Weapon::clear_has_weaponprice() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void Weapon::clear_weaponprice() {
+  weaponprice_ = 0;
+  clear_has_weaponprice();
+}
+inline ::google::protobuf::int32 Weapon::weaponprice() const {
+  return weaponprice_;
+}
+inline void Weapon::set_weaponprice(::google::protobuf::int32 value) {
+  set_has_weaponprice();
+  weaponprice_ = value;
+}
+
+// optional int32 level = 18;
+inline bool Weapon::has_level() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void Weapon::set_has_level() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void Weapon::clear_has_level() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void Weapon::clear_level() {
+  level_ = 0;
+  clear_has_level();
+}
+inline ::google::protobuf::int32 Weapon::level() const {
+  return level_;
+}
+inline void Weapon::set_level(::google::protobuf::int32 value) {
+  set_has_level();
+  level_ = value;
+}
+
+// optional float range = 19;
+inline bool Weapon::has_range() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void Weapon::set_has_range() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void Weapon::clear_has_range() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void Weapon::clear_range() {
+  range_ = 0;
+  clear_has_range();
+}
+inline float Weapon::range() const {
+  return range_;
+}
+inline void Weapon::set_range(float value) {
+  set_has_range();
+  range_ = value;
+}
+
+// optional float overheatLevel = 20;
+inline bool Weapon::has_overheatlevel() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void Weapon::set_has_overheatlevel() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void Weapon::clear_has_overheatlevel() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void Weapon::clear_overheatlevel() {
+  overheatlevel_ = 0;
+  clear_has_overheatlevel();
+}
+inline float Weapon::overheatlevel() const {
+  return overheatlevel_;
+}
+inline void Weapon::set_overheatlevel(float value) {
+  set_has_overheatlevel();
+  overheatlevel_ = value;
+}
+
+// optional float heatPerShot = 21;
+inline bool Weapon::has_heatpershot() const {
+  return (_has_bits_[0] & 0x00004000u) != 0;
+}
+inline void Weapon::set_has_heatpershot() {
+  _has_bits_[0] |= 0x00004000u;
+}
+inline void Weapon::clear_has_heatpershot() {
+  _has_bits_[0] &= ~0x00004000u;
+}
+inline void Weapon::clear_heatpershot() {
+  heatpershot_ = 0;
+  clear_has_heatpershot();
+}
+inline float Weapon::heatpershot() const {
+  return heatpershot_;
+}
+inline void Weapon::set_heatpershot(float value) {
+  set_has_heatpershot();
+  heatpershot_ = value;
 }
 
 // -------------------------------------------------------------------

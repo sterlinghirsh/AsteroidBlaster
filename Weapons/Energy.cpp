@@ -11,6 +11,8 @@
 #include "Utility/SoundEffect.h"
 #include "Shots/EnergyShot.h"
 
+#include "Network/gamestate.pb.h"
+
 #define ENERGY_SOUND_VOLUME 0.1f
 
 Energy::Energy(AsteroidShip* owner, int _index)
@@ -26,6 +28,7 @@ Energy::Energy(AsteroidShip* owner, int _index)
    lastFiredFrame = 0;
    chargeStartTime = 0;
    chargingShot = NULL;
+   chargingShotid = 0;
    soundHandle = NULL;
    chargingSoundPlaying = false;
    icon = "ChargeCannonIcon";
@@ -47,6 +50,7 @@ void Energy::update(double timeDiff) {
    // Fire when the trigger is released.
    static Vector3D randomVariation;
 
+   chargingShot = dynamic_cast<EnergyShot*>(ship->gameState->custodian[chargingShotid]);
    // Update the position of the charging shot.
    if (chargingShot != NULL) {
       chargingShot->position->updateMagnitude(ship->shotOrigin);
@@ -89,6 +93,7 @@ void Energy::update(double timeDiff) {
 void Energy::resetChargingShot() {
    chargeStartTime = 0;
    chargingShot = NULL;
+   chargingShotid = 0;
    // Update timeLastFired with new current time.
    timeLastFired = doubleTime();
 }
@@ -107,6 +112,7 @@ void Energy::fire() {
       return;
 
    lastFiredFrame = curFrame;
+   chargingShot = dynamic_cast<EnergyShot*>(ship->gameState->custodian[chargingShotid]);
 
    // If we haven't started a shot yet...
    if (chargeStartTime == 0 && chargingShot == NULL) {
@@ -114,6 +120,7 @@ void Energy::fire() {
       Vector3D zeroVelocity(0, 0, 0);
       chargingShot = new EnergyShot(ship->shotOrigin, zeroVelocity, index, ship, ship->gameState);
       ship->custodian->add(chargingShot);
+      chargingShotid = chargingShot->id;
 
       soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME);
       chargingSoundPlaying = true;
@@ -192,4 +199,15 @@ void Energy::stopSounds() {
       SoundEffect::stopSoundEffect(soundHandle);
       soundHandle = NULL;
    }
+}
+
+void Energy::save(ast::Weapon* weap) {
+   Weapon::save(weap);
+   weap->set_shotid(chargingShotid);
+}
+
+void Energy::load(const ast::Weapon& weap) {
+   Weapon::load(weap);
+   if (weap.has_shotid())
+      chargingShotid = weap.shotid();
 }

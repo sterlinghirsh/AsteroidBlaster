@@ -23,6 +23,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Entity_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Entity_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Weapon_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Weapon_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Timer_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Timer_reflection_ = NULL;
@@ -69,7 +72,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector));
   Entity_descriptor_ = file->message_type(1);
-  static const int Entity_offsets_[52] = {
+  static const int Entity_offsets_[53] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, position_),
@@ -84,6 +87,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, targetyawspeed_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, targetpitchspeed_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, targetrollspeed_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, weapon_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, health_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, healthmax_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, enginelevel_),
@@ -134,7 +138,36 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Entity));
-  Timer_descriptor_ = file->message_type(2);
+  Weapon_descriptor_ = file->message_type(2);
+  static const int Weapon_offsets_[15] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, index_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, activationtimer_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, timelastfired_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, cooldown_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, damage_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, currentheat_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, shotsfired_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, timestartedfiring_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, shotid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, purchased_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, weaponprice_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, level_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, range_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, overheatlevel_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, heatpershot_),
+  };
+  Weapon_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Weapon_descriptor_,
+      Weapon::default_instance_,
+      Weapon_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Weapon, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Weapon));
+  Timer_descriptor_ = file->message_type(3);
   static const int Timer_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, timestarted_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Timer, countdowntime_),
@@ -153,7 +186,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Timer));
-  GameState_descriptor_ = file->message_type(3);
+  GameState_descriptor_ = file->message_type(4);
   static const int GameState_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, playership_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, gametime_),
@@ -172,7 +205,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GameState));
-  CollisionMessage_descriptor_ = file->message_type(4);
+  CollisionMessage_descriptor_ = file->message_type(5);
   static const int CollisionMessage_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, messageid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, timestamp_),
@@ -190,7 +223,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CollisionMessage));
-  ChatMessage_descriptor_ = file->message_type(5);
+  ChatMessage_descriptor_ = file->message_type(6);
   static const int ChatMessage_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ChatMessage, sourceid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ChatMessage, text_),
@@ -206,7 +239,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ChatMessage));
-  CreateEntityMessage_descriptor_ = file->message_type(6);
+  CreateEntityMessage_descriptor_ = file->message_type(7);
   static const int CreateEntityMessage_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateEntityMessage, createentitymessageid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateEntityMessage, entity_),
@@ -222,7 +255,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateEntityMessage));
-  ServerToClient_descriptor_ = file->message_type(7);
+  ServerToClient_descriptor_ = file->message_type(8);
   static const int ServerToClient_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerToClient, seq_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ServerToClient, ack_),
@@ -259,6 +292,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Entity_descriptor_, &Entity::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Weapon_descriptor_, &Weapon::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Timer_descriptor_, &Timer::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     GameState_descriptor_, &GameState::default_instance());
@@ -279,6 +314,8 @@ void protobuf_ShutdownFile_Network_2fgamestate_2eproto() {
   delete Vector_reflection_;
   delete Entity::default_instance_;
   delete Entity_reflection_;
+  delete Weapon::default_instance_;
+  delete Weapon_reflection_;
   delete Timer::default_instance_;
   delete Timer_reflection_;
   delete GameState::default_instance_;
@@ -301,7 +338,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027Network/gamestate.proto\022\003ast\")\n\006Vector"
-    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\237\t\n\006En"
+    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\274\t\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
     "\013.ast.Vector\022\016\n\006radius\030\023 \001(\002\022\031\n\004axis\030\025 \001"
@@ -310,48 +347,58 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "\n\005right\030\027 \001(\0132\013.ast.Vector\022\034\n\007forward\030\030 "
     "\001(\0132\013.ast.Vector\022\026\n\016targetYawSpeed\030\033 \001(\002"
     "\022\030\n\020targetPitchSpeed\030\034 \001(\002\022\027\n\017targetRoll"
-    "Speed\030\035 \001(\002\022\016\n\006health\030\036 \001(\002\022\021\n\thealthMax"
-    "\030\037 \001(\002\022\023\n\013engineLevel\030  \001(\005\022\030\n\020regenHeal"
-    "thLevel\030! \001(\005\022\021\n\tbankLevel\030\" \001(\005\022\016\n\006colo"
-    "r1\030# \001(\002\022\016\n\006color2\030$ \001(\002\022\"\n\rshotDirectio"
-    "n\030% \001(\0132\013.ast.Vector\022\020\n\010isFiring\030& \001(\010\022\025"
-    "\n\rcurrentWeapon\030\' \001(\005\022\033\n\023isBarrelRolling"
-    "Left\030( \001(\002\022\034\n\024isBarrelRollingRight\030) \001(\002"
-    "\022\027\n\017curForwardAccel\030* \001(\002\022\025\n\rcurRightAcc"
-    "el\030+ \001(\002\022\022\n\ncurUpAccel\030, \001(\002\022\021\n\tisBrakin"
-    "g\030- \001(\010\022\022\n\nbankPeriod\030. \001(\002\022\027\n\017flyingAIE"
-    "nabled\030/ \001(\010\022\031\n\021shootingAIEnabled\0300 \001(\010\022"
-    "\035\n\tbankTimer\0301 \001(\0132\n.ast.Timer\022\036\n\naliveT"
-    "imer\0302 \001(\0132\n.ast.Timer\022 \n\014respawnTimer\0303"
-    " \001(\0132\n.ast.Timer\022\031\n\021timeLeftToRespawn\0304 "
-    "\001(\002\022\r\n\005score\0305 \001(\005\022\r\n\005kills\0306 \001(\005\022\016\n\006dea"
-    "ths\0307 \001(\005\022\014\n\004life\0308 \001(\005\022\024\n\014bankedShards\030"
-    "9 \001(\005\022\026\n\016unbankedShards\030: \001(\005\022\031\n\021totalBa"
-    "nkedShards\030; \001(\005\022\017\n\007ownerid\030< \001(\r\022\020\n\010lif"
-    "etime\030= \001(\002\022\021\n\ttimeFired\030> \001(\002\022\023\n\013weapon"
-    "Index\030\? \001(\005\022\016\n\006damage\030@ \001(\002\022\022\n\nchargeTim"
-    "e\030A \001(\002\022\027\n\017damagePerSecond\030B \001(\002\022\031\n\021time"
-    "SinceExploded\030C \001(\002\"l\n\005Timer\022\023\n\013timeStar"
-    "ted\030\001 \001(\002\022\025\n\rcountDownTime\030\002 \001(\002\022\022\n\ntime"
-    "Paused\030\003 \001(\002\022\020\n\010isPaused\030\004 \001(\010\022\021\n\tisRunn"
-    "ing\030\005 \001(\010\"\200\001\n\tGameState\022\022\n\nplayerShip\030\003 "
-    "\001(\r\022\020\n\010gameTime\030\002 \002(\001\022\036\n\nlevelTimer\030\004 \001("
-    "\0132\n.ast.Timer\022\033\n\006entity\030\001 \003(\0132\013.ast.Enti"
-    "ty\022\020\n\010curLevel\030\005 \001(\005\"^\n\020CollisionMessage"
-    "\022\021\n\tmessageid\030\004 \001(\r\022\021\n\ttimestamp\030\001 \001(\001\022\021"
-    "\n\tobjectId1\030\002 \001(\r\022\021\n\tobjectId2\030\003 \001(\r\"-\n\013"
-    "ChatMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 "
-    "\001(\t\"Q\n\023CreateEntityMessage\022\035\n\025createEnti"
-    "tyMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast."
-    "Entity\"\270\001\n\016ServerToClient\022\013\n\003seq\030\003 \001(\004\022\013"
-    "\n\003ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022!\n\tgameSt"
-    "ate\030\021 \001(\0132\016.ast.GameState\022/\n\020collisionMe"
-    "ssage\030\001 \003(\0132\025.ast.CollisionMessage\022%\n\013ch"
-    "atMessage\030\002 \003(\0132\020.ast.ChatMessage", 1913);
+    "Speed\030\035 \001(\002\022\033\n\006weapon\030\005 \003(\0132\013.ast.Weapon"
+    "\022\016\n\006health\030\036 \001(\002\022\021\n\thealthMax\030\037 \001(\002\022\023\n\013e"
+    "ngineLevel\030  \001(\005\022\030\n\020regenHealthLevel\030! \001"
+    "(\005\022\021\n\tbankLevel\030\" \001(\005\022\016\n\006color1\030# \001(\002\022\016\n"
+    "\006color2\030$ \001(\002\022\"\n\rshotDirection\030% \001(\0132\013.a"
+    "st.Vector\022\020\n\010isFiring\030& \001(\010\022\025\n\rcurrentWe"
+    "apon\030\' \001(\005\022\033\n\023isBarrelRollingLeft\030( \001(\002\022"
+    "\034\n\024isBarrelRollingRight\030) \001(\002\022\027\n\017curForw"
+    "ardAccel\030* \001(\002\022\025\n\rcurRightAccel\030+ \001(\002\022\022\n"
+    "\ncurUpAccel\030, \001(\002\022\021\n\tisBraking\030- \001(\010\022\022\n\n"
+    "bankPeriod\030. \001(\002\022\027\n\017flyingAIEnabled\030/ \001("
+    "\010\022\031\n\021shootingAIEnabled\0300 \001(\010\022\035\n\tbankTime"
+    "r\0301 \001(\0132\n.ast.Timer\022\036\n\naliveTimer\0302 \001(\0132"
+    "\n.ast.Timer\022 \n\014respawnTimer\0303 \001(\0132\n.ast."
+    "Timer\022\031\n\021timeLeftToRespawn\0304 \001(\002\022\r\n\005scor"
+    "e\0305 \001(\005\022\r\n\005kills\0306 \001(\005\022\016\n\006deaths\0307 \001(\005\022\014"
+    "\n\004life\0308 \001(\005\022\024\n\014bankedShards\0309 \001(\005\022\026\n\016un"
+    "bankedShards\030: \001(\005\022\031\n\021totalBankedShards\030"
+    "; \001(\005\022\017\n\007ownerid\030< \001(\r\022\020\n\010lifetime\030= \001(\002"
+    "\022\021\n\ttimeFired\030> \001(\002\022\023\n\013weaponIndex\030\? \001(\005"
+    "\022\016\n\006damage\030@ \001(\002\022\022\n\nchargeTime\030A \001(\002\022\027\n\017"
+    "damagePerSecond\030B \001(\002\022\031\n\021timeSinceExplod"
+    "ed\030C \001(\002\"\273\002\n\006Weapon\022\r\n\005index\030\001 \002(\r\022#\n\017ac"
+    "tivationTimer\030\002 \001(\0132\n.ast.Timer\022\025\n\rtimeL"
+    "astFired\030\003 \001(\002\022\020\n\010coolDown\030\004 \001(\002\022\016\n\006dama"
+    "ge\030\005 \001(\002\022\023\n\013currentHeat\030\006 \001(\002\022\022\n\nshotsFi"
+    "red\030\007 \001(\005\022\031\n\021timeStartedFiring\030\010 \001(\002\022\016\n\006"
+    "shotid\030\t \001(\005\022\021\n\tpurchased\030\020 \001(\010\022\023\n\013weapo"
+    "nPrice\030\021 \001(\005\022\r\n\005level\030\022 \001(\005\022\r\n\005range\030\023 \001"
+    "(\002\022\025\n\roverheatLevel\030\024 \001(\002\022\023\n\013heatPerShot"
+    "\030\025 \001(\002\"l\n\005Timer\022\023\n\013timeStarted\030\001 \001(\002\022\025\n\r"
+    "countDownTime\030\002 \001(\002\022\022\n\ntimePaused\030\003 \001(\002\022"
+    "\020\n\010isPaused\030\004 \001(\010\022\021\n\tisRunning\030\005 \001(\010\"\200\001\n"
+    "\tGameState\022\022\n\nplayerShip\030\003 \001(\r\022\020\n\010gameTi"
+    "me\030\002 \002(\001\022\036\n\nlevelTimer\030\004 \001(\0132\n.ast.Timer"
+    "\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity\022\020\n\010curLeve"
+    "l\030\005 \001(\005\"^\n\020CollisionMessage\022\021\n\tmessageid"
+    "\030\004 \001(\r\022\021\n\ttimestamp\030\001 \001(\001\022\021\n\tobjectId1\030\002"
+    " \001(\r\022\021\n\tobjectId2\030\003 \001(\r\"-\n\013ChatMessage\022\020"
+    "\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\"Q\n\023Create"
+    "EntityMessage\022\035\n\025createEntityMessageid\030\001"
+    " \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast.Entity\"\270\001\n\016Se"
+    "rverToClient\022\013\n\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001(\004\022\021"
+    "\n\ttimestamp\030\005 \001(\001\022!\n\tgameState\030\021 \001(\0132\016.a"
+    "st.GameState\022/\n\020collisionMessage\030\001 \003(\0132\025"
+    ".ast.CollisionMessage\022%\n\013chatMessage\030\002 \003"
+    "(\0132\020.ast.ChatMessage", 2260);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
   Entity::default_instance_ = new Entity();
+  Weapon::default_instance_ = new Weapon();
   Timer::default_instance_ = new Timer();
   GameState::default_instance_ = new GameState();
   CollisionMessage::default_instance_ = new CollisionMessage();
@@ -360,6 +407,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
   ServerToClient::default_instance_ = new ServerToClient();
   Vector::default_instance_->InitAsDefaultInstance();
   Entity::default_instance_->InitAsDefaultInstance();
+  Weapon::default_instance_->InitAsDefaultInstance();
   Timer::default_instance_->InitAsDefaultInstance();
   GameState::default_instance_->InitAsDefaultInstance();
   CollisionMessage::default_instance_->InitAsDefaultInstance();
@@ -676,6 +724,7 @@ const int Entity::kForwardFieldNumber;
 const int Entity::kTargetYawSpeedFieldNumber;
 const int Entity::kTargetPitchSpeedFieldNumber;
 const int Entity::kTargetRollSpeedFieldNumber;
+const int Entity::kWeaponFieldNumber;
 const int Entity::kHealthFieldNumber;
 const int Entity::kHealthMaxFieldNumber;
 const int Entity::kEngineLevelFieldNumber;
@@ -867,9 +916,9 @@ void Entity::Clear() {
     targetpitchspeed_ = 0;
     targetrollspeed_ = 0;
     health_ = 0;
-    healthmax_ = 0;
   }
   if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
+    healthmax_ = 0;
     enginelevel_ = 0;
     regenhealthlevel_ = 0;
     banklevel_ = 0;
@@ -879,9 +928,9 @@ void Entity::Clear() {
       if (shotdirection_ != NULL) shotdirection_->::ast::Vector::Clear();
     }
     isfiring_ = false;
-    currentweapon_ = 0;
   }
   if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
+    currentweapon_ = 0;
     isbarrelrollingleft_ = 0;
     isbarrelrollingright_ = 0;
     curforwardaccel_ = 0;
@@ -889,9 +938,9 @@ void Entity::Clear() {
     curupaccel_ = 0;
     isbraking_ = false;
     bankperiod_ = 0;
-    flyingaienabled_ = false;
   }
   if (_has_bits_[32 / 32] & (0xffu << (32 % 32))) {
+    flyingaienabled_ = false;
     shootingaienabled_ = false;
     if (has_banktimer()) {
       if (banktimer_ != NULL) banktimer_->::ast::Timer::Clear();
@@ -905,9 +954,9 @@ void Entity::Clear() {
     timelefttorespawn_ = 0;
     score_ = 0;
     kills_ = 0;
-    deaths_ = 0;
   }
   if (_has_bits_[40 / 32] & (0xffu << (40 % 32))) {
+    deaths_ = 0;
     life_ = 0;
     bankedshards_ = 0;
     unbankedshards_ = 0;
@@ -915,14 +964,15 @@ void Entity::Clear() {
     ownerid_ = 0u;
     lifetime_ = 0;
     timefired_ = 0;
-    weaponindex_ = 0;
   }
   if (_has_bits_[48 / 32] & (0xffu << (48 % 32))) {
+    weaponindex_ = 0;
     damage_ = 0;
     chargetime_ = 0;
     damagepersecond_ = 0;
     timesinceexploded_ = 0;
   }
+  weapon_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -988,6 +1038,21 @@ bool Entity::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(42)) goto parse_weapon;
+        break;
+      }
+      
+      // repeated .ast.Weapon weapon = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_weapon:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_weapon()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(42)) goto parse_weapon;
         if (input->ExpectTag(157)) goto parse_radius;
         break;
       }
@@ -1784,6 +1849,12 @@ void Entity::SerializeWithCachedSizes(
       4, this->velocity(), output);
   }
   
+  // repeated .ast.Weapon weapon = 5;
+  for (int i = 0; i < this->weapon_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->weapon(i), output);
+  }
+  
   // optional float radius = 19;
   if (has_radius()) {
     ::google::protobuf::internal::WireFormatLite::WriteFloat(19, this->radius(), output);
@@ -2062,6 +2133,13 @@ void Entity::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         4, this->velocity(), target);
+  }
+  
+  // repeated .ast.Weapon weapon = 5;
+  for (int i = 0; i < this->weapon_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        5, this->weapon(i), target);
   }
   
   // optional float radius = 19;
@@ -2424,13 +2502,13 @@ int Entity::ByteSize() const {
       total_size += 2 + 4;
     }
     
+  }
+  if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     // optional float healthMax = 31;
     if (has_healthmax()) {
       total_size += 2 + 4;
     }
     
-  }
-  if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     // optional int32 engineLevel = 32;
     if (has_enginelevel()) {
       total_size += 2 +
@@ -2474,6 +2552,8 @@ int Entity::ByteSize() const {
       total_size += 2 + 1;
     }
     
+  }
+  if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
     // optional int32 currentWeapon = 39;
     if (has_currentweapon()) {
       total_size += 2 +
@@ -2481,8 +2561,6 @@ int Entity::ByteSize() const {
           this->currentweapon());
     }
     
-  }
-  if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
     // optional float isBarrelRollingLeft = 40;
     if (has_isbarrelrollingleft()) {
       total_size += 2 + 4;
@@ -2518,13 +2596,13 @@ int Entity::ByteSize() const {
       total_size += 2 + 4;
     }
     
+  }
+  if (_has_bits_[32 / 32] & (0xffu << (32 % 32))) {
     // optional bool flyingAIEnabled = 47;
     if (has_flyingaienabled()) {
       total_size += 2 + 1;
     }
     
-  }
-  if (_has_bits_[32 / 32] & (0xffu << (32 % 32))) {
     // optional bool shootingAIEnabled = 48;
     if (has_shootingaienabled()) {
       total_size += 2 + 1;
@@ -2570,6 +2648,8 @@ int Entity::ByteSize() const {
           this->kills());
     }
     
+  }
+  if (_has_bits_[40 / 32] & (0xffu << (40 % 32))) {
     // optional int32 deaths = 55;
     if (has_deaths()) {
       total_size += 2 +
@@ -2577,8 +2657,6 @@ int Entity::ByteSize() const {
           this->deaths());
     }
     
-  }
-  if (_has_bits_[40 / 32] & (0xffu << (40 % 32))) {
     // optional int32 life = 56;
     if (has_life()) {
       total_size += 2 +
@@ -2624,6 +2702,8 @@ int Entity::ByteSize() const {
       total_size += 2 + 4;
     }
     
+  }
+  if (_has_bits_[48 / 32] & (0xffu << (48 % 32))) {
     // optional int32 weaponIndex = 63;
     if (has_weaponindex()) {
       total_size += 2 +
@@ -2631,8 +2711,6 @@ int Entity::ByteSize() const {
           this->weaponindex());
     }
     
-  }
-  if (_has_bits_[48 / 32] & (0xffu << (48 % 32))) {
     // optional float damage = 64;
     if (has_damage()) {
       total_size += 2 + 4;
@@ -2654,6 +2732,14 @@ int Entity::ByteSize() const {
     }
     
   }
+  // repeated .ast.Weapon weapon = 5;
+  total_size += 1 * this->weapon_size();
+  for (int i = 0; i < this->weapon_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->weapon(i));
+  }
+  
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -2679,6 +2765,7 @@ void Entity::MergeFrom(const ::google::protobuf::Message& from) {
 
 void Entity::MergeFrom(const Entity& from) {
   GOOGLE_CHECK_NE(&from, this);
+  weapon_.MergeFrom(from.weapon_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_id()) {
       set_id(from.id());
@@ -2727,11 +2814,11 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_health()) {
       set_health(from.health());
     }
+  }
+  if (from._has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     if (from.has_healthmax()) {
       set_healthmax(from.healthmax());
     }
-  }
-  if (from._has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     if (from.has_enginelevel()) {
       set_enginelevel(from.enginelevel());
     }
@@ -2753,11 +2840,11 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_isfiring()) {
       set_isfiring(from.isfiring());
     }
+  }
+  if (from._has_bits_[24 / 32] & (0xffu << (24 % 32))) {
     if (from.has_currentweapon()) {
       set_currentweapon(from.currentweapon());
     }
-  }
-  if (from._has_bits_[24 / 32] & (0xffu << (24 % 32))) {
     if (from.has_isbarrelrollingleft()) {
       set_isbarrelrollingleft(from.isbarrelrollingleft());
     }
@@ -2779,11 +2866,11 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_bankperiod()) {
       set_bankperiod(from.bankperiod());
     }
+  }
+  if (from._has_bits_[32 / 32] & (0xffu << (32 % 32))) {
     if (from.has_flyingaienabled()) {
       set_flyingaienabled(from.flyingaienabled());
     }
-  }
-  if (from._has_bits_[32 / 32] & (0xffu << (32 % 32))) {
     if (from.has_shootingaienabled()) {
       set_shootingaienabled(from.shootingaienabled());
     }
@@ -2805,11 +2892,11 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_kills()) {
       set_kills(from.kills());
     }
+  }
+  if (from._has_bits_[40 / 32] & (0xffu << (40 % 32))) {
     if (from.has_deaths()) {
       set_deaths(from.deaths());
     }
-  }
-  if (from._has_bits_[40 / 32] & (0xffu << (40 % 32))) {
     if (from.has_life()) {
       set_life(from.life());
     }
@@ -2831,11 +2918,11 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_timefired()) {
       set_timefired(from.timefired());
     }
+  }
+  if (from._has_bits_[48 / 32] & (0xffu << (48 % 32))) {
     if (from.has_weaponindex()) {
       set_weaponindex(from.weaponindex());
     }
-  }
-  if (from._has_bits_[48 / 32] & (0xffu << (48 % 32))) {
     if (from.has_damage()) {
       set_damage(from.damage());
     }
@@ -2884,6 +2971,9 @@ bool Entity::IsInitialized() const {
   if (has_forward()) {
     if (!this->forward().IsInitialized()) return false;
   }
+  for (int i = 0; i < weapon_size(); i++) {
+    if (!this->weapon(i).IsInitialized()) return false;
+  }
   if (has_shotdirection()) {
     if (!this->shotdirection().IsInitialized()) return false;
   }
@@ -2906,6 +2996,7 @@ void Entity::Swap(Entity* other) {
     std::swap(targetyawspeed_, other->targetyawspeed_);
     std::swap(targetpitchspeed_, other->targetpitchspeed_);
     std::swap(targetrollspeed_, other->targetrollspeed_);
+    weapon_.Swap(&other->weapon_);
     std::swap(health_, other->health_);
     std::swap(healthmax_, other->healthmax_);
     std::swap(enginelevel_, other->enginelevel_);
@@ -2956,6 +3047,767 @@ void Entity::Swap(Entity* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = Entity_descriptor_;
   metadata.reflection = Entity_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int Weapon::kIndexFieldNumber;
+const int Weapon::kActivationTimerFieldNumber;
+const int Weapon::kTimeLastFiredFieldNumber;
+const int Weapon::kCoolDownFieldNumber;
+const int Weapon::kDamageFieldNumber;
+const int Weapon::kCurrentHeatFieldNumber;
+const int Weapon::kShotsFiredFieldNumber;
+const int Weapon::kTimeStartedFiringFieldNumber;
+const int Weapon::kShotidFieldNumber;
+const int Weapon::kPurchasedFieldNumber;
+const int Weapon::kWeaponPriceFieldNumber;
+const int Weapon::kLevelFieldNumber;
+const int Weapon::kRangeFieldNumber;
+const int Weapon::kOverheatLevelFieldNumber;
+const int Weapon::kHeatPerShotFieldNumber;
+#endif  // !_MSC_VER
+
+Weapon::Weapon()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void Weapon::InitAsDefaultInstance() {
+  activationtimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
+}
+
+Weapon::Weapon(const Weapon& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void Weapon::SharedCtor() {
+  _cached_size_ = 0;
+  index_ = 0u;
+  activationtimer_ = NULL;
+  timelastfired_ = 0;
+  cooldown_ = 0;
+  damage_ = 0;
+  currentheat_ = 0;
+  shotsfired_ = 0;
+  timestartedfiring_ = 0;
+  shotid_ = 0;
+  purchased_ = false;
+  weaponprice_ = 0;
+  level_ = 0;
+  range_ = 0;
+  overheatlevel_ = 0;
+  heatpershot_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Weapon::~Weapon() {
+  SharedDtor();
+}
+
+void Weapon::SharedDtor() {
+  if (this != default_instance_) {
+    delete activationtimer_;
+  }
+}
+
+void Weapon::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Weapon::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Weapon_descriptor_;
+}
+
+const Weapon& Weapon::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_Network_2fgamestate_2eproto();  return *default_instance_;
+}
+
+Weapon* Weapon::default_instance_ = NULL;
+
+Weapon* Weapon::New() const {
+  return new Weapon;
+}
+
+void Weapon::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    index_ = 0u;
+    if (has_activationtimer()) {
+      if (activationtimer_ != NULL) activationtimer_->::ast::Timer::Clear();
+    }
+    timelastfired_ = 0;
+    cooldown_ = 0;
+    damage_ = 0;
+    currentheat_ = 0;
+    shotsfired_ = 0;
+    timestartedfiring_ = 0;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    shotid_ = 0;
+    purchased_ = false;
+    weaponprice_ = 0;
+    level_ = 0;
+    range_ = 0;
+    overheatlevel_ = 0;
+    heatpershot_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Weapon::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required uint32 index = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &index_)));
+          set_has_index();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_activationTimer;
+        break;
+      }
+      
+      // optional .ast.Timer activationTimer = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_activationTimer:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_activationtimer()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(29)) goto parse_timeLastFired;
+        break;
+      }
+      
+      // optional float timeLastFired = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_timeLastFired:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &timelastfired_)));
+          set_has_timelastfired();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(37)) goto parse_coolDown;
+        break;
+      }
+      
+      // optional float coolDown = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_coolDown:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &cooldown_)));
+          set_has_cooldown();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(45)) goto parse_damage;
+        break;
+      }
+      
+      // optional float damage = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_damage:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &damage_)));
+          set_has_damage();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(53)) goto parse_currentHeat;
+        break;
+      }
+      
+      // optional float currentHeat = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_currentHeat:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &currentheat_)));
+          set_has_currentheat();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(56)) goto parse_shotsFired;
+        break;
+      }
+      
+      // optional int32 shotsFired = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_shotsFired:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &shotsfired_)));
+          set_has_shotsfired();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(69)) goto parse_timeStartedFiring;
+        break;
+      }
+      
+      // optional float timeStartedFiring = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_timeStartedFiring:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &timestartedfiring_)));
+          set_has_timestartedfiring();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(72)) goto parse_shotid;
+        break;
+      }
+      
+      // optional int32 shotid = 9;
+      case 9: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_shotid:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &shotid_)));
+          set_has_shotid();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(128)) goto parse_purchased;
+        break;
+      }
+      
+      // optional bool purchased = 16;
+      case 16: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_purchased:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &purchased_)));
+          set_has_purchased();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(136)) goto parse_weaponPrice;
+        break;
+      }
+      
+      // optional int32 weaponPrice = 17;
+      case 17: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_weaponPrice:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &weaponprice_)));
+          set_has_weaponprice();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(144)) goto parse_level;
+        break;
+      }
+      
+      // optional int32 level = 18;
+      case 18: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_level:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &level_)));
+          set_has_level();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(157)) goto parse_range;
+        break;
+      }
+      
+      // optional float range = 19;
+      case 19: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_range:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &range_)));
+          set_has_range();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(165)) goto parse_overheatLevel;
+        break;
+      }
+      
+      // optional float overheatLevel = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_overheatLevel:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &overheatlevel_)));
+          set_has_overheatlevel();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(173)) goto parse_heatPerShot;
+        break;
+      }
+      
+      // optional float heatPerShot = 21;
+      case 21: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_heatPerShot:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &heatpershot_)));
+          set_has_heatpershot();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void Weapon::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required uint32 index = 1;
+  if (has_index()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->index(), output);
+  }
+  
+  // optional .ast.Timer activationTimer = 2;
+  if (has_activationtimer()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->activationtimer(), output);
+  }
+  
+  // optional float timeLastFired = 3;
+  if (has_timelastfired()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->timelastfired(), output);
+  }
+  
+  // optional float coolDown = 4;
+  if (has_cooldown()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->cooldown(), output);
+  }
+  
+  // optional float damage = 5;
+  if (has_damage()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(5, this->damage(), output);
+  }
+  
+  // optional float currentHeat = 6;
+  if (has_currentheat()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(6, this->currentheat(), output);
+  }
+  
+  // optional int32 shotsFired = 7;
+  if (has_shotsfired()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->shotsfired(), output);
+  }
+  
+  // optional float timeStartedFiring = 8;
+  if (has_timestartedfiring()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->timestartedfiring(), output);
+  }
+  
+  // optional int32 shotid = 9;
+  if (has_shotid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->shotid(), output);
+  }
+  
+  // optional bool purchased = 16;
+  if (has_purchased()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(16, this->purchased(), output);
+  }
+  
+  // optional int32 weaponPrice = 17;
+  if (has_weaponprice()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(17, this->weaponprice(), output);
+  }
+  
+  // optional int32 level = 18;
+  if (has_level()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(18, this->level(), output);
+  }
+  
+  // optional float range = 19;
+  if (has_range()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(19, this->range(), output);
+  }
+  
+  // optional float overheatLevel = 20;
+  if (has_overheatlevel()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(20, this->overheatlevel(), output);
+  }
+  
+  // optional float heatPerShot = 21;
+  if (has_heatpershot()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(21, this->heatpershot(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* Weapon::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required uint32 index = 1;
+  if (has_index()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->index(), target);
+  }
+  
+  // optional .ast.Timer activationTimer = 2;
+  if (has_activationtimer()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->activationtimer(), target);
+  }
+  
+  // optional float timeLastFired = 3;
+  if (has_timelastfired()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->timelastfired(), target);
+  }
+  
+  // optional float coolDown = 4;
+  if (has_cooldown()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->cooldown(), target);
+  }
+  
+  // optional float damage = 5;
+  if (has_damage()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(5, this->damage(), target);
+  }
+  
+  // optional float currentHeat = 6;
+  if (has_currentheat()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(6, this->currentheat(), target);
+  }
+  
+  // optional int32 shotsFired = 7;
+  if (has_shotsfired()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->shotsfired(), target);
+  }
+  
+  // optional float timeStartedFiring = 8;
+  if (has_timestartedfiring()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->timestartedfiring(), target);
+  }
+  
+  // optional int32 shotid = 9;
+  if (has_shotid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->shotid(), target);
+  }
+  
+  // optional bool purchased = 16;
+  if (has_purchased()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(16, this->purchased(), target);
+  }
+  
+  // optional int32 weaponPrice = 17;
+  if (has_weaponprice()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(17, this->weaponprice(), target);
+  }
+  
+  // optional int32 level = 18;
+  if (has_level()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(18, this->level(), target);
+  }
+  
+  // optional float range = 19;
+  if (has_range()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(19, this->range(), target);
+  }
+  
+  // optional float overheatLevel = 20;
+  if (has_overheatlevel()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(20, this->overheatlevel(), target);
+  }
+  
+  // optional float heatPerShot = 21;
+  if (has_heatpershot()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(21, this->heatpershot(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int Weapon::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required uint32 index = 1;
+    if (has_index()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->index());
+    }
+    
+    // optional .ast.Timer activationTimer = 2;
+    if (has_activationtimer()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->activationtimer());
+    }
+    
+    // optional float timeLastFired = 3;
+    if (has_timelastfired()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional float coolDown = 4;
+    if (has_cooldown()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional float damage = 5;
+    if (has_damage()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional float currentHeat = 6;
+    if (has_currentheat()) {
+      total_size += 1 + 4;
+    }
+    
+    // optional int32 shotsFired = 7;
+    if (has_shotsfired()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->shotsfired());
+    }
+    
+    // optional float timeStartedFiring = 8;
+    if (has_timestartedfiring()) {
+      total_size += 1 + 4;
+    }
+    
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional int32 shotid = 9;
+    if (has_shotid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->shotid());
+    }
+    
+    // optional bool purchased = 16;
+    if (has_purchased()) {
+      total_size += 2 + 1;
+    }
+    
+    // optional int32 weaponPrice = 17;
+    if (has_weaponprice()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->weaponprice());
+    }
+    
+    // optional int32 level = 18;
+    if (has_level()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->level());
+    }
+    
+    // optional float range = 19;
+    if (has_range()) {
+      total_size += 2 + 4;
+    }
+    
+    // optional float overheatLevel = 20;
+    if (has_overheatlevel()) {
+      total_size += 2 + 4;
+    }
+    
+    // optional float heatPerShot = 21;
+    if (has_heatpershot()) {
+      total_size += 2 + 4;
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Weapon::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Weapon* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Weapon*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Weapon::MergeFrom(const Weapon& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_index()) {
+      set_index(from.index());
+    }
+    if (from.has_activationtimer()) {
+      mutable_activationtimer()->::ast::Timer::MergeFrom(from.activationtimer());
+    }
+    if (from.has_timelastfired()) {
+      set_timelastfired(from.timelastfired());
+    }
+    if (from.has_cooldown()) {
+      set_cooldown(from.cooldown());
+    }
+    if (from.has_damage()) {
+      set_damage(from.damage());
+    }
+    if (from.has_currentheat()) {
+      set_currentheat(from.currentheat());
+    }
+    if (from.has_shotsfired()) {
+      set_shotsfired(from.shotsfired());
+    }
+    if (from.has_timestartedfiring()) {
+      set_timestartedfiring(from.timestartedfiring());
+    }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_shotid()) {
+      set_shotid(from.shotid());
+    }
+    if (from.has_purchased()) {
+      set_purchased(from.purchased());
+    }
+    if (from.has_weaponprice()) {
+      set_weaponprice(from.weaponprice());
+    }
+    if (from.has_level()) {
+      set_level(from.level());
+    }
+    if (from.has_range()) {
+      set_range(from.range());
+    }
+    if (from.has_overheatlevel()) {
+      set_overheatlevel(from.overheatlevel());
+    }
+    if (from.has_heatpershot()) {
+      set_heatpershot(from.heatpershot());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Weapon::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Weapon::CopyFrom(const Weapon& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Weapon::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+  
+  return true;
+}
+
+void Weapon::Swap(Weapon* other) {
+  if (other != this) {
+    std::swap(index_, other->index_);
+    std::swap(activationtimer_, other->activationtimer_);
+    std::swap(timelastfired_, other->timelastfired_);
+    std::swap(cooldown_, other->cooldown_);
+    std::swap(damage_, other->damage_);
+    std::swap(currentheat_, other->currentheat_);
+    std::swap(shotsfired_, other->shotsfired_);
+    std::swap(timestartedfiring_, other->timestartedfiring_);
+    std::swap(shotid_, other->shotid_);
+    std::swap(purchased_, other->purchased_);
+    std::swap(weaponprice_, other->weaponprice_);
+    std::swap(level_, other->level_);
+    std::swap(range_, other->range_);
+    std::swap(overheatlevel_, other->overheatlevel_);
+    std::swap(heatpershot_, other->heatpershot_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Weapon::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Weapon_descriptor_;
+  metadata.reflection = Weapon_reflection_;
   return metadata;
 }
 

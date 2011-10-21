@@ -24,16 +24,19 @@ class Energy : public Weapon {
       virtual void debug();
       virtual void fire();
       virtual void resetChargingShot();
-      EnergyShot* chargingShot;
+      unsigned chargingShotid;
       virtual void stopSounds();
+      
+      virtual void save(ast::Weapon* weap);
+      virtual void load(const ast::Weapon& weap);
 
    protected:
       double shotSpeed;
-      double turnSpeed;
       double randomVariationAmount;
       Point3D* lastShotPos;
       unsigned long lastFiredFrame;
       double chargeStartTime;
+      EnergyShot* chargingShot;
 
       bool chargingSoundPlaying;
       SoundChannel* soundHandle;

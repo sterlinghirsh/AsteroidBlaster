@@ -2109,6 +2109,12 @@ void AsteroidShip::save(ast::Entity* ent) {
    up->save(ent->mutable_up());
    forward->save(ent->mutable_forward());
    right->save(ent->mutable_right());
+   
+   ast::Weapon* weap;
+   for (int i = 0; i < NUMBER_OF_WEAPONS; ++i) {
+      weap = ent->add_weapon();
+      getWeapon(i)->save(weap);
+   }
 
    ent->set_targetrollspeed(targetRollSpeed);
    ent->set_targetyawspeed(targetYawSpeed);
@@ -2154,6 +2160,14 @@ void AsteroidShip::save(ast::Entity* ent) {
 
 void AsteroidShip::load(const ast::Entity& ent) {
    Object3D::load(ent);
+
+   // Load weapons.
+   for (int i = 0; i < ent.weapon_size(); ++i) {
+      const ast::Weapon& weap = ent.weapon(i);
+      unsigned index = weap.index();
+      getWeapon(index)->load(weap);
+   }
+
 
    if (ent.has_forward())
       forward->load(ent.forward());

@@ -165,14 +165,14 @@ void EnergyShot::update(double timeDiff) {
    }
    
    if (shouldRemove) {
-      if (weapon->chargingShot == this)
+      if (weapon->chargingShotid == id)
          weapon->resetChargingShot();
    }
 }
 
 void EnergyShot::hitWall(BoundingWall* wall) {
    shouldRemove = true;
-   if (weapon->chargingShot == this)
+   if (weapon->chargingShotid == id)
       weapon->resetChargingShot();
 }
 

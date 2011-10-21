@@ -272,7 +272,7 @@ void Collision<AsteroidShip, EnergyShot>::handleCollision() {
 
       b->shouldRemove = true;
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
-      if (b->weapon->chargingShot == b) {
+      if (b->weapon->chargingShotid == b->id) {
          b->weapon->resetChargingShot();
       }
       a->shakeAmount = 0.7f;
@@ -499,7 +499,7 @@ void Collision<Asteroid3D, EnergyShot>::handleCollision() {
 
    b->shouldRemove = true;
    SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
-   if (b->weapon->chargingShot == b) {
+   if (b->weapon->chargingShotid == b->id) {
       b->weapon->resetChargingShot();
    }
 }

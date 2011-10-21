@@ -27,6 +27,9 @@ class Electricity : public Weapon {
       virtual void stopSounds();
       
       virtual double getCoolDownAmount();
+      
+      virtual void save(ast::Weapon* weap);
+      virtual void load(const ast::Weapon& weap);
    private:
       int currentFrame;
       int lastFiredFrame;

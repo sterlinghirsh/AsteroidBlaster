@@ -27,7 +27,6 @@ class Blaster : public Weapon {
 
    protected:
       double shotSpeed;
-      double turnSpeed;
       double randomVariationAmount;
       Point3D* lastShotPos;
       unsigned long lastFiredFrame;
