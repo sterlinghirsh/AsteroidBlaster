@@ -10,6 +10,7 @@
 #include "Menus/HelpMenu.h"
 #include "Menus/CreditsMenu.h"
 
+#include "Particles/Particle.h"
 #include "Graphics/Image.h"
 #include "Utility/SoundEffect.h"
 #include "Items/AsteroidShip.h"
@@ -215,6 +216,8 @@ void MainMenu::mouseMove(int dx, int dy, int _x, int _y) {
 
 void MainMenu::activate() {
    SDL_ShowCursor(SDL_ENABLE);
+   MeshFace::Clear();
+   Particle::Clear();
    menuActive = true;
    SoundEffect::stopAllSoundEffect();
    SoundEffect::playMusic("AsteroidsMenu2");
@@ -226,6 +229,8 @@ void MainMenu::deactivate() {
    SDL_ShowCursor(SDL_DISABLE);
    menuActive = false;
    SoundEffect::playMusic("Asteroids2.ogg");
+   MeshFace::Clear();
+   Particle::Clear();
 }
 
 void MainMenu::gameDeactivate(bool shouldLoad) {
