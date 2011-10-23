@@ -288,10 +288,11 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateEntityMessage));
   Frame_descriptor_ = file->message_type(9);
-  static const int Frame_offsets_[8] = {
+  static const int Frame_offsets_[9] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, seq_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, ack_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, timestamp_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, shipid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, gamestate_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, collision_message_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, firing_ships_),
@@ -435,12 +436,13 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "\020\001\"-\n\013ChatMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004t"
     "ext\030\002 \001(\t\"Q\n\023CreateEntityMessage\022\035\n\025crea"
     "teEntityMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132"
-    "\013.ast.Entity\"\341\001\n\005Frame\022\013\n\003seq\030\003 \001(\004\022\013\n\003a"
-    "ck\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022!\n\tgameState"
-    "\030\021 \001(\0132\016.ast.GameState\0220\n\021collision_mess"
-    "age\030\001 \001(\0132\025.ast.CollisionMessage\022\030\n\014firi"
-    "ng_ships\030\007 \003(\rB\002\020\001\022\025\n\tremove_id\030\006 \003(\rB\002\020"
-    "\001\022%\n\013chatMessage\030\002 \003(\0132\020.ast.ChatMessage", 2640);
+    "\013.ast.Entity\"\361\001\n\005Frame\022\013\n\003seq\030\003 \001(\004\022\013\n\003a"
+    "ck\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022\016\n\006shipid\030\022 "
+    "\001(\r\022!\n\tgameState\030\021 \001(\0132\016.ast.GameState\0220"
+    "\n\021collision_message\030\001 \001(\0132\025.ast.Collisio"
+    "nMessage\022\030\n\014firing_ships\030\007 \003(\rB\002\020\001\022\025\n\tre"
+    "move_id\030\006 \003(\rB\002\020\001\022%\n\013chatMessage\030\002 \003(\0132\020"
+    ".ast.ChatMessage", 2656);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -6362,6 +6364,7 @@ void CreateEntityMessage::Swap(CreateEntityMessage* other) {
 const int Frame::kSeqFieldNumber;
 const int Frame::kAckFieldNumber;
 const int Frame::kTimestampFieldNumber;
+const int Frame::kShipidFieldNumber;
 const int Frame::kGameStateFieldNumber;
 const int Frame::kCollisionMessageFieldNumber;
 const int Frame::kFiringShipsFieldNumber;
@@ -6390,6 +6393,7 @@ void Frame::SharedCtor() {
   seq_ = GOOGLE_ULONGLONG(0);
   ack_ = GOOGLE_ULONGLONG(0);
   timestamp_ = 0;
+  shipid_ = 0u;
   gamestate_ = NULL;
   collision_message_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -6431,6 +6435,7 @@ void Frame::Clear() {
     seq_ = GOOGLE_ULONGLONG(0);
     ack_ = GOOGLE_ULONGLONG(0);
     timestamp_ = 0;
+    shipid_ = 0u;
     if (has_gamestate()) {
       if (gamestate_ != NULL) gamestate_->::ast::GameState::Clear();
     }
@@ -6579,6 +6584,22 @@ bool Frame::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(144)) goto parse_shipid;
+        break;
+      }
+      
+      // optional uint32 shipid = 18;
+      case 18: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_shipid:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &shipid_)));
+          set_has_shipid();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -6654,6 +6675,11 @@ void Frame::SerializeWithCachedSizes(
       17, this->gamestate(), output);
   }
   
+  // optional uint32 shipid = 18;
+  if (has_shipid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(18, this->shipid(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -6726,6 +6752,11 @@ void Frame::SerializeWithCachedSizes(
         17, this->gamestate(), target);
   }
   
+  // optional uint32 shipid = 18;
+  if (has_shipid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(18, this->shipid(), target);
+  }
+  
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -6754,6 +6785,13 @@ int Frame::ByteSize() const {
     // optional double timestamp = 5;
     if (has_timestamp()) {
       total_size += 1 + 8;
+    }
+    
+    // optional uint32 shipid = 18;
+    if (has_shipid()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->shipid());
     }
     
     // optional .ast.GameState gameState = 17;
@@ -6847,6 +6885,9 @@ void Frame::MergeFrom(const Frame& from) {
     if (from.has_timestamp()) {
       set_timestamp(from.timestamp());
     }
+    if (from.has_shipid()) {
+      set_shipid(from.shipid());
+    }
     if (from.has_gamestate()) {
       mutable_gamestate()->::ast::GameState::MergeFrom(from.gamestate());
     }
@@ -6882,6 +6923,7 @@ void Frame::Swap(Frame* other) {
     std::swap(seq_, other->seq_);
     std::swap(ack_, other->ack_);
     std::swap(timestamp_, other->timestamp_);
+    std::swap(shipid_, other->shipid_);
     std::swap(gamestate_, other->gamestate_);
     std::swap(collision_message_, other->collision_message_);
     firing_ships_.Swap(&other->firing_ships_);

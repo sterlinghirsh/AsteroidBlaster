@@ -11,6 +11,9 @@
 #include <enet/enet.h>
 
 class GameState;
+namespace ast {
+   class ClientCommand;
+}
 
 class ClientSide {
    public:
@@ -20,7 +23,7 @@ class ClientSide {
       void connect(char* stringAddr);
       
       void receive();
-      void send(char* dataToSend, int length, bool reliable);
+      void send(const ast::ClientCommand& clientcommand, bool reliable);
 
    private:
       ENetHost* client;

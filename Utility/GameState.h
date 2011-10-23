@@ -28,19 +28,14 @@ class Screen;
 class UDP_Server;
 class UDP_Client;
 class Weapon;
+class ServerSide;
+class ClientSide;
 
 enum GameStateMode { SingleMode, MenuMode, ClientMode, ServerMode };
 
-namespace boost {
-   class thread;
-   
-   namespace asio {
-      class io_service;
-   }
-}
-
 namespace ast {
    class ClientCommand;
+   class Frame;
 }
 
 class GameState : public InputReceiver {
@@ -98,12 +93,6 @@ class GameState : public InputReceiver {
       Timer levelTimer;
       Timer gameOverTimer;
 
-      //server stuff
-      void* udpServer;
-      void* udpClient;
-      void* networkThread;
-      void* io;
-      
    //private variables------------------------------
    private:
    
@@ -130,6 +119,9 @@ class GameState : public InputReceiver {
 
       double gameTime; // Starts at 0.
       double levelStartTime;
+
+      ServerSide* serverSide;
+      ClientSide* clientSide;
    
    
    //public functions------------------------------
@@ -139,6 +131,8 @@ class GameState : public InputReceiver {
 
       double getGameTime();
       void updateGameTime(double timeDiff);
+
+      void connect(char* addr);
       
       // virtual functions required by InputReciever
       virtual void keyUp(int key);
@@ -194,11 +188,13 @@ class GameState : public InputReceiver {
       void addWeaponUnlockMessage(Weapon* unlockedWeapon);
       void reset(bool shouldLoad = false);
       void resetClientCommand();
+      void handleCommand(const ast::ClientCommand& command);
+      void handleFrame(const ast::Frame& frame);
       
       void setLevelTimer();
       
       void addAIPlayer();
-      void addNetworkPlayer(unsigned clientID);
+      unsigned addNetworkPlayer(unsigned clientID);
       
       void serialize(std::ostream &oss);
       void deserialize(std::istream &iss);

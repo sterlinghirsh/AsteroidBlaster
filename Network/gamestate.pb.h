@@ -1861,6 +1861,13 @@ class Frame : public ::google::protobuf::Message {
   inline double timestamp() const;
   inline void set_timestamp(double value);
   
+  // optional uint32 shipid = 18;
+  inline bool has_shipid() const;
+  inline void clear_shipid();
+  static const int kShipidFieldNumber = 18;
+  inline ::google::protobuf::uint32 shipid() const;
+  inline void set_shipid(::google::protobuf::uint32 value);
+  
   // optional .ast.GameState gameState = 17;
   inline bool has_gamestate() const;
   inline void clear_gamestate();
@@ -1921,6 +1928,8 @@ class Frame : public ::google::protobuf::Message {
   inline void clear_has_ack();
   inline void set_has_timestamp();
   inline void clear_has_timestamp();
+  inline void set_has_shipid();
+  inline void clear_has_shipid();
   inline void set_has_gamestate();
   inline void clear_has_gamestate();
   inline void set_has_collision_message();
@@ -1938,9 +1947,10 @@ class Frame : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > remove_id_;
   mutable int _remove_id_cached_byte_size_;
   ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage > chatmessage_;
+  ::google::protobuf::uint32 shipid_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -4496,15 +4506,37 @@ inline void Frame::set_timestamp(double value) {
   timestamp_ = value;
 }
 
-// optional .ast.GameState gameState = 17;
-inline bool Frame::has_gamestate() const {
+// optional uint32 shipid = 18;
+inline bool Frame::has_shipid() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Frame::set_has_gamestate() {
+inline void Frame::set_has_shipid() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Frame::clear_has_gamestate() {
+inline void Frame::clear_has_shipid() {
   _has_bits_[0] &= ~0x00000008u;
+}
+inline void Frame::clear_shipid() {
+  shipid_ = 0u;
+  clear_has_shipid();
+}
+inline ::google::protobuf::uint32 Frame::shipid() const {
+  return shipid_;
+}
+inline void Frame::set_shipid(::google::protobuf::uint32 value) {
+  set_has_shipid();
+  shipid_ = value;
+}
+
+// optional .ast.GameState gameState = 17;
+inline bool Frame::has_gamestate() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Frame::set_has_gamestate() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Frame::clear_has_gamestate() {
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void Frame::clear_gamestate() {
   if (gamestate_ != NULL) gamestate_->::ast::GameState::Clear();
@@ -4527,13 +4559,13 @@ inline ::ast::GameState* Frame::release_gamestate() {
 
 // optional .ast.CollisionMessage collision_message = 1;
 inline bool Frame::has_collision_message() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void Frame::set_has_collision_message() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void Frame::clear_has_collision_message() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void Frame::clear_collision_message() {
   if (collision_message_ != NULL) collision_message_->::ast::CollisionMessage::Clear();

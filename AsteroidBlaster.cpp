@@ -34,6 +34,8 @@
 #include "Text/Input.h"
 
 #include "Network/NetUtility.h"
+#include "Network/ClientSide.h"
+#include "Network/ServerSide.h"
 
 #include "SDL.h"
 
@@ -313,6 +315,7 @@ void load() {
 int main(int argc, char* argv[]) {
    GameStateMode _gsm;
    bool badArugment = false;
+
    if (argc == 1) {
       _gsm = SingleMode;
    } else if (argc == 3) {
@@ -376,6 +379,10 @@ int main(int argc, char* argv[]) {
    
    // Initialize the gameState
    gameState = new GameState(_gsm);
+
+   if (_gsm == ClientMode) {
+      gameState->connect((char*) ipAddress.c_str());
+   }
    
    // Initialize the screens
    gameState->addScreens();
@@ -389,11 +396,11 @@ int main(int argc, char* argv[]) {
    creditsMenu = new CreditsMenu();
    chat = new Input(gameState);
    //turn the menu on for the inial menu display
-   if (_gsm != ServerMode && _gsm != ClientMode) {
-      mainMenu->menuActive = true;
-   } else {
+   if (_gsm == ServerMode || _gsm == ClientMode) {
       mainMenu->menuActive = false;
       gameState->reset();
+   } else {
+      mainMenu->menuActive = true;
    }
 
    //Initialize the input manager

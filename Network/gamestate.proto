@@ -170,6 +170,7 @@ message Frame {
    optional uint64 seq = 3;
    optional uint64 ack = 4;
    optional double timestamp = 5;
+   optional uint32 shipid = 18;
    optional GameState gameState = 17;
    optional CollisionMessage collision_message = 1;
    repeated uint32 firing_ships = 7 [packed=true];

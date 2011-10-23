@@ -38,7 +38,8 @@
 #include "HUD/Screen.h"
 
 #include "Network/gamestate.pb.h"
-
+#include "Network/ServerSide.h"
+#include "Network/ClientSide.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -63,30 +64,15 @@ GameState::GameState(GameStateMode _gsm) :
    gameOverTimer(this) {
       clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
       gsm = _gsm;
-      if (gsm == SingleMode) {
-         io = NULL;
-         udpClient = NULL;
-         udpServer = NULL;
-         networkThread = NULL;
-      } else if (gsm == MenuMode) {
-         io = NULL;
-         udpClient = NULL;
-         udpServer = NULL;
-         networkThread = NULL;
-      } else if (gsm == ClientMode) {
-         //io = new boost::asio::io_service();
-         //udpClient = new UDP_Client(*io, this, ipAddress, portNumber);
-         udpServer = NULL;
-         //networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
-      } else if (gsm == ServerMode) {
-         //io = new boost::asio::io_service();
-         udpClient = NULL;
+      serverSide = NULL;
+      clientSide = NULL;
 
-         //std::istringstream iss(portNumber);
-         //int tempPortNumber;
-         //iss >> tempPortNumber;
-         //udpServer = new UDP_Server(*io, this, tempPortNumber);
-         //networkThread = new boost::thread(boost::bind(&boost::asio::io_service::run, io));
+      if (gsm == SingleMode) {
+      } else if (gsm == MenuMode) {
+      } else if (gsm == ClientMode) {
+         clientSide = new ClientSide(this);
+      } else if (gsm == ServerMode) {
+         serverSide = new ServerSide(this);
       }
 
       gameTime = 0;
@@ -250,14 +236,15 @@ void GameState::addAIPlayer() {
    custodian.add(otherShip);
 }
 
-void GameState::addNetworkPlayer(unsigned clientID) {
-   //AsteroidShip* otherShip = new AsteroidShip(this);
-   //double randX = (randdouble())*(worldSize / 2);
-   //double randY = (randdouble())*(worldSize / 2);
-   //double randZ = (randdouble())*(worldSize / 2);
-   //otherShip->position->update(randX, randY, randZ);
-   //custodian.add(otherShip);
-   //custodian.shipsByClientID.insert(std::pair<unsigned, AsteroidShip*>(clientID, otherShip));
+unsigned GameState::addNetworkPlayer(unsigned clientID) {
+   AsteroidShip* otherShip = new AsteroidShip(this);
+   double randX = (randdouble())*(worldSize / 2);
+   double randY = (randdouble())*(worldSize / 2);
+   double randZ = (randdouble())*(worldSize / 2);
+   otherShip->position->update(randX, randY, randZ);
+   custodian.add(otherShip);
+   custodian.shipsByClientID.insert(std::pair<unsigned, AsteroidShip*>(clientID, otherShip));
+   return otherShip->id;
 }
 
 /**
@@ -281,6 +268,15 @@ void GameState::addScreens() {
  */
 void GameState::update(double timeDiff) {
    updateGameTime(timeDiff);
+
+   if (gsm == ServerMode) {
+      serverSide->receive();
+      //serverSide->send(clientCommandString, clientCommandString.length(), false);
+   } else if (gsm == ClientMode) {
+      clientSide->receive();
+      clientSide->send(clientCommand, false);
+   }
+
    // if the game over timer is set, and is over
    if (gameOverTimer.isRunning && gameOverTimer.getTimeLeft() < 0) {
       mainMenu->firstTime = true;
@@ -322,7 +318,8 @@ void GameState::update(double timeDiff) {
    // Keep items in the box.
    // cube->constrain(ship); why did we do this twice?
 
-   if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled() && gsm != MenuMode) {
+   if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled() && 
+    (gsm == SingleMode || gsm == ClientMode)) {
       ship->readCommand(clientCommand);
    }
 
@@ -1590,4 +1587,40 @@ double GameState::getGameTime() {
 
 void GameState::updateGameTime(double timeDiff) {
    gameTime += timeDiff;
+}
+
+void GameState::connect(char* addr) {
+   if (gsm != ClientMode) {
+      std::cerr << "GameState::connect() called when not in client mode!" << std::endl;
+      exit(EXIT_FAILURE);
+   }
+
+   clientSide->connect(addr);
+}
+
+/**
+ * This is executed server side when a new command comes in.
+ */
+void GameState::handleCommand(const ast::ClientCommand& command) {
+   if (!command.has_shipid() || command.shipid() == 0) {
+      std::cerr << "Shipid not set. Ignoring." << std::endl;
+      return;
+   }
+
+   AsteroidShip* curShip = dynamic_cast<AsteroidShip*>(custodian[command.shipid()]);
+   if (curShip == NULL) {
+      std::cerr << "Command refers to a nonexistent ship." << std::endl;
+   } else {
+      curShip->readCommand(command);
+   }
+}
+
+/**
+ * This is executed client side when a new frame comes in.
+ */
+void GameState::handleFrame(const ast::Frame& frame) {
+   if (frame.has_shipid()) {
+      std::cout << "Found shipid. Setting it to " << frame.shipid() << "." << std::endl;
+      clientCommand.set_shipid(frame.shipid());
+   }
 }

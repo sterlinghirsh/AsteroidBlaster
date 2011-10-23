@@ -8,10 +8,13 @@
 #include "Network/NetUtility.h"
 #include "Network/gamestate.pb.h"
 #include "Utility/GlobalUtility.h"
+#include "Utility/GameState.h"
 #include <iostream>
 // enet is included from ServerSide.h
 
 using namespace std;
+
+static string outgoing;
 
 ServerSide::ServerSide(GameState* _gameState) :
  gameState(_gameState) {
@@ -63,20 +66,39 @@ void ServerSide::receive() {
          if (event->type == ENET_EVENT_TYPE_CONNECT) {
             cout << "Client connected! That's normal." << endl;
             client = event->peer;
+
+            unsigned shipid = gameState->addNetworkPlayer(client->connectID);
+            cout << "Adding ship with clientid " << client->connectID << 
+               " and id " << shipid << "." << endl;
+
+            ast::Frame frame;
+            frame.set_shipid(shipid);
+            send(frame, true);
          }
 
          if (event->type == ENET_EVENT_TYPE_RECEIVE) {
-            cout << "Packet received from client: " << (char*) event->packet->data << endl;
+            ast::ClientCommand cc;
+            cc.ParseFromArray(event->packet->data, event->packet->dataLength);
+            gameState->handleCommand(cc);
+            //cout << "Packet received from client: " << (char*) event->packet->data << endl;
          }
 
       }
-
-      enet_packet_destroy(event->packet);
+      if (event->packet != NULL) {
+         enet_packet_destroy(event->packet);
+      }
    } while (result > 0);
 }
 
-void ServerSide::send(char* dataToSend, int length, bool reliable) {
-   ENetPacket* packet = enet_packet_create(dataToSend, length, 
+void ServerSide::send(const ast::Frame& frame, bool reliable) {
+   if (client == NULL)
+      return;
+
+   if (!frame.SerializeToString(&outgoing)) {
+      cerr << "Failed to serialize frame!" << endl;
+   }
+
+   ENetPacket* packet = enet_packet_create(outgoing.c_str(), outgoing.length(), 
     reliable ? ENET_PACKET_FLAG_RELIABLE : 0);
    // The 0 here is the channel. 
    enet_peer_send(client, 0, packet);

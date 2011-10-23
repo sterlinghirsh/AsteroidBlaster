@@ -12,13 +12,17 @@
 
 class GameState;
 
+namespace ast {
+   class Frame;
+}
+
 class ServerSide {
    public:
       ServerSide(GameState* _gameState);
       ~ServerSide();
 
       void receive();
-      void send(char* dataToSend, int length, bool reliable);
+      void send(const ast::Frame& frame, bool reliable);
 
    private:
       ENetHost* server;

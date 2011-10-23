@@ -8,10 +8,14 @@
 #include "Network/NetUtility.h"
 #include "Network/gamestate.pb.h"
 #include "Utility/GlobalUtility.h"
+#include "Utility/GameState.h"
 #include <iostream>
+#include <string>
 // enet is included from ClientSide.h
 
 using namespace std;
+
+static string outgoing;
 
 ClientSide::ClientSide(GameState* _gameState) :
  gameState(_gameState) {
@@ -45,32 +49,40 @@ ClientSide::~ClientSide() {
 
 void ClientSide::receive() {
    // 0 timeout for no wait.
-   int result = enet_host_service(client, event, 0);
+   int result;
+   do {
+      result= enet_host_service(client, event, 0);
 
-   if (result < 0) {
-      cerr << "Error receiving!" << endl;
-      exit(EXIT_FAILURE);
-   }
-
-   if (result > 0) {
-      // If a new packet came in.
-      if (event->type == ENET_EVENT_TYPE_DISCONNECT) {
-         cout << "Server disconnected. Exiting." << endl;
-         exit(EXIT_SUCCESS);
-      }
-
-      if (event->type == ENET_EVENT_TYPE_CONNECT) {
-         cout << "Server... connecting? That's weird." << endl;
+      if (result < 0) {
+         cerr << "Error receiving!" << endl;
          exit(EXIT_FAILURE);
       }
 
-      if (event->type == ENET_EVENT_TYPE_RECEIVE) {
-         cout << "Packet received from server: " << (char*) event->packet->data << endl;
+      if (result > 0) {
+         // If a new packet came in.
+         if (event->type == ENET_EVENT_TYPE_DISCONNECT) {
+            cout << "Server disconnected. Exiting." << endl;
+            exit(EXIT_SUCCESS);
+         }
+
+         if (event->type == ENET_EVENT_TYPE_CONNECT) {
+            cout << "Server... connecting? That's weird." << endl;
+            exit(EXIT_FAILURE);
+         }
+
+         if (event->type == ENET_EVENT_TYPE_RECEIVE) {
+            //cout << "Packet received from server: " << (char*) event->packet->data << endl;
+            ast::Frame frame;
+            frame.ParseFromArray(event->packet->data, event->packet->dataLength);
+            gameState->handleFrame(frame);
+         }
+
       }
 
-   }
-
-   enet_packet_destroy(event->packet);
+      if (event->packet != NULL) {
+         enet_packet_destroy(event->packet);
+      }
+   } while (result > 0);
 }
 
 void ClientSide::connect(char* stringAddr) {
@@ -105,8 +117,12 @@ void ClientSide::connect(char* stringAddr) {
    cout << "Connected!" << endl;
 }
 
-void ClientSide::send(char* dataToSend, int length, bool reliable) {
-   ENetPacket* packet = enet_packet_create(dataToSend, length, 
+void ClientSide::send(const ast::ClientCommand& clientCommand, bool reliable) {
+   if (!clientCommand.SerializeToString(&outgoing)) {
+      cerr << "Failed to serialize clientCommand!" << endl;
+   }
+   
+   ENetPacket* packet = enet_packet_create(outgoing.c_str(), outgoing.length(), 
     reliable ? ENET_PACKET_FLAG_RELIABLE : 0);
    // The 0 here is the channel. 
    enet_peer_send(server, 0, packet);
