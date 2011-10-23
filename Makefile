@@ -36,7 +36,7 @@ endif
 
 
 
-LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf -g -O3
+LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf -lenet -g -O3
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
@@ -59,7 +59,7 @@ SHOTSFILES:=Shots/Shot.cpp Shots/BeamShot.cpp Shots/BlasterShot.cpp Shots/Tracto
 
 AIFILES:=AI/FlyingAI.cpp AI/ShootingAI.cpp 
 
-NETWORKFILES:=Network/ClientNode.cpp Network/gamestate.pb.cc
+NETWORKFILES:=Network/ClientNode.cpp Network/ClientSide.cpp Network/ServerSide.cpp Network/NetUtility.cpp  Network/gamestate.pb.cc
 # Network/UDP_Server.cpp Network/UDP_Client.cpp Network/ClientNode.cpp Network/NetTimer.cpp Network/NetShard.cpp Network/NetAsteroid.cpp Network/NetShip.cpp Network/NetBlasterShot.cpp Network/NetBeamShot.cpp Network/NetTractorBeamShot.cpp
 
 WEAPONSFILES:=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/TractorBeam.cpp Weapons/Electricity.cpp Weapons/TimedBomber.cpp Weapons/Energy.cpp Weapons/RemoteBomber.cpp Weapons/HomingMissile.cpp Weapons/Ram.cpp

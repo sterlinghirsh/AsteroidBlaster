@@ -33,6 +33,8 @@
 #include "Menus/CreditsMenu.h"
 #include "Text/Input.h"
 
+#include "Network/NetUtility.h"
+
 #include "SDL.h"
 
 GameState* gameState;
@@ -342,6 +344,9 @@ int main(int argc, char* argv[]) {
       return 1;
    }
 
+   // Initialize networking.
+   initNetworking();
+   atexit(deinitNetworking);
 
    srand((unsigned)time(NULL));
 

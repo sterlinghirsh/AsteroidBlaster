@@ -143,10 +143,16 @@ message GameState {
 }
 
 message CollisionMessage {
-   optional uint32 messageid = 4;
-   optional double timestamp = 1;
-   optional uint32 objectId1 = 2;
-   optional uint32 objectId2 = 3;
+   // Every 2 are a pair.
+   repeated uint32 collider = 2 [packed=true];
+
+   // Now things that collide with walls.
+   repeated uint32 wall_top = 3 [packed=true];
+   repeated uint32 wall_bottom = 4 [packed=true];
+   repeated uint32 wall_left = 5 [packed=true];
+   repeated uint32 wall_right = 6 [packed=true];
+   repeated uint32 wall_front = 7 [packed=true];
+   repeated uint32 wall_back = 8 [packed=true];
 }
 
 message ChatMessage {
@@ -160,12 +166,15 @@ message CreateEntityMessage {
    repeated Entity entity = 2;
 }
 
-message ServerToClient {
+message Frame {
    optional uint64 seq = 3;
    optional uint64 ack = 4;
    optional double timestamp = 5;
    optional GameState gameState = 17;
-   repeated CollisionMessage collisionMessage = 1;
+   optional CollisionMessage collision_message = 1;
+   repeated uint32 firing_ships = 7 [packed=true];
+   // Ids of objects to remove after collisions are processed.
+   repeated uint32 remove_id = 6 [packed=true];
    repeated ChatMessage chatMessage = 2;
 
 }

@@ -41,7 +41,7 @@ class GameState;
 class CollisionMessage;
 class ChatMessage;
 class CreateEntityMessage;
-class ServerToClient;
+class Frame;
 
 // ===================================================================
 
@@ -1479,54 +1479,112 @@ class CollisionMessage : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // optional uint32 messageid = 4;
-  inline bool has_messageid() const;
-  inline void clear_messageid();
-  static const int kMessageidFieldNumber = 4;
-  inline ::google::protobuf::uint32 messageid() const;
-  inline void set_messageid(::google::protobuf::uint32 value);
+  // repeated uint32 collider = 2 [packed = true];
+  inline int collider_size() const;
+  inline void clear_collider();
+  static const int kColliderFieldNumber = 2;
+  inline ::google::protobuf::uint32 collider(int index) const;
+  inline void set_collider(int index, ::google::protobuf::uint32 value);
+  inline void add_collider(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      collider() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_collider();
   
-  // optional double timestamp = 1;
-  inline bool has_timestamp() const;
-  inline void clear_timestamp();
-  static const int kTimestampFieldNumber = 1;
-  inline double timestamp() const;
-  inline void set_timestamp(double value);
+  // repeated uint32 wall_top = 3 [packed = true];
+  inline int wall_top_size() const;
+  inline void clear_wall_top();
+  static const int kWallTopFieldNumber = 3;
+  inline ::google::protobuf::uint32 wall_top(int index) const;
+  inline void set_wall_top(int index, ::google::protobuf::uint32 value);
+  inline void add_wall_top(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      wall_top() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_wall_top();
   
-  // optional uint32 objectId1 = 2;
-  inline bool has_objectid1() const;
-  inline void clear_objectid1();
-  static const int kObjectId1FieldNumber = 2;
-  inline ::google::protobuf::uint32 objectid1() const;
-  inline void set_objectid1(::google::protobuf::uint32 value);
+  // repeated uint32 wall_bottom = 4 [packed = true];
+  inline int wall_bottom_size() const;
+  inline void clear_wall_bottom();
+  static const int kWallBottomFieldNumber = 4;
+  inline ::google::protobuf::uint32 wall_bottom(int index) const;
+  inline void set_wall_bottom(int index, ::google::protobuf::uint32 value);
+  inline void add_wall_bottom(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      wall_bottom() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_wall_bottom();
   
-  // optional uint32 objectId2 = 3;
-  inline bool has_objectid2() const;
-  inline void clear_objectid2();
-  static const int kObjectId2FieldNumber = 3;
-  inline ::google::protobuf::uint32 objectid2() const;
-  inline void set_objectid2(::google::protobuf::uint32 value);
+  // repeated uint32 wall_left = 5 [packed = true];
+  inline int wall_left_size() const;
+  inline void clear_wall_left();
+  static const int kWallLeftFieldNumber = 5;
+  inline ::google::protobuf::uint32 wall_left(int index) const;
+  inline void set_wall_left(int index, ::google::protobuf::uint32 value);
+  inline void add_wall_left(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      wall_left() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_wall_left();
+  
+  // repeated uint32 wall_right = 6 [packed = true];
+  inline int wall_right_size() const;
+  inline void clear_wall_right();
+  static const int kWallRightFieldNumber = 6;
+  inline ::google::protobuf::uint32 wall_right(int index) const;
+  inline void set_wall_right(int index, ::google::protobuf::uint32 value);
+  inline void add_wall_right(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      wall_right() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_wall_right();
+  
+  // repeated uint32 wall_front = 7 [packed = true];
+  inline int wall_front_size() const;
+  inline void clear_wall_front();
+  static const int kWallFrontFieldNumber = 7;
+  inline ::google::protobuf::uint32 wall_front(int index) const;
+  inline void set_wall_front(int index, ::google::protobuf::uint32 value);
+  inline void add_wall_front(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      wall_front() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_wall_front();
+  
+  // repeated uint32 wall_back = 8 [packed = true];
+  inline int wall_back_size() const;
+  inline void clear_wall_back();
+  static const int kWallBackFieldNumber = 8;
+  inline ::google::protobuf::uint32 wall_back(int index) const;
+  inline void set_wall_back(int index, ::google::protobuf::uint32 value);
+  inline void add_wall_back(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      wall_back() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_wall_back();
   
   // @@protoc_insertion_point(class_scope:ast.CollisionMessage)
  private:
-  inline void set_has_messageid();
-  inline void clear_has_messageid();
-  inline void set_has_timestamp();
-  inline void clear_has_timestamp();
-  inline void set_has_objectid1();
-  inline void clear_has_objectid1();
-  inline void set_has_objectid2();
-  inline void clear_has_objectid2();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  double timestamp_;
-  ::google::protobuf::uint32 messageid_;
-  ::google::protobuf::uint32 objectid1_;
-  ::google::protobuf::uint32 objectid2_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > collider_;
+  mutable int _collider_cached_byte_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > wall_top_;
+  mutable int _wall_top_cached_byte_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > wall_bottom_;
+  mutable int _wall_bottom_cached_byte_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > wall_left_;
+  mutable int _wall_left_cached_byte_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > wall_right_;
+  mutable int _wall_right_cached_byte_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > wall_front_;
+  mutable int _wall_front_cached_byte_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > wall_back_;
+  mutable int _wall_back_cached_byte_size_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -1728,14 +1786,14 @@ class CreateEntityMessage : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class ServerToClient : public ::google::protobuf::Message {
+class Frame : public ::google::protobuf::Message {
  public:
-  ServerToClient();
-  virtual ~ServerToClient();
+  Frame();
+  virtual ~Frame();
   
-  ServerToClient(const ServerToClient& from);
+  Frame(const Frame& from);
   
-  inline ServerToClient& operator=(const ServerToClient& from) {
+  inline Frame& operator=(const Frame& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1749,17 +1807,17 @@ class ServerToClient : public ::google::protobuf::Message {
   }
   
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ServerToClient& default_instance();
+  static const Frame& default_instance();
   
-  void Swap(ServerToClient* other);
+  void Swap(Frame* other);
   
   // implements Message ----------------------------------------------
   
-  ServerToClient* New() const;
+  Frame* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ServerToClient& from);
-  void MergeFrom(const ServerToClient& from);
+  void CopyFrom(const Frame& from);
+  void MergeFrom(const Frame& from);
   void Clear();
   bool IsInitialized() const;
   
@@ -1811,17 +1869,37 @@ class ServerToClient : public ::google::protobuf::Message {
   inline ::ast::GameState* mutable_gamestate();
   inline ::ast::GameState* release_gamestate();
   
-  // repeated .ast.CollisionMessage collisionMessage = 1;
-  inline int collisionmessage_size() const;
-  inline void clear_collisionmessage();
+  // optional .ast.CollisionMessage collision_message = 1;
+  inline bool has_collision_message() const;
+  inline void clear_collision_message();
   static const int kCollisionMessageFieldNumber = 1;
-  inline const ::ast::CollisionMessage& collisionmessage(int index) const;
-  inline ::ast::CollisionMessage* mutable_collisionmessage(int index);
-  inline ::ast::CollisionMessage* add_collisionmessage();
-  inline const ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage >&
-      collisionmessage() const;
-  inline ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage >*
-      mutable_collisionmessage();
+  inline const ::ast::CollisionMessage& collision_message() const;
+  inline ::ast::CollisionMessage* mutable_collision_message();
+  inline ::ast::CollisionMessage* release_collision_message();
+  
+  // repeated uint32 firing_ships = 7 [packed = true];
+  inline int firing_ships_size() const;
+  inline void clear_firing_ships();
+  static const int kFiringShipsFieldNumber = 7;
+  inline ::google::protobuf::uint32 firing_ships(int index) const;
+  inline void set_firing_ships(int index, ::google::protobuf::uint32 value);
+  inline void add_firing_ships(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      firing_ships() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_firing_ships();
+  
+  // repeated uint32 remove_id = 6 [packed = true];
+  inline int remove_id_size() const;
+  inline void clear_remove_id();
+  static const int kRemoveIdFieldNumber = 6;
+  inline ::google::protobuf::uint32 remove_id(int index) const;
+  inline void set_remove_id(int index, ::google::protobuf::uint32 value);
+  inline void add_remove_id(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      remove_id() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_remove_id();
   
   // repeated .ast.ChatMessage chatMessage = 2;
   inline int chatmessage_size() const;
@@ -1835,7 +1913,7 @@ class ServerToClient : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >*
       mutable_chatmessage();
   
-  // @@protoc_insertion_point(class_scope:ast.ServerToClient)
+  // @@protoc_insertion_point(class_scope:ast.Frame)
  private:
   inline void set_has_seq();
   inline void clear_has_seq();
@@ -1845,6 +1923,8 @@ class ServerToClient : public ::google::protobuf::Message {
   inline void clear_has_timestamp();
   inline void set_has_gamestate();
   inline void clear_has_gamestate();
+  inline void set_has_collision_message();
+  inline void clear_has_collision_message();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -1852,18 +1932,22 @@ class ServerToClient : public ::google::protobuf::Message {
   ::google::protobuf::uint64 ack_;
   double timestamp_;
   ::ast::GameState* gamestate_;
-  ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage > collisionmessage_;
+  ::ast::CollisionMessage* collision_message_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > firing_ships_;
+  mutable int _firing_ships_cached_byte_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > remove_id_;
+  mutable int _remove_id_cached_byte_size_;
   ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage > chatmessage_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
   friend void protobuf_ShutdownFile_Network_2fgamestate_2eproto();
   
   void InitAsDefaultInstance();
-  static ServerToClient* default_instance_;
+  static Frame* default_instance_;
 };
 // ===================================================================
 
@@ -4032,92 +4116,179 @@ inline void GameState::set_curlevel(::google::protobuf::int32 value) {
 
 // CollisionMessage
 
-// optional uint32 messageid = 4;
-inline bool CollisionMessage::has_messageid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+// repeated uint32 collider = 2 [packed = true];
+inline int CollisionMessage::collider_size() const {
+  return collider_.size();
 }
-inline void CollisionMessage::set_has_messageid() {
-  _has_bits_[0] |= 0x00000001u;
+inline void CollisionMessage::clear_collider() {
+  collider_.Clear();
 }
-inline void CollisionMessage::clear_has_messageid() {
-  _has_bits_[0] &= ~0x00000001u;
+inline ::google::protobuf::uint32 CollisionMessage::collider(int index) const {
+  return collider_.Get(index);
 }
-inline void CollisionMessage::clear_messageid() {
-  messageid_ = 0u;
-  clear_has_messageid();
+inline void CollisionMessage::set_collider(int index, ::google::protobuf::uint32 value) {
+  collider_.Set(index, value);
 }
-inline ::google::protobuf::uint32 CollisionMessage::messageid() const {
-  return messageid_;
+inline void CollisionMessage::add_collider(::google::protobuf::uint32 value) {
+  collider_.Add(value);
 }
-inline void CollisionMessage::set_messageid(::google::protobuf::uint32 value) {
-  set_has_messageid();
-  messageid_ = value;
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+CollisionMessage::collider() const {
+  return collider_;
 }
-
-// optional double timestamp = 1;
-inline bool CollisionMessage::has_timestamp() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void CollisionMessage::set_has_timestamp() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void CollisionMessage::clear_has_timestamp() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void CollisionMessage::clear_timestamp() {
-  timestamp_ = 0;
-  clear_has_timestamp();
-}
-inline double CollisionMessage::timestamp() const {
-  return timestamp_;
-}
-inline void CollisionMessage::set_timestamp(double value) {
-  set_has_timestamp();
-  timestamp_ = value;
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+CollisionMessage::mutable_collider() {
+  return &collider_;
 }
 
-// optional uint32 objectId1 = 2;
-inline bool CollisionMessage::has_objectid1() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+// repeated uint32 wall_top = 3 [packed = true];
+inline int CollisionMessage::wall_top_size() const {
+  return wall_top_.size();
 }
-inline void CollisionMessage::set_has_objectid1() {
-  _has_bits_[0] |= 0x00000004u;
+inline void CollisionMessage::clear_wall_top() {
+  wall_top_.Clear();
 }
-inline void CollisionMessage::clear_has_objectid1() {
-  _has_bits_[0] &= ~0x00000004u;
+inline ::google::protobuf::uint32 CollisionMessage::wall_top(int index) const {
+  return wall_top_.Get(index);
 }
-inline void CollisionMessage::clear_objectid1() {
-  objectid1_ = 0u;
-  clear_has_objectid1();
+inline void CollisionMessage::set_wall_top(int index, ::google::protobuf::uint32 value) {
+  wall_top_.Set(index, value);
 }
-inline ::google::protobuf::uint32 CollisionMessage::objectid1() const {
-  return objectid1_;
+inline void CollisionMessage::add_wall_top(::google::protobuf::uint32 value) {
+  wall_top_.Add(value);
 }
-inline void CollisionMessage::set_objectid1(::google::protobuf::uint32 value) {
-  set_has_objectid1();
-  objectid1_ = value;
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+CollisionMessage::wall_top() const {
+  return wall_top_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+CollisionMessage::mutable_wall_top() {
+  return &wall_top_;
 }
 
-// optional uint32 objectId2 = 3;
-inline bool CollisionMessage::has_objectid2() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+// repeated uint32 wall_bottom = 4 [packed = true];
+inline int CollisionMessage::wall_bottom_size() const {
+  return wall_bottom_.size();
 }
-inline void CollisionMessage::set_has_objectid2() {
-  _has_bits_[0] |= 0x00000008u;
+inline void CollisionMessage::clear_wall_bottom() {
+  wall_bottom_.Clear();
 }
-inline void CollisionMessage::clear_has_objectid2() {
-  _has_bits_[0] &= ~0x00000008u;
+inline ::google::protobuf::uint32 CollisionMessage::wall_bottom(int index) const {
+  return wall_bottom_.Get(index);
 }
-inline void CollisionMessage::clear_objectid2() {
-  objectid2_ = 0u;
-  clear_has_objectid2();
+inline void CollisionMessage::set_wall_bottom(int index, ::google::protobuf::uint32 value) {
+  wall_bottom_.Set(index, value);
 }
-inline ::google::protobuf::uint32 CollisionMessage::objectid2() const {
-  return objectid2_;
+inline void CollisionMessage::add_wall_bottom(::google::protobuf::uint32 value) {
+  wall_bottom_.Add(value);
 }
-inline void CollisionMessage::set_objectid2(::google::protobuf::uint32 value) {
-  set_has_objectid2();
-  objectid2_ = value;
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+CollisionMessage::wall_bottom() const {
+  return wall_bottom_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+CollisionMessage::mutable_wall_bottom() {
+  return &wall_bottom_;
+}
+
+// repeated uint32 wall_left = 5 [packed = true];
+inline int CollisionMessage::wall_left_size() const {
+  return wall_left_.size();
+}
+inline void CollisionMessage::clear_wall_left() {
+  wall_left_.Clear();
+}
+inline ::google::protobuf::uint32 CollisionMessage::wall_left(int index) const {
+  return wall_left_.Get(index);
+}
+inline void CollisionMessage::set_wall_left(int index, ::google::protobuf::uint32 value) {
+  wall_left_.Set(index, value);
+}
+inline void CollisionMessage::add_wall_left(::google::protobuf::uint32 value) {
+  wall_left_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+CollisionMessage::wall_left() const {
+  return wall_left_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+CollisionMessage::mutable_wall_left() {
+  return &wall_left_;
+}
+
+// repeated uint32 wall_right = 6 [packed = true];
+inline int CollisionMessage::wall_right_size() const {
+  return wall_right_.size();
+}
+inline void CollisionMessage::clear_wall_right() {
+  wall_right_.Clear();
+}
+inline ::google::protobuf::uint32 CollisionMessage::wall_right(int index) const {
+  return wall_right_.Get(index);
+}
+inline void CollisionMessage::set_wall_right(int index, ::google::protobuf::uint32 value) {
+  wall_right_.Set(index, value);
+}
+inline void CollisionMessage::add_wall_right(::google::protobuf::uint32 value) {
+  wall_right_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+CollisionMessage::wall_right() const {
+  return wall_right_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+CollisionMessage::mutable_wall_right() {
+  return &wall_right_;
+}
+
+// repeated uint32 wall_front = 7 [packed = true];
+inline int CollisionMessage::wall_front_size() const {
+  return wall_front_.size();
+}
+inline void CollisionMessage::clear_wall_front() {
+  wall_front_.Clear();
+}
+inline ::google::protobuf::uint32 CollisionMessage::wall_front(int index) const {
+  return wall_front_.Get(index);
+}
+inline void CollisionMessage::set_wall_front(int index, ::google::protobuf::uint32 value) {
+  wall_front_.Set(index, value);
+}
+inline void CollisionMessage::add_wall_front(::google::protobuf::uint32 value) {
+  wall_front_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+CollisionMessage::wall_front() const {
+  return wall_front_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+CollisionMessage::mutable_wall_front() {
+  return &wall_front_;
+}
+
+// repeated uint32 wall_back = 8 [packed = true];
+inline int CollisionMessage::wall_back_size() const {
+  return wall_back_.size();
+}
+inline void CollisionMessage::clear_wall_back() {
+  wall_back_.Clear();
+}
+inline ::google::protobuf::uint32 CollisionMessage::wall_back(int index) const {
+  return wall_back_.Get(index);
+}
+inline void CollisionMessage::set_wall_back(int index, ::google::protobuf::uint32 value) {
+  wall_back_.Set(index, value);
+}
+inline void CollisionMessage::add_wall_back(::google::protobuf::uint32 value) {
+  wall_back_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+CollisionMessage::wall_back() const {
+  return wall_back_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+CollisionMessage::mutable_wall_back() {
+  return &wall_back_;
 }
 
 // -------------------------------------------------------------------
@@ -4257,150 +4428,204 @@ CreateEntityMessage::mutable_entity() {
 
 // -------------------------------------------------------------------
 
-// ServerToClient
+// Frame
 
 // optional uint64 seq = 3;
-inline bool ServerToClient::has_seq() const {
+inline bool Frame::has_seq() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ServerToClient::set_has_seq() {
+inline void Frame::set_has_seq() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ServerToClient::clear_has_seq() {
+inline void Frame::clear_has_seq() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ServerToClient::clear_seq() {
+inline void Frame::clear_seq() {
   seq_ = GOOGLE_ULONGLONG(0);
   clear_has_seq();
 }
-inline ::google::protobuf::uint64 ServerToClient::seq() const {
+inline ::google::protobuf::uint64 Frame::seq() const {
   return seq_;
 }
-inline void ServerToClient::set_seq(::google::protobuf::uint64 value) {
+inline void Frame::set_seq(::google::protobuf::uint64 value) {
   set_has_seq();
   seq_ = value;
 }
 
 // optional uint64 ack = 4;
-inline bool ServerToClient::has_ack() const {
+inline bool Frame::has_ack() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ServerToClient::set_has_ack() {
+inline void Frame::set_has_ack() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ServerToClient::clear_has_ack() {
+inline void Frame::clear_has_ack() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void ServerToClient::clear_ack() {
+inline void Frame::clear_ack() {
   ack_ = GOOGLE_ULONGLONG(0);
   clear_has_ack();
 }
-inline ::google::protobuf::uint64 ServerToClient::ack() const {
+inline ::google::protobuf::uint64 Frame::ack() const {
   return ack_;
 }
-inline void ServerToClient::set_ack(::google::protobuf::uint64 value) {
+inline void Frame::set_ack(::google::protobuf::uint64 value) {
   set_has_ack();
   ack_ = value;
 }
 
 // optional double timestamp = 5;
-inline bool ServerToClient::has_timestamp() const {
+inline bool Frame::has_timestamp() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void ServerToClient::set_has_timestamp() {
+inline void Frame::set_has_timestamp() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void ServerToClient::clear_has_timestamp() {
+inline void Frame::clear_has_timestamp() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void ServerToClient::clear_timestamp() {
+inline void Frame::clear_timestamp() {
   timestamp_ = 0;
   clear_has_timestamp();
 }
-inline double ServerToClient::timestamp() const {
+inline double Frame::timestamp() const {
   return timestamp_;
 }
-inline void ServerToClient::set_timestamp(double value) {
+inline void Frame::set_timestamp(double value) {
   set_has_timestamp();
   timestamp_ = value;
 }
 
 // optional .ast.GameState gameState = 17;
-inline bool ServerToClient::has_gamestate() const {
+inline bool Frame::has_gamestate() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void ServerToClient::set_has_gamestate() {
+inline void Frame::set_has_gamestate() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void ServerToClient::clear_has_gamestate() {
+inline void Frame::clear_has_gamestate() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void ServerToClient::clear_gamestate() {
+inline void Frame::clear_gamestate() {
   if (gamestate_ != NULL) gamestate_->::ast::GameState::Clear();
   clear_has_gamestate();
 }
-inline const ::ast::GameState& ServerToClient::gamestate() const {
+inline const ::ast::GameState& Frame::gamestate() const {
   return gamestate_ != NULL ? *gamestate_ : *default_instance_->gamestate_;
 }
-inline ::ast::GameState* ServerToClient::mutable_gamestate() {
+inline ::ast::GameState* Frame::mutable_gamestate() {
   set_has_gamestate();
   if (gamestate_ == NULL) gamestate_ = new ::ast::GameState;
   return gamestate_;
 }
-inline ::ast::GameState* ServerToClient::release_gamestate() {
+inline ::ast::GameState* Frame::release_gamestate() {
   clear_has_gamestate();
   ::ast::GameState* temp = gamestate_;
   gamestate_ = NULL;
   return temp;
 }
 
-// repeated .ast.CollisionMessage collisionMessage = 1;
-inline int ServerToClient::collisionmessage_size() const {
-  return collisionmessage_.size();
+// optional .ast.CollisionMessage collision_message = 1;
+inline bool Frame::has_collision_message() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void ServerToClient::clear_collisionmessage() {
-  collisionmessage_.Clear();
+inline void Frame::set_has_collision_message() {
+  _has_bits_[0] |= 0x00000010u;
 }
-inline const ::ast::CollisionMessage& ServerToClient::collisionmessage(int index) const {
-  return collisionmessage_.Get(index);
+inline void Frame::clear_has_collision_message() {
+  _has_bits_[0] &= ~0x00000010u;
 }
-inline ::ast::CollisionMessage* ServerToClient::mutable_collisionmessage(int index) {
-  return collisionmessage_.Mutable(index);
+inline void Frame::clear_collision_message() {
+  if (collision_message_ != NULL) collision_message_->::ast::CollisionMessage::Clear();
+  clear_has_collision_message();
 }
-inline ::ast::CollisionMessage* ServerToClient::add_collisionmessage() {
-  return collisionmessage_.Add();
+inline const ::ast::CollisionMessage& Frame::collision_message() const {
+  return collision_message_ != NULL ? *collision_message_ : *default_instance_->collision_message_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage >&
-ServerToClient::collisionmessage() const {
-  return collisionmessage_;
+inline ::ast::CollisionMessage* Frame::mutable_collision_message() {
+  set_has_collision_message();
+  if (collision_message_ == NULL) collision_message_ = new ::ast::CollisionMessage;
+  return collision_message_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage >*
-ServerToClient::mutable_collisionmessage() {
-  return &collisionmessage_;
+inline ::ast::CollisionMessage* Frame::release_collision_message() {
+  clear_has_collision_message();
+  ::ast::CollisionMessage* temp = collision_message_;
+  collision_message_ = NULL;
+  return temp;
+}
+
+// repeated uint32 firing_ships = 7 [packed = true];
+inline int Frame::firing_ships_size() const {
+  return firing_ships_.size();
+}
+inline void Frame::clear_firing_ships() {
+  firing_ships_.Clear();
+}
+inline ::google::protobuf::uint32 Frame::firing_ships(int index) const {
+  return firing_ships_.Get(index);
+}
+inline void Frame::set_firing_ships(int index, ::google::protobuf::uint32 value) {
+  firing_ships_.Set(index, value);
+}
+inline void Frame::add_firing_ships(::google::protobuf::uint32 value) {
+  firing_ships_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+Frame::firing_ships() const {
+  return firing_ships_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+Frame::mutable_firing_ships() {
+  return &firing_ships_;
+}
+
+// repeated uint32 remove_id = 6 [packed = true];
+inline int Frame::remove_id_size() const {
+  return remove_id_.size();
+}
+inline void Frame::clear_remove_id() {
+  remove_id_.Clear();
+}
+inline ::google::protobuf::uint32 Frame::remove_id(int index) const {
+  return remove_id_.Get(index);
+}
+inline void Frame::set_remove_id(int index, ::google::protobuf::uint32 value) {
+  remove_id_.Set(index, value);
+}
+inline void Frame::add_remove_id(::google::protobuf::uint32 value) {
+  remove_id_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+Frame::remove_id() const {
+  return remove_id_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+Frame::mutable_remove_id() {
+  return &remove_id_;
 }
 
 // repeated .ast.ChatMessage chatMessage = 2;
-inline int ServerToClient::chatmessage_size() const {
+inline int Frame::chatmessage_size() const {
   return chatmessage_.size();
 }
-inline void ServerToClient::clear_chatmessage() {
+inline void Frame::clear_chatmessage() {
   chatmessage_.Clear();
 }
-inline const ::ast::ChatMessage& ServerToClient::chatmessage(int index) const {
+inline const ::ast::ChatMessage& Frame::chatmessage(int index) const {
   return chatmessage_.Get(index);
 }
-inline ::ast::ChatMessage* ServerToClient::mutable_chatmessage(int index) {
+inline ::ast::ChatMessage* Frame::mutable_chatmessage(int index) {
   return chatmessage_.Mutable(index);
 }
-inline ::ast::ChatMessage* ServerToClient::add_chatmessage() {
+inline ::ast::ChatMessage* Frame::add_chatmessage() {
   return chatmessage_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >&
-ServerToClient::chatmessage() const {
+Frame::chatmessage() const {
   return chatmessage_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >*
-ServerToClient::mutable_chatmessage() {
+Frame::mutable_chatmessage() {
   return &chatmessage_;
 }
 
