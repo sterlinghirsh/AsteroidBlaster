@@ -20,6 +20,8 @@
 #include "Shots/ElectricityShot.h"
 #include "Shots/EnergyShot.h"
 
+#include "Graphics/Camera.h"
+
 #include "Particles/ElectricityImpactParticle.h"
 
 #include "Network/gamestate.pb.h"
@@ -241,7 +243,7 @@ void Asteroid3D::draw() {
    //}
    //glColor3f(0.996, 0.612, 0.0);
 
-   double shipDist = position->distanceFrom(*gameState->ship->position);
+   double shipDist = position->distanceFrom(*gameState->getCurrentCamera()->position);
    double lineW = worldSize / shipDist * ASTEROID3D_LINE_W + 1.0;
    //glLineWidth(ASTEROID3D_LINE_W);
    glLineWidth((GLfloat)lineW);

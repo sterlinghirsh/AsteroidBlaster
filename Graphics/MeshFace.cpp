@@ -7,8 +7,8 @@
 #include "Graphics/MeshFace.h"
 #include "Utility/GameState.h"
 // TODO: a better way.
-#include "Items/AsteroidShip.h"
 #include "Items/BoundingSpace.h"
+#include "Graphics/Camera.h"
 
 #define ASTEROID3D_LINE_W 0.5
 #define MAX_INDEPENDENT_FACES 500
@@ -57,7 +57,7 @@ void MeshFace::moveBy(Vector3D move) {
 }
 
 void MeshFace::draw() {
-   double shipDist = position->distanceFrom(*gameState->ship->position);
+   double shipDist = position->distanceFrom(*gameState->getCurrentCamera()->position);
    //unused variable
    GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 1);
 
@@ -114,7 +114,7 @@ void MeshFace::drawLines() {
    // TODO: Make this the ship position.
    glDisable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, 0);
-   double shipDist = p1.distanceFrom(*gameState->ship->position);
+   double shipDist = p1.distanceFrom(*gameState->getCurrentCamera()->position);
    GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
 
    float curAlpha = timeExploded == 0 ? 1.0f :
@@ -244,7 +244,7 @@ void MeshFace::update(double timeDiff) {
 }
 
 void MeshFace::drawGlow() {
-   double shipDist = position->distanceFrom(*gameState->ship->position);
+   double shipDist = position->distanceFrom(*gameState->getCurrentCamera()->position);
    GLfloat lineW = (GLfloat) ((gameState->worldSize / shipDist * ASTEROID3D_LINE_W + 1.0) / 2);
 
    glEnable(GL_COLOR_MATERIAL);

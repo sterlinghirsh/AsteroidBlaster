@@ -100,6 +100,7 @@ class GameState : public InputReceiver {
    
       Camera* shipCamera;
       Camera* spectatorCamera;
+      Camera* currentCamera;
       double spectatorSpeed;
       double spectatorRadius;
       
@@ -219,6 +220,8 @@ class GameState : public InputReceiver {
 
       void testFunction();
       void gameOver();
+
+      Camera* getCurrentCamera();
    
    //private functions------------------------------
    private:

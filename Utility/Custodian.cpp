@@ -164,7 +164,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
    b->shouldRemove = true;
    
    Point3D* soundSource = NULL;
-   if (a = a->gameState->ship) {
+   if (a == a->gameState->ship) {
       SoundEffect::playSoundEffect("CrystalCollect.wav", NULL, NULL, true);
    } else {
       SoundEffect::playSoundEffect("CrystalCollect.wav", a->position);
@@ -1086,14 +1086,12 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
    unsigned type = ent.type();
    Object3D* obj = (*this)[id];
    if (obj == NULL) {
-      std::cout << "Item not found.\n";
       AsteroidShip* owner = NULL;
       if (IS_SHOT(type)) {
          
          if (ent.has_ownerid()) {
             // Should this be dynamic cast?
             owner = static_cast<AsteroidShip*>((*this)[ent.ownerid()]);
-            std::cout << "Ownerid: " << ent.ownerid();
          } else {
             std::cout << "No owner specified!\n";
          }
@@ -1142,7 +1140,6 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             obj = new BlasterShot(pos, dir, ent.weaponindex(), owner, gameState);
 
             obj->load(ent);
-            std::cout << "Found Blastershot.\n";
          }
          break;
          case TYPE_ELECTRICITYSHOT:
@@ -1215,12 +1212,12 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
       }
       if (obj != NULL) {
          add(obj);
-         std::cout << "Adding object.\n";
+         std::cout << "Adding object " << obj->id << ".\n";
       } else {
          std::cout << "NULL OBJECT!\n";
       }
    } else {
-      //std::cout << "Item found.\n";
+      obj->load(ent);
    }
    //std::cout << "ID: " << id << std::endl;
    return obj;
