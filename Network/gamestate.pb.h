@@ -587,6 +587,20 @@ class Entity : public ::google::protobuf::Message {
   inline float timesinceexploded() const;
   inline void set_timesinceexploded(float value);
   
+  // optional bool energyHit = 68;
+  inline bool has_energyhit() const;
+  inline void clear_energyhit();
+  static const int kEnergyHitFieldNumber = 68;
+  inline bool energyhit() const;
+  inline void set_energyhit(bool value);
+  
+  // optional float timeLastHitByEnergy = 69;
+  inline bool has_timelasthitbyenergy() const;
+  inline void clear_timelasthitbyenergy();
+  static const int kTimeLastHitByEnergyFieldNumber = 69;
+  inline float timelasthitbyenergy() const;
+  inline void set_timelasthitbyenergy(float value);
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -693,6 +707,10 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_damagepersecond();
   inline void set_has_timesinceexploded();
   inline void clear_has_timesinceexploded();
+  inline void set_has_energyhit();
+  inline void clear_has_energyhit();
+  inline void set_has_timelasthitbyenergy();
+  inline void clear_has_timelasthitbyenergy();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -749,9 +767,11 @@ class Entity : public ::google::protobuf::Message {
   float chargetime_;
   float damagepersecond_;
   float timesinceexploded_;
+  bool energyhit_;
+  float timelasthitbyenergy_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(53 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(55 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -3303,6 +3323,50 @@ inline float Entity::timesinceexploded() const {
 inline void Entity::set_timesinceexploded(float value) {
   set_has_timesinceexploded();
   timesinceexploded_ = value;
+}
+
+// optional bool energyHit = 68;
+inline bool Entity::has_energyhit() const {
+  return (_has_bits_[1] & 0x00200000u) != 0;
+}
+inline void Entity::set_has_energyhit() {
+  _has_bits_[1] |= 0x00200000u;
+}
+inline void Entity::clear_has_energyhit() {
+  _has_bits_[1] &= ~0x00200000u;
+}
+inline void Entity::clear_energyhit() {
+  energyhit_ = false;
+  clear_has_energyhit();
+}
+inline bool Entity::energyhit() const {
+  return energyhit_;
+}
+inline void Entity::set_energyhit(bool value) {
+  set_has_energyhit();
+  energyhit_ = value;
+}
+
+// optional float timeLastHitByEnergy = 69;
+inline bool Entity::has_timelasthitbyenergy() const {
+  return (_has_bits_[1] & 0x00400000u) != 0;
+}
+inline void Entity::set_has_timelasthitbyenergy() {
+  _has_bits_[1] |= 0x00400000u;
+}
+inline void Entity::clear_has_timelasthitbyenergy() {
+  _has_bits_[1] &= ~0x00400000u;
+}
+inline void Entity::clear_timelasthitbyenergy() {
+  timelasthitbyenergy_ = 0;
+  clear_has_timelasthitbyenergy();
+}
+inline float Entity::timelasthitbyenergy() const {
+  return timelasthitbyenergy_;
+}
+inline void Entity::set_timelasthitbyenergy(float value) {
+  set_has_timelasthitbyenergy();
+  timelasthitbyenergy_ = value;
 }
 
 // -------------------------------------------------------------------

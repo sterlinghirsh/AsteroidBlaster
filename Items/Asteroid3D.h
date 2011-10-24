@@ -35,8 +35,6 @@ class Asteroid3D : public Object3D {
       double timeLastHitByEnergy;
       double damagePerSecond;
 
-      bool isExploding; // TODO: Is this used?
-      double timeSinceExplode;
       double rotationSpeedChange;
       
       // Make this an id.
@@ -69,9 +67,6 @@ class Asteroid3D : public Object3D {
       void newRandomPosition();
       void drawInMinimap();
       void debug();
-      
-      void serialize(std::ostream &os);
-      void deserialize(std::istream &is);   
       
       virtual void save(ast::Entity* ent);
       virtual void load(const ast::Entity& ent);

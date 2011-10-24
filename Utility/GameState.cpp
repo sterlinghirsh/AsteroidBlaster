@@ -273,14 +273,6 @@ void GameState::update(double timeDiff) {
 
    if (gsm == ServerMode) {
       serverSide->receive();
-      // Send the gamestate to everyone.
-      unsigned gameStateId = storeFullGameState();
-
-      ast::Frame frame;
-      frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
-      frame.set_timestamp(getGameTime());
-      serverSide->send(frame, false);
-      //serverSide->send(clientCommandString, clientCommandString.length(), false);
    } else if (gsm == ClientMode) {
       clientSide->receive();
       clientSide->send(clientCommand, false);
@@ -370,6 +362,17 @@ void GameState::update(double timeDiff) {
 
       spring->update(timeDiff);
       minimap->update(timeDiff);
+   }
+
+   if (gsm == ServerMode) {
+      // Send the gamestate to everyone.
+      unsigned gameStateId = storeFullGameState();
+
+      ast::Frame frame;
+      frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
+      frame.set_timestamp(getGameTime());
+      serverSide->send(frame, false);
+      //serverSide->send(clientCommandString, clientCommandString.length(), false);
    }
 
    updateText();

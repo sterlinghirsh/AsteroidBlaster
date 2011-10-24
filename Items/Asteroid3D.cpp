@@ -51,12 +51,13 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState
 
       mesh.drawAnim = isFirst;
 
-      isExploding = false;
-
       lastHitShotOwner = NULL;
 
       health = initH;
-      newRandomPosition();
+
+      if (gameState->gsm != ClientMode) {
+         newRandomPosition();
+      }
       InitAsteroid(r, worldSizeIn);
       newVelocity = new Vector3D();
       newAcceleration = new Vector3D();
@@ -394,10 +395,6 @@ void Asteroid3D::drawEnergyEffect() {
 void Asteroid3D::update(double timeDiff) {
    double maxAsteroidSpeed = std::min(gameState->curLevel * 10, 60);
 
-   if (isExploding) {
-      timeSinceExplode += timeDiff;
-   }
-
    /* Apply the rotationSpeedChange that we wanted to this asteroid,
     * but never make the rotationSpeed beneath 0.
     */
@@ -405,27 +402,31 @@ void Asteroid3D::update(double timeDiff) {
    rotationSpeedChange = 0;
    
    Object3D::update(timeDiff);
-   mesh.tick(timeDiff);
-   if (velocity->getComparisonLength() > maxAsteroidSpeed * maxAsteroidSpeed) {
-      // Set a speed limit of 60 u/s.
-      velocity->setLength(maxAsteroidSpeed);
-   }
-   
-   if (energyHitAsteroid) {
-      if (gameState->getGameTime() - timeLastHitByEnergy > 5) {
-         energyHitAsteroid = false;
-         velocity->updateMagnitude(newVelocity);
-         acceleration->updateMagnitude(newAcceleration);         
-         damagePerSecond = 0;
-      }
 
-      const double rotationSpeedIncreasePerSecond = 20 * damagePerSecond; // deg/sec
-      rotationSpeed += timeDiff * rotationSpeedIncreasePerSecond;
-      
-      health -= timeDiff * damagePerSecond;
-   }
+   mesh.tick(timeDiff);
    
-   if (health <= 0 && !isExploding && gameState->gsm != ClientMode) {
+   if (gameState->gsm != ClientMode) {
+      if (velocity->getComparisonLength() > maxAsteroidSpeed * maxAsteroidSpeed) {
+         // Set a speed limit of 60 u/s.
+         velocity->setLength(maxAsteroidSpeed);
+      }
+      
+      if (energyHitAsteroid) {
+         if (gameState->getGameTime() - timeLastHitByEnergy > 5) {
+            energyHitAsteroid = false;
+            velocity->updateMagnitude(newVelocity);
+            acceleration->updateMagnitude(newAcceleration);         
+            damagePerSecond = 0;
+         }
+
+         const double rotationSpeedIncreasePerSecond = 20 * damagePerSecond; // deg/sec
+         rotationSpeed += timeDiff * rotationSpeedIncreasePerSecond;
+         
+         health -= timeDiff * damagePerSecond;
+      }
+   }
+      
+   if (health <= 0) {
       // Get the modelview matrix.
       Matrix4 modelView;
       glPushMatrix();
@@ -502,20 +503,20 @@ void Asteroid3D::update(double timeDiff) {
 
       SoundEffect::playSoundEffect("Explosion1.wav", position, velocity);
       shouldRemove = true;
-      //timeSinceExplode = 0.0;
-      isExploding = true;
       
-      if (radius > 2) {
-         int dimension = rand() % 3;
-         custodian->add(makeChild(0, dimension));
-         custodian->add(makeChild(1, dimension));
+      if (gameState->gsm != ClientMode) {
+         if (radius > 2) {
+            int dimension = rand() % 3;
+            custodian->add(makeChild(0, dimension));
+            custodian->add(makeChild(1, dimension));
+         }
+         // TODO: Replace this with custodian[lastHitShotOwnerId];
+         if (lastHitShotOwner != NULL) {
+            lastHitShotOwner->score += (int) radius * 10;
+         }
+
+         dropRandomItem();
       }
-      if (lastHitShotOwner != NULL) {
-         lastHitShotOwner->score += (int) radius * 10;
-      }
-      dropRandomItem();
-   } else if (health <= 0 && !isExploding && gameState->gsm == ClientMode) {
-      shouldRemove = true;
    }
 }
 
@@ -590,24 +591,28 @@ void Asteroid3D::dropRandomItem() {
    }
 }
 
-void Asteroid3D::serialize(std::ostream &oss) {
-   oss << "Ast|" << radius;
-}
-
-void Asteroid3D::deserialize(std::istream &iss) {
-   iss >> radius;
-}
-
 void Asteroid3D::save(ast::Entity* ent) {
    Object3D::save(ent);
    ent->set_radius(radius);
    ent->set_health(health);
    ent->set_healthmax(initH);
+   ent->set_energyhit(energyHitAsteroid);
+   ent->set_timelasthitbyenergy(timeLastHitByEnergy);
+   ent->set_damagepersecond(damagePerSecond);
 }
 
 void Asteroid3D::load(const ast::Entity& ent) {
    Object3D::load(ent);
-   radius = ent.radius();
-   health = ent.health();
-   initH = ent.healthmax();
+   if (ent.has_radius())
+      radius = ent.radius();
+   if (ent.has_health())
+      health = ent.health();
+   if (ent.has_healthmax())
+      initH = ent.healthmax();
+   if (ent.has_energyhit())
+      energyHitAsteroid = ent.energyhit();
+   if (ent.has_timelasthitbyenergy())
+      timeLastHitByEnergy = ent.timelasthitbyenergy();
+   if (ent.has_damagepersecond())
+      damagePerSecond = ent.damagepersecond();
 }

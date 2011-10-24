@@ -83,6 +83,11 @@ message Entity {
 
    // Timed Bomb Shot
    optional float timeSinceExploded = 67;
+
+   // Asteroid again
+   // Is the asteroid under the effects of the energy gun?
+   optional bool energyHit = 68;
+   optional float timeLastHitByEnergy = 69;
 }
 
 message Weapon {
