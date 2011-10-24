@@ -277,6 +277,25 @@ std::string Object3D::serialize() {
    return "Object3D\n";
 }
 
+bool Object3D::saveDiff(const ast::Entity& old, ast::Entity* ent) {
+   bool somethingChanged = false;
+   
+   // We always set the id. If nothing changed, we'll just remove the ent later.
+   // But we can't tell if something has really changed from this function,
+   // since a subclass's saveDiff might change something.
+   ent->set_id(id);
+
+   // The type never changes, don't don't send that again.
+
+   if (!position->saveDiff(old.position(), ent->mutable_position()))
+      ent->clear_position();
+
+   if (!velocity->saveDiff(old.velocity(), ent->mutable_velocity()))
+      ent->clear_velocity();
+
+   return somethingChanged;
+}
+
 void Object3D::save(ast::Entity* ent) {
    ent->set_id(id);
    ent->set_type(type);

@@ -177,7 +177,7 @@ void MainMenu::mouseDown(int button) {
    } else if(loadGameText->mouseSelect(x,y)) {
       gameDeactivate(true);
    } else if(saveGameText->mouseSelect(x,y)) {
-      mainGameState->save();
+      mainGameState->saveToDisk();
    } else if(helpText->mouseSelect(x,y)) {
       menuActive = false;
       helpMenu->menuActive = true;

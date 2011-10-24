@@ -71,8 +71,14 @@ void ServerSide::receive() {
             cout << "Adding ship with clientid " << client->connectID << 
                " and id " << shipid << "." << endl;
 
+            // Make sure the new ship is there.
+            gameState->custodian.update();
+            gameState->storeFullGameState();
+
             ast::Frame frame;
             frame.set_shipid(shipid);
+            ast::GameState* gs = gameState->getLastSavedGameState();
+            frame.mutable_gamestate()->CopyFrom(*gs);
             send(frame, true);
          }
 

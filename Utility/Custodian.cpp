@@ -1220,9 +1220,9 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
          std::cout << "NULL OBJECT!\n";
       }
    } else {
-      std::cout << "Item found.\n";
+      //std::cout << "Item found.\n";
    }
-   std::cout << "ID: " << id << std::endl;
+   //std::cout << "ID: " << id << std::endl;
    return obj;
 }
 

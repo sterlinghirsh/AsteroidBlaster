@@ -112,29 +112,53 @@ double Timer::getCurTime() {
 void Timer::load(const ast::Timer& t) {
    if (t.has_timestarted()) {
       timeStarted = t.timestarted();
-      std::cout << " setting timestarted to " << timeStarted <<"\n";
    }
 
    if (t.has_countdowntime()) {
       countDownTime = t.countdowntime();
-      std::cout << " setting countdowntime to " << countDownTime <<"\n";
    }
 
    if (t.has_timepaused()) {
       timePaused = t.timepaused();
-      std::cout << " setting time paused to " << timePaused <<"\n";
    }
 
    if (t.has_ispaused()) {
       isPaused = t.ispaused();
-      std::cout << " setting is paused to " << isPaused <<"\n";
    }
 
    if (t.has_isrunning()) {
       isRunning = t.isrunning();
-      std::cout << " setting is running to " << isRunning <<"\n";
    }
-   std::cout << "Loaded ";
+}
+
+bool Timer::saveDiff(const ast::Timer& old, ast::Timer* t) {
+   bool somethingChanged = false;
+   if (old.timestarted() != timeStarted) {
+      somethingChanged = true;
+      t->set_timestarted(timeStarted);
+   }
+
+   if (old.countdowntime() != countDownTime) {
+      somethingChanged = true;
+      t->set_countdowntime(countDownTime);
+   }
+
+   if (old.timepaused() != timePaused) {
+      somethingChanged = true;
+      t->set_timepaused(timePaused);
+   }
+
+   if (old.ispaused() != isPaused) {
+      somethingChanged = true;
+      t->set_ispaused(isPaused);
+   }
+
+   if (old.isrunning() != isRunning) {
+      somethingChanged = true;
+      t->set_isrunning(isRunning);
+   }
+
+   return somethingChanged;
 }
 
 void Timer::save(ast::Timer* t) {
@@ -143,7 +167,6 @@ void Timer::save(ast::Timer* t) {
    t->set_timepaused(timePaused);
    t->set_ispaused(isPaused);
    t->set_isrunning(isRunning);
-   std::cout << "Saved ";
 }
 
 void Timer::debug() {

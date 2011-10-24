@@ -62,10 +62,16 @@ GameState::GameState(GameStateMode _gsm) :
    custodian(this),
    levelTimer(this),
    gameOverTimer(this) {
+      curGameStateId = 0;
+      lastReceivedGameStateId = 0;
+
       clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
       gsm = _gsm;
       serverSide = NULL;
       clientSide = NULL;
+
+      shipCamera = NULL;
+      minimap = NULL;
 
       if (gsm == SingleMode) {
       } else if (gsm == MenuMode) {
@@ -96,14 +102,9 @@ GameState::GameState(GameStateMode _gsm) :
       worldSize = WORLD_SIZE;
       skybox = new Skybox();
 
-      ship = new AsteroidShip(this);
-      clientCommand.set_shipid(ship->id);
-
       spring = new Spring(this);
-      minimap = new Minimap(ship);
+      setShip(new AsteroidShip(this));
 
-      shipCamera = new Camera(ship);
-      spring->attach(ship, shipCamera);
       spectatorCamera = new Camera(false);
       //make it look at the center of the map for spectator mode
       spectatorCamera->lookAt(0.0, 0.0, 0.0);
@@ -150,22 +151,23 @@ GameState::GameState(GameStateMode _gsm) :
       healthBar->setHorizontal(true);
       healthBar->setSkew(0.0, 0.05f);
       healthBar->setCentered(true);
-      //weaponBar = new WeaponDisplay(healthHeight * 1.5f, 1.0f, 0.0f, -0.9f + (healthHeight * 0.5f), this);
+      
       weaponBar = new WeaponDisplay(weaponBarHeight, weaponBarHeight, 0.0f, -0.9f + (weaponBarHeight * 0.5f), this);
-      //healthBar->setIcon("ShieldIcon");
 
       // Start off at level 1.
       curLevel = 1;
+     
       // Spawn one more asteroid for each level, to a point..
       numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
 
-      if (gsm != ClientMode && gsm != ServerMode) {
+      if (gsm == ClientMode || gsm == ServerMode) {
+         custodian.update();
+      } else {
+         // For single / menu.
          // Set up objects.
          custodian.add(ship);
          // It crashes without this. :/
          initAsteroids();
-      } else {
-         custodian.update();
       }
 
 
@@ -271,6 +273,13 @@ void GameState::update(double timeDiff) {
 
    if (gsm == ServerMode) {
       serverSide->receive();
+      // Send the gamestate to everyone.
+      unsigned gameStateId = storeFullGameState();
+
+      ast::Frame frame;
+      frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
+      frame.set_timestamp(getGameTime());
+      serverSide->send(frame, false);
       //serverSide->send(clientCommandString, clientCommandString.length(), false);
    } else if (gsm == ClientMode) {
       clientSide->receive();
@@ -318,8 +327,8 @@ void GameState::update(double timeDiff) {
    // Keep items in the box.
    // cube->constrain(ship); why did we do this twice?
 
-   if (!ship->flyingAI->isEnabled() && !ship->shooter->isEnabled() && 
-    (gsm == SingleMode || gsm == ClientMode)) {
+   if ((gsm == SingleMode || gsm == ClientMode)
+    && !ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
       ship->readCommand(clientCommand);
    }
 
@@ -353,17 +362,21 @@ void GameState::update(double timeDiff) {
       // TODO: fix memory leak.
    }
 
-   SoundEffect::updatePositions(shipCamera->position,
-    ship->velocity, shipCamera->forward, shipCamera->up);
+   if (gsm == SingleMode || gsm == ClientMode) {
+      SoundEffect::updatePositions(shipCamera->position,
+       ship->velocity, shipCamera->forward, shipCamera->up);
+   }
 
    // Update all of the text seen on screen.
-   updateText();
 
-   shardBankBar->setAmount(ship->bankTimer.isRunning ? ship->bankTimer.getAmountComplete() : 0);
-   healthBar->setAmount(((float) ship->health / (float) ship->healthMax));
+   if (gsm == SingleMode || gsm == ClientMode) {
+      shardBankBar->setAmount(ship->bankTimer.isRunning ? ship->bankTimer.getAmountComplete() : 0);
+      healthBar->setAmount(((float) ship->health / (float) ship->healthMax));
+      spring->update(timeDiff);
+      minimap->update(timeDiff);
+   }
+   updateText();
    cube->update(timeDiff);
-   minimap->update(timeDiff);
-   spring->update(timeDiff);
    spectatorCameraUpdate(timeDiff);
    ++curFrame;
 }
@@ -505,6 +518,7 @@ void GameState::drawObjects() {
    // This decides where the camera is, either ship or spectator camera.
    Camera *currentCamera;
    if (usingShipCamera && gsm != ServerMode) {
+      //DEBUG
       currentCamera = shipCamera;
       shipCamera->setViewVector(ship->getViewVector());
       shipCamera->setOffset(*ship->getCameraOffset());
@@ -515,6 +529,9 @@ void GameState::drawObjects() {
    // If this gameState is not mainGamestate menu, set the camera and shake.
    if (gsm != MenuMode) {
       currentCamera->setCamera(true);
+   }
+
+   if (gsm != ServerMode) {
       shipCamera->shake(ship->getShakeAmount());
    }
 
@@ -541,9 +558,6 @@ void GameState::drawObjects() {
       cube->draw();
    }
 
-   // Get a list of all of the objects after culling them down to the view frustum.
-   viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
-
    glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
    if ((gsm != MenuMode) && usingShipCamera && gsm != ServerMode) {
       if (gameSettings->drawDeferred) {
@@ -558,6 +572,13 @@ void GameState::drawObjects() {
          glUseProgram(0);
       }
       //fboEnd();
+   }
+
+   // Get a list of all of the objects after culling them down to the view frustum.
+   if (gsm == ClientMode || gsm == SingleMode) {
+      viewFrustumObjects = ship->getRadar()->getViewFrustumReading();
+   } else {
+      viewFrustumObjects = getGenericViewFrustumReading(&custodian, spectatorCamera);
    }
 
    for (listIter = viewFrustumObjects->begin(); listIter != viewFrustumObjects->end(); ++listIter) {
@@ -749,19 +770,12 @@ void GameState::drawAllText() {
  */
 void GameState::updateText() {
    FPSText->updateBody((int)curFPS);
-   scoreText->updateBody(ship->getScore());
-   bankedShardText->updateBody(ship->bankedShards);
-   unbankedShardText->updateBody(ship->unbankedShards);
-   lifeText->updateBody(ship->life);
-   //weaponText->updateBody(ship->getCurrentWeapon()->getName());
-   // If the gun has infinite ammo, say so.
-   /*if(ship->getCurrentWeapon()->curAmmo == -1)
-     ammoText->updateBody("Inf");
-     else {
-     sstream2 << ship->getCurrentWeapon()->curAmmo;
-     ammoText->updateBody(sstream2.str());
-     sstream2.str("");
-     }*/
+   if (gsm == ClientMode || gsm == SingleMode) {
+      scoreText->updateBody(ship->getScore());
+      bankedShardText->updateBody(ship->bankedShards);
+      unbankedShardText->updateBody(ship->unbankedShards);
+      lifeText->updateBody(ship->life);
+   }
 
    // Update the timer on screen to show the minutes & seconds remaining.
    std::string minutes;
@@ -783,7 +797,6 @@ void GameState::updateText() {
 
    sstream2.str("");
    timerText->updateBody(minutes + ":" + seconds);
-   //timerText->updateBody(seconds);
 }
 
 void GameState::initAsteroids() {
@@ -848,8 +861,12 @@ void GameState::reset(bool shouldLoad) {
    delete spectatorCamera;
    delete cube;
    delete ship;
-   delete spring;
    delete minimap;
+   shipCamera = NULL;
+   spectatorCamera = NULL;
+   cube = NULL;
+   ship = NULL;
+   minimap = NULL;
 
    custodian.clear();
    Particle::Clear();
@@ -873,33 +890,34 @@ void GameState::reset(bool shouldLoad) {
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
    //temp
    if(shouldLoad) {
-      load();
+      loadFromDisk();
       custodian.update();
    } else {
       numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
       
       std::cout << "Resetting." << std::endl;
 
-      ship = new AsteroidShip(this);
+      if (gsm != ServerMode) {
+         ship = new AsteroidShip(this);
 
 
-      if (gsm == MenuMode || gsm == SingleMode) {
-         custodian.add(ship);
-         // Crashes without this.
-         initAsteroids();
-      } else if (gsm == ServerMode) {
-         initAsteroids();
-      } else if (gsm == ClientMode) {
-         custodian.update();
+         if (gsm == MenuMode || gsm == SingleMode) {
+            custodian.add(ship);
+            // Crashes without this.
+            initAsteroids();
+         } else if (gsm == ServerMode) {
+            initAsteroids();
+         } else if (gsm == ClientMode) {
+            custodian.update();
+         }
       }
 
    }
-   clientCommand.set_shipid(ship->id);
-   spring = new Spring(this);
-   cube->constrain(ship);
-   minimap = new Minimap(ship);
-   shipCamera = new Camera(ship);
-   spring->attach(ship, shipCamera);
+   
+   if (gsm != ServerMode) {
+      setShip(ship);
+   }
+
    spectatorCamera = new Camera(false);
    curLevelText->updateBody(curLevel);
   
@@ -1046,7 +1064,7 @@ void GameState::keyDown(int key, int unicode) {
    switch(key) {
       //movement keys, not valid if flying AI is enabled
 
-      if(!ship->flyingAI->isEnabled()) {
+      if (gsm != ServerMode && !ship->flyingAI->isEnabled()) {
       case SDLK_w:
          isW = true;
          if (isS) {
@@ -1112,19 +1130,22 @@ void GameState::keyDown(int key, int unicode) {
 
 
       //Camera controls
-   case SDLK_8:
-      ship->setZoomSpeed(-1);
-      break;
-   case SDLK_9:
-      ship->setZoomSpeed(1);
-      break;
+   if (gsm != ServerMode) {
+      case SDLK_8:
+            ship->setZoomSpeed(-1);
+         break;
+      case SDLK_9:
+            ship->setZoomSpeed(1);
+         break;
 
-   case SDLK_t:
-      ship->nextView();
-      break;
-   case SDLK_y:
-      usingShipCamera = !usingShipCamera;
-      break;
+      case SDLK_t:
+            ship->nextView();
+         break;
+      case SDLK_y:
+            usingShipCamera = !usingShipCamera;
+         break;
+   }
+
    case SDLK_KP_PLUS:
       spectatorSpeed += 0.1;
       break;
@@ -1140,66 +1161,67 @@ void GameState::keyDown(int key, int unicode) {
 
 
       // AI controls
-   case SDLK_g:
-      //TODO: Based on how many shooting AIs this ship has, activate the correct one.
-      if(ship->shooter->isEnabled())
-         ship->shooter->disable();
-      else
-         ship->shooter->enable();
+   if (gsm != ServerMode) {
+      case SDLK_g:
+         //TODO: Based on how many shooting AIs this ship has, activate the correct one.
+         if(ship->shooter->isEnabled())
+            ship->shooter->disable();
+         else
+            ship->shooter->enable();
+         break;
 
-      break;
-
-   case SDLK_f:
-      // When you disable the flyingAI, stop accelerating the ship.
-      if(ship->flyingAI->isEnabled()) {
-         ship->flyingAI->disable();
-         resetClientCommand();
-      } else {
-         // Stop accelerating the ship when turning on the flyingAI as well.
-         resetClientCommand();
-         ship->flyingAI->enable();
-      }
-      break;
+      case SDLK_f:
+         // When you disable the flyingAI, stop accelerating the ship.
+         if(ship->flyingAI->isEnabled()) {
+            ship->flyingAI->disable();
+            resetClientCommand();
+         } else {
+            // Stop accelerating the ship when turning on the flyingAI as well.
+            resetClientCommand();
+            ship->flyingAI->enable();
+         }
+         break;
 
 
-      //switch weapons
-   case SDLK_v:
-      // Keep scrolling through weapons as long as they're not purchased.
-      clientCommand.set_curweapon(ship->getPrevWeaponID());
-      break;
+         //switch weapons
+      case SDLK_v:
+         // Keep scrolling through weapons as long as they're not purchased.
+         clientCommand.set_curweapon(ship->getPrevWeaponID());
+         break;
 
-   case SDLK_z:
-      // Keep scrolling through weapons as long as they're not purchased.
-      clientCommand.set_curweapon(ship->getNextWeaponID());
-      break;
+      case SDLK_z:
+         // Keep scrolling through weapons as long as they're not purchased.
+         clientCommand.set_curweapon(ship->getNextWeaponID());
+         break;
 
-      // Enable chat.
-   case SDLK_j:
-      chat->activate();
-      break;
+         // Enable chat.
+      case SDLK_j:
+         chat->activate();
+         break;
 
-      // Minimap Display Size
-   case SDLK_1:
-      minimap->adjustDisplaySizeDirection = 1;
-      break;
-   case SDLK_2:
-      minimap->adjustDisplaySizeDirection = -1;
-      break;
-   case SDLK_0:
-      minimap->toggle();
-      break;
-      // Minimap Zoom
-   case SDLK_3:
-      minimap->disableAutoZoom();
-      minimap->adjustZoomDirection = 1;
-      break;
-   case SDLK_4:
-      minimap->disableAutoZoom();
-      minimap->adjustZoomDirection = -1;
-      break;
-   case SDLK_5:
-      minimap->toggleAutoZoom();
-      break;
+         // Minimap Display Size
+      case SDLK_1:
+         minimap->adjustDisplaySizeDirection = 1;
+         break;
+      case SDLK_2:
+         minimap->adjustDisplaySizeDirection = -1;
+         break;
+      case SDLK_0:
+         minimap->toggle();
+         break;
+         // Minimap Zoom
+      case SDLK_3:
+         minimap->disableAutoZoom();
+         minimap->adjustZoomDirection = 1;
+         break;
+      case SDLK_4:
+         minimap->disableAutoZoom();
+         minimap->adjustZoomDirection = -1;
+         break;
+      case SDLK_5:
+         minimap->toggleAutoZoom();
+         break;
+   }
 
 
       // Audio and Video settings
@@ -1243,17 +1265,19 @@ void GameState::keyDown(int key, int unicode) {
       break;
 
    case SDLK_F10:
-      ship->unbankedShards += 10;
+      if (gsm != ServerMode)
+         ship->unbankedShards += 10;
       break;
       // If the user presses F11, give them all of the weapons.
    case SDLK_F11:
       // Make all of the weapons be purchased.
-      for (int i = 0; i < ship->getNumWeapons(); i++) {
-         ship->getWeapon(i)->purchased = true;
-         if(ship->getWeapon(i)->curAmmo != -1) {
-            ship->getWeapon(i)->curAmmo += 500;
+      if (gsm != ServerMode)
+         for (int i = 0; i < ship->getNumWeapons(); i++) {
+            ship->getWeapon(i)->purchased = true;
+            if(ship->getWeapon(i)->curAmmo != -1) {
+               ship->getWeapon(i)->curAmmo += 500;
+            }
          }
-      }
       break;
       // Enables God Mode
    case SDLK_F12:
@@ -1273,7 +1297,7 @@ void GameState::keyUp(int key) {
    switch(key) {
    case SDLK_s:
       isS = false;
-      if(!ship->flyingAI->isEnabled()) {
+      if(gsm != ServerMode && !ship->flyingAI->isEnabled()) {
          if (isW) {
             clientCommand.set_forwardacceleration(1);
          } else {
@@ -1284,7 +1308,7 @@ void GameState::keyUp(int key) {
 
    case SDLK_w:
       isW = false;
-      if(!ship->flyingAI->isEnabled()) {
+      if(gsm != ServerMode && !ship->flyingAI->isEnabled()) {
          if (isS) {
             clientCommand.set_forwardacceleration(-1);
          } else {
@@ -1295,7 +1319,7 @@ void GameState::keyUp(int key) {
 
    case SDLK_a:
       isA = false;
-      if(!ship->flyingAI->isEnabled()) {
+      if(gsm!= ServerMode && !ship->flyingAI->isEnabled()) {
          if (isD) {
             clientCommand.set_yawspeed(-1.0);
          } else {
@@ -1306,7 +1330,7 @@ void GameState::keyUp(int key) {
 
    case SDLK_d:
       isD = false;
-      if(!ship->flyingAI->isEnabled()) {
+      if(gsm != ServerMode && !ship->flyingAI->isEnabled()) {
          if (isA) {
             clientCommand.set_yawspeed(1.0);
          } else {
@@ -1317,13 +1341,13 @@ void GameState::keyUp(int key) {
 
    case SDLK_q:
    case SDLK_e:
-      if(!ship->flyingAI->isEnabled())
+      if(gsm != ServerMode && !ship->flyingAI->isEnabled())
          clientCommand.set_rightacceleration(0);
       break;
 
    case SDLK_SPACE:
    case SDLK_LCTRL:
-      if(!ship->flyingAI->isEnabled())
+      if(gsm != ServerMode && !ship->flyingAI->isEnabled())
          clientCommand.set_upacceleration(0);
       break;
 
@@ -1333,23 +1357,28 @@ void GameState::keyUp(int key) {
       break;
       // Minimap Size
    case SDLK_1:
-      minimap->adjustDisplaySizeDirection = 0;
+      if (gsm != ServerMode)
+         minimap->adjustDisplaySizeDirection = 0;
       break;
    case SDLK_2:
-      minimap->adjustDisplaySizeDirection = 0;
+      if (gsm != ServerMode)
+         minimap->adjustDisplaySizeDirection = 0;
       break;
       // Minimap Zoom
    case SDLK_3:
-      minimap->adjustZoomDirection = 0;
+      if (gsm != ServerMode)
+         minimap->adjustZoomDirection = 0;
       break;
    case SDLK_4:
-      minimap->adjustZoomDirection = 0;
+      if (gsm != ServerMode)
+         minimap->adjustZoomDirection = 0;
       break;
 
       // Camera
    case SDLK_8:
    case SDLK_9:
-      ship->setZoomSpeed(0);
+      if (gsm != ServerMode)
+         ship->setZoomSpeed(0);
       break;
    }
 }
@@ -1425,14 +1454,16 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    shipControlX = clamp(shipControlX * fabs(shipControlX * shipControlX), -1, 1);
    shipControlY = clamp(-shipControlY * fabs(shipControlY * shipControlY), -1, 1);
 
-   if(!ship->flyingAI->isEnabled()) {
-      if (doYaw) {
-         clientCommand.set_yawspeed(-shipControlX);
-      } else {
-         clientCommand.set_rollspeed(shipControlX);
-      }
+   if (gsm != ServerMode) {
+      if(!ship->flyingAI->isEnabled()) {
+         if (doYaw) {
+            clientCommand.set_yawspeed(-shipControlX);
+         } else {
+            clientCommand.set_rollspeed(shipControlX);
+         }
 
-      clientCommand.set_pitchspeed(shipControlY);
+         clientCommand.set_pitchspeed(shipControlY);
+      }
    }
 }
 
@@ -1490,15 +1521,104 @@ void GameState::debugPosition() {
 
 }
 
-void GameState::save() {
-   ast::GameState gs; // The outgoing protobuf gamestate.
-   // TODO: Make the typeids be sequential and do 1 << type when hashing for collisions.
-   std::ofstream ofs(SAVEFILENAME);
+/**
+ * This is going to be a lot like the save() function, but we pass in
+ * a complete gameState and get back a diffed gamestate.
+ * The load() function will handle a diff no problem, as long as it already has
+ * an existing gamestate in memory.
+ * We're going to overwrite the gamestate we were passed in.
+ */
+void GameState::saveDiff(const ast::GameState& oldState, ast::GameState* newState) {
+   newState->set_gametime(getGameTime()); // Always changes.
+
+   if (gsm == SingleMode) {
+      // We probably won't use ship->id when running a server.
+      if (oldState.playership() != ship->id)
+         newState->set_playership(ship->id);
+   }
+
+   if (oldState.curlevel() == curLevel)
+      newState->set_curlevel(curLevel);
    
-   gs.set_gametime(getGameTime());
-   gs.set_playership(ship->id);
-   levelTimer.save(gs.mutable_leveltimer());
-   gs.set_curlevel(curLevel);
+   // This means if the leveltimer hasn't changed, clear it.
+   // Sucks that we have to allocate then deallocate, but I can't think of a better way.
+   if (!levelTimer.saveDiff(oldState.leveltimer(), newState->mutable_leveltimer())) {
+      newState->clear_leveltimer();
+   }
+
+   const std::map<unsigned, Object3D*>& objects = custodian.getObjectsByID();
+   std::map<unsigned, Object3D*>::const_iterator iter = objects.begin();
+   const ast::Entity* oldEnt;
+   ast::Entity* newEnt;
+   Object3D* obj = NULL;
+
+   unsigned curOldId = 0;
+
+   // We have to iterate through all current objects and all objects in oldState
+   // at the same time to update the right ones.
+   // We take advantage of the fact that both lists are sorted by id.
+   for (; iter != objects.end(); ++iter) {
+      oldEnt = NULL;
+      newEnt = newState->add_entity();
+      obj = (*iter).second;
+
+      while (curOldId < oldState.entity_size()) {
+         oldEnt = &oldState.entity(curOldId);
+         if (oldEnt->id() < obj->id) {
+            // We must have removed this object.
+            ++curOldId;
+            // Reset pointer just in case.
+            oldEnt = NULL;
+            continue;
+         }
+
+         if (oldEnt->id() == obj->id) {
+            // This is the object we care about.
+            ++curOldId;
+            break;
+         }
+
+         if (oldEnt->id() > obj->id) {
+            // We've gone too far!
+            // We we should be able to add an object that we haven't already seen.
+            // Kind of a weird error message, but it's unique.
+            std::cerr << "Found serialized object with id > next real object." << std::endl;
+            exit(EXIT_FAILURE);
+            oldEnt = NULL;
+            break;
+         }
+      }
+
+      if (oldEnt == NULL)
+         obj->save(newEnt);
+      else if (!obj->saveDiff(*oldEnt, newEnt)) {
+         newState->mutable_entity()->RemoveLast();
+      }
+   }
+}
+
+void GameState::saveToDisk() {
+   ast::GameState gs;
+   std::ofstream ofs(SAVEFILENAME);
+   save(&gs);
+
+   if (!gs.SerializeToOstream(&ofs)) {
+      std::cerr << "Failed to write gameState." << std::endl;
+   }
+
+   std::cout << "Saved GameState" << std::endl;
+}
+
+void GameState::save(ast::GameState* gs) {
+   // TODO: Make the typeids be sequential and do 1 << type when hashing for collisions.
+   if (gsm == SingleMode) {
+      gs->set_playership(ship->id);
+   }
+   
+   gs->set_gametime(getGameTime());
+   gs->set_curlevel(curLevel);
+   gs->set_id(curGameStateId);
+   levelTimer.save(gs->mutable_leveltimer());
    
    const std::map<unsigned, Object3D*>& objects = custodian.getObjectsByID();
    std::map<unsigned, Object3D*>::const_iterator iter = objects.begin();
@@ -1508,19 +1628,13 @@ void GameState::save() {
 
    for (; iter != objects.end(); ++iter) {
       obj = (*iter).second;
-      ent = gs.add_entity();
+      ent = gs->add_entity();
       obj->save(ent);
-      std::cout << "ID: " << ent->id() << " Type: " << ent->type() << std::endl;
+      //std::cout << "ID: " << ent->id() << " Type: " << ent->type() << std::endl;
    }
-
-   if (!gs.SerializeToOstream(&ofs)) {
-      std::cerr << "Failed to write gameState." << std::endl;
-   }
-
-   std::cout << "Saved GameState" << std::endl;
 }
 
-void GameState::load() {
+void GameState::loadFromDisk() {
    ast::GameState gs; // The incoming protobuf gamestate.
    std::ifstream ifs(SAVEFILENAME);
 
@@ -1530,6 +1644,13 @@ void GameState::load() {
       std::cerr << "Failed to read gameState." << std::endl;
    }
 
+   load(gs);
+   
+   ifs.close();
+   std::cout << "Loaded GameState" << std::endl;
+}
+
+void GameState::load(const ast::GameState& gs) {
    gameTime = gs.gametime();
 
    if (gs.has_leveltimer())
@@ -1541,20 +1662,19 @@ void GameState::load() {
    for (int i = 0; i < gs.entity_size(); ++i) {
       const ast::Entity& ent = gs.entity(i);
       custodian.updateObjectFromEntity(ent);
-      std::cout << "ID: " << ent.id() << " Type: " << ent.type() << std::endl;
+      //std::cout << "ID: " << ent.id() << " Type: " << ent.type() << std::endl;
    }
 
-   std::cout << "Playership id: " << gs.playership() << std::endl;
-   AsteroidShip* tmpShip = dynamic_cast<AsteroidShip*>(custodian[gs.playership()]);
-   if (tmpShip == NULL) {
-      std::cerr << "ERROR no ship found!" << std::endl;
-      exit(EXIT_FAILURE);
-   } else {
-      ship = tmpShip;
+   if (gs.has_playership()) {
+      std::cout << "Playership id: " << gs.playership() << std::endl;
+      AsteroidShip* tmpShip = dynamic_cast<AsteroidShip*>(custodian[gs.playership()]);
+      if (tmpShip == NULL) {
+         std::cerr << "ERROR no ship found!" << std::endl;
+         exit(EXIT_FAILURE);
+      } else {
+         ship = tmpShip;
+      }
    }
-
-   ifs.close();
-   std::cout << "Loaded GameState" << std::endl;
 }
 
 void GameState::testFunction() {
@@ -1595,6 +1715,8 @@ void GameState::connect(char* addr) {
       exit(EXIT_FAILURE);
    }
 
+   reset();
+
    clientSide->connect(addr);
 }
 
@@ -1619,8 +1741,76 @@ void GameState::handleCommand(const ast::ClientCommand& command) {
  * This is executed client side when a new frame comes in.
  */
 void GameState::handleFrame(const ast::Frame& frame) {
-   if (frame.has_shipid()) {
-      std::cout << "Found shipid. Setting it to " << frame.shipid() << "." << std::endl;
-      clientCommand.set_shipid(frame.shipid());
+
+   if (frame.has_gamestate()) {
+      if (frame.gamestate().id() > lastReceivedGameStateId ||
+       lastReceivedGameStateId == 0) {
+         load(frame.gamestate());
+         custodian.update();
+         lastReceivedGameStateId = frame.gamestate().id();
+         clientCommand.set_lastreceivedgamestateid(lastReceivedGameStateId);
+      }
+      
+      // TODO: Come up with a way to do this that doesn't involve resetting the ship every time.
+      
+      if (frame.has_shipid()) {
+         std::cout << "Found shipid. Setting it to " << frame.shipid() << "." << std::endl;
+         clientCommand.set_shipid(frame.shipid());
+         unsigned shipid = frame.shipid();
+         
+         AsteroidShip* tmpShip = dynamic_cast<AsteroidShip*>(custodian[shipid]);
+         if (tmpShip == NULL) {
+            std::cerr << "ERROR no ship found in handleFrame!" << std::endl;
+            exit(EXIT_FAILURE);
+         } else {
+            ship = tmpShip;
+         }
+      }
    }
+}
+
+unsigned GameState::storeFullGameState() {
+   ast::GameState* gs = new ast::GameState();
+   // Increment first.
+   curGameStateId++;
+   savedGameStates[curGameStateId] = gs;
+
+   save(gs);
+
+   return curGameStateId;
+}
+
+ast::GameState* GameState::getLastSavedGameState() {
+   if (curGameStateId == 0)
+      storeFullGameState();
+
+   return getSavedGameState(curGameStateId);
+}
+
+ast::GameState* GameState::getSavedGameState(unsigned id) {
+   std::map<unsigned, ast::GameState*>::iterator iter;
+   iter = savedGameStates.find(id);
+   if (iter == savedGameStates.end())
+      return NULL;
+   else
+      return iter->second;
+}
+
+void GameState::setShip(AsteroidShip* newShip) {
+   ship = newShip;
+   clientCommand.set_shipid(ship->id);
+
+   if (minimap != NULL) {
+      delete minimap;
+   }
+
+   minimap = new Minimap(ship);
+
+   if (shipCamera != NULL) {
+      delete shipCamera;
+   }
+
+   shipCamera = new Camera(ship);
+
+   spring->attach(ship, shipCamera);
 }

@@ -126,6 +126,7 @@ class Vector3D {
       }
 
       void save(ast::Vector* vec);
+      bool saveDiff(const ast::Vector& old, ast::Vector* vec);
       void load(const ast::Vector& vec);
 };
 

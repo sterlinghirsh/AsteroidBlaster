@@ -347,6 +347,26 @@ const Vector3D Vector3D::getNormalized() const {
    return normalized;
 }
 
+bool Vector3D::saveDiff(const ast::Vector& old, ast::Vector* vec) {
+   bool somethingChanged = false;
+   if (x != old.x()) {
+      somethingChanged = true;
+      vec->set_x(x);
+   }
+
+   if (y != old.y()) {
+      somethingChanged = true;
+      vec->set_y(y);
+   }
+
+   if (z != old.z()) {
+      somethingChanged = true;
+      vec->set_z(z);
+   }
+
+   return somethingChanged;
+}
+
 void Vector3D::save(ast::Vector* vec) {
    vec->set_x(x);
    vec->set_y(y);

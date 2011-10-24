@@ -33,6 +33,7 @@ class Timer {
       Timer(GameState* _gameState = 0); // Null default.
 
       void save(ast::Timer* t);
+      bool saveDiff(const ast::Timer& old, ast::Timer* t);
       void load(const ast::Timer& t);
 
       void setGameState(GameState* _gameState);

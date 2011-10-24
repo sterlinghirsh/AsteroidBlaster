@@ -39,19 +39,14 @@ class Radar {
       /* Same as getViewFrustumReading, but only returns targetable objects for the AI. No particles are included.
        */
       virtual std::list<Object3D*>* getTargetableViewFrustumReading();
-      
-      /**
-       * Used for distance comparison for z ordering of objects
-       */
-      static bool compareDrawables(Drawable* one, Drawable* two);
 
-      static Point3D* cameraPosition;
-      static Vector3D* viewVector;
    private:
       // The ship that owns this Radar
       AsteroidShip* owner;
       Custodian* custodian;
-      ViewFrustum* curFrustum;
 };
+
+// Thrown in here for good measure.
+std::list<Drawable*>* getGenericViewFrustumReading(Custodian* custodian, Camera* camera);
 
 #endif

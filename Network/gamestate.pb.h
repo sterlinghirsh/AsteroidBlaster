@@ -231,6 +231,42 @@ class Entity : public ::google::protobuf::Message {
   inline ::ast::Vector* mutable_velocity();
   inline ::ast::Vector* release_velocity();
   
+  // repeated .ast.Weapon weapon = 5;
+  inline int weapon_size() const;
+  inline void clear_weapon();
+  static const int kWeaponFieldNumber = 5;
+  inline const ::ast::Weapon& weapon(int index) const;
+  inline ::ast::Weapon* mutable_weapon(int index);
+  inline ::ast::Weapon* add_weapon();
+  inline const ::google::protobuf::RepeatedPtrField< ::ast::Weapon >&
+      weapon() const;
+  inline ::google::protobuf::RepeatedPtrField< ::ast::Weapon >*
+      mutable_weapon();
+  
+  // optional .ast.Vector up = 6;
+  inline bool has_up() const;
+  inline void clear_up();
+  static const int kUpFieldNumber = 6;
+  inline const ::ast::Vector& up() const;
+  inline ::ast::Vector* mutable_up();
+  inline ::ast::Vector* release_up();
+  
+  // optional .ast.Vector right = 7;
+  inline bool has_right() const;
+  inline void clear_right();
+  static const int kRightFieldNumber = 7;
+  inline const ::ast::Vector& right() const;
+  inline ::ast::Vector* mutable_right();
+  inline ::ast::Vector* release_right();
+  
+  // optional .ast.Vector forward = 8;
+  inline bool has_forward() const;
+  inline void clear_forward();
+  static const int kForwardFieldNumber = 8;
+  inline const ::ast::Vector& forward() const;
+  inline ::ast::Vector* mutable_forward();
+  inline ::ast::Vector* release_forward();
+  
   // optional float radius = 19;
   inline bool has_radius() const;
   inline void clear_radius();
@@ -260,30 +296,6 @@ class Entity : public ::google::protobuf::Message {
   inline float rotationspeed() const;
   inline void set_rotationspeed(float value);
   
-  // optional .ast.Vector up = 22;
-  inline bool has_up() const;
-  inline void clear_up();
-  static const int kUpFieldNumber = 22;
-  inline const ::ast::Vector& up() const;
-  inline ::ast::Vector* mutable_up();
-  inline ::ast::Vector* release_up();
-  
-  // optional .ast.Vector right = 23;
-  inline bool has_right() const;
-  inline void clear_right();
-  static const int kRightFieldNumber = 23;
-  inline const ::ast::Vector& right() const;
-  inline ::ast::Vector* mutable_right();
-  inline ::ast::Vector* release_right();
-  
-  // optional .ast.Vector forward = 24;
-  inline bool has_forward() const;
-  inline void clear_forward();
-  static const int kForwardFieldNumber = 24;
-  inline const ::ast::Vector& forward() const;
-  inline ::ast::Vector* mutable_forward();
-  inline ::ast::Vector* release_forward();
-  
   // optional float targetYawSpeed = 27;
   inline bool has_targetyawspeed() const;
   inline void clear_targetyawspeed();
@@ -304,18 +316,6 @@ class Entity : public ::google::protobuf::Message {
   static const int kTargetRollSpeedFieldNumber = 29;
   inline float targetrollspeed() const;
   inline void set_targetrollspeed(float value);
-  
-  // repeated .ast.Weapon weapon = 5;
-  inline int weapon_size() const;
-  inline void clear_weapon();
-  static const int kWeaponFieldNumber = 5;
-  inline const ::ast::Weapon& weapon(int index) const;
-  inline ::ast::Weapon* mutable_weapon(int index);
-  inline ::ast::Weapon* add_weapon();
-  inline const ::google::protobuf::RepeatedPtrField< ::ast::Weapon >&
-      weapon() const;
-  inline ::google::protobuf::RepeatedPtrField< ::ast::Weapon >*
-      mutable_weapon();
   
   // optional float health = 30;
   inline bool has_health() const;
@@ -597,6 +597,12 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_position();
   inline void set_has_velocity();
   inline void clear_has_velocity();
+  inline void set_has_up();
+  inline void clear_has_up();
+  inline void set_has_right();
+  inline void clear_has_right();
+  inline void set_has_forward();
+  inline void clear_has_forward();
   inline void set_has_radius();
   inline void clear_has_radius();
   inline void set_has_axis();
@@ -605,12 +611,6 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_angle();
   inline void set_has_rotationspeed();
   inline void clear_has_rotationspeed();
-  inline void set_has_up();
-  inline void clear_has_up();
-  inline void set_has_right();
-  inline void clear_has_right();
-  inline void set_has_forward();
-  inline void clear_has_forward();
   inline void set_has_targetyawspeed();
   inline void clear_has_targetyawspeed();
   inline void set_has_targetpitchspeed();
@@ -700,17 +700,17 @@ class Entity : public ::google::protobuf::Message {
   ::google::protobuf::uint32 type_;
   ::ast::Vector* position_;
   ::ast::Vector* velocity_;
+  ::google::protobuf::RepeatedPtrField< ::ast::Weapon > weapon_;
+  ::ast::Vector* up_;
+  ::ast::Vector* right_;
+  ::ast::Vector* forward_;
   ::ast::Vector* axis_;
   float radius_;
   float angle_;
-  ::ast::Vector* up_;
-  ::ast::Vector* right_;
   float rotationspeed_;
   float targetyawspeed_;
-  ::ast::Vector* forward_;
   float targetpitchspeed_;
   float targetrollspeed_;
-  ::google::protobuf::RepeatedPtrField< ::ast::Weapon > weapon_;
   float health_;
   float healthmax_;
   ::google::protobuf::int32 enginelevel_;
@@ -880,45 +880,45 @@ class Weapon : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 shotid() const;
   inline void set_shotid(::google::protobuf::int32 value);
   
-  // optional bool purchased = 16;
+  // optional bool purchased = 10;
   inline bool has_purchased() const;
   inline void clear_purchased();
-  static const int kPurchasedFieldNumber = 16;
+  static const int kPurchasedFieldNumber = 10;
   inline bool purchased() const;
   inline void set_purchased(bool value);
   
-  // optional int32 weaponPrice = 17;
+  // optional int32 weaponPrice = 11;
   inline bool has_weaponprice() const;
   inline void clear_weaponprice();
-  static const int kWeaponPriceFieldNumber = 17;
+  static const int kWeaponPriceFieldNumber = 11;
   inline ::google::protobuf::int32 weaponprice() const;
   inline void set_weaponprice(::google::protobuf::int32 value);
   
-  // optional int32 level = 18;
+  // optional int32 level = 12;
   inline bool has_level() const;
   inline void clear_level();
-  static const int kLevelFieldNumber = 18;
+  static const int kLevelFieldNumber = 12;
   inline ::google::protobuf::int32 level() const;
   inline void set_level(::google::protobuf::int32 value);
   
-  // optional float range = 19;
+  // optional float range = 13;
   inline bool has_range() const;
   inline void clear_range();
-  static const int kRangeFieldNumber = 19;
+  static const int kRangeFieldNumber = 13;
   inline float range() const;
   inline void set_range(float value);
   
-  // optional float overheatLevel = 20;
+  // optional float overheatLevel = 14;
   inline bool has_overheatlevel() const;
   inline void clear_overheatlevel();
-  static const int kOverheatLevelFieldNumber = 20;
+  static const int kOverheatLevelFieldNumber = 14;
   inline float overheatlevel() const;
   inline void set_overheatlevel(float value);
   
-  // optional float heatPerShot = 21;
+  // optional float heatPerShot = 15;
   inline bool has_heatpershot() const;
   inline void clear_heatpershot();
-  static const int kHeatPerShotFieldNumber = 21;
+  static const int kHeatPerShotFieldNumber = 15;
   inline float heatpershot() const;
   inline void set_heatpershot(float value);
   
@@ -1123,6 +1123,13 @@ class ClientCommand : public ::google::protobuf::Message {
   inline float mousey() const;
   inline void set_mousey(float value);
   
+  // optional uint32 lastReceivedGameStateId = 13;
+  inline bool has_lastreceivedgamestateid() const;
+  inline void clear_lastreceivedgamestateid();
+  static const int kLastReceivedGameStateIdFieldNumber = 13;
+  inline ::google::protobuf::uint32 lastreceivedgamestateid() const;
+  inline void set_lastreceivedgamestateid(::google::protobuf::uint32 value);
+  
   // @@protoc_insertion_point(class_scope:ast.ClientCommand)
  private:
   inline void set_has_shipid();
@@ -1149,6 +1156,8 @@ class ClientCommand : public ::google::protobuf::Message {
   inline void clear_has_mousex();
   inline void set_has_mousey();
   inline void clear_has_mousey();
+  inline void set_has_lastreceivedgamestateid();
+  inline void clear_has_lastreceivedgamestateid();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -1164,9 +1173,10 @@ class ClientCommand : public ::google::protobuf::Message {
   ::google::protobuf::uint32 curweapon_;
   float mousex_;
   float mousey_;
+  ::google::protobuf::uint32 lastreceivedgamestateid_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(13 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -1353,28 +1363,6 @@ class GameState : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // optional uint32 playerShip = 3;
-  inline bool has_playership() const;
-  inline void clear_playership();
-  static const int kPlayerShipFieldNumber = 3;
-  inline ::google::protobuf::uint32 playership() const;
-  inline void set_playership(::google::protobuf::uint32 value);
-  
-  // required double gameTime = 2;
-  inline bool has_gametime() const;
-  inline void clear_gametime();
-  static const int kGameTimeFieldNumber = 2;
-  inline double gametime() const;
-  inline void set_gametime(double value);
-  
-  // optional .ast.Timer levelTimer = 4;
-  inline bool has_leveltimer() const;
-  inline void clear_leveltimer();
-  static const int kLevelTimerFieldNumber = 4;
-  inline const ::ast::Timer& leveltimer() const;
-  inline ::ast::Timer* mutable_leveltimer();
-  inline ::ast::Timer* release_leveltimer();
-  
   // repeated .ast.Entity entity = 1;
   inline int entity_size() const;
   inline void clear_entity();
@@ -1387,6 +1375,28 @@ class GameState : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ast::Entity >*
       mutable_entity();
   
+  // required double gameTime = 2;
+  inline bool has_gametime() const;
+  inline void clear_gametime();
+  static const int kGameTimeFieldNumber = 2;
+  inline double gametime() const;
+  inline void set_gametime(double value);
+  
+  // optional uint32 playerShip = 3;
+  inline bool has_playership() const;
+  inline void clear_playership();
+  static const int kPlayerShipFieldNumber = 3;
+  inline ::google::protobuf::uint32 playership() const;
+  inline void set_playership(::google::protobuf::uint32 value);
+  
+  // optional .ast.Timer levelTimer = 4;
+  inline bool has_leveltimer() const;
+  inline void clear_leveltimer();
+  static const int kLevelTimerFieldNumber = 4;
+  inline const ::ast::Timer& leveltimer() const;
+  inline ::ast::Timer* mutable_leveltimer();
+  inline ::ast::Timer* release_leveltimer();
+  
   // optional int32 curLevel = 5;
   inline bool has_curlevel() const;
   inline void clear_curlevel();
@@ -1394,27 +1404,37 @@ class GameState : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 curlevel() const;
   inline void set_curlevel(::google::protobuf::int32 value);
   
+  // optional uint32 id = 6;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 6;
+  inline ::google::protobuf::uint32 id() const;
+  inline void set_id(::google::protobuf::uint32 value);
+  
   // @@protoc_insertion_point(class_scope:ast.GameState)
  private:
-  inline void set_has_playership();
-  inline void clear_has_playership();
   inline void set_has_gametime();
   inline void clear_has_gametime();
+  inline void set_has_playership();
+  inline void clear_has_playership();
   inline void set_has_leveltimer();
   inline void clear_has_leveltimer();
   inline void set_has_curlevel();
   inline void clear_has_curlevel();
+  inline void set_has_id();
+  inline void clear_has_id();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
+  ::google::protobuf::RepeatedPtrField< ::ast::Entity > entity_;
   double gametime_;
   ::ast::Timer* leveltimer_;
   ::google::protobuf::uint32 playership_;
   ::google::protobuf::int32 curlevel_;
-  ::google::protobuf::RepeatedPtrField< ::ast::Entity > entity_;
+  ::google::protobuf::uint32 id_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -1840,6 +1860,26 @@ class Frame : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
+  // optional .ast.CollisionMessage collision_message = 1;
+  inline bool has_collision_message() const;
+  inline void clear_collision_message();
+  static const int kCollisionMessageFieldNumber = 1;
+  inline const ::ast::CollisionMessage& collision_message() const;
+  inline ::ast::CollisionMessage* mutable_collision_message();
+  inline ::ast::CollisionMessage* release_collision_message();
+  
+  // repeated .ast.ChatMessage chatMessage = 2;
+  inline int chatmessage_size() const;
+  inline void clear_chatmessage();
+  static const int kChatMessageFieldNumber = 2;
+  inline const ::ast::ChatMessage& chatmessage(int index) const;
+  inline ::ast::ChatMessage* mutable_chatmessage(int index);
+  inline ::ast::ChatMessage* add_chatmessage();
+  inline const ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >&
+      chatmessage() const;
+  inline ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >*
+      mutable_chatmessage();
+  
   // optional uint64 seq = 3;
   inline bool has_seq() const;
   inline void clear_seq();
@@ -1861,28 +1901,17 @@ class Frame : public ::google::protobuf::Message {
   inline double timestamp() const;
   inline void set_timestamp(double value);
   
-  // optional uint32 shipid = 18;
-  inline bool has_shipid() const;
-  inline void clear_shipid();
-  static const int kShipidFieldNumber = 18;
-  inline ::google::protobuf::uint32 shipid() const;
-  inline void set_shipid(::google::protobuf::uint32 value);
-  
-  // optional .ast.GameState gameState = 17;
-  inline bool has_gamestate() const;
-  inline void clear_gamestate();
-  static const int kGameStateFieldNumber = 17;
-  inline const ::ast::GameState& gamestate() const;
-  inline ::ast::GameState* mutable_gamestate();
-  inline ::ast::GameState* release_gamestate();
-  
-  // optional .ast.CollisionMessage collision_message = 1;
-  inline bool has_collision_message() const;
-  inline void clear_collision_message();
-  static const int kCollisionMessageFieldNumber = 1;
-  inline const ::ast::CollisionMessage& collision_message() const;
-  inline ::ast::CollisionMessage* mutable_collision_message();
-  inline ::ast::CollisionMessage* release_collision_message();
+  // repeated uint32 remove_id = 6 [packed = true];
+  inline int remove_id_size() const;
+  inline void clear_remove_id();
+  static const int kRemoveIdFieldNumber = 6;
+  inline ::google::protobuf::uint32 remove_id(int index) const;
+  inline void set_remove_id(int index, ::google::protobuf::uint32 value);
+  inline void add_remove_id(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      remove_id() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_remove_id();
   
   // repeated uint32 firing_ships = 7 [packed = true];
   inline int firing_ships_size() const;
@@ -1896,61 +1925,62 @@ class Frame : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
       mutable_firing_ships();
   
-  // repeated uint32 remove_id = 6 [packed = true];
-  inline int remove_id_size() const;
-  inline void clear_remove_id();
-  static const int kRemoveIdFieldNumber = 6;
-  inline ::google::protobuf::uint32 remove_id(int index) const;
-  inline void set_remove_id(int index, ::google::protobuf::uint32 value);
-  inline void add_remove_id(::google::protobuf::uint32 value);
-  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
-      remove_id() const;
-  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
-      mutable_remove_id();
+  // optional uint32 diff_of = 8;
+  inline bool has_diff_of() const;
+  inline void clear_diff_of();
+  static const int kDiffOfFieldNumber = 8;
+  inline ::google::protobuf::uint32 diff_of() const;
+  inline void set_diff_of(::google::protobuf::uint32 value);
   
-  // repeated .ast.ChatMessage chatMessage = 2;
-  inline int chatmessage_size() const;
-  inline void clear_chatmessage();
-  static const int kChatMessageFieldNumber = 2;
-  inline const ::ast::ChatMessage& chatmessage(int index) const;
-  inline ::ast::ChatMessage* mutable_chatmessage(int index);
-  inline ::ast::ChatMessage* add_chatmessage();
-  inline const ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >&
-      chatmessage() const;
-  inline ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >*
-      mutable_chatmessage();
+  // optional .ast.GameState gameState = 9;
+  inline bool has_gamestate() const;
+  inline void clear_gamestate();
+  static const int kGameStateFieldNumber = 9;
+  inline const ::ast::GameState& gamestate() const;
+  inline ::ast::GameState* mutable_gamestate();
+  inline ::ast::GameState* release_gamestate();
+  
+  // optional uint32 shipid = 10;
+  inline bool has_shipid() const;
+  inline void clear_shipid();
+  static const int kShipidFieldNumber = 10;
+  inline ::google::protobuf::uint32 shipid() const;
+  inline void set_shipid(::google::protobuf::uint32 value);
   
   // @@protoc_insertion_point(class_scope:ast.Frame)
  private:
+  inline void set_has_collision_message();
+  inline void clear_has_collision_message();
   inline void set_has_seq();
   inline void clear_has_seq();
   inline void set_has_ack();
   inline void clear_has_ack();
   inline void set_has_timestamp();
   inline void clear_has_timestamp();
-  inline void set_has_shipid();
-  inline void clear_has_shipid();
+  inline void set_has_diff_of();
+  inline void clear_has_diff_of();
   inline void set_has_gamestate();
   inline void clear_has_gamestate();
-  inline void set_has_collision_message();
-  inline void clear_has_collision_message();
+  inline void set_has_shipid();
+  inline void clear_has_shipid();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
+  ::ast::CollisionMessage* collision_message_;
+  ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage > chatmessage_;
   ::google::protobuf::uint64 seq_;
   ::google::protobuf::uint64 ack_;
   double timestamp_;
-  ::ast::GameState* gamestate_;
-  ::ast::CollisionMessage* collision_message_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > firing_ships_;
-  mutable int _firing_ships_cached_byte_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > remove_id_;
   mutable int _remove_id_cached_byte_size_;
-  ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage > chatmessage_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > firing_ships_;
+  mutable int _firing_ships_cached_byte_size_;
+  ::ast::GameState* gamestate_;
+  ::google::protobuf::uint32 diff_of_;
   ::google::protobuf::uint32 shipid_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -2138,254 +2168,6 @@ inline ::ast::Vector* Entity::release_velocity() {
   return temp;
 }
 
-// optional float radius = 19;
-inline bool Entity::has_radius() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void Entity::set_has_radius() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void Entity::clear_has_radius() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void Entity::clear_radius() {
-  radius_ = 0;
-  clear_has_radius();
-}
-inline float Entity::radius() const {
-  return radius_;
-}
-inline void Entity::set_radius(float value) {
-  set_has_radius();
-  radius_ = value;
-}
-
-// optional .ast.Vector axis = 21;
-inline bool Entity::has_axis() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void Entity::set_has_axis() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void Entity::clear_has_axis() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void Entity::clear_axis() {
-  if (axis_ != NULL) axis_->::ast::Vector::Clear();
-  clear_has_axis();
-}
-inline const ::ast::Vector& Entity::axis() const {
-  return axis_ != NULL ? *axis_ : *default_instance_->axis_;
-}
-inline ::ast::Vector* Entity::mutable_axis() {
-  set_has_axis();
-  if (axis_ == NULL) axis_ = new ::ast::Vector;
-  return axis_;
-}
-inline ::ast::Vector* Entity::release_axis() {
-  clear_has_axis();
-  ::ast::Vector* temp = axis_;
-  axis_ = NULL;
-  return temp;
-}
-
-// optional float angle = 25;
-inline bool Entity::has_angle() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
-}
-inline void Entity::set_has_angle() {
-  _has_bits_[0] |= 0x00000040u;
-}
-inline void Entity::clear_has_angle() {
-  _has_bits_[0] &= ~0x00000040u;
-}
-inline void Entity::clear_angle() {
-  angle_ = 0;
-  clear_has_angle();
-}
-inline float Entity::angle() const {
-  return angle_;
-}
-inline void Entity::set_angle(float value) {
-  set_has_angle();
-  angle_ = value;
-}
-
-// optional float rotationSpeed = 26;
-inline bool Entity::has_rotationspeed() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
-}
-inline void Entity::set_has_rotationspeed() {
-  _has_bits_[0] |= 0x00000080u;
-}
-inline void Entity::clear_has_rotationspeed() {
-  _has_bits_[0] &= ~0x00000080u;
-}
-inline void Entity::clear_rotationspeed() {
-  rotationspeed_ = 0;
-  clear_has_rotationspeed();
-}
-inline float Entity::rotationspeed() const {
-  return rotationspeed_;
-}
-inline void Entity::set_rotationspeed(float value) {
-  set_has_rotationspeed();
-  rotationspeed_ = value;
-}
-
-// optional .ast.Vector up = 22;
-inline bool Entity::has_up() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
-}
-inline void Entity::set_has_up() {
-  _has_bits_[0] |= 0x00000100u;
-}
-inline void Entity::clear_has_up() {
-  _has_bits_[0] &= ~0x00000100u;
-}
-inline void Entity::clear_up() {
-  if (up_ != NULL) up_->::ast::Vector::Clear();
-  clear_has_up();
-}
-inline const ::ast::Vector& Entity::up() const {
-  return up_ != NULL ? *up_ : *default_instance_->up_;
-}
-inline ::ast::Vector* Entity::mutable_up() {
-  set_has_up();
-  if (up_ == NULL) up_ = new ::ast::Vector;
-  return up_;
-}
-inline ::ast::Vector* Entity::release_up() {
-  clear_has_up();
-  ::ast::Vector* temp = up_;
-  up_ = NULL;
-  return temp;
-}
-
-// optional .ast.Vector right = 23;
-inline bool Entity::has_right() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
-}
-inline void Entity::set_has_right() {
-  _has_bits_[0] |= 0x00000200u;
-}
-inline void Entity::clear_has_right() {
-  _has_bits_[0] &= ~0x00000200u;
-}
-inline void Entity::clear_right() {
-  if (right_ != NULL) right_->::ast::Vector::Clear();
-  clear_has_right();
-}
-inline const ::ast::Vector& Entity::right() const {
-  return right_ != NULL ? *right_ : *default_instance_->right_;
-}
-inline ::ast::Vector* Entity::mutable_right() {
-  set_has_right();
-  if (right_ == NULL) right_ = new ::ast::Vector;
-  return right_;
-}
-inline ::ast::Vector* Entity::release_right() {
-  clear_has_right();
-  ::ast::Vector* temp = right_;
-  right_ = NULL;
-  return temp;
-}
-
-// optional .ast.Vector forward = 24;
-inline bool Entity::has_forward() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
-}
-inline void Entity::set_has_forward() {
-  _has_bits_[0] |= 0x00000400u;
-}
-inline void Entity::clear_has_forward() {
-  _has_bits_[0] &= ~0x00000400u;
-}
-inline void Entity::clear_forward() {
-  if (forward_ != NULL) forward_->::ast::Vector::Clear();
-  clear_has_forward();
-}
-inline const ::ast::Vector& Entity::forward() const {
-  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
-}
-inline ::ast::Vector* Entity::mutable_forward() {
-  set_has_forward();
-  if (forward_ == NULL) forward_ = new ::ast::Vector;
-  return forward_;
-}
-inline ::ast::Vector* Entity::release_forward() {
-  clear_has_forward();
-  ::ast::Vector* temp = forward_;
-  forward_ = NULL;
-  return temp;
-}
-
-// optional float targetYawSpeed = 27;
-inline bool Entity::has_targetyawspeed() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
-}
-inline void Entity::set_has_targetyawspeed() {
-  _has_bits_[0] |= 0x00000800u;
-}
-inline void Entity::clear_has_targetyawspeed() {
-  _has_bits_[0] &= ~0x00000800u;
-}
-inline void Entity::clear_targetyawspeed() {
-  targetyawspeed_ = 0;
-  clear_has_targetyawspeed();
-}
-inline float Entity::targetyawspeed() const {
-  return targetyawspeed_;
-}
-inline void Entity::set_targetyawspeed(float value) {
-  set_has_targetyawspeed();
-  targetyawspeed_ = value;
-}
-
-// optional float targetPitchSpeed = 28;
-inline bool Entity::has_targetpitchspeed() const {
-  return (_has_bits_[0] & 0x00001000u) != 0;
-}
-inline void Entity::set_has_targetpitchspeed() {
-  _has_bits_[0] |= 0x00001000u;
-}
-inline void Entity::clear_has_targetpitchspeed() {
-  _has_bits_[0] &= ~0x00001000u;
-}
-inline void Entity::clear_targetpitchspeed() {
-  targetpitchspeed_ = 0;
-  clear_has_targetpitchspeed();
-}
-inline float Entity::targetpitchspeed() const {
-  return targetpitchspeed_;
-}
-inline void Entity::set_targetpitchspeed(float value) {
-  set_has_targetpitchspeed();
-  targetpitchspeed_ = value;
-}
-
-// optional float targetRollSpeed = 29;
-inline bool Entity::has_targetrollspeed() const {
-  return (_has_bits_[0] & 0x00002000u) != 0;
-}
-inline void Entity::set_has_targetrollspeed() {
-  _has_bits_[0] |= 0x00002000u;
-}
-inline void Entity::clear_has_targetrollspeed() {
-  _has_bits_[0] &= ~0x00002000u;
-}
-inline void Entity::clear_targetrollspeed() {
-  targetrollspeed_ = 0;
-  clear_has_targetrollspeed();
-}
-inline float Entity::targetrollspeed() const {
-  return targetrollspeed_;
-}
-inline void Entity::set_targetrollspeed(float value) {
-  set_has_targetrollspeed();
-  targetrollspeed_ = value;
-}
-
 // repeated .ast.Weapon weapon = 5;
 inline int Entity::weapon_size() const {
   return weapon_.size();
@@ -2409,6 +2191,254 @@ Entity::weapon() const {
 inline ::google::protobuf::RepeatedPtrField< ::ast::Weapon >*
 Entity::mutable_weapon() {
   return &weapon_;
+}
+
+// optional .ast.Vector up = 6;
+inline bool Entity::has_up() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Entity::set_has_up() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Entity::clear_has_up() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Entity::clear_up() {
+  if (up_ != NULL) up_->::ast::Vector::Clear();
+  clear_has_up();
+}
+inline const ::ast::Vector& Entity::up() const {
+  return up_ != NULL ? *up_ : *default_instance_->up_;
+}
+inline ::ast::Vector* Entity::mutable_up() {
+  set_has_up();
+  if (up_ == NULL) up_ = new ::ast::Vector;
+  return up_;
+}
+inline ::ast::Vector* Entity::release_up() {
+  clear_has_up();
+  ::ast::Vector* temp = up_;
+  up_ = NULL;
+  return temp;
+}
+
+// optional .ast.Vector right = 7;
+inline bool Entity::has_right() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Entity::set_has_right() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Entity::clear_has_right() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Entity::clear_right() {
+  if (right_ != NULL) right_->::ast::Vector::Clear();
+  clear_has_right();
+}
+inline const ::ast::Vector& Entity::right() const {
+  return right_ != NULL ? *right_ : *default_instance_->right_;
+}
+inline ::ast::Vector* Entity::mutable_right() {
+  set_has_right();
+  if (right_ == NULL) right_ = new ::ast::Vector;
+  return right_;
+}
+inline ::ast::Vector* Entity::release_right() {
+  clear_has_right();
+  ::ast::Vector* temp = right_;
+  right_ = NULL;
+  return temp;
+}
+
+// optional .ast.Vector forward = 8;
+inline bool Entity::has_forward() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void Entity::set_has_forward() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void Entity::clear_has_forward() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void Entity::clear_forward() {
+  if (forward_ != NULL) forward_->::ast::Vector::Clear();
+  clear_has_forward();
+}
+inline const ::ast::Vector& Entity::forward() const {
+  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
+}
+inline ::ast::Vector* Entity::mutable_forward() {
+  set_has_forward();
+  if (forward_ == NULL) forward_ = new ::ast::Vector;
+  return forward_;
+}
+inline ::ast::Vector* Entity::release_forward() {
+  clear_has_forward();
+  ::ast::Vector* temp = forward_;
+  forward_ = NULL;
+  return temp;
+}
+
+// optional float radius = 19;
+inline bool Entity::has_radius() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Entity::set_has_radius() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Entity::clear_has_radius() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Entity::clear_radius() {
+  radius_ = 0;
+  clear_has_radius();
+}
+inline float Entity::radius() const {
+  return radius_;
+}
+inline void Entity::set_radius(float value) {
+  set_has_radius();
+  radius_ = value;
+}
+
+// optional .ast.Vector axis = 21;
+inline bool Entity::has_axis() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void Entity::set_has_axis() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void Entity::clear_has_axis() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void Entity::clear_axis() {
+  if (axis_ != NULL) axis_->::ast::Vector::Clear();
+  clear_has_axis();
+}
+inline const ::ast::Vector& Entity::axis() const {
+  return axis_ != NULL ? *axis_ : *default_instance_->axis_;
+}
+inline ::ast::Vector* Entity::mutable_axis() {
+  set_has_axis();
+  if (axis_ == NULL) axis_ = new ::ast::Vector;
+  return axis_;
+}
+inline ::ast::Vector* Entity::release_axis() {
+  clear_has_axis();
+  ::ast::Vector* temp = axis_;
+  axis_ = NULL;
+  return temp;
+}
+
+// optional float angle = 25;
+inline bool Entity::has_angle() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void Entity::set_has_angle() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void Entity::clear_has_angle() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void Entity::clear_angle() {
+  angle_ = 0;
+  clear_has_angle();
+}
+inline float Entity::angle() const {
+  return angle_;
+}
+inline void Entity::set_angle(float value) {
+  set_has_angle();
+  angle_ = value;
+}
+
+// optional float rotationSpeed = 26;
+inline bool Entity::has_rotationspeed() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void Entity::set_has_rotationspeed() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void Entity::clear_has_rotationspeed() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void Entity::clear_rotationspeed() {
+  rotationspeed_ = 0;
+  clear_has_rotationspeed();
+}
+inline float Entity::rotationspeed() const {
+  return rotationspeed_;
+}
+inline void Entity::set_rotationspeed(float value) {
+  set_has_rotationspeed();
+  rotationspeed_ = value;
+}
+
+// optional float targetYawSpeed = 27;
+inline bool Entity::has_targetyawspeed() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void Entity::set_has_targetyawspeed() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void Entity::clear_has_targetyawspeed() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void Entity::clear_targetyawspeed() {
+  targetyawspeed_ = 0;
+  clear_has_targetyawspeed();
+}
+inline float Entity::targetyawspeed() const {
+  return targetyawspeed_;
+}
+inline void Entity::set_targetyawspeed(float value) {
+  set_has_targetyawspeed();
+  targetyawspeed_ = value;
+}
+
+// optional float targetPitchSpeed = 28;
+inline bool Entity::has_targetpitchspeed() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void Entity::set_has_targetpitchspeed() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void Entity::clear_has_targetpitchspeed() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void Entity::clear_targetpitchspeed() {
+  targetpitchspeed_ = 0;
+  clear_has_targetpitchspeed();
+}
+inline float Entity::targetpitchspeed() const {
+  return targetpitchspeed_;
+}
+inline void Entity::set_targetpitchspeed(float value) {
+  set_has_targetpitchspeed();
+  targetpitchspeed_ = value;
+}
+
+// optional float targetRollSpeed = 29;
+inline bool Entity::has_targetrollspeed() const {
+  return (_has_bits_[0] & 0x00004000u) != 0;
+}
+inline void Entity::set_has_targetrollspeed() {
+  _has_bits_[0] |= 0x00004000u;
+}
+inline void Entity::clear_has_targetrollspeed() {
+  _has_bits_[0] &= ~0x00004000u;
+}
+inline void Entity::clear_targetrollspeed() {
+  targetrollspeed_ = 0;
+  clear_has_targetrollspeed();
+}
+inline float Entity::targetrollspeed() const {
+  return targetrollspeed_;
+}
+inline void Entity::set_targetrollspeed(float value) {
+  set_has_targetrollspeed();
+  targetrollspeed_ = value;
 }
 
 // optional float health = 30;
@@ -3484,7 +3514,7 @@ inline void Weapon::set_shotid(::google::protobuf::int32 value) {
   shotid_ = value;
 }
 
-// optional bool purchased = 16;
+// optional bool purchased = 10;
 inline bool Weapon::has_purchased() const {
   return (_has_bits_[0] & 0x00000200u) != 0;
 }
@@ -3506,7 +3536,7 @@ inline void Weapon::set_purchased(bool value) {
   purchased_ = value;
 }
 
-// optional int32 weaponPrice = 17;
+// optional int32 weaponPrice = 11;
 inline bool Weapon::has_weaponprice() const {
   return (_has_bits_[0] & 0x00000400u) != 0;
 }
@@ -3528,7 +3558,7 @@ inline void Weapon::set_weaponprice(::google::protobuf::int32 value) {
   weaponprice_ = value;
 }
 
-// optional int32 level = 18;
+// optional int32 level = 12;
 inline bool Weapon::has_level() const {
   return (_has_bits_[0] & 0x00000800u) != 0;
 }
@@ -3550,7 +3580,7 @@ inline void Weapon::set_level(::google::protobuf::int32 value) {
   level_ = value;
 }
 
-// optional float range = 19;
+// optional float range = 13;
 inline bool Weapon::has_range() const {
   return (_has_bits_[0] & 0x00001000u) != 0;
 }
@@ -3572,7 +3602,7 @@ inline void Weapon::set_range(float value) {
   range_ = value;
 }
 
-// optional float overheatLevel = 20;
+// optional float overheatLevel = 14;
 inline bool Weapon::has_overheatlevel() const {
   return (_has_bits_[0] & 0x00002000u) != 0;
 }
@@ -3594,7 +3624,7 @@ inline void Weapon::set_overheatlevel(float value) {
   overheatlevel_ = value;
 }
 
-// optional float heatPerShot = 21;
+// optional float heatPerShot = 15;
 inline bool Weapon::has_heatpershot() const {
   return (_has_bits_[0] & 0x00004000u) != 0;
 }
@@ -3884,6 +3914,28 @@ inline void ClientCommand::set_mousey(float value) {
   mousey_ = value;
 }
 
+// optional uint32 lastReceivedGameStateId = 13;
+inline bool ClientCommand::has_lastreceivedgamestateid() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void ClientCommand::set_has_lastreceivedgamestateid() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void ClientCommand::clear_has_lastreceivedgamestateid() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void ClientCommand::clear_lastreceivedgamestateid() {
+  lastreceivedgamestateid_ = 0u;
+  clear_has_lastreceivedgamestateid();
+}
+inline ::google::protobuf::uint32 ClientCommand::lastreceivedgamestateid() const {
+  return lastreceivedgamestateid_;
+}
+inline void ClientCommand::set_lastreceivedgamestateid(::google::protobuf::uint32 value) {
+  set_has_lastreceivedgamestateid();
+  lastreceivedgamestateid_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // Timer
@@ -4002,79 +4054,6 @@ inline void Timer::set_isrunning(bool value) {
 
 // GameState
 
-// optional uint32 playerShip = 3;
-inline bool GameState::has_playership() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void GameState::set_has_playership() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void GameState::clear_has_playership() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void GameState::clear_playership() {
-  playership_ = 0u;
-  clear_has_playership();
-}
-inline ::google::protobuf::uint32 GameState::playership() const {
-  return playership_;
-}
-inline void GameState::set_playership(::google::protobuf::uint32 value) {
-  set_has_playership();
-  playership_ = value;
-}
-
-// required double gameTime = 2;
-inline bool GameState::has_gametime() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void GameState::set_has_gametime() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void GameState::clear_has_gametime() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void GameState::clear_gametime() {
-  gametime_ = 0;
-  clear_has_gametime();
-}
-inline double GameState::gametime() const {
-  return gametime_;
-}
-inline void GameState::set_gametime(double value) {
-  set_has_gametime();
-  gametime_ = value;
-}
-
-// optional .ast.Timer levelTimer = 4;
-inline bool GameState::has_leveltimer() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void GameState::set_has_leveltimer() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void GameState::clear_has_leveltimer() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void GameState::clear_leveltimer() {
-  if (leveltimer_ != NULL) leveltimer_->::ast::Timer::Clear();
-  clear_has_leveltimer();
-}
-inline const ::ast::Timer& GameState::leveltimer() const {
-  return leveltimer_ != NULL ? *leveltimer_ : *default_instance_->leveltimer_;
-}
-inline ::ast::Timer* GameState::mutable_leveltimer() {
-  set_has_leveltimer();
-  if (leveltimer_ == NULL) leveltimer_ = new ::ast::Timer;
-  return leveltimer_;
-}
-inline ::ast::Timer* GameState::release_leveltimer() {
-  clear_has_leveltimer();
-  ::ast::Timer* temp = leveltimer_;
-  leveltimer_ = NULL;
-  return temp;
-}
-
 // repeated .ast.Entity entity = 1;
 inline int GameState::entity_size() const {
   return entity_.size();
@@ -4100,6 +4079,79 @@ GameState::mutable_entity() {
   return &entity_;
 }
 
+// required double gameTime = 2;
+inline bool GameState::has_gametime() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void GameState::set_has_gametime() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void GameState::clear_has_gametime() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void GameState::clear_gametime() {
+  gametime_ = 0;
+  clear_has_gametime();
+}
+inline double GameState::gametime() const {
+  return gametime_;
+}
+inline void GameState::set_gametime(double value) {
+  set_has_gametime();
+  gametime_ = value;
+}
+
+// optional uint32 playerShip = 3;
+inline bool GameState::has_playership() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void GameState::set_has_playership() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void GameState::clear_has_playership() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void GameState::clear_playership() {
+  playership_ = 0u;
+  clear_has_playership();
+}
+inline ::google::protobuf::uint32 GameState::playership() const {
+  return playership_;
+}
+inline void GameState::set_playership(::google::protobuf::uint32 value) {
+  set_has_playership();
+  playership_ = value;
+}
+
+// optional .ast.Timer levelTimer = 4;
+inline bool GameState::has_leveltimer() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void GameState::set_has_leveltimer() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void GameState::clear_has_leveltimer() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void GameState::clear_leveltimer() {
+  if (leveltimer_ != NULL) leveltimer_->::ast::Timer::Clear();
+  clear_has_leveltimer();
+}
+inline const ::ast::Timer& GameState::leveltimer() const {
+  return leveltimer_ != NULL ? *leveltimer_ : *default_instance_->leveltimer_;
+}
+inline ::ast::Timer* GameState::mutable_leveltimer() {
+  set_has_leveltimer();
+  if (leveltimer_ == NULL) leveltimer_ = new ::ast::Timer;
+  return leveltimer_;
+}
+inline ::ast::Timer* GameState::release_leveltimer() {
+  clear_has_leveltimer();
+  ::ast::Timer* temp = leveltimer_;
+  leveltimer_ = NULL;
+  return temp;
+}
+
 // optional int32 curLevel = 5;
 inline bool GameState::has_curlevel() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
@@ -4120,6 +4172,28 @@ inline ::google::protobuf::int32 GameState::curlevel() const {
 inline void GameState::set_curlevel(::google::protobuf::int32 value) {
   set_has_curlevel();
   curlevel_ = value;
+}
+
+// optional uint32 id = 6;
+inline bool GameState::has_id() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void GameState::set_has_id() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void GameState::clear_has_id() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void GameState::clear_id() {
+  id_ = 0u;
+  clear_has_id();
+}
+inline ::google::protobuf::uint32 GameState::id() const {
+  return id_;
+}
+inline void GameState::set_id(::google::protobuf::uint32 value) {
+  set_has_id();
+  id_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -4440,132 +4514,15 @@ CreateEntityMessage::mutable_entity() {
 
 // Frame
 
-// optional uint64 seq = 3;
-inline bool Frame::has_seq() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Frame::set_has_seq() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Frame::clear_has_seq() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Frame::clear_seq() {
-  seq_ = GOOGLE_ULONGLONG(0);
-  clear_has_seq();
-}
-inline ::google::protobuf::uint64 Frame::seq() const {
-  return seq_;
-}
-inline void Frame::set_seq(::google::protobuf::uint64 value) {
-  set_has_seq();
-  seq_ = value;
-}
-
-// optional uint64 ack = 4;
-inline bool Frame::has_ack() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Frame::set_has_ack() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void Frame::clear_has_ack() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void Frame::clear_ack() {
-  ack_ = GOOGLE_ULONGLONG(0);
-  clear_has_ack();
-}
-inline ::google::protobuf::uint64 Frame::ack() const {
-  return ack_;
-}
-inline void Frame::set_ack(::google::protobuf::uint64 value) {
-  set_has_ack();
-  ack_ = value;
-}
-
-// optional double timestamp = 5;
-inline bool Frame::has_timestamp() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Frame::set_has_timestamp() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void Frame::clear_has_timestamp() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void Frame::clear_timestamp() {
-  timestamp_ = 0;
-  clear_has_timestamp();
-}
-inline double Frame::timestamp() const {
-  return timestamp_;
-}
-inline void Frame::set_timestamp(double value) {
-  set_has_timestamp();
-  timestamp_ = value;
-}
-
-// optional uint32 shipid = 18;
-inline bool Frame::has_shipid() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void Frame::set_has_shipid() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void Frame::clear_has_shipid() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void Frame::clear_shipid() {
-  shipid_ = 0u;
-  clear_has_shipid();
-}
-inline ::google::protobuf::uint32 Frame::shipid() const {
-  return shipid_;
-}
-inline void Frame::set_shipid(::google::protobuf::uint32 value) {
-  set_has_shipid();
-  shipid_ = value;
-}
-
-// optional .ast.GameState gameState = 17;
-inline bool Frame::has_gamestate() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void Frame::set_has_gamestate() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void Frame::clear_has_gamestate() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void Frame::clear_gamestate() {
-  if (gamestate_ != NULL) gamestate_->::ast::GameState::Clear();
-  clear_has_gamestate();
-}
-inline const ::ast::GameState& Frame::gamestate() const {
-  return gamestate_ != NULL ? *gamestate_ : *default_instance_->gamestate_;
-}
-inline ::ast::GameState* Frame::mutable_gamestate() {
-  set_has_gamestate();
-  if (gamestate_ == NULL) gamestate_ = new ::ast::GameState;
-  return gamestate_;
-}
-inline ::ast::GameState* Frame::release_gamestate() {
-  clear_has_gamestate();
-  ::ast::GameState* temp = gamestate_;
-  gamestate_ = NULL;
-  return temp;
-}
-
 // optional .ast.CollisionMessage collision_message = 1;
 inline bool Frame::has_collision_message() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 inline void Frame::set_has_collision_message() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000001u;
 }
 inline void Frame::clear_has_collision_message() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void Frame::clear_collision_message() {
   if (collision_message_ != NULL) collision_message_->::ast::CollisionMessage::Clear();
@@ -4586,29 +4543,95 @@ inline ::ast::CollisionMessage* Frame::release_collision_message() {
   return temp;
 }
 
-// repeated uint32 firing_ships = 7 [packed = true];
-inline int Frame::firing_ships_size() const {
-  return firing_ships_.size();
+// repeated .ast.ChatMessage chatMessage = 2;
+inline int Frame::chatmessage_size() const {
+  return chatmessage_.size();
 }
-inline void Frame::clear_firing_ships() {
-  firing_ships_.Clear();
+inline void Frame::clear_chatmessage() {
+  chatmessage_.Clear();
 }
-inline ::google::protobuf::uint32 Frame::firing_ships(int index) const {
-  return firing_ships_.Get(index);
+inline const ::ast::ChatMessage& Frame::chatmessage(int index) const {
+  return chatmessage_.Get(index);
 }
-inline void Frame::set_firing_ships(int index, ::google::protobuf::uint32 value) {
-  firing_ships_.Set(index, value);
+inline ::ast::ChatMessage* Frame::mutable_chatmessage(int index) {
+  return chatmessage_.Mutable(index);
 }
-inline void Frame::add_firing_ships(::google::protobuf::uint32 value) {
-  firing_ships_.Add(value);
+inline ::ast::ChatMessage* Frame::add_chatmessage() {
+  return chatmessage_.Add();
 }
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
-Frame::firing_ships() const {
-  return firing_ships_;
+inline const ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >&
+Frame::chatmessage() const {
+  return chatmessage_;
 }
-inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
-Frame::mutable_firing_ships() {
-  return &firing_ships_;
+inline ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >*
+Frame::mutable_chatmessage() {
+  return &chatmessage_;
+}
+
+// optional uint64 seq = 3;
+inline bool Frame::has_seq() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Frame::set_has_seq() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Frame::clear_has_seq() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Frame::clear_seq() {
+  seq_ = GOOGLE_ULONGLONG(0);
+  clear_has_seq();
+}
+inline ::google::protobuf::uint64 Frame::seq() const {
+  return seq_;
+}
+inline void Frame::set_seq(::google::protobuf::uint64 value) {
+  set_has_seq();
+  seq_ = value;
+}
+
+// optional uint64 ack = 4;
+inline bool Frame::has_ack() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Frame::set_has_ack() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Frame::clear_has_ack() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Frame::clear_ack() {
+  ack_ = GOOGLE_ULONGLONG(0);
+  clear_has_ack();
+}
+inline ::google::protobuf::uint64 Frame::ack() const {
+  return ack_;
+}
+inline void Frame::set_ack(::google::protobuf::uint64 value) {
+  set_has_ack();
+  ack_ = value;
+}
+
+// optional double timestamp = 5;
+inline bool Frame::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Frame::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Frame::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Frame::clear_timestamp() {
+  timestamp_ = 0;
+  clear_has_timestamp();
+}
+inline double Frame::timestamp() const {
+  return timestamp_;
+}
+inline void Frame::set_timestamp(double value) {
+  set_has_timestamp();
+  timestamp_ = value;
 }
 
 // repeated uint32 remove_id = 6 [packed = true];
@@ -4636,29 +4659,102 @@ Frame::mutable_remove_id() {
   return &remove_id_;
 }
 
-// repeated .ast.ChatMessage chatMessage = 2;
-inline int Frame::chatmessage_size() const {
-  return chatmessage_.size();
+// repeated uint32 firing_ships = 7 [packed = true];
+inline int Frame::firing_ships_size() const {
+  return firing_ships_.size();
 }
-inline void Frame::clear_chatmessage() {
-  chatmessage_.Clear();
+inline void Frame::clear_firing_ships() {
+  firing_ships_.Clear();
 }
-inline const ::ast::ChatMessage& Frame::chatmessage(int index) const {
-  return chatmessage_.Get(index);
+inline ::google::protobuf::uint32 Frame::firing_ships(int index) const {
+  return firing_ships_.Get(index);
 }
-inline ::ast::ChatMessage* Frame::mutable_chatmessage(int index) {
-  return chatmessage_.Mutable(index);
+inline void Frame::set_firing_ships(int index, ::google::protobuf::uint32 value) {
+  firing_ships_.Set(index, value);
 }
-inline ::ast::ChatMessage* Frame::add_chatmessage() {
-  return chatmessage_.Add();
+inline void Frame::add_firing_ships(::google::protobuf::uint32 value) {
+  firing_ships_.Add(value);
 }
-inline const ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >&
-Frame::chatmessage() const {
-  return chatmessage_;
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+Frame::firing_ships() const {
+  return firing_ships_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >*
-Frame::mutable_chatmessage() {
-  return &chatmessage_;
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+Frame::mutable_firing_ships() {
+  return &firing_ships_;
+}
+
+// optional uint32 diff_of = 8;
+inline bool Frame::has_diff_of() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void Frame::set_has_diff_of() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void Frame::clear_has_diff_of() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void Frame::clear_diff_of() {
+  diff_of_ = 0u;
+  clear_has_diff_of();
+}
+inline ::google::protobuf::uint32 Frame::diff_of() const {
+  return diff_of_;
+}
+inline void Frame::set_diff_of(::google::protobuf::uint32 value) {
+  set_has_diff_of();
+  diff_of_ = value;
+}
+
+// optional .ast.GameState gameState = 9;
+inline bool Frame::has_gamestate() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Frame::set_has_gamestate() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Frame::clear_has_gamestate() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Frame::clear_gamestate() {
+  if (gamestate_ != NULL) gamestate_->::ast::GameState::Clear();
+  clear_has_gamestate();
+}
+inline const ::ast::GameState& Frame::gamestate() const {
+  return gamestate_ != NULL ? *gamestate_ : *default_instance_->gamestate_;
+}
+inline ::ast::GameState* Frame::mutable_gamestate() {
+  set_has_gamestate();
+  if (gamestate_ == NULL) gamestate_ = new ::ast::GameState;
+  return gamestate_;
+}
+inline ::ast::GameState* Frame::release_gamestate() {
+  clear_has_gamestate();
+  ::ast::GameState* temp = gamestate_;
+  gamestate_ = NULL;
+  return temp;
+}
+
+// optional uint32 shipid = 10;
+inline bool Frame::has_shipid() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void Frame::set_has_shipid() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void Frame::clear_has_shipid() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void Frame::clear_shipid() {
+  shipid_ = 0u;
+  clear_has_shipid();
+}
+inline ::google::protobuf::uint32 Frame::shipid() const {
+  return shipid_;
+}
+inline void Frame::set_shipid(::google::protobuf::uint32 value) {
+  set_has_shipid();
+  shipid_ = value;
 }
 
 

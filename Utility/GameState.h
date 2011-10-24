@@ -14,6 +14,7 @@
 #include "Utility/Timer.h"
 
 #include <list>
+#include <map>
 
 class Camera;
 class Skybox;
@@ -36,6 +37,7 @@ enum GameStateMode { SingleMode, MenuMode, ClientMode, ServerMode };
 namespace ast {
    class ClientCommand;
    class Frame;
+   class GameState;
 }
 
 class GameState : public InputReceiver {
@@ -122,6 +124,10 @@ class GameState : public InputReceiver {
 
       ServerSide* serverSide;
       ClientSide* clientSide;
+
+      std::map<unsigned, ast::GameState*> savedGameStates;
+      unsigned curGameStateId;
+      unsigned lastReceivedGameStateId;
    
    
    //public functions------------------------------
@@ -133,6 +139,11 @@ class GameState : public InputReceiver {
       void updateGameTime(double timeDiff);
 
       void connect(char* addr);
+
+      void setShip(AsteroidShip* newShip);
+
+      ast::GameState* getSavedGameState(unsigned id);
+      ast::GameState* getLastSavedGameState();
       
       // virtual functions required by InputReciever
       virtual void keyUp(int key);
@@ -199,8 +210,12 @@ class GameState : public InputReceiver {
       void serialize(std::ostream &oss);
       void deserialize(std::istream &iss);
       
-      void save();
-      void load();
+      unsigned storeFullGameState();
+      void saveDiff(const ast::GameState& oldState, ast::GameState* newState);
+      void save(ast::GameState* gs);
+      void saveToDisk();
+      void load(const ast::GameState& gs);
+      void loadFromDisk();
 
       void testFunction();
       void gameOver();

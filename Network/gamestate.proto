@@ -15,22 +15,25 @@ message Entity {
    // Probably all items will have pos/vel.
    optional Vector position = 3;
    optional Vector velocity = 4;
-
+   
+   // Frequently-changing ship fields.
+   repeated Weapon weapon = 5;
+   optional Vector up = 6;
+   optional Vector right = 7;
+   optional Vector forward = 8;
 
    // Some items have a radius etc.
    optional float radius = 19;
    optional Vector axis = 21;
+
+   // Might not want to send this every time. 
    optional float angle = 25;
    optional float rotationSpeed = 26;
 
    // Mostly for the ship
-   optional Vector up = 22;
-   optional Vector right = 23;
-   optional Vector forward = 24;
    optional float targetYawSpeed = 27;
    optional float targetPitchSpeed = 28;
    optional float targetRollSpeed = 29;
-   repeated Weapon weapon = 5;
 
    // Ship + Asteroid
    optional float health = 30;
@@ -101,13 +104,12 @@ message Weapon {
 
 
    // Less frequently updated values (these change only during the end of the level).
-   optional bool purchased = 16;
-   optional int32 weaponPrice = 17;
-   optional int32 level = 18;
-   optional float range = 19;
-   optional float overheatLevel = 20;
-   optional float heatPerShot = 21;
-
+   optional bool purchased = 10;
+   optional int32 weaponPrice = 11;
+   optional int32 level = 12;
+   optional float range = 13;
+   optional float overheatLevel = 14;
+   optional float heatPerShot = 15;
 }
 
 message ClientCommand {
@@ -123,6 +125,7 @@ message ClientCommand {
    optional uint32 curWeapon = 10;
    optional float mouseX = 11;
    optional float mouseY = 12;
+   optional uint32 lastReceivedGameStateId = 13;
 }
 
 message Timer {
@@ -135,11 +138,14 @@ message Timer {
 
 // Just a timestamp and an entity list.
 message GameState {
-   optional uint32 playerShip = 3;
-   required double gameTime = 2;
-   optional Timer levelTimer = 4;
    repeated Entity entity = 1;
+   required double gameTime = 2;
+   
+   optional uint32 playerShip = 3;
+   optional Timer levelTimer = 4;
    optional int32 curLevel = 5;
+
+   optional uint32 id = 6;
 }
 
 message CollisionMessage {
@@ -167,15 +173,17 @@ message CreateEntityMessage {
 }
 
 message Frame {
+   optional CollisionMessage collision_message = 1;
+   repeated ChatMessage chatMessage = 2;
    optional uint64 seq = 3;
    optional uint64 ack = 4;
    optional double timestamp = 5;
-   optional uint32 shipid = 18;
-   optional GameState gameState = 17;
-   optional CollisionMessage collision_message = 1;
-   repeated uint32 firing_ships = 7 [packed=true];
-   // Ids of objects to remove after collisions are processed.
    repeated uint32 remove_id = 6 [packed=true];
-   repeated ChatMessage chatMessage = 2;
+   repeated uint32 firing_ships = 7 [packed=true];
+   // Gamestate id of what this gameState is a diff from.
+   optional uint32 diff_of = 8;
+   optional GameState gameState = 9;
 
+   optional uint32 shipid = 10;
+   // Ids of objects to remove after collisions are processed.
 }

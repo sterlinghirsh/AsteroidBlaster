@@ -80,17 +80,17 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, position_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, velocity_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, weapon_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, up_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, right_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, forward_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, radius_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, axis_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, angle_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, rotationspeed_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, up_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, right_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, forward_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, targetyawspeed_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, targetpitchspeed_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, targetrollspeed_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, weapon_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, health_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, healthmax_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, enginelevel_),
@@ -171,7 +171,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Weapon));
   ClientCommand_descriptor_ = file->message_type(3);
-  static const int ClientCommand_offsets_[12] = {
+  static const int ClientCommand_offsets_[13] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, shipid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, forwardacceleration_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, rightacceleration_),
@@ -184,6 +184,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, curweapon_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, mousex_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, mousey_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientCommand, lastreceivedgamestateid_),
   };
   ClientCommand_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -216,12 +217,13 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Timer));
   GameState_descriptor_ = file->message_type(5);
-  static const int GameState_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, playership_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, gametime_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, leveltimer_),
+  static const int GameState_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, entity_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, gametime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, playership_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, leveltimer_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, curlevel_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameState, id_),
   };
   GameState_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -288,16 +290,17 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateEntityMessage));
   Frame_descriptor_ = file->message_type(9);
-  static const int Frame_offsets_[9] = {
+  static const int Frame_offsets_[10] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, collision_message_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, chatmessage_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, seq_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, ack_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, timestamp_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, shipid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, gamestate_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, collision_message_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, firing_ships_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, remove_id_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, chatmessage_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, firing_ships_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, diff_of_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, gamestate_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, shipid_),
   };
   Frame_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -380,13 +383,13 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\274\t\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
-    "\013.ast.Vector\022\016\n\006radius\030\023 \001(\002\022\031\n\004axis\030\025 \001"
-    "(\0132\013.ast.Vector\022\r\n\005angle\030\031 \001(\002\022\025\n\rrotati"
-    "onSpeed\030\032 \001(\002\022\027\n\002up\030\026 \001(\0132\013.ast.Vector\022\032"
-    "\n\005right\030\027 \001(\0132\013.ast.Vector\022\034\n\007forward\030\030 "
-    "\001(\0132\013.ast.Vector\022\026\n\016targetYawSpeed\030\033 \001(\002"
-    "\022\030\n\020targetPitchSpeed\030\034 \001(\002\022\027\n\017targetRoll"
-    "Speed\030\035 \001(\002\022\033\n\006weapon\030\005 \003(\0132\013.ast.Weapon"
+    "\013.ast.Vector\022\033\n\006weapon\030\005 \003(\0132\013.ast.Weapo"
+    "n\022\027\n\002up\030\006 \001(\0132\013.ast.Vector\022\032\n\005right\030\007 \001("
+    "\0132\013.ast.Vector\022\034\n\007forward\030\010 \001(\0132\013.ast.Ve"
+    "ctor\022\016\n\006radius\030\023 \001(\002\022\031\n\004axis\030\025 \001(\0132\013.ast"
+    ".Vector\022\r\n\005angle\030\031 \001(\002\022\025\n\rrotationSpeed\030"
+    "\032 \001(\002\022\026\n\016targetYawSpeed\030\033 \001(\002\022\030\n\020targetP"
+    "itchSpeed\030\034 \001(\002\022\027\n\017targetRollSpeed\030\035 \001(\002"
     "\022\016\n\006health\030\036 \001(\002\022\021\n\thealthMax\030\037 \001(\002\022\023\n\013e"
     "ngineLevel\030  \001(\005\022\030\n\020regenHealthLevel\030! \001"
     "(\005\022\021\n\tbankLevel\030\" \001(\005\022\016\n\006color1\030# \001(\002\022\016\n"
@@ -413,36 +416,37 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "astFired\030\003 \001(\002\022\020\n\010coolDown\030\004 \001(\002\022\016\n\006dama"
     "ge\030\005 \001(\002\022\023\n\013currentHeat\030\006 \001(\002\022\022\n\nshotsFi"
     "red\030\007 \001(\005\022\031\n\021timeStartedFiring\030\010 \001(\002\022\016\n\006"
-    "shotid\030\t \001(\005\022\021\n\tpurchased\030\020 \001(\010\022\023\n\013weapo"
-    "nPrice\030\021 \001(\005\022\r\n\005level\030\022 \001(\005\022\r\n\005range\030\023 \001"
-    "(\002\022\025\n\roverheatLevel\030\024 \001(\002\022\023\n\013heatPerShot"
-    "\030\025 \001(\002\"\370\001\n\rClientCommand\022\016\n\006shipID\030\001 \002(\r"
+    "shotid\030\t \001(\005\022\021\n\tpurchased\030\n \001(\010\022\023\n\013weapo"
+    "nPrice\030\013 \001(\005\022\r\n\005level\030\014 \001(\005\022\r\n\005range\030\r \001"
+    "(\002\022\025\n\roverheatLevel\030\016 \001(\002\022\023\n\013heatPerShot"
+    "\030\017 \001(\002\"\231\002\n\rClientCommand\022\016\n\006shipID\030\001 \002(\r"
     "\022\033\n\023forwardAcceleration\030\002 \001(\021\022\031\n\021rightAc"
     "celeration\030\003 \001(\021\022\026\n\016upAcceleration\030\004 \001(\021"
     "\022\r\n\005brake\030\005 \001(\010\022\020\n\010yawSpeed\030\006 \001(\002\022\021\n\trol"
     "lSpeed\030\007 \001(\002\022\022\n\npitchSpeed\030\010 \001(\002\022\014\n\004fire"
     "\030\t \001(\010\022\021\n\tcurWeapon\030\n \001(\r\022\016\n\006mouseX\030\013 \001("
-    "\002\022\016\n\006mouseY\030\014 \001(\002\"l\n\005Timer\022\023\n\013timeStarte"
-    "d\030\001 \001(\002\022\025\n\rcountDownTime\030\002 \001(\002\022\022\n\ntimePa"
-    "used\030\003 \001(\002\022\020\n\010isPaused\030\004 \001(\010\022\021\n\tisRunnin"
-    "g\030\005 \001(\010\"\200\001\n\tGameState\022\022\n\nplayerShip\030\003 \001("
-    "\r\022\020\n\010gameTime\030\002 \002(\001\022\036\n\nlevelTimer\030\004 \001(\0132"
-    "\n.ast.Timer\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity"
-    "\022\020\n\010curLevel\030\005 \001(\005\"\265\001\n\020CollisionMessage\022"
-    "\024\n\010collider\030\002 \003(\rB\002\020\001\022\024\n\010wall_top\030\003 \003(\rB"
-    "\002\020\001\022\027\n\013wall_bottom\030\004 \003(\rB\002\020\001\022\025\n\twall_lef"
-    "t\030\005 \003(\rB\002\020\001\022\026\n\nwall_right\030\006 \003(\rB\002\020\001\022\026\n\nw"
-    "all_front\030\007 \003(\rB\002\020\001\022\025\n\twall_back\030\010 \003(\rB\002"
-    "\020\001\"-\n\013ChatMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004t"
-    "ext\030\002 \001(\t\"Q\n\023CreateEntityMessage\022\035\n\025crea"
-    "teEntityMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132"
-    "\013.ast.Entity\"\361\001\n\005Frame\022\013\n\003seq\030\003 \001(\004\022\013\n\003a"
-    "ck\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022\016\n\006shipid\030\022 "
-    "\001(\r\022!\n\tgameState\030\021 \001(\0132\016.ast.GameState\0220"
-    "\n\021collision_message\030\001 \001(\0132\025.ast.Collisio"
-    "nMessage\022\030\n\014firing_ships\030\007 \003(\rB\002\020\001\022\025\n\tre"
-    "move_id\030\006 \003(\rB\002\020\001\022%\n\013chatMessage\030\002 \003(\0132\020"
-    ".ast.ChatMessage", 2656);
+    "\002\022\016\n\006mouseY\030\014 \001(\002\022\037\n\027lastReceivedGameSta"
+    "teId\030\r \001(\r\"l\n\005Timer\022\023\n\013timeStarted\030\001 \001(\002"
+    "\022\025\n\rcountDownTime\030\002 \001(\002\022\022\n\ntimePaused\030\003 "
+    "\001(\002\022\020\n\010isPaused\030\004 \001(\010\022\021\n\tisRunning\030\005 \001(\010"
+    "\"\214\001\n\tGameState\022\033\n\006entity\030\001 \003(\0132\013.ast.Ent"
+    "ity\022\020\n\010gameTime\030\002 \002(\001\022\022\n\nplayerShip\030\003 \001("
+    "\r\022\036\n\nlevelTimer\030\004 \001(\0132\n.ast.Timer\022\020\n\010cur"
+    "Level\030\005 \001(\005\022\n\n\002id\030\006 \001(\r\"\265\001\n\020CollisionMes"
+    "sage\022\024\n\010collider\030\002 \003(\rB\002\020\001\022\024\n\010wall_top\030\003"
+    " \003(\rB\002\020\001\022\027\n\013wall_bottom\030\004 \003(\rB\002\020\001\022\025\n\twal"
+    "l_left\030\005 \003(\rB\002\020\001\022\026\n\nwall_right\030\006 \003(\rB\002\020\001"
+    "\022\026\n\nwall_front\030\007 \003(\rB\002\020\001\022\025\n\twall_back\030\010 "
+    "\003(\rB\002\020\001\"-\n\013ChatMessage\022\020\n\010sourceid\030\001 \001(\r"
+    "\022\014\n\004text\030\002 \001(\t\"Q\n\023CreateEntityMessage\022\035\n"
+    "\025createEntityMessageid\030\001 \001(\r\022\033\n\006entity\030\002"
+    " \003(\0132\013.ast.Entity\"\202\002\n\005Frame\0220\n\021collision"
+    "_message\030\001 \001(\0132\025.ast.CollisionMessage\022%\n"
+    "\013chatMessage\030\002 \003(\0132\020.ast.ChatMessage\022\013\n\003"
+    "seq\030\003 \001(\004\022\013\n\003ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001("
+    "\001\022\025\n\tremove_id\030\006 \003(\rB\002\020\001\022\030\n\014firing_ships"
+    "\030\007 \003(\rB\002\020\001\022\017\n\007diff_of\030\010 \001(\r\022!\n\tgameState"
+    "\030\t \001(\0132\016.ast.GameState\022\016\n\006shipid\030\n \001(\r", 2718);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -765,17 +769,17 @@ const int Entity::kIdFieldNumber;
 const int Entity::kTypeFieldNumber;
 const int Entity::kPositionFieldNumber;
 const int Entity::kVelocityFieldNumber;
+const int Entity::kWeaponFieldNumber;
+const int Entity::kUpFieldNumber;
+const int Entity::kRightFieldNumber;
+const int Entity::kForwardFieldNumber;
 const int Entity::kRadiusFieldNumber;
 const int Entity::kAxisFieldNumber;
 const int Entity::kAngleFieldNumber;
 const int Entity::kRotationSpeedFieldNumber;
-const int Entity::kUpFieldNumber;
-const int Entity::kRightFieldNumber;
-const int Entity::kForwardFieldNumber;
 const int Entity::kTargetYawSpeedFieldNumber;
 const int Entity::kTargetPitchSpeedFieldNumber;
 const int Entity::kTargetRollSpeedFieldNumber;
-const int Entity::kWeaponFieldNumber;
 const int Entity::kHealthFieldNumber;
 const int Entity::kHealthMaxFieldNumber;
 const int Entity::kEngineLevelFieldNumber;
@@ -824,10 +828,10 @@ Entity::Entity()
 void Entity::InitAsDefaultInstance() {
   position_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   velocity_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
-  axis_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   up_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   right_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   forward_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
+  axis_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   shotdirection_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   banktimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
   alivetimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
@@ -846,13 +850,13 @@ void Entity::SharedCtor() {
   type_ = 0u;
   position_ = NULL;
   velocity_ = NULL;
+  up_ = NULL;
+  right_ = NULL;
+  forward_ = NULL;
   radius_ = 0;
   axis_ = NULL;
   angle_ = 0;
   rotationspeed_ = 0;
-  up_ = NULL;
-  right_ = NULL;
-  forward_ = NULL;
   targetyawspeed_ = 0;
   targetpitchspeed_ = 0;
   targetrollspeed_ = 0;
@@ -905,10 +909,10 @@ void Entity::SharedDtor() {
   if (this != default_instance_) {
     delete position_;
     delete velocity_;
-    delete axis_;
     delete up_;
     delete right_;
     delete forward_;
+    delete axis_;
     delete shotdirection_;
     delete banktimer_;
     delete alivetimer_;
@@ -946,14 +950,6 @@ void Entity::Clear() {
     if (has_velocity()) {
       if (velocity_ != NULL) velocity_->::ast::Vector::Clear();
     }
-    radius_ = 0;
-    if (has_axis()) {
-      if (axis_ != NULL) axis_->::ast::Vector::Clear();
-    }
-    angle_ = 0;
-    rotationspeed_ = 0;
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (has_up()) {
       if (up_ != NULL) up_->::ast::Vector::Clear();
     }
@@ -963,6 +959,14 @@ void Entity::Clear() {
     if (has_forward()) {
       if (forward_ != NULL) forward_->::ast::Vector::Clear();
     }
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    radius_ = 0;
+    if (has_axis()) {
+      if (axis_ != NULL) axis_->::ast::Vector::Clear();
+    }
+    angle_ = 0;
+    rotationspeed_ = 0;
     targetyawspeed_ = 0;
     targetpitchspeed_ = 0;
     targetrollspeed_ = 0;
@@ -1104,6 +1108,48 @@ bool Entity::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(42)) goto parse_weapon;
+        if (input->ExpectTag(50)) goto parse_up;
+        break;
+      }
+      
+      // optional .ast.Vector up = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_up:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_up()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(58)) goto parse_right;
+        break;
+      }
+      
+      // optional .ast.Vector right = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_right:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_right()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(66)) goto parse_forward;
+        break;
+      }
+      
+      // optional .ast.Vector forward = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_forward:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_forward()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectTag(157)) goto parse_radius;
         break;
       }
@@ -1131,48 +1177,6 @@ bool Entity::MergePartialFromCodedStream(
          parse_axis:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_axis()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(178)) goto parse_up;
-        break;
-      }
-      
-      // optional .ast.Vector up = 22;
-      case 22: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_up:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_up()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(186)) goto parse_right;
-        break;
-      }
-      
-      // optional .ast.Vector right = 23;
-      case 23: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_right:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_right()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(194)) goto parse_forward;
-        break;
-      }
-      
-      // optional .ast.Vector forward = 24;
-      case 24: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_forward:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_forward()));
         } else {
           goto handle_uninterpreted;
         }
@@ -1906,6 +1910,24 @@ void Entity::SerializeWithCachedSizes(
       5, this->weapon(i), output);
   }
   
+  // optional .ast.Vector up = 6;
+  if (has_up()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, this->up(), output);
+  }
+  
+  // optional .ast.Vector right = 7;
+  if (has_right()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      7, this->right(), output);
+  }
+  
+  // optional .ast.Vector forward = 8;
+  if (has_forward()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      8, this->forward(), output);
+  }
+  
   // optional float radius = 19;
   if (has_radius()) {
     ::google::protobuf::internal::WireFormatLite::WriteFloat(19, this->radius(), output);
@@ -1915,24 +1937,6 @@ void Entity::SerializeWithCachedSizes(
   if (has_axis()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       21, this->axis(), output);
-  }
-  
-  // optional .ast.Vector up = 22;
-  if (has_up()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      22, this->up(), output);
-  }
-  
-  // optional .ast.Vector right = 23;
-  if (has_right()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      23, this->right(), output);
-  }
-  
-  // optional .ast.Vector forward = 24;
-  if (has_forward()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      24, this->forward(), output);
   }
   
   // optional float angle = 25;
@@ -2193,6 +2197,27 @@ void Entity::SerializeWithCachedSizes(
         5, this->weapon(i), target);
   }
   
+  // optional .ast.Vector up = 6;
+  if (has_up()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        6, this->up(), target);
+  }
+  
+  // optional .ast.Vector right = 7;
+  if (has_right()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        7, this->right(), target);
+  }
+  
+  // optional .ast.Vector forward = 8;
+  if (has_forward()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        8, this->forward(), target);
+  }
+  
   // optional float radius = 19;
   if (has_radius()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(19, this->radius(), target);
@@ -2203,27 +2228,6 @@ void Entity::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         21, this->axis(), target);
-  }
-  
-  // optional .ast.Vector up = 22;
-  if (has_up()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        22, this->up(), target);
-  }
-  
-  // optional .ast.Vector right = 23;
-  if (has_right()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        23, this->right(), target);
-  }
-  
-  // optional .ast.Vector forward = 24;
-  if (has_forward()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        24, this->forward(), target);
   }
   
   // optional float angle = 25;
@@ -2488,6 +2492,29 @@ int Entity::ByteSize() const {
           this->velocity());
     }
     
+    // optional .ast.Vector up = 6;
+    if (has_up()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->up());
+    }
+    
+    // optional .ast.Vector right = 7;
+    if (has_right()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->right());
+    }
+    
+    // optional .ast.Vector forward = 8;
+    if (has_forward()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->forward());
+    }
+    
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional float radius = 19;
     if (has_radius()) {
       total_size += 2 + 4;
@@ -2508,29 +2535,6 @@ int Entity::ByteSize() const {
     // optional float rotationSpeed = 26;
     if (has_rotationspeed()) {
       total_size += 2 + 4;
-    }
-    
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional .ast.Vector up = 22;
-    if (has_up()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->up());
-    }
-    
-    // optional .ast.Vector right = 23;
-    if (has_right()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->right());
-    }
-    
-    // optional .ast.Vector forward = 24;
-    if (has_forward()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->forward());
     }
     
     // optional float targetYawSpeed = 27;
@@ -2830,6 +2834,17 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_velocity()) {
       mutable_velocity()->::ast::Vector::MergeFrom(from.velocity());
     }
+    if (from.has_up()) {
+      mutable_up()->::ast::Vector::MergeFrom(from.up());
+    }
+    if (from.has_right()) {
+      mutable_right()->::ast::Vector::MergeFrom(from.right());
+    }
+    if (from.has_forward()) {
+      mutable_forward()->::ast::Vector::MergeFrom(from.forward());
+    }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_radius()) {
       set_radius(from.radius());
     }
@@ -2841,17 +2856,6 @@ void Entity::MergeFrom(const Entity& from) {
     }
     if (from.has_rotationspeed()) {
       set_rotationspeed(from.rotationspeed());
-    }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    if (from.has_up()) {
-      mutable_up()->::ast::Vector::MergeFrom(from.up());
-    }
-    if (from.has_right()) {
-      mutable_right()->::ast::Vector::MergeFrom(from.right());
-    }
-    if (from.has_forward()) {
-      mutable_forward()->::ast::Vector::MergeFrom(from.forward());
     }
     if (from.has_targetyawspeed()) {
       set_targetyawspeed(from.targetyawspeed());
@@ -3010,8 +3014,8 @@ bool Entity::IsInitialized() const {
   if (has_velocity()) {
     if (!this->velocity().IsInitialized()) return false;
   }
-  if (has_axis()) {
-    if (!this->axis().IsInitialized()) return false;
+  for (int i = 0; i < weapon_size(); i++) {
+    if (!this->weapon(i).IsInitialized()) return false;
   }
   if (has_up()) {
     if (!this->up().IsInitialized()) return false;
@@ -3022,8 +3026,8 @@ bool Entity::IsInitialized() const {
   if (has_forward()) {
     if (!this->forward().IsInitialized()) return false;
   }
-  for (int i = 0; i < weapon_size(); i++) {
-    if (!this->weapon(i).IsInitialized()) return false;
+  if (has_axis()) {
+    if (!this->axis().IsInitialized()) return false;
   }
   if (has_shotdirection()) {
     if (!this->shotdirection().IsInitialized()) return false;
@@ -3037,17 +3041,17 @@ void Entity::Swap(Entity* other) {
     std::swap(type_, other->type_);
     std::swap(position_, other->position_);
     std::swap(velocity_, other->velocity_);
+    weapon_.Swap(&other->weapon_);
+    std::swap(up_, other->up_);
+    std::swap(right_, other->right_);
+    std::swap(forward_, other->forward_);
     std::swap(radius_, other->radius_);
     std::swap(axis_, other->axis_);
     std::swap(angle_, other->angle_);
     std::swap(rotationspeed_, other->rotationspeed_);
-    std::swap(up_, other->up_);
-    std::swap(right_, other->right_);
-    std::swap(forward_, other->forward_);
     std::swap(targetyawspeed_, other->targetyawspeed_);
     std::swap(targetpitchspeed_, other->targetpitchspeed_);
     std::swap(targetrollspeed_, other->targetrollspeed_);
-    weapon_.Swap(&other->weapon_);
     std::swap(health_, other->health_);
     std::swap(healthmax_, other->healthmax_);
     std::swap(enginelevel_, other->enginelevel_);
@@ -3356,12 +3360,12 @@ bool Weapon::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(128)) goto parse_purchased;
+        if (input->ExpectTag(80)) goto parse_purchased;
         break;
       }
       
-      // optional bool purchased = 16;
-      case 16: {
+      // optional bool purchased = 10;
+      case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_purchased:
@@ -3372,12 +3376,12 @@ bool Weapon::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(136)) goto parse_weaponPrice;
+        if (input->ExpectTag(88)) goto parse_weaponPrice;
         break;
       }
       
-      // optional int32 weaponPrice = 17;
-      case 17: {
+      // optional int32 weaponPrice = 11;
+      case 11: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_weaponPrice:
@@ -3388,12 +3392,12 @@ bool Weapon::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(144)) goto parse_level;
+        if (input->ExpectTag(96)) goto parse_level;
         break;
       }
       
-      // optional int32 level = 18;
-      case 18: {
+      // optional int32 level = 12;
+      case 12: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_level:
@@ -3404,12 +3408,12 @@ bool Weapon::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(157)) goto parse_range;
+        if (input->ExpectTag(109)) goto parse_range;
         break;
       }
       
-      // optional float range = 19;
-      case 19: {
+      // optional float range = 13;
+      case 13: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_range:
@@ -3420,12 +3424,12 @@ bool Weapon::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(165)) goto parse_overheatLevel;
+        if (input->ExpectTag(117)) goto parse_overheatLevel;
         break;
       }
       
-      // optional float overheatLevel = 20;
-      case 20: {
+      // optional float overheatLevel = 14;
+      case 14: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_overheatLevel:
@@ -3436,12 +3440,12 @@ bool Weapon::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(173)) goto parse_heatPerShot;
+        if (input->ExpectTag(125)) goto parse_heatPerShot;
         break;
       }
       
-      // optional float heatPerShot = 21;
-      case 21: {
+      // optional float heatPerShot = 15;
+      case 15: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_heatPerShot:
@@ -3520,34 +3524,34 @@ void Weapon::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->shotid(), output);
   }
   
-  // optional bool purchased = 16;
+  // optional bool purchased = 10;
   if (has_purchased()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(16, this->purchased(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(10, this->purchased(), output);
   }
   
-  // optional int32 weaponPrice = 17;
+  // optional int32 weaponPrice = 11;
   if (has_weaponprice()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(17, this->weaponprice(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(11, this->weaponprice(), output);
   }
   
-  // optional int32 level = 18;
+  // optional int32 level = 12;
   if (has_level()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(18, this->level(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(12, this->level(), output);
   }
   
-  // optional float range = 19;
+  // optional float range = 13;
   if (has_range()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(19, this->range(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(13, this->range(), output);
   }
   
-  // optional float overheatLevel = 20;
+  // optional float overheatLevel = 14;
   if (has_overheatlevel()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(20, this->overheatlevel(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(14, this->overheatlevel(), output);
   }
   
-  // optional float heatPerShot = 21;
+  // optional float heatPerShot = 15;
   if (has_heatpershot()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(21, this->heatpershot(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(15, this->heatpershot(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -3605,34 +3609,34 @@ void Weapon::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->shotid(), target);
   }
   
-  // optional bool purchased = 16;
+  // optional bool purchased = 10;
   if (has_purchased()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(16, this->purchased(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(10, this->purchased(), target);
   }
   
-  // optional int32 weaponPrice = 17;
+  // optional int32 weaponPrice = 11;
   if (has_weaponprice()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(17, this->weaponprice(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(11, this->weaponprice(), target);
   }
   
-  // optional int32 level = 18;
+  // optional int32 level = 12;
   if (has_level()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(18, this->level(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(12, this->level(), target);
   }
   
-  // optional float range = 19;
+  // optional float range = 13;
   if (has_range()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(19, this->range(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(13, this->range(), target);
   }
   
-  // optional float overheatLevel = 20;
+  // optional float overheatLevel = 14;
   if (has_overheatlevel()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(20, this->overheatlevel(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(14, this->overheatlevel(), target);
   }
   
-  // optional float heatPerShot = 21;
+  // optional float heatPerShot = 15;
   if (has_heatpershot()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(21, this->heatpershot(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(15, this->heatpershot(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -3701,38 +3705,38 @@ int Weapon::ByteSize() const {
           this->shotid());
     }
     
-    // optional bool purchased = 16;
+    // optional bool purchased = 10;
     if (has_purchased()) {
-      total_size += 2 + 1;
+      total_size += 1 + 1;
     }
     
-    // optional int32 weaponPrice = 17;
+    // optional int32 weaponPrice = 11;
     if (has_weaponprice()) {
-      total_size += 2 +
+      total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->weaponprice());
     }
     
-    // optional int32 level = 18;
+    // optional int32 level = 12;
     if (has_level()) {
-      total_size += 2 +
+      total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->level());
     }
     
-    // optional float range = 19;
+    // optional float range = 13;
     if (has_range()) {
-      total_size += 2 + 4;
+      total_size += 1 + 4;
     }
     
-    // optional float overheatLevel = 20;
+    // optional float overheatLevel = 14;
     if (has_overheatlevel()) {
-      total_size += 2 + 4;
+      total_size += 1 + 4;
     }
     
-    // optional float heatPerShot = 21;
+    // optional float heatPerShot = 15;
     if (has_heatpershot()) {
-      total_size += 2 + 4;
+      total_size += 1 + 4;
     }
     
   }
@@ -3878,6 +3882,7 @@ const int ClientCommand::kFireFieldNumber;
 const int ClientCommand::kCurWeaponFieldNumber;
 const int ClientCommand::kMouseXFieldNumber;
 const int ClientCommand::kMouseYFieldNumber;
+const int ClientCommand::kLastReceivedGameStateIdFieldNumber;
 #endif  // !_MSC_VER
 
 ClientCommand::ClientCommand()
@@ -3908,6 +3913,7 @@ void ClientCommand::SharedCtor() {
   curweapon_ = 0u;
   mousex_ = 0;
   mousey_ = 0;
+  lastreceivedgamestateid_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3956,6 +3962,7 @@ void ClientCommand::Clear() {
     curweapon_ = 0u;
     mousex_ = 0;
     mousey_ = 0;
+    lastreceivedgamestateid_ = 0u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -4154,6 +4161,22 @@ bool ClientCommand::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(104)) goto parse_lastReceivedGameStateId;
+        break;
+      }
+      
+      // optional uint32 lastReceivedGameStateId = 13;
+      case 13: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_lastReceivedGameStateId:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &lastreceivedgamestateid_)));
+          set_has_lastreceivedgamestateid();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4236,6 +4259,11 @@ void ClientCommand::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(12, this->mousey(), output);
   }
   
+  // optional uint32 lastReceivedGameStateId = 13;
+  if (has_lastreceivedgamestateid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(13, this->lastreceivedgamestateid(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -4302,6 +4330,11 @@ void ClientCommand::SerializeWithCachedSizes(
   // optional float mouseY = 12;
   if (has_mousey()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(12, this->mousey(), target);
+  }
+  
+  // optional uint32 lastReceivedGameStateId = 13;
+  if (has_lastreceivedgamestateid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(13, this->lastreceivedgamestateid(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -4387,6 +4420,13 @@ int ClientCommand::ByteSize() const {
       total_size += 1 + 4;
     }
     
+    // optional uint32 lastReceivedGameStateId = 13;
+    if (has_lastreceivedgamestateid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->lastreceivedgamestateid());
+    }
+    
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -4452,6 +4492,9 @@ void ClientCommand::MergeFrom(const ClientCommand& from) {
     if (from.has_mousey()) {
       set_mousey(from.mousey());
     }
+    if (from.has_lastreceivedgamestateid()) {
+      set_lastreceivedgamestateid(from.lastreceivedgamestateid());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -4488,6 +4531,7 @@ void ClientCommand::Swap(ClientCommand* other) {
     std::swap(curweapon_, other->curweapon_);
     std::swap(mousex_, other->mousex_);
     std::swap(mousey_, other->mousey_);
+    std::swap(lastreceivedgamestateid_, other->lastreceivedgamestateid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -4863,11 +4907,12 @@ void Timer::Swap(Timer* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int GameState::kPlayerShipFieldNumber;
-const int GameState::kGameTimeFieldNumber;
-const int GameState::kLevelTimerFieldNumber;
 const int GameState::kEntityFieldNumber;
+const int GameState::kGameTimeFieldNumber;
+const int GameState::kPlayerShipFieldNumber;
+const int GameState::kLevelTimerFieldNumber;
 const int GameState::kCurLevelFieldNumber;
+const int GameState::kIdFieldNumber;
 #endif  // !_MSC_VER
 
 GameState::GameState()
@@ -4887,10 +4932,11 @@ GameState::GameState(const GameState& from)
 
 void GameState::SharedCtor() {
   _cached_size_ = 0;
-  playership_ = 0u;
   gametime_ = 0;
+  playership_ = 0u;
   leveltimer_ = NULL;
   curlevel_ = 0;
+  id_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4925,13 +4971,14 @@ GameState* GameState::New() const {
 }
 
 void GameState::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    playership_ = 0u;
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
     gametime_ = 0;
+    playership_ = 0u;
     if (has_leveltimer()) {
       if (leveltimer_ != NULL) leveltimer_->::ast::Timer::Clear();
     }
     curlevel_ = 0;
+    id_ = 0u;
   }
   entity_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -5017,6 +5064,22 @@ bool GameState::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(48)) goto parse_id;
+        break;
+      }
+      
+      // optional uint32 id = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_id:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &id_)));
+          set_has_id();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -5066,6 +5129,11 @@ void GameState::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->curlevel(), output);
   }
   
+  // optional uint32 id = 6;
+  if (has_id()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(6, this->id(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -5103,6 +5171,11 @@ void GameState::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->curlevel(), target);
   }
   
+  // optional uint32 id = 6;
+  if (has_id()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(6, this->id(), target);
+  }
+  
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -5113,17 +5186,17 @@ void GameState::SerializeWithCachedSizes(
 int GameState::ByteSize() const {
   int total_size = 0;
   
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    // required double gameTime = 2;
+    if (has_gametime()) {
+      total_size += 1 + 8;
+    }
+    
     // optional uint32 playerShip = 3;
     if (has_playership()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->playership());
-    }
-    
-    // required double gameTime = 2;
-    if (has_gametime()) {
-      total_size += 1 + 8;
     }
     
     // optional .ast.Timer levelTimer = 4;
@@ -5138,6 +5211,13 @@ int GameState::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->curlevel());
+    }
+    
+    // optional uint32 id = 6;
+    if (has_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->id());
     }
     
   }
@@ -5175,18 +5255,21 @@ void GameState::MergeFrom(const ::google::protobuf::Message& from) {
 void GameState::MergeFrom(const GameState& from) {
   GOOGLE_CHECK_NE(&from, this);
   entity_.MergeFrom(from.entity_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_playership()) {
-      set_playership(from.playership());
-    }
+  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
     if (from.has_gametime()) {
       set_gametime(from.gametime());
+    }
+    if (from.has_playership()) {
+      set_playership(from.playership());
     }
     if (from.has_leveltimer()) {
       mutable_leveltimer()->::ast::Timer::MergeFrom(from.leveltimer());
     }
     if (from.has_curlevel()) {
       set_curlevel(from.curlevel());
+    }
+    if (from.has_id()) {
+      set_id(from.id());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -5215,11 +5298,12 @@ bool GameState::IsInitialized() const {
 
 void GameState::Swap(GameState* other) {
   if (other != this) {
-    std::swap(playership_, other->playership_);
-    std::swap(gametime_, other->gametime_);
-    std::swap(leveltimer_, other->leveltimer_);
     entity_.Swap(&other->entity_);
+    std::swap(gametime_, other->gametime_);
+    std::swap(playership_, other->playership_);
+    std::swap(leveltimer_, other->leveltimer_);
     std::swap(curlevel_, other->curlevel_);
+    std::swap(id_, other->id_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -6361,15 +6445,16 @@ void CreateEntityMessage::Swap(CreateEntityMessage* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int Frame::kCollisionMessageFieldNumber;
+const int Frame::kChatMessageFieldNumber;
 const int Frame::kSeqFieldNumber;
 const int Frame::kAckFieldNumber;
 const int Frame::kTimestampFieldNumber;
-const int Frame::kShipidFieldNumber;
-const int Frame::kGameStateFieldNumber;
-const int Frame::kCollisionMessageFieldNumber;
-const int Frame::kFiringShipsFieldNumber;
 const int Frame::kRemoveIdFieldNumber;
-const int Frame::kChatMessageFieldNumber;
+const int Frame::kFiringShipsFieldNumber;
+const int Frame::kDiffOfFieldNumber;
+const int Frame::kGameStateFieldNumber;
+const int Frame::kShipidFieldNumber;
 #endif  // !_MSC_VER
 
 Frame::Frame()
@@ -6378,8 +6463,8 @@ Frame::Frame()
 }
 
 void Frame::InitAsDefaultInstance() {
-  gamestate_ = const_cast< ::ast::GameState*>(&::ast::GameState::default_instance());
   collision_message_ = const_cast< ::ast::CollisionMessage*>(&::ast::CollisionMessage::default_instance());
+  gamestate_ = const_cast< ::ast::GameState*>(&::ast::GameState::default_instance());
 }
 
 Frame::Frame(const Frame& from)
@@ -6390,12 +6475,13 @@ Frame::Frame(const Frame& from)
 
 void Frame::SharedCtor() {
   _cached_size_ = 0;
+  collision_message_ = NULL;
   seq_ = GOOGLE_ULONGLONG(0);
   ack_ = GOOGLE_ULONGLONG(0);
   timestamp_ = 0;
-  shipid_ = 0u;
+  diff_of_ = 0u;
   gamestate_ = NULL;
-  collision_message_ = NULL;
+  shipid_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -6405,8 +6491,8 @@ Frame::~Frame() {
 
 void Frame::SharedDtor() {
   if (this != default_instance_) {
-    delete gamestate_;
     delete collision_message_;
+    delete gamestate_;
   }
 }
 
@@ -6432,20 +6518,23 @@ Frame* Frame::New() const {
 
 void Frame::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    seq_ = GOOGLE_ULONGLONG(0);
-    ack_ = GOOGLE_ULONGLONG(0);
-    timestamp_ = 0;
-    shipid_ = 0u;
-    if (has_gamestate()) {
-      if (gamestate_ != NULL) gamestate_->::ast::GameState::Clear();
-    }
     if (has_collision_message()) {
       if (collision_message_ != NULL) collision_message_->::ast::CollisionMessage::Clear();
     }
+    seq_ = GOOGLE_ULONGLONG(0);
+    ack_ = GOOGLE_ULONGLONG(0);
+    timestamp_ = 0;
+    diff_of_ = 0u;
   }
-  firing_ships_.Clear();
-  remove_id_.Clear();
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (has_gamestate()) {
+      if (gamestate_ != NULL) gamestate_->::ast::GameState::Clear();
+    }
+    shipid_ = 0u;
+  }
   chatmessage_.Clear();
+  remove_id_.Clear();
+  firing_ships_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -6570,12 +6659,28 @@ bool Frame::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(138)) goto parse_gameState;
+        if (input->ExpectTag(64)) goto parse_diff_of;
         break;
       }
       
-      // optional .ast.GameState gameState = 17;
-      case 17: {
+      // optional uint32 diff_of = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_diff_of:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &diff_of_)));
+          set_has_diff_of();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(74)) goto parse_gameState;
+        break;
+      }
+      
+      // optional .ast.GameState gameState = 9;
+      case 9: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_gameState:
@@ -6584,12 +6689,12 @@ bool Frame::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(144)) goto parse_shipid;
+        if (input->ExpectTag(80)) goto parse_shipid;
         break;
       }
       
-      // optional uint32 shipid = 18;
-      case 18: {
+      // optional uint32 shipid = 10;
+      case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_shipid:
@@ -6669,15 +6774,20 @@ void Frame::SerializeWithCachedSizes(
       this->firing_ships(i), output);
   }
   
-  // optional .ast.GameState gameState = 17;
-  if (has_gamestate()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      17, this->gamestate(), output);
+  // optional uint32 diff_of = 8;
+  if (has_diff_of()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(8, this->diff_of(), output);
   }
   
-  // optional uint32 shipid = 18;
+  // optional .ast.GameState gameState = 9;
+  if (has_gamestate()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      9, this->gamestate(), output);
+  }
+  
+  // optional uint32 shipid = 10;
   if (has_shipid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(18, this->shipid(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(10, this->shipid(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -6745,16 +6855,21 @@ void Frame::SerializeWithCachedSizes(
       WriteUInt32NoTagToArray(this->firing_ships(i), target);
   }
   
-  // optional .ast.GameState gameState = 17;
+  // optional uint32 diff_of = 8;
+  if (has_diff_of()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(8, this->diff_of(), target);
+  }
+  
+  // optional .ast.GameState gameState = 9;
   if (has_gamestate()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        17, this->gamestate(), target);
+        9, this->gamestate(), target);
   }
   
-  // optional uint32 shipid = 18;
+  // optional uint32 shipid = 10;
   if (has_shipid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(18, this->shipid(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(10, this->shipid(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -6768,6 +6883,13 @@ int Frame::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .ast.CollisionMessage collision_message = 1;
+    if (has_collision_message()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->collision_message());
+    }
+    
     // optional uint64 seq = 3;
     if (has_seq()) {
       total_size += 1 +
@@ -6787,41 +6909,36 @@ int Frame::ByteSize() const {
       total_size += 1 + 8;
     }
     
-    // optional uint32 shipid = 18;
-    if (has_shipid()) {
-      total_size += 2 +
+    // optional uint32 diff_of = 8;
+    if (has_diff_of()) {
+      total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->shipid());
+          this->diff_of());
     }
     
-    // optional .ast.GameState gameState = 17;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional .ast.GameState gameState = 9;
     if (has_gamestate()) {
-      total_size += 2 +
+      total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->gamestate());
     }
     
-    // optional .ast.CollisionMessage collision_message = 1;
-    if (has_collision_message()) {
+    // optional uint32 shipid = 10;
+    if (has_shipid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->collision_message());
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->shipid());
     }
     
   }
-  // repeated uint32 firing_ships = 7 [packed = true];
-  {
-    int data_size = 0;
-    for (int i = 0; i < this->firing_ships_size(); i++) {
-      data_size += ::google::protobuf::internal::WireFormatLite::
-        UInt32Size(this->firing_ships(i));
-    }
-    if (data_size > 0) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
-    }
-    _firing_ships_cached_byte_size_ = data_size;
-    total_size += data_size;
+  // repeated .ast.ChatMessage chatMessage = 2;
+  total_size += 1 * this->chatmessage_size();
+  for (int i = 0; i < this->chatmessage_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->chatmessage(i));
   }
   
   // repeated uint32 remove_id = 6 [packed = true];
@@ -6839,12 +6956,19 @@ int Frame::ByteSize() const {
     total_size += data_size;
   }
   
-  // repeated .ast.ChatMessage chatMessage = 2;
-  total_size += 1 * this->chatmessage_size();
-  for (int i = 0; i < this->chatmessage_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->chatmessage(i));
+  // repeated uint32 firing_ships = 7 [packed = true];
+  {
+    int data_size = 0;
+    for (int i = 0; i < this->firing_ships_size(); i++) {
+      data_size += ::google::protobuf::internal::WireFormatLite::
+        UInt32Size(this->firing_ships(i));
+    }
+    if (data_size > 0) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
+    }
+    _firing_ships_cached_byte_size_ = data_size;
+    total_size += data_size;
   }
   
   if (!unknown_fields().empty()) {
@@ -6872,10 +6996,13 @@ void Frame::MergeFrom(const ::google::protobuf::Message& from) {
 
 void Frame::MergeFrom(const Frame& from) {
   GOOGLE_CHECK_NE(&from, this);
-  firing_ships_.MergeFrom(from.firing_ships_);
-  remove_id_.MergeFrom(from.remove_id_);
   chatmessage_.MergeFrom(from.chatmessage_);
+  remove_id_.MergeFrom(from.remove_id_);
+  firing_ships_.MergeFrom(from.firing_ships_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_collision_message()) {
+      mutable_collision_message()->::ast::CollisionMessage::MergeFrom(from.collision_message());
+    }
     if (from.has_seq()) {
       set_seq(from.seq());
     }
@@ -6885,14 +7012,16 @@ void Frame::MergeFrom(const Frame& from) {
     if (from.has_timestamp()) {
       set_timestamp(from.timestamp());
     }
-    if (from.has_shipid()) {
-      set_shipid(from.shipid());
+    if (from.has_diff_of()) {
+      set_diff_of(from.diff_of());
     }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_gamestate()) {
       mutable_gamestate()->::ast::GameState::MergeFrom(from.gamestate());
     }
-    if (from.has_collision_message()) {
-      mutable_collision_message()->::ast::CollisionMessage::MergeFrom(from.collision_message());
+    if (from.has_shipid()) {
+      set_shipid(from.shipid());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -6920,15 +7049,16 @@ bool Frame::IsInitialized() const {
 
 void Frame::Swap(Frame* other) {
   if (other != this) {
+    std::swap(collision_message_, other->collision_message_);
+    chatmessage_.Swap(&other->chatmessage_);
     std::swap(seq_, other->seq_);
     std::swap(ack_, other->ack_);
     std::swap(timestamp_, other->timestamp_);
-    std::swap(shipid_, other->shipid_);
-    std::swap(gamestate_, other->gamestate_);
-    std::swap(collision_message_, other->collision_message_);
-    firing_ships_.Swap(&other->firing_ships_);
     remove_id_.Swap(&other->remove_id_);
-    chatmessage_.Swap(&other->chatmessage_);
+    firing_ships_.Swap(&other->firing_ships_);
+    std::swap(diff_of_, other->diff_of_);
+    std::swap(gamestate_, other->gamestate_);
+    std::swap(shipid_, other->shipid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

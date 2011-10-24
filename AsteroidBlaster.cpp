@@ -379,10 +379,6 @@ int main(int argc, char* argv[]) {
    
    // Initialize the gameState
    gameState = new GameState(_gsm);
-
-   if (_gsm == ClientMode) {
-      gameState->connect((char*) ipAddress.c_str());
-   }
    
    // Initialize the screens
    gameState->addScreens();
@@ -395,6 +391,10 @@ int main(int argc, char* argv[]) {
    helpMenu = new HelpMenu();
    creditsMenu = new CreditsMenu();
    chat = new Input(gameState);
+
+   if (_gsm == ClientMode) {
+      gameState->connect((char*) ipAddress.c_str());
+   }
    //turn the menu on for the inial menu display
    if (_gsm == ServerMode || _gsm == ClientMode) {
       mainMenu->menuActive = false;
