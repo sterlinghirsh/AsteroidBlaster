@@ -67,6 +67,7 @@ class Custodian {
       void cleanup();
       void update();
       void add(Object3D* objectIn);
+      CollisionBase* getCollision(Object3D* a, Object3D* b);
       std::set<CollisionBase*, compareByDistance>* findCollisions(Object3D* item, bool searchBackwards = false);
       void findAllCollisions();
       std::vector<Object3D*>* getListOfObjects();

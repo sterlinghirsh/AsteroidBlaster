@@ -74,7 +74,7 @@ void ClientSide::receive() {
             //cout << "Packet received from server: " << (char*) event->packet->data << endl;
             ast::Frame frame;
             frame.ParseFromArray(event->packet->data, event->packet->dataLength);
-            gameState->handleFrame(frame);
+            gameState->handleFrame(&frame);
          }
 
       }

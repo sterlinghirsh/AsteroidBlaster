@@ -401,6 +401,8 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
  */
 template<>
 void Collision<Asteroid3D, BlasterShot>::handleCollision() {
+   // DEBUG
+   printf("Got to blastershot handlecollision.\n");
    const int particlesToEmit = 10;
    
    Vector3D particleVariation;
@@ -992,11 +994,16 @@ void Custodian::add(Object3D* objectIn) {
 /**
  * Iterate through objectsByID and remove any with shouldRemove set.
  * This should be called after each frame, after the server has sent updates.
+ * We check isRemoved, which means that the custodian must have previously
+ * called setRemoved() on this object. This is different from setting
+ * shouldRemove, since the server may set shouldRemove, which tells the
+ * client to remove it, and then the client actually does the removal.
+ * The server cannot directly remove an object.
  */
 void Custodian::cleanup() {
    std::map<unsigned, Object3D*>::iterator iter = objectsByID.begin();
    for (; iter != objectsByID.end(); iter++) {
-      if (iter->second->shouldRemove) {
+      if (iter->second->isRemoved()) {
          delete iter->second;
          objectsByID.erase(iter);
       }
@@ -1038,8 +1045,35 @@ void Custodian::remove(Object3D* objectIn) {
 
    // Last wishes? We don't use the destructor, since we might actually erase later.
    objectIn->onRemove();
+   objectIn->setRemoved();
 
    // delete objectIn;
+}
+
+/**
+ * Get a collision object for two objects that we know collide.
+ */
+CollisionBase* Custodian::getCollision(Object3D* a, Object3D* b) {
+   if (a == NULL || b == NULL) {
+      // DEBUG
+      if (a == NULL)
+         printf("a is null.\n");
+      if (b == NULL)
+         printf("b is null.\n");
+
+      return NULL;
+   }
+
+   CollisionBase* curCollision = NULL;
+   std::map<unsigned, CollisionBase*>::iterator curCollisionHandler;
+   unsigned collisionHandlerKey;
+   
+   collisionHandlerKey = a->type | b->type;
+   curCollisionHandler = collisionHandlers->find(collisionHandlerKey);
+   if (curCollisionHandler != collisionHandlers->end()) {
+      curCollision = curCollisionHandler->second->tryExecute(a, b);
+   }
+   return curCollision;
 }
 
 /**
@@ -1048,7 +1082,6 @@ void Custodian::remove(Object3D* objectIn) {
  */
 std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Object3D* item, bool searchBackwards) {
 
-   unsigned collisionHandlerKey;
    compareByDistance::curObject = item;
    // TODO: Order this by distance.
    std::set<CollisionBase*, compareByDistance >* sublist = new std::set<CollisionBase*, compareByDistance>();
@@ -1073,15 +1106,10 @@ std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Object3D*
          if (other == NULL)
             continue;
          if (other->maxPosition->x >= item->minPosition->x) {
-            curCollision = NULL;
+            curCollision = getCollision(item, other);;
 
-            collisionHandlerKey = item->type | other->type;
-            curCollisionHandler = collisionHandlers->find(collisionHandlerKey);
-            if (curCollisionHandler != collisionHandlers->end()) {
-               curCollision = curCollisionHandler->second->tryExecute(item, other);
-               if (curCollision != NULL) {
-                  sublist->insert(curCollision);
-               }
+            if (curCollision != NULL) {
+               sublist->insert(curCollision);
             }
          }
          else break;
@@ -1097,15 +1125,10 @@ std::set<CollisionBase*, compareByDistance>* Custodian::findCollisions(Object3D*
          continue;
 
       if (other->minPosition->x <= item->maxPosition->x) {
-         curCollision = NULL;
+         curCollision = getCollision(item, other);;
             
-         collisionHandlerKey = item->type | other->type;
-         curCollisionHandler = collisionHandlers->find(collisionHandlerKey);
-         if (curCollisionHandler != collisionHandlers->end()) {
-            curCollision = curCollisionHandler->second->tryExecute(item, other);
-            if (curCollision != NULL) {
-               sublist->insert(curCollision);
-            }
+         if (curCollision != NULL) {
+            sublist->insert(curCollision);
          }
       } else {
          break;

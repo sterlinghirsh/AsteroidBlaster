@@ -7,6 +7,6 @@
 #include "Network/ClientInfo.h"
 
 ClientInfo::ClientInfo(unsigned _shipid, _ENetPeer* _client) :
- client(_client), shipid(_shipid), ackCollision(0), ackGameState(0) {
+ client(_client), shipid(_shipid), ackGameState(0) {
    // Nothing to do.
 }

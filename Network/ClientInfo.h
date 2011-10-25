@@ -13,7 +13,6 @@ class ClientInfo {
    public:
       ClientInfo(unsigned _shipid, _ENetPeer* _client);
       unsigned shipid;
-      unsigned ackCollision;
       unsigned ackGameState;
       _ENetPeer* client;
 };

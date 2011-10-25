@@ -39,7 +39,8 @@ void Shot::onRemove() {
 
 void Shot::update(double timeDiff) {
    Object3D::update(timeDiff);
-   if (gameState->getGameTime() - timeFired > lifetime) {
+   if (gameState->gsm != ClientMode &&
+    gameState->getGameTime() - timeFired > lifetime) {
       shouldRemove = true;
    }
 }

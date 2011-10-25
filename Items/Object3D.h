@@ -35,6 +35,7 @@ class Object3D : public Drawable {
       
    //private variables------------------------------
    private:
+      bool removed;
    
    
    //public functions------------------------------
@@ -63,6 +64,8 @@ class Object3D : public Drawable {
       virtual void onRemove();
       
       void glRotate(bool doTranspose = true);
+      void setRemoved();
+      bool isRemoved();
       
    //private functions------------------------------
    private:
@@ -85,25 +88,6 @@ class Object3D : public Drawable {
 
    // Serialization
    public:
-      template<class Archive> 
-            void serialize(Archive & ar, const unsigned int version) {
-         std::cout << "lol the classic got to here, Object3DS" << std::endl;
-         ar & boost::serialization::base_object<Drawable>(*this);
-         ar & id;
-
-         ar & acceleration;
-         ar & axis;
-         ar & up;
-         ar & right;
-         ar & forward;
-
-         ar & angle;
-         ar & rotationSpeed;
-
-         ar & yawSpeed;
-         ar & pitchSpeed;
-         ar & rollSpeed;
-      }
       virtual void save(ast::Entity* ent);
       virtual bool saveDiff(const ast::Entity& old, ast::Entity* ent);
       virtual void load(const ast::Entity& ent);

@@ -203,7 +203,7 @@ class GameState : public InputReceiver {
       void reset(bool shouldLoad = false);
       void resetClientCommand();
       void handleCommand(const ast::ClientCommand& command);
-      void handleFrame(const ast::Frame& frame);
+      void handleFrame(ast::Frame* frame);
       
       void setLevelTimer();
       

@@ -14,7 +14,8 @@
 #include "Network/gamestate.pb.h"
 
 
-Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState) {
+Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState),
+ removed(false) {
    id = custodian->getNextID();
 
    minX = minY = minZ = -0.5;
@@ -328,8 +329,19 @@ void Object3D::load(const ast::Entity& ent) {
 }
 
 /**
- * This is called from Custodian::remove is.
+ * This is called from Custodian::remove().
  */
-void Object3D::onRemove() {
+void Object3D::onRemove() {}
 
+/**
+ * This is called from Custodian::remove() as well to signal
+ * Custodian::cleanup() to actually do the removal. This should
+ * be the only place where removed is set to true.
+ */
+void Object3D::setRemoved() {
+   removed = true;
+}
+
+bool Object3D::isRemoved() {
+   return removed;
 }

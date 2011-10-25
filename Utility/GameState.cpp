@@ -65,6 +65,7 @@ GameState::GameState(GameStateMode _gsm) :
    gameOverTimer(this) {
       curGameStateId = 0;
       lastReceivedGameStateId = 0;
+      ship = NULL;
 
       clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
       gsm = _gsm;
@@ -271,6 +272,8 @@ void GameState::addScreens() {
 void GameState::update(double timeDiff) {
    updateGameTime(timeDiff);
    curGameStateId++;
+   // Cleanup here to make sure we're not depending on anything (hopefully.)
+   custodian.cleanup();
 
    if (gsm == ClientMode) {
       clientSide->receive();
@@ -315,9 +318,10 @@ void GameState::update(double timeDiff) {
    std::set<CollisionBase*, compareByDistance>* collisions;
    std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
-   // Update and cleanup before proceeding.
+   // Update before proceeding.
+   // TODO: Do we need to do this here?
    custodian.update();
-   custodian.cleanup();
+   // Used to cleanup here, but that broke collisions.
 
    if (ship != NULL &&
     (gsm == ClientMode || gsm == SingleMode) && 
@@ -370,7 +374,29 @@ void GameState::update(double timeDiff) {
       }
    } else {
       // Read collisions and handle them.
-      // Use map's upper_bound().
+      std::map<unsigned, ast::CollisionMessage*>::iterator collisionIter;
+      collisionIter = savedCollisionMessages.begin();
+      CollisionBase* collision;
+      unsigned aId, bId;
+      for (; collisionIter != savedCollisionMessages.end(); ++collisionIter) {
+         // Go by 2s.
+         for (int i = 0; i < collisionIter->second->collider_size(); i += 2) {
+            aId = collisionIter->second->collider(i);
+            bId = collisionIter->second->collider(i + 1);
+            printf("aid: %d, bid: %d\n", aId, bId);
+            collision = custodian.getCollision(custodian[aId], custodian[bId]);
+            if (collision != NULL) {
+               // DEBUG
+               printf("Handling collision.\n");
+               collision->handleCollision();
+               delete collision;
+            } else {
+               // DEBUG
+               printf("Null collision.\n");
+            }
+            savedCollisionMessages.erase(collisionIter);
+         }
+      }
    }
 
    if (ship != NULL && shipCamera != NULL) {
@@ -409,8 +435,10 @@ void GameState::update(double timeDiff) {
             }
 
             
-            for (int i = client->ackGameState + 1; i < gameStateId; ++i) {
-               frame.add_collision_message()->CopyFrom(*(savedCollisionMessages[i]));
+            if (client->ackGameState != 0) {
+               for (int i = client->ackGameState + 1; i <= gameStateId; ++i) {
+                  frame.add_collision_message()->CopyFrom(*(savedCollisionMessages[i]));
+               }
             }
 
             frame.set_timestamp(getGameTime());
@@ -1788,22 +1816,34 @@ void GameState::handleCommand(const ast::ClientCommand& command) {
 /**
  * This is executed client side when a new frame comes in.
  */
-void GameState::handleFrame(const ast::Frame& frame) {
+void GameState::handleFrame(ast::Frame* frame) {
 
-   if (frame.has_gamestate()) {
-      if (frame.gamestate().id() > lastReceivedGameStateId ||
+   if (frame->has_gamestate()) {
+      unsigned gameStateId = 0;
+      ast::CollisionMessage* curCollisionMessage = NULL;
+      while (frame->collision_message_size() > 0) {
+
+         curCollisionMessage = frame->mutable_collision_message()->ReleaseLast();
+         if (curCollisionMessage->gamestateid() > lastReceivedGameStateId) {
+            savedCollisionMessages[curCollisionMessage->gamestateid()] = curCollisionMessage;
+         } else {
+            delete curCollisionMessage;
+         }
+      }
+
+      if (frame->gamestate().id() > lastReceivedGameStateId ||
        lastReceivedGameStateId == 0) {
-         load(frame.gamestate());
+         load(frame->gamestate());
          custodian.update();
-         lastReceivedGameStateId = frame.gamestate().id();
+         lastReceivedGameStateId = frame->gamestate().id();
          clientCommand.set_lastreceivedgamestateid(lastReceivedGameStateId);
       }
       
       // TODO: Come up with a way to do this that doesn't involve resetting the ship every time.
       
-      if (frame.has_shipid()) {
-         std::cout << "Found shipid. Setting it to " << frame.shipid() << "." << std::endl;
-         unsigned shipid = frame.shipid();
+      if (frame->has_shipid()) {
+         std::cout << "Found shipid. Setting it to " << frame->shipid() << "." << std::endl;
+         unsigned shipid = frame->shipid();
          
          AsteroidShip* tmpShip = dynamic_cast<AsteroidShip*>(custodian[shipid]);
          if (tmpShip == NULL) {
