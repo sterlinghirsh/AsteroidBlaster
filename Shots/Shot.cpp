@@ -33,6 +33,10 @@ Shot::~Shot() {
    // Do nothing.
 }
 
+void Shot::onRemove() {
+   Object3D::onRemove();
+}
+
 void Shot::update(double timeDiff) {
    Object3D::update(timeDiff);
    if (gameState->getGameTime() - timeFired > lifetime) {

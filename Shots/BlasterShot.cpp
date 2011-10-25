@@ -39,6 +39,10 @@ BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
 }
 
 BlasterShot::~BlasterShot() {
+}
+
+void BlasterShot::onRemove() {
+   Shot::onRemove();
    SoundEffect::stopSoundEffect(soundHandle);
    SoundEffect::playSoundEffect("BlasterEnd", position, velocity);
 }

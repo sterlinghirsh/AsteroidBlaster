@@ -8,7 +8,7 @@
 #define __SERVERSIDE_H__
 
 // This errors if we don't include it here.
-#include <enet/enet.h>
+#include <map>
 
 class GameState;
 
@@ -16,21 +16,29 @@ namespace ast {
    class Frame;
 }
 
+class ClientInfo;
+class _ENetHost;
+class _ENetEvent;
+class _ENetAddress;
+class _ENetPeer;
+
 class ServerSide {
    public:
       ServerSide(GameState* _gameState);
       ~ServerSide();
 
       void receive();
-      void send(const ast::Frame& frame, bool reliable);
+      void send(_ENetPeer* client, const ast::Frame& frame, bool reliable);
+
+      std::map<unsigned, ClientInfo*>& getClients();
 
    private:
-      ENetHost* server;
-      ENetEvent* event;
-      ENetAddress* serverAddress;
+      _ENetHost* server;
+      _ENetEvent* event;
+      _ENetAddress* serverAddress;
       // TODO: Change this to a map or something.
-      ENetPeer* client;
       GameState* gameState;
+      std::map<unsigned, ClientInfo*> clients;
 };
 
 #endif

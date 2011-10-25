@@ -29,6 +29,7 @@ class Shot : public Object3D {
       unsigned ownerid;
       Shot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* ownerIn, const GameState* _gameState);
       virtual ~Shot();
+      virtual void onRemove();
 
       virtual void draw();
       virtual void update(double timeDiff);

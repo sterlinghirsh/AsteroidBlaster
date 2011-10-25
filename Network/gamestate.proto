@@ -88,6 +88,9 @@ message Entity {
    // Is the asteroid under the effects of the energy gun?
    optional bool energyHit = 68;
    optional float timeLastHitByEnergy = 69;
+
+   // All
+   optional bool shouldRemove = 70;
 }
 
 message Weapon {

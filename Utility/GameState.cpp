@@ -40,6 +40,7 @@
 #include "Network/gamestate.pb.h"
 #include "Network/ServerSide.h"
 #include "Network/ClientSide.h"
+#include "Network/ClientInfo.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -87,7 +88,7 @@ GameState::GameState(GameStateMode _gsm) :
       godMode = false;
       gameIsRunning = true;
       levelOver = false;
-      if (gsm == ServerMode) {
+      if (gsm == ServerMode || gsm == MenuMode) {
          usingShipCamera = false;
       } else {
          usingShipCamera = true;
@@ -103,7 +104,8 @@ GameState::GameState(GameStateMode _gsm) :
       skybox = new Skybox();
 
       spring = new Spring(this);
-      setShip(new AsteroidShip(this));
+      if (gsm == SingleMode)
+         setShip(new AsteroidShip(this));
 
       spectatorCamera = new Camera(false);
       //make it look at the center of the map for spectator mode
@@ -123,16 +125,14 @@ GameState::GameState(GameStateMode _gsm) :
 
       //new all the text class we will be using
       FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
-      scoreText = new Text("Score: ", ship->getScore(), "",  hudFont, position);
-      bankedShardText = new Text("Banked Shards: ", ship->bankedShards, "",  hudFont, position);
-      unbankedShardText = new Text("Unbanked Shards: ", ship->unbankedShards, "",  hudFont, position);
-      //ammoText = new Text("Ammo: ", sstream2.str(), "",  hudFont, position);
-      //weaponText = new Text("Current Weapon: ", ship->getCurrentWeapon()->getName(), "",  hudFont, position);
+      scoreText = new Text("Score: ", 0, "",  hudFont, position);
+      bankedShardText = new Text("Banked Shards: ", 0, "",  hudFont, position);
+      unbankedShardText = new Text("Unbanked Shards: ", 0, "",  hudFont, position);
       timerText = new Text("", sstream2.str(), "", hudFont, position);
       timerText->alignment = RIGHT_ALIGN;
       curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
       curLevelText->alignment = RIGHT_ALIGN;
-      lifeText = new Text("Lives: ", ship->life, "",  hudFont, position);
+      lifeText = new Text("Lives: ", 3, "",  hudFont, position);
       lifeText->alignment = RIGHT_ALIGN;
 
       // Clear the sstream2
@@ -160,10 +160,10 @@ GameState::GameState(GameStateMode _gsm) :
       // Spawn one more asteroid for each level, to a point..
       numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
 
-      if (gsm == ClientMode || gsm == ServerMode) {
+      if (gsm != SingleMode) {
          custodian.update();
       } else {
-         // For single / menu.
+         // For single.
          // Set up objects.
          custodian.add(ship);
          // It crashes without this. :/
@@ -316,10 +316,13 @@ void GameState::update(double timeDiff) {
    std::set<CollisionBase*, compareByDistance>* collisions;
    std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
-   // Keep items in the box.
-   // cube->constrain(ship); why did we do this twice?
+   // Update and cleanup before proceeding.
+   custodian.update();
+   custodian.cleanup();
 
-   if (ship != NULL && !ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
+   if (ship != NULL &&
+    (gsm == ClientMode || gsm == SingleMode) && 
+    !ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
       ship->readCommand(clientCommand);
    }
 
@@ -344,13 +347,19 @@ void GameState::update(double timeDiff) {
    GameMessage::updateAllMessages(timeDiff);
 
    // Check every object for collisions.
-   for (item = objects->begin(); item != objects->end(); ++item) {
-      collisions = custodian.findCollisions(*item, false);
-      for (curCollision = collisions->begin(); curCollision != collisions->end(); ++curCollision) {
-         (*curCollision)->handleCollision();
+   if (gsm != ClientMode) {
+      for (item = objects->begin(); item != objects->end(); ++item) {
+         collisions = custodian.findCollisions(*item, false);
+         for (curCollision = collisions->begin(); curCollision != collisions->end();
+          ++curCollision) {
+            (*curCollision)->handleCollision();
+         }
+         delete collisions;
+         // TODO: fix memory leak.
       }
-      delete collisions;
-      // TODO: fix memory leak.
+   } else {
+      // Read collisions and handle them.
+      // Use map's upper_bound().
    }
 
    if (ship != NULL && shipCamera != NULL) {
@@ -367,12 +376,21 @@ void GameState::update(double timeDiff) {
    if (gsm == ServerMode) {
       // Send the gamestate to everyone.
       unsigned gameStateId = storeFullGameState();
+      std::map<unsigned, ClientInfo*>& clients = serverSide->getClients();
+      std::map<unsigned, ClientInfo*>::iterator clientIter = clients.begin();
 
       ast::Frame frame;
-      frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
-      frame.set_timestamp(getGameTime());
-      serverSide->send(frame, false);
-      //serverSide->send(clientCommandString, clientCommandString.length(), false);
+      for (; clientIter != clients.end(); clientIter++) {
+         if (clientIter->second == NULL) {
+            clients.erase(clientIter);
+         } else {
+            frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
+            frame.set_timestamp(getGameTime());
+            serverSide->send((*clientIter).second->client, frame, false);
+            
+            frame.Clear();
+         }
+      }
    }
 
    updateText();
@@ -875,6 +893,7 @@ void GameState::reset(bool shouldLoad) {
    Particle::Clear();
    MeshFace::Clear();
    custodian.update();
+   custodian.cleanup();
    resetClientCommand();
 
    setLevelTimer();

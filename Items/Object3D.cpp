@@ -293,12 +293,16 @@ bool Object3D::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    if (!velocity->saveDiff(old.velocity(), ent->mutable_velocity()))
       ent->clear_velocity();
 
+   if (shouldRemove != old.shouldremove())
+      ent->set_shouldremove(shouldRemove);
+
    return somethingChanged;
 }
 
 void Object3D::save(ast::Entity* ent) {
    ent->set_id(id);
    ent->set_type(type);
+   ent->set_shouldremove(shouldRemove);
    position->save(ent->mutable_position());
    velocity->save(ent->mutable_velocity());
 }
@@ -306,6 +310,11 @@ void Object3D::save(ast::Entity* ent) {
 void Object3D::load(const ast::Entity& ent) {
    id = ent.id();
    type = ent.type();
+
+   if (ent.has_shouldremove()) {
+      shouldRemove = ent.shouldremove();
+   }
+
    if (ent.has_position()) {
       position->load(ent.position());
    }
@@ -318,3 +327,9 @@ void Object3D::load(const ast::Entity& ent) {
    updateBoundingBox();
 }
 
+/**
+ * This is called from Custodian::remove is.
+ */
+void Object3D::onRemove() {
+
+}

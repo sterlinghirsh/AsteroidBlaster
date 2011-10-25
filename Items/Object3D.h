@@ -60,6 +60,7 @@ class Object3D : public Drawable {
       virtual void addInstantAcceleration(Vector3D* newAccel);
       virtual void nullPointers();
       virtual Point3D* sphereCollideWithRay(const Point3D& origin, Vector3D direction, double* hitDistance = NULL);
+      virtual void onRemove();
       
       void glRotate(bool doTranspose = true);
       

@@ -601,6 +601,13 @@ class Entity : public ::google::protobuf::Message {
   inline float timelasthitbyenergy() const;
   inline void set_timelasthitbyenergy(float value);
   
+  // optional bool shouldRemove = 70;
+  inline bool has_shouldremove() const;
+  inline void clear_shouldremove();
+  static const int kShouldRemoveFieldNumber = 70;
+  inline bool shouldremove() const;
+  inline void set_shouldremove(bool value);
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -711,6 +718,8 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_energyhit();
   inline void set_has_timelasthitbyenergy();
   inline void clear_has_timelasthitbyenergy();
+  inline void set_has_shouldremove();
+  inline void clear_has_shouldremove();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -767,11 +776,12 @@ class Entity : public ::google::protobuf::Message {
   float chargetime_;
   float damagepersecond_;
   float timesinceexploded_;
-  bool energyhit_;
   float timelasthitbyenergy_;
+  bool energyhit_;
+  bool shouldremove_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(55 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(56 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -3367,6 +3377,28 @@ inline float Entity::timelasthitbyenergy() const {
 inline void Entity::set_timelasthitbyenergy(float value) {
   set_has_timelasthitbyenergy();
   timelasthitbyenergy_ = value;
+}
+
+// optional bool shouldRemove = 70;
+inline bool Entity::has_shouldremove() const {
+  return (_has_bits_[1] & 0x00800000u) != 0;
+}
+inline void Entity::set_has_shouldremove() {
+  _has_bits_[1] |= 0x00800000u;
+}
+inline void Entity::clear_has_shouldremove() {
+  _has_bits_[1] &= ~0x00800000u;
+}
+inline void Entity::clear_shouldremove() {
+  shouldremove_ = false;
+  clear_has_shouldremove();
+}
+inline bool Entity::shouldremove() const {
+  return shouldremove_;
+}
+inline void Entity::set_shouldremove(bool value) {
+  set_has_shouldremove();
+  shouldremove_ = value;
 }
 
 // -------------------------------------------------------------------

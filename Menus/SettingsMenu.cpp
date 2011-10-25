@@ -62,15 +62,17 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
    menuTexts.push_back(new Text(getStatus(gameSettings->fullscreen), menuFont, position));
    types.push_back(RIGHT_TYPE);
 
-   menuTexts.push_back(new Text("Minimap:",  menuFont, position));
-   types.push_back(LEFT_TYPE);
-   menuTexts.push_back(new Text(getStatus(gameState->minimapOn()), menuFont, position));
-   types.push_back(RIGHT_TYPE);
+   if (gameState->ship != NULL) {
+      menuTexts.push_back(new Text("Minimap:",  menuFont, position));
+      types.push_back(LEFT_TYPE);
+      menuTexts.push_back(new Text(getStatus(gameState->minimapOn()), menuFont, position));
+      types.push_back(RIGHT_TYPE);
 
-   menuTexts.push_back(new Text("Camera:",  menuFont, position));
-   types.push_back(LEFT_TYPE);
-   menuTexts.push_back(new Text(getViewStatus(gameState->ship->getCurrentView()), menuFont, position));
-   types.push_back(RIGHT_TYPE);
+      menuTexts.push_back(new Text("Camera:",  menuFont, position));
+      types.push_back(LEFT_TYPE);
+      menuTexts.push_back(new Text(getViewStatus(gameState->ship->getCurrentView()), menuFont, position));
+      types.push_back(RIGHT_TYPE);
+   }
 
    menuTexts.push_back(new Text("Music:",  menuFont, position));
    types.push_back(LEFT_TYPE);
@@ -144,6 +146,9 @@ std::string SettingsMenu::getViewStatus(int status) {
 }
 
 void SettingsMenu::draw() {
+   if (gameState->ship == NULL) {
+      return;
+   }
    menuTexts[BLOOM_INDEX]->textToDisplay =
       getStatus(gameSettings->bloom && gameSettings->drawDeferred);
    menuTexts[OVERLAY_INDEX]->textToDisplay =

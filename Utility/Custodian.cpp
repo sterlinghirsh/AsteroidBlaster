@@ -39,11 +39,11 @@ const unsigned defaultNextID = 1;
  */
 template<>
 void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
+   if (a->gameState->gsm == MenuMode || a->gameState->gsm == ClientMode)
+      return;
+
    if (!(a->isVulnerable())) { return;}
    if (!(b->isVulnerable())) { return;}
-
-   if (a->gameState->gsm == MenuMode)
-      return;
 
    double d = a->position->distanceFrom(*b->position);
    double combinedRad = a->radius + b->radius;
@@ -118,11 +118,21 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
       const double minHealthDeduction = 50;
       const double randomHealthDeduction = randdouble() * 40;
 
-      double healthToRemove = std::min(std::min(a->health, b->health), 
-       minHealthDeduction + randomHealthDeduction);
+      if (a->gameState->gsm != ClientMode) {
+         double healthToRemove = std::min(std::min(a->health, b->health), 
+          minHealthDeduction + randomHealthDeduction);
+         
+         a->health -= healthToRemove;
+         b->health -= healthToRemove;
+         
+         a->addInstantAcceleration(new Vector3D(*(b->velocity)));
+         a->addInstantAcceleration(new Vector3D(*b->position, *a->position));
+         b->addInstantAcceleration(new Vector3D(*(a->velocity)));
+         b->addInstantAcceleration(new Vector3D(*a->position, *b->position));
+      }
 
-      a->health -= healthToRemove;
-      b->health -= healthToRemove;
+      a->lastDamagerId = b->id;
+      a->lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
 
       a->shakeAmount = 8;
 
@@ -134,36 +144,33 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
       SoundEffect::playSoundEffect("ShipHit.wav", &collisionPoint);
 
       a->justGotHit = a->gameState->getGameTime();
-      a->addInstantAcceleration(new Vector3D(*(b->velocity)));
-      a->addInstantAcceleration(new Vector3D(*b->position, *a->position));
-      b->addInstantAcceleration(new Vector3D(*(a->velocity)));
-      b->addInstantAcceleration(new Vector3D(*a->position, *b->position));
-
-      a->lastDamagerId = b->id;
-      a->lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
    } else {
-      const double minHealthDeduction = 50;
-      const double randomHealthDeduction = randdouble() * 40;
-   
-      double healthToRemove = std::min(std::min(a->health, b->health), 
-       minHealthDeduction + randomHealthDeduction);
+      if (a->gameState->gsm != ClientMode) {
+         const double minHealthDeduction = 50;
+         const double randomHealthDeduction = randdouble() * 40;
+      
+         double healthToRemove = std::min(std::min(a->health, b->health), 
+          minHealthDeduction + randomHealthDeduction);
 
-      b->health -= healthToRemove;
+         b->health -= healthToRemove;
+      }
    }
 }
 
 template<>
 void Collision<AsteroidShip, Shard>::handleCollision() {
    if (a->isRespawning()) { return;}
-   a->health += 10;
-   if (a->health > a->healthMax)
-      a->health = a->healthMax;
 
-   a->unbankedShards++;
-   a->score += 69;
-   b->shouldRemove = true;
+   if (a->gameState->gsm != ClientMode) {
+      a->health += 10;
+      if (a->health > a->healthMax)
+         a->health = a->healthMax;
+
+      a->unbankedShards++;
+      a->score += 69;
+      b->shouldRemove = true;
+   }
    
-   Point3D* soundSource = NULL;
    if (a == a->gameState->ship) {
       SoundEffect::playSoundEffect("CrystalCollect.wav", NULL, NULL, true);
    } else {
@@ -177,7 +184,10 @@ void Collision<AsteroidShip, BlasterShot>::handleCollision() {
    if (a->isRespawning()) { return;}
    int particlesToEmit = 10;
    if (a != b->owner  && !(a->spawnInvulnerable)) {
-      a->health -= b->getDamage(a);
+      if (a->gameState->gsm != ClientMode) {
+         a->health -= b->getDamage(a);
+         b->shouldRemove = true;
+      }
       a->shakeAmount = 0.5f;
       a->justGotHit = a->gameState->getGameTime();
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
@@ -188,7 +198,6 @@ void Collision<AsteroidShip, BlasterShot>::handleCollision() {
          particleDirection->setLength(3);
          BlasterImpactParticle::Add(particleStartPoint, particleDirection, b->gameState);
       }
-      b->shouldRemove = true;
       a->lastDamagerId = b->owner->id;
       a->lastDamagerWeapon = b->weaponIndex;
    }
@@ -200,21 +209,21 @@ void Collision<AsteroidShip, BeamShot>::handleCollision() {
    if (a->isRespawning()) { return;}
    if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame  && !(a->spawnInvulnerable)) {
       //TODO addInstantVelocity b->velocity->scalarMultiply(10)
-      a->health -= b->getDamage(a);
+      if (a->gameState->gsm != ClientMode) {
+         a->health -= b->getDamage(a);
+         b->owner->score += (int) a->radius * 10;
+         a->addInstantAcceleration(new Vector3D(b->velocity->scalarMultiply(20)));
+      }
       a->shakeAmount = 0.75f;
       b->hitYet = true;
       b->hitItem = a;
       b->lastHitFrame = curFrame;
-      b->owner->score += (int) a->radius * 10;
       b->drawLength = a->position->distanceFrom(*b->position);
       a->justGotHit = a->gameState->getGameTime();
-      a->addInstantAcceleration(new Vector3D(b->velocity->scalarMultiply(20)));
-      b->velocity->scalarMultiply(10).print();
 
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       a->lastDamagerId = b->owner->id;
       a->lastDamagerWeapon = b->weaponIndex;
-
    }
 }
 
@@ -236,7 +245,9 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
       // Sometimes, we decide that it's not a real hit. No big deal.
       if (closestPoint != NULL) {
          b->hitYet = true;
-         a->health -= b->getDamage(a);
+         if (a->gameState->gsm != ClientMode) {
+            a->health -= b->getDamage(a);
+         }
          a->shakeAmount = 0.7f;
          a->justGotHit = a->gameState->getGameTime();
          a->lastDamagerId = b->owner->id;
@@ -265,12 +276,14 @@ void Collision<AsteroidShip, EnergyShot>::handleCollision() {
    if (!(a->isVulnerable())) { return;}
    if (a->isRespawning()) { return;}
    if (a != b->owner  && !(a->spawnInvulnerable)) {
-      a->health -= clamp(b->chargeTime, 0, 5) * 15.0;
+      if (a->gameState->gsm != ClientMode) {
+         a->health -= clamp(b->chargeTime, 0, 5) * 15.0;
+         a->velocity->updateMagnitude(0, 0, 0);
+         a->acceleration->updateMagnitude(0, 0, 0);
+         b->shouldRemove = true;
+      }
 
-      a->velocity->updateMagnitude(0, 0, 0);
-      a->acceleration->updateMagnitude(0, 0, 0);
 
-      b->shouldRemove = true;
       SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       if (b->weapon->chargingShotid == b->id) {
          b->weapon->resetChargingShot();
@@ -292,39 +305,42 @@ void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
       double distance = positionToAsteroid.getLength();
       if (distance < b->seekRadius + a->radius) {
          if (distance > b->collisionRadius + a->radius) {
-            Vector3D toAsteroidNorm(positionToAsteroid);
-            toAsteroidNorm.normalize();         
-           
-            double forwardAmount = b->forward->dot(toAsteroidNorm);
+            if (a->gameState->gsm != ClientMode) {
+               Vector3D toAsteroidNorm(positionToAsteroid);
+               toAsteroidNorm.normalize();         
+               double forwardAmount = b->forward->dot(toAsteroidNorm);
 
-            if (forwardAmount > .75) {
-               if (b->targetID == -1) {
-                  b->targetID = a->id;
-               } else {
-                  Object3D* target = a->gameState->custodian[b->targetID];
-                  if(target == NULL) {
+               if (forwardAmount > .75) {
+                  if (b->targetID == -1) {
                      b->targetID = a->id;
                   } else {
-                     Vector3D positionToExistingAsteroid(*b->position, *(target->position));
-                     Vector3D toExistingAsteroidNorm(positionToExistingAsteroid);
-                     toExistingAsteroidNorm.normalize();
+                     Object3D* target = a->gameState->custodian[b->targetID];
+                     if(target == NULL) {
+                        b->targetID = a->id;
+                     } else {
+                        Vector3D positionToExistingAsteroid(*b->position, *(target->position));
+                        Vector3D toExistingAsteroidNorm(positionToExistingAsteroid);
+                        toExistingAsteroidNorm.normalize();
 
-                     double existingForwardAmount = b->forward->dot(toExistingAsteroidNorm);
-                     if (forwardAmount > .95 && existingForwardAmount > .95) {
-                        double otherDistance = positionToExistingAsteroid.getLength();
-                        if (distance < otherDistance) {
+                        double existingForwardAmount = b->forward->dot(toExistingAsteroidNorm);
+                        if (forwardAmount > .95 && existingForwardAmount > .95) {
+                           double otherDistance = positionToExistingAsteroid.getLength();
+                           if (distance < otherDistance) {
+                              b->targetID = a->id;
+                           }
+                        } else if (forwardAmount > existingForwardAmount) {
                            b->targetID = a->id;
                         }
-                     } else if (forwardAmount > existingForwardAmount) {
-                        b->targetID = a->id;
                      }
                   }
                }
             }
          } else {
             b->shouldExplode = true;
-            a->health -= b->getDamage(a);
-            a->justGotHit = a->gameState->getGameTime();
+            if (a->gameState->gsm != ClientMode) {
+               a->health -= b->getDamage(a);
+               a->justGotHit = a->gameState->getGameTime();
+            }
             b->hasDamaged = true;
             SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
          }
@@ -333,7 +349,8 @@ void Collision<AsteroidShip, HomingMissileShot>::handleCollision() {
       // Seek
       Vector3D positionToAsteroid(*b->position, *a->position);
       double distance = positionToAsteroid.getLength();
-      if (!(b->hasDamaged) && distance < b->collisionRadius + a->radius) {
+      if (a->gameState->gsm != ClientMode &&
+       !(b->hasDamaged) && distance < b->collisionRadius + a->radius) {
          Vector3D* shotToAsteroid;
          shotToAsteroid = new Vector3D(*b->position, *a->position);
          double distance = shotToAsteroid->getLength() - a->radius;
@@ -364,12 +381,14 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
          }
       }
    } else {
-      a->health -= b->getDamage(a);
-      Vector3D* shotToShip = new Vector3D(*b->position, *a->position);
-      double distance = shotToShip->getLength() - a->radius;
-      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
-      shotToShip->setLength(newSpeed);
-      a->addInstantAcceleration(shotToShip);
+      if (a->gameState->gsm != ClientMode) {
+         a->health -= b->getDamage(a);
+         Vector3D* shotToShip = new Vector3D(*b->position, *a->position);
+         double distance = shotToShip->getLength() - a->radius;
+         double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
+         shotToShip->setLength(newSpeed);
+         a->addInstantAcceleration(shotToShip);
+      }
       a->shakeAmount = 2;
       a->justGotHit = a->gameState->getGameTime();
       a->lastDamagerId = b->owner->id;
@@ -384,19 +403,22 @@ template<>
 void Collision<Asteroid3D, BlasterShot>::handleCollision() {
    const int particlesToEmit = 10;
    
-   static Vector3D particleVariation;
-   static Vector3D positionDifference;
+   Vector3D particleVariation;
+   Vector3D positionDifference;
    const double particleSpeed = 15;
    double speed = 6 / (a->radius);
 
-   b->shouldRemove = true;
+   if (a->gameState->gsm != ClientMode) {
+      b->shouldRemove = true;
+      a->health -= b->getDamage(a);
+      
+      Vector3D* newAcceleration = new Vector3D(*b->position, *a->position);
+      newAcceleration->setLength(speed);
+      a->addInstantAcceleration(newAcceleration);
+   }
    
    a->lastHitShotOwner = b->owner;
-   a->health -= b->getDamage(a);
 
-   Vector3D* newAcceleration = new Vector3D(*b->position, *a->position);
-   newAcceleration->setLength(speed);
-   a->addInstantAcceleration(newAcceleration);
    
    SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
    // Make some particles!
@@ -416,32 +438,36 @@ void Collision<Asteroid3D, BlasterShot>::handleCollision() {
 template<>
 void Collision<Asteroid3D, BeamShot>::handleCollision() {
    if (!b->hitYet && curFrame - 1 <= b->firstFrame) {
-      a->velocity->addUpdate(b->velocity->scalarMultiply(10));
+      if (a->gameState->gsm != ClientMode) {
+         a->velocity->addUpdate(b->velocity->scalarMultiply(10));
+         a->health -= b->getDamage(a);
+         b->owner->score += (int) a->radius * 10;
+      }
       a->lastHitShotOwner = b->owner;
-      a->health -= b->getDamage(a);
 
       b->hitYet = true;
       b->hitItem = a;
       b->lastHitFrame = curFrame;
-      b->owner->score += (int) a->radius * 10;
       b->drawLength = a->position->distanceFrom(*b->position);
    }
 }
 
 template<>
 void Collision<Asteroid3D, TractorBeamShot>::handleCollision() {
-   // Slowly match the Asteroid's speed to the ship's speed.
-   // Weight the new velocity towards the ship's velocity.
-   Vector3D* tmp = new Vector3D(*a->velocity + (*b->owner->velocity)*2);
-   // Divide by 3 since there's 3 vectors added together.
-   *tmp /= 3;
-   // This is deleted in Object3D::updateAcceleration
-   Vector3D* newOne = new Vector3D(*tmp - *a->velocity);
-   a->addAcceleration(newOne);
-   
-   // Add a rotationSpeedChange which the Asteroid3D will apply to itself
-   // next frame's update() in a time based manner.
-   a->rotationSpeedChange += 15;
+   if (a->gameState->gsm != ClientMode) {
+      // Slowly match the Asteroid's speed to the ship's speed.
+      // Weight the new velocity towards the ship's velocity.
+      Vector3D* tmp = new Vector3D(*a->velocity + (*b->owner->velocity)*2);
+      // Divide by 3 since there's 3 vectors added together.
+      *tmp /= 3;
+      // This is deleted in Object3D::updateAcceleration
+      Vector3D* newOne = new Vector3D(*tmp - *a->velocity);
+      a->addAcceleration(newOne);
+      
+      // Add a rotationSpeedChange which the Asteroid3D will apply to itself
+      // next frame's update() in a time based manner.
+      a->rotationSpeedChange += 15;
+   }
 }
 
 template<>
@@ -450,7 +476,11 @@ void Collision<Asteroid3D, ElectricityShot>::handleCollision() {
    double hitDistance = 0;
 
    a->lastHitShotOwner = b->owner;
-   a->health -= b->getDamage(a);
+   if (a->gameState->gsm != ClientMode) {
+      a->health -= b->getDamage(a);
+   }
+   
+   //TODO: Add a bit of push.
    
    /* Normal collision detection gets done in CollisionTypes.h. 
     * I can't think of an efficient way to do this, so I'm leaving it here
@@ -479,29 +509,36 @@ void Collision<Asteroid3D, ElectricityShot>::handleCollision() {
 
 template<>
 void Collision<Asteroid3D, EnergyShot>::handleCollision() {
-   a->energyHitAsteroid = true;
    a->lastHitShotOwner = b->owner;
-   a->health -= b->getDamage(a);
    
    // Calculate any remaining damage to be done, and factor it in to the new damage per second.
    // TODO: 5.0 is the time damage is dealt. We may want to put this in energyshot.
 
    const double energyDamageTime = 5.0;
-   double damageTimeLeft = clamp(a->gameState->getGameTime() - a->timeLastHitByEnergy, 0.0, energyDamageTime);
-   double damageLeft = a->damagePerSecond * damageTimeLeft;
-   a->damagePerSecond = (damageLeft / energyDamageTime) + b->damagePerSecond;
-   a->timeLastHitByEnergy = a->gameState->getGameTime();
-   a->newVelocity->updateMagnitude(a->velocity);
-   a->newAcceleration->updateMagnitude(a->acceleration);
-   
-   a->velocity->updateMagnitude(0, 0, 0);
-   a->acceleration->updateMagnitude(0, 0, 0);
 
-   b->shouldRemove = true;
-   SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
-   if (b->weapon->chargingShotid == b->id) {
-      b->weapon->resetChargingShot();
+
+   if (a->gameState->gsm != ClientMode) {
+      double damageTimeLeft = clamp(a->gameState->getGameTime() - a->timeLastHitByEnergy, 0.0, energyDamageTime);
+      double damageLeft = a->damagePerSecond * damageTimeLeft;
+
+      a->damagePerSecond = (damageLeft / energyDamageTime) + b->damagePerSecond;
+      a->timeLastHitByEnergy = a->gameState->getGameTime();
+      a->newVelocity->updateMagnitude(a->velocity);
+      a->newAcceleration->updateMagnitude(a->acceleration);
+      
+      a->health -= b->getDamage(a);
+   
+      a->velocity->updateMagnitude(0, 0, 0);
+      a->acceleration->updateMagnitude(0, 0, 0);
+
+      a->energyHitAsteroid = true;
+      b->shouldRemove = true;
+      
+      if (b->weapon->chargingShotid == b->id) {
+         b->weapon->resetChargingShot();
+      }
    }
+   SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
 }
 
 template<>
@@ -519,19 +556,22 @@ void Collision<Asteroid3D, TimedBombShot>::handleCollision() {
          //attraction->setLength(-100.0);
          //b->addAcceleration(attraction);
       } else {
-         b->shouldExplode = true;
+         if (a->gameState->gsm != ClientMode)
+            b->shouldExplode = true;
          // TODO: Use a better sound effect here.
          SoundEffect::playSoundEffect("BlasterHit.wav", a->position);
       }
    } else if (distance < b->explodeRadius + a->radius) {
       //printf("Distance is: %f\n", distance);
-      a->health -= b->getDamage(a);
-      Vector3D* shotToAsteroid;
-      shotToAsteroid = new Vector3D(*b->position, *a->position);
-      double distance = shotToAsteroid->getLength() - a->radius;
-      double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
-      shotToAsteroid->setLength(newSpeed);
-      a->addInstantAcceleration(shotToAsteroid);
+      if (a->gameState->gsm != ClientMode) {
+         a->health -= b->getDamage(a);
+         Vector3D* shotToAsteroid;
+         shotToAsteroid = new Vector3D(*b->position, *a->position);
+         double distance = shotToAsteroid->getLength() - a->radius;
+         double newSpeed = 1000 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
+         shotToAsteroid->setLength(newSpeed);
+         a->addInstantAcceleration(shotToAsteroid);
+      }
    }
 }
 
@@ -543,59 +583,69 @@ void Collision<Asteroid3D, HomingMissileShot>::handleCollision() {
       double distance = positionToAsteroid.getLength();
       if (distance < b->seekRadius + a->radius) {
          if (distance > b->collisionRadius + a->radius) {
-            Vector3D toAsteroidNorm(positionToAsteroid);
-            toAsteroidNorm.normalize();         
-           
-            double forwardAmount = b->forward->dot(toAsteroidNorm);
-
-            if (forwardAmount > .75) {
-               if (b->targetID == -1) {
-                  b->targetID = a->id;
-               } else {
-                  Object3D* target = a->gameState->custodian[b->targetID];
-                  if(target == NULL) {
+            if (a->gameState->gsm != ClientMode) {
+               Vector3D toAsteroidNorm(positionToAsteroid);
+               toAsteroidNorm.normalize();         
+              
+               double forwardAmount = b->forward->dot(toAsteroidNorm);
+            
+               if (forwardAmount > .75) {
+                  if (b->targetID == -1) {
                      b->targetID = a->id;
                   } else {
-                     Vector3D positionToExistingAsteroid(*b->position, *(target->position));
-                     Vector3D toExistingAsteroidNorm(positionToExistingAsteroid);
-                     toExistingAsteroidNorm.normalize();
+                     Object3D* target = a->gameState->custodian[b->targetID];
+                     if(target == NULL) {
+                        b->targetID = a->id;
+                     } else {
+                        Vector3D positionToExistingAsteroid(*b->position, *(target->position));
+                        Vector3D toExistingAsteroidNorm(positionToExistingAsteroid);
+                        toExistingAsteroidNorm.normalize();
 
-                     double existingForwardAmount = b->forward->dot(toExistingAsteroidNorm);
-                     if (forwardAmount > .95 && existingForwardAmount > .95) {
-                        double otherDistance = positionToExistingAsteroid.getLength();
-                        if (distance < otherDistance) {
+                        double existingForwardAmount = b->forward->dot(toExistingAsteroidNorm);
+                        if (forwardAmount > .95 && existingForwardAmount > .95) {
+                           double otherDistance = positionToExistingAsteroid.getLength();
+                           if (distance < otherDistance) {
+                              b->targetID = a->id;
+                           }
+                        } else if (forwardAmount > existingForwardAmount) {
                            b->targetID = a->id;
                         }
-                     } else if (forwardAmount > existingForwardAmount) {
-                        b->targetID = a->id;
                      }
                   }
                }
             }
          } else {
-            b->shouldExplode = true;
-            a->health -= b->getDamage(a);
+            if (a->gameState->gsm != ClientMode) {
+               b->shouldExplode = true;
+               a->health -= b->getDamage(a);
+            }
             b->hasDamaged = true;
             SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
          }
       }
    } else {
-      Vector3D positionToAsteroid(*b->position, *a->position);
-      double distance = positionToAsteroid.getLength();
-      if (!(b->hasDamaged) && distance < b->collisionRadius + a->radius) {
-         Vector3D* shotToAsteroid;
-         shotToAsteroid = new Vector3D(*b->position, *a->position);
-         double distance = shotToAsteroid->getLength() - a->radius;
-         //printf("Asteroid's health is: %f\n", a->health);
-         double newSpeed = 1 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
-         shotToAsteroid->setLength(newSpeed);
-         a->addInstantAcceleration(shotToAsteroid);
+      if (a->gameState->gsm != ClientMode) {
+         Vector3D positionToAsteroid(*b->position, *a->position);
+         double distance = positionToAsteroid.getLength();
+         if (!(b->hasDamaged) && distance < b->collisionRadius + a->radius) {
+            Vector3D* shotToAsteroid;
+            shotToAsteroid = new Vector3D(*b->position, *a->position);
+            double distance = shotToAsteroid->getLength() - a->radius;
+            //printf("Asteroid's health is: %f\n", a->health);
+            double newSpeed = 1 / ((1 + (distance * distance) / b->explodeRadius + 1) * a->radius);
+            shotToAsteroid->setLength(newSpeed);
+            a->addInstantAcceleration(shotToAsteroid);
+         }
       }
    }
 }
 
 template<>
 void Collision<Asteroid3D, Asteroid3D>::handleCollision() {
+   if (a->gameState->gsm != ClientMode) {
+      return;
+   }
+
    double d = a->position->distanceFrom(*b->position);
    double maxR = std::max(a->radius, b->radius);
    Vector3D* pushOnA = new Vector3D(*b->position, *a->position);
@@ -662,7 +712,9 @@ void Collision<Shard, TractorBeamShot>::handleCollision() {
    TBshotToShip->setLength(1000 / sqrt((1 + TBshotToShip->getLength())));
    
    // Pull the shard in.
-   a->addAcceleration(TBshotToShip);
+   if (a->gameState->gsm != ClientMode) {
+      a->addAcceleration(TBshotToShip);
+   }
 
    // Now do particles.
    Vector3D random;
@@ -681,9 +733,11 @@ void Collision<Shard, TractorBeamShot>::handleCollision() {
 template<>
 void Collision<Shard, BeamShot>::handleCollision() {
    if (!b->hitYet && curFrame - 1 <= b->firstFrame) {
-      double speed = 80; // High speed from hard-hitting railgun.
-      a->velocity->updateMagnitude(*b->position, *a->position);
-      a->velocity->setLength(speed);
+      if (a->gameState->gsm != ClientMode) {
+         double speed = 80; // High speed from hard-hitting railgun.
+         a->velocity->updateMagnitude(*b->position, *a->position);
+         a->velocity->setLength(speed);
+      }
       b->hitYet = true;
       b->hitItem = a;
       b->lastHitFrame = curFrame;
@@ -693,20 +747,24 @@ void Collision<Shard, BeamShot>::handleCollision() {
 
 template<>
 void Collision<Asteroid3D, Shard>::handleCollision() {
-   double speed = a->velocity->getLength();
-   b->velocity->updateMagnitude(*a->position, *b->position);
-   b->velocity->setLength(speed);
+   if (a->gameState->gsm != ClientMode) {
+      double speed = a->velocity->getLength();
+      b->velocity->updateMagnitude(*a->position, *b->position);
+      b->velocity->setLength(speed);
+   }
 }
 
 template<>
 void Collision<Shard, Shard>::handleCollision() {
-   Vector3D* pushOnA = new Vector3D(*b->position, *a->position);
-   if (pushOnA->getComparisonLength() == 0) {
-      pushOnA->randomMagnitude();
+   if (a->gameState->gsm != ClientMode) {
+      Vector3D* pushOnA = new Vector3D(*b->position, *a->position);
+      if (pushOnA->getComparisonLength() == 0) {
+         pushOnA->randomMagnitude();
+      }
+      pushOnA->setLength(5);
+      a->addAcceleration(pushOnA);
+      b->addAcceleration(new Vector3D(pushOnA->scalarMultiply(-1)));
    }
-   pushOnA->setLength(5);
-   a->addAcceleration(pushOnA);
-   b->addAcceleration(new Vector3D(pushOnA->scalarMultiply(-1)));
 }
 
 template<>
@@ -719,12 +777,14 @@ void Collision<Shard, TimedBombShot>::handleCollision() {
          SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       }
    } else {
-      Vector3D* shotToShard;
-      shotToShard = new Vector3D(*b->position, *a->position);
-      double distance = shotToShard->getLength();
-      double newSpeed = 100 / ((distance * distance) / b->explodeRadius + 1);
-      shotToShard->setLength(newSpeed);
-      a->addInstantAcceleration(shotToShard);
+      if (a->gameState->gsm != ClientMode) {
+         Vector3D* shotToShard;
+         shotToShard = new Vector3D(*b->position, *a->position);
+         double distance = shotToShard->getLength();
+         double newSpeed = 100 / ((distance * distance) / b->explodeRadius + 1);
+         shotToShard->setLength(newSpeed);
+         a->addInstantAcceleration(shotToShard);
+      }
    }
 }
 
@@ -738,12 +798,14 @@ void Collision<Shard, HomingMissileShot>::handleCollision() {
          SoundEffect::playSoundEffect("BlasterHit.wav", b->position);
       }
    } else {
-      Vector3D* shotToShard;
-      shotToShard = new Vector3D(*b->position, *a->position);
-      double distance = shotToShard->getLength();
-      double newSpeed = 100 / ((distance * distance) / b->explodeRadius + 1);
-      shotToShard->setLength(newSpeed);
-      a->addInstantAcceleration(shotToShard);
+      if (a->gameState->gsm != ClientMode) {
+         Vector3D* shotToShard;
+         shotToShard = new Vector3D(*b->position, *a->position);
+         double distance = shotToShard->getLength();
+         double newSpeed = 100 / ((distance * distance) / b->explodeRadius + 1);
+         shotToShard->setLength(newSpeed);
+         a->addInstantAcceleration(shotToShard);
+      }
    }
 }
 
@@ -928,6 +990,20 @@ void Custodian::add(Object3D* objectIn) {
 }
 
 /**
+ * Iterate through objectsByID and remove any with shouldRemove set.
+ * This should be called after each frame, after the server has sent updates.
+ */
+void Custodian::cleanup() {
+   std::map<unsigned, Object3D*>::iterator iter = objectsByID.begin();
+   for (; iter != objectsByID.end(); iter++) {
+      if (iter->second->shouldRemove) {
+         delete iter->second;
+         objectsByID.erase(iter);
+      }
+   }
+}
+
+/**
  * Remove a Object3D object.
  * This is a private function. To make an object not be in the custodian, set
  * the object's shouldRemove = true.
@@ -935,7 +1011,9 @@ void Custodian::add(Object3D* objectIn) {
 void Custodian::remove(Object3D* objectIn) {
    objectsByMinX[objectIn->minXRank] = NULL;
    objectsByMaxX[objectIn->maxXRank] = NULL;
-   objectsByID.erase(objectIn->id);
+   // We're going to make the removal a separate step so that we can send
+   // stuff from server to client.
+   // objectsByID.erase(objectIn->id);
    
    Asteroid3D* asteroid;
    Shard* shard;
@@ -958,7 +1036,10 @@ void Custodian::remove(Object3D* objectIn) {
       ships.erase(ship);
    }
 
-   delete objectIn;
+   // Last wishes? We don't use the destructor, since we might actually erase later.
+   objectIn->onRemove();
+
+   // delete objectIn;
 }
 
 /**

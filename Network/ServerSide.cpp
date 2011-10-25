@@ -7,8 +7,10 @@
 #include "Network/ServerSide.h"
 #include "Network/NetUtility.h"
 #include "Network/gamestate.pb.h"
+#include "Network/ClientInfo.h"
 #include "Utility/GlobalUtility.h"
 #include "Utility/GameState.h"
+#include <enet/enet.h>
 #include <iostream>
 // enet is included from ServerSide.h
 
@@ -33,7 +35,6 @@ ServerSide::ServerSide(GameState* _gameState) :
    }
 
    event = new ENetEvent();
-   client = NULL;
 }
 
 ServerSide::~ServerSide() {
@@ -65,10 +66,11 @@ void ServerSide::receive() {
 
          if (event->type == ENET_EVENT_TYPE_CONNECT) {
             cout << "Client connected! That's normal." << endl;
-            client = event->peer;
 
-            unsigned shipid = gameState->addNetworkPlayer(client->connectID);
-            cout << "Adding ship with clientid " << client->connectID << 
+            unsigned shipid = gameState->addNetworkPlayer(event->peer->connectID);
+            clients[event->peer->connectID] = new ClientInfo(shipid, event->peer);
+
+            cout << "Adding ship with clientid " << event->peer->connectID << 
                " and id " << shipid << "." << endl;
 
             // Make sure the new ship is there.
@@ -79,13 +81,17 @@ void ServerSide::receive() {
             frame.set_shipid(shipid);
             ast::GameState* gs = gameState->getLastSavedGameState();
             frame.mutable_gamestate()->CopyFrom(*gs);
-            send(frame, true);
+            send(event->peer, frame, true);
          }
 
          if (event->type == ENET_EVENT_TYPE_RECEIVE) {
             ast::ClientCommand cc;
             cc.ParseFromArray(event->packet->data, event->packet->dataLength);
             gameState->handleCommand(cc);
+
+            if (cc.has_lastreceivedgamestateid())
+               clients[event->peer->connectID]->ackGameState = cc.lastreceivedgamestateid();
+
             //cout << "Packet received from client: " << (char*) event->packet->data << endl;
          }
 
@@ -96,7 +102,7 @@ void ServerSide::receive() {
    } while (result > 0);
 }
 
-void ServerSide::send(const ast::Frame& frame, bool reliable) {
+void ServerSide::send(_ENetPeer* client, const ast::Frame& frame, bool reliable) {
    if (client == NULL)
       return;
 
@@ -112,3 +118,6 @@ void ServerSide::send(const ast::Frame& frame, bool reliable) {
 }
 
 
+std::map<unsigned, ClientInfo*>& ServerSide::getClients() {
+   return clients;
+}

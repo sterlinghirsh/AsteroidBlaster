@@ -118,8 +118,14 @@ void ClientSide::connect(char* stringAddr) {
 }
 
 void ClientSide::send(const ast::ClientCommand& clientCommand, bool reliable) {
+   if (!clientCommand.has_shipid()) {
+      cerr << "No shipid. Not sending." << endl;
+      return;
+   }
+
    if (!clientCommand.SerializeToString(&outgoing)) {
       cerr << "Failed to serialize clientCommand!" << endl;
+      return;
    }
    
    ENetPacket* packet = enet_packet_create(outgoing.c_str(), outgoing.length(), 

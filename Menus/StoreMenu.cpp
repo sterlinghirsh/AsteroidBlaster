@@ -62,42 +62,44 @@ StoreMenu::StoreMenu(GameState*& _gameState) : gameState(_gameState) {
    
    
    //get weapon purchase text in weaponsTexts
-   std::vector<Weapon*> weaponList = gameState->ship->getWeapons();
-   for(unsigned int i = 0; i < weaponList.size(); i++) {
-      weaponsTexts.push_back(new Text(weaponList.at(i)->weaponString(), menuFont, position));
-   }
+   if (gameState->ship != NULL) {
+      std::vector<Weapon*> weaponList = gameState->ship->getWeapons();
+      for(unsigned int i = 0; i < weaponList.size(); i++) {
+         weaponsTexts.push_back(new Text(weaponList.at(i)->weaponString(), menuFont, position));
+      }
+      
+      for(unsigned int i = 0; i < weaponList.size(); i++) {
+         ammoTexts.push_back(new Text(weaponList.at(i)->ammoString(), menuFont, position));
+      }
    
-   for(unsigned int i = 0; i < weaponList.size(); i++) {
-      ammoTexts.push_back(new Text(weaponList.at(i)->ammoString(), menuFont, position));
-   }
-   
-   //get ship related text in shipTexts
-   
-   engineShipText = new Text(out.str(), menuFont, position);
-   shipTexts.push_back(engineShipText);
-   
-   maxHealthShipText = new Text(out.str(), menuFont, position);
-   shipTexts.push_back(maxHealthShipText);
-   
-   regenHealthShipText = new Text(out.str(), menuFont, position);
-   shipTexts.push_back(regenHealthShipText);
+      //get ship related text in shipTexts
+      
+      engineShipText = new Text(out.str(), menuFont, position);
+      shipTexts.push_back(engineShipText);
+      
+      maxHealthShipText = new Text(out.str(), menuFont, position);
+      shipTexts.push_back(maxHealthShipText);
+      
+      regenHealthShipText = new Text(out.str(), menuFont, position);
+      shipTexts.push_back(regenHealthShipText);
 
-   buyOneLifeText = new Text(out.str(), menuFont, position);
-   shipTexts.push_back(buyOneLifeText);
+      buyOneLifeText = new Text(out.str(), menuFont, position);
+      shipTexts.push_back(buyOneLifeText);
 
-   bankShipText = new Text(out.str(), menuFont, position);
-   shipTexts.push_back(bankShipText);
-   
-   
-    
-   for(unsigned i = 0; i < weaponsTexts.size(); i++) {
-      weaponsTexts[i]->selectable = true;
-   }
-   for(unsigned i = 0; i < ammoTexts.size(); i++) {
-      ammoTexts[i]->selectable = true;
-   }
-   for(unsigned i = 0; i < shipTexts.size(); i++) {
-      shipTexts[i]->selectable = true;
+      bankShipText = new Text(out.str(), menuFont, position);
+      shipTexts.push_back(bankShipText);
+      
+      
+       
+      for(unsigned i = 0; i < weaponsTexts.size(); i++) {
+         weaponsTexts[i]->selectable = true;
+      }
+      for(unsigned i = 0; i < ammoTexts.size(); i++) {
+         ammoTexts[i]->selectable = true;
+      }
+      for(unsigned i = 0; i < shipTexts.size(); i++) {
+         shipTexts[i]->selectable = true;
+      }
    }
 }
 
@@ -129,11 +131,15 @@ void StoreMenu::clearOverlay() {
 }
 
 void StoreMenu::draw() {
+   if (gameState->ship == NULL) {
+      return;
+   }
+   
    if (gameSettings->useOverlay) {
       fboBegin();
       glDrawBuffer(OVERLAY_BUFFER);
    }
-   
+
    SDL_Rect position;
    std::stringstream out;
 
