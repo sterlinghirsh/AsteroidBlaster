@@ -240,7 +240,8 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GameState));
   CollisionMessage_descriptor_ = file->message_type(6);
-  static const int CollisionMessage_offsets_[7] = {
+  static const int CollisionMessage_offsets_[8] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, gamestateid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, collider_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, wall_top_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollisionMessage, wall_bottom_),
@@ -437,21 +438,22 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "tate\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity\022\020\n\010gam"
     "eTime\030\002 \002(\001\022\022\n\nplayerShip\030\003 \001(\r\022\036\n\nlevel"
     "Timer\030\004 \001(\0132\n.ast.Timer\022\020\n\010curLevel\030\005 \001("
-    "\005\022\n\n\002id\030\006 \001(\r\"\265\001\n\020CollisionMessage\022\024\n\010co"
-    "llider\030\002 \003(\rB\002\020\001\022\024\n\010wall_top\030\003 \003(\rB\002\020\001\022\027"
-    "\n\013wall_bottom\030\004 \003(\rB\002\020\001\022\025\n\twall_left\030\005 \003"
-    "(\rB\002\020\001\022\026\n\nwall_right\030\006 \003(\rB\002\020\001\022\026\n\nwall_f"
-    "ront\030\007 \003(\rB\002\020\001\022\025\n\twall_back\030\010 \003(\rB\002\020\001\"-\n"
-    "\013ChatMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002"
-    " \001(\t\"Q\n\023CreateEntityMessage\022\035\n\025createEnt"
-    "ityMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast"
-    ".Entity\"\202\002\n\005Frame\0220\n\021collision_message\030\001"
-    " \001(\0132\025.ast.CollisionMessage\022%\n\013chatMessa"
-    "ge\030\002 \003(\0132\020.ast.ChatMessage\022\013\n\003seq\030\003 \001(\004\022"
-    "\013\n\003ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022\025\n\tremov"
-    "e_id\030\006 \003(\rB\002\020\001\022\030\n\014firing_ships\030\007 \003(\rB\002\020\001"
-    "\022\017\n\007diff_of\030\010 \001(\r\022!\n\tgameState\030\t \001(\0132\016.a"
-    "st.GameState\022\016\n\006shipid\030\n \001(\r", 2788);
+    "\005\022\n\n\002id\030\006 \001(\r\"\312\001\n\020CollisionMessage\022\023\n\013ga"
+    "mestateid\030\001 \001(\r\022\024\n\010collider\030\002 \003(\rB\002\020\001\022\024\n"
+    "\010wall_top\030\003 \003(\rB\002\020\001\022\027\n\013wall_bottom\030\004 \003(\r"
+    "B\002\020\001\022\025\n\twall_left\030\005 \003(\rB\002\020\001\022\026\n\nwall_righ"
+    "t\030\006 \003(\rB\002\020\001\022\026\n\nwall_front\030\007 \003(\rB\002\020\001\022\025\n\tw"
+    "all_back\030\010 \003(\rB\002\020\001\"-\n\013ChatMessage\022\020\n\010sou"
+    "rceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\"Q\n\023CreateEntit"
+    "yMessage\022\035\n\025createEntityMessageid\030\001 \001(\r\022"
+    "\033\n\006entity\030\002 \003(\0132\013.ast.Entity\"\202\002\n\005Frame\0220"
+    "\n\021collision_message\030\001 \003(\0132\025.ast.Collisio"
+    "nMessage\022%\n\013chatMessage\030\002 \003(\0132\020.ast.Chat"
+    "Message\022\013\n\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001(\004\022\021\n\ttim"
+    "estamp\030\005 \001(\001\022\025\n\tremove_id\030\006 \003(\rB\002\020\001\022\030\n\014f"
+    "iring_ships\030\007 \003(\rB\002\020\001\022\017\n\007diff_of\030\010 \001(\r\022!"
+    "\n\tgameState\030\t \001(\0132\016.ast.GameState\022\016\n\006shi"
+    "pid\030\n \001(\r", 2809);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -5441,6 +5443,7 @@ void GameState::Swap(GameState* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int CollisionMessage::kGamestateidFieldNumber;
 const int CollisionMessage::kColliderFieldNumber;
 const int CollisionMessage::kWallTopFieldNumber;
 const int CollisionMessage::kWallBottomFieldNumber;
@@ -5466,6 +5469,7 @@ CollisionMessage::CollisionMessage(const CollisionMessage& from)
 
 void CollisionMessage::SharedCtor() {
   _cached_size_ = 0;
+  gamestateid_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -5499,6 +5503,9 @@ CollisionMessage* CollisionMessage::New() const {
 }
 
 void CollisionMessage::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    gamestateid_ = 0u;
+  }
   collider_.Clear();
   wall_top_.Clear();
   wall_bottom_.Clear();
@@ -5516,10 +5523,26 @@ bool CollisionMessage::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional uint32 gamestateid = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &gamestateid_)));
+          set_has_gamestateid();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_collider;
+        break;
+      }
+      
       // repeated uint32 collider = 2 [packed = true];
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_collider:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, this->mutable_collider())));
@@ -5680,6 +5703,11 @@ bool CollisionMessage::MergePartialFromCodedStream(
 
 void CollisionMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional uint32 gamestateid = 1;
+  if (has_gamestateid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->gamestateid(), output);
+  }
+  
   // repeated uint32 collider = 2 [packed = true];
   if (this->collider_size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteTag(2, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
@@ -5758,6 +5786,11 @@ void CollisionMessage::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* CollisionMessage::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // optional uint32 gamestateid = 1;
+  if (has_gamestateid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->gamestateid(), target);
+  }
+  
   // repeated uint32 collider = 2 [packed = true];
   if (this->collider_size() > 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
@@ -5866,6 +5899,15 @@ void CollisionMessage::SerializeWithCachedSizes(
 int CollisionMessage::ByteSize() const {
   int total_size = 0;
   
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional uint32 gamestateid = 1;
+    if (has_gamestateid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->gamestateid());
+    }
+    
+  }
   // repeated uint32 collider = 2 [packed = true];
   {
     int data_size = 0;
@@ -6003,6 +6045,11 @@ void CollisionMessage::MergeFrom(const CollisionMessage& from) {
   wall_right_.MergeFrom(from.wall_right_);
   wall_front_.MergeFrom(from.wall_front_);
   wall_back_.MergeFrom(from.wall_back_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_gamestateid()) {
+      set_gamestateid(from.gamestateid());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -6025,6 +6072,7 @@ bool CollisionMessage::IsInitialized() const {
 
 void CollisionMessage::Swap(CollisionMessage* other) {
   if (other != this) {
+    std::swap(gamestateid_, other->gamestateid_);
     collider_.Swap(&other->collider_);
     wall_top_.Swap(&other->wall_top_);
     wall_bottom_.Swap(&other->wall_bottom_);
@@ -6582,7 +6630,6 @@ Frame::Frame()
 }
 
 void Frame::InitAsDefaultInstance() {
-  collision_message_ = const_cast< ::ast::CollisionMessage*>(&::ast::CollisionMessage::default_instance());
   gamestate_ = const_cast< ::ast::GameState*>(&::ast::GameState::default_instance());
 }
 
@@ -6594,7 +6641,6 @@ Frame::Frame(const Frame& from)
 
 void Frame::SharedCtor() {
   _cached_size_ = 0;
-  collision_message_ = NULL;
   seq_ = GOOGLE_ULONGLONG(0);
   ack_ = GOOGLE_ULONGLONG(0);
   timestamp_ = 0;
@@ -6610,7 +6656,6 @@ Frame::~Frame() {
 
 void Frame::SharedDtor() {
   if (this != default_instance_) {
-    delete collision_message_;
     delete gamestate_;
   }
 }
@@ -6636,10 +6681,7 @@ Frame* Frame::New() const {
 }
 
 void Frame::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_collision_message()) {
-      if (collision_message_ != NULL) collision_message_->::ast::CollisionMessage::Clear();
-    }
+  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
     seq_ = GOOGLE_ULONGLONG(0);
     ack_ = GOOGLE_ULONGLONG(0);
     timestamp_ = 0;
@@ -6651,6 +6693,7 @@ void Frame::Clear() {
     }
     shipid_ = 0u;
   }
+  collision_message_.Clear();
   chatmessage_.Clear();
   remove_id_.Clear();
   firing_ships_.Clear();
@@ -6664,15 +6707,17 @@ bool Frame::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .ast.CollisionMessage collision_message = 1;
+      // repeated .ast.CollisionMessage collision_message = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_collision_message:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_collision_message()));
+                input, add_collision_message()));
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(10)) goto parse_collision_message;
         if (input->ExpectTag(18)) goto parse_chatMessage;
         break;
       }
@@ -6846,10 +6891,10 @@ bool Frame::MergePartialFromCodedStream(
 
 void Frame::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .ast.CollisionMessage collision_message = 1;
-  if (has_collision_message()) {
+  // repeated .ast.CollisionMessage collision_message = 1;
+  for (int i = 0; i < this->collision_message_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->collision_message(), output);
+      1, this->collision_message(i), output);
   }
   
   // repeated .ast.ChatMessage chatMessage = 2;
@@ -6917,11 +6962,11 @@ void Frame::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Frame::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .ast.CollisionMessage collision_message = 1;
-  if (has_collision_message()) {
+  // repeated .ast.CollisionMessage collision_message = 1;
+  for (int i = 0; i < this->collision_message_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->collision_message(), target);
+        1, this->collision_message(i), target);
   }
   
   // repeated .ast.ChatMessage chatMessage = 2;
@@ -7001,14 +7046,7 @@ void Frame::SerializeWithCachedSizes(
 int Frame::ByteSize() const {
   int total_size = 0;
   
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .ast.CollisionMessage collision_message = 1;
-    if (has_collision_message()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->collision_message());
-    }
-    
+  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
     // optional uint64 seq = 3;
     if (has_seq()) {
       total_size += 1 +
@@ -7052,6 +7090,14 @@ int Frame::ByteSize() const {
     }
     
   }
+  // repeated .ast.CollisionMessage collision_message = 1;
+  total_size += 1 * this->collision_message_size();
+  for (int i = 0; i < this->collision_message_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->collision_message(i));
+  }
+  
   // repeated .ast.ChatMessage chatMessage = 2;
   total_size += 1 * this->chatmessage_size();
   for (int i = 0; i < this->chatmessage_size(); i++) {
@@ -7115,13 +7161,11 @@ void Frame::MergeFrom(const ::google::protobuf::Message& from) {
 
 void Frame::MergeFrom(const Frame& from) {
   GOOGLE_CHECK_NE(&from, this);
+  collision_message_.MergeFrom(from.collision_message_);
   chatmessage_.MergeFrom(from.chatmessage_);
   remove_id_.MergeFrom(from.remove_id_);
   firing_ships_.MergeFrom(from.firing_ships_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_collision_message()) {
-      mutable_collision_message()->::ast::CollisionMessage::MergeFrom(from.collision_message());
-    }
+  if (from._has_bits_[2 / 32] & (0xffu << (2 % 32))) {
     if (from.has_seq()) {
       set_seq(from.seq());
     }
@@ -7168,7 +7212,7 @@ bool Frame::IsInitialized() const {
 
 void Frame::Swap(Frame* other) {
   if (other != this) {
-    std::swap(collision_message_, other->collision_message_);
+    collision_message_.Swap(&other->collision_message_);
     chatmessage_.Swap(&other->chatmessage_);
     std::swap(seq_, other->seq_);
     std::swap(ack_, other->ack_);

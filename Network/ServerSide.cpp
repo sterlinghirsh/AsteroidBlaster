@@ -75,13 +75,7 @@ void ServerSide::receive() {
 
             // Make sure the new ship is there.
             gameState->custodian.update();
-            gameState->storeFullGameState();
-
-            ast::Frame frame;
-            frame.set_shipid(shipid);
-            ast::GameState* gs = gameState->getLastSavedGameState();
-            frame.mutable_gamestate()->CopyFrom(*gs);
-            send(event->peer, frame, true);
+            // Send them their first packet in the normal send place.
          }
 
          if (event->type == ENET_EVENT_TYPE_RECEIVE) {

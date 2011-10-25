@@ -38,6 +38,7 @@ namespace ast {
    class ClientCommand;
    class Frame;
    class GameState;
+   class CollisionMessage;
 }
 
 class GameState : public InputReceiver {
@@ -127,6 +128,7 @@ class GameState : public InputReceiver {
       ClientSide* clientSide;
 
       std::map<unsigned, ast::GameState*> savedGameStates;
+      std::map<unsigned, ast::CollisionMessage*> savedCollisionMessages;
       unsigned curGameStateId;
       unsigned lastReceivedGameStateId;
    

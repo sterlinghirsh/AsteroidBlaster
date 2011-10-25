@@ -1529,6 +1529,13 @@ class CollisionMessage : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
+  // optional uint32 gamestateid = 1;
+  inline bool has_gamestateid() const;
+  inline void clear_gamestateid();
+  static const int kGamestateidFieldNumber = 1;
+  inline ::google::protobuf::uint32 gamestateid() const;
+  inline void set_gamestateid(::google::protobuf::uint32 value);
+  
   // repeated uint32 collider = 2 [packed = true];
   inline int collider_size() const;
   inline void clear_collider();
@@ -1615,6 +1622,8 @@ class CollisionMessage : public ::google::protobuf::Message {
   
   // @@protoc_insertion_point(class_scope:ast.CollisionMessage)
  private:
+  inline void set_has_gamestateid();
+  inline void clear_has_gamestateid();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -1632,9 +1641,10 @@ class CollisionMessage : public ::google::protobuf::Message {
   mutable int _wall_front_cached_byte_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > wall_back_;
   mutable int _wall_back_cached_byte_size_;
+  ::google::protobuf::uint32 gamestateid_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -1890,13 +1900,17 @@ class Frame : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // optional .ast.CollisionMessage collision_message = 1;
-  inline bool has_collision_message() const;
+  // repeated .ast.CollisionMessage collision_message = 1;
+  inline int collision_message_size() const;
   inline void clear_collision_message();
   static const int kCollisionMessageFieldNumber = 1;
-  inline const ::ast::CollisionMessage& collision_message() const;
-  inline ::ast::CollisionMessage* mutable_collision_message();
-  inline ::ast::CollisionMessage* release_collision_message();
+  inline const ::ast::CollisionMessage& collision_message(int index) const;
+  inline ::ast::CollisionMessage* mutable_collision_message(int index);
+  inline ::ast::CollisionMessage* add_collision_message();
+  inline const ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage >&
+      collision_message() const;
+  inline ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage >*
+      mutable_collision_message();
   
   // repeated .ast.ChatMessage chatMessage = 2;
   inline int chatmessage_size() const;
@@ -1979,8 +1993,6 @@ class Frame : public ::google::protobuf::Message {
   
   // @@protoc_insertion_point(class_scope:ast.Frame)
  private:
-  inline void set_has_collision_message();
-  inline void clear_has_collision_message();
   inline void set_has_seq();
   inline void clear_has_seq();
   inline void set_has_ack();
@@ -1996,7 +2008,7 @@ class Frame : public ::google::protobuf::Message {
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::ast::CollisionMessage* collision_message_;
+  ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage > collision_message_;
   ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage > chatmessage_;
   ::google::protobuf::uint64 seq_;
   ::google::protobuf::uint64 ack_;
@@ -4296,6 +4308,28 @@ inline void GameState::set_id(::google::protobuf::uint32 value) {
 
 // CollisionMessage
 
+// optional uint32 gamestateid = 1;
+inline bool CollisionMessage::has_gamestateid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CollisionMessage::set_has_gamestateid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CollisionMessage::clear_has_gamestateid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CollisionMessage::clear_gamestateid() {
+  gamestateid_ = 0u;
+  clear_has_gamestateid();
+}
+inline ::google::protobuf::uint32 CollisionMessage::gamestateid() const {
+  return gamestateid_;
+}
+inline void CollisionMessage::set_gamestateid(::google::protobuf::uint32 value) {
+  set_has_gamestateid();
+  gamestateid_ = value;
+}
+
 // repeated uint32 collider = 2 [packed = true];
 inline int CollisionMessage::collider_size() const {
   return collider_.size();
@@ -4610,33 +4644,29 @@ CreateEntityMessage::mutable_entity() {
 
 // Frame
 
-// optional .ast.CollisionMessage collision_message = 1;
-inline bool Frame::has_collision_message() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Frame::set_has_collision_message() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Frame::clear_has_collision_message() {
-  _has_bits_[0] &= ~0x00000001u;
+// repeated .ast.CollisionMessage collision_message = 1;
+inline int Frame::collision_message_size() const {
+  return collision_message_.size();
 }
 inline void Frame::clear_collision_message() {
-  if (collision_message_ != NULL) collision_message_->::ast::CollisionMessage::Clear();
-  clear_has_collision_message();
+  collision_message_.Clear();
 }
-inline const ::ast::CollisionMessage& Frame::collision_message() const {
-  return collision_message_ != NULL ? *collision_message_ : *default_instance_->collision_message_;
+inline const ::ast::CollisionMessage& Frame::collision_message(int index) const {
+  return collision_message_.Get(index);
 }
-inline ::ast::CollisionMessage* Frame::mutable_collision_message() {
-  set_has_collision_message();
-  if (collision_message_ == NULL) collision_message_ = new ::ast::CollisionMessage;
+inline ::ast::CollisionMessage* Frame::mutable_collision_message(int index) {
+  return collision_message_.Mutable(index);
+}
+inline ::ast::CollisionMessage* Frame::add_collision_message() {
+  return collision_message_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage >&
+Frame::collision_message() const {
   return collision_message_;
 }
-inline ::ast::CollisionMessage* Frame::release_collision_message() {
-  clear_has_collision_message();
-  ::ast::CollisionMessage* temp = collision_message_;
-  collision_message_ = NULL;
-  return temp;
+inline ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage >*
+Frame::mutable_collision_message() {
+  return &collision_message_;
 }
 
 // repeated .ast.ChatMessage chatMessage = 2;

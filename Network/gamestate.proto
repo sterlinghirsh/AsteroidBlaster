@@ -158,6 +158,8 @@ message GameState {
 
 message CollisionMessage {
    // Every 2 are a pair.
+   optional uint32 gamestateid = 1;
+
    repeated uint32 collider = 2 [packed=true];
 
    // Now things that collide with walls.
@@ -181,7 +183,7 @@ message CreateEntityMessage {
 }
 
 message Frame {
-   optional CollisionMessage collision_message = 1;
+   repeated CollisionMessage collision_message = 1;
    repeated ChatMessage chatMessage = 2;
    optional uint64 seq = 3;
    optional uint64 ack = 4;

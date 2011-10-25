@@ -6,8 +6,6 @@
 
 #include "Items/Drawable.h"
 #include "Utility/CollisionTypes.h"
-#include "Items/AsteroidShip.h"
-#include "Items/Asteroid3D.h"
 
 #ifndef __COLLISION_H__
 #define __COLLISION_H__
@@ -19,6 +17,8 @@ struct CollisionBase {
    CollisionBase(double _squaredDistance) : squaredDistance(_squaredDistance) {}
    virtual CollisionBase* tryExecute(Drawable* _a, Drawable* _b) =0;
    virtual void handleCollision() = 0;
+   unsigned aId;
+   unsigned bId;
 };
 
 template <class A, class B>
@@ -34,6 +34,8 @@ struct Collision : public CollisionBase {
     a(_a), b(_b) {
       Vector3D tmp(*a->position, *b->position);
       squaredDistance = tmp.getComparisonLength();
+      aId = a->id;
+      bId = b->id;
    }
 
    virtual Collision<A, B>* tryExecute(Drawable* _a, Drawable* _b) {

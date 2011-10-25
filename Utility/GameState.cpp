@@ -270,10 +270,9 @@ void GameState::addScreens() {
  */
 void GameState::update(double timeDiff) {
    updateGameTime(timeDiff);
+   curGameStateId++;
 
-   if (gsm == ServerMode) {
-      serverSide->receive();
-   } else if (gsm == ClientMode) {
+   if (gsm == ClientMode) {
       clientSide->receive();
       clientSide->send(clientCommand, false);
    }
@@ -346,6 +345,13 @@ void GameState::update(double timeDiff) {
    MeshFace::updateIndependentFaces(timeDiff);
    GameMessage::updateAllMessages(timeDiff);
 
+   ast::CollisionMessage* curFrameCollisions = NULL;
+   if (gsm == ServerMode) {
+      curFrameCollisions = new ast::CollisionMessage();
+      curFrameCollisions->set_gamestateid(curGameStateId);
+      savedCollisionMessages[curGameStateId] = curFrameCollisions;
+   }
+
    // Check every object for collisions.
    if (gsm != ClientMode) {
       for (item = objects->begin(); item != objects->end(); ++item) {
@@ -353,6 +359,11 @@ void GameState::update(double timeDiff) {
          for (curCollision = collisions->begin(); curCollision != collisions->end();
           ++curCollision) {
             (*curCollision)->handleCollision();
+            if (gsm == ServerMode) {
+               // Every 2 is a collision.
+               curFrameCollisions->add_collider((*curCollision)->aId);
+               curFrameCollisions->add_collider((*curCollision)->bId);
+            }
          }
          delete collisions;
          // TODO: fix memory leak.
@@ -380,17 +391,36 @@ void GameState::update(double timeDiff) {
       std::map<unsigned, ClientInfo*>::iterator clientIter = clients.begin();
 
       ast::Frame frame;
+      bool sendReliable;
+
       for (; clientIter != clients.end(); clientIter++) {
+         sendReliable = false;
          if (clientIter->second == NULL) {
             clients.erase(clientIter);
          } else {
+            ClientInfo* client = clientIter->second;
             frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
+
+            if (client->ackGameState == 0) {
+               // Send the initial update.
+               sendReliable = true;
+               // No diff.
+               frame.set_shipid(client->shipid);
+            }
+
+            
+            for (int i = client->ackGameState + 1; i < gameStateId; ++i) {
+               frame.add_collision_message()->CopyFrom(*(savedCollisionMessages[i]));
+            }
+
             frame.set_timestamp(getGameTime());
-            serverSide->send((*clientIter).second->client, frame, false);
+            serverSide->send(client->client, frame, sendReliable);
             
             frame.Clear();
          }
       }
+
+      serverSide->receive();
    }
 
    updateText();
@@ -1789,7 +1819,6 @@ void GameState::handleFrame(const ast::Frame& frame) {
 unsigned GameState::storeFullGameState() {
    ast::GameState* gs = new ast::GameState();
    // Increment first.
-   curGameStateId++;
    savedGameStates[curGameStateId] = gs;
 
    save(gs);
@@ -1798,10 +1827,12 @@ unsigned GameState::storeFullGameState() {
 }
 
 ast::GameState* GameState::getLastSavedGameState() {
-   if (curGameStateId == 0)
-      storeFullGameState();
-
-   return getSavedGameState(curGameStateId);
+   std::map<unsigned, ast::GameState*>::reverse_iterator iter;
+   iter = savedGameStates.rbegin();
+   if (iter == savedGameStates.rend())
+      return NULL;
+   else
+      return iter->second;
 }
 
 ast::GameState* GameState::getSavedGameState(unsigned id) {
