@@ -36,7 +36,7 @@ endif
 
 
 
-LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf -lenet -g -O3 -Wall -Werror
+LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf  -Wl,-Bstatic -lenet -Wl,-Bdynamic -g -O3 -Wall -Werror
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files

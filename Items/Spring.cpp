@@ -40,8 +40,8 @@ void Spring::update(double ms) {
       }
    }
    // Connect the up vectors with a spring force.
-   if (isAttached && firstPerson ||
-    (anchor->isBarrelRollingLeft <= 0 && anchor->isBarrelRollingRight <= 0)) {
+   if (isAttached && (firstPerson ||
+    ((anchor->isBarrelRollingLeft <= 0) && (anchor->isBarrelRollingRight <= 0)))) {
       Vector3D displace = *anchor->up;
       Vector3D springVector = displace.subtract(*item->up);
       double length = springVector.getLength();
