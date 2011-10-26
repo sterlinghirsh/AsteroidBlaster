@@ -819,7 +819,6 @@ Custodian::Custodian(const GameState* _gameState) :
    nextID = defaultNextID;
    
    if (collisionHandlers == NULL) {
-      unsigned key;
       collisionHandlers = new std::map<unsigned, CollisionBase*>();
       // Just to make syntax nicer.
       std::map<unsigned, CollisionBase*>& ch = *collisionHandlers;
@@ -1004,6 +1003,7 @@ void Custodian::cleanup() {
    std::map<unsigned, Object3D*>::iterator iter = objectsByID.begin();
    for (; iter != objectsByID.end(); iter++) {
       if (iter->second->isRemoved()) {
+         printf("Deleting %d\n", iter->second->id);
          delete iter->second;
          objectsByID.erase(iter);
       }
@@ -1016,11 +1016,19 @@ void Custodian::cleanup() {
  * the object's shouldRemove = true.
  */
 void Custodian::remove(Object3D* objectIn) {
+   if (objectIn->isRemoved()) {
+      // Looks like this got removed, so let's not diggity do it again.
+      return;
+   }
+
    objectsByMinX[objectIn->minXRank] = NULL;
    objectsByMaxX[objectIn->maxXRank] = NULL;
    // We're going to make the removal a separate step so that we can send
    // stuff from server to client.
    // objectsByID.erase(objectIn->id);
+
+   // DEBUG
+   printf("Removing %d\n", objectIn->id);
    
    Asteroid3D* asteroid;
    Shard* shard;
@@ -1190,6 +1198,14 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
    unsigned type = ent.type();
    Object3D* obj = (*this)[id];
    if (obj == NULL) {
+      // Object doesn't exit.
+      if (ent.id() < nextID) {
+         // Must have deleted already. Ignore,
+         // DEBUG
+         printf("Tried to add deleted object.\n");
+         return NULL;
+      }
+
       AsteroidShip* owner = NULL;
       if (IS_SHOT(type)) {
          
@@ -1321,7 +1337,8 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
          std::cout << "NULL OBJECT!\n";
       }
    } else {
-      obj->load(ent);
+      if (!obj->isRemoved())
+         obj->load(ent);
    }
    //std::cout << "ID: " << id << std::endl;
    return obj;

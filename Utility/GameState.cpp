@@ -59,8 +59,8 @@ std::ostringstream sstream2; // TODO: Better name plz.
 ast::ClientCommand localClientCommand;
 
 GameState::GameState(GameStateMode _gsm) :
-   clientCommand(localClientCommand),
    custodian(this),
+   clientCommand(localClientCommand),
    levelTimer(this),
    gameOverTimer(this) {
       curGameStateId = 0;
@@ -386,16 +386,14 @@ void GameState::update(double timeDiff) {
             printf("aid: %d, bid: %d\n", aId, bId);
             collision = custodian.getCollision(custodian[aId], custodian[bId]);
             if (collision != NULL) {
-               // DEBUG
-               printf("Handling collision.\n");
                collision->handleCollision();
                delete collision;
             } else {
                // DEBUG
                printf("Null collision.\n");
             }
-            savedCollisionMessages.erase(collisionIter);
          }
+         savedCollisionMessages.erase(collisionIter);
       }
    }
 
@@ -436,7 +434,7 @@ void GameState::update(double timeDiff) {
 
             
             if (client->ackGameState != 0) {
-               for (int i = client->ackGameState + 1; i <= gameStateId; ++i) {
+               for (unsigned i = client->ackGameState + 1; i <= gameStateId; ++i) {
                   frame.add_collision_message()->CopyFrom(*(savedCollisionMessages[i]));
                }
             }
@@ -1628,7 +1626,7 @@ void GameState::saveDiff(const ast::GameState& oldState, ast::GameState* newStat
    ast::Entity* newEnt;
    Object3D* obj = NULL;
 
-   unsigned curOldId = 0;
+   int curOldId = 0;
 
    // We have to iterate through all current objects and all objects in oldState
    // at the same time to update the right ones.
@@ -1764,7 +1762,9 @@ void GameState::testFunction() {
 
    std::cout << "NetTimer=" << oss.str() << std::endl;*/
    
-   ship->life++;
+   if (ship != NULL) {
+      ship->life++;
+   }
 
 }
 
@@ -1819,7 +1819,6 @@ void GameState::handleCommand(const ast::ClientCommand& command) {
 void GameState::handleFrame(ast::Frame* frame) {
 
    if (frame->has_gamestate()) {
-      unsigned gameStateId = 0;
       ast::CollisionMessage* curCollisionMessage = NULL;
       while (frame->collision_message_size() > 0) {
 

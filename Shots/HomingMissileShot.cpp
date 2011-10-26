@@ -513,13 +513,10 @@ void HomingMissileShot::update(double timeDiff) {
          Object3D* target = gameState->custodian[targetID];
          if (target != NULL) {
             Vector3D positionToAsteroid(*position, *target->position);
-            double distance = positionToAsteroid.getLength();
             Vector3D toAsteroidNorm(positionToAsteroid);
             toAsteroidNorm.normalize();
             Point3D futurePosition(*(target->position));
       
-            //target->velocity->movePoint(futurePosition, distance / std::max(80.0, velocity->getLength()));
-            
             Vector3D toFuturePositionNorm(*position, futurePosition);
             toFuturePositionNorm.normalize();
             

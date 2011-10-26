@@ -36,13 +36,13 @@ endif
 
 
 
-LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf -lenet -g -O3
+LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf -lenet -g -O3 -Wall -Werror
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
 
 
-CFLAGS:=$(PLATFORMSPECIFICCFLAGS) -I. -I Libraries/ -c $(SDL_CFLAGS) $(PROTOBUF_CFLAGS) -g -O3
+CFLAGS:=$(PLATFORMSPECIFICCFLAGS) -I. -I Libraries/ -c $(SDL_CFLAGS) $(PROTOBUF_CFLAGS) -g -O3 -Wall -Werror
 CC:=ccache g++
 
 PROGNAME:=AsteroidBlaster
@@ -114,6 +114,9 @@ libClean:
 
 valgrind:
 	valgrind --leak-check=no --track-origins=yes --log-file=valgrindOutput ./${PROGNAME}
+
+valgrindClient:
+	valgrind --leak-check=no --log-file=valgrindOutput ./${PROGNAME} -c localhost 5001
 
 gdb:
 	gdb ./${PROGNAME}

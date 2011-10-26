@@ -67,6 +67,7 @@ class Asteroid3D : public Object3D {
       void newRandomPosition();
       void drawInMinimap();
       void debug();
+      virtual void onRemove();
       
       virtual void save(ast::Entity* ent);
       virtual void load(const ast::Entity& ent);

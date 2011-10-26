@@ -427,84 +427,9 @@ void Asteroid3D::update(double timeDiff) {
    }
       
    if (health <= 0) {
-      // Get the modelview matrix.
-      Matrix4 modelView;
-      glPushMatrix();
-      // Copy the draw() method's transforms.
-      glLoadIdentity();
-      position->glTranslate();
-      glRotated(angle, axis->x, axis->y, axis->z);
-      glScaled(scalex, scaley, scalez);
-      modelView.loadModelviewMatrix();
-      glPopMatrix();
-
-      MeshFace* newFace;
-      MeshFace* oldFace;
-      for (unsigned i = 0; i < mesh.faces.size(); i++) {
-         //mesh.faces[i].position->updateMagnitude();
-         // Copy them all.
-         oldFace = (mesh.faces[i]);
-         newFace = new MeshFace(*oldFace);
-
-         newFace->rotationSpeed = randdouble() * 360;
-         newFace->axis = new Vector3D();
-         newFace->axis->randomMagnitude();
-         newFace->axis->normalize();
-
-         newFace->setTexture(gameState->godMode ? 
-          Texture::getTexture("ZoeRedEyes") :
-          Texture::getTexture("AsteroidSurface"));
-         newFace->timeExploded = gameState->getGameTime();
-
-         // NULL out the pointers that will get copied.
-         oldFace->nullPointers();
-
-         // Transform each of the points.
-         // We can't use = because p1 - p3 are MeshPoints, not Point3Ds.
-         newFace->p1.updateMagnitude(modelView * newFace->p1);
-         newFace->p2.updateMagnitude(modelView * newFace->p2);
-         newFace->p3.updateMagnitude(modelView * newFace->p3);
-
-         // The new position is the average of the three points.
-         newFace->position->updateMagnitude(newFace->p1);
-         newFace->position->addUpdate(newFace->p2);
-         newFace->position->addUpdate(newFace->p3);
-
-         newFace->position->scalarMultiplyUpdate(1.0 / 3.0);
-
-         // Make each of the points be relative to the position.
-         newFace->p1.subtractUpdate(*newFace->position);
-         newFace->p2.subtractUpdate(*newFace->position);
-         newFace->p3.subtractUpdate(*newFace->position);
-
-         // Add the original asteroid's position.
-         newFace->position->addUpdate(*position);
-
-         // Set the new face's velocity.
-         newFace->velocity->updateMagnitude(position, newFace->position);
-         newFace->velocity->setLength(8);
-         newFace->velocity->addUpdate(*velocity);
-
-         // Calculate linear velocity from angular velocity.
-         Vector3D positionToFace(*position, *newFace->position);
-         Vector3D tmpAxis(*axis); // Normalized.
-         double distanceAlongAxis = tmpAxis.dot(positionToFace);
-         tmpAxis.setLength(distanceAlongAxis);
-         Vector3D spinRadius = positionToFace - tmpAxis;
-         Vector3D newDirection = spinRadius.cross(*axis); // This might be backwards.
-         newDirection.setLength(-1 * std::min(rotationSpeed * (M_PI / 180.0)
-          * spinRadius.getLength(), 30.0));
-         //printf("spinRadiusLength: %f, radius: %f\n", spinRadius.getLength(), radius);
-
-         newFace->velocity->addUpdate(newDirection);
-
-         MeshFace::Add(newFace);
-      }
-
-      SoundEffect::playSoundEffect("Explosion1.wav", position, velocity);
-      shouldRemove = true;
-      
       if (gameState->gsm != ClientMode) {
+         shouldRemove = true;
+
          if (radius > 2) {
             int dimension = rand() % 3;
             custodian->add(makeChild(0, dimension));
@@ -615,4 +540,82 @@ void Asteroid3D::load(const ast::Entity& ent) {
       timeLastHitByEnergy = ent.timelasthitbyenergy();
    if (ent.has_damagepersecond())
       damagePerSecond = ent.damagepersecond();
+}
+
+void Asteroid3D::onRemove() {
+   // Get the modelview matrix.
+   Matrix4 modelView;
+   glPushMatrix();
+   // Copy the draw() method's transforms.
+   glLoadIdentity();
+   position->glTranslate();
+   glRotated(angle, axis->x, axis->y, axis->z);
+   glScaled(scalex, scaley, scalez);
+   modelView.loadModelviewMatrix();
+   glPopMatrix();
+
+   MeshFace* newFace;
+   MeshFace* oldFace;
+   for (unsigned i = 0; i < mesh.faces.size(); i++) {
+      //mesh.faces[i].position->updateMagnitude();
+      // Copy them all.
+      oldFace = (mesh.faces[i]);
+      newFace = new MeshFace(*oldFace);
+
+      newFace->rotationSpeed = randdouble() * 360;
+      newFace->axis = new Vector3D();
+      newFace->axis->randomMagnitude();
+      newFace->axis->normalize();
+
+      newFace->setTexture(gameState->godMode ? 
+       Texture::getTexture("ZoeRedEyes") :
+       Texture::getTexture("AsteroidSurface"));
+      newFace->timeExploded = gameState->getGameTime();
+
+      // NULL out the pointers that will get copied.
+      oldFace->nullPointers();
+
+      // Transform each of the points.
+      // We can't use = because p1 - p3 are MeshPoints, not Point3Ds.
+      newFace->p1.updateMagnitude(modelView * newFace->p1);
+      newFace->p2.updateMagnitude(modelView * newFace->p2);
+      newFace->p3.updateMagnitude(modelView * newFace->p3);
+
+      // The new position is the average of the three points.
+      newFace->position->updateMagnitude(newFace->p1);
+      newFace->position->addUpdate(newFace->p2);
+      newFace->position->addUpdate(newFace->p3);
+
+      newFace->position->scalarMultiplyUpdate(1.0 / 3.0);
+
+      // Make each of the points be relative to the position.
+      newFace->p1.subtractUpdate(*newFace->position);
+      newFace->p2.subtractUpdate(*newFace->position);
+      newFace->p3.subtractUpdate(*newFace->position);
+
+      // Add the original asteroid's position.
+      newFace->position->addUpdate(*position);
+
+      // Set the new face's velocity.
+      newFace->velocity->updateMagnitude(position, newFace->position);
+      newFace->velocity->setLength(8);
+      newFace->velocity->addUpdate(*velocity);
+
+      // Calculate linear velocity from angular velocity.
+      Vector3D positionToFace(*position, *newFace->position);
+      Vector3D tmpAxis(*axis); // Normalized.
+      double distanceAlongAxis = tmpAxis.dot(positionToFace);
+      tmpAxis.setLength(distanceAlongAxis);
+      Vector3D spinRadius = positionToFace - tmpAxis;
+      Vector3D newDirection = spinRadius.cross(*axis); // This might be backwards.
+      newDirection.setLength(-1 * std::min(rotationSpeed * (M_PI / 180.0)
+       * spinRadius.getLength(), 30.0));
+      //printf("spinRadiusLength: %f, radius: %f\n", spinRadius.getLength(), radius);
+
+      newFace->velocity->addUpdate(newDirection);
+
+      MeshFace::Add(newFace);
+   }
+
+   SoundEffect::playSoundEffect("Explosion1.wav", position, velocity);
 }

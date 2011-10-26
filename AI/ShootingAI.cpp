@@ -136,8 +136,10 @@ bool ShootingAI::aimAt(double dt, Object3D* target) {
    // The aiming should be clamped within a radius
    //double forwardDotAim = aim.dot(*ship->forward);
    double forwardDotAim = targetDir.dot(*ship->forward);
+   /*
    double upDotAim = aim.dot(*ship->up);
    double rightDotAim = aim.dot(*ship->right);
+   */
    // (Root 2)/2 radians
    const double minForwardAimAmount = 0.707;
 
@@ -204,8 +206,10 @@ void ShootingAI::aimCursorAtMiddle(double dt) {
 // Choose the appropriate weapon for this situation.
 void ShootingAI::chooseWeapon(Object3D* target) {
    Vector3D vec;
+   /*
    double curWeight = 0.0;
    double maxWeight = -1.0;
+   */
    /* Stores the weight of each weapon. At the end of the function, the weapon
     * with the highest weight is chosen.
     */
@@ -326,7 +330,7 @@ void ShootingAI::chooseWeapon(Object3D* target) {
       // Select the weapon index which has the highest weight.
       selectWeaponUpdateChosen(maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS));
 
-   int ndx =  maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS);
+   //int ndx =  maxValuedIndexInArray(weaponWeights, NUMBER_OF_WEAPONS);
 
    //printf("Chose %d, with weight %f\n", ndx, weaponWeights[ndx]);
 
@@ -370,7 +374,6 @@ Object3D* ShootingAI::chooseTarget() {
    targets_iterator = targets->begin();
    Object3D* closest = NULL;
    AsteroidShip* consideredShip = NULL;
-   Object3D* thisObj = NULL;
 
    for ( ; targets_iterator != targets->end(); ++targets_iterator) {
       //printf("starting null check.\n");
@@ -402,7 +405,7 @@ Object3D* ShootingAI::chooseTarget() {
          // Make sure we don't get a divide by 0 error.
          if(consideredShip->deaths != 0) {
             playerWeight = consideredShip->kills / consideredShip->deaths;
-            if(playerWeight = 0)
+            if(playerWeight == 0)
                playerWeight = 1;
             // Don't ever add too much of a weight for a player, even if their KTD ratio is high.
             if(playerWeight > 1.6)

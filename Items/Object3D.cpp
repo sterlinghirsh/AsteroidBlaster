@@ -12,7 +12,7 @@
 #include "Utility/Custodian.h"
 #include <string>
 #include "Network/gamestate.pb.h"
-
+#include "Utility/GameState.h"
 
 Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState),
  removed(false) {
@@ -56,25 +56,27 @@ Object3D::~Object3D() {
 }
 
 void Object3D::update(double timeDifference) {
-   angle += rotationSpeed * timeDifference;
+   if (gameState->gsm != ClientMode) {
+      angle += rotationSpeed * timeDifference;
 
-   updateAcceleration(timeDifference);
-   if (acceleration != NULL && velocity != NULL)
-      velocity->addUpdate(acceleration->scalarMultiply(timeDifference));
+      updateAcceleration(timeDifference);
+      if (acceleration != NULL && velocity != NULL)
+         velocity->addUpdate(acceleration->scalarMultiply(timeDifference));
 
-   if (velocity != NULL) {
-      while (!instantAccelerations.empty()) {
-         if (instantAccelerations.front() != NULL) {
-            velocity->addUpdate(*instantAccelerations.front());
-            delete instantAccelerations.front();
+      if (velocity != NULL) {
+         while (!instantAccelerations.empty()) {
+            if (instantAccelerations.front() != NULL) {
+               velocity->addUpdate(*instantAccelerations.front());
+               delete instantAccelerations.front();
+            }
+            instantAccelerations.pop();
          }
-         instantAccelerations.pop();
+
       }
 
+      if (velocity != NULL && position != NULL)
+         velocity->scalarMultiply(timeDifference).movePoint(*position);
    }
-
-   if (velocity != NULL && position != NULL)
-      velocity->scalarMultiply(timeDifference).movePoint(*position);
 
    updateBoundingBox();
 }
@@ -310,9 +312,15 @@ void Object3D::save(ast::Entity* ent) {
 
 void Object3D::load(const ast::Entity& ent) {
    id = ent.id();
-   type = ent.type();
+
+   if (ent.has_type())
+      type = ent.type();
 
    if (ent.has_shouldremove()) {
+      if (shouldRemove != ent.shouldremove()) {
+         // DEBUG
+         printf("Setting shouldRemove to %d on %d\n", ent.shouldremove(), id);
+      }
       shouldRemove = ent.shouldremove();
    }
 

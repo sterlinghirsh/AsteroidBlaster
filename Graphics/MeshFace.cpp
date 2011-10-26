@@ -166,8 +166,10 @@ void MeshFace::drawFace(bool drawSmooth, bool drawTex) {
    MeshPoint p3_tmp = MeshPoint(p3.x + offset.x,
          p3.y + offset.y,
          p3.z + offset.z);
+   /*
    float curAlpha = timeExploded == 0 ? 1.0f :
       (GLfloat) sqrt((lifetime - (gameState->getGameTime() - timeExploded)));
+      */
 
    if (timeExploded > 0.0) {
       glDisable(GL_CULL_FACE);

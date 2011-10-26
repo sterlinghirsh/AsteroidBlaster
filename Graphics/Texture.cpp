@@ -75,7 +75,7 @@ void Texture::Add(std::string file, std::string keyName) {
    amask = 0xff000000;
 #endif
 
-   GLenum texture_format;
+   GLenum texture_format = GL_RGBA;
    GLint  nOfColors;
    // get the number of channels in the SDL surface
    nOfColors = image->format->BytesPerPixel;

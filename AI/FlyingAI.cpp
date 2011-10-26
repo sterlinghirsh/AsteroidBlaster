@@ -73,6 +73,7 @@ Point3D* FlyingAI :: getClosestShard() {
    
    for ( ; iter != targets->end(); iter++) {
       // TODO: 2?
+      /*
       tempDist = (float) (
         ((*iter)->position->x - ship->position->x, 2) *
         ((*iter)->position->x - ship->position->x, 2) +
@@ -80,6 +81,14 @@ Point3D* FlyingAI :: getClosestShard() {
         ((*iter)->position->y - ship->position->y, 2) +
         ((*iter)->position->z - ship->position->z, 2) *
         ((*iter)->position->z - ship->position->z, 2));
+        */
+      tempDist = (float) (
+        ((*iter)->position->x - ship->position->x) *
+        ((*iter)->position->x - ship->position->x) +
+        ((*iter)->position->y - ship->position->y) *
+        ((*iter)->position->y - ship->position->y) +
+        ((*iter)->position->z - ship->position->z) *
+        ((*iter)->position->z - ship->position->z));
 
       if(shortestDist > tempDist) {
          shortestDist = tempDist;
