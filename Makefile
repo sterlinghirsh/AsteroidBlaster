@@ -15,7 +15,7 @@ ifeq ($(UNAME), Linux)
    SDL_CFLAGS:=$(shell "sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_image-1.2.10 
 
-   PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs $(FMODLIB_PATH)/libfmodex.so  -lGL -lGLU -lSDL -lGLEW -lpthread
+   PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs $(FMODLIB_PATH)/libfmodex.so  -lGL -lGLU -lSDL -lGLEW -lpthread -Wl,-Bstatic -lenet -Wl,-Bdynamic
    FMODLIB_NAME_RELEASE  = libfmodex.so
    FMODLIB_NAME_LOGGING  = libfmodexL.so
    INSTALL_NAME_TOOL_LINE = 
@@ -26,7 +26,7 @@ else
    SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--libs")
    SDL_CFLAGS:=$(shell "/sw/bin/sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=-I /opt/local/include
-   PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -Wl -L$(FMODLIB_PATH) -lfmodex
+   PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -Wl -L$(FMODLIB_PATH) -lfmodex -lenet
    FMODLIB_NAME_RELEASE  = libfmodex.dylib
    FMODLIB_NAME_LOGGING  = libfmodexL.dylib
    INSTALL_NAME_TOOL_LINE = install_name_tool -change ./${FMODLIB_NAME_RELEASE} ${FMODLIB_PATH}/${FMODLIB_NAME_RELEASE} AsteroidBlaster
@@ -36,7 +36,7 @@ endif
 
 
 
-LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf  -Wl,-Bstatic -lenet -Wl,-Bdynamic -g -O3 -Wall -Werror
+LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf -g -O3 -Wall -Werror
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
