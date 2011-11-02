@@ -69,20 +69,23 @@ void Blaster::fire() {
    // Update timeLastFired with new current time.
    timeLastFired = ship->gameState->getGameTime();
    // Copy the ship's position for the start point.
-   Point3D start = ship->shotOrigin;
-   // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
-   Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed));
-   // Add a random variation to each of the shots.
-   randomVariation.randomMagnitude();
-   randomVariation.scalarMultiplyUpdate(randomVariationAmount);
-   shotDirection.addUpdate(randomVariation);
 
-   ship->shotDirection.movePoint(start, 3);
+   if (ship->gameState->gsm != ClientMode) {
+      Point3D start = ship->shotOrigin;
+      // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
+      Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed));
+      // Add a random variation to each of the shots.
+      randomVariation.randomMagnitude();
+      randomVariation.scalarMultiplyUpdate(randomVariationAmount);
+      shotDirection.addUpdate(randomVariation);
+
+      ship->shotDirection.movePoint(start, 3);
+      ship->custodian->add(new BlasterShot(start,
+               shotDirection, index, ship, ship->gameState));
+      addHeat(heatPerShot / level);
+   }
+
    ship->setShakeAmount(0.1f);
-   ship->custodian->add(new BlasterShot(start,
-            shotDirection, index, ship, ship->gameState));
-
-   addHeat(heatPerShot / level);
 }
 
 /**

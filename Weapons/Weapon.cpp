@@ -61,7 +61,7 @@ void Weapon::update(double timeDiff) {
  * Increase currentHeat by heatPerShot / level by default.
  */
 void Weapon::addHeat(double newHeat) {
-   if (!ship->gameState->godMode) {
+   if (!ship->gameState->godMode && ship->gameState->gsm != ClientMode) {
       currentHeat += newHeat;
    }
 }
