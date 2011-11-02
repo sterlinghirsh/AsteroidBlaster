@@ -60,7 +60,7 @@ class AsteroidShip : public Object3D {
       int score;
       int kills;
       int deaths;
-      int life;
+      int lives;
 
       // Banking
       int bankedShards; // Shards that were collected this round.
@@ -146,7 +146,6 @@ class AsteroidShip : public Object3D {
       virtual void drawGlow() { draw(); };
       virtual void drawInMinimap();
       virtual void debug();
-      virtual std::string serialize();
       
       bool isRespawning();
       

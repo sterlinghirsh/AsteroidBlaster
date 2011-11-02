@@ -503,12 +503,12 @@ class Entity : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 deaths() const;
   inline void set_deaths(::google::protobuf::int32 value);
   
-  // optional int32 life = 56;
-  inline bool has_life() const;
-  inline void clear_life();
-  static const int kLifeFieldNumber = 56;
-  inline ::google::protobuf::int32 life() const;
-  inline void set_life(::google::protobuf::int32 value);
+  // optional int32 lives = 56;
+  inline bool has_lives() const;
+  inline void clear_lives();
+  static const int kLivesFieldNumber = 56;
+  inline ::google::protobuf::int32 lives() const;
+  inline void set_lives(::google::protobuf::int32 value);
   
   // optional int32 bankedShards = 57;
   inline bool has_bankedshards() const;
@@ -690,8 +690,8 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_kills();
   inline void set_has_deaths();
   inline void clear_has_deaths();
-  inline void set_has_life();
-  inline void clear_has_life();
+  inline void set_has_lives();
+  inline void clear_has_lives();
   inline void set_has_bankedshards();
   inline void clear_has_bankedshards();
   inline void set_has_unbankedshards();
@@ -764,7 +764,7 @@ class Entity : public ::google::protobuf::Message {
   ::google::protobuf::int32 score_;
   ::google::protobuf::int32 kills_;
   ::google::protobuf::int32 deaths_;
-  ::google::protobuf::int32 life_;
+  ::google::protobuf::int32 lives_;
   ::google::protobuf::int32 bankedshards_;
   ::google::protobuf::int32 unbankedshards_;
   ::google::protobuf::int32 totalbankedshards_;
@@ -3083,26 +3083,26 @@ inline void Entity::set_deaths(::google::protobuf::int32 value) {
   deaths_ = value;
 }
 
-// optional int32 life = 56;
-inline bool Entity::has_life() const {
+// optional int32 lives = 56;
+inline bool Entity::has_lives() const {
   return (_has_bits_[1] & 0x00000200u) != 0;
 }
-inline void Entity::set_has_life() {
+inline void Entity::set_has_lives() {
   _has_bits_[1] |= 0x00000200u;
 }
-inline void Entity::clear_has_life() {
+inline void Entity::clear_has_lives() {
   _has_bits_[1] &= ~0x00000200u;
 }
-inline void Entity::clear_life() {
-  life_ = 0;
-  clear_has_life();
+inline void Entity::clear_lives() {
+  lives_ = 0;
+  clear_has_lives();
 }
-inline ::google::protobuf::int32 Entity::life() const {
-  return life_;
+inline ::google::protobuf::int32 Entity::lives() const {
+  return lives_;
 }
-inline void Entity::set_life(::google::protobuf::int32 value) {
-  set_has_life();
-  life_ = value;
+inline void Entity::set_lives(::google::protobuf::int32 value) {
+  set_has_lives();
+  lives_ = value;
 }
 
 // optional int32 bankedShards = 57;

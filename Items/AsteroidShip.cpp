@@ -14,6 +14,7 @@
 #include "Text/GameMessage.h"
 #include "Items/Spring.h"
 #include "Network/gamestate.pb.h"
+#include "Menus/StoreMenu.h"
 
 #include <sstream>
 
@@ -47,149 +48,148 @@ const double spawnRate = .5;
  * Constructor
  */
 AsteroidShip::AsteroidShip(const GameState* _gameState) :
-   Object3D(_gameState) {
-      type = TYPE_ASTEROIDSHIP;
+ Object3D(_gameState),
+ bankTimer(gameState),
+ respawnTimer(gameState),
+ aliveTimer(gameState) {
+   type = TYPE_ASTEROIDSHIP;
 
-      bankTimer.setGameState(gameState);
-      respawnTimer.setGameState(gameState);
-      aliveTimer.setGameState(gameState);
+   cullRadius = 12;
+   health = 100;
+   healthMax = 100;
 
-      cullRadius = 12;
-      health = 100;
-      healthMax = 100;
+   // Bounding box stuff.
+   maxX = maxY = maxZ = 3;
+   minX = minY = minZ = -3;
+   radius = 3;
+   updateBoundingBox();
 
-      // Bounding box stuff.
-      maxX = maxY = maxZ = 3;
-      minX = minY = minZ = -3;
-      radius = 3;
-      updateBoundingBox();
+   // Todo: comment these.
+   spin = 90;
+   flashiness = 0;
+   
+   tracker = 0;
+   rando = 1;
+   upOrDown = 1;
 
-      // Todo: comment these.
-      spin = 90;
-      flashiness = 0;
-      
-      tracker = 0;
-      rando = 1;
-      upOrDown = 1;
+   zMove = 2;
+   lineMove = zMove / 4;
+   frontX = 0;
+   frontY = 0;
+   frontZ = 0;
+   cornerX = .2;
+   cornerY = .2;
+   cornerZ = 1.3;
+   middleXY = .15;
+   middleZ = 1;
+   backX = 0;
+   backY = 0;
+   backZ = 1.6;
 
-      zMove = 2;
-      lineMove = zMove / 4;
-      frontX = 0;
-      frontY = 0;
-      frontZ = 0;
-      cornerX = .2;
-      cornerY = .2;
-      cornerZ = 1.3;
-      middleXY = .15;
-      middleZ = 1;
-      backX = 0;
-      backY = 0;
-      backZ = 1.6;
+   isBarrelRollingLeft = -1;
+   isBarrelRollingRight = -1;
 
-      isBarrelRollingLeft = -1;
-      isBarrelRollingRight = -1;
+   hitX = 0;
+   hitY = 0;
+   hitZ = 0;
 
-      hitX = 0;
-      hitY = 0;
-      hitZ = 0;
+   spawnInvulnerable = true;
+   drawShieldTime = 0.4; // Seconds
+   justGotHit = 0;
+   timeLeftToRespawn = -1;
+   isFirstSpawn = true;
 
-      spawnInvulnerable = true;
-      drawShieldTime = 0.4; // Seconds
-      justGotHit = 0;
-      timeLeftToRespawn = -1;
-      isFirstSpawn = true;
+   //skew must be set to 0 til I figure out a better way to do things
+   skew = 0;
 
-      //skew must be set to 0 til I figure out a better way to do things
-      skew = 0;
+   // TODO: Comment these.
+   x2Change = middleXY / 2;
+   y2Change = middleXY / 2;
+   z2Change = (backZ - middleZ) / 2;
+   xChange = 0;
+   yChange = 0;
+   zChange = 0;
+   backChange = 0;
 
-      // TODO: Comment these.
-      x2Change = middleXY / 2;
-      y2Change = middleXY / 2;
-      z2Change = (backZ - middleZ) / 2;
-      xChange = 0;
-      yChange = 0;
-      zChange = 0;
-      backChange = 0;
+   shotOriginScale = 4;
 
-      shotOriginScale = 4;
+   // The ship's score. This number is displayed to the screen.
+   score = 0;
+   kills = 0;
+   deaths = 0;
+   lives = 3;
 
-      // The ship's score. This number is displayed to the screen.
-      score = 0;
-      kills = 0;
-      deaths = 0;
-      life = 3;
+   lastDamagerId = -1;
+   lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
 
-      lastDamagerId = -1;
-      lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
+   // The number of shard collected. This number is displayed to the screen.
+   bankedShards = 0;
+   unbankedShards = 0;
+   totalBankedShards = 0;
+   bankPeriod = 10; // Default bank period is 10 seconds.
+   bankTimer.reset();
 
-      // The number of shard collected. This number is displayed to the screen.
-      bankedShards = 0;
-      unbankedShards = 0;
-      totalBankedShards = 0;
-      bankPeriod = 10; // Default bank period is 10 seconds.
-      bankTimer.reset();
+   // The ship's max motion parameters.
+   maxForwardAccel = 10;
+   maxRightAccel = 20;
+   maxUpAccel = 5;
+   maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
 
-      // The ship's max motion parameters.
-      maxForwardAccel = 10;
-      maxRightAccel = 20;
-      maxUpAccel = 5;
-      maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
+   // The ship's health
+   health = 100;
+   // health max
+   healthMax = 100;
 
-      // The ship's health
-      health = 100;
-      // health max
-      healthMax = 100;
+   // levels
+   engineLevel = 1;
+   regenHealthLevel = 0;
+   bankLevel = 1;
 
-      // levels
-      engineLevel = 1;
-      regenHealthLevel = 0;
-      bankLevel = 1;
+   // Add weapons to the list!
+   /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE CONSTANTS IN Utility/Constants.h
+   */
+   int tmpNumberOfWeapons = 0;
+   
+   weapons.push_back(new TractorBeam(this, tmpNumberOfWeapons++));
+   weapons.push_back(new Blaster(this, tmpNumberOfWeapons++));
+   weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
+   weapons.push_back(new Electricity(this, tmpNumberOfWeapons++));
+   weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
+   //weapons.push_back(new LawnMower(this, tmpNumberOfWeapons++));
+   weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
+   //weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
+   weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
+   weapons.push_back(new RailGun(this, tmpNumberOfWeapons++));
 
-      // Add weapons to the list!
-      /* IF YOU CHANGE THE ORDER OF THIS LIST, CHANGE THE CONSTANTS IN Utility/Constants.h
-      */
-      int tmpNumberOfWeapons = 0;
-      
-      weapons.push_back(new TractorBeam(this, tmpNumberOfWeapons++));
-      weapons.push_back(new Blaster(this, tmpNumberOfWeapons++));
-      weapons.push_back(new HomingMissile(this, tmpNumberOfWeapons++));
-      weapons.push_back(new Electricity(this, tmpNumberOfWeapons++));
-      weapons.push_back(new Ram(this, tmpNumberOfWeapons++));
-      //weapons.push_back(new LawnMower(this, tmpNumberOfWeapons++));
-      weapons.push_back(new TimedBomber(this, tmpNumberOfWeapons++));
-      //weapons.push_back(new RemoteBomber(this, tmpNumberOfWeapons++));
-      weapons.push_back(new Energy(this, tmpNumberOfWeapons++));
-      weapons.push_back(new RailGun(this, tmpNumberOfWeapons++));
+   NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
 
-      NUMBER_OF_WEAPONS = tmpNumberOfWeapons;
+   // Create this ship's Radar
+   radar = new Radar(this);
 
-      // Create this ship's Radar
-      radar = new Radar(this);
+   soundHandle = NULL;
 
-      soundHandle = NULL;
+   cameraOffset = new Vector3D(0, 2, 5);
+   currentView = VIEW_THIRDPERSON_SHIP;
+   zoomFactor = 1.0;
+   zoomSpeed = 0.0;
 
-      cameraOffset = new Vector3D(0, 2, 5);
-      currentView = VIEW_THIRDPERSON_SHIP;
-      zoomFactor = 1.0;
-      zoomSpeed = 0.0;
+   // Ships should be drawn in the minimap
+   shouldDrawInMinimap = true;
 
-      // Ships should be drawn in the minimap
-      shouldDrawInMinimap = true;
+   collisionType = collisionSphere = new CollisionSphere(4, *position);
 
-      collisionType = collisionSphere = new CollisionSphere(4, *position);
+   reInitialize();
 
-      reInitialize();
-
-      /* These must be created last b/c they need the ship / weapons to be
-       * initialized first.
-       */
-      shooter = new ShootingAI(this);
-      flyingAI = new FlyingAI(this);
-      
-      // The two colors of the ship
-      color1 = (float) randdouble();
-      color2 = (float) randdouble();
-   }
+   /* These must be created last b/c they need the ship / weapons to be
+    * initialized first.
+    */
+   shooter = new ShootingAI(this);
+   flyingAI = new FlyingAI(this);
+   
+   // The two colors of the ship
+   color1 = (float) randdouble();
+   color2 = (float) randdouble();
+}
 
 /**
  * Destructor
@@ -315,17 +315,19 @@ void AsteroidShip::setRollSpeed(double rollAmountIn) {
 }
 
 void AsteroidShip::updatePlayerAcceleration() {
-   Vector3D* newAcceleration = new Vector3D(
-            forward->scalarMultiply(curForwardAccel).add(
-               right->scalarMultiply(curRightAccel).add(
-                  up->scalarMultiply(curUpAccel))));
-   Vector3D normalizedAccel = newAcceleration->getNormalized();
-   double topAccelSpeed = maxSpeed + engineLevel * 2;
-   if (isFiring && currentWeapon == RAM_WEAPON_INDEX  && weapons[RAM_WEAPON_INDEX]->isReady()) {
-      topAccelSpeed *= 4;
-   }
-   if (normalizedAccel.dot(*velocity) < topAccelSpeed) {
-      addAcceleration(newAcceleration);
+   if (gameState->gsm != ClientMode) {
+      Vector3D* newAcceleration = new Vector3D(
+               forward->scalarMultiply(curForwardAccel).add(
+                  right->scalarMultiply(curRightAccel).add(
+                     up->scalarMultiply(curUpAccel))));
+      Vector3D normalizedAccel = newAcceleration->getNormalized();
+      double topAccelSpeed = maxSpeed + engineLevel * 2;
+      if (isFiring && currentWeapon == RAM_WEAPON_INDEX  && weapons[RAM_WEAPON_INDEX]->isReady()) {
+         topAccelSpeed *= 4;
+      }
+      if (normalizedAccel.dot(*velocity) < topAccelSpeed) {
+         addAcceleration(newAcceleration);
+      }
    }
 }
 
@@ -499,7 +501,7 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
 }
 
 void AsteroidShip::update(double timeDiff) {
-   if (life == 0) {
+   if (lives == 0) {
       return;
    }
    if (health <= 0) {
@@ -509,32 +511,36 @@ void AsteroidShip::update(double timeDiff) {
 
       // Handle respawning.
       if (!respawnTimer.isRunning) {
-         respawnTimer.setCountDown(respawnTime);
-         timeLeftToRespawn = respawnTimer.getTimeLeft();
-         ++deaths;
-         --life;
-
          if (this == gameState->ship) {
             gameState->usingShipCamera = false;
          }
 
-         // Make sure to stop barrel rolling.
-         isBarrelRollingLeft = -1;
-         isBarrelRollingRight = -1;
-
-         if (life <= 0 && this == gameState->ship) {
-            gameState->gameOver();
-            gameState->usingShipCamera = false;
-            return;
-         } else if (life <= 0) {
-            shouldRemove = true;
+         if (gameState->gsm != ClientMode) {
+            respawnTimer.setCountDown(respawnTime);
+            timeLeftToRespawn = respawnTimer.getTimeLeft();
+            ++deaths;
+            --lives;
+            
+            // Make sure to stop barrel rolling.
+            isBarrelRollingLeft = -1;
+            isBarrelRollingRight = -1;
+            
+            if (lives <= 0 && this == gameState->ship) {
+               gameState->gameOver();
+               gameState->usingShipCamera = false;
+               return;
+            } else if (lives <= 0) {
+               shouldRemove = true;
+            }
          }
 
          Object3D* lastDamager = (*custodian)[lastDamagerId];
          if (lastDamager != NULL) {
             if (lastDamager->type == TYPE_ASTEROIDSHIP) {
                AsteroidShip* lastDamagerShip = static_cast<AsteroidShip*>(lastDamager);
-               lastDamagerShip->kills++;
+               if (gameState->gsm != ClientMode) {
+                  lastDamagerShip->kills++;
+               }
                std::cout << lastDamagerShip->id << " killed " << id << " with a " 
                 << weapons[lastDamagerWeapon]->getName() << "." << std::endl;
             } else {
@@ -562,15 +568,18 @@ void AsteroidShip::update(double timeDiff) {
          }
 
          // Release all the shards.
-         while (gameState->gsm != ClientMode && unbankedShards > 0) {
-            custodian->add(makeShard());
-            --unbankedShards;
+         if (gameState->gsm != ClientMode) {
+            while (unbankedShards > 0) {
+               custodian->add(makeShard());
+               --unbankedShards;
+            }
+            
+            // Make a few more for good measure.
+            while(rand() % 2 == 0) {
+               custodian->add(makeShard());
+            }
          }
 
-         // Make a few more for good measure.
-         while(gameState->gsm != ClientMode && rand() % 2 == 0) {
-            custodian->add(makeShard());
-         }
       }
 
       timeLeftToRespawn = respawnTimer.getTimeLeft();
@@ -621,69 +630,74 @@ void AsteroidShip::update(double timeDiff) {
       drawSpawn = false;
    }
 
-   health += regenHealthLevel * timeDiff;
-   if (health > healthMax) {
-      health = healthMax;
-   }
+   if (gameState->gsm != ClientMode) {
+      health += regenHealthLevel * timeDiff;
+      if (health > healthMax) {
+         health = healthMax;
+      }
+      
+      if (shooter->isEnabled()) {
+         shooter->think(timeDiff);
+      }
 
-   if (shooter->isEnabled()) {
-      shooter->think(timeDiff);
-   }
-
-   if(flyingAI->isEnabled()) {
-      flyingAI->think(timeDiff);
-   } else {
-      updatePlayerAcceleration();
-   }
-
-   if (isBraking) {
-      velocity->x -= velocity->x * timeDiff * brakeFactor;
-      velocity->y -= velocity->y * timeDiff * brakeFactor;
-      velocity->z -= velocity->z * timeDiff * brakeFactor;
+      if(flyingAI->isEnabled()) {
+         flyingAI->think(timeDiff);
+      } else {
+         updatePlayerAcceleration();
+      }
+      
+      if (isBraking) {
+         velocity->x -= velocity->x * timeDiff * brakeFactor;
+         velocity->y -= velocity->y * timeDiff * brakeFactor;
+         velocity->z -= velocity->z * timeDiff * brakeFactor;
+      }
    }
 
    Object3D::update(timeDiff);         
    
-   if (velocity->getComparisonLength() > 
-    (maxSpeed + engineLevel * 2) * (maxSpeed + engineLevel * 2)) {
-      Vector3D* slowDown = new Vector3D(velocity->scalarMultiply(-0.8 * timeDiff));
-      velocity->addUpdate(slowDown);
-   }  
+   if (gameState->gsm != ClientMode) {
+      if (velocity->getComparisonLength() > 
+       (maxSpeed + engineLevel * 2) * (maxSpeed + engineLevel * 2)) {
+         Vector3D* slowDown = new Vector3D(velocity->scalarMultiply(-0.8 * timeDiff));
+         velocity->addUpdate(slowDown);
+      }  
 
-   if (rollSpeed > targetRollSpeed) {
-      rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration),
-            targetRollSpeed, rollSpeed);
-   } else if (rollSpeed < targetRollSpeed) {
-      rollSpeed = clamp(rollSpeed + (timeDiff * rotationalAcceleration),
-            rollSpeed, targetRollSpeed);
-   }
+      if (rollSpeed > targetRollSpeed) {
+         rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration),
+               targetRollSpeed, rollSpeed);
+      } else if (rollSpeed < targetRollSpeed) {
+         rollSpeed = clamp(rollSpeed + (timeDiff * rotationalAcceleration),
+               rollSpeed, targetRollSpeed);
+      }
 
-   if (pitchSpeed > targetPitchSpeed) {
-      pitchSpeed = clamp(pitchSpeed - (timeDiff * rotationalAcceleration),
-            targetPitchSpeed, pitchSpeed);
-   } else if (pitchSpeed < targetPitchSpeed) {
-      pitchSpeed = clamp(pitchSpeed + (timeDiff * rotationalAcceleration),
-            pitchSpeed, targetPitchSpeed);
-   }
+      if (pitchSpeed > targetPitchSpeed) {
+         pitchSpeed = clamp(pitchSpeed - (timeDiff * rotationalAcceleration),
+               targetPitchSpeed, pitchSpeed);
+      } else if (pitchSpeed < targetPitchSpeed) {
+         pitchSpeed = clamp(pitchSpeed + (timeDiff * rotationalAcceleration),
+               pitchSpeed, targetPitchSpeed);
+      }
 
-   if (yawSpeed > targetYawSpeed) {
-      yawSpeed = clamp(yawSpeed - (timeDiff * rotationalAcceleration),
-            targetYawSpeed, yawSpeed);
-   } else if (yawSpeed < targetYawSpeed) {
-      yawSpeed = clamp(yawSpeed + (timeDiff * rotationalAcceleration),
-            yawSpeed, targetYawSpeed);
-   }
+      if (yawSpeed > targetYawSpeed) {
+         yawSpeed = clamp(yawSpeed - (timeDiff * rotationalAcceleration),
+               targetYawSpeed, yawSpeed);
+      } else if (yawSpeed < targetYawSpeed) {
+         yawSpeed = clamp(yawSpeed + (timeDiff * rotationalAcceleration),
+               yawSpeed, targetYawSpeed);
+      }
 
-   if (isBarrelRollingLeft <= 0 && isBarrelRollingRight <= 0) {
-      roll(timeDiff * rollSpeed);
+      if (isBarrelRollingLeft <= 0 && isBarrelRollingRight <= 0) {
+         roll(timeDiff * rollSpeed);
+      }
+      pitch(timeDiff * pitchSpeed);
+      yaw(timeDiff * yawSpeed);
    }
-   pitch(timeDiff * pitchSpeed);
-   yaw(timeDiff * yawSpeed);
 
    if (!shooter->isEnabled()) {
       updateShotDirectionVector();
    }
 
+   bool showBankedShardsMessage = false;
    // Bank shards.
    if (bankTimer.isRunning) {
       if (unbankedShards <= 0) {
@@ -691,15 +705,15 @@ void AsteroidShip::update(double timeDiff) {
          bankTimer.reset();
       } else if (bankTimer.getTimeLeft() < 0) {
          bankTimer.reset();
-         bankedShards++;
-         totalBankedShards++;
-         unbankedShards--;
+         if (gameState->gsm != ClientMode) {
+            bankedShards++;
+            totalBankedShards++;
+            unbankedShards--;
+         }
 
          // Play the sound effect only sometimes.
          // Something else special should happen.
          std::ostringstream sstream;
-
-         bool showBankedShardsMessage = false;
 
          switch (totalBankedShards) {
             case 1: case 5: case 10: case 25: case 50:
@@ -710,7 +724,7 @@ void AsteroidShip::update(double timeDiff) {
                   showBankedShardsMessage = true;
                }
          }
-                  
+         
          if (gameState->ship == this && showBankedShardsMessage) {
             SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true, 0.3f);
             if (totalBankedShards == 1) {
@@ -721,11 +735,11 @@ void AsteroidShip::update(double timeDiff) {
 
             GameMessage::Add(sstream.str(), 1, 2);
          }
-
       }
-   } else if (unbankedShards > 0) {
+   } else if (unbankedShards > 0 && gameState->gsm != ClientMode) {
       bankTimer.setCountDown(getBankPeriod());
    }
+   
 
    // Update weapons.
    for (std::vector<Weapon*>::iterator iter = weapons.begin();
@@ -733,7 +747,7 @@ void AsteroidShip::update(double timeDiff) {
       (*iter)->update(timeDiff);
    }
 
-   if ((gameState->gsm != MenuMode) &&
+   if ((gameState->gsm != MenuMode) && (storeMenu != NULL) && !storeMenu->menuActive &&
          (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
       if (soundHandle == NULL) {
          soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav",
@@ -750,16 +764,13 @@ void AsteroidShip::update(double timeDiff) {
 
    shotOrigin = *position;
    // I don't think anything does fireBackwards.
-   if (getCurrentWeapon()->fireBackwards) {
-      shotOriginScale = -4;
-   } else {
-      shotOriginScale = 4;
-   }
+   shotOriginScale = 4;
    forward->movePoint(shotOrigin, shotOriginScale);
 
    // Actually fire the weapons.
    keepFiring();
 
+   // Reduce shake.
    if (shakeAmount != 0) {
       shakeAmount -= (float) (5 * shakeAmount * timeDiff);
       if (shakeAmount < 0.01) {
@@ -804,26 +815,30 @@ void AsteroidShip::update(double timeDiff) {
       drawHit = false;
    }
    
-   if (isBarrelRollingLeft == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(-20)));
-   if (isBarrelRollingRight == 1) addInstantAcceleration(new Vector3D(right->scalarMultiply(20)));
-   if (isBarrelRollingLeft > 0) {
-      if (isBarrelRollingLeft < timeDiff) {
-         roll(isBarrelRollingLeft * -2 * M_PI);
-      } else {
-         roll(timeDiff * -2 * M_PI);
-      }
-      
-      isBarrelRollingLeft -= timeDiff;
-   }
-
-   if (isBarrelRollingRight > 0) {
-      if (isBarrelRollingRight < timeDiff) {
-         roll(isBarrelRollingRight * 2 * M_PI);
-      } else {
-         roll(timeDiff * 2 * M_PI);
+   if (gameState->gsm != ClientMode) {
+      if (isBarrelRollingLeft == 1)
+         addInstantAcceleration(new Vector3D(right->scalarMultiply(-20)));
+      if (isBarrelRollingRight == 1)
+         addInstantAcceleration(new Vector3D(right->scalarMultiply(20)));
+      if (isBarrelRollingLeft > 0) {
+         if (isBarrelRollingLeft < timeDiff) {
+            roll(isBarrelRollingLeft * -2 * M_PI);
+         } else {
+            roll(timeDiff * -2 * M_PI);
+         }
+         
+         isBarrelRollingLeft -= timeDiff;
       }
 
-      isBarrelRollingRight -= timeDiff;
+      if (isBarrelRollingRight > 0) {
+         if (isBarrelRollingRight < timeDiff) {
+            roll(isBarrelRollingRight * 2 * M_PI);
+         } else {
+            roll(timeDiff * 2 * M_PI);
+         }
+
+         isBarrelRollingRight -= timeDiff;
+      }
    }
 
    if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode) && weapons[RAM_WEAPON_INDEX]->isReady()) {
@@ -832,7 +847,8 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    createEngineParticles(timeDiff);
-   if(health < 50) createLowHealthParticles(timeDiff);
+   if (health < 50)
+      createLowHealthParticles(timeDiff);
 
    // Update the zoom level.
    const float minZoom = 1;
@@ -1934,11 +1950,6 @@ bool AsteroidShip::isRespawning() {
    return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0 && timeLeftToRespawn > 0;
 }
 
-// serialize
-std::string AsteroidShip::serialize() {
-   return "";
-}
-
 Shard* AsteroidShip::makeShard() {
    Vector3D randomOffset;
    randomOffset.randomMagnitude();
@@ -1985,17 +1996,22 @@ void AsteroidShip::readCommand(const ast::ClientCommand& command) {
  * This is called on the ship when the level ends.
  */
 void AsteroidShip::atLevelEnd() {
-   SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true, 0.8f);
-   bankedShards += unbankedShards;
-   totalBankedShards += unbankedShards;
+   if (this == gameState->ship && unbankedShards > 0) {
+      SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true, 0.8f);
+   }
+   if (gameState->gsm != ClientMode) {
+      bankedShards += unbankedShards;
+      totalBankedShards += unbankedShards;
 
-   unbankedShards = 0;
-   health = healthMax;
+      unbankedShards = 0;
+      health = healthMax;
+      
+      respawnTimer.reset();
+      timeLeftToRespawn = -1;
+   }
    shakeAmount = 0;
 
    stopSounds();
-   respawnTimer.reset();
-   timeLeftToRespawn = -1;
 }
 
 /**
@@ -2095,7 +2111,7 @@ void AsteroidShip::bankUpgrade() {
 
 void AsteroidShip::buyLife() {
    bankedShards -= lifePrice();
-   life += 1;
+   lives += 1;
 }
 
 // calculates the correct bank period depending on the bankLevel
@@ -2151,7 +2167,7 @@ void AsteroidShip::save(ast::Entity* ent) {
    ent->set_score(score);
    ent->set_kills(kills);
    ent->set_deaths(deaths);
-   ent->set_life(life);
+   ent->set_lives(lives);
    ent->set_bankedshards(bankedShards);
    ent->set_unbankedshards(unbankedShards);
    ent->set_totalbankedshards(totalBankedShards);
@@ -2252,14 +2268,13 @@ void AsteroidShip::load(const ast::Entity& ent) {
       kills = ent.kills();
    if (ent.has_deaths())
       deaths = ent.deaths();
-   if (ent.has_life())
-      life = ent.life();
+   if (ent.has_lives())
+      lives = ent.lives();
    if (ent.has_bankedshards())
       bankedShards = ent.bankedshards();
    if (ent.has_unbankedshards())
       unbankedShards = ent.unbankedshards();
    if (ent.has_totalbankedshards())
       totalBankedShards = ent.totalbankedshards();
-
 }
 

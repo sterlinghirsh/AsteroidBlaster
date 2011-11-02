@@ -851,7 +851,7 @@ void GameState::updateText() {
       scoreText->updateBody(ship->getScore());
       bankedShardText->updateBody(ship->bankedShards);
       unbankedShardText->updateBody(ship->unbankedShards);
-      lifeText->updateBody(ship->life);
+      lifeText->updateBody(ship->lives);
    }
 
    // Update the timer on screen to show the minutes & seconds remaining.
@@ -1763,7 +1763,7 @@ void GameState::testFunction() {
    std::cout << "NetTimer=" << oss.str() << std::endl;*/
    
    if (ship != NULL) {
-      ship->life++;
+      ship->lives++;
    }
 
 }

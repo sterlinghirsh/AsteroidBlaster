@@ -166,7 +166,7 @@ void StoreMenu::draw() {
    //lives
    position.x = (Sint16) (gameSettings->GW*(5.0/10.0));
    position.y = (Sint16) (gameSettings->GH*(9.5/10.0));
-   lifeText->updateBody((int)gameState->ship->life);
+   lifeText->updateBody((int)gameState->ship->lives);
    lifeText->setPosition(position);
    
    

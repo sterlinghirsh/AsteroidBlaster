@@ -393,19 +393,22 @@ void Asteroid3D::drawEnergyEffect() {
 }
 
 void Asteroid3D::update(double timeDiff) {
-   double maxAsteroidSpeed = std::min(gameState->curLevel * 10, 60);
-
-   /* Apply the rotationSpeedChange that we wanted to this asteroid,
-    * but never make the rotationSpeed beneath 0.
-    */
-   rotationSpeed = std::max(rotationSpeed - rotationSpeedChange * timeDiff, 0.0);
-   rotationSpeedChange = 0;
+   if (gameState->gsm != ClientMode) {
+      /* Apply the rotationSpeedChange that we wanted to this asteroid,
+       * but never make the rotationSpeed beneath 0.
+       * We do this here since Object3D::update() uses rotationSpeed.
+       */
+      rotationSpeed = std::max(rotationSpeed - rotationSpeedChange * timeDiff, 0.0);
+      rotationSpeedChange = 0;
+   }
    
    Object3D::update(timeDiff);
 
    mesh.tick(timeDiff);
    
    if (gameState->gsm != ClientMode) {
+      double maxAsteroidSpeed = std::min(gameState->curLevel * 10, 60);
+
       if (velocity->getComparisonLength() > maxAsteroidSpeed * maxAsteroidSpeed) {
          // Set a speed limit of 60 u/s.
          velocity->setLength(maxAsteroidSpeed);
@@ -617,5 +620,6 @@ void Asteroid3D::onRemove() {
       MeshFace::Add(newFace);
    }
 
-   SoundEffect::playSoundEffect("Explosion1.wav", position, velocity);
+   if (health <= 0)
+      SoundEffect::playSoundEffect("Explosion1.wav", position, velocity);
 }

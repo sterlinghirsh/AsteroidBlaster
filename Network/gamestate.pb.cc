@@ -117,7 +117,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, score_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, kills_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, deaths_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, life_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, lives_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, bankedshards_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, unbankedshards_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, totalbankedshards_),
@@ -384,7 +384,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027Network/gamestate.proto\022\003ast\")\n\006Vector"
-    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\202\n\n\006En"
+    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\203\n\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
     "\013.ast.Vector\022\033\n\006weapon\030\005 \003(\0132\013.ast.Weapo"
@@ -408,52 +408,52 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "r\0301 \001(\0132\n.ast.Timer\022\036\n\naliveTimer\0302 \001(\0132"
     "\n.ast.Timer\022 \n\014respawnTimer\0303 \001(\0132\n.ast."
     "Timer\022\031\n\021timeLeftToRespawn\0304 \001(\002\022\r\n\005scor"
-    "e\0305 \001(\005\022\r\n\005kills\0306 \001(\005\022\016\n\006deaths\0307 \001(\005\022\014"
-    "\n\004life\0308 \001(\005\022\024\n\014bankedShards\0309 \001(\005\022\026\n\016un"
-    "bankedShards\030: \001(\005\022\031\n\021totalBankedShards\030"
-    "; \001(\005\022\017\n\007ownerid\030< \001(\r\022\020\n\010lifetime\030= \001(\002"
-    "\022\021\n\ttimeFired\030> \001(\002\022\023\n\013weaponIndex\030\? \001(\005"
-    "\022\016\n\006damage\030@ \001(\002\022\022\n\nchargeTime\030A \001(\002\022\027\n\017"
-    "damagePerSecond\030B \001(\002\022\031\n\021timeSinceExplod"
-    "ed\030C \001(\002\022\021\n\tenergyHit\030D \001(\010\022\033\n\023timeLastH"
-    "itByEnergy\030E \001(\002\022\024\n\014shouldRemove\030F \001(\010\"\273"
-    "\002\n\006Weapon\022\r\n\005index\030\001 \002(\r\022#\n\017activationTi"
-    "mer\030\002 \001(\0132\n.ast.Timer\022\025\n\rtimeLastFired\030\003"
-    " \001(\002\022\020\n\010coolDown\030\004 \001(\002\022\016\n\006damage\030\005 \001(\002\022\023"
-    "\n\013currentHeat\030\006 \001(\002\022\022\n\nshotsFired\030\007 \001(\005\022"
-    "\031\n\021timeStartedFiring\030\010 \001(\002\022\016\n\006shotid\030\t \001"
-    "(\005\022\021\n\tpurchased\030\n \001(\010\022\023\n\013weaponPrice\030\013 \001"
-    "(\005\022\r\n\005level\030\014 \001(\005\022\r\n\005range\030\r \001(\002\022\025\n\rover"
-    "heatLevel\030\016 \001(\002\022\023\n\013heatPerShot\030\017 \001(\002\"\231\002\n"
-    "\rClientCommand\022\016\n\006shipID\030\001 \002(\r\022\033\n\023forwar"
-    "dAcceleration\030\002 \001(\021\022\031\n\021rightAcceleration"
-    "\030\003 \001(\021\022\026\n\016upAcceleration\030\004 \001(\021\022\r\n\005brake\030"
-    "\005 \001(\010\022\020\n\010yawSpeed\030\006 \001(\002\022\021\n\trollSpeed\030\007 \001"
-    "(\002\022\022\n\npitchSpeed\030\010 \001(\002\022\014\n\004fire\030\t \001(\010\022\021\n\t"
-    "curWeapon\030\n \001(\r\022\016\n\006mouseX\030\013 \001(\002\022\016\n\006mouse"
-    "Y\030\014 \001(\002\022\037\n\027lastReceivedGameStateId\030\r \001(\r"
-    "\"l\n\005Timer\022\023\n\013timeStarted\030\001 \001(\002\022\025\n\rcountD"
-    "ownTime\030\002 \001(\002\022\022\n\ntimePaused\030\003 \001(\002\022\020\n\010isP"
-    "aused\030\004 \001(\010\022\021\n\tisRunning\030\005 \001(\010\"\214\001\n\tGameS"
-    "tate\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity\022\020\n\010gam"
-    "eTime\030\002 \002(\001\022\022\n\nplayerShip\030\003 \001(\r\022\036\n\nlevel"
-    "Timer\030\004 \001(\0132\n.ast.Timer\022\020\n\010curLevel\030\005 \001("
-    "\005\022\n\n\002id\030\006 \001(\r\"\312\001\n\020CollisionMessage\022\023\n\013ga"
-    "mestateid\030\001 \001(\r\022\024\n\010collider\030\002 \003(\rB\002\020\001\022\024\n"
-    "\010wall_top\030\003 \003(\rB\002\020\001\022\027\n\013wall_bottom\030\004 \003(\r"
-    "B\002\020\001\022\025\n\twall_left\030\005 \003(\rB\002\020\001\022\026\n\nwall_righ"
-    "t\030\006 \003(\rB\002\020\001\022\026\n\nwall_front\030\007 \003(\rB\002\020\001\022\025\n\tw"
-    "all_back\030\010 \003(\rB\002\020\001\"-\n\013ChatMessage\022\020\n\010sou"
-    "rceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\"Q\n\023CreateEntit"
-    "yMessage\022\035\n\025createEntityMessageid\030\001 \001(\r\022"
-    "\033\n\006entity\030\002 \003(\0132\013.ast.Entity\"\202\002\n\005Frame\0220"
-    "\n\021collision_message\030\001 \003(\0132\025.ast.Collisio"
-    "nMessage\022%\n\013chatMessage\030\002 \003(\0132\020.ast.Chat"
-    "Message\022\013\n\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001(\004\022\021\n\ttim"
-    "estamp\030\005 \001(\001\022\025\n\tremove_id\030\006 \003(\rB\002\020\001\022\030\n\014f"
-    "iring_ships\030\007 \003(\rB\002\020\001\022\017\n\007diff_of\030\010 \001(\r\022!"
-    "\n\tgameState\030\t \001(\0132\016.ast.GameState\022\016\n\006shi"
-    "pid\030\n \001(\r", 2809);
+    "e\0305 \001(\005\022\r\n\005kills\0306 \001(\005\022\016\n\006deaths\0307 \001(\005\022\r"
+    "\n\005lives\0308 \001(\005\022\024\n\014bankedShards\0309 \001(\005\022\026\n\016u"
+    "nbankedShards\030: \001(\005\022\031\n\021totalBankedShards"
+    "\030; \001(\005\022\017\n\007ownerid\030< \001(\r\022\020\n\010lifetime\030= \001("
+    "\002\022\021\n\ttimeFired\030> \001(\002\022\023\n\013weaponIndex\030\? \001("
+    "\005\022\016\n\006damage\030@ \001(\002\022\022\n\nchargeTime\030A \001(\002\022\027\n"
+    "\017damagePerSecond\030B \001(\002\022\031\n\021timeSinceExplo"
+    "ded\030C \001(\002\022\021\n\tenergyHit\030D \001(\010\022\033\n\023timeLast"
+    "HitByEnergy\030E \001(\002\022\024\n\014shouldRemove\030F \001(\010\""
+    "\273\002\n\006Weapon\022\r\n\005index\030\001 \002(\r\022#\n\017activationT"
+    "imer\030\002 \001(\0132\n.ast.Timer\022\025\n\rtimeLastFired\030"
+    "\003 \001(\002\022\020\n\010coolDown\030\004 \001(\002\022\016\n\006damage\030\005 \001(\002\022"
+    "\023\n\013currentHeat\030\006 \001(\002\022\022\n\nshotsFired\030\007 \001(\005"
+    "\022\031\n\021timeStartedFiring\030\010 \001(\002\022\016\n\006shotid\030\t "
+    "\001(\005\022\021\n\tpurchased\030\n \001(\010\022\023\n\013weaponPrice\030\013 "
+    "\001(\005\022\r\n\005level\030\014 \001(\005\022\r\n\005range\030\r \001(\002\022\025\n\rove"
+    "rheatLevel\030\016 \001(\002\022\023\n\013heatPerShot\030\017 \001(\002\"\231\002"
+    "\n\rClientCommand\022\016\n\006shipID\030\001 \002(\r\022\033\n\023forwa"
+    "rdAcceleration\030\002 \001(\021\022\031\n\021rightAcceleratio"
+    "n\030\003 \001(\021\022\026\n\016upAcceleration\030\004 \001(\021\022\r\n\005brake"
+    "\030\005 \001(\010\022\020\n\010yawSpeed\030\006 \001(\002\022\021\n\trollSpeed\030\007 "
+    "\001(\002\022\022\n\npitchSpeed\030\010 \001(\002\022\014\n\004fire\030\t \001(\010\022\021\n"
+    "\tcurWeapon\030\n \001(\r\022\016\n\006mouseX\030\013 \001(\002\022\016\n\006mous"
+    "eY\030\014 \001(\002\022\037\n\027lastReceivedGameStateId\030\r \001("
+    "\r\"l\n\005Timer\022\023\n\013timeStarted\030\001 \001(\002\022\025\n\rcount"
+    "DownTime\030\002 \001(\002\022\022\n\ntimePaused\030\003 \001(\002\022\020\n\010is"
+    "Paused\030\004 \001(\010\022\021\n\tisRunning\030\005 \001(\010\"\214\001\n\tGame"
+    "State\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity\022\020\n\010ga"
+    "meTime\030\002 \002(\001\022\022\n\nplayerShip\030\003 \001(\r\022\036\n\nleve"
+    "lTimer\030\004 \001(\0132\n.ast.Timer\022\020\n\010curLevel\030\005 \001"
+    "(\005\022\n\n\002id\030\006 \001(\r\"\312\001\n\020CollisionMessage\022\023\n\013g"
+    "amestateid\030\001 \001(\r\022\024\n\010collider\030\002 \003(\rB\002\020\001\022\024"
+    "\n\010wall_top\030\003 \003(\rB\002\020\001\022\027\n\013wall_bottom\030\004 \003("
+    "\rB\002\020\001\022\025\n\twall_left\030\005 \003(\rB\002\020\001\022\026\n\nwall_rig"
+    "ht\030\006 \003(\rB\002\020\001\022\026\n\nwall_front\030\007 \003(\rB\002\020\001\022\025\n\t"
+    "wall_back\030\010 \003(\rB\002\020\001\"-\n\013ChatMessage\022\020\n\010so"
+    "urceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\"Q\n\023CreateEnti"
+    "tyMessage\022\035\n\025createEntityMessageid\030\001 \001(\r"
+    "\022\033\n\006entity\030\002 \003(\0132\013.ast.Entity\"\202\002\n\005Frame\022"
+    "0\n\021collision_message\030\001 \003(\0132\025.ast.Collisi"
+    "onMessage\022%\n\013chatMessage\030\002 \003(\0132\020.ast.Cha"
+    "tMessage\022\013\n\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001(\004\022\021\n\tti"
+    "mestamp\030\005 \001(\001\022\025\n\tremove_id\030\006 \003(\rB\002\020\001\022\030\n\014"
+    "firing_ships\030\007 \003(\rB\002\020\001\022\017\n\007diff_of\030\010 \001(\r\022"
+    "!\n\tgameState\030\t \001(\0132\016.ast.GameState\022\016\n\006sh"
+    "ipid\030\n \001(\r", 2810);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -813,7 +813,7 @@ const int Entity::kTimeLeftToRespawnFieldNumber;
 const int Entity::kScoreFieldNumber;
 const int Entity::kKillsFieldNumber;
 const int Entity::kDeathsFieldNumber;
-const int Entity::kLifeFieldNumber;
+const int Entity::kLivesFieldNumber;
 const int Entity::kBankedShardsFieldNumber;
 const int Entity::kUnbankedShardsFieldNumber;
 const int Entity::kTotalBankedShardsFieldNumber;
@@ -896,7 +896,7 @@ void Entity::SharedCtor() {
   score_ = 0;
   kills_ = 0;
   deaths_ = 0;
-  life_ = 0;
+  lives_ = 0;
   bankedshards_ = 0;
   unbankedshards_ = 0;
   totalbankedshards_ = 0;
@@ -1025,7 +1025,7 @@ void Entity::Clear() {
   }
   if (_has_bits_[40 / 32] & (0xffu << (40 % 32))) {
     deaths_ = 0;
-    life_ = 0;
+    lives_ = 0;
     bankedshards_ = 0;
     unbankedshards_ = 0;
     totalbankedshards_ = 0;
@@ -1684,19 +1684,19 @@ bool Entity::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(448)) goto parse_life;
+        if (input->ExpectTag(448)) goto parse_lives;
         break;
       }
       
-      // optional int32 life = 56;
+      // optional int32 lives = 56;
       case 56: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_life:
+         parse_lives:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &life_)));
-          set_has_life();
+                 input, &lives_)));
+          set_has_lives();
         } else {
           goto handle_uninterpreted;
         }
@@ -2162,9 +2162,9 @@ void Entity::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(55, this->deaths(), output);
   }
   
-  // optional int32 life = 56;
-  if (has_life()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(56, this->life(), output);
+  // optional int32 lives = 56;
+  if (has_lives()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(56, this->lives(), output);
   }
   
   // optional int32 bankedShards = 57;
@@ -2472,9 +2472,9 @@ void Entity::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(55, this->deaths(), target);
   }
   
-  // optional int32 life = 56;
-  if (has_life()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(56, this->life(), target);
+  // optional int32 lives = 56;
+  if (has_lives()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(56, this->lives(), target);
   }
   
   // optional int32 bankedShards = 57;
@@ -2806,11 +2806,11 @@ int Entity::ByteSize() const {
           this->deaths());
     }
     
-    // optional int32 life = 56;
-    if (has_life()) {
+    // optional int32 lives = 56;
+    if (has_lives()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->life());
+          this->lives());
     }
     
     // optional int32 bankedShards = 57;
@@ -3061,8 +3061,8 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_deaths()) {
       set_deaths(from.deaths());
     }
-    if (from.has_life()) {
-      set_life(from.life());
+    if (from.has_lives()) {
+      set_lives(from.lives());
     }
     if (from.has_bankedshards()) {
       set_bankedshards(from.bankedshards());
@@ -3196,7 +3196,7 @@ void Entity::Swap(Entity* other) {
     std::swap(score_, other->score_);
     std::swap(kills_, other->kills_);
     std::swap(deaths_, other->deaths_);
-    std::swap(life_, other->life_);
+    std::swap(lives_, other->lives_);
     std::swap(bankedshards_, other->bankedshards_);
     std::swap(unbankedshards_, other->unbankedshards_);
     std::swap(totalbankedshards_, other->totalbankedshards_);
