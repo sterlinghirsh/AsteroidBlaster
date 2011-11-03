@@ -231,6 +231,7 @@ template<>
 void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
    if (!(a->isVulnerable())) { return;}
    if (a->isRespawning()) { return;}
+   if (b->damage == 0) { return;}
    const int numElecParticles = 1;
    double hitDistance = 0;
 
@@ -474,6 +475,7 @@ void Collision<Asteroid3D, TractorBeamShot>::handleCollision() {
 
 template<>
 void Collision<Asteroid3D, ElectricityShot>::handleCollision() {
+   if (b->damage == 0) { return;}
    const int numElecParticles = 1;
    double hitDistance = 0;
 
@@ -1269,7 +1271,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             pos.load(ent.position());
             dir.load(ent.velocity());
             
-            obj = new ElectricityShot(pos, dir, ent.weaponindex(), owner, 1.0, gameState);
+            obj = new ElectricityShot(pos, dir, ent.weaponindex(), owner, gameState);
 
             obj->load(ent);
             std::cout << "Found Electricity shot.\n";

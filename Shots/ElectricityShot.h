@@ -16,17 +16,18 @@
 class ElectricityShot : public Shot {
    public:
       ElectricityShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* const ownerIn,
-       double strengthOfShot, const GameState* _gameState);
+       const GameState* _gameState);
       virtual void draw();
       virtual void drawGlow();
       virtual void drawShot(bool isGlow);
       virtual void update(double timeDiff);
-      int framesAlive;
       // TODO: Looks like this still has some cone logic. Remove.
-      double angle;
       double length;
-      double farRadius;
       bool hitYet;
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
+      void setPosAndDir(Vector3D& newPos, Vector3D& newDir);
+      void setStrength(double strength);
 };
 
 #endif

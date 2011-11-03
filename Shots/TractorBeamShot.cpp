@@ -26,8 +26,6 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, int _weaponInde
    length = owner->weapons[TRACTOR_WEAPON_INDEX]->range + (owner->weapons[TRACTOR_WEAPON_INDEX]->level * 5);
    farRadius = length * tan(angle);
 
-   framesAlive = 0;
-
    forward = new Vector3D(*velocity);
    up = new Vector3D(*ownerIn->up);
 

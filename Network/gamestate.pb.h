@@ -608,6 +608,13 @@ class Entity : public ::google::protobuf::Message {
   inline bool shouldremove() const;
   inline void set_shouldremove(bool value);
   
+  // optional float length = 71;
+  inline bool has_length() const;
+  inline void clear_length();
+  static const int kLengthFieldNumber = 71;
+  inline float length() const;
+  inline void set_length(float value);
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -720,6 +727,8 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_timelasthitbyenergy();
   inline void set_has_shouldremove();
   inline void clear_has_shouldremove();
+  inline void set_has_length();
+  inline void clear_has_length();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -779,9 +788,10 @@ class Entity : public ::google::protobuf::Message {
   float timelasthitbyenergy_;
   bool energyhit_;
   bool shouldremove_;
+  float length_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(56 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(57 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -3411,6 +3421,28 @@ inline bool Entity::shouldremove() const {
 inline void Entity::set_shouldremove(bool value) {
   set_has_shouldremove();
   shouldremove_ = value;
+}
+
+// optional float length = 71;
+inline bool Entity::has_length() const {
+  return (_has_bits_[1] & 0x01000000u) != 0;
+}
+inline void Entity::set_has_length() {
+  _has_bits_[1] |= 0x01000000u;
+}
+inline void Entity::clear_has_length() {
+  _has_bits_[1] &= ~0x01000000u;
+}
+inline void Entity::clear_length() {
+  length_ = 0;
+  clear_has_length();
+}
+inline float Entity::length() const {
+  return length_;
+}
+inline void Entity::set_length(float value) {
+  set_has_length();
+  length_ = value;
 }
 
 // -------------------------------------------------------------------

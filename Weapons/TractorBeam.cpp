@@ -39,10 +39,12 @@ void TractorBeam::update(double timeDiff) {
    if (curFrame > lastFiredFrame + 1 && soundPlaying) {
       SoundEffect::stopSoundEffect(soundHandle);
       soundPlaying = false;
-      if (shotid != 0) {
-         Object3D* shot = (*ship->custodian)[shotid];
-         if (shot != NULL)
-            shot->shouldRemove = true;
+      if (ship->gameState->gsm != ClientMode) {
+         if (shotid != 0) {
+            Object3D* shot = (*ship->custodian)[shotid];
+            if (shot != NULL)
+               shot->shouldRemove = true;
+         }
       }
       shotid = 0;
    }

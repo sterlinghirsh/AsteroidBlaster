@@ -141,11 +141,11 @@ class CollisionPoint : public CollisionType {
 
 class CollisionRay : public CollisionType {
    public:
-      double length;
+      double &length;
       Vector3D& direction;
       Point3D& origin;
 
-      CollisionRay(double _length, Vector3D& _direction, Point3D& _origin) :
+      CollisionRay(double &_length, Vector3D& _direction, Point3D& _origin) :
        length(_length), direction(_direction), origin(_origin) {
 
       }

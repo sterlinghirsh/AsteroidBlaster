@@ -91,6 +91,9 @@ message Entity {
 
    // All
    optional bool shouldRemove = 70;
+
+   // Electricity Shot
+   optional float length = 71;
 }
 
 message Weapon {
@@ -107,7 +110,7 @@ message Weapon {
    optional int32 shotsFired = 7;
    optional float timeStartedFiring = 8;
 
-   // Energy / Tractor Beam
+   // Energy / Tractor Beam / Electricity
    optional uint32 shotid = 9;
 
 

@@ -23,6 +23,7 @@ class Electricity : public Weapon {
       virtual void fire();
       int shotsFired;
       int shotsPerSec;
+      unsigned shotid;
       double timeStartedFiring;
       virtual void stopSounds();
       

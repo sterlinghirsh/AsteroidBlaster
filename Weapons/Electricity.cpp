@@ -1,6 +1,6 @@
 /**
- * Tractor Beam
- * This pulls in crystals.
+ * Electricity
+ * This kills the crab.
  * @author Sterling Hirsh (shirsh@calpoly.edu)
  * @date Valentine's Day <3
  */
@@ -24,6 +24,7 @@ Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index
    curAmmo = -1;
    purchased = false;
    soundHandle = NULL;
+   shotid = 0;
    
    overheatLevel = 5;
    heatPerShot = 0.15;
@@ -41,16 +42,30 @@ Electricity::~Electricity() {
 void Electricity::update(double timeDiff) {
    Weapon::update(timeDiff);
 
-   if (currentFrame != lastFiredFrame) 
-      shotsFired = 0;
    // Stop sound if we're no longer firing.
-   if (currentFrame == lastFiredFrame && !soundPlaying) {
-      // We should play sound.
-      soundPlaying = true;
-      soundHandle = SoundEffect::playSoundEffect("ElectricitySound", ship->position, ship->velocity, ship == ship->gameState->ship, 0.5f, true);
-   } else if (currentFrame != lastFiredFrame && soundPlaying) {
-      SoundEffect::stopSoundEffect(soundHandle);
-      soundPlaying = false;
+   if (currentFrame == lastFiredFrame) {
+      if (!soundPlaying) {
+         // We should play sound.
+         soundPlaying = true;
+         soundHandle = SoundEffect::playSoundEffect("ElectricitySound", 
+          ship->position, ship->velocity, 
+          ship == ship->gameState->ship, 0.5f, true);
+      }
+   } else if (currentFrame != lastFiredFrame) {
+      if (ship->gameState->gsm != ClientMode) {
+         shotsFired = 0;
+      }
+      if (soundPlaying) {
+         SoundEffect::stopSoundEffect(soundHandle);
+         soundPlaying = false;
+      }
+      if (ship->gameState->gsm != ClientMode) {
+         if (shotid != 0) {
+            Object3D* shot = (*ship->custodian)[shotid];
+            if (shot != NULL)
+               shot->shouldRemove = true;
+         }
+      }
    }
    ++currentFrame;
 
@@ -59,42 +74,57 @@ void Electricity::update(double timeDiff) {
 }
 
 void Electricity::fire() {
-   // If it's client mode, wait for the shot packet to arrive, 
-   // and then add to the game.
-   if (ship->gameState->gsm == ClientMode) {
-      return;
-   }
-
    if (!isReady())
       return;
-
-   if (shotsFired == 0) {
-      timeStartedFiring = ship->gameState->getGameTime();
-   }
    
-   double curTime = ship->gameState->getGameTime();
-   double timeFired = curTime - timeStartedFiring;
-   int shotsToFire = 0;
-   //printf("Time fired: %f\n", timeStartedFiring);
-   if (timeFired == 0) {
-      shotsToFire = 1;
-   }
-   else {
-      while (((shotsFired + shotsToFire) / timeFired) <= shotsPerSec
-            /* && ((curAmmo - shotsToFire) > 0)*/) {
-         shotsToFire++;
-      }
-   }
-   
-   Point3D start = ship->shotOrigin;
-   ship->setShakeAmount(0.1f);
-   ship->custodian->add(new ElectricityShot(start, ship->shotDirection, index, ship, shotsToFire, ship->gameState));
-
-
    lastFiredFrame = currentFrame;
-   shotsFired += shotsToFire;
 
-   addHeat(heatPerShot * shotsToFire);
+   // If it's client mode, wait for the shot packet to arrive, 
+   // and then add to the game.
+   if (ship->gameState->gsm != ClientMode) {
+      if (shotsFired == 0) {
+         timeStartedFiring = ship->gameState->getGameTime();
+      }
+      
+      double curTime = ship->gameState->getGameTime();
+      double timeFired = curTime - timeStartedFiring;
+      int shotsToFire = 0;
+
+      if (timeFired == 0) {
+         shotsToFire = 1;
+      } else {
+         while (((shotsFired + shotsToFire) / timeFired) <= shotsPerSec) {
+            shotsToFire++;
+         }
+      }
+      
+      ElectricityShot* shot;
+
+      if (shotid != 0) {
+         shot = static_cast<ElectricityShot*>((*ship->custodian)[shotid]);
+         if (shot == NULL) {
+            // Oops!
+            shotid = 0;
+         } else {
+            // Update shot.
+            shot->setPosAndDir(ship->shotOrigin, ship->shotDirection);
+            shot->setStrength(shotsToFire);
+         }
+      }
+      // Catch the oops from before.
+      if (shotid == 0) {
+         Point3D start = ship->shotOrigin;
+         shot = new ElectricityShot(start, 
+          ship->shotDirection, index, ship, ship->gameState);
+         ship->custodian->add(shot);
+         shotid = shot->id;
+      }
+
+      shotsFired += shotsToFire;
+      addHeat(heatPerShot * shotsToFire);
+   }
+
+   ship->setShakeAmount(0.1f);
 }
 
 void Electricity::debug() {
@@ -128,6 +158,7 @@ void Electricity::save(ast::Weapon* weap) {
    Weapon::save(weap);
    weap->set_shotsfired(shotsFired);
    weap->set_timestartedfiring(timeStartedFiring);
+   weap->set_shotid(shotid);
 }
 
 void Electricity::load(const ast::Weapon& weap) {
@@ -136,5 +167,7 @@ void Electricity::load(const ast::Weapon& weap) {
       shotsFired = weap.shotsfired();
    if (weap.has_timestartedfiring())
       timeStartedFiring = weap.timestartedfiring();
+   if (weap.has_shotid())
+      shotid = weap.shotid();
 }
 

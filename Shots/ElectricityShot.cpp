@@ -11,49 +11,29 @@
 #include "Shots/ElectricityShot.h"
 #include <math.h>
 
+#include "Network/gamestate.pb.h"
+
 #ifdef WIN32
 #include "Utility/WindowsMathLib.h"
 #endif
 
 static float flashiness = 0;
+const double damageBase = 3;
+const double defaultLength = 80;
+const double startLength = 1;
+const double growSpeed = 80;
 
 ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
- AsteroidShip* const ownerIn, double strengthOfShot, const GameState* _gameState) : 
+ AsteroidShip* const ownerIn, const GameState* _gameState) : 
  Shot(posIn, dirIn, _weaponIndex, ownerIn, _gameState) {
    type = TYPE_ELECTRICITYSHOT;
    persist = true;
-   angle = M_PI / 360; // Radians from the center
-   length = 80;
-   farRadius = length * tan(angle);
-   framesAlive = 0;
+   length = startLength;
+
    forward = new Vector3D(*velocity); // Goofy.
    up = new Vector3D(0, 1, 0);
-   Point3D endPoint1(*position);
-   Point3D endPoint2(*position);
    // Set endPoint2 100 units away.
-   velocity->setLength(length);
-   velocity->movePoint(endPoint2);
-   velocity->normalize();
-   // Correct for position when calculating endpoint1 and 2.
-   Vector3D positionVector(*position);
-   positionVector = positionVector.scalarMultiply(-1);
-   positionVector.movePoint(endPoint1);
-   positionVector.movePoint(endPoint2);
-   // Now set min/max xyz
-   minX = std::min(endPoint1.x, endPoint2.x);
-   maxX = std::max(endPoint1.x, endPoint2.x);
-   minY = std::min(endPoint1.y, endPoint2.y);
-   maxY = std::max(endPoint1.y, endPoint2.y);
-   minZ = std::min(endPoint1.z, endPoint2.z);
-   maxZ = std::max(endPoint1.z, endPoint2.z);
-
-   // Expand the bounding box to make sure it contains the whole cone.
-   minX -= farRadius;
-   minY -= farRadius;
-   minZ -= farRadius;
-   maxX += farRadius;
-   maxY += farRadius;
-   maxZ += farRadius;
+   setPosAndDir(*position, *velocity);
 
    timeFired = gameState->getGameTime();
    shouldConstrain = false;
@@ -61,18 +41,20 @@ ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn, int _weaponInde
    */
    shouldBeCulled = false;
    updateBoundingBox();
-   const double damageBase = 3;
-   damage = damageBase * strengthOfShot; // We might want to change this.
+   setStrength(1);
    collisionType = new CollisionRay(length, *velocity, *position);
    hitYet = false;
 }
 
 /**
- * Kill this after a certain number of frames.
  */
 void ElectricityShot::update(double timeDiff) {
-   if (++framesAlive >= 2)
-      shouldRemove = true;
+   // We have to reset the length after a hit.
+   if (gameState->gsm != ClientMode) {
+      if (length < defaultLength) {
+         length = std::min(length + (timeDiff * growSpeed), defaultLength);
+      }
+   }
 }
 
 void ElectricityShot::drawGlow() {
@@ -84,7 +66,6 @@ void ElectricityShot::draw() {
 }
 
 /**
- * We want to remove this after drawing it once.
  */
 void ElectricityShot::drawShot(bool isGlow) {
    if (!isGlow)
@@ -168,6 +149,50 @@ void ElectricityShot::drawShot(bool isGlow) {
    } else {
       glDisable(GL_COLOR_MATERIAL);
    }
+}
 
+void ElectricityShot::setPosAndDir(Vector3D& newPos, Vector3D& newDir) {
+   position->clone(&newPos);
+   velocity->clone(&newDir); // It should be a unit vector.
+   forward->clone(velocity);
+
+   Point3D endPoint1(*position);
+   Point3D endPoint2(*position);
+
+   // Set endPoint2 100 units away.
+   velocity->movePoint(endPoint2, length);
+   // Correct for position when calculating endpoint1 and 2.
+   Vector3D positionVector(*position);
+   positionVector = positionVector.scalarMultiply(-1);
+   positionVector.movePoint(endPoint1);
+   positionVector.movePoint(endPoint2);
+   
+   // Now set min/max xyz
+   minX = std::min(endPoint1.x, endPoint2.x);
+   maxX = std::max(endPoint1.x, endPoint2.x);
+   minY = std::min(endPoint1.y, endPoint2.y);
+   maxY = std::max(endPoint1.y, endPoint2.y);
+   minZ = std::min(endPoint1.z, endPoint2.z);
+   maxZ = std::max(endPoint1.z, endPoint2.z);
+   
+   updateBoundingBox();
+}
+
+void ElectricityShot::setStrength(double strength) {
+   damage = damageBase * strength;
+}
+
+void ElectricityShot::save(ast::Entity* ent) {
+   Shot::save(ent);
+   ent->set_length(length);
+}
+
+void ElectricityShot::load(const ast::Entity& ent) {
+   Shot::load(ent);
+   
+   if (ent.has_length())
+      length = ent.length();
+
+   setPosAndDir(*position, *velocity);
 }
 
