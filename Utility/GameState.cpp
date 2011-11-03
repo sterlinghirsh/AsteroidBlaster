@@ -1770,7 +1770,8 @@ void GameState::testFunction() {
    std::cout << "NetTimer=" << oss.str() << std::endl;*/
    
    if (ship != NULL) {
-      ship->lives++;
+      ship->health = 1;
+      ship->lives = 1;
    }
 
 }

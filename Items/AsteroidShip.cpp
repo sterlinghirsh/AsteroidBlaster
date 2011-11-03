@@ -501,10 +501,16 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
 }
 
 void AsteroidShip::update(double timeDiff) {
-   if (lives == 0) {
-      return;
-   }
    if (health <= 0) {
+      fire(false);
+      setRollSpeed(0);
+      accelerateForward(0);
+      accelerateUp(0);
+      accelerateRight(0);
+      setYawSpeed(0.0);
+      setPitchSpeed(0.0);
+      setRollSpeed(0.0);
+
       const double respawnTime = 8;
       shakeAmount = 0;
       stopSounds();
@@ -525,12 +531,19 @@ void AsteroidShip::update(double timeDiff) {
             isBarrelRollingLeft = -1;
             isBarrelRollingRight = -1;
             
-            if (lives <= 0 && this == gameState->ship) {
-               gameState->gameOver();
-               gameState->usingShipCamera = false;
-               return;
-            } else if (lives <= 0) {
-               shouldRemove = true;
+            if (lives <= 0) {
+               // Update weapons one last time.
+               for (std::vector<Weapon*>::iterator iter = weapons.begin();
+                     iter != weapons.end(); ++iter) {
+                  (*iter)->update(timeDiff);
+               }
+               if (this == gameState->ship) {
+                  gameState->gameOver();
+                  gameState->usingShipCamera = false;
+                  return;
+               } else {
+                  shouldRemove = true;
+               }
             }
          }
 

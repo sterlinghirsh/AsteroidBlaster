@@ -235,7 +235,7 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
    const int numElecParticles = 1;
    double hitDistance = 0;
 
-   if (a != b->owner && !b->hitYet  && !(a->spawnInvulnerable)) {
+   if (a != b->owner  && !(a->spawnInvulnerable)) {
 
       /* Normal collision detection gets done in CollisionTypes.h. 
        * I can't think of an efficient way to do this, so I'm leaving it here

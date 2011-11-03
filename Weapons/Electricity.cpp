@@ -43,7 +43,7 @@ void Electricity::update(double timeDiff) {
    Weapon::update(timeDiff);
 
    // Stop sound if we're no longer firing.
-   if (currentFrame == lastFiredFrame) {
+   if (currentFrame == lastFiredFrame && ship->isFiring) {
       if (!soundPlaying) {
          // We should play sound.
          soundPlaying = true;
@@ -51,20 +51,17 @@ void Electricity::update(double timeDiff) {
           ship->position, ship->velocity, 
           ship == ship->gameState->ship, 0.5f, true);
       }
-   } else if (currentFrame != lastFiredFrame) {
-      if (ship->gameState->gsm != ClientMode) {
-         shotsFired = 0;
-      }
+   } else if (shotid != 0) {
+      // If we've got a shot in the world.
       if (soundPlaying) {
          SoundEffect::stopSoundEffect(soundHandle);
          soundPlaying = false;
       }
       if (ship->gameState->gsm != ClientMode) {
-         if (shotid != 0) {
-            Object3D* shot = (*ship->custodian)[shotid];
-            if (shot != NULL)
-               shot->shouldRemove = true;
-         }
+         shotsFired = 0;
+         Object3D* shot = (*ship->custodian)[shotid];
+         if (shot != NULL)
+            shot->shouldRemove = true;
       }
    }
    ++currentFrame;
