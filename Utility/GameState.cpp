@@ -1345,17 +1345,24 @@ void GameState::keyDown(int key, int unicode) {
       case SDLK_F10:
          ship->unbankedShards += 10;
          break;
-         // If the user presses F11, give them all of the weapons.
-      case SDLK_F11:
-         // Make all of the weapons be purchased.
+   }
+      // If the user presses F11, give them all of the weapons.
+   case SDLK_F11:
+      // Make all of the weapons be purchased.
+      if (ship != NULL) {
          for (int i = 0; i < ship->getNumWeapons(); i++) {
             ship->getWeapon(i)->purchased = true;
-            if(ship->getWeapon(i)->curAmmo != -1) {
-               ship->getWeapon(i)->curAmmo += 500;
+         }
+      } else {
+         std::set<AsteroidShip*>::iterator tmpShip;
+         tmpShip = custodian.ships.begin();
+         for (; tmpShip != custodian.ships.end(); ++tmpShip) {
+            for (int i = 0; i < (*tmpShip)->getNumWeapons(); i++) {
+               (*tmpShip)->getWeapon(i)->purchased = true;
             }
          }
-         break;
-   }
+      }
+      break;
       // Enables God Mode
    case SDLK_F12:
       godMode = !godMode;

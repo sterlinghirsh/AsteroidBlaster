@@ -108,7 +108,7 @@ message Weapon {
    optional float timeStartedFiring = 8;
 
    // Energy
-   optional int32 shotid = 9;
+   optional uint32 shotid = 9;
 
 
    // Less frequently updated values (these change only during the end of the level).

@@ -55,22 +55,6 @@ class Shard : public Object3D {
 
    // Serialization
    public:
-      template<class Archive> 
-            void serialize(Archive & ar, const unsigned int version) {
-         std::cout << "lol the classic got to here, shard" << std::endl;
-         ar & boost::serialization::base_object<Object3D>(*this);
-         ar & rotationVector;
-         ar & rotationSpeed;
-         ar & rotationAmount;
-         ar & scalex;
-         ar & scaley;
-         ar & scalez;
-         ar & worldSize;
-         ar & sizeX;
-         ar & sizeY;
-         ar & sizeZ;
-         ar & collisionRadius;
-      }
       virtual void save(ast::Entity* ent);
       virtual void load(const ast::Entity& ent);
 };

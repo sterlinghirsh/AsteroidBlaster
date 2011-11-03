@@ -422,7 +422,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "\003 \001(\002\022\020\n\010coolDown\030\004 \001(\002\022\016\n\006damage\030\005 \001(\002\022"
     "\023\n\013currentHeat\030\006 \001(\002\022\022\n\nshotsFired\030\007 \001(\005"
     "\022\031\n\021timeStartedFiring\030\010 \001(\002\022\016\n\006shotid\030\t "
-    "\001(\005\022\021\n\tpurchased\030\n \001(\010\022\023\n\013weaponPrice\030\013 "
+    "\001(\r\022\021\n\tpurchased\030\n \001(\010\022\023\n\013weaponPrice\030\013 "
     "\001(\005\022\r\n\005level\030\014 \001(\005\022\r\n\005range\030\r \001(\002\022\025\n\rove"
     "rheatLevel\030\016 \001(\002\022\023\n\013heatPerShot\030\017 \001(\002\"\231\002"
     "\n\rClientCommand\022\016\n\006shipID\030\001 \002(\r\022\033\n\023forwa"
@@ -3272,7 +3272,7 @@ void Weapon::SharedCtor() {
   currentheat_ = 0;
   shotsfired_ = 0;
   timestartedfiring_ = 0;
-  shotid_ = 0;
+  shotid_ = 0u;
   purchased_ = false;
   weaponprice_ = 0;
   level_ = 0;
@@ -3326,7 +3326,7 @@ void Weapon::Clear() {
     timestartedfiring_ = 0;
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    shotid_ = 0;
+    shotid_ = 0u;
     purchased_ = false;
     weaponprice_ = 0;
     level_ = 0;
@@ -3469,13 +3469,13 @@ bool Weapon::MergePartialFromCodedStream(
         break;
       }
       
-      // optional int32 shotid = 9;
+      // optional uint32 shotid = 9;
       case 9: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_shotid:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &shotid_)));
           set_has_shotid();
         } else {
@@ -3640,9 +3640,9 @@ void Weapon::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->timestartedfiring(), output);
   }
   
-  // optional int32 shotid = 9;
+  // optional uint32 shotid = 9;
   if (has_shotid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->shotid(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(9, this->shotid(), output);
   }
   
   // optional bool purchased = 10;
@@ -3725,9 +3725,9 @@ void Weapon::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->timestartedfiring(), target);
   }
   
-  // optional int32 shotid = 9;
+  // optional uint32 shotid = 9;
   if (has_shotid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->shotid(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(9, this->shotid(), target);
   }
   
   // optional bool purchased = 10;
@@ -3819,10 +3819,10 @@ int Weapon::ByteSize() const {
     
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional int32 shotid = 9;
+    // optional uint32 shotid = 9;
     if (has_shotid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->shotid());
     }
     

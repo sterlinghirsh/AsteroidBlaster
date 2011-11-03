@@ -21,6 +21,7 @@ class TractorBeamShot : public Shot {
       double angle;
       double length;
       double farRadius;
+      void setPosAndDir(Vector3D& newPos, Vector3D& newDir);
 };
 
 #endif

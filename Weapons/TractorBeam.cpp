@@ -20,6 +20,7 @@ TractorBeam::TractorBeam(AsteroidShip* owner, int _index) : Weapon(owner, _index
    randomAIVariationAmount = 4;
    range = 40;
    soundHandle = NULL;
+   shotid = 0;
 
    icon = "TractorBeamIcon";
    r = 0;
@@ -36,22 +37,41 @@ void TractorBeam::update(double timeDiff) {
    if (curFrame > lastFiredFrame + 1 && soundPlaying) {
       SoundEffect::stopSoundEffect(soundHandle);
       soundPlaying = false;
+      if (shotid != 0) {
+         Object3D* shot = (*ship->custodian)[shotid];
+         if (shot != NULL)
+            shot->shouldRemove = true;
+      }
+      shotid = 0;
    }
 }
 
 void TractorBeam::fire() {
-   // If it's client mode, wait for the shot packet to arrive, 
-   // and then add to the game.
-   if (ship->gameState->gsm == ClientMode) {
-      return;
-   }
-
    if (!isReady())
       return;
 
-   Point3D start = ship->shotOrigin;
-   ship->custodian->add(new TractorBeamShot(start, ship->shotDirection, index, ship, ship->gameState));
-   //std::set<Object3D*>* tempList = gameState->custodian.findCollisions(new TractorBeamShot(start, ship->shotDirection, ship));
+   if (ship->gameState->gsm != ClientMode) {
+      TractorBeamShot* shot;
+      if (shotid != 0) {
+         shot = static_cast<TractorBeamShot*>((*ship->custodian)[shotid]);
+         if (shot == NULL) {
+            // Oops!
+            shotid = 0;
+         } else {
+            // Update shot.
+            shot->setPosAndDir(ship->shotOrigin, ship->shotDirection);
+            shot->up->clone(ship->up);
+         }
+      }
+      // Catch the oops from before.
+      if (shotid == 0) {
+         Point3D start = ship->shotOrigin;
+         shot = new TractorBeamShot(start, ship->shotDirection, index, ship, ship->gameState);
+         ship->custodian->add(shot);
+         shotid = shot->id;
+      }
+   }
+
    lastFiredFrame = curFrame;
    // We should play sound.
    if (!soundPlaying) {

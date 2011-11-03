@@ -903,12 +903,12 @@ class Weapon : public ::google::protobuf::Message {
   inline float timestartedfiring() const;
   inline void set_timestartedfiring(float value);
   
-  // optional int32 shotid = 9;
+  // optional uint32 shotid = 9;
   inline bool has_shotid() const;
   inline void clear_shotid();
   static const int kShotidFieldNumber = 9;
-  inline ::google::protobuf::int32 shotid() const;
-  inline void set_shotid(::google::protobuf::int32 value);
+  inline ::google::protobuf::uint32 shotid() const;
+  inline void set_shotid(::google::protobuf::uint32 value);
   
   // optional bool purchased = 10;
   inline bool has_purchased() const;
@@ -995,7 +995,7 @@ class Weapon : public ::google::protobuf::Message {
   float currentheat_;
   ::google::protobuf::int32 shotsfired_;
   float timestartedfiring_;
-  ::google::protobuf::int32 shotid_;
+  ::google::protobuf::uint32 shotid_;
   bool purchased_;
   ::google::protobuf::int32 weaponprice_;
   ::google::protobuf::int32 level_;
@@ -3600,7 +3600,7 @@ inline void Weapon::set_timestartedfiring(float value) {
   timestartedfiring_ = value;
 }
 
-// optional int32 shotid = 9;
+// optional uint32 shotid = 9;
 inline bool Weapon::has_shotid() const {
   return (_has_bits_[0] & 0x00000100u) != 0;
 }
@@ -3611,13 +3611,13 @@ inline void Weapon::clear_has_shotid() {
   _has_bits_[0] &= ~0x00000100u;
 }
 inline void Weapon::clear_shotid() {
-  shotid_ = 0;
+  shotid_ = 0u;
   clear_has_shotid();
 }
-inline ::google::protobuf::int32 Weapon::shotid() const {
+inline ::google::protobuf::uint32 Weapon::shotid() const {
   return shotid_;
 }
-inline void Weapon::set_shotid(::google::protobuf::int32 value) {
+inline void Weapon::set_shotid(::google::protobuf::uint32 value) {
   set_has_shotid();
   shotid_ = value;
 }

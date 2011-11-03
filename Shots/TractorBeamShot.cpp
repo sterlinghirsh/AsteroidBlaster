@@ -25,41 +25,19 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, int _weaponInde
    // The length of the tractor beam shot is the range of the weapon.
    length = owner->weapons[TRACTOR_WEAPON_INDEX]->range + (owner->weapons[TRACTOR_WEAPON_INDEX]->level * 5);
    farRadius = length * tan(angle);
+
    framesAlive = 0;
+
    forward = new Vector3D(*velocity);
    up = new Vector3D(*ownerIn->up);
-   Point3D endPoint1(*position);
-   Point3D endPoint2(*position);
-   // Set endPoint2 100 units away.
-   velocity->setLength(length);
-   velocity->movePoint(endPoint2);
-   velocity->normalize();
-   // Correct for position when calculating endpoint1 and 2.
-   Vector3D positionVector(*position);
-   positionVector = positionVector.scalarMultiply(-1);
-   positionVector.movePoint(endPoint1);
-   positionVector.movePoint(endPoint2);
-   // Now set min/max xyz
-   minX = std::min(endPoint1.x, endPoint2.x);
-   maxX = std::max(endPoint1.x, endPoint2.x);
-   minY = std::min(endPoint1.y, endPoint2.y);
-   maxY = std::max(endPoint1.y, endPoint2.y);
-   minZ = std::min(endPoint1.z, endPoint2.z);
-   maxZ = std::max(endPoint1.z, endPoint2.z);
-   
-   // Expand the bounding box to make sure it contains the whole cone.
-   minX -= farRadius;
-   minY -= farRadius;
-   minZ -= farRadius;
-   maxX += farRadius;
-   maxY += farRadius;
-   maxZ += farRadius;
+
+   setPosAndDir(posIn, dirIn);
+
 
    shouldConstrain = false;
-   /* Make sure tractor beam shots aren't culled from the view frustum (necessary to make them appear)
-    */
+   // Make sure tractor beam shots aren't culled from the view frustum.
+   // (necessary to make them appear)
    shouldBeCulled = false;
-   updateBoundingBox();
    damage = 0;
 
    collisionType = new CollisionCone(angle, length, *velocity, *position);
@@ -69,9 +47,6 @@ TractorBeamShot::TractorBeamShot(Point3D& posIn, Vector3D dirIn, int _weaponInde
  * Kill this after a certain number of frames.
  */
 void TractorBeamShot::update(double timeDiff) {
-   if (++framesAlive >= 2)
-      shouldRemove = true;
-   
    const float spinSpeed = 90; // Degrees per second.
    spin += (float) (spinSpeed * timeDiff * 2);
 }
@@ -179,5 +154,39 @@ void TractorBeamShot::draw() {
    glPopMatrix();
 
    glLineWidth(1.0);
+}
+
+void TractorBeamShot::setPosAndDir(Vector3D& newPos, Vector3D& newDir) {
+   position->clone(&newPos);
+   velocity->clone(&newDir); // It should be a unit vector.
+   forward->clone(velocity);
+
+   Point3D endPoint1(*position);
+   Point3D endPoint2(*position);
+
+   // Set endPoint2 100 units away.
+   velocity->movePoint(endPoint2, length);
+   // Correct for position when calculating endpoint1 and 2.
+   Vector3D positionVector(*position);
+   positionVector = positionVector.scalarMultiply(-1);
+   positionVector.movePoint(endPoint1);
+   positionVector.movePoint(endPoint2);
+   
+   // Now set min/max xyz
+   minX = std::min(endPoint1.x, endPoint2.x);
+   maxX = std::max(endPoint1.x, endPoint2.x);
+   minY = std::min(endPoint1.y, endPoint2.y);
+   maxY = std::max(endPoint1.y, endPoint2.y);
+   minZ = std::min(endPoint1.z, endPoint2.z);
+   maxZ = std::max(endPoint1.z, endPoint2.z);
+   
+   // Expand the bounding box to make sure it contains the whole cone.
+   minX -= farRadius;
+   minY -= farRadius;
+   minZ -= farRadius;
+   maxX += farRadius;
+   maxY += farRadius;
+   maxZ += farRadius;
+   updateBoundingBox();
 }
 
