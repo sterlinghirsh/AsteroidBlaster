@@ -9,6 +9,8 @@
 #include "Shots/TractorBeamShot.h"
 #include "Utility/SoundEffect.h"
 
+#include "Network/gamestate.pb.h"
+
 TractorBeam::TractorBeam(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
    TRACTOR_WEAPON_INDEX = index;
    coolDown = 0;
@@ -98,4 +100,15 @@ void TractorBeam::stopSounds() {
       soundHandle = NULL;
       soundPlaying = false;
    }
+}
+
+void TractorBeam::save(ast::Weapon* weap) {
+   Weapon::save(weap);
+   weap->set_shotid(shotid);
+}
+
+void TractorBeam::load(const ast::Weapon& weap) {
+   Weapon::load(weap);
+   if (weap.has_shotid())
+      shotid = weap.shotid();
 }

@@ -107,7 +107,7 @@ message Weapon {
    optional int32 shotsFired = 7;
    optional float timeStartedFiring = 8;
 
-   // Energy
+   // Energy / Tractor Beam
    optional uint32 shotid = 9;
 
 

@@ -190,3 +190,12 @@ void TractorBeamShot::setPosAndDir(Vector3D& newPos, Vector3D& newDir) {
    updateBoundingBox();
 }
 
+void TractorBeamShot::save(ast::Entity* ent) {
+   Shot::save(ent);
+}
+
+void TractorBeamShot::load(const ast::Entity& ent) {
+   Shot::load(ent);
+   setPosAndDir(*position, *velocity);
+}
+

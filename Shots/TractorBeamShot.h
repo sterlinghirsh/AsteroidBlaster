@@ -22,6 +22,8 @@ class TractorBeamShot : public Shot {
       double length;
       double farRadius;
       void setPosAndDir(Vector3D& newPos, Vector3D& newDir);
+      virtual void save(ast::Entity* ent);
+      virtual void load(const ast::Entity& ent);
 };
 
 #endif
