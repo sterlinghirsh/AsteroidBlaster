@@ -50,7 +50,7 @@ void Energy::update(double timeDiff) {
    // Fire when the trigger is released.
    static Vector3D randomVariation;
 
-   chargingShot = dynamic_cast<EnergyShot*>(ship->gameState->custodian[chargingShotid]);
+   chargingShot = static_cast<EnergyShot*>(ship->gameState->custodian[chargingShotid]);
    // Update the position of the charging shot.
    if (chargingShot != NULL) {
       chargingShot->position->updateMagnitude(ship->shotOrigin);
@@ -204,10 +204,13 @@ void Energy::stopSounds() {
 void Energy::save(ast::Weapon* weap) {
    Weapon::save(weap);
    weap->set_shotid(chargingShotid);
+   weap->set_chargestarttime(chargeStartTime);
 }
 
 void Energy::load(const ast::Weapon& weap) {
    Weapon::load(weap);
    if (weap.has_shotid())
       chargingShotid = weap.shotid();
+   if (weap.has_chargestarttime())
+      chargeStartTime = weap.chargestarttime();
 }

@@ -972,6 +972,13 @@ class Weapon : public ::google::protobuf::Message {
   inline float heatpershot() const;
   inline void set_heatpershot(float value);
   
+  // optional float chargeStartTime = 16;
+  inline bool has_chargestarttime() const;
+  inline void clear_chargestarttime();
+  static const int kChargeStartTimeFieldNumber = 16;
+  inline float chargestarttime() const;
+  inline void set_chargestarttime(float value);
+  
   // @@protoc_insertion_point(class_scope:ast.Weapon)
  private:
   inline void set_has_index();
@@ -1004,6 +1011,8 @@ class Weapon : public ::google::protobuf::Message {
   inline void clear_has_overheatlevel();
   inline void set_has_heatpershot();
   inline void clear_has_heatpershot();
+  inline void set_has_chargestarttime();
+  inline void clear_has_chargestarttime();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -1022,9 +1031,10 @@ class Weapon : public ::google::protobuf::Message {
   float range_;
   float overheatlevel_;
   float heatpershot_;
+  float chargestarttime_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(15 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(16 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -3816,6 +3826,28 @@ inline float Weapon::heatpershot() const {
 inline void Weapon::set_heatpershot(float value) {
   set_has_heatpershot();
   heatpershot_ = value;
+}
+
+// optional float chargeStartTime = 16;
+inline bool Weapon::has_chargestarttime() const {
+  return (_has_bits_[0] & 0x00008000u) != 0;
+}
+inline void Weapon::set_has_chargestarttime() {
+  _has_bits_[0] |= 0x00008000u;
+}
+inline void Weapon::clear_has_chargestarttime() {
+  _has_bits_[0] &= ~0x00008000u;
+}
+inline void Weapon::clear_chargestarttime() {
+  chargestarttime_ = 0;
+  clear_has_chargestarttime();
+}
+inline float Weapon::chargestarttime() const {
+  return chargestarttime_;
+}
+inline void Weapon::set_chargestarttime(float value) {
+  set_has_chargestarttime();
+  chargestarttime_ = value;
 }
 
 // -------------------------------------------------------------------

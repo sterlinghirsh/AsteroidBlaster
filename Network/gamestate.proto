@@ -124,6 +124,9 @@ message Weapon {
    optional float range = 13;
    optional float overheatLevel = 14;
    optional float heatPerShot = 15;
+
+   // Energy
+   optional float chargeStartTime = 16;
 }
 
 message ClientCommand {
