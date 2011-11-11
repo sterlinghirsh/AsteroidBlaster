@@ -527,6 +527,7 @@ void Asteroid3D::save(ast::Entity* ent) {
    ent->set_timelasthitbyenergy(timeLastHitByEnergy);
    ent->set_damagepersecond(damagePerSecond);
    ent->set_releasedshards(releasedShards);
+   ent->set_rotationspeed(rotationSpeed);
 }
 
 void Asteroid3D::load(const ast::Entity& ent) {
@@ -545,6 +546,8 @@ void Asteroid3D::load(const ast::Entity& ent) {
       damagePerSecond = ent.damagepersecond();
    if (ent.has_releasedshards())
       releasedShards = ent.releasedshards();
+   if (ent.has_rotationspeed())
+      rotationSpeed = ent.rotationspeed();
 }
 
 void Asteroid3D::onRemove() {

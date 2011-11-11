@@ -51,8 +51,15 @@ void Energy::update(double timeDiff) {
    static Vector3D randomVariation;
 
    chargingShot = static_cast<EnergyShot*>(ship->gameState->custodian[chargingShotid]);
+
    // Update the position of the charging shot.
    if (chargingShot != NULL) {
+      if (!chargingSoundPlaying) {
+         soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME);
+
+         chargingSoundPlaying = true;
+      }
+
       chargingShot->position->updateMagnitude(ship->shotOrigin);
       chargingShot->updateChargeTime(ship->gameState->getGameTime() - chargeStartTime);
       
@@ -65,22 +72,26 @@ void Energy::update(double timeDiff) {
    } else if (soundHandle != NULL) {
       SoundEffect::stopSoundEffect(soundHandle);
       soundHandle = NULL;
+      chargingSoundPlaying = false;
    }
    
    // If user has stopped charging a shot.
    if (chargingShot != NULL && (lastFiredFrame == curFrame - 2 || ship->isRespawning() )) {
-      // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
-      Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed / (1 + std::min(ship->gameState->getGameTime() - chargeStartTime, 3.0))));
+      if (ship->gameState->gsm != ClientMode) {
+         // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
+         Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed / (1 + std::min(ship->gameState->getGameTime() - chargeStartTime, 3.0))));
 
-      // Add a random variation to each of the shots.
-      randomVariation.randomMagnitude();
-      randomVariation.scalarMultiplyUpdate(randomVariationAmount);
-      shotDirection.addUpdate(randomVariation);
-      chargingShot->velocity->updateMagnitude(shotDirection);
+         // Add a random variation to each of the shots.
+         randomVariation.randomMagnitude();
+         randomVariation.scalarMultiplyUpdate(randomVariationAmount);
+         shotDirection.addUpdate(randomVariation);
+         chargingShot->velocity->updateMagnitude(shotDirection);
+      }
 
       // Don't play sound effects in godMode b/c there would be too many.
       SoundEffect::stopSoundEffect(soundHandle);
       soundHandle = NULL;
+      chargingSoundPlaying = false;
       if (!ship->gameState->godMode) {
          SoundEffect::playSoundEffect("ChargeShotFire", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME);
       }
@@ -102,16 +113,15 @@ void Energy::resetChargingShot() {
  * This is what actually shoots. Finally!
  */
 void Energy::fire() {
-   // If it's client mode, wait for the shot packet to arrive, 
-   // and then add to the game.
-   if (ship->gameState->gsm == ClientMode) {
-      return;
-   }
-
    if (!isReady())
       return;
 
    lastFiredFrame = curFrame;
+
+   if (ship->gameState->gsm == ClientMode) {
+      return;
+   }
+
    chargingShot = dynamic_cast<EnergyShot*>(ship->gameState->custodian[chargingShotid]);
 
    // If we haven't started a shot yet...
@@ -122,8 +132,6 @@ void Energy::fire() {
       ship->custodian->add(chargingShot);
       chargingShotid = chargingShot->id;
 
-      soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME);
-      chargingSoundPlaying = true;
    }
 
 }
