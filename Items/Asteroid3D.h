@@ -49,6 +49,7 @@ class Asteroid3D : public Object3D {
    private:   
       std::vector<Ring> _rList;
       int _nPoints;
+      int releasedShards;
    
    //public functions------------------------------
    public:

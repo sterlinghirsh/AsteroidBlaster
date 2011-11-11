@@ -615,6 +615,13 @@ class Entity : public ::google::protobuf::Message {
   inline float length() const;
   inline void set_length(float value);
   
+  // optional int32 releasedShards = 72;
+  inline bool has_releasedshards() const;
+  inline void clear_releasedshards();
+  static const int kReleasedShardsFieldNumber = 72;
+  inline ::google::protobuf::int32 releasedshards() const;
+  inline void set_releasedshards(::google::protobuf::int32 value);
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -729,6 +736,8 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_shouldremove();
   inline void set_has_length();
   inline void clear_has_length();
+  inline void set_has_releasedshards();
+  inline void clear_has_releasedshards();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -765,9 +774,9 @@ class Entity : public ::google::protobuf::Message {
   bool isbraking_;
   bool flyingaienabled_;
   bool shootingaienabled_;
+  ::ast::Timer* banktimer_;
   float bankperiod_;
   float timelefttorespawn_;
-  ::ast::Timer* banktimer_;
   ::ast::Timer* alivetimer_;
   ::ast::Timer* respawntimer_;
   ::google::protobuf::int32 score_;
@@ -789,9 +798,10 @@ class Entity : public ::google::protobuf::Message {
   bool energyhit_;
   bool shouldremove_;
   float length_;
+  ::google::protobuf::int32 releasedshards_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(57 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(58 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -3443,6 +3453,28 @@ inline float Entity::length() const {
 inline void Entity::set_length(float value) {
   set_has_length();
   length_ = value;
+}
+
+// optional int32 releasedShards = 72;
+inline bool Entity::has_releasedshards() const {
+  return (_has_bits_[1] & 0x02000000u) != 0;
+}
+inline void Entity::set_has_releasedshards() {
+  _has_bits_[1] |= 0x02000000u;
+}
+inline void Entity::clear_has_releasedshards() {
+  _has_bits_[1] &= ~0x02000000u;
+}
+inline void Entity::clear_releasedshards() {
+  releasedshards_ = 0;
+  clear_has_releasedshards();
+}
+inline ::google::protobuf::int32 Entity::releasedshards() const {
+  return releasedshards_;
+}
+inline void Entity::set_releasedshards(::google::protobuf::int32 value) {
+  set_has_releasedshards();
+  releasedshards_ = value;
 }
 
 // -------------------------------------------------------------------

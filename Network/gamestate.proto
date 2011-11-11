@@ -94,6 +94,9 @@ message Entity {
 
    // Electricity Shot
    optional float length = 71;
+
+   // Asteroid again again
+   optional int32 releasedShards = 72;
 }
 
 message Weapon {

@@ -61,6 +61,7 @@ Asteroid3D::Asteroid3D(double r, double worldSizeIn, const GameState* _gameState
       InitAsteroid(r, worldSizeIn);
       newVelocity = new Vector3D();
       newAcceleration = new Vector3D();
+      releasedShards = 0;
    }
 
 Asteroid3D::~Asteroid3D() {
@@ -509,11 +510,9 @@ void Asteroid3D::dropRandomItem() {
    double whichItem = randdouble();
    if (whichItem < 0.6) {
       custodian->add(makeShard(0));
-      SoundEffect::playSoundEffect("CrystalRelease", position);
-      //printf("YOU JUST SHARDED\n");
+      releasedShards = 1;
    } else if (whichItem < 0.7) {
-      // Don't play the sound effect twice on top of itself.
-      SoundEffect::playSoundEffect("DoubleCrystalRelease", position);
+      releasedShards = 2;
       custodian->add(makeShard(0));
       custodian->add(makeShard(0));
    }
@@ -527,6 +526,7 @@ void Asteroid3D::save(ast::Entity* ent) {
    ent->set_energyhit(energyHitAsteroid);
    ent->set_timelasthitbyenergy(timeLastHitByEnergy);
    ent->set_damagepersecond(damagePerSecond);
+   ent->set_releasedshards(releasedShards);
 }
 
 void Asteroid3D::load(const ast::Entity& ent) {
@@ -543,6 +543,8 @@ void Asteroid3D::load(const ast::Entity& ent) {
       timeLastHitByEnergy = ent.timelasthitbyenergy();
    if (ent.has_damagepersecond())
       damagePerSecond = ent.damagepersecond();
+   if (ent.has_releasedshards())
+      releasedShards = ent.releasedshards();
 }
 
 void Asteroid3D::onRemove() {
@@ -622,4 +624,13 @@ void Asteroid3D::onRemove() {
 
    if (health <= 0)
       SoundEffect::playSoundEffect("Explosion1.wav", position, velocity);
+
+   if (releasedShards == 1) {
+      SoundEffect::playSoundEffect("CrystalRelease", position);
+   }
+      //printf("YOU JUST SHARDED\n");
+   else if (releasedShards == 2) {
+      // Don't play the sound effect twice on top of itself.
+      SoundEffect::playSoundEffect("DoubleCrystalRelease", position);
+   }
 }
