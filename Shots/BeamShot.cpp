@@ -6,6 +6,7 @@
 
 #include "BeamShot.h"
 #include "Items/BoundingWall.h"
+#include "Utility/SoundEffect.h"
 
 #include <math.h>
 #include <algorithm>
@@ -79,6 +80,10 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShi
       damage = 50 + (owner->weapons[RAILGUN_WEAPON_INDEX]->level*10);
 
       collisionType = new CollisionRay(length, *velocity, *position);
+      
+      if (!owner->gameState->godMode) {
+         SoundEffect::playSoundEffect("Rail2.wav", owner->position, NULL, owner == owner->gameState->ship, 0.3f);
+      }
    }
 
 /**

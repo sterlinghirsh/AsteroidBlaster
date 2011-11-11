@@ -357,6 +357,11 @@ int main(int argc, char* argv[]) {
    // This sets up defaults and reads in any necessary settings.
    gameSettings = new GameSettings();
 
+   if (_gsm == ServerMode) {
+      gameSettings->soundOn = false;
+      gameSettings->musicOn = false;
+   }
+
    updateStartTime();
    updateDoubleTime();
 
@@ -480,7 +485,9 @@ int main(int argc, char* argv[]) {
       //SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
    }
 
-   gameSettings->writeOut();
+   if (_gsm != ServerMode) {
+      gameSettings->writeOut();
+   }
 
    // Clean up
    delete gameState;

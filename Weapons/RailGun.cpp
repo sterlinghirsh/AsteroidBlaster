@@ -55,11 +55,6 @@ void RailGun::fire() {
    ship->setShakeAmount(5.0);
    ship->custodian->add(new BeamShot(start,
             ship->shotDirection, index, ship, ship->gameState));
-   // Only take away ammo and play a sound if we're not in godMode
-   if (!ship->gameState->godMode) {
-      SoundEffect::playSoundEffect("Rail2.wav", ship->position, NULL, ship == ship->gameState->ship, 0.3f);
-      //curAmmo--;
-   }
 }
 
 /**
