@@ -49,14 +49,18 @@ void HomingMissile::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void HomingMissile::fire() {
+   if (!isReady())
+      return;
+
+   // This isn't a big deal if it happens or not, but it might not.
+   ship->setShakeAmount(0.01f);
+
    // If it's client mode, wait for the shot packet to arrive, 
    // and then add to the game.
    if (ship->gameState->gsm == ClientMode) {
       return;
    }
    static Vector3D randomVariation;
-   if (!isReady())
-      return;
    //lastShotRight = !lastShotRight;
    //printf("Did it shoot right? %d\n", lastShotRight);
    // Update timeLastFired with new current time.
@@ -71,7 +75,6 @@ void HomingMissile::fire() {
    randomVariation.scalarMultiplyUpdate(randomVariationAmount);
    shotDirection.addUpdate(randomVariation);
    ship->shotDirection.movePoint(start);
-   ship->setShakeAmount(0.01f);
    ship->custodian->add(new HomingMissileShot(start,
             shotDirection, index, ship, ship->gameState));
    addHeat(heatPerShot / level);

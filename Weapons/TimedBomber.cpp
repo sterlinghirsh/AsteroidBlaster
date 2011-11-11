@@ -44,34 +44,32 @@ void TimedBomber::update(double timeDiff) {
  * This is what actually shoots. Finally!
  */
 void TimedBomber::fire() {
-   // If it's client mode, wait for the shot packet to arrive, 
-   // and then add to the game.
-   if (ship->gameState->gsm == ClientMode) {
-      return;
-   }
-
-   static Vector3D randomVariation;
    if (!isReady())
       return;
 
-   // Update timeLastFired with new current time.
-   timeLastFired = doubleTime();
-   // Copy the ship's position for the start point.
-   Point3D start = ship->shotOrigin;
-   // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
-   Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed));
-   // Add a random variation to each of the shots.
-   randomVariation.randomMagnitude();
-   randomVariation.scalarMultiplyUpdate(randomVariationAmount);
-   shotDirection.addUpdate(randomVariation);
-   ship->shotDirection.movePoint(start);
-   ship->setShakeAmount(0.1f);
-   ship->custodian->add(new TimedBombShot(start,
-            shotDirection, index, ship, ship->gameState));
-   // Don't play sound effects in godMode b/c there would be too many.
-   if (!ship->gameState->godMode) {
-      SoundEffect::playSoundEffect("BlasterShot2.wav", &ship->shotOrigin);
+   // If it's client mode, wait for the shot packet to arrive, 
+   // and then add to the game.
+   if (ship->gameState->gsm != ClientMode) {
+
+      Vector3D randomVariation;
+
+      // Update timeLastFired with new current time.
+      timeLastFired = doubleTime();
+      // Copy the ship's position for the start point.
+      Point3D start = ship->shotOrigin;
+      // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).
+      Vector3D shotDirection(ship->shotDirection.scalarMultiply(shotSpeed));
+      // Add a random variation to each of the shots.
+      randomVariation.randomMagnitude();
+      randomVariation.scalarMultiplyUpdate(randomVariationAmount);
+      shotDirection.addUpdate(randomVariation);
+      ship->shotDirection.movePoint(start);
+      ship->custodian->add(new TimedBombShot(start,
+               shotDirection, index, ship, ship->gameState));
    }
+
+   ship->setShakeAmount(0.1f);
+   // Don't play sound effects in godMode b/c there would be too many.
 }
 
 /**

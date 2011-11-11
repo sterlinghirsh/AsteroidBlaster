@@ -20,6 +20,7 @@ class TimedBombShot : public ExplosiveShot {
       virtual void hitWall(BoundingWall* wall);
       // Called when the shot's isExploded becomes true.
       virtual void explode();
+      virtual void onRemove();
 
       // In seconds.
       double spin;
@@ -34,6 +35,8 @@ class TimedBombShot : public ExplosiveShot {
       double seekRadius;
       double slowDownPerSecond;
       double collisionRadius;
+      
+      SoundChannel* soundHandle;
       
       virtual void save(ast::Entity* ent);
       virtual void load(const ast::Entity& ent);

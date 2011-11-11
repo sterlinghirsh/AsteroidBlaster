@@ -51,6 +51,8 @@ TimedBombShot::TimedBombShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, A
    slowDownPerSecond = 1.0;
    collisionRadius = 2.0;
    collisionSphere->updateRadius(seekRadius);
+   
+   soundHandle = SoundEffect::playSoundEffect("TimedBombSiren", position, velocity, false, DEFAULT_VOLUME, true);
 }
 
 // Needed to avoid obscure vtable compiler error.
@@ -534,6 +536,7 @@ void TimedBombShot::update(double timeDiff) {
       velocity->setLength(newSpeed);
 
       ExplosiveShot::update(timeDiff);
+      SoundEffect::updateSource(soundHandle, position, velocity);
    }
    /* If the bomb has already blown up and we're back here again,
     * then we've already gone through a cycle of hit detection, so it's time
@@ -554,6 +557,7 @@ void TimedBombShot::update(double timeDiff) {
       timeSinceExploded = 1;
       //isExploded = true;
       //explode();
+      SoundEffect::stopSoundEffect(soundHandle);
       SoundEffect::playSoundEffect("TimedBombExplosion", position, NULL, false, 1.0f);
    }
    
@@ -587,6 +591,10 @@ void TimedBombShot::explode() {
    ExplosiveShot::explode();
 }
 
+void TimedBombShot::onRemove() {
+   SoundEffect::stopSoundEffect(soundHandle);
+}
+
 void TimedBombShot::save(ast::Entity* ent) {
    Shot::save(ent);
 
@@ -600,3 +608,4 @@ void TimedBombShot::load(const ast::Entity& ent) {
       timeSinceExploded = ent.timesinceexploded();
    }
 }
+
