@@ -402,8 +402,6 @@ void Collision<AsteroidShip, TimedBombShot>::handleCollision() {
  */
 template<>
 void Collision<Asteroid3D, BlasterShot>::handleCollision() {
-   // DEBUG
-   printf("Got to blastershot handlecollision.\n");
    const int particlesToEmit = 10;
    
    Vector3D particleVariation;
@@ -1005,7 +1003,8 @@ void Custodian::cleanup() {
    std::map<unsigned, Object3D*>::iterator iter = objectsByID.begin();
    for (; iter != objectsByID.end(); iter++) {
       if (iter->second->isRemoved()) {
-         printf("Deleting %d\n", iter->second->id);
+         // DEBUG
+         //printf("Deleting %d\n", iter->second->id);
          delete iter->second;
          objectsByID.erase(iter);
       }
@@ -1030,7 +1029,7 @@ void Custodian::remove(Object3D* objectIn) {
    // objectsByID.erase(objectIn->id);
 
    // DEBUG
-   printf("Removing %d\n", objectIn->id);
+   //printf("Removing %d\n", objectIn->id);
    
    Asteroid3D* asteroid;
    Shard* shard;

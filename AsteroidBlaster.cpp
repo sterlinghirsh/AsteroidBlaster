@@ -427,7 +427,13 @@ int main(int argc, char* argv[]) {
    timeDiff = doubleTime() - lastUpdateTime;
    lastUpdateTime = doubleTime();
 
+   unsigned long frameLength = 50; // ms
+   long nextFrameDelay = 0;
+   unsigned long startTick = 0;
+
    while (running) {
+      startTick = SDL_GetTicks();
+      
       updateDoubleTime();
       timeDiff = doubleTime() - lastUpdateTime;
       lastUpdateTime = doubleTime();
@@ -474,6 +480,11 @@ int main(int argc, char* argv[]) {
 
       while (SDL_PollEvent(event)) {
          inputManager->update(*event);
+      }
+
+      nextFrameDelay = startTick + frameLength - SDL_GetTicks();
+      if (_gsm == ServerMode && nextFrameDelay > 0) {
+         SDL_Delay(nextFrameDelay);
       }
    }
 

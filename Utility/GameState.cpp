@@ -435,7 +435,8 @@ void GameState::update(double timeDiff) {
             
             if (client->ackGameState != 0) {
                for (unsigned i = client->ackGameState + 1; i <= gameStateId; ++i) {
-                  frame.add_collision_message()->CopyFrom(*(savedCollisionMessages[i]));
+                  if (savedCollisionMessages[i] != NULL)
+                     frame.add_collision_message()->CopyFrom(*(savedCollisionMessages[i]));
                }
             }
 
