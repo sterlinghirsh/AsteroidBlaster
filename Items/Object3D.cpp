@@ -56,8 +56,8 @@ Object3D::~Object3D() {
 }
 
 void Object3D::update(double timeDifference) {
+   angle += rotationSpeed * timeDifference;
    if (gameState->gsm != ClientMode) {
-      angle += rotationSpeed * timeDifference;
 
       updateAcceleration(timeDifference);
       if (acceleration != NULL && velocity != NULL)

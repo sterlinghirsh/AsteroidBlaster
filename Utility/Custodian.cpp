@@ -644,7 +644,7 @@ void Collision<Asteroid3D, HomingMissileShot>::handleCollision() {
 
 template<>
 void Collision<Asteroid3D, Asteroid3D>::handleCollision() {
-   if (a->gameState->gsm != ClientMode) {
+   if (a->gameState->gsm == ClientMode) {
       return;
    }
 
@@ -897,7 +897,7 @@ Object3D* compareByDistance::curObject;
 void Custodian::update() {
    Object3D* tempObject;
    // Iterate over objects that need to be added.
-   while (objectsToAdd.size() > 0) {
+   while (!objectsToAdd.empty()) {
       // Get the first item in the list.
       tempObject = objectsToAdd.front();
       if (tempObject == NULL) {
@@ -908,8 +908,10 @@ void Custodian::update() {
       // Run the update function to make sure everything is right.
       tempObject->update(0);
       // Add the item to the sorted lists.
-      objectsByMinX.push_back(tempObject);
-      objectsByMaxX.push_back(tempObject);
+      if (!tempObject->shouldRemove) {
+         objectsByMinX.push_back(tempObject);
+         objectsByMaxX.push_back(tempObject);
+      }
       // Remove the item.
       objectsToAdd.pop_front();
    }
@@ -1004,7 +1006,7 @@ void Custodian::cleanup() {
    for (; iter != objectsByID.end(); iter++) {
       if (iter->second->isRemoved()) {
          // DEBUG
-         //printf("Deleting %d\n", iter->second->id);
+         // printf("Deleting %d\n", iter->second->id);
          delete iter->second;
          objectsByID.erase(iter);
       }
@@ -1022,14 +1024,21 @@ void Custodian::remove(Object3D* objectIn) {
       return;
    }
 
-   objectsByMinX[objectIn->minXRank] = NULL;
-   objectsByMaxX[objectIn->maxXRank] = NULL;
+   // If we remove an object before it has been sorted, we get weird shits.
+   if (objectsByMinX[objectIn->minXRank] == objectIn) {
+      objectsByMinX[objectIn->minXRank] = NULL;
+   }
+
+   if (objectsByMaxX[objectIn->maxXRank] == objectIn) {
+      objectsByMaxX[objectIn->maxXRank] = NULL;
+   }
+
    // We're going to make the removal a separate step so that we can send
    // stuff from server to client.
    // objectsByID.erase(objectIn->id);
 
    // DEBUG
-   //printf("Removing %d\n", objectIn->id);
+   // printf("Removing %d\n", objectIn->id);
    
    Asteroid3D* asteroid;
    Shard* shard;
@@ -1203,7 +1212,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
       if (ent.id() < nextID) {
          // Must have deleted already. Ignore,
          // DEBUG
-         printf("Tried to add deleted object.\n");
+         printf("Tried to add deleted object %u.\n", ent.id());
          return NULL;
       }
 

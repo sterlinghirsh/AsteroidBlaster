@@ -314,10 +314,6 @@ void GameState::update(double timeDiff) {
    }
 
 
-   std::vector<Object3D*>* objects = custodian.getListOfObjects();
-   std::set<CollisionBase*, compareByDistance>* collisions;
-   std::set<CollisionBase*, compareByDistance>::iterator curCollision;
-
    // Update before proceeding.
    // TODO: Do we need to do this here?
    custodian.update();
@@ -328,6 +324,10 @@ void GameState::update(double timeDiff) {
     !ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
       ship->readCommand(clientCommand);
    }
+   
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
+   std::set<CollisionBase*, compareByDistance>* collisions;
+   std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
    // Update each item.
    for (item = objects->begin(); item != objects->end(); ++item) {
@@ -341,7 +341,7 @@ void GameState::update(double timeDiff) {
    // positions in the sorted lists.
    custodian.update();
 
-   // Get updated list.
+   // Get updated list. (Probably does nothing since the reference is the same.)
    objects = custodian.getListOfObjects();
 
    Particle::updateParticles(timeDiff);
@@ -397,6 +397,7 @@ void GameState::update(double timeDiff) {
       }
    }
 
+   // TODO: Add code to handle sound on client side, when ship is null.
    if (ship != NULL && shipCamera != NULL) {
       SoundEffect::updatePositions(shipCamera->position,
        ship->velocity, shipCamera->forward, shipCamera->up);
