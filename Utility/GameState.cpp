@@ -1075,22 +1075,24 @@ void GameState::nextLevel() {
    std::set<Asteroid3D*>::iterator asteroidIter;
 
    for (asteroidIter = custodian.asteroids.begin(); asteroidIter != custodian.asteroids.end(); ++asteroidIter) {
-      (*asteroidIter)->shouldRemove = true;;
+      (*asteroidIter)->shouldRemove = true;
    }
 
    std::set<Shard*>::iterator shardIter;
 
    for (shardIter = custodian.shards.begin(); shardIter != custodian.shards.end(); ++shardIter) {
-      (*shardIter)->shouldRemove = true;;
+      (*shardIter)->shouldRemove = true;
    }
 
    std::set<Shot*>::iterator shotIter;
 
    for (shotIter = custodian.shots.begin(); shotIter != custodian.shots.end(); ++shotIter) {
-      (*shotIter)->shouldRemove = true;;
+      (*shotIter)->shouldRemove = true;
    }
 
-   if (ship != NULL && !ship->shooter->isEnabled() && !ship->flyingAI->isEnabled()) {
+   if (gsm == SingleMode && 
+       ship != NULL && 
+       !ship->shooter->isEnabled() && !ship->flyingAI->isEnabled()) {
       storeMenu->menuActive = true;
       SoundEffect::stopMusic();
       SoundEffect::playMusic("8-bit3.ogg");
