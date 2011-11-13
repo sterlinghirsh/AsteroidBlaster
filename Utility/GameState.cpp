@@ -383,7 +383,8 @@ void GameState::update(double timeDiff) {
          for (int i = 0; i < collisionIter->second->collider_size(); i += 2) {
             aId = collisionIter->second->collider(i);
             bId = collisionIter->second->collider(i + 1);
-            printf("aid: %d, bid: %d\n", aId, bId);
+            // DEBUG
+            // printf("aid: %d, bid: %d\n", aId, bId);
             collision = custodian.getCollision(custodian[aId], custodian[bId]);
             if (collision != NULL) {
                collision->handleCollision();

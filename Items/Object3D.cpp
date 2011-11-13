@@ -319,7 +319,7 @@ void Object3D::load(const ast::Entity& ent) {
    if (ent.has_shouldremove()) {
       if (shouldRemove != ent.shouldremove()) {
          // DEBUG
-         printf("Setting shouldRemove to %d on %d\n", ent.shouldremove(), id);
+         // printf("Setting shouldRemove to %d on %d\n", ent.shouldremove(), id);
       }
       shouldRemove = ent.shouldremove();
    }

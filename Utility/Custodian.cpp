@@ -824,33 +824,33 @@ Custodian::Custodian(const GameState* _gameState) :
       std::map<unsigned, CollisionBase*>& ch = *collisionHandlers;
       
       // Collision for AsteroidShip
-      ch[TYPE_ASTEROIDSHIP] = new Collision<AsteroidShip, AsteroidShip>;
-      ch[TYPE_ASTEROIDSHIP | TYPE_ASTEROID3D] = new Collision<AsteroidShip, Asteroid3D>;
-      ch[TYPE_ASTEROIDSHIP | TYPE_SHARD] = new Collision<AsteroidShip, Shard>;
-      ch[TYPE_ASTEROIDSHIP | TYPE_BLASTERSHOT] = new Collision<AsteroidShip, BlasterShot>;
-      ch[TYPE_ASTEROIDSHIP | TYPE_BEAMSHOT] = new Collision<AsteroidShip, BeamShot>;
-      ch[TYPE_ASTEROIDSHIP | TYPE_ELECTRICITYSHOT] = new Collision<AsteroidShip, ElectricityShot>;
-      ch[TYPE_ASTEROIDSHIP | TYPE_ENERGYSHOT] = new Collision<AsteroidShip, EnergyShot>;
-      ch[TYPE_ASTEROIDSHIP | TYPE_HOMINGMISSILESHOT] = new Collision<AsteroidShip, HomingMissileShot>;
-      ch[TYPE_ASTEROIDSHIP | TYPE_TIMEDBOMBSHOT] = new Collision<AsteroidShip, TimedBombShot>;
+      ch[(1 << TYPE_ASTEROIDSHIP)] = new Collision<AsteroidShip, AsteroidShip>;
+      ch[(1 << TYPE_ASTEROIDSHIP) | (1 << TYPE_ASTEROID3D)] = new Collision<AsteroidShip, Asteroid3D>;
+      ch[(1 << TYPE_ASTEROIDSHIP) | (1 << TYPE_SHARD)] = new Collision<AsteroidShip, Shard>;
+      ch[(1 << TYPE_ASTEROIDSHIP) | (1 << TYPE_BLASTERSHOT)] = new Collision<AsteroidShip, BlasterShot>;
+      ch[(1 << TYPE_ASTEROIDSHIP) | (1 << TYPE_BEAMSHOT)] = new Collision<AsteroidShip, BeamShot>;
+      ch[(1 << TYPE_ASTEROIDSHIP) | (1 << TYPE_ELECTRICITYSHOT)] = new Collision<AsteroidShip, ElectricityShot>;
+      ch[(1 << TYPE_ASTEROIDSHIP) | (1 << TYPE_ENERGYSHOT)] = new Collision<AsteroidShip, EnergyShot>;
+      ch[(1 << TYPE_ASTEROIDSHIP) | (1 << TYPE_HOMINGMISSILESHOT)] = new Collision<AsteroidShip, HomingMissileShot>;
+      ch[(1 << TYPE_ASTEROIDSHIP) | (1 << TYPE_TIMEDBOMBSHOT)] = new Collision<AsteroidShip, TimedBombShot>;
 
       // Collision for Asteroid3D
-      ch[TYPE_ASTEROID3D] = new Collision<Asteroid3D, Asteroid3D>;
-      ch[TYPE_ASTEROID3D | TYPE_BLASTERSHOT] = new Collision<Asteroid3D, BlasterShot>;
-      ch[TYPE_ASTEROID3D | TYPE_BEAMSHOT] = new Collision<Asteroid3D, BeamShot>;
-      ch[TYPE_ASTEROID3D | TYPE_TRACTORBEAMSHOT] = new Collision<Asteroid3D, TractorBeamShot>;
-      ch[TYPE_ASTEROID3D | TYPE_ELECTRICITYSHOT] = new Collision<Asteroid3D, ElectricityShot>;
-      ch[TYPE_ASTEROID3D | TYPE_ENERGYSHOT] = new Collision<Asteroid3D, EnergyShot>;
-      ch[TYPE_ASTEROID3D | TYPE_TIMEDBOMBSHOT] = new Collision<Asteroid3D, TimedBombShot>;
-      ch[TYPE_ASTEROID3D | TYPE_HOMINGMISSILESHOT] = new Collision<Asteroid3D, HomingMissileShot>;
-      ch[TYPE_ASTEROID3D | TYPE_SHARD] = new Collision<Asteroid3D, Shard>;
+      ch[(1 << TYPE_ASTEROID3D)] = new Collision<Asteroid3D, Asteroid3D>;
+      ch[(1 << TYPE_ASTEROID3D) | (1 << TYPE_BLASTERSHOT)] = new Collision<Asteroid3D, BlasterShot>;
+      ch[(1 << TYPE_ASTEROID3D) | (1 << TYPE_BEAMSHOT)] = new Collision<Asteroid3D, BeamShot>;
+      ch[(1 << TYPE_ASTEROID3D) | (1 << TYPE_TRACTORBEAMSHOT)] = new Collision<Asteroid3D, TractorBeamShot>;
+      ch[(1 << TYPE_ASTEROID3D) | (1 << TYPE_ELECTRICITYSHOT)] = new Collision<Asteroid3D, ElectricityShot>;
+      ch[(1 << TYPE_ASTEROID3D) | (1 << TYPE_ENERGYSHOT)] = new Collision<Asteroid3D, EnergyShot>;
+      ch[(1 << TYPE_ASTEROID3D) | (1 << TYPE_TIMEDBOMBSHOT)] = new Collision<Asteroid3D, TimedBombShot>;
+      ch[(1 << TYPE_ASTEROID3D) | (1 << TYPE_HOMINGMISSILESHOT)] = new Collision<Asteroid3D, HomingMissileShot>;
+      ch[(1 << TYPE_ASTEROID3D) | (1 << TYPE_SHARD)] = new Collision<Asteroid3D, Shard>;
 
       // Collisions for Shard
-      ch[TYPE_SHARD] = new Collision<Shard, Shard>;
-      ch[TYPE_SHARD | TYPE_TRACTORBEAMSHOT] = new Collision<Shard, TractorBeamShot>;
-      ch[TYPE_SHARD | TYPE_BEAMSHOT] = new Collision<Shard, BeamShot>;
-      ch[TYPE_SHARD | TYPE_TIMEDBOMBSHOT] = new Collision<Shard, TimedBombShot>;
-      ch[TYPE_SHARD | TYPE_HOMINGMISSILESHOT] = new Collision<Shard, HomingMissileShot>;
+      ch[(1 << TYPE_SHARD)] = new Collision<Shard, Shard>;
+      ch[(1 << TYPE_SHARD) | (1 << TYPE_TRACTORBEAMSHOT)] = new Collision<Shard, TractorBeamShot>;
+      ch[(1 << TYPE_SHARD) | (1 << TYPE_BEAMSHOT)] = new Collision<Shard, BeamShot>;
+      ch[(1 << TYPE_SHARD) | (1 << TYPE_TIMEDBOMBSHOT)] = new Collision<Shard, TimedBombShot>;
+      ch[(1 << TYPE_SHARD) | (1 << TYPE_HOMINGMISSILESHOT)] = new Collision<Shard, HomingMissileShot>;
       // Used to have a generic shot handler.
    }
 }
@@ -1086,7 +1086,7 @@ CollisionBase* Custodian::getCollision(Object3D* a, Object3D* b) {
    std::map<unsigned, CollisionBase*>::iterator curCollisionHandler;
    unsigned collisionHandlerKey;
    
-   collisionHandlerKey = a->type | b->type;
+   collisionHandlerKey = (1 << a->type) | (1 << b->type);
    curCollisionHandler = collisionHandlers->find(collisionHandlerKey);
    if (curCollisionHandler != collisionHandlers->end()) {
       curCollision = curCollisionHandler->second->tryExecute(a, b);
@@ -1212,7 +1212,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
       if (ent.id() < nextID) {
          // Must have deleted already. Ignore,
          // DEBUG
-         printf("Tried to add deleted object %u.\n", ent.id());
+         // printf("Tried to add deleted object %u.\n", ent.id());
          return NULL;
       }
 
@@ -1236,17 +1236,17 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
          case TYPE_ASTEROID3D:
             obj = new Asteroid3D(ent.radius(), gameState->worldSize, gameState, false);
             obj->load(ent);
-            std::cout << "Found Asteroid.\n";
+            //std::cout << "Found Asteroid.\n";
          break;
          case TYPE_ASTEROIDSHIP:
             obj = new AsteroidShip(gameState);
             obj->load(ent);
-            std::cout << "Found Ship.\n";
+            //std::cout << "Found Ship.\n";
          break;
          case TYPE_SHARD:
             obj = new Shard(0.5, gameState->worldSize, gameState);
             obj->load(ent);
-            std::cout << "Found Shard.\n";
+            //std::cout << "Found Shard.\n";
          break;
          case TYPE_BEAMSHOT:
          {
@@ -1257,7 +1257,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
 
             obj = new BeamShot(pos, dir, ent.weaponindex(), owner, gameState);
             obj->load(ent);
-            std::cout << "Found Beamshot.\n";
+            //std::cout << "Found Beamshot.\n";
          }
          break;
          case TYPE_BLASTERSHOT:
@@ -1282,7 +1282,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             obj = new ElectricityShot(pos, dir, ent.weaponindex(), owner, gameState);
 
             obj->load(ent);
-            std::cout << "Found Electricity shot.\n";
+            //std::cout << "Found Electricity shot.\n";
          }
          break;
          case TYPE_ENERGYSHOT:
@@ -1295,7 +1295,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             obj = new EnergyShot(pos, dir, ent.weaponindex(), owner, gameState);
 
             obj->load(ent);
-            std::cout << "Found Energyshot.\n";
+            //std::cout << "Found Energyshot.\n";
          }
          break;
          case TYPE_HOMINGMISSILESHOT:
@@ -1308,7 +1308,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             obj = new HomingMissileShot(pos, dir, ent.weaponindex(), owner, gameState);
 
             obj->load(ent);
-            std::cout << "Found Homing Missile shot.\n";
+            // std::cout << "Found Homing Missile shot.\n";
          }
          break;
          case TYPE_TIMEDBOMBSHOT:
@@ -1321,7 +1321,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             obj = new TimedBombShot(pos, dir, ent.weaponindex(), owner, gameState);
 
             obj->load(ent);
-            std::cout << "Found Timed Bomb shot.\n";
+            //std::cout << "Found Timed Bomb shot.\n";
          }
          break;
          case TYPE_TRACTORBEAMSHOT:
@@ -1334,7 +1334,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
             obj = new TractorBeamShot(pos, dir, ent.weaponindex(), owner, gameState);
 
             obj->load(ent);
-            std::cout << "Found Tractor Beam shot.\n";
+            //std::cout << "Found Tractor Beam shot.\n";
          }
          break;
          default:
@@ -1342,7 +1342,7 @@ Object3D* Custodian::updateObjectFromEntity(const ast::Entity& ent) {
       }
       if (obj != NULL) {
          add(obj);
-         std::cout << "Adding object " << obj->id << ".\n";
+         // std::cout << "Adding object " << obj->id << ".\n";
       } else {
          std::cout << "NULL OBJECT!\n";
       }
