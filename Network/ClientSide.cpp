@@ -85,6 +85,12 @@ void ClientSide::receive() {
    } while (result > 0);
 }
 
+void ClientSide::disconnect() {
+   // 0 is "data" to send with the disconnection.
+   enet_peer_disconnect(server, 0);
+   enet_host_flush(client);
+}
+
 void ClientSide::connect(char* stringAddr) {
    enet_address_set_host(serverAddress, stringAddr);
    serverAddress->port = NET_PORT;

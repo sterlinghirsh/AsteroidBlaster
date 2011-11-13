@@ -488,6 +488,11 @@ int main(int argc, char* argv[]) {
       }
    }
 
+   // Closing up!
+   if (_gsm == ClientMode) {
+      gameState->disconnect();
+   }
+
    glDeleteFramebuffersEXT(1, &fbo);
    glDeleteRenderbuffersEXT(1, &depthbuffer);
 

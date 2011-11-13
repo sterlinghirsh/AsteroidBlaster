@@ -60,6 +60,8 @@ void ServerSide::receive() {
          // If a new packet came in.
          if (event->type == ENET_EVENT_TYPE_DISCONNECT) {
             cout << "Client disconnected. No big." << endl;
+            ClientInfo* curClient =(ClientInfo*) event->peer->data;
+            gameState->removeNetworkPlayer(curClient->shipid);
             // I guess this is how you do it?
             event->peer->data = NULL;
          }
@@ -68,7 +70,8 @@ void ServerSide::receive() {
             cout << "Client connected! That's normal." << endl;
 
             unsigned shipid = gameState->addNetworkPlayer(event->peer->connectID);
-            clients[event->peer->connectID] = new ClientInfo(shipid, event->peer);
+            event->peer->data = clients[event->peer->connectID] = 
+             new ClientInfo(shipid, event->peer);
 
             cout << "Adding ship with clientid " << event->peer->connectID << 
                " and id " << shipid << "." << endl;

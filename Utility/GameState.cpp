@@ -1809,6 +1809,13 @@ void GameState::connect(char* addr) {
    clientSide->connect(addr);
 }
 
+void GameState::disconnect() {
+   if (gsm == ClientMode) {
+      printf("Disconnecting.\n");
+      clientSide->disconnect();
+   }
+}
+
 /**
  * This is executed server side when a new command comes in.
  */
@@ -1914,4 +1921,11 @@ void GameState::setShip(AsteroidShip* newShip) {
 
    spring->attach(ship, shipCamera);
    usingShipCamera = true;
+}
+
+void GameState::removeNetworkPlayer(unsigned shipid) {
+   Object3D* ship = custodian[shipid];
+   if (ship != NULL) {
+      ship->shouldRemove = true;
+   }
 }

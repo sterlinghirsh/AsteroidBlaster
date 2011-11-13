@@ -142,6 +142,7 @@ class GameState : public InputReceiver {
       void updateGameTime(double timeDiff);
 
       void connect(char* addr);
+      void disconnect();
 
       void setShip(AsteroidShip* newShip);
 
@@ -209,6 +210,7 @@ class GameState : public InputReceiver {
       
       void addAIPlayer();
       unsigned addNetworkPlayer(unsigned clientID);
+      void removeNetworkPlayer(unsigned shipid);
       
       void serialize(std::ostream &oss);
       void deserialize(std::istream &iss);

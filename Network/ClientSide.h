@@ -21,6 +21,7 @@ class ClientSide {
       ~ClientSide();
 
       void connect(char* stringAddr);
+      void disconnect();
       
       void receive();
       void send(const ast::ClientCommand& clientcommand, bool reliable);
