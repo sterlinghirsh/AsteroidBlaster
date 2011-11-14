@@ -71,6 +71,7 @@ class Asteroid3D : public Object3D {
       virtual void onRemove();
       
       virtual void save(ast::Entity* ent);
+      virtual bool saveDiff(const ast::Entity& old, ast::Entity* t);
       virtual void load(const ast::Entity& ent);
       
    //private functions------------------------------

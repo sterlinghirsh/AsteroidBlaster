@@ -387,7 +387,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027Network/gamestate.proto\022\003ast\")\n\006Vector"
-    "\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\t\n\001z\030\003 \002(\001\"\253\n\n\006En"
+    "\022\t\n\001x\030\001 \001(\001\022\t\n\001y\030\002 \001(\001\022\t\n\001z\030\003 \001(\001\"\253\n\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
     "\013.ast.Vector\022\033\n\006weapon\030\005 \003(\0132\013.ast.Weapo"
@@ -566,7 +566,7 @@ bool Vector::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required double x = 1;
+      // optional double x = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
@@ -581,7 +581,7 @@ bool Vector::MergePartialFromCodedStream(
         break;
       }
       
-      // required double y = 2;
+      // optional double y = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
@@ -597,7 +597,7 @@ bool Vector::MergePartialFromCodedStream(
         break;
       }
       
-      // required double z = 3;
+      // optional double z = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
@@ -631,17 +631,17 @@ bool Vector::MergePartialFromCodedStream(
 
 void Vector::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required double x = 1;
+  // optional double x = 1;
   if (has_x()) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(1, this->x(), output);
   }
   
-  // required double y = 2;
+  // optional double y = 2;
   if (has_y()) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->y(), output);
   }
   
-  // required double z = 3;
+  // optional double z = 3;
   if (has_z()) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(3, this->z(), output);
   }
@@ -654,17 +654,17 @@ void Vector::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Vector::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required double x = 1;
+  // optional double x = 1;
   if (has_x()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(1, this->x(), target);
   }
   
-  // required double y = 2;
+  // optional double y = 2;
   if (has_y()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->y(), target);
   }
   
-  // required double z = 3;
+  // optional double z = 3;
   if (has_z()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(3, this->z(), target);
   }
@@ -680,17 +680,17 @@ int Vector::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required double x = 1;
+    // optional double x = 1;
     if (has_x()) {
       total_size += 1 + 8;
     }
     
-    // required double y = 2;
+    // optional double y = 2;
     if (has_y()) {
       total_size += 1 + 8;
     }
     
-    // required double z = 3;
+    // optional double z = 3;
     if (has_z()) {
       total_size += 1 + 8;
     }
@@ -748,7 +748,6 @@ void Vector::CopyFrom(const Vector& from) {
 }
 
 bool Vector::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
   
   return true;
 }
@@ -3212,29 +3211,8 @@ void Entity::CopyFrom(const Entity& from) {
 
 bool Entity::IsInitialized() const {
   
-  if (has_position()) {
-    if (!this->position().IsInitialized()) return false;
-  }
-  if (has_velocity()) {
-    if (!this->velocity().IsInitialized()) return false;
-  }
   for (int i = 0; i < weapon_size(); i++) {
     if (!this->weapon(i).IsInitialized()) return false;
-  }
-  if (has_up()) {
-    if (!this->up().IsInitialized()) return false;
-  }
-  if (has_right()) {
-    if (!this->right().IsInitialized()) return false;
-  }
-  if (has_forward()) {
-    if (!this->forward().IsInitialized()) return false;
-  }
-  if (has_axis()) {
-    if (!this->axis().IsInitialized()) return false;
-  }
-  if (has_shotdirection()) {
-    if (!this->shotdirection().IsInitialized()) return false;
   }
   return true;
 }

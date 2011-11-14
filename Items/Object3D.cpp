@@ -33,11 +33,11 @@ Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState),
    forward = new Vector3D(0, 0, 1);
    lockUpVector = false;
    yawSpeed = pitchSpeed = rollSpeed = 0;
-   radius = std::max(fabs(maxX), fabs(minX));
-   radius = std::max(radius, fabs(maxY));
-   radius = std::max(radius, fabs(minY));
-   radius = std::max(radius, fabs(maxZ));
-   radius = std::max(radius, fabs(minZ));
+   radius = std::max((float) fabs(maxX), (float) fabs(minX));
+   radius = std::max(radius, (float) fabs(maxY));
+   radius = std::max(radius, (float) fabs(minY));
+   radius = std::max(radius, (float) fabs(maxZ));
+   radius = std::max(radius, (float) fabs(minZ));
    targeted = false;
    rotationSpeed = 0;
 }
@@ -292,12 +292,18 @@ bool Object3D::saveDiff(const ast::Entity& old, ast::Entity* ent) {
 
    if (!position->saveDiff(old.position(), ent->mutable_position()))
       ent->clear_position();
+   else
+      somethingChanged = true;
 
    if (!velocity->saveDiff(old.velocity(), ent->mutable_velocity()))
       ent->clear_velocity();
+   else
+      somethingChanged = true;
 
-   if (shouldRemove != old.shouldremove())
+   if (shouldRemove != old.shouldremove()) {
       ent->set_shouldremove(shouldRemove);
+      somethingChanged = true;
+   }
 
    return somethingChanged;
 }

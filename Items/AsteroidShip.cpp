@@ -2132,11 +2132,175 @@ double AsteroidShip::getBankPeriod() {
    return ((double)bankPeriod) / ((double)bankLevel+1);
 }
 
+bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
+   bool changed = Object3D::saveDiff(old, ent);
+   
+   if (!up->saveDiff(old.up(), ent->mutable_up()))
+      ent->clear_up();
+   else
+      changed = true;
+   
+   if (!forward->saveDiff(old.forward(), ent->mutable_forward()))
+      ent->clear_forward();
+   else
+      changed = true;
+   
+   if (!right->saveDiff(old.right(), ent->mutable_right()))
+      ent->clear_right();
+   else
+      changed = true;
+   
+   if (!shotDirection.saveDiff(old.shotdirection(), ent->mutable_shotdirection()))
+      ent->clear_shotdirection();
+   else
+      changed = true;
+
+   if (!bankTimer.saveDiff(old.banktimer(), ent->mutable_banktimer())) {
+      ent->clear_banktimer();
+   }
+   if (!aliveTimer.saveDiff(old.alivetimer(), ent->mutable_alivetimer())) {
+      ent->clear_alivetimer();
+   }
+   if (!respawnTimer.saveDiff(old.respawntimer(), ent->mutable_respawntimer())) {
+      ent->clear_respawntimer();
+   }
+
+   // Handle weapons.
+   for (int i = 0; i < NUMBER_OF_WEAPONS; ++i) {
+      if (!getWeapon(i)->saveDiff(old.weapon(i), ent->add_weapon()))
+         ent->mutable_weapon()->RemoveLast();
+      else
+         changed = true;
+   }
+
+
+   if (targetRollSpeed != old.targetrollspeed()) {
+      ent->set_targetrollspeed(targetRollSpeed);
+      changed = true;
+   }
+
+   if (targetYawSpeed != old.targetyawspeed()) {
+      ent->set_targetyawspeed(targetYawSpeed);
+      changed = true;
+   }
+
+   if (targetPitchSpeed != old.targetpitchspeed()) {
+      ent->set_targetpitchspeed(targetPitchSpeed);
+      changed = true;
+   }
+
+
+   if (health != old.health()) {
+      ent->set_health(health);
+      changed = true;
+   }
+
+   if (healthMax != old.healthmax()) {
+      ent->set_healthmax(healthMax);
+      changed = true;
+   }
+
+   
+   if (engineLevel != old.enginelevel()) {
+      ent->set_enginelevel(engineLevel);
+      changed = true;
+   }
+
+   if (regenHealthLevel != old.regenhealthlevel()) {
+      ent->set_regenhealthlevel(regenHealthLevel);
+      changed = true;
+   }
+
+   if (bankLevel != old.banklevel()) {
+      ent->set_banklevel(bankLevel);
+      changed = true;
+   }
+
+   if (color1 != old.color1()) {
+      ent->set_color1(color1);
+      changed = true;
+   }
+
+   if (color2 != old.color2()) {
+      ent->set_color2(color2);
+      changed = true;
+   }
+
+   
+   if (bankPeriod != old.bankperiod()) {
+      ent->set_bankperiod(bankPeriod);
+      changed = true;
+   }
+
+   
+   if (flyingAI->isEnabled() != old.flyingaienabled()) {
+      ent->set_flyingaienabled(flyingAI->isEnabled());
+      changed = true;
+   }
+   
+   if (shooter->isEnabled() != old.shootingaienabled()) {
+      ent->set_shootingaienabled(shooter->isEnabled());
+      changed = true;
+   }
+
+   
+   if (timeLeftToRespawn != old.timelefttorespawn()) {
+      ent->set_timelefttorespawn(timeLeftToRespawn);
+      changed = true;
+   }
+   
+   if (score != old.score()) {
+      ent->set_score(score);
+      changed = true;
+   }
+
+   if (kills != old.kills()) {
+      ent->set_kills(kills);
+      changed = true;
+   }
+
+   if (deaths != old.deaths()) {
+      ent->set_deaths(deaths);
+      changed = true;
+   }
+
+   if (lives != old.lives()) {
+      ent->set_lives(lives);
+      changed = true;
+   }
+
+   if (bankedShards != old.bankedshards()) {
+      ent->set_bankedshards(bankedShards);
+      changed = true;
+   }
+
+   if (unbankedShards != old.unbankedshards()) {
+      ent->set_unbankedshards(unbankedShards);
+      changed = true;
+   }
+
+   if (totalBankedShards != old.totalbankedshards()) {
+      ent->set_totalbankedshards(totalBankedShards);
+      changed = true;
+   }
+
+
+   return changed;
+}
+
 void AsteroidShip::save(ast::Entity* ent) {
    Object3D::save(ent);
+   // TODO: Only save two of these and calc the third?
    up->save(ent->mutable_up());
    forward->save(ent->mutable_forward());
    right->save(ent->mutable_right());
+   
+   shotDirection.save(ent->mutable_shotdirection());
+   
+   bankTimer.save(ent->mutable_banktimer());
+   aliveTimer.save(ent->mutable_alivetimer());
+   respawnTimer.save(ent->mutable_respawntimer());
+
    
    ast::Weapon* weap;
    for (int i = 0; i < NUMBER_OF_WEAPONS; ++i) {
@@ -2157,7 +2321,6 @@ void AsteroidShip::save(ast::Entity* ent) {
    ent->set_color1(color1);
    ent->set_color2(color2);
    
-   shotDirection.save(ent->mutable_shotdirection());
    ent->set_isfiring(isFiring);
    ent->set_currentweapon(currentWeapon);
    ent->set_isbarrelrollingleft(isBarrelRollingLeft);
@@ -2170,10 +2333,6 @@ void AsteroidShip::save(ast::Entity* ent) {
 
    ent->set_flyingaienabled(flyingAI->isEnabled());
    ent->set_shootingaienabled(shooter->isEnabled());
-
-   bankTimer.save(ent->mutable_banktimer());
-   aliveTimer.save(ent->mutable_alivetimer());
-   respawnTimer.save(ent->mutable_respawntimer());
 
    ent->set_timelefttorespawn(timeLeftToRespawn);
 

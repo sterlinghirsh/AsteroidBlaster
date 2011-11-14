@@ -374,7 +374,10 @@ void Vector3D::save(ast::Vector* vec) {
 }
 
 void Vector3D::load(const ast::Vector& vec) {
-   x = vec.x();
-   y = vec.y();
-   z = vec.z();
+   if (vec.has_x())
+      x = vec.x();
+   if (vec.has_y())
+      y = vec.y();
+   if (vec.has_z())
+      z = vec.z();
 }

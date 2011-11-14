@@ -99,21 +99,21 @@ class Vector : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // required double x = 1;
+  // optional double x = 1;
   inline bool has_x() const;
   inline void clear_x();
   static const int kXFieldNumber = 1;
   inline double x() const;
   inline void set_x(double value);
   
-  // required double y = 2;
+  // optional double y = 2;
   inline bool has_y() const;
   inline void clear_y();
   static const int kYFieldNumber = 2;
   inline double y() const;
   inline void set_y(double value);
   
-  // required double z = 3;
+  // optional double z = 3;
   inline bool has_z() const;
   inline void clear_z();
   static const int kZFieldNumber = 3;
@@ -2068,7 +2068,7 @@ class Frame : public ::google::protobuf::Message {
 
 // Vector
 
-// required double x = 1;
+// optional double x = 1;
 inline bool Vector::has_x() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2090,7 +2090,7 @@ inline void Vector::set_x(double value) {
   x_ = value;
 }
 
-// required double y = 2;
+// optional double y = 2;
 inline bool Vector::has_y() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -2112,7 +2112,7 @@ inline void Vector::set_y(double value) {
   y_ = value;
 }
 
-// required double z = 3;
+// optional double z = 3;
 inline bool Vector::has_z() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }

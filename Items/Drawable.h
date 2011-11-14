@@ -32,15 +32,15 @@ class Drawable {
       Custodian* custodian;
       
       unsigned type;
-      double radius; // TODO
+      float radius; // TODO
       bool shouldRemove; // True when custodian should remove this.
-      double cullRadius; // TODO
+      float cullRadius; // TODO
       bool shouldBeCulled; // Specifies whether or not this Object should be culled by VFC.
       unsigned int minXRank, maxXRank; // TODO
       bool shouldConstrain; // TODO
       bool shouldDrawInMinimap; // TODO
       // This might not belong here.
-      double minX, minY, minZ, maxX, maxY, maxZ;
+      float minX, minY, minZ, maxX, maxY, maxZ;
       
 
    //private variables------------------------------

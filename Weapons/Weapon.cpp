@@ -203,6 +203,14 @@ void Weapon::stopSounds() {
    // Do nothing.
 }
 
+bool Weapon::saveDiff(const ast::Weapon& old, ast::Weapon* weap) {
+   bool changed = false;
+   // TODO: actual diffing logic.
+   save(weap);
+   
+   return changed;
+}
+
 void Weapon::save(ast::Weapon* weap) {
    weap->set_index(index);
    activationTimer.save(weap->mutable_activationtimer());

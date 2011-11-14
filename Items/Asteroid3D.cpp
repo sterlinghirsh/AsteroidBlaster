@@ -518,6 +518,52 @@ void Asteroid3D::dropRandomItem() {
    }
 }
 
+bool Asteroid3D::saveDiff(const ast::Entity& old, ast::Entity* ent) {
+   bool somethingChanged = Object3D::saveDiff(old, ent);
+
+   if (radius != old.radius()) {
+      ent->set_radius(radius);
+      somethingChanged = true;
+   }
+
+   if (health != old.health()) {
+      ent->set_health(health);
+      somethingChanged = true;
+   }
+   
+   if (initH != old.healthmax()) {
+      ent->set_healthmax(initH);
+      somethingChanged = true;
+   }
+   
+   if (energyHitAsteroid != old.energyhit()) {
+      ent->set_energyhit(energyHitAsteroid);
+      somethingChanged = true;
+   }
+   
+   if (timeLastHitByEnergy != old.timelasthitbyenergy()) {
+      ent->set_timelasthitbyenergy(timeLastHitByEnergy);
+      somethingChanged = true;
+   }
+   
+   if (damagePerSecond != old.damagepersecond()) {
+      ent->set_damagepersecond(damagePerSecond);
+      somethingChanged = true;
+   }
+
+   if (releasedShards != old.releasedshards()) {
+      ent->set_releasedshards(releasedShards);
+      somethingChanged = true;
+   }
+   
+   if (rotationSpeed != old.rotationspeed()) {
+      ent->set_rotationspeed(rotationSpeed);
+      somethingChanged = true;
+   }
+
+   return somethingChanged;
+}
+
 void Asteroid3D::save(ast::Entity* ent) {
    Object3D::save(ent);
    ent->set_radius(radius);

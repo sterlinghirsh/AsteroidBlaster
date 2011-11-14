@@ -436,7 +436,7 @@ void GameState::update(double timeDiff) {
                frame.set_shipid(client->shipid);
                frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
             } else {
-               saveDiff(*(savedGameStates[gameStateId]), frame.mutable_gamestate());
+               saveDiff(*(savedGameStates[client->ackGameState]), frame.mutable_gamestate());
             }
 
             
@@ -1664,15 +1664,11 @@ void GameState::saveDiff(const ast::GameState& oldState, ast::GameState* newStat
             // Reset pointer just in case.
             oldEnt = NULL;
             continue;
-         }
-
-         if (oldEnt->id() == obj->id) {
+         } else if (oldEnt->id() == obj->id) {
             // This is the object we care about.
             ++curOldId;
             break;
-         }
-
-         if (oldEnt->id() > obj->id) {
+         } else if (oldEnt->id() > obj->id) {
             // We've gone too far!
             // We we should be able to add an object that we haven't already seen.
             // Kind of a weird error message, but it's unique.
@@ -1683,10 +1679,12 @@ void GameState::saveDiff(const ast::GameState& oldState, ast::GameState* newStat
          }
       }
 
-      if (oldEnt == NULL)
+      if (oldEnt == NULL) {
          obj->save(newEnt);
-      else if (!obj->saveDiff(*oldEnt, newEnt)) {
+      } else if (!obj->saveDiff(*oldEnt, newEnt)) {
          newState->mutable_entity()->RemoveLast();
+      } else {
+         assert(oldEnt->id() == newEnt->id());
       }
    }
 }
