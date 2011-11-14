@@ -54,7 +54,7 @@ void Energy::update(double timeDiff) {
 
    // Update the position of the charging shot.
    if (chargingShot != NULL) {
-      if (!chargingSoundPlaying) {
+      if (!chargingSoundPlaying && soundHandle == NULL) {
          soundHandle = SoundEffect::playSoundEffect("ChargeShotCharge", ship->position, ship->velocity, ship == ship->gameState->ship, ENERGY_SOUND_VOLUME);
 
          chargingSoundPlaying = true;
