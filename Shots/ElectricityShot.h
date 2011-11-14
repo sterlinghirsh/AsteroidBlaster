@@ -25,6 +25,7 @@ class ElectricityShot : public Shot {
       double length;
       bool hitYet;
       virtual void save(ast::Entity* ent);
+      virtual bool saveDiff(const ast::Entity& old, ast::Entity* ent);
       virtual void load(const ast::Entity& ent);
       void setPosAndDir(Vector3D& newPos, Vector3D& newDir);
       void setStrength(double strength);

@@ -191,6 +191,25 @@ void EnergyShot::updateChargeTime(double newChargeTime) {
    damagePerSecond = baseDamagePerSecond + baseDamagePerSecond * cappedSquaredChargeTime;
 }
 
+bool EnergyShot::saveDiff(const ast::Entity& old, ast::Entity* ent) {
+   bool changed = Shot::saveDiff(old, ent);
+   if (chargeTime != old.chargetime()) {
+      ent->set_chargetime(chargeTime);
+      changed = true;
+   }
+   
+   if (damagePerSecond != old.damagepersecond()) {
+      ent->set_damagepersecond(damagePerSecond);
+      changed = true;
+   }
+   
+   if (radius != old.radius()) {
+      ent->set_radius(radius);
+      changed = true;
+   }
+   return changed;
+}
+
 void EnergyShot::save(ast::Entity* ent) {
    Shot::save(ent);
    ent->set_chargetime(chargeTime);

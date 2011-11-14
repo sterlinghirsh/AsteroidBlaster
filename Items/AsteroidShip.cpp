@@ -2227,6 +2227,43 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    }
 
    
+   if (isFiring != old.isfiring()) {
+      ent->set_isfiring(isFiring);
+      changed = true;
+   }
+   
+   if (currentWeapon != old.currentweapon()) {
+      ent->set_currentweapon(currentWeapon);
+      changed = true;
+   }
+   
+   if (isBarrelRollingLeft != old.isbarrelrollingleft()) {
+      ent->set_isbarrelrollingleft(isBarrelRollingLeft);
+      changed = true;
+   }
+   
+   if (isBarrelRollingRight != old.isbarrelrollingright()) {
+      ent->set_isbarrelrollingright(isBarrelRollingRight);
+      changed = true;
+   }
+   
+   if (curForwardAccel != old.curforwardaccel()) {
+      ent->set_curforwardaccel(curForwardAccel);
+      changed = true;
+   }
+   
+   if (curUpAccel != old.curupaccel()) {
+      ent->set_curupaccel(curUpAccel);
+      changed = true;
+   }
+   
+   if (curRightAccel != old.currightaccel()) {
+      ent->set_currightaccel(curRightAccel);
+      changed = true;
+   }
+
+
+   
    if (bankPeriod != old.bankperiod()) {
       ent->set_bankperiod(bankPeriod);
       changed = true;

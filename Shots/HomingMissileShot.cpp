@@ -630,6 +630,29 @@ void HomingMissileShot::explode() {
    // set it as not collidable
 }
 
+bool HomingMissileShot::saveDiff(const ast::Entity& old, ast::Entity* ent) {
+   bool changed = Shot::saveDiff(old, ent);
+   
+   // Maybe make it calculate one from the others?
+   if (!up->saveDiff(old.up(), ent->mutable_up()))
+      ent->clear_up();
+   else
+      changed = true;
+   
+   if (!forward->saveDiff(old.forward(), ent->mutable_forward()))
+      ent->clear_forward();
+   else
+      changed = true;
+   
+   if (!right->saveDiff(old.right(), ent->mutable_right()))
+      ent->clear_right();
+   else
+      changed = true;
+
+
+   return changed;
+}
+
 void HomingMissileShot::save(ast::Entity* ent) {
    Shot::save(ent);
    

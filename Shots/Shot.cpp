@@ -102,11 +102,28 @@ double Shot::getDamage(Object3D* collidedObject) {
 void Shot::save(ast::Entity* ent) {
    Object3D::save(ent);
    ent->set_ownerid(ownerid);
-   ent->set_lifetime(lifetime);
    ent->set_timefired(timeFired);
    ent->set_weaponindex(weaponIndex);
-   ent->set_damage(damage);
 
+   ent->set_lifetime(lifetime);
+   ent->set_damage(damage);
+}
+
+bool Shot::saveDiff(const ast::Entity& old, ast::Entity* ent) {
+   bool changed = Object3D::saveDiff(old, ent);
+
+   // Ownerid, timefired, weaponindex never change.
+   if (lifetime != old.lifetime()) {
+      ent->set_lifetime(lifetime);
+      changed = true;
+   }
+   
+   if (damage != old.damage()) {
+      ent->set_damage(damage);
+      changed = true;
+   }
+
+   return changed;
 }
 
 void Shot::load(const ast::Entity& ent) {

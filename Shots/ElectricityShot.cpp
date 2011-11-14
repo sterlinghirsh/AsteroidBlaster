@@ -35,7 +35,6 @@ ElectricityShot::ElectricityShot(Point3D& posIn, Vector3D dirIn, int _weaponInde
    // Set endPoint2 100 units away.
    setPosAndDir(*position, *velocity);
 
-   timeFired = gameState->getGameTime();
    shouldConstrain = false;
    /* Make sure tractor beam shots aren't culled from the view frustum (necessary to make them appear)
    */
@@ -180,6 +179,17 @@ void ElectricityShot::setPosAndDir(Vector3D& newPos, Vector3D& newDir) {
 
 void ElectricityShot::setStrength(double strength) {
    damage = damageBase * strength;
+}
+
+bool ElectricityShot::saveDiff(const ast::Entity& old, ast::Entity* ent) {
+   bool changed = Shot::saveDiff(old, ent);
+   
+   if (length != old.length()) {
+      ent->set_length(length);
+      changed = true;
+   }
+
+   return changed;
 }
 
 void ElectricityShot::save(ast::Entity* ent) {

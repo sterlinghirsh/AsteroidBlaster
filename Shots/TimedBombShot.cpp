@@ -595,6 +595,17 @@ void TimedBombShot::onRemove() {
    SoundEffect::stopSoundEffect(soundHandle);
 }
 
+bool TimedBombShot::saveDiff(const ast::Entity& old, ast::Entity* ent) {
+   bool changed = Shot::saveDiff(old, ent);
+
+   if (timeSinceExploded != old.timesinceexploded()) {
+      ent->set_timesinceexploded(timeSinceExploded);
+      changed = true;
+   }
+
+   return changed;
+}
+
 void TimedBombShot::save(ast::Entity* ent) {
    Shot::save(ent);
 

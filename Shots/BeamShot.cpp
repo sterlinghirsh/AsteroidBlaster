@@ -64,7 +64,7 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShi
       maxY = std::max(endPoint1.y, endPoint2.y);
       minZ = std::min(endPoint1.z, endPoint2.z);
       maxZ = std::max(endPoint1.z, endPoint2.z);
-      timeFired = gameState->getGameTime();
+      
       //shouldConstrain = true;
       /* Make sure beam shots aren't culled from the view frustum (necessary to make them appear)
       */

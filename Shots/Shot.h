@@ -45,6 +45,7 @@ class Shot : public Object3D {
       virtual double getDamage(Object3D* collidedObject);
       
       virtual void save(ast::Entity* ent);
+      virtual bool saveDiff(const ast::Entity& old, ast::Entity* ent);
       virtual void load(const ast::Entity& ent);
 };
 

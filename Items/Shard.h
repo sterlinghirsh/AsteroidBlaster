@@ -56,6 +56,7 @@ class Shard : public Object3D {
    // Serialization
    public:
       virtual void save(ast::Entity* ent);
+      virtual bool saveDiff(const ast::Entity& old, ast::Entity* ent);
       virtual void load(const ast::Entity& ent);
 };
 

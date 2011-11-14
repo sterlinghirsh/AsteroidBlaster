@@ -219,6 +219,12 @@ void Shard::save(ast::Entity* ent) {
    Object3D::save(ent);
 }
 
+bool Shard::saveDiff(const ast::Entity& old, ast::Entity* ent) {
+   // This is here for easy extensibility.
+   bool changed = Object3D::saveDiff(old, ent);
+   return changed;
+}
+
 void Shard::load(const ast::Entity& ent) {
    Object3D::load(ent);
 }
