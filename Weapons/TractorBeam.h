@@ -23,7 +23,9 @@ class TractorBeam : public Weapon {
       virtual void debug();
       virtual void fire();
       virtual void stopSounds();
+
       virtual void save(ast::Weapon* weap);
+      virtual bool saveDiff(const ast::Weapon& old, ast::Weapon* weap);
       virtual void load(const ast::Weapon& weap);
    private:
       long unsigned int lastFiredFrame;

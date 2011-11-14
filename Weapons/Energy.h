@@ -28,6 +28,7 @@ class Energy : public Weapon {
       virtual void stopSounds();
       
       virtual void save(ast::Weapon* weap);
+      virtual bool saveDiff(const ast::Weapon& old, ast::Weapon* weap);
       virtual void load(const ast::Weapon& weap);
 
    protected:

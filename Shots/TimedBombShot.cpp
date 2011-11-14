@@ -544,10 +544,7 @@ void TimedBombShot::update(double timeDiff) {
     */
    if (isExploded && timeSinceExploded < 0) {
       shouldRemove = true;
-   }
-   
-   if (timeSinceExploded > 0 && timeSinceExploded < .6)
-      isExploded = true;
+   } 
 
    // If the bomb should explode this frame and has not already, then explode.
    // If more time has passed than the bomb's timeToExplode, blow it up.
@@ -555,7 +552,7 @@ void TimedBombShot::update(double timeDiff) {
      gameState->getGameTime() - timeFired > timeToExplode) && 
     !isExploded && timeSinceExploded < .6) {
       timeSinceExploded = 1;
-      //isExploded = true;
+      isExploded = true;
       //explode();
       SoundEffect::stopSoundEffect(soundHandle);
       SoundEffect::playSoundEffect("TimedBombExplosion", position, NULL, false, 1.0f);

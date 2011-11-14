@@ -107,6 +107,17 @@ void TractorBeam::stopSounds() {
    }
 }
 
+bool TractorBeam::saveDiff(const ast::Weapon& old, ast::Weapon* weap) {
+   bool changed = Weapon::saveDiff(old, weap);
+   
+   if (shotid != old.shotid()) {
+      weap->set_shotid(shotid);
+      changed = true;
+   }
+
+   return changed;
+}
+
 void TractorBeam::save(ast::Weapon* weap) {
    Weapon::save(weap);
    weap->set_shotid(shotid);

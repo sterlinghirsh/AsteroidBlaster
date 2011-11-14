@@ -205,8 +205,63 @@ void Weapon::stopSounds() {
 
 bool Weapon::saveDiff(const ast::Weapon& old, ast::Weapon* weap) {
    bool changed = false;
-   // TODO: actual diffing logic.
-   save(weap);
+   // Always.
+   weap->set_index(index);
+
+   if (!activationTimer.saveDiff(old.activationtimer(), weap->mutable_activationtimer()))
+      weap->clear_activationtimer();
+   else
+      changed = true;
+   
+   if (timeLastFired != old.timelastfired()) {
+      weap->set_timelastfired(timeLastFired);
+      changed = true;
+   }
+
+   if (coolDown != old.cooldown()) {
+      weap->set_cooldown(coolDown);
+      changed = true;
+   }
+   
+   if (damage != old.damage()) {
+      weap->set_damage(damage);
+      changed = true;
+   }
+   
+   if (currentHeat != old.currentheat()) {
+      weap->set_currentheat(currentHeat);
+      changed = true;
+   }
+   
+   if (purchased != old.purchased()) {
+      weap->set_purchased(purchased);
+      changed = true;
+   }
+   
+   if (weaponPrice != old.weaponprice()) {
+      weap->set_weaponprice(weaponPrice);
+      changed = true;
+   }
+   
+   if (level != old.level()) {
+      weap->set_level(level);
+      changed = true;
+   }
+   
+   if (range != old.range()) {
+      weap->set_range(range);
+      changed = true;
+   }
+   
+   if (overheatLevel != old.overheatlevel()) {
+      weap->set_overheatlevel(overheatLevel);
+      changed = true;
+   }
+   
+   if (heatPerShot != old.heatpershot()) {
+      weap->set_heatpershot(heatPerShot);
+      changed = true;
+   }
    
    return changed;
 }

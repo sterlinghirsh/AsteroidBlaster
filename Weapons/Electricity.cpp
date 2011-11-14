@@ -151,6 +151,27 @@ double Electricity::getCoolDownAmount() {
    return 1 - clamp(currentHeat / overheatLevel, 0, 1);
 }
 
+bool Electricity::saveDiff(const ast::Weapon& old, ast::Weapon* weap) {
+   bool changed = Weapon::saveDiff(old, weap);
+
+   if (shotsFired != old.shotsfired()) {
+      weap->set_shotsfired(shotsFired);
+      changed = true;
+   }
+   
+   if (timeStartedFiring != old.timestartedfiring()) {
+      weap->set_timestartedfiring(timeStartedFiring);
+      changed = true;
+   }
+
+   if (shotid != old.shotid()) {
+      weap->set_shotid(shotid);
+      changed = true;
+   }
+
+   return changed;
+}
+
 void Electricity::save(ast::Weapon* weap) {
    Weapon::save(weap);
    weap->set_shotsfired(shotsFired);

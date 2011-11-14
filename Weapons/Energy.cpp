@@ -209,6 +209,22 @@ void Energy::stopSounds() {
    }
 }
 
+bool Energy::saveDiff(const ast::Weapon& old, ast::Weapon* weap) {
+   bool changed = Weapon::saveDiff(old, weap);
+
+   if (chargingShotid != old.shotid()) {
+      weap->set_shotid(chargingShotid);
+      changed = true;
+   }
+
+   if (chargeStartTime != old.chargestarttime()) {
+      weap->set_chargestarttime(chargeStartTime);
+      changed = true;
+   }
+   
+   return changed;
+}
+
 void Energy::save(ast::Weapon* weap) {
    Weapon::save(weap);
    weap->set_shotid(chargingShotid);

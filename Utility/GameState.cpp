@@ -1629,7 +1629,7 @@ void GameState::saveDiff(const ast::GameState& oldState, ast::GameState* newStat
 
    newState->set_gametime(getGameTime()); // Always changes.
 
-   if (oldState.curlevel() == curLevel)
+   if (oldState.curlevel() != curLevel)
       newState->set_curlevel(curLevel);
    
    newState->set_id(curGameStateId);
