@@ -9,6 +9,7 @@
 ClientInfo::ClientInfo(unsigned _shipid, _ENetPeer* _client) :
    shipid(_shipid), 
    ackGameState(0),
-   client(_client) {
+   client(_client),
+   connected(true) {
    // Nothing to do.
 }

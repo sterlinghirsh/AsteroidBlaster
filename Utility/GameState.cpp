@@ -423,20 +423,26 @@ void GameState::update(double timeDiff) {
          sendReliable = false;
          if (clientIter->second == NULL) {
             clients.erase(clientIter);
+         } else if (!clientIter->second->connected) {
+            delete clientIter->second;
+            clients.erase(clientIter);
          } else {
             ClientInfo* client = clientIter->second;
-            frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
 
             if (client->ackGameState == 0) {
                // Send the initial update.
                sendReliable = true;
                // No diff.
                frame.set_shipid(client->shipid);
+               frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
+            } else {
+               saveDiff(*(savedGameStates[gameStateId]), frame.mutable_gamestate());
             }
 
             
             if (client->ackGameState != 0) {
-               for (unsigned i = client->ackGameState + 1; i <= gameStateId; ++i) {
+               unsigned i;
+               for (i = client->ackGameState + 1; i <= gameStateId; ++i) {
                   if (savedCollisionMessages[i] != NULL)
                      frame.add_collision_message()->CopyFrom(*(savedCollisionMessages[i]));
                }
@@ -1615,16 +1621,18 @@ void GameState::debugPosition() {
  * We're going to overwrite the gamestate we were passed in.
  */
 void GameState::saveDiff(const ast::GameState& oldState, ast::GameState* newState) {
-   newState->set_gametime(getGameTime()); // Always changes.
-
    if (gsm == SingleMode) {
       // We probably won't use ship->id when running a server.
       if (oldState.playership() != ship->id)
          newState->set_playership(ship->id);
    }
 
+   newState->set_gametime(getGameTime()); // Always changes.
+
    if (oldState.curlevel() == curLevel)
       newState->set_curlevel(curLevel);
+   
+   newState->set_id(curGameStateId);
    
    // This means if the leveltimer hasn't changed, clear it.
    // Sucks that we have to allocate then deallocate, but I can't think of a better way.
@@ -1696,7 +1704,6 @@ void GameState::saveToDisk() {
 }
 
 void GameState::save(ast::GameState* gs) {
-   // TODO: Make the typeids be sequential and do 1 << type when hashing for collisions.
    if (gsm == SingleMode) {
       gs->set_playership(ship->id);
    }

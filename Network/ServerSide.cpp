@@ -60,7 +60,8 @@ void ServerSide::receive() {
          // If a new packet came in.
          if (event->type == ENET_EVENT_TYPE_DISCONNECT) {
             cout << "Client disconnected. No big." << endl;
-            ClientInfo* curClient =(ClientInfo*) event->peer->data;
+            ClientInfo* curClient = (ClientInfo*) event->peer->data;
+            curClient->connected = false;
             gameState->removeNetworkPlayer(curClient->shipid);
             // I guess this is how you do it?
             event->peer->data = NULL;
@@ -86,8 +87,9 @@ void ServerSide::receive() {
             cc.ParseFromArray(event->packet->data, event->packet->dataLength);
             gameState->handleCommand(cc);
 
-            if (cc.has_lastreceivedgamestateid())
+            if (cc.has_lastreceivedgamestateid()) {
                clients[event->peer->connectID]->ackGameState = cc.lastreceivedgamestateid();
+            }
 
             //cout << "Packet received from client: " << (char*) event->packet->data << endl;
          }
@@ -106,6 +108,9 @@ void ServerSide::send(_ENetPeer* client, const ast::Frame& frame, bool reliable)
    if (!frame.SerializeToString(&outgoing)) {
       cerr << "Failed to serialize frame!" << endl;
    }
+
+   // DEBUG
+   //printf("Plen: %lu\n", outgoing.length());
 
    ENetPacket* packet = enet_packet_create(outgoing.c_str(), outgoing.length(), 
     reliable ? ENET_PACKET_FLAG_RELIABLE : 0);

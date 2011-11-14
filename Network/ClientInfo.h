@@ -15,6 +15,7 @@ class ClientInfo {
       unsigned shipid;
       unsigned ackGameState;
       _ENetPeer* client;
+      bool connected;
 };
 
 #endif
