@@ -177,7 +177,7 @@ GameState::GameState(GameStateMode _gsm) :
       mouseY = 0;
 
       // Make a good formula here for how many seconds a level should last.
-      levelDuration = 180;
+      levelDuration = 10;
 
       godMode = false;
 
@@ -237,6 +237,7 @@ void GameState::addAIPlayer() {
    otherShip->position->update(randX, randY, randZ);
    otherShip->flyingAI->enable();
    otherShip->shooter->enable();
+   otherShip->lives = 1;
    custodian.add(otherShip);
 }
 
@@ -309,7 +310,11 @@ void GameState::update(double timeDiff) {
       if (levelTimer.getTimeLeft() <= 6) {
          // Check if it is done waiting until going to the next level
          std::ostringstream gameMsg;
-         gameMsg << "Entering store in " << (int)levelTimer.getTimeLeft() << "...";
+         if (gsm == SingleMode) {
+            gameMsg << "Entering store in " << (int)levelTimer.getTimeLeft() << "...";
+         } else {
+            gameMsg << "Next level in " << (int)levelTimer.getTimeLeft() << "...";
+         }
          GameMessage::Add(gameMsg.str(), 30, 0);
       }
    }
@@ -896,25 +901,35 @@ void GameState::initAsteroids() {
 
    Asteroid3D* tempAsteroid;
 
+   /*
    std::set<CollisionBase*, compareByDistance>* collisions;
    std::set<CollisionBase*, compareByDistance>::iterator curCollision;
+   */
 
    /* We want this spaceHolder because we don't want to spawn asteroids
     * too close to the ship.
     */
    /* TODO: One of these should go around each ship. */
+   /*
    Object3D* spaceHolder = new Object3D(this);
    spaceHolder->minX = spaceHolder->minY = spaceHolder->minZ = -10;
    spaceHolder->maxX = spaceHolder->maxY = spaceHolder->maxZ = 10;
    custodian.add(spaceHolder);
 
    int numCollisions = 0;
-   double asteroidSize = 8;
    // Spawn the initial asteroids for the game.
+   */
+   double asteroidSize;
+   if (curLevel == 1)
+      asteroidSize = 5;
+   else
+      asteroidSize = 8;
+
    for (int i = 0; i < numAsteroidsToSpawn; ++i) {
       tempAsteroid = new Asteroid3D(asteroidSize, worldSize, this, true);
       // Add each asteroid to the custodian so we know of its existence.
       custodian.add(tempAsteroid);
+      /*
       do {
          custodian.update();
          collisions = custodian.findCollisions(tempAsteroid, true);
@@ -925,8 +940,11 @@ void GameState::initAsteroids() {
          // TODO: Fix memory leak.
          delete collisions;
       } while (numCollisions > 0);
+      */
    }
+   /*
    spaceHolder->shouldRemove = true;
+   */
    custodian.update();
 }
 
@@ -1151,7 +1169,9 @@ void GameState::nextLevel() {
    GameMessage::Clear();
 
    addLevelMessage();
-   addWarningMessage();
+   if (gsm == SingleMode) {
+      addWarningMessage();
+   }
 
    // Reset the ship's controls so that the ship isn't stuck moving in a direction
    resetClientCommand();
@@ -1974,7 +1994,6 @@ void GameState::testFunction() {
    
    if (ship != NULL) {
       ship->health = 1;
-      ship->lives = 1;
    }
 
 }

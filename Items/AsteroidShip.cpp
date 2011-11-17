@@ -25,6 +25,7 @@
 #define BOOST_SCALE 2.0
 
 #define SHOT_ANGLE_FACTOR ((M_PI/180) * VERT_FOV / 2)
+#define PLAYER_LIVES 2
 
 int TRACTOR_WEAPON_INDEX = 0;
 int BLASTER_WEAPON_INDEX = 0;
@@ -117,7 +118,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    score = 0;
    kills = 0;
    deaths = 0;
-   lives = 3;
+   lives = PLAYER_LIVES;
 
    lastDamagerId = -1;
    lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
@@ -539,11 +540,17 @@ void AsteroidShip::update(double timeDiff) {
                   (*iter)->update(timeDiff);
                }
                if (this == gameState->ship) {
-                  gameState->gameOver();
+                  if (gameState->gsm == SingleMode) {
+                     gameState->gameOver();
+                  }
+
                   gameState->usingShipCamera = false;
                   return;
                } else {
-                  shouldRemove = true;
+                  if (gameState->gsm == SingleMode || 
+                    shooter->isEnabled() || flyingAI->isEnabled()) {
+                     shouldRemove = true;
+                  }
                }
             }
          }
@@ -2004,9 +2011,11 @@ void AsteroidShip::readCommand(const ast::ClientCommand& command) {
  * This is called on the ship when the level ends.
  */
 void AsteroidShip::atLevelEnd() {
+   /*
    if (this == gameState->ship && unbankedShards > 0) {
       SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true, 0.8f);
    }
+   */
    if (gameState->gsm != ClientMode) {
       bankedShards += unbankedShards;
       totalBankedShards += unbankedShards;
@@ -2018,6 +2027,11 @@ void AsteroidShip::atLevelEnd() {
       timeLeftToRespawn = -1;
    }
    shakeAmount = 0;
+
+   if (gameState->gsm == ServerMode) {
+      // Give Player all lives back after each level.
+      lives = PLAYER_LIVES;
+   }
 
    stopSounds();
 }
