@@ -21,6 +21,7 @@ TimedBomber::TimedBomber(AsteroidShip* owner, int _index) : Weapon(owner, _index
    purchased = false;
 
    fireBackwards = false; // This used to be true for mine layer.
+   timeLastFired = owner->gameState->getGameTime() - coolDown;
 
    icon = "MineLayerIcon";
    r = 1;
@@ -54,7 +55,7 @@ void TimedBomber::fire() {
       Vector3D randomVariation;
 
       // Update timeLastFired with new current time.
-      timeLastFired = doubleTime();
+      timeLastFired = ship->gameState->getGameTime();
       // Copy the ship's position for the start point.
       Point3D start = ship->shotOrigin;
       // Copy the shot direction, set length to shotSpeed (since shotDirection is unit-length).

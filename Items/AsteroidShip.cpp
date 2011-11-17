@@ -502,6 +502,7 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
 
 void AsteroidShip::update(double timeDiff) {
    if (health <= 0) {
+      shouldDrawInMinimap = false;
       fire(false);
       setRollSpeed(0);
       accelerateForward(0);
@@ -570,16 +571,7 @@ void AsteroidShip::update(double timeDiff) {
          // Fix all the velocities with anything added from the killer.
          Object3D::update(timeDiff);       
 
-         // Make some sparkles when you die!~~~
-         for (int i = 0; i < 500; ++i) {
-            Point3D* particleStartPoint = new Point3D(*position);
-            Vector3D* particleDirection = new Vector3D();
-            particleDirection->randomMagnitude();
-            particleDirection->setLength(3 * randdouble());
-            particleDirection->addUpdate(velocity->scalarMultiply(randdouble()));
-            ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
-         }
-
+         createExplosionParticles();
          // Release all the shards.
          if (gameState->gsm != ClientMode) {
             while (unbankedShards > 0) {
@@ -620,6 +612,9 @@ void AsteroidShip::update(double timeDiff) {
          setRollSpeed(0.0);
          return;
       }
+   } else if (!shouldDrawInMinimap) {
+      // If health > 0.
+      shouldDrawInMinimap = true;
    }
 
    if (timeLeftToRespawn > 0 && (gameState->gsm != MenuMode)) {
@@ -1783,16 +1778,16 @@ void AsteroidShip::nextWeapon() {
 }
 
 int AsteroidShip::getNextWeaponID() {
-   unsigned thisWeapon = currentWeapon;
-   while (thisWeapon < weapons.size() - 1) {
-      if (weapons[thisWeapon + 1]->purchased) {
-         return thisWeapon + 1;
+   int thisWeapon = (currentWeapon + 1) % weapons.size();
+   while (thisWeapon != currentWeapon) {
+      if (weapons[thisWeapon]->purchased) {
+         return thisWeapon;
       } else {
          thisWeapon++;
       }
-   }
-   if (!weapons[thisWeapon]->purchased) {
-      thisWeapon = currentWeapon;
+      if (thisWeapon >= (int) weapons.size()) {
+         thisWeapon = 0;
+      }
    }
    return thisWeapon;
 }
@@ -1805,16 +1800,16 @@ void AsteroidShip::prevWeapon() {
 }
 
 int AsteroidShip::getPrevWeaponID() {
-   int thisWeapon = currentWeapon;
-   while (thisWeapon > 0) {
-      if (weapons[thisWeapon - 1]->purchased) {
-         return thisWeapon - 1;
+   int thisWeapon = (weapons.size() + currentWeapon - 1) % weapons.size();
+   while (thisWeapon != currentWeapon) {
+      if (weapons[thisWeapon]->purchased) {
+         return thisWeapon;
       } else {
          thisWeapon--;
       }
-   }
-   if (!weapons[thisWeapon]->purchased) {
-      thisWeapon = currentWeapon;
+      if (thisWeapon <= 0) {
+         thisWeapon = weapons.size() - 1;
+      }
    }
    return thisWeapon;
 }
@@ -2145,10 +2140,12 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    else
       changed = true;
    
+   /*
    if (!right->saveDiff(old.right(), ent->mutable_right()))
       ent->clear_right();
    else
       changed = true;
+      */
    
    if (!shotDirection.saveDiff(old.shotdirection(), ent->mutable_shotdirection()))
       ent->clear_shotdirection();
@@ -2330,7 +2327,9 @@ void AsteroidShip::save(ast::Entity* ent) {
    // TODO: Only save two of these and calc the third?
    up->save(ent->mutable_up());
    forward->save(ent->mutable_forward());
+   /*
    right->save(ent->mutable_right());
+   */
    
    shotDirection.save(ent->mutable_shotdirection());
    
@@ -2395,10 +2394,13 @@ void AsteroidShip::load(const ast::Entity& ent) {
 
    if (ent.has_forward())
       forward->load(ent.forward());
-   if (ent.has_right())
-      right->load(ent.right());
    if (ent.has_up())
       up->load(ent.up());
+   /*
+   if (ent.has_right())
+      right->load(ent.right());
+      */
+   *right = forward->cross(*up);
 
    if (ent.has_health())
       health = ent.health();
@@ -2487,3 +2489,19 @@ void AsteroidShip::load(const ast::Entity& ent) {
       totalBankedShards = ent.totalbankedshards();
 }
 
+void AsteroidShip::createExplosionParticles() {
+   // Make some sparkles when you die!~~~
+   for (int i = 0; i < 500; ++i) {
+      Point3D* particleStartPoint = new Point3D(*position);
+      Vector3D* particleDirection = new Vector3D();
+      particleDirection->randomMagnitude();
+      particleDirection->setLength(3 * randdouble());
+      particleDirection->addUpdate(velocity->scalarMultiply(randdouble()));
+      ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
+   }
+}
+
+void AsteroidShip::onRemove() {
+   Object3D::onRemove();
+   createExplosionParticles();
+}

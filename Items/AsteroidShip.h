@@ -146,6 +146,7 @@ class AsteroidShip : public Object3D {
       virtual void drawGlow() { draw(); };
       virtual void drawInMinimap();
       virtual void debug();
+      virtual void onRemove();
       
       bool isRespawning();
       
@@ -368,6 +369,8 @@ class AsteroidShip : public Object3D {
       void addNewParticle(Point3D& emitter, Vector3D& initialOffset, Vector3D& offsetDirectionX,
        Vector3D& offsetDirectionY, double color = 1.0);
       Shard* makeShard();
+
+      void createExplosionParticles();
 
 };
 

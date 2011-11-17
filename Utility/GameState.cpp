@@ -172,7 +172,7 @@ GameState::GameState(GameStateMode _gsm) :
       }
 
 
-      doYaw = 0;
+      doYaw = false;
       mouseX = 0;
       mouseY = 0;
 
@@ -183,6 +183,7 @@ GameState::GameState(GameStateMode _gsm) :
 
       // TODO: comment this or rename it.
       isW = isA = isS = isD = false;
+      isI = isJ = isK = isL = false;
 
       drawGraphics = true;
    }
@@ -936,7 +937,22 @@ void GameState::setCurFPS(double fpsIn) {
 void GameState::resetClientCommand() {
    // Do stuff.
    clientCommand.clear_forwardacceleration();
-   // TODO: More of this.
+   clientCommand.clear_rightacceleration();
+   clientCommand.clear_upacceleration();
+   clientCommand.clear_brake();
+   
+   clientCommand.clear_yawspeed();
+   clientCommand.clear_pitchspeed();
+   clientCommand.clear_rollspeed();
+
+   clientCommand.clear_fire();
+
+   clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
+
+   clientCommand.set_mousex(0);
+   clientCommand.set_mousey(0);
+
+   // Do we need to clear shipid and lastreceivedgamestateid?
 }
 
 /**
@@ -1105,8 +1121,7 @@ void GameState::nextLevel() {
    }
 
    setLevelTimer();
-
-   minimap = new Minimap(ship);
+   
    gameIsRunning = true;
    // The current level is over when we're advancing to the next level.
    levelOver = true;
@@ -1173,19 +1188,95 @@ void GameState::keyDown(int key, int unicode) {
 
       case SDLK_a:
          isA = true;
-         if (isD) {
-            clientCommand.set_yawspeed(0);
+         if (!doYaw) {
+            if (isD) {
+               clientCommand.set_yawspeed(0);
+            } else {
+               clientCommand.set_yawspeed(1.0);
+            }
          } else {
-            clientCommand.set_yawspeed(1.0);
+            if (isD) {
+               clientCommand.set_rollspeed(0);
+            } else {
+               clientCommand.set_rollspeed(-1.0);
+            }
          }
          break;
 
       case SDLK_d:
          isD = true;
-         if (isA) {
-            clientCommand.set_yawspeed(0);
+         if (!doYaw) {
+            if (isA) {
+               clientCommand.set_yawspeed(0);
+            } else {
+               clientCommand.set_yawspeed(-1.0);
+            }
          } else {
-            clientCommand.set_yawspeed(-1.0);
+            if (isA) {
+               clientCommand.set_rollspeed(0);
+            } else {
+               clientCommand.set_rollspeed(1.0);
+            }
+         }
+         break;
+
+      case SDLK_i:
+         clientCommand.set_mousex(0);
+         clientCommand.set_mousey(0);
+         isI = true;
+         if (isK) {
+            clientCommand.set_pitchspeed(0);
+         } else {
+            clientCommand.set_pitchspeed(1.0);
+         }
+         break;
+      
+      case SDLK_k:
+         clientCommand.set_mousex(0);
+         clientCommand.set_mousey(0);
+         isK = true;
+         if (isI) {
+            clientCommand.set_pitchspeed(0);
+         } else {
+            clientCommand.set_pitchspeed(-1.0);
+         }
+         break;
+      
+      case SDLK_j:
+         clientCommand.set_mousex(0);
+         clientCommand.set_mousey(0);
+         isJ = true;
+         if (doYaw) {
+            if (isL) {
+               clientCommand.set_yawspeed(0);
+            } else {
+               clientCommand.set_yawspeed(1.0);
+            }
+         } else {
+            if (isL) {
+               clientCommand.set_rollspeed(0);
+            } else {
+               clientCommand.set_rollspeed(-1.0);
+            }
+         }
+         break;
+      
+      case SDLK_l:
+         clientCommand.set_mousex(0);
+         clientCommand.set_mousey(0);
+         isL = true;
+         if (doYaw) {
+            if (isJ) {
+               clientCommand.set_yawspeed(0);
+            } else {
+               clientCommand.set_yawspeed(-1.0);
+            }
+         } else {
+            if (isJ) {
+               clientCommand.set_rollspeed(0);
+            } else {
+               clientCommand.set_rollspeed(1.0);
+            }
          }
          break;
 
@@ -1197,13 +1288,22 @@ void GameState::keyDown(int key, int unicode) {
          clientCommand.set_rightacceleration(1);
          break;
 
+         /*
       case SDLK_SPACE:
          clientCommand.set_upacceleration(1);
          break;
+         */
+      case SDLK_SPACE:
+         if (ship != NULL && !ship->shooter->isEnabled()) {
+            clientCommand.set_fire(true);
+         }
+         break;
 
+      /*
       case SDLK_LCTRL:
          clientCommand.set_upacceleration(-1);
          break;
+         */
 
       case SDLK_RSHIFT:
          doYaw = !doYaw;
@@ -1250,6 +1350,7 @@ void GameState::keyDown(int key, int unicode) {
 
       // AI controls
    if (ship != NULL) {
+         /*
       case SDLK_g:
          //TODO: Based on how many shooting AIs this ship has, activate the correct one.
          if(ship->shooter->isEnabled())
@@ -1269,23 +1370,28 @@ void GameState::keyDown(int key, int unicode) {
             ship->flyingAI->enable();
          }
          break;
+         */
 
 
          //switch weapons
       case SDLK_v:
+      case SDLK_u:
          // Keep scrolling through weapons as long as they're not purchased.
          clientCommand.set_curweapon(ship->getPrevWeaponID());
          break;
 
       case SDLK_z:
+      case SDLK_o:
          // Keep scrolling through weapons as long as they're not purchased.
          clientCommand.set_curweapon(ship->getNextWeaponID());
          break;
 
          // Enable chat.
+         /*
       case SDLK_j:
          chat->activate();
          break;
+         */
 
          // Minimap Display Size
       case SDLK_1:
@@ -1415,10 +1521,18 @@ void GameState::keyUp(int key) {
    case SDLK_a:
       isA = false;
       if(ship != NULL && !ship->flyingAI->isEnabled()) {
-         if (isD) {
-            clientCommand.set_yawspeed(-1.0);
+         if (!doYaw) {
+            if (isD) {
+               clientCommand.set_yawspeed(-1.0);
+            } else {
+               clientCommand.set_yawspeed(0);
+            }
          } else {
-            clientCommand.set_yawspeed(0);
+            if (isD) {
+               clientCommand.set_rollspeed(1.0);
+            } else {
+               clientCommand.set_rollspeed(0);
+            }
          }
       }
       break;
@@ -1426,13 +1540,85 @@ void GameState::keyUp(int key) {
    case SDLK_d:
       isD = false;
       if(ship != NULL && !ship->flyingAI->isEnabled()) {
-         if (isA) {
-            clientCommand.set_yawspeed(1.0);
+         if (!doYaw) {
+            if (isA) {
+               clientCommand.set_yawspeed(1.0);
+            } else {
+               clientCommand.set_yawspeed(0);
+            }
          } else {
-            clientCommand.set_yawspeed(0);
+            if (isA) {
+               clientCommand.set_rollspeed(-1.0);
+            } else {
+               clientCommand.set_rollspeed(0);
+            }
          }
       }
       break;
+
+
+   if (ship != NULL && !ship->flyingAI->isEnabled()) {
+      case SDLK_i:
+         clientCommand.set_mousex(0);
+         clientCommand.set_mousey(0);
+         isI = false;
+         if (isK) {
+            clientCommand.set_pitchspeed(-1.0);
+         } else {
+            clientCommand.set_pitchspeed(0);
+         }
+         break;
+      
+      case SDLK_k:
+         clientCommand.set_mousex(0);
+         clientCommand.set_mousey(0);
+         isK = false;
+         if (isI) {
+            clientCommand.set_pitchspeed(1.0);
+         } else {
+            clientCommand.set_pitchspeed(0);
+         }
+         break;
+      
+      case SDLK_j:
+         clientCommand.set_mousex(0);
+         clientCommand.set_mousey(0);
+         isJ = false;
+         if (doYaw) {
+            if (isL) {
+               clientCommand.set_yawspeed(-1.0);
+            } else {
+               clientCommand.set_yawspeed(0);
+            }
+         } else {
+            if (isL) {
+               clientCommand.set_rollspeed(1.0);
+            } else {
+               clientCommand.set_rollspeed(0);
+            }
+         }
+         break;
+      
+      case SDLK_l:
+         clientCommand.set_mousex(0);
+         clientCommand.set_mousey(0);
+         isL = false;
+         if (doYaw) {
+            if (isJ) {
+               clientCommand.set_yawspeed(1.0);
+            } else {
+               clientCommand.set_yawspeed(0);
+            }
+         } else {
+            if (isJ) {
+               clientCommand.set_rollspeed(-1.0);
+            } else {
+               clientCommand.set_rollspeed(0);
+            }
+         }
+         break;
+   }
+
 
    case SDLK_q:
    case SDLK_e:
@@ -1440,10 +1626,17 @@ void GameState::keyUp(int key) {
          clientCommand.set_rightacceleration(0);
       break;
 
+      /*
    case SDLK_SPACE:
    case SDLK_LCTRL:
       if(ship != NULL && !ship->flyingAI->isEnabled())
          clientCommand.set_upacceleration(0);
+      break;
+      */
+   case SDLK_SPACE:
+      if (ship != NULL && !ship->shooter->isEnabled()) {
+         clientCommand.set_fire(false);
+      }
       break;
 
 

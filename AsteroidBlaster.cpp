@@ -324,7 +324,7 @@ int main(int argc, char* argv[]) {
    char* dn = dirname(argv[0]);
    std::string bn = basename(dn);
    std::cout << bn << std::endl;
-   if (bn == "MacOS") {
+   if (bn.compare("MacOS") == 0) {
       // Go a dir up.
       chdir(dirname(dn));
    }

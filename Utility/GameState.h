@@ -110,6 +110,7 @@ class GameState : public InputReceiver {
       double shipControlX, shipControlY;
       int numAsteroidsToSpawn;
       bool isW, isA, isS, isD;
+      bool isI, isJ, isK, isL;
 
       // The number of seconds this level will last.
       double levelDuration;

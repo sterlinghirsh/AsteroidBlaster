@@ -34,9 +34,10 @@ void Spring::update(double ms) {
          displace.addUpdate(item->up->scalarMultiply(2.5));
          Vector3D springVector = displace.subtract(*item->position);
          double length = springVector.getLength();
-         if (length <= 0.001 && length >= -0.001) { return; }
-         Vector3D forceVector = springVector.scalarMultiply(ms * POS_FORCE_SCALE);
-         item->position->addUpdate(forceVector);
+         if (length >= 0.001 || length <= -0.001) {
+            Vector3D forceVector = springVector.scalarMultiply(ms * POS_FORCE_SCALE);
+            item->position->addUpdate(forceVector);
+         }
       }
    }
    // Connect the up vectors with a spring force.
@@ -45,9 +46,10 @@ void Spring::update(double ms) {
       Vector3D displace = *anchor->up;
       Vector3D springVector = displace.subtract(*item->up);
       double length = springVector.getLength();
-      if (length <= 0.001 && length >= -0.001) { return; }
-      Vector3D forceVector = springVector.scalarMultiply(ms * UP_FORCE_SCALE);
-      item->up->addUpdate(forceVector);
+      if (length >= 0.001 || length <= -0.001) {
+         Vector3D forceVector = springVector.scalarMultiply(ms * UP_FORCE_SCALE);
+         item->up->addUpdate(forceVector);
+      }
       /*
       double forceScalar = (length - normalLength) / normalLength;
       springVector.scalarMultiplyUpdate(1.0 / length);

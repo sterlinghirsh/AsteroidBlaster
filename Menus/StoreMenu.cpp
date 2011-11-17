@@ -382,6 +382,7 @@ void StoreMenu::keyDown(int key, int unicode) {
    //do nothing if main menu is active
    if(mainMenu->menuActive) { return; } 
    
+   /*
    if (key == SDLK_p)  {
       if(menuActive){
          SDL_ShowCursor(SDL_DISABLE);
@@ -399,6 +400,7 @@ void StoreMenu::keyDown(int key, int unicode) {
          gameState->pauseLevelTimer();
       }
    }
+   */
    if (!menuActive) { return; }
    
    switch(key) {
