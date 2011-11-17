@@ -39,6 +39,8 @@
 
 #include "SDL.h"
 
+#include <libgen.h>
+
 GameState* gameState;
 // the absolute time update was last called
 static double lastUpdateTime = 0;
@@ -316,6 +318,20 @@ void load() {
 int main(int argc, char* argv[]) {
    GameStateMode _gsm;
    bool badArugment = false;
+
+   // First check if we're on OSX and if we need to cd up a dir.
+#ifdef __APPLE__
+   char* dn = dirname(argv[0]);
+   std::string bn = basename(dn);
+   std::cout << bn << std::endl;
+   if (bn == "MacOS") {
+      // Go a dir up.
+      chdir(dirname(dn));
+   }
+   std::cout << getcwd(NULL, 0) << std::endl;
+
+#endif
+   std::cerr << "too far\n";
 
    if (argc == 1) {
       _gsm = SingleMode;

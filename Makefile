@@ -23,20 +23,21 @@ ifeq ($(UNAME), Linux)
    PROTOBUF_LIBS:=-Wl,-Bstatic $(shell "pkg-config" "--libs" "protobuf") -Wl,-Bdynamic
 else
    # Mac stuff
-   SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--libs")
+   #SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--static-libs") -lSDL_image -lSDL_ttf 
+   SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--static-libs") /sw/lib/libSDL_image.a /sw/lib/libSDL_ttf.a /sw/lib/libfreetype.a
    SDL_CFLAGS:=$(shell "/sw/bin/sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=-I /opt/local/include
-   PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -Wl -L$(FMODLIB_PATH) -lfmodex -lenet
+   PLATFORMSPECIFICLDFLAGS=-framework OpenGL -Wl,-framework,Cocoa -Wl -L$(FMODLIB_PATH) -lfmodex /usr/local/lib/libenet.a
    FMODLIB_NAME_RELEASE  = libfmodex.dylib
    FMODLIB_NAME_LOGGING  = libfmodexL.dylib
    INSTALL_NAME_TOOL_LINE = install_name_tool -change ./${FMODLIB_NAME_RELEASE} ${FMODLIB_PATH}/${FMODLIB_NAME_RELEASE} AsteroidBlaster
    PROTOBUF_CFLAGS:=-I/usr/local/include
-   PROTOBUF_LIBS:=-L/usr/local/lib -lprotobuf -lz
+   PROTOBUF_LIBS:=-L/usr/local/lib /usr/local/lib/libprotobuf.a -lz
 endif
 
 
 
-LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -lSDL_image -lSDL_ttf -g -O3 -Wall -Werror
+LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -g -O3 -Wall -Werror
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
@@ -46,6 +47,8 @@ CFLAGS:=$(PLATFORMSPECIFICCFLAGS) -I. -I Libraries/ -c $(SDL_CFLAGS) $(PROTOBUF_
 CC:=ccache g++
 
 PROGNAME:=AsteroidBlaster
+OSX_APP_NAME:=$(PROGNAME).app
+BUNDLE_CONTENTS=$(OSX_APP_NAME)/Contents
 
 UTILITYFILES:=Utility/Vector3D.cpp Utility/GameState.cpp Utility/Custodian.cpp Utility/InputManager.cpp Utility/Point3D.cpp Utility/Radar.cpp Utility/Quaternion.cpp Utility/ViewFrustum.cpp Utility/Matrix4.cpp Utility/GlobalUtility.cpp Utility/SoundEffect.cpp Utility/GameSettings.cpp Utility/CollisionTypes.cpp Utility/Timer.cpp
 
@@ -139,3 +142,21 @@ glc-play:
 glc-encode:
 	glc-play ${PROGNAME}.glc -y 1 -o - | mencoder -demuxer y4m - -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=1500 -o video.avi
 
+osx:
+	rm -r osxresult/
+	mkdir -p $(BUNDLE_CONTENTS)/MacOS
+	mkdir -p $(BUNDLE_CONTENTS)/Resources
+	mkdir -p $(BUNDLE_CONTENTS)/Frameworks
+	cp Libraries/fmod/libfmodex.dylib $(BUNDLE_CONTENTS)/Frameworks
+	echo "AAPL????" > $(BUNDLE_CONTENTS)/PkgInfo
+	cp $(PROGNAME) $(BUNDLE_CONTENTS)/MacOS/
+	cp -r Fonts $(BUNDLE_CONTENTS)/
+	cp -r Images $(BUNDLE_CONTENTS)/
+	cp -r Shaders $(BUNDLE_CONTENTS)/
+	cp -r Sounds $(BUNDLE_CONTENTS)/
+	install_name_tool -change $(FMODLIB_PATH)/$(FMODLIB_NAME_RELEASE) @executable_path/../Frameworks/$(FMODLIB_NAME_RELEASE) $(BUNDLE_CONTENTS)/MacOS/$(PROGNAME)
+	mkdir osxresult
+	mv $(OSX_APP_NAME) osxresult/
+
+runOsx:
+	open osxresult/$(OSX_APP_NAME)
