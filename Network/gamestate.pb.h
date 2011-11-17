@@ -629,6 +629,13 @@ class Entity : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 shardtype() const;
   inline void set_shardtype(::google::protobuf::uint32 value);
   
+  // optional uint32 weapNum = 74;
+  inline bool has_weapnum() const;
+  inline void clear_weapnum();
+  static const int kWeapNumFieldNumber = 74;
+  inline ::google::protobuf::uint32 weapnum() const;
+  inline void set_weapnum(::google::protobuf::uint32 value);
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -747,6 +754,8 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_releasedshards();
   inline void set_has_shardtype();
   inline void clear_has_shardtype();
+  inline void set_has_weapnum();
+  inline void clear_has_weapnum();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -809,9 +818,10 @@ class Entity : public ::google::protobuf::Message {
   float length_;
   ::google::protobuf::int32 releasedshards_;
   ::google::protobuf::uint32 shardtype_;
+  ::google::protobuf::uint32 weapnum_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(59 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(60 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -3517,6 +3527,28 @@ inline ::google::protobuf::uint32 Entity::shardtype() const {
 inline void Entity::set_shardtype(::google::protobuf::uint32 value) {
   set_has_shardtype();
   shardtype_ = value;
+}
+
+// optional uint32 weapNum = 74;
+inline bool Entity::has_weapnum() const {
+  return (_has_bits_[1] & 0x08000000u) != 0;
+}
+inline void Entity::set_has_weapnum() {
+  _has_bits_[1] |= 0x08000000u;
+}
+inline void Entity::clear_has_weapnum() {
+  _has_bits_[1] &= ~0x08000000u;
+}
+inline void Entity::clear_weapnum() {
+  weapnum_ = 0u;
+  clear_has_weapnum();
+}
+inline ::google::protobuf::uint32 Entity::weapnum() const {
+  return weapnum_;
+}
+inline void Entity::set_weapnum(::google::protobuf::uint32 value) {
+  set_has_weapnum();
+  weapnum_ = value;
 }
 
 // -------------------------------------------------------------------

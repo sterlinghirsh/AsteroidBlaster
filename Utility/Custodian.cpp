@@ -163,40 +163,54 @@ template<>
 void Collision<AsteroidShip, Shard>::handleCollision() {
    if (a->isRespawning()) { return;}
 
-   // TODO: Make the messages appear on the client side.
-   if (a->gameState->gsm != ClientMode) {
-      switch (b->shardType) {
-         case SHARD_TYPE_HEALTH:
+   switch (b->shardType) {
+      case SHARD_TYPE_HEALTH:
+         if (a->gameState->gsm != ClientMode) {
             a->health += 10;
             if (a->health > a->healthMax)
                a->health = a->healthMax;
-            break;
-         case SHARD_TYPE_WEAPON:
-            {
-               // Pick a random weapon. If it's purchased, levelup. Else, get it.
-               int startWeapNum = rand() % NUMBER_OF_WEAPONS;
-               int weapNum = (startWeapNum + 1) % NUMBER_OF_WEAPONS;
+         }
+         break;
+      case SHARD_TYPE_WEAPON:
+         {
+            // TODO: Messages from weapons.
+            // Pick a random weapon. If it's purchased, levelup. Else, get it.
+            int startWeapNum = rand() % NUMBER_OF_WEAPONS;
+            int weapNum = (startWeapNum + 1) % NUMBER_OF_WEAPONS;
 
+            Weapon* weapon;
+            if (a->gameState->gsm != ClientMode) {
                while (weapNum != startWeapNum) {
-                  Weapon* weapon = a->getWeapon(weapNum);
+                  weapon = a->getWeapon(weapNum);
                   if (!weapon->purchased) {
                      weapon->purchased = true;
-                     if (a == a->gameState->ship)
-                        a->gameState->addWeaponUnlockMessage(weapon);
                      break;
                   } else if (weapon->level < weapon->levelMax) {
                      weapon->level++;
-                     if (a == a->gameState->ship)
-                        a->gameState->addWeaponUnlockMessage(weapon);
                      break;
                   }
                   weapNum++;
                }
-               // If we get here, oh well.
+               // Send it to the client.
+               b->weapNum = weapNum;
+            } else {
+               weapNum = b->weapNum;
             }
-            break;
 
-         case SHARD_TYPE_REGEN:
+            if (a == a->gameState->ship) {
+               weapon = a->getWeapon(weapNum);
+               if (!weapon->purchased) {
+                  a->gameState->addWeaponUnlockMessage(weapon);
+               } else if (weapon->level < weapon->levelMax) {
+                  a->gameState->addWeaponUnlockMessage(weapon);
+               }
+            }
+            // If we get here, oh well.
+         }
+         break;
+
+      case SHARD_TYPE_REGEN:
+         if (a->gameState->gsm != ClientMode) {
             if (a->regenHealthLevel + 1 < a->regenHealthLevelMax()) {
                a->regenHealthLevel += 1;
 
@@ -206,53 +220,64 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
                   GameMessage::Add(gameMsg.str(), 30, 3);
                }
             }
-            break;
-
-         case SHARD_TYPE_ENGINE:
-            {
-               a->engineLevel += 1;
-               if (a == a->gameState->ship) {
-                  std::ostringstream gameMsg;
-                  gameMsg << "Unlocked Engine level " << a->engineLevel;
-                  GameMessage::Add(gameMsg.str(), 30, 3);
-               }
+         } else {
+            if (a == a->gameState->ship) {
+               std::ostringstream gameMsg;
+               gameMsg << "Unlocked Regen Health level " << a->regenHealthLevel;
+               GameMessage::Add(gameMsg.str(), 30, 3);
             }
-            break;
+         }
+         break;
 
-         case SHARD_TYPE_MAXHEALTH:
-            {
-               a->healthMax += 10;
-               a->health = a->healthMax;
-               
-               if (a == a->gameState->ship) {
-                  std::ostringstream gameMsg;
-                  gameMsg << "Shields upgraded to " << a->healthMax << "%";
-                  GameMessage::Add(gameMsg.str(), 30, 3);
-               }
-            }
-            break;
+      case SHARD_TYPE_ENGINE:
+         if (a->gameState->gsm != ClientMode) {
+            a->engineLevel += 1;
+         }
+         if (a == a->gameState->ship) {
+            std::ostringstream gameMsg;
+            gameMsg << "Unlocked Engine level " << a->engineLevel;
+            GameMessage::Add(gameMsg.str(), 30, 3);
+         }
+         break;
 
-         case SHARD_TYPE_LIFE:
-            {
-               a->buyLife();
+      case SHARD_TYPE_MAXHEALTH:
+         if (a->gameState->gsm != ClientMode) {
+            a->healthMax += 10;
+            a->health = a->healthMax;
+         }
+            
+         if (a == a->gameState->ship) {
+            std::ostringstream gameMsg;
+            gameMsg << "Shields upgraded to " << a->healthMax << "%";
+            GameMessage::Add(gameMsg.str(), 30, 3);
+         }
+         break;
 
-               if (a == a->gameState->ship) {
-                  std::ostringstream gameMsg;
-                  gameMsg << "Extra Life!";
-                  GameMessage::Add(gameMsg.str(), 30, 3);
-               }
-            }
-            break;
-         
-         case SHARD_TYPE_MONEY:
-         default:
+      case SHARD_TYPE_LIFE:
+         if (a->gameState->gsm != ClientMode) {
+            a->lives++;
+         }
+
+         if (a == a->gameState->ship) {
+            std::ostringstream gameMsg;
+            gameMsg << "Extra Life!";
+            GameMessage::Add(gameMsg.str(), 30, 3);
+         }
+         break;
+      
+      case SHARD_TYPE_MONEY:
+      default:
+         if (a->gameState->gsm != ClientMode) {
             a->health += 10;
             if (a->health > a->healthMax)
                a->health = a->healthMax;
 
             a->unbankedShards++;
             a->score += 69;
-      }
+         }
+   }
+
+   if (a->gameState->gsm != ClientMode) {
       b->shouldRemove = true;
    }
    

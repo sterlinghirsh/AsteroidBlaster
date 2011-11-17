@@ -92,6 +92,7 @@ void Shard::InitShard(double r, double worldSizeIn) {
          shardType = SHARD_TYPE_HEALTH;
       }
    }
+   weapNum = 0;
 }
 
 void Shard::drawOtherOrbiters() {
@@ -267,6 +268,7 @@ void Shard::debug() {
 void Shard::save(ast::Entity* ent) {
    Object3D::save(ent);
    ent->set_shardtype(shardType);
+   ent->set_weapnum(weapNum);
 }
 
 bool Shard::saveDiff(const ast::Entity& old, ast::Entity* ent) {
@@ -278,6 +280,11 @@ bool Shard::saveDiff(const ast::Entity& old, ast::Entity* ent) {
       ent->set_shardtype(shardType);
    }
 
+   if (weapNum != old.weapnum()) {
+      changed = true;
+      ent->set_weapnum(weapNum);
+   }
+
    return changed;
 }
 
@@ -285,5 +292,8 @@ void Shard::load(const ast::Entity& ent) {
    Object3D::load(ent);
    if (ent.has_shardtype()) {
       shardType = ent.shardtype();
+   }
+   if (ent.has_weapnum()) {
+      weapNum = ent.weapnum();
    }
 }

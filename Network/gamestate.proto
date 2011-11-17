@@ -100,6 +100,7 @@ message Entity {
 
    // Shard
    optional uint32 shardType = 73;
+   optional uint32 weapNum = 74;
 }
 
 message Weapon {

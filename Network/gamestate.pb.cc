@@ -75,7 +75,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector));
   Entity_descriptor_ = file->message_type(1);
-  static const int Entity_offsets_[59] = {
+  static const int Entity_offsets_[60] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, position_),
@@ -135,6 +135,7 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, length_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, releasedshards_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, shardtype_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, weapnum_),
   };
   Entity_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -388,7 +389,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027Network/gamestate.proto\022\003ast\")\n\006Vector"
-    "\022\t\n\001x\030\001 \001(\001\022\t\n\001y\030\002 \001(\001\022\t\n\001z\030\003 \001(\001\"\276\n\n\006En"
+    "\022\t\n\001x\030\001 \001(\001\022\t\n\001y\030\002 \001(\001\022\t\n\001z\030\003 \001(\001\"\317\n\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
     "\013.ast.Vector\022\033\n\006weapon\030\005 \003(\0132\013.ast.Weapo"
@@ -422,44 +423,44 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "ded\030C \001(\002\022\021\n\tenergyHit\030D \001(\010\022\033\n\023timeLast"
     "HitByEnergy\030E \001(\002\022\024\n\014shouldRemove\030F \001(\010\022"
     "\016\n\006length\030G \001(\002\022\026\n\016releasedShards\030H \001(\005\022"
-    "\021\n\tshardType\030I \001(\r\"\324\002\n\006Weapon\022\r\n\005index\030\001"
-    " \002(\r\022#\n\017activationTimer\030\002 \001(\0132\n.ast.Time"
-    "r\022\025\n\rtimeLastFired\030\003 \001(\002\022\020\n\010coolDown\030\004 \001"
-    "(\002\022\016\n\006damage\030\005 \001(\002\022\023\n\013currentHeat\030\006 \001(\002\022"
-    "\022\n\nshotsFired\030\007 \001(\005\022\031\n\021timeStartedFiring"
-    "\030\010 \001(\002\022\016\n\006shotid\030\t \001(\r\022\021\n\tpurchased\030\n \001("
-    "\010\022\023\n\013weaponPrice\030\013 \001(\005\022\r\n\005level\030\014 \001(\005\022\r\n"
-    "\005range\030\r \001(\002\022\025\n\roverheatLevel\030\016 \001(\002\022\023\n\013h"
-    "eatPerShot\030\017 \001(\002\022\027\n\017chargeStartTime\030\020 \001("
-    "\002\"\231\002\n\rClientCommand\022\016\n\006shipID\030\001 \002(\r\022\033\n\023f"
-    "orwardAcceleration\030\002 \001(\021\022\031\n\021rightAcceler"
-    "ation\030\003 \001(\021\022\026\n\016upAcceleration\030\004 \001(\021\022\r\n\005b"
-    "rake\030\005 \001(\010\022\020\n\010yawSpeed\030\006 \001(\002\022\021\n\trollSpee"
-    "d\030\007 \001(\002\022\022\n\npitchSpeed\030\010 \001(\002\022\014\n\004fire\030\t \001("
-    "\010\022\021\n\tcurWeapon\030\n \001(\r\022\016\n\006mouseX\030\013 \001(\002\022\016\n\006"
-    "mouseY\030\014 \001(\002\022\037\n\027lastReceivedGameStateId\030"
-    "\r \001(\r\"l\n\005Timer\022\023\n\013timeStarted\030\001 \001(\002\022\025\n\rc"
-    "ountDownTime\030\002 \001(\002\022\022\n\ntimePaused\030\003 \001(\002\022\020"
-    "\n\010isPaused\030\004 \001(\010\022\021\n\tisRunning\030\005 \001(\010\"\214\001\n\t"
-    "GameState\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity\022\020"
-    "\n\010gameTime\030\002 \002(\001\022\022\n\nplayerShip\030\003 \001(\r\022\036\n\n"
-    "levelTimer\030\004 \001(\0132\n.ast.Timer\022\020\n\010curLevel"
-    "\030\005 \001(\005\022\n\n\002id\030\006 \001(\r\"\312\001\n\020CollisionMessage\022"
-    "\023\n\013gamestateid\030\001 \001(\r\022\024\n\010collider\030\002 \003(\rB\002"
-    "\020\001\022\024\n\010wall_top\030\003 \003(\rB\002\020\001\022\027\n\013wall_bottom\030"
-    "\004 \003(\rB\002\020\001\022\025\n\twall_left\030\005 \003(\rB\002\020\001\022\026\n\nwall"
-    "_right\030\006 \003(\rB\002\020\001\022\026\n\nwall_front\030\007 \003(\rB\002\020\001"
-    "\022\025\n\twall_back\030\010 \003(\rB\002\020\001\"-\n\013ChatMessage\022\020"
-    "\n\010sourceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\"Q\n\023Create"
-    "EntityMessage\022\035\n\025createEntityMessageid\030\001"
-    " \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast.Entity\"\202\002\n\005Fr"
-    "ame\0220\n\021collision_message\030\001 \003(\0132\025.ast.Col"
-    "lisionMessage\022%\n\013chatMessage\030\002 \003(\0132\020.ast"
-    ".ChatMessage\022\013\n\003seq\030\003 \001(\004\022\013\n\003ack\030\004 \001(\004\022\021"
-    "\n\ttimestamp\030\005 \001(\001\022\025\n\tremove_id\030\006 \003(\rB\002\020\001"
-    "\022\030\n\014firing_ships\030\007 \003(\rB\002\020\001\022\017\n\007diff_of\030\010 "
-    "\001(\r\022!\n\tgameState\030\t \001(\0132\016.ast.GameState\022\016"
-    "\n\006shipid\030\n \001(\r", 2894);
+    "\021\n\tshardType\030I \001(\r\022\017\n\007weapNum\030J \001(\r\"\324\002\n\006"
+    "Weapon\022\r\n\005index\030\001 \002(\r\022#\n\017activationTimer"
+    "\030\002 \001(\0132\n.ast.Timer\022\025\n\rtimeLastFired\030\003 \001("
+    "\002\022\020\n\010coolDown\030\004 \001(\002\022\016\n\006damage\030\005 \001(\002\022\023\n\013c"
+    "urrentHeat\030\006 \001(\002\022\022\n\nshotsFired\030\007 \001(\005\022\031\n\021"
+    "timeStartedFiring\030\010 \001(\002\022\016\n\006shotid\030\t \001(\r\022"
+    "\021\n\tpurchased\030\n \001(\010\022\023\n\013weaponPrice\030\013 \001(\005\022"
+    "\r\n\005level\030\014 \001(\005\022\r\n\005range\030\r \001(\002\022\025\n\roverhea"
+    "tLevel\030\016 \001(\002\022\023\n\013heatPerShot\030\017 \001(\002\022\027\n\017cha"
+    "rgeStartTime\030\020 \001(\002\"\231\002\n\rClientCommand\022\016\n\006"
+    "shipID\030\001 \002(\r\022\033\n\023forwardAcceleration\030\002 \001("
+    "\021\022\031\n\021rightAcceleration\030\003 \001(\021\022\026\n\016upAccele"
+    "ration\030\004 \001(\021\022\r\n\005brake\030\005 \001(\010\022\020\n\010yawSpeed\030"
+    "\006 \001(\002\022\021\n\trollSpeed\030\007 \001(\002\022\022\n\npitchSpeed\030\010"
+    " \001(\002\022\014\n\004fire\030\t \001(\010\022\021\n\tcurWeapon\030\n \001(\r\022\016\n"
+    "\006mouseX\030\013 \001(\002\022\016\n\006mouseY\030\014 \001(\002\022\037\n\027lastRec"
+    "eivedGameStateId\030\r \001(\r\"l\n\005Timer\022\023\n\013timeS"
+    "tarted\030\001 \001(\002\022\025\n\rcountDownTime\030\002 \001(\002\022\022\n\nt"
+    "imePaused\030\003 \001(\002\022\020\n\010isPaused\030\004 \001(\010\022\021\n\tisR"
+    "unning\030\005 \001(\010\"\214\001\n\tGameState\022\033\n\006entity\030\001 \003"
+    "(\0132\013.ast.Entity\022\020\n\010gameTime\030\002 \002(\001\022\022\n\npla"
+    "yerShip\030\003 \001(\r\022\036\n\nlevelTimer\030\004 \001(\0132\n.ast."
+    "Timer\022\020\n\010curLevel\030\005 \001(\005\022\n\n\002id\030\006 \001(\r\"\312\001\n\020"
+    "CollisionMessage\022\023\n\013gamestateid\030\001 \001(\r\022\024\n"
+    "\010collider\030\002 \003(\rB\002\020\001\022\024\n\010wall_top\030\003 \003(\rB\002\020"
+    "\001\022\027\n\013wall_bottom\030\004 \003(\rB\002\020\001\022\025\n\twall_left\030"
+    "\005 \003(\rB\002\020\001\022\026\n\nwall_right\030\006 \003(\rB\002\020\001\022\026\n\nwal"
+    "l_front\030\007 \003(\rB\002\020\001\022\025\n\twall_back\030\010 \003(\rB\002\020\001"
+    "\"-\n\013ChatMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004tex"
+    "t\030\002 \001(\t\"Q\n\023CreateEntityMessage\022\035\n\025create"
+    "EntityMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013."
+    "ast.Entity\"\202\002\n\005Frame\0220\n\021collision_messag"
+    "e\030\001 \003(\0132\025.ast.CollisionMessage\022%\n\013chatMe"
+    "ssage\030\002 \003(\0132\020.ast.ChatMessage\022\013\n\003seq\030\003 \001"
+    "(\004\022\013\n\003ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022\025\n\tre"
+    "move_id\030\006 \003(\rB\002\020\001\022\030\n\014firing_ships\030\007 \003(\rB"
+    "\002\020\001\022\017\n\007diff_of\030\010 \001(\r\022!\n\tgameState\030\t \001(\0132"
+    "\016.ast.GameState\022\016\n\006shipid\030\n \001(\r", 2911);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -836,6 +837,7 @@ const int Entity::kShouldRemoveFieldNumber;
 const int Entity::kLengthFieldNumber;
 const int Entity::kReleasedShardsFieldNumber;
 const int Entity::kShardTypeFieldNumber;
+const int Entity::kWeapNumFieldNumber;
 #endif  // !_MSC_VER
 
 Entity::Entity()
@@ -922,6 +924,7 @@ void Entity::SharedCtor() {
   length_ = 0;
   releasedshards_ = 0;
   shardtype_ = 0u;
+  weapnum_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1058,6 +1061,7 @@ void Entity::Clear() {
     length_ = 0;
     releasedshards_ = 0;
     shardtype_ = 0u;
+    weapnum_ = 0u;
   }
   weapon_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1988,6 +1992,22 @@ bool Entity::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(592)) goto parse_weapNum;
+        break;
+      }
+      
+      // optional uint32 weapNum = 74;
+      case 74: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_weapNum:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &weapnum_)));
+          set_has_weapnum();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2316,6 +2336,11 @@ void Entity::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(73, this->shardtype(), output);
   }
   
+  // optional uint32 weapNum = 74;
+  if (has_weapnum()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(74, this->weapnum(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2639,6 +2664,11 @@ void Entity::SerializeWithCachedSizes(
   // optional uint32 shardType = 73;
   if (has_shardtype()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(73, this->shardtype(), target);
+  }
+  
+  // optional uint32 weapNum = 74;
+  if (has_weapnum()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(74, this->weapnum(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -3010,6 +3040,13 @@ int Entity::ByteSize() const {
           this->shardtype());
     }
     
+    // optional uint32 weapNum = 74;
+    if (has_weapnum()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->weapnum());
+    }
+    
   }
   // repeated .ast.Weapon weapon = 5;
   total_size += 1 * this->weapon_size();
@@ -3234,6 +3271,9 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_shardtype()) {
       set_shardtype(from.shardtype());
     }
+    if (from.has_weapnum()) {
+      set_weapnum(from.weapnum());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -3319,6 +3359,7 @@ void Entity::Swap(Entity* other) {
     std::swap(length_, other->length_);
     std::swap(releasedshards_, other->releasedshards_);
     std::swap(shardtype_, other->shardtype_);
+    std::swap(weapnum_, other->weapnum_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_has_bits_[1], other->_has_bits_[1]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

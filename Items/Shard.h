@@ -54,6 +54,7 @@ class Shard : public Object3D {
       float transparentZ;
       
       unsigned shardType;
+      unsigned weapNum;
 
    private:
       double randRadius(double r);
