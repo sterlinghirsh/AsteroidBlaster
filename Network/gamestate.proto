@@ -97,6 +97,9 @@ message Entity {
 
    // Asteroid again again
    optional int32 releasedShards = 72;
+
+   // Shard
+   optional uint32 shardType = 73;
 }
 
 message Weapon {

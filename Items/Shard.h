@@ -23,6 +23,13 @@
 #define DECEL_RATE 0.2
 #define ORBITER_CLR glColor3f(0.2, 0.5, 0.8)
 
+#define SHARD_TYPE_MONEY 0
+#define SHARD_TYPE_HEALTH 1
+#define SHARD_TYPE_WEAPON 2
+#define SHARD_TYPE_REGEN 3
+#define SHARD_TYPE_ENGINE 4
+#define SHARD_TYPE_MAXHEALTH 5
+#define SHARD_TYPE_LIFE 6
 
 
 class Shard : public Object3D {
@@ -45,6 +52,8 @@ class Shard : public Object3D {
       void debug();
       GLuint cubeList;
       float transparentZ;
+      
+      unsigned shardType;
 
    private:
       double randRadius(double r);

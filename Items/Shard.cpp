@@ -19,6 +19,7 @@
 #include "Utility/SoundEffect.h"
 #include "Particles/TractorAttractionParticle.h"
 #include "Particles/ShardParticle.h"
+#include "Network/gamestate.pb.h"
 
 using namespace std;
 
@@ -73,6 +74,24 @@ void Shard::InitShard(double r, double worldSizeIn) {
    updateBoundingBox();
 
    orbiterOffset = randdouble() * 10;
+   if (gameState->gsm == SingleMode || gameState->gsm == ClientMode) {
+      shardType = SHARD_TYPE_MONEY;
+   } else {
+      double randNum = randdouble();
+      if (randNum < 0.02) {
+         shardType = SHARD_TYPE_LIFE;
+      } else if (randNum < 0.1) {
+         shardType = SHARD_TYPE_MAXHEALTH;
+      } else if (randNum < 0.2) {
+         shardType = SHARD_TYPE_REGEN;
+      } else if (randNum < 0.35) {
+         shardType = SHARD_TYPE_WEAPON;
+      } else if (randNum < 0.7) {
+         shardType = SHARD_TYPE_ENGINE;
+      } else {
+         shardType = SHARD_TYPE_HEALTH;
+      }
+   }
 }
 
 void Shard::drawOtherOrbiters() {
@@ -116,11 +135,41 @@ void Shard::drawOtherOrbiters() {
 void Shard::drawShard() {
    double w = 0.5;
    double h = 2.0;
+   switch (shardType) {
+      case SHARD_TYPE_HEALTH:
+         glColor3d(0.3, 0.3, 0.9);
+         break;
+      
+      case SHARD_TYPE_WEAPON:
+         glColor3d(0.9, 0.0, 0.0);
+         break;
+
+      case SHARD_TYPE_REGEN:
+         glColor3d(0.0, 0.0, 0.9);
+         break;
+
+      case SHARD_TYPE_ENGINE:
+         glColor3d(1.0, 1.0, 0.0);
+         break;
+
+      case SHARD_TYPE_MAXHEALTH:
+         glColor3d(0.0, 0.9, 0.9);
+         break;
+
+      case SHARD_TYPE_LIFE:
+         glColor3d(0.0, 0.9, 0.0);
+         break;
+
+      case SHARD_TYPE_MONEY:
+      default:
+         glColor3d(0.8, 0.8, 1.0);
+   }
    //fboBegin();
    if (gameSettings->drawDeferred) {
       GLenum buffers[] = {NORMAL_BUFFER, GL_NONE, ALBEDO_BUFFER, GLOW_BUFFER};
       glDrawBuffers(4, buffers);
-      glUseProgram(bonerShader);
+      // Used to be bonerShader, but I don't know why.
+      glUseProgram(gBufferShader);
    }
    glBegin(GL_TRIANGLE_STRIP);
    for (int i = 0; i < 2; i++) {
@@ -159,7 +208,7 @@ void Shard::draw() {
 
    //setMaterial(CrystalMaterial);
    //mesh.draw(false);
-   glColor4d(0.8, 0.8, 1.0, 1.0);
+   //glColor4d(0.8, 0.8, 1.0, 1.0);
    drawShard();
 
    glPopMatrix();
@@ -217,14 +266,24 @@ void Shard::debug() {
 
 void Shard::save(ast::Entity* ent) {
    Object3D::save(ent);
+   ent->set_shardtype(shardType);
 }
 
 bool Shard::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    // This is here for easy extensibility.
    bool changed = Object3D::saveDiff(old, ent);
+
+   if (shardType != old.shardtype()) {
+      changed = true;
+      ent->set_shardtype(shardType);
+   }
+
    return changed;
 }
 
 void Shard::load(const ast::Entity& ent) {
    Object3D::load(ent);
+   if (ent.has_shardtype()) {
+      shardType = ent.shardtype();
+   }
 }

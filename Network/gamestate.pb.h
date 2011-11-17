@@ -622,6 +622,13 @@ class Entity : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 releasedshards() const;
   inline void set_releasedshards(::google::protobuf::int32 value);
   
+  // optional uint32 shardType = 73;
+  inline bool has_shardtype() const;
+  inline void clear_shardtype();
+  static const int kShardTypeFieldNumber = 73;
+  inline ::google::protobuf::uint32 shardtype() const;
+  inline void set_shardtype(::google::protobuf::uint32 value);
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -738,6 +745,8 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_length();
   inline void set_has_releasedshards();
   inline void clear_has_releasedshards();
+  inline void set_has_shardtype();
+  inline void clear_has_shardtype();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -799,9 +808,10 @@ class Entity : public ::google::protobuf::Message {
   bool shouldremove_;
   float length_;
   ::google::protobuf::int32 releasedshards_;
+  ::google::protobuf::uint32 shardtype_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(58 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(59 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -3485,6 +3495,28 @@ inline ::google::protobuf::int32 Entity::releasedshards() const {
 inline void Entity::set_releasedshards(::google::protobuf::int32 value) {
   set_has_releasedshards();
   releasedshards_ = value;
+}
+
+// optional uint32 shardType = 73;
+inline bool Entity::has_shardtype() const {
+  return (_has_bits_[1] & 0x04000000u) != 0;
+}
+inline void Entity::set_has_shardtype() {
+  _has_bits_[1] |= 0x04000000u;
+}
+inline void Entity::clear_has_shardtype() {
+  _has_bits_[1] &= ~0x04000000u;
+}
+inline void Entity::clear_shardtype() {
+  shardtype_ = 0u;
+  clear_has_shardtype();
+}
+inline ::google::protobuf::uint32 Entity::shardtype() const {
+  return shardtype_;
+}
+inline void Entity::set_shardtype(::google::protobuf::uint32 value) {
+  set_has_shardtype();
+  shardtype_ = value;
 }
 
 // -------------------------------------------------------------------

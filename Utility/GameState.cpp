@@ -177,7 +177,7 @@ GameState::GameState(GameStateMode _gsm) :
       mouseY = 0;
 
       // Make a good formula here for how many seconds a level should last.
-      levelDuration = 10;
+      levelDuration = 120;
 
       godMode = false;
 
@@ -752,10 +752,12 @@ void GameState::drawHud() {
          glDrawBuffer(HUD_BUFFER);
       }
 
-      shardBankBar->x = p2wx(10);
-      shardBankBar->y = p2wy(100);
+      if (gsm == SingleMode) {
+         shardBankBar->x = p2wx(10);
+         shardBankBar->y = p2wy(100);
 
-      shardBankBar->draw();
+         shardBankBar->draw();
+      }
       healthBar->draw();
       weaponBar->draw();
       drawMinimap();
@@ -844,8 +846,10 @@ void GameState::drawAllText() {
 
    if (ship != NULL) {
       scoreText->draw();
-      bankedShardText->draw();
-      unbankedShardText->draw();
+      if (gsm == SingleMode) {
+         bankedShardText->draw();
+         unbankedShardText->draw();
+      }
       lifeText->draw();
    }
 
@@ -1091,7 +1095,7 @@ void GameState::addWarningMessage() {
  */
 void GameState::addWeaponUnlockMessage(Weapon* unlockedWeapon) {
    std::ostringstream gameMsg;
-   gameMsg << unlockedWeapon->getName() << " unlocked!";
+   gameMsg << unlockedWeapon->getName() << " level " << unlockedWeapon->level << " unlocked!";
    GameMessage::Add(gameMsg.str(), 30, 3);
 }
 
