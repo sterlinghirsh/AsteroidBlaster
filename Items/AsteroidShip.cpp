@@ -2033,8 +2033,8 @@ void AsteroidShip::atLevelEnd() {
    shakeAmount = 0;
 
    if (gameState->gsm == ServerMode) {
-      // Give Player all lives back after each level.
-      lives = PLAYER_LIVES;
+      // Give Player one more life at each level.
+      lives++;
    }
 
    stopSounds();
