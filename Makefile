@@ -11,7 +11,7 @@ ifeq ($(UNAME), Linux)
    # Linux stuff
    # Use this if you're on a school machine.
 	# We have to use this version on linux since the -mt version doesn't exist.
-   SDL_LIBS:=$(shell "sdl-config" "--libs")
+   SDL_LIBS:=$(shell "sdl-config" "--libs") -lSDL_ttf -lSDL_image
    SDL_CFLAGS:=$(shell "sdl-config" "--cflags")
    PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_image-1.2.10 
 
