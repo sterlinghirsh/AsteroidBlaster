@@ -74,9 +74,10 @@ void Object3D::update(double timeDifference) {
 
       }
 
-      if (velocity != NULL && position != NULL)
-         velocity->scalarMultiply(timeDifference).movePoint(*position);
    }
+   // We're doing this for extrapolation purposes.
+   if (velocity != NULL && position != NULL)
+      velocity->scalarMultiply(timeDifference).movePoint(*position);
 
    updateBoundingBox();
 }
