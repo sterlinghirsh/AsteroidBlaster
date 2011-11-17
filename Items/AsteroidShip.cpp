@@ -603,9 +603,6 @@ void AsteroidShip::update(double timeDiff) {
       }
 
       if (gameState->gameIsRunning && respawnTimer.isRunning && timeLeftToRespawn <= 1.5) {
-         if (this == gameState->ship) {
-            gameState->usingShipCamera = true;
-         }
          timeLeftToRespawn = 1.5;
          reInitialize();
       } else {
@@ -619,10 +616,17 @@ void AsteroidShip::update(double timeDiff) {
          setRollSpeed(0.0);
          return;
       }
+
+
    } else if (!shouldDrawInMinimap) {
       // If health > 0.
       shouldDrawInMinimap = true;
    }
+   
+   if (this == gameState->ship && health > 0) {
+      gameState->usingShipCamera = true;
+   }
+
 
    if (timeLeftToRespawn > 0 && (gameState->gsm != MenuMode)) {
       if (this == gameState->ship && !isFirstSpawn) {

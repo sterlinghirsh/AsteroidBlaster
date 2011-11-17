@@ -182,6 +182,11 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
             if (a->gameState->gsm != ClientMode) {
                while (weapNum != startWeapNum) {
                   weapon = a->getWeapon(weapNum);
+                  if (weapon == NULL) {
+                     std::cerr << "Null weapon " << weapNum << " in Ship/Shard collision." << std::endl;;
+                     break;
+                  }
+                  
                   if (!weapon->purchased) {
                      weapon->purchased = true;
                      break;
@@ -199,10 +204,12 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
 
             if (a == a->gameState->ship) {
                weapon = a->getWeapon(weapNum);
-               if (!weapon->purchased) {
-                  a->gameState->addWeaponUnlockMessage(weapon);
-               } else if (weapon->level < weapon->levelMax) {
-                  a->gameState->addWeaponUnlockMessage(weapon);
+               if (weapon != NULL) {
+                  if (!weapon->purchased) {
+                     a->gameState->addWeaponUnlockMessage(weapon);
+                  } else if (weapon->level < weapon->levelMax) {
+                     a->gameState->addWeaponUnlockMessage(weapon);
+                  }
                }
             }
             // If we get here, oh well.
