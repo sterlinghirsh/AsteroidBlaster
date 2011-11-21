@@ -78,16 +78,24 @@ void Shard::InitShard(double r, double worldSizeIn) {
       shardType = SHARD_TYPE_MONEY;
    } else {
       double randNum = randdouble();
+      double weaponShardCutoff = 0;
+      // Make weapon shards spawn less as the levels progress.
+      if (gameState->curLevel > 4) {
+         weaponShardCutoff = 0;
+      } else {
+         weaponShardCutoff = 0.25 - (0.05 * gameState->curLevel);
+      }
+
       if (randNum < 0.02) {
          shardType = SHARD_TYPE_LIFE;
       } else if (randNum < 0.1) {
          shardType = SHARD_TYPE_MAXHEALTH;
       } else if (randNum < 0.2) {
          shardType = SHARD_TYPE_REGEN;
-      } else if (randNum < 0.35) {
-         shardType = SHARD_TYPE_WEAPON;
-      } else if (randNum < 0.7) {
+      } else if (randNum < 0.3) {
          shardType = SHARD_TYPE_ENGINE;
+      } else if (randNum < 0.5 + weaponShardCutoff) {
+         shardType = SHARD_TYPE_WEAPON;
       } else {
          shardType = SHARD_TYPE_HEALTH;
       }
