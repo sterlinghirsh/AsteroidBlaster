@@ -92,7 +92,7 @@ void Shard::InitShard(double r, double worldSizeIn) {
          shardType = SHARD_TYPE_HEALTH;
       }
    }
-   weapNum = 0;
+   weapNum = NUMBER_OF_WEAPONS;
 }
 
 void Shard::drawOtherOrbiters() {

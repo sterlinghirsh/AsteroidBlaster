@@ -178,9 +178,30 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
             int startWeapNum = rand() % NUMBER_OF_WEAPONS;
             int weapNum = (startWeapNum + 1) % NUMBER_OF_WEAPONS;
 
+            bool pickWeapNum = ((int)b->weapNum == NUMBER_OF_WEAPONS);
+
             Weapon* weapon;
             if (a->gameState->gsm != ClientMode) {
-               while (weapNum != startWeapNum) {
+               if (pickWeapNum) {
+                  while (weapNum != startWeapNum) {
+                     weapon = a->getWeapon(weapNum);
+                     if (weapon == NULL) {
+                        std::cerr << "Null weapon " << weapNum << " in Ship/Shard collision." << std::endl;;
+                        break;
+                     }
+                     
+                     if (!weapon->purchased) {
+                        weapon->purchased = true;
+                        break;
+                     } else if (weapon->level < weapon->levelMax) {
+                        weapon->level++;
+                        break;
+                     }
+                     weapNum++;
+                  }
+                  // Send it to the client.
+                  b->weapNum = weapNum;
+               } else {
                   weapon = a->getWeapon(weapNum);
                   if (weapon == NULL) {
                      std::cerr << "Null weapon " << weapNum << " in Ship/Shard collision." << std::endl;;
@@ -194,10 +215,8 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
                      weapon->level++;
                      break;
                   }
-                  weapNum++;
+                  // Weap num is already set.
                }
-               // Send it to the client.
-               b->weapNum = weapNum;
             } else {
                weapNum = b->weapNum;
             }

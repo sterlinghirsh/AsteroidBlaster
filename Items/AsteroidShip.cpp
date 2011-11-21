@@ -262,6 +262,12 @@ void AsteroidShip::reInitialize() {
    forward->movePoint(shotOrigin, shotOriginScale);
    respawnTimer.reset();
    aliveTimer.countUp();
+
+   // Reset powerups.
+   healthMax = 100;
+   engineLevel = 1;
+   regenHealthLevel = 0;
+   bankLevel = 1;
 }
 
 /**
@@ -589,6 +595,59 @@ void AsteroidShip::update(double timeDiff) {
             // Make a few more for good measure.
             while(rand() % 2 == 0) {
                custodian->add(makeShard());
+            }
+
+            if (gameState->gsm == ServerMode) {
+               Shard* tmp;
+               while (healthMax > 100) {
+                  tmp = makeShard();
+                  tmp->shardType = SHARD_TYPE_MAXHEALTH;
+                  custodian->add(tmp);
+                  --healthMax;
+               }
+
+               while (engineLevel > 1) {
+                  tmp = makeShard();
+                  tmp->shardType = SHARD_TYPE_ENGINE;
+                  custodian->add(tmp);
+                  --engineLevel;
+               }
+
+               while (regenHealthLevel > 0) {
+                  tmp = makeShard();
+                  tmp->shardType = SHARD_TYPE_ENGINE;
+                  custodian->add(tmp);
+                  --regenHealthLevel;
+               }
+
+               Weapon* weap;
+               for (int i = 0; i < NUMBER_OF_WEAPONS; ++i) {
+                  weap = getWeapon(i); 
+                  if (weap->purchased) {
+                     weap->level = 1;
+                     /*
+                     while (weap->level > 1) {
+                        tmp = makeShard();
+                        tmp->shardType = SHARD_TYPE_WEAPON;
+                        tmp->weapNum = i;
+                        custodian->add(tmp);
+                        --weap->level;
+                        
+                     }
+                     */
+                     
+                     if (i > BLASTER_WEAPON_INDEX) {
+                        tmp = makeShard();
+                        tmp->shardType = SHARD_TYPE_WEAPON;
+                        tmp->weapNum = i;
+                        custodian->add(tmp);
+
+                        weap->purchased = false;
+                     }
+                  }
+               }
+
+
             }
          }
 
