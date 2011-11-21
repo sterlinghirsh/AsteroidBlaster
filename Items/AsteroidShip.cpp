@@ -531,11 +531,11 @@ void AsteroidShip::update(double timeDiff) {
 
          if (gameState->gsm != ClientMode) {
             ++deaths;
+            --lives;
            
             if (lives > 0) {
                respawnTimer.setCountDown(respawnTime);
                timeLeftToRespawn = respawnTimer.getTimeLeft();
-               --lives;
                
                // Make sure to stop barrel rolling.
                isBarrelRollingLeft = -1;
