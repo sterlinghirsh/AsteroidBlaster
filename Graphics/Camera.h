@@ -19,6 +19,7 @@
 class Camera {
    public:
       Point3D* position;
+      Vector3D *velocity;
       Vector3D *up, *right, *forward;
       Vector3D *offset;
       bool lockUpVector;

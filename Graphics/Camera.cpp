@@ -13,6 +13,7 @@
 
 Camera::Camera(bool lockUp) {
    position = new Point3D(0, 0, 0);
+   velocity = new Vector3D(0, 0, 0);
    up = new Vector3D(0, 1, 0);
    right = new Vector3D(1, 0, 0);
    forward = new Vector3D(0, 0, 1);
@@ -23,6 +24,7 @@ Camera::Camera(bool lockUp) {
 
 Camera::Camera(Object3D* object) {
    position = new Point3D(0, 0, 0);
+   velocity = new Vector3D(0, 0, 0);
    lockUpVector = false;
    shakeAmount = 0;
    offset = new Vector3D(0, 0, 0);
@@ -72,6 +74,7 @@ void Camera::setCamera(Point3D* newPosition, Vector3D* upIn,
 void Camera::viewFrom(Object3D* object) {
    if (!cameraFollow) {
       position = object->position;
+      velocity->clone(object->velocity);
       up = object->up;
    }
    forward = object->forward;

@@ -381,3 +381,14 @@ void Vector3D::load(const ast::Vector& vec) {
    if (vec.has_z())
       z = vec.z();
 }
+
+/**
+ * Amount = 0 means all a, no b. Amount = 1 means all b no a.
+ */
+Vector3D Vector3D::lirp(Vector3D& b, float amount) {
+   Vector3D toReturn(
+         (1 - amount) * x + amount * b.x,
+         (1 - amount) * y + amount * b.y,
+         (1 - amount) * z + amount * b.z);
+   return toReturn;
+}

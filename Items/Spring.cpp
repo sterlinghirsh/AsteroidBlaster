@@ -27,7 +27,18 @@ void Spring::update(double ms) {
    bool firstPerson = anchor->getCurrentView() == VIEW_FIRSTPERSON_SHIP;
 
    if (isAttached) {
-      Vector3D displace = (anchor->position)->add(*anchor->getCameraOffset());
+      if (firstPerson) {
+         item->position->updateMagnitude((anchor->position)->add(*anchor->getCameraOffset()));
+      } else {
+         Vector3D targetVelocity = ((anchor->position)->add(*anchor->getCameraOffset()) - *item->position);
+         targetVelocity.addUpdate(item->up->scalarMultiply(2.5));
+         targetVelocity.scalarMultiplyUpdate(POS_FORCE_SCALE);
+         //*item->velocity = targetVelocity;
+         *item->velocity = anchor->velocity->lirp(targetVelocity, 0.5);
+
+         item->velocity->movePoint(*item->position, ms);
+      }
+      /*
       if (firstPerson) {
          item->position->updateMagnitude(displace);
       } else {
@@ -39,6 +50,7 @@ void Spring::update(double ms) {
             item->position->addUpdate(forceVector);
          }
       }
+      */
    }
    // Connect the up vectors with a spring force.
    if (isAttached && (firstPerson ||

@@ -43,6 +43,7 @@ class Vector3D {
       Vector3D cross(Vector3D&);
       Vector3D add(Vector3D);
       Vector3D subtract(Vector3D&);
+      Vector3D lirp(Vector3D&, float amount);
       void subtractUpdate(const Vector3D);
       void movePoint(Vector3D&, double scale = 1);
       void addUpdate(Vector3D);

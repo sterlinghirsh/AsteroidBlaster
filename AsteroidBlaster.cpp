@@ -443,8 +443,13 @@ int main(int argc, char* argv[]) {
    timeDiff = doubleTime() - lastUpdateTime;
    lastUpdateTime = doubleTime();
 
-   unsigned long frameLength = 50; // ms
+   unsigned long frameLength = 50; // ms = 20 fps
+   if (_gsm != ServerMode) {
+      frameLength = 16; // ms = 60 fps
+   }
    long nextFrameDelay = 0;
+   long framesAtThisFrameRate = 0;
+   long missedFrames = 0;
    unsigned long startTick = 0;
 
    while (running) {
@@ -499,8 +504,36 @@ int main(int argc, char* argv[]) {
       }
 
       nextFrameDelay = startTick + frameLength - SDL_GetTicks();
-      if (_gsm == ServerMode && nextFrameDelay > 0) {
-         SDL_Delay(nextFrameDelay);
+      if (_gsm == ServerMode) {
+         if (nextFrameDelay > 0) {
+            SDL_Delay(nextFrameDelay);
+         }
+      } else {
+         if (nextFrameDelay > 0) {
+            framesAtThisFrameRate++;
+            if (framesAtThisFrameRate > 100) {
+               missedFrames = 0;
+            }
+
+            if (nextFrameDelay > 16 && framesAtThisFrameRate > 10) {
+               // Increase speed.
+               frameLength = 16; // 60 fps.
+               framesAtThisFrameRate = 0;
+               missedFrames = 0;
+            }
+
+            SDL_Delay(nextFrameDelay);
+         } else {
+            missedFrames++;
+            framesAtThisFrameRate = 0;
+            if (missedFrames > 10) {
+               if (frameLength == 16) {
+                  // Decrease speed.
+                  frameLength = 32; // 30 fps.
+                  missedFrames = 0;
+               }
+            }
+         }
       }
    }
 

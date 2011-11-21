@@ -644,10 +644,12 @@ bool HomingMissileShot::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    else
       changed = true;
    
+   /*
    if (!right->saveDiff(old.right(), ent->mutable_right()))
       ent->clear_right();
    else
       changed = true;
+      */
 
 
    return changed;
@@ -658,7 +660,7 @@ void HomingMissileShot::save(ast::Entity* ent) {
    
    up->save(ent->mutable_up());
    forward->save(ent->mutable_forward());
-   right->save(ent->mutable_right());
+   // right->save(ent->mutable_right());
 }
 
 void HomingMissileShot::load(const ast::Entity& ent) {
@@ -666,8 +668,11 @@ void HomingMissileShot::load(const ast::Entity& ent) {
 
    if (ent.has_forward())
       forward->load(ent.forward());
+   /*
    if (ent.has_right())
       right->load(ent.right());
+      */
    if (ent.has_up())
       up->load(ent.up());
+   *right = forward->cross(*up);
 }
