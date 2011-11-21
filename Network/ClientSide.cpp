@@ -50,6 +50,8 @@ ClientSide::~ClientSide() {
 void ClientSide::receive() {
    // 0 timeout for no wait.
    int result;
+   ast::Frame* curFrame = NULL;
+   ast::Frame* frame = NULL;
    do {
       result= enet_host_service(client, event, 0);
 
@@ -72,9 +74,16 @@ void ClientSide::receive() {
 
          if (event->type == ENET_EVENT_TYPE_RECEIVE) {
             //cout << "Packet received from server: " << (char*) event->packet->data << endl;
-            ast::Frame frame;
-            frame.ParseFromArray(event->packet->data, event->packet->dataLength);
-            gameState->handleFrame(&frame);
+            curFrame = new ast::Frame();
+            curFrame->ParseFromArray(event->packet->data, event->packet->dataLength);
+            if (frame == NULL) {
+               frame = curFrame;
+            } else if (curFrame->gamestate().id() > frame->gamestate().id()) {
+               delete frame;
+               frame = curFrame;
+            } else {
+               delete curFrame;
+            }
          }
 
       }
@@ -83,6 +92,10 @@ void ClientSide::receive() {
          enet_packet_destroy(event->packet);
       }
    } while (result > 0);
+
+   if (frame != NULL) {
+      gameState->handleFrame(frame);
+   }
 }
 
 void ClientSide::disconnect() {
