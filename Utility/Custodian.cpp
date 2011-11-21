@@ -202,18 +202,14 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
                   // Send it to the client.
                   b->weapNum = weapNum;
                } else {
+                  weapNum = b->weapNum;
                   weapon = a->getWeapon(weapNum);
                   if (weapon == NULL) {
                      std::cerr << "Null weapon " << weapNum << " in Ship/Shard collision." << std::endl;;
-                     break;
-                  }
-                  
-                  if (!weapon->purchased) {
+                  } else if (!weapon->purchased) {
                      weapon->purchased = true;
-                     break;
                   } else if (weapon->level < weapon->levelMax) {
                      weapon->level++;
-                     break;
                   }
                   // Weap num is already set.
                }
