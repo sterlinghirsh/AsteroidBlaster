@@ -16,9 +16,9 @@ namespace ast {
 class Timer {
    //public variables------------------------------
    public:
-      double timeStarted;
-      double countDownTime;
-      double timePaused;
+      float timeStarted;
+      float countDownTime;
+      float timePaused;
       bool isPaused;
       bool isRunning;
 

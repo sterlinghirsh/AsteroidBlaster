@@ -99,26 +99,26 @@ class Vector : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // optional double x = 1;
+  // optional float x = 1;
   inline bool has_x() const;
   inline void clear_x();
   static const int kXFieldNumber = 1;
-  inline double x() const;
-  inline void set_x(double value);
+  inline float x() const;
+  inline void set_x(float value);
   
-  // optional double y = 2;
+  // optional float y = 2;
   inline bool has_y() const;
   inline void clear_y();
   static const int kYFieldNumber = 2;
-  inline double y() const;
-  inline void set_y(double value);
+  inline float y() const;
+  inline void set_y(float value);
   
-  // optional double z = 3;
+  // optional float z = 3;
   inline bool has_z() const;
   inline void clear_z();
   static const int kZFieldNumber = 3;
-  inline double z() const;
-  inline void set_z(double value);
+  inline float z() const;
+  inline void set_z(float value);
   
   // @@protoc_insertion_point(class_scope:ast.Vector)
  private:
@@ -131,9 +131,9 @@ class Vector : public ::google::protobuf::Message {
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  double x_;
-  double y_;
-  double z_;
+  float x_;
+  float y_;
+  float z_;
   
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -1962,70 +1962,6 @@ class Frame : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage >*
       mutable_collision_message();
   
-  // repeated .ast.ChatMessage chatMessage = 2;
-  inline int chatmessage_size() const;
-  inline void clear_chatmessage();
-  static const int kChatMessageFieldNumber = 2;
-  inline const ::ast::ChatMessage& chatmessage(int index) const;
-  inline ::ast::ChatMessage* mutable_chatmessage(int index);
-  inline ::ast::ChatMessage* add_chatmessage();
-  inline const ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >&
-      chatmessage() const;
-  inline ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >*
-      mutable_chatmessage();
-  
-  // optional uint64 seq = 3;
-  inline bool has_seq() const;
-  inline void clear_seq();
-  static const int kSeqFieldNumber = 3;
-  inline ::google::protobuf::uint64 seq() const;
-  inline void set_seq(::google::protobuf::uint64 value);
-  
-  // optional uint64 ack = 4;
-  inline bool has_ack() const;
-  inline void clear_ack();
-  static const int kAckFieldNumber = 4;
-  inline ::google::protobuf::uint64 ack() const;
-  inline void set_ack(::google::protobuf::uint64 value);
-  
-  // optional double timestamp = 5;
-  inline bool has_timestamp() const;
-  inline void clear_timestamp();
-  static const int kTimestampFieldNumber = 5;
-  inline double timestamp() const;
-  inline void set_timestamp(double value);
-  
-  // repeated uint32 remove_id = 6 [packed = true];
-  inline int remove_id_size() const;
-  inline void clear_remove_id();
-  static const int kRemoveIdFieldNumber = 6;
-  inline ::google::protobuf::uint32 remove_id(int index) const;
-  inline void set_remove_id(int index, ::google::protobuf::uint32 value);
-  inline void add_remove_id(::google::protobuf::uint32 value);
-  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
-      remove_id() const;
-  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
-      mutable_remove_id();
-  
-  // repeated uint32 firing_ships = 7 [packed = true];
-  inline int firing_ships_size() const;
-  inline void clear_firing_ships();
-  static const int kFiringShipsFieldNumber = 7;
-  inline ::google::protobuf::uint32 firing_ships(int index) const;
-  inline void set_firing_ships(int index, ::google::protobuf::uint32 value);
-  inline void add_firing_ships(::google::protobuf::uint32 value);
-  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
-      firing_ships() const;
-  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
-      mutable_firing_ships();
-  
-  // optional uint32 diff_of = 8;
-  inline bool has_diff_of() const;
-  inline void clear_diff_of();
-  static const int kDiffOfFieldNumber = 8;
-  inline ::google::protobuf::uint32 diff_of() const;
-  inline void set_diff_of(::google::protobuf::uint32 value);
-  
   // optional .ast.GameState gameState = 9;
   inline bool has_gamestate() const;
   inline void clear_gamestate();
@@ -2043,14 +1979,6 @@ class Frame : public ::google::protobuf::Message {
   
   // @@protoc_insertion_point(class_scope:ast.Frame)
  private:
-  inline void set_has_seq();
-  inline void clear_has_seq();
-  inline void set_has_ack();
-  inline void clear_has_ack();
-  inline void set_has_timestamp();
-  inline void clear_has_timestamp();
-  inline void set_has_diff_of();
-  inline void clear_has_diff_of();
   inline void set_has_gamestate();
   inline void clear_has_gamestate();
   inline void set_has_shipid();
@@ -2059,20 +1987,11 @@ class Frame : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
   ::google::protobuf::RepeatedPtrField< ::ast::CollisionMessage > collision_message_;
-  ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage > chatmessage_;
-  ::google::protobuf::uint64 seq_;
-  ::google::protobuf::uint64 ack_;
-  double timestamp_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > remove_id_;
-  mutable int _remove_id_cached_byte_size_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > firing_ships_;
-  mutable int _firing_ships_cached_byte_size_;
   ::ast::GameState* gamestate_;
-  ::google::protobuf::uint32 diff_of_;
   ::google::protobuf::uint32 shipid_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -2088,7 +2007,7 @@ class Frame : public ::google::protobuf::Message {
 
 // Vector
 
-// optional double x = 1;
+// optional float x = 1;
 inline bool Vector::has_x() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2102,15 +2021,15 @@ inline void Vector::clear_x() {
   x_ = 0;
   clear_has_x();
 }
-inline double Vector::x() const {
+inline float Vector::x() const {
   return x_;
 }
-inline void Vector::set_x(double value) {
+inline void Vector::set_x(float value) {
   set_has_x();
   x_ = value;
 }
 
-// optional double y = 2;
+// optional float y = 2;
 inline bool Vector::has_y() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -2124,15 +2043,15 @@ inline void Vector::clear_y() {
   y_ = 0;
   clear_has_y();
 }
-inline double Vector::y() const {
+inline float Vector::y() const {
   return y_;
 }
-inline void Vector::set_y(double value) {
+inline void Vector::set_y(float value) {
   set_has_y();
   y_ = value;
 }
 
-// optional double z = 3;
+// optional float z = 3;
 inline bool Vector::has_z() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -2146,10 +2065,10 @@ inline void Vector::clear_z() {
   z_ = 0;
   clear_has_z();
 }
-inline double Vector::z() const {
+inline float Vector::z() const {
   return z_;
 }
-inline void Vector::set_z(double value) {
+inline void Vector::set_z(float value) {
   set_has_z();
   z_ = value;
 }
@@ -4829,178 +4748,15 @@ Frame::mutable_collision_message() {
   return &collision_message_;
 }
 
-// repeated .ast.ChatMessage chatMessage = 2;
-inline int Frame::chatmessage_size() const {
-  return chatmessage_.size();
-}
-inline void Frame::clear_chatmessage() {
-  chatmessage_.Clear();
-}
-inline const ::ast::ChatMessage& Frame::chatmessage(int index) const {
-  return chatmessage_.Get(index);
-}
-inline ::ast::ChatMessage* Frame::mutable_chatmessage(int index) {
-  return chatmessage_.Mutable(index);
-}
-inline ::ast::ChatMessage* Frame::add_chatmessage() {
-  return chatmessage_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >&
-Frame::chatmessage() const {
-  return chatmessage_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::ast::ChatMessage >*
-Frame::mutable_chatmessage() {
-  return &chatmessage_;
-}
-
-// optional uint64 seq = 3;
-inline bool Frame::has_seq() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Frame::set_has_seq() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void Frame::clear_has_seq() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void Frame::clear_seq() {
-  seq_ = GOOGLE_ULONGLONG(0);
-  clear_has_seq();
-}
-inline ::google::protobuf::uint64 Frame::seq() const {
-  return seq_;
-}
-inline void Frame::set_seq(::google::protobuf::uint64 value) {
-  set_has_seq();
-  seq_ = value;
-}
-
-// optional uint64 ack = 4;
-inline bool Frame::has_ack() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void Frame::set_has_ack() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void Frame::clear_has_ack() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void Frame::clear_ack() {
-  ack_ = GOOGLE_ULONGLONG(0);
-  clear_has_ack();
-}
-inline ::google::protobuf::uint64 Frame::ack() const {
-  return ack_;
-}
-inline void Frame::set_ack(::google::protobuf::uint64 value) {
-  set_has_ack();
-  ack_ = value;
-}
-
-// optional double timestamp = 5;
-inline bool Frame::has_timestamp() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void Frame::set_has_timestamp() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void Frame::clear_has_timestamp() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void Frame::clear_timestamp() {
-  timestamp_ = 0;
-  clear_has_timestamp();
-}
-inline double Frame::timestamp() const {
-  return timestamp_;
-}
-inline void Frame::set_timestamp(double value) {
-  set_has_timestamp();
-  timestamp_ = value;
-}
-
-// repeated uint32 remove_id = 6 [packed = true];
-inline int Frame::remove_id_size() const {
-  return remove_id_.size();
-}
-inline void Frame::clear_remove_id() {
-  remove_id_.Clear();
-}
-inline ::google::protobuf::uint32 Frame::remove_id(int index) const {
-  return remove_id_.Get(index);
-}
-inline void Frame::set_remove_id(int index, ::google::protobuf::uint32 value) {
-  remove_id_.Set(index, value);
-}
-inline void Frame::add_remove_id(::google::protobuf::uint32 value) {
-  remove_id_.Add(value);
-}
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
-Frame::remove_id() const {
-  return remove_id_;
-}
-inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
-Frame::mutable_remove_id() {
-  return &remove_id_;
-}
-
-// repeated uint32 firing_ships = 7 [packed = true];
-inline int Frame::firing_ships_size() const {
-  return firing_ships_.size();
-}
-inline void Frame::clear_firing_ships() {
-  firing_ships_.Clear();
-}
-inline ::google::protobuf::uint32 Frame::firing_ships(int index) const {
-  return firing_ships_.Get(index);
-}
-inline void Frame::set_firing_ships(int index, ::google::protobuf::uint32 value) {
-  firing_ships_.Set(index, value);
-}
-inline void Frame::add_firing_ships(::google::protobuf::uint32 value) {
-  firing_ships_.Add(value);
-}
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
-Frame::firing_ships() const {
-  return firing_ships_;
-}
-inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
-Frame::mutable_firing_ships() {
-  return &firing_ships_;
-}
-
-// optional uint32 diff_of = 8;
-inline bool Frame::has_diff_of() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
-}
-inline void Frame::set_has_diff_of() {
-  _has_bits_[0] |= 0x00000080u;
-}
-inline void Frame::clear_has_diff_of() {
-  _has_bits_[0] &= ~0x00000080u;
-}
-inline void Frame::clear_diff_of() {
-  diff_of_ = 0u;
-  clear_has_diff_of();
-}
-inline ::google::protobuf::uint32 Frame::diff_of() const {
-  return diff_of_;
-}
-inline void Frame::set_diff_of(::google::protobuf::uint32 value) {
-  set_has_diff_of();
-  diff_of_ = value;
-}
-
 // optional .ast.GameState gameState = 9;
 inline bool Frame::has_gamestate() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void Frame::set_has_gamestate() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void Frame::clear_has_gamestate() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void Frame::clear_gamestate() {
   if (gamestate_ != NULL) gamestate_->::ast::GameState::Clear();
@@ -5023,13 +4779,13 @@ inline ::ast::GameState* Frame::release_gamestate() {
 
 // optional uint32 shipid = 10;
 inline bool Frame::has_shipid() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void Frame::set_has_shipid() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void Frame::clear_has_shipid() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void Frame::clear_shipid() {
   shipid_ = 0u;

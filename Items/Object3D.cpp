@@ -291,15 +291,18 @@ bool Object3D::saveDiff(const ast::Entity& old, ast::Entity* ent) {
 
    // The type never changes, don't don't send that again.
 
-   if (!position->saveDiff(old.position(), ent->mutable_position()))
-      ent->clear_position();
-   else
+   if (!velocity->saveDiff(old.velocity(), ent->mutable_velocity())) {
+      ent->clear_velocity();
+   } else {
+      // Velocity changed.
       somethingChanged = true;
 
-   if (!velocity->saveDiff(old.velocity(), ent->mutable_velocity()))
-      ent->clear_velocity();
-   else
-      somethingChanged = true;
+      // Only send position if velocity changes.
+      // Note: This might break tractor beam shot or something.
+      if (!position->saveDiff(old.position(), ent->mutable_position())) {
+         ent->clear_position();
+      }
+   }
 
    if (shouldRemove != old.shouldremove()) {
       ent->set_shouldremove(shouldRemove);
@@ -324,10 +327,12 @@ void Object3D::load(const ast::Entity& ent) {
       type = ent.type();
 
    if (ent.has_shouldremove()) {
+      /*
       if (shouldRemove != ent.shouldremove()) {
          // DEBUG
          // printf("Setting shouldRemove to %d on %d\n", ent.shouldremove(), id);
       }
+      */
       shouldRemove = ent.shouldremove();
    }
 

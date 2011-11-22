@@ -18,6 +18,10 @@ using namespace std;
 
 static string outgoing;
 
+// DEBUG
+#include <fstream>
+extern ofstream debugoutput;
+
 ServerSide::ServerSide(GameState* _gameState) :
  gameState(_gameState) {
    serverAddress = new ENetAddress();
@@ -31,6 +35,11 @@ ServerSide::ServerSide(GameState* _gameState) :
          0);
    if (server == NULL) {
       cerr << "Could not create server!" << endl;
+      exit(EXIT_FAILURE);
+   }
+   
+   if (enet_host_compress_with_range_coder(server) < 0) {
+      cerr << "Could not enable server range coder!" << endl;
       exit(EXIT_FAILURE);
    }
 
@@ -110,7 +119,7 @@ void ServerSide::send(_ENetPeer* client, const ast::Frame& frame, bool reliable)
    }
 
    // DEBUG
-   //printf("Plen: %lu\n", outgoing.length());
+   debugoutput << "Plen: " << outgoing.length() << std::endl;
 
    ENetPacket* packet = enet_packet_create(outgoing.c_str(), outgoing.length(), 
     reliable ? ENET_PACKET_FLAG_RELIABLE : 0);

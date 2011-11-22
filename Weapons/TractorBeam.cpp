@@ -36,7 +36,7 @@ TractorBeam::~TractorBeam() {
 
 void TractorBeam::update(double timeDiff) {
    // Stop sound if we're no longer firing.
-   if (!ship->isFiring) {
+   if (!ship->isFiring || ship->currentWeapon != index) {
       if (soundPlaying) {
          SoundEffect::stopSoundEffect(soundHandle);
          soundPlaying = false;
@@ -56,20 +56,21 @@ void TractorBeam::update(double timeDiff) {
 void TractorBeam::fire() {
    if (!isReady())
       return;
+   
+   TractorBeamShot* shot;
+   if (shotid != 0) {
+      shot = static_cast<TractorBeamShot*>((*ship->custodian)[shotid]);
+      if (shot == NULL) {
+         // Oops!
+         shotid = 0;
+      } else {
+         // Update shot.
+         shot->setPosAndDir(ship->shotOrigin, ship->shotDirection);
+         shot->up->clone(ship->up);
+      }
+   }
 
    if (ship->gameState->gsm != ClientMode) {
-      TractorBeamShot* shot;
-      if (shotid != 0) {
-         shot = static_cast<TractorBeamShot*>((*ship->custodian)[shotid]);
-         if (shot == NULL) {
-            // Oops!
-            shotid = 0;
-         } else {
-            // Update shot.
-            shot->setPosAndDir(ship->shotOrigin, ship->shotDirection);
-            shot->up->clone(ship->up);
-         }
-      }
       // Catch the oops from before.
       if (shotid == 0) {
          Point3D start = ship->shotOrigin;

@@ -274,8 +274,11 @@ void GameState::addScreens() {
 void GameState::update(double timeDiff) {
    updateGameTime(timeDiff);
    curGameStateId++;
-   // Cleanup here to make sure we're not depending on anything (hopefully.)
-   custodian.cleanup();
+   if (gsm != ServerMode) {
+      // Cleanup here to make sure we're not depending on anything (hopefully.)
+      // Don't cleanup if on server side.
+      custodian.cleanup();
+   }
 
    if (gsm == ClientMode) {
       clientSide->receive();
@@ -443,10 +446,7 @@ void GameState::update(double timeDiff) {
                frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
             } else {
                saveDiff(*(savedGameStates[client->ackGameState]), frame.mutable_gamestate());
-            }
-
-            
-            if (client->ackGameState != 0) {
+               
                unsigned i;
                for (i = client->ackGameState + 1; i <= gameStateId; ++i) {
                   if (savedCollisionMessages[i] != NULL)
@@ -454,7 +454,6 @@ void GameState::update(double timeDiff) {
                }
             }
 
-            frame.set_timestamp(getGameTime());
             serverSide->send(client->client, frame, sendReliable);
             
             frame.Clear();
@@ -1961,11 +1960,13 @@ void GameState::loadFromDisk() {
 void GameState::load(const ast::GameState& gs) {
    gameTime = gs.gametime();
 
-   if (gs.has_leveltimer())
+   if (gs.has_leveltimer()) {
       levelTimer.load(gs.leveltimer());
+   }
 
-   if (gs.has_curlevel())
+   if (gs.has_curlevel()) {
       curLevel = gs.curlevel();
+   }
 
    for (int i = 0; i < gs.entity_size(); ++i) {
       const ast::Entity& ent = gs.entity(i);
@@ -2061,18 +2062,19 @@ void GameState::handleFrame(ast::Frame* frame) {
 
    if (frame->has_gamestate()) {
       ast::CollisionMessage* curCollisionMessage = NULL;
-      while (frame->collision_message_size() > 0) {
-
-         curCollisionMessage = frame->mutable_collision_message()->ReleaseLast();
-         if (curCollisionMessage->gamestateid() > lastReceivedGameStateId) {
-            savedCollisionMessages[curCollisionMessage->gamestateid()] = curCollisionMessage;
-         } else {
-            delete curCollisionMessage;
-         }
-      }
-
+      
       if (frame->gamestate().id() > lastReceivedGameStateId ||
        lastReceivedGameStateId == 0) {
+         while (frame->collision_message_size() > 0) {
+
+            curCollisionMessage = frame->mutable_collision_message()->ReleaseLast();
+            if (curCollisionMessage->gamestateid() > lastReceivedGameStateId) {
+               savedCollisionMessages[curCollisionMessage->gamestateid()] = curCollisionMessage;
+            } else {
+               delete curCollisionMessage;
+            }
+         }
+
          load(frame->gamestate());
          custodian.update();
          lastReceivedGameStateId = frame->gamestate().id();

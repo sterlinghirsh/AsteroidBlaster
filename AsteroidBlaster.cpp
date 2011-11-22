@@ -41,6 +41,11 @@
 
 #include <libgen.h>
 
+// DEBUG
+#include <fstream>
+std::ofstream debugoutput("debug.txt");
+
+
 GameState* gameState;
 // the absolute time update was last called
 static double lastUpdateTime = 0;
@@ -444,6 +449,7 @@ int main(int argc, char* argv[]) {
    lastUpdateTime = doubleTime();
 
    unsigned long frameLength = 50; // ms = 20 fps
+   frameLength = 100;
    if (_gsm != ServerMode) {
       frameLength = 16; // ms = 60 fps
    }

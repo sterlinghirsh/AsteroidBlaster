@@ -117,8 +117,8 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
       /* Remove health from both equal to minHealthDeduction + randomHealthDeduction 
        * or b->health or a->health, whichever is smallest.
        */
-      const double minHealthDeduction = 50;
-      const double randomHealthDeduction = randdouble() * 40;
+      const float minHealthDeduction = 50;
+      const float randomHealthDeduction = randdouble() * 40;
 
       if (a->gameState->gsm != ClientMode) {
          double healthToRemove = std::min(std::min(a->health, b->health), 
@@ -148,10 +148,10 @@ void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
       a->justGotHit = a->gameState->getGameTime();
    } else {
       if (a->gameState->gsm != ClientMode) {
-         const double minHealthDeduction = 50;
-         const double randomHealthDeduction = randdouble() * 40;
+         const float minHealthDeduction = 50;
+         const float randomHealthDeduction = randdouble() * 40;
       
-         double healthToRemove = std::min(std::min(a->health, b->health), 
+         float healthToRemove = std::min(std::min(a->health, b->health), 
           minHealthDeduction + randomHealthDeduction);
 
          b->health -= healthToRemove;

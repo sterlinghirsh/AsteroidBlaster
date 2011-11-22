@@ -18,6 +18,11 @@
 
 #include <sstream>
 
+// DEBUG
+#include <fstream>
+extern std::ofstream debugoutput;
+
+
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
 #endif
@@ -729,9 +734,13 @@ void AsteroidShip::update(double timeDiff) {
          }
          
          if (isBraking) {
-            velocity->x -= velocity->x * timeDiff * brakeFactor;
-            velocity->y -= velocity->y * timeDiff * brakeFactor;
-            velocity->z -= velocity->z * timeDiff * brakeFactor;
+            if (velocity->getComparisonLength() < 0.01) {
+               velocity->updateMagnitude(0, 0, 0);
+            } else {
+               velocity->x -= velocity->x * timeDiff * brakeFactor;
+               velocity->y -= velocity->y * timeDiff * brakeFactor;
+               velocity->z -= velocity->z * timeDiff * brakeFactor;
+            }
          }
       }
    }
@@ -739,43 +748,41 @@ void AsteroidShip::update(double timeDiff) {
    Object3D::update(timeDiff);         
    
    if (lives > 0) {
-      if (gameState->gsm != ClientMode) {
-         if (velocity->getComparisonLength() > 
-          (maxSpeed + engineLevel * 2) * (maxSpeed + engineLevel * 2)) {
-            Vector3D* slowDown = new Vector3D(velocity->scalarMultiply(-0.8 * timeDiff));
-            velocity->addUpdate(slowDown);
-         }  
+      if (velocity->getComparisonLength() > 
+       (maxSpeed + engineLevel * 2) * (maxSpeed + engineLevel * 2)) {
+         Vector3D* slowDown = new Vector3D(velocity->scalarMultiply(-0.8 * timeDiff));
+         velocity->addUpdate(slowDown);
+      }  
 
-         if (rollSpeed > targetRollSpeed) {
-            rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration),
-                  targetRollSpeed, rollSpeed);
-         } else if (rollSpeed < targetRollSpeed) {
-            rollSpeed = clamp(rollSpeed + (timeDiff * rotationalAcceleration),
-                  rollSpeed, targetRollSpeed);
-         }
-
-         if (pitchSpeed > targetPitchSpeed) {
-            pitchSpeed = clamp(pitchSpeed - (timeDiff * rotationalAcceleration),
-                  targetPitchSpeed, pitchSpeed);
-         } else if (pitchSpeed < targetPitchSpeed) {
-            pitchSpeed = clamp(pitchSpeed + (timeDiff * rotationalAcceleration),
-                  pitchSpeed, targetPitchSpeed);
-         }
-
-         if (yawSpeed > targetYawSpeed) {
-            yawSpeed = clamp(yawSpeed - (timeDiff * rotationalAcceleration),
-                  targetYawSpeed, yawSpeed);
-         } else if (yawSpeed < targetYawSpeed) {
-            yawSpeed = clamp(yawSpeed + (timeDiff * rotationalAcceleration),
-                  yawSpeed, targetYawSpeed);
-         }
-
-         if (isBarrelRollingLeft <= 0 && isBarrelRollingRight <= 0) {
-            roll(timeDiff * rollSpeed);
-         }
-         pitch(timeDiff * pitchSpeed);
-         yaw(timeDiff * yawSpeed);
+      if (rollSpeed > targetRollSpeed) {
+         rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration),
+               targetRollSpeed, rollSpeed);
+      } else if (rollSpeed < targetRollSpeed) {
+         rollSpeed = clamp(rollSpeed + (timeDiff * rotationalAcceleration),
+               rollSpeed, targetRollSpeed);
       }
+
+      if (pitchSpeed > targetPitchSpeed) {
+         pitchSpeed = clamp(pitchSpeed - (timeDiff * rotationalAcceleration),
+               targetPitchSpeed, pitchSpeed);
+      } else if (pitchSpeed < targetPitchSpeed) {
+         pitchSpeed = clamp(pitchSpeed + (timeDiff * rotationalAcceleration),
+               pitchSpeed, targetPitchSpeed);
+      }
+
+      if (yawSpeed > targetYawSpeed) {
+         yawSpeed = clamp(yawSpeed - (timeDiff * rotationalAcceleration),
+               targetYawSpeed, yawSpeed);
+      } else if (yawSpeed < targetYawSpeed) {
+         yawSpeed = clamp(yawSpeed + (timeDiff * rotationalAcceleration),
+               yawSpeed, targetYawSpeed);
+      }
+
+      if (isBarrelRollingLeft <= 0 && isBarrelRollingRight <= 0) {
+         roll(timeDiff * rollSpeed);
+      }
+      pitch(timeDiff * pitchSpeed);
+      yaw(timeDiff * yawSpeed);
 
       if (!shooter->isEnabled()) {
          updateShotDirectionVector();
@@ -905,25 +912,27 @@ void AsteroidShip::update(double timeDiff) {
             addInstantAcceleration(new Vector3D(right->scalarMultiply(-20)));
          if (isBarrelRollingRight == 1)
             addInstantAcceleration(new Vector3D(right->scalarMultiply(20)));
-         if (isBarrelRollingLeft > 0) {
-            if (isBarrelRollingLeft < timeDiff) {
-               roll(isBarrelRollingLeft * -2 * M_PI);
-            } else {
-               roll(timeDiff * -2 * M_PI);
-            }
-            
-            isBarrelRollingLeft -= timeDiff;
+      }
+
+      // Do this client side too.
+      if (isBarrelRollingLeft > 0) {
+         if (isBarrelRollingLeft < timeDiff) {
+            roll(isBarrelRollingLeft * -2 * M_PI);
+         } else {
+            roll(timeDiff * -2 * M_PI);
+         }
+         
+         isBarrelRollingLeft -= timeDiff;
+      }
+
+      if (isBarrelRollingRight > 0) {
+         if (isBarrelRollingRight < timeDiff) {
+            roll(isBarrelRollingRight * 2 * M_PI);
+         } else {
+            roll(timeDiff * 2 * M_PI);
          }
 
-         if (isBarrelRollingRight > 0) {
-            if (isBarrelRollingRight < timeDiff) {
-               roll(isBarrelRollingRight * 2 * M_PI);
-            } else {
-               roll(timeDiff * 2 * M_PI);
-            }
-
-            isBarrelRollingRight -= timeDiff;
-         }
+         isBarrelRollingRight -= timeDiff;
       }
 
       if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode) && weapons[RAM_WEAPON_INDEX]->isReady()) {
@@ -2215,15 +2224,17 @@ double AsteroidShip::getBankPeriod() {
 bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    bool changed = Object3D::saveDiff(old, ent);
    
-   if (!up->saveDiff(old.up(), ent->mutable_up()))
+   if (!up->saveDiff(old.up(), ent->mutable_up())) {
       ent->clear_up();
-   else
+   } else {
       changed = true;
+   }
    
-   if (!forward->saveDiff(old.forward(), ent->mutable_forward()))
+   if (!forward->saveDiff(old.forward(), ent->mutable_forward())) {
       ent->clear_forward();
-   else
+   } else {
       changed = true;
+   }
    
    /*
    if (!right->saveDiff(old.right(), ent->mutable_right()))
@@ -2232,10 +2243,11 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
       changed = true;
       */
    
-   if (!shotDirection.saveDiff(old.shotdirection(), ent->mutable_shotdirection()))
+   if (!shotDirection.saveDiff(old.shotdirection(), ent->mutable_shotdirection())) {
       ent->clear_shotdirection();
-   else
+   } else {
       changed = true;
+   }
 
    if (!bankTimer.saveDiff(old.banktimer(), ent->mutable_banktimer())) {
       ent->clear_banktimer();
@@ -2251,8 +2263,10 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    for (int i = 0; i < NUMBER_OF_WEAPONS; ++i) {
       if (!getWeapon(i)->saveDiff(old.weapon(i), ent->add_weapon()))
          ent->mutable_weapon()->RemoveLast();
-      else
+      else {
          changed = true;
+         debugoutput << "weap " << i << " changed.\n";
+      }
    }
 
 

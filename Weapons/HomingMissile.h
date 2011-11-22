@@ -24,8 +24,8 @@ class HomingMissile : public Weapon {
       virtual double getCoolDownAmount();
    
    protected:
-      double shotSpeed;
-      double randomVariationAmount;
+      float shotSpeed;
+      float randomVariationAmount;
       Point3D* lastShotPos;
 };
 

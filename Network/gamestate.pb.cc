@@ -299,15 +299,8 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateEntityMessage));
   Frame_descriptor_ = file->message_type(9);
-  static const int Frame_offsets_[10] = {
+  static const int Frame_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, collision_message_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, chatmessage_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, seq_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, ack_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, timestamp_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, remove_id_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, firing_ships_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, diff_of_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, gamestate_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Frame, shipid_),
   };
@@ -389,7 +382,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027Network/gamestate.proto\022\003ast\")\n\006Vector"
-    "\022\t\n\001x\030\001 \001(\001\022\t\n\001y\030\002 \001(\001\022\t\n\001z\030\003 \001(\001\"\317\n\n\006En"
+    "\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\"\317\n\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
     "\013.ast.Vector\022\033\n\006weapon\030\005 \003(\0132\013.ast.Weapo"
@@ -454,13 +447,9 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "\"-\n\013ChatMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004tex"
     "t\030\002 \001(\t\"Q\n\023CreateEntityMessage\022\035\n\025create"
     "EntityMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013."
-    "ast.Entity\"\202\002\n\005Frame\0220\n\021collision_messag"
-    "e\030\001 \003(\0132\025.ast.CollisionMessage\022%\n\013chatMe"
-    "ssage\030\002 \003(\0132\020.ast.ChatMessage\022\013\n\003seq\030\003 \001"
-    "(\004\022\013\n\003ack\030\004 \001(\004\022\021\n\ttimestamp\030\005 \001(\001\022\025\n\tre"
-    "move_id\030\006 \003(\rB\002\020\001\022\030\n\014firing_ships\030\007 \003(\rB"
-    "\002\020\001\022\017\n\007diff_of\030\010 \001(\r\022!\n\tgameState\030\t \001(\0132"
-    "\016.ast.GameState\022\016\n\006shipid\030\n \001(\r", 2911);
+    "ast.Entity\"l\n\005Frame\0220\n\021collision_message"
+    "\030\001 \003(\0132\025.ast.CollisionMessage\022!\n\tgameSta"
+    "te\030\t \001(\0132\016.ast.GameState\022\016\n\006shipid\030\n \001(\r", 2760);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -569,44 +558,44 @@ bool Vector::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional double x = 1;
+      // optional float x = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &x_)));
           set_has_x();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(17)) goto parse_y;
+        if (input->ExpectTag(21)) goto parse_y;
         break;
       }
       
-      // optional double y = 2;
+      // optional float y = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_y:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &y_)));
           set_has_y();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(25)) goto parse_z;
+        if (input->ExpectTag(29)) goto parse_z;
         break;
       }
       
-      // optional double z = 3;
+      // optional float z = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_z:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &z_)));
           set_has_z();
         } else {
@@ -634,19 +623,19 @@ bool Vector::MergePartialFromCodedStream(
 
 void Vector::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional double x = 1;
+  // optional float x = 1;
   if (has_x()) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(1, this->x(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->x(), output);
   }
   
-  // optional double y = 2;
+  // optional float y = 2;
   if (has_y()) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->y(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->y(), output);
   }
   
-  // optional double z = 3;
+  // optional float z = 3;
   if (has_z()) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(3, this->z(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->z(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -657,19 +646,19 @@ void Vector::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Vector::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional double x = 1;
+  // optional float x = 1;
   if (has_x()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(1, this->x(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->x(), target);
   }
   
-  // optional double y = 2;
+  // optional float y = 2;
   if (has_y()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->y(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->y(), target);
   }
   
-  // optional double z = 3;
+  // optional float z = 3;
   if (has_z()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(3, this->z(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->z(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -683,19 +672,19 @@ int Vector::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional double x = 1;
+    // optional float x = 1;
     if (has_x()) {
-      total_size += 1 + 8;
+      total_size += 1 + 4;
     }
     
-    // optional double y = 2;
+    // optional float y = 2;
     if (has_y()) {
-      total_size += 1 + 8;
+      total_size += 1 + 4;
     }
     
-    // optional double z = 3;
+    // optional float z = 3;
     if (has_z()) {
-      total_size += 1 + 8;
+      total_size += 1 + 4;
     }
     
   }
@@ -6800,13 +6789,6 @@ void CreateEntityMessage::Swap(CreateEntityMessage* other) {
 
 #ifndef _MSC_VER
 const int Frame::kCollisionMessageFieldNumber;
-const int Frame::kChatMessageFieldNumber;
-const int Frame::kSeqFieldNumber;
-const int Frame::kAckFieldNumber;
-const int Frame::kTimestampFieldNumber;
-const int Frame::kRemoveIdFieldNumber;
-const int Frame::kFiringShipsFieldNumber;
-const int Frame::kDiffOfFieldNumber;
 const int Frame::kGameStateFieldNumber;
 const int Frame::kShipidFieldNumber;
 #endif  // !_MSC_VER
@@ -6828,10 +6810,6 @@ Frame::Frame(const Frame& from)
 
 void Frame::SharedCtor() {
   _cached_size_ = 0;
-  seq_ = GOOGLE_ULONGLONG(0);
-  ack_ = GOOGLE_ULONGLONG(0);
-  timestamp_ = 0;
-  diff_of_ = 0u;
   gamestate_ = NULL;
   shipid_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -6868,22 +6846,13 @@ Frame* Frame::New() const {
 }
 
 void Frame::Clear() {
-  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
-    seq_ = GOOGLE_ULONGLONG(0);
-    ack_ = GOOGLE_ULONGLONG(0);
-    timestamp_ = 0;
-    diff_of_ = 0u;
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
     if (has_gamestate()) {
       if (gamestate_ != NULL) gamestate_->::ast::GameState::Clear();
     }
     shipid_ = 0u;
   }
   collision_message_.Clear();
-  chatmessage_.Clear();
-  remove_id_.Clear();
-  firing_ships_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -6905,127 +6874,6 @@ bool Frame::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(10)) goto parse_collision_message;
-        if (input->ExpectTag(18)) goto parse_chatMessage;
-        break;
-      }
-      
-      // repeated .ast.ChatMessage chatMessage = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_chatMessage:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_chatmessage()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_chatMessage;
-        if (input->ExpectTag(24)) goto parse_seq;
-        break;
-      }
-      
-      // optional uint64 seq = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_seq:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &seq_)));
-          set_has_seq();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(32)) goto parse_ack;
-        break;
-      }
-      
-      // optional uint64 ack = 4;
-      case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_ack:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &ack_)));
-          set_has_ack();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(41)) goto parse_timestamp;
-        break;
-      }
-      
-      // optional double timestamp = 5;
-      case 5: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-         parse_timestamp:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, &timestamp_)));
-          set_has_timestamp();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(50)) goto parse_remove_id;
-        break;
-      }
-      
-      // repeated uint32 remove_id = 6 [packed = true];
-      case 6: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_remove_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, this->mutable_remove_id())));
-        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
-                   == ::google::protobuf::internal::WireFormatLite::
-                      WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 1, 50, input, this->mutable_remove_id())));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(58)) goto parse_firing_ships;
-        break;
-      }
-      
-      // repeated uint32 firing_ships = 7 [packed = true];
-      case 7: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_firing_ships:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, this->mutable_firing_ships())));
-        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
-                   == ::google::protobuf::internal::WireFormatLite::
-                      WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 1, 58, input, this->mutable_firing_ships())));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(64)) goto parse_diff_of;
-        break;
-      }
-      
-      // optional uint32 diff_of = 8;
-      case 8: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_diff_of:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &diff_of_)));
-          set_has_diff_of();
-        } else {
-          goto handle_uninterpreted;
-        }
         if (input->ExpectTag(74)) goto parse_gameState;
         break;
       }
@@ -7084,52 +6932,6 @@ void Frame::SerializeWithCachedSizes(
       1, this->collision_message(i), output);
   }
   
-  // repeated .ast.ChatMessage chatMessage = 2;
-  for (int i = 0; i < this->chatmessage_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->chatmessage(i), output);
-  }
-  
-  // optional uint64 seq = 3;
-  if (has_seq()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->seq(), output);
-  }
-  
-  // optional uint64 ack = 4;
-  if (has_ack()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->ack(), output);
-  }
-  
-  // optional double timestamp = 5;
-  if (has_timestamp()) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(5, this->timestamp(), output);
-  }
-  
-  // repeated uint32 remove_id = 6 [packed = true];
-  if (this->remove_id_size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteTag(6, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
-    output->WriteVarint32(_remove_id_cached_byte_size_);
-  }
-  for (int i = 0; i < this->remove_id_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32NoTag(
-      this->remove_id(i), output);
-  }
-  
-  // repeated uint32 firing_ships = 7 [packed = true];
-  if (this->firing_ships_size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteTag(7, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
-    output->WriteVarint32(_firing_ships_cached_byte_size_);
-  }
-  for (int i = 0; i < this->firing_ships_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32NoTag(
-      this->firing_ships(i), output);
-  }
-  
-  // optional uint32 diff_of = 8;
-  if (has_diff_of()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(8, this->diff_of(), output);
-  }
-  
   // optional .ast.GameState gameState = 9;
   if (has_gamestate()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -7156,61 +6958,6 @@ void Frame::SerializeWithCachedSizes(
         1, this->collision_message(i), target);
   }
   
-  // repeated .ast.ChatMessage chatMessage = 2;
-  for (int i = 0; i < this->chatmessage_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->chatmessage(i), target);
-  }
-  
-  // optional uint64 seq = 3;
-  if (has_seq()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->seq(), target);
-  }
-  
-  // optional uint64 ack = 4;
-  if (has_ack()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->ack(), target);
-  }
-  
-  // optional double timestamp = 5;
-  if (has_timestamp()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(5, this->timestamp(), target);
-  }
-  
-  // repeated uint32 remove_id = 6 [packed = true];
-  if (this->remove_id_size() > 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
-      6,
-      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
-      target);
-    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
-      _remove_id_cached_byte_size_, target);
-  }
-  for (int i = 0; i < this->remove_id_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteUInt32NoTagToArray(this->remove_id(i), target);
-  }
-  
-  // repeated uint32 firing_ships = 7 [packed = true];
-  if (this->firing_ships_size() > 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
-      7,
-      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
-      target);
-    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
-      _firing_ships_cached_byte_size_, target);
-  }
-  for (int i = 0; i < this->firing_ships_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteUInt32NoTagToArray(this->firing_ships(i), target);
-  }
-  
-  // optional uint32 diff_of = 8;
-  if (has_diff_of()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(8, this->diff_of(), target);
-  }
-  
   // optional .ast.GameState gameState = 9;
   if (has_gamestate()) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -7233,35 +6980,7 @@ void Frame::SerializeWithCachedSizes(
 int Frame::ByteSize() const {
   int total_size = 0;
   
-  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
-    // optional uint64 seq = 3;
-    if (has_seq()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->seq());
-    }
-    
-    // optional uint64 ack = 4;
-    if (has_ack()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->ack());
-    }
-    
-    // optional double timestamp = 5;
-    if (has_timestamp()) {
-      total_size += 1 + 8;
-    }
-    
-    // optional uint32 diff_of = 8;
-    if (has_diff_of()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->diff_of());
-    }
-    
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
     // optional .ast.GameState gameState = 9;
     if (has_gamestate()) {
       total_size += 1 +
@@ -7283,44 +7002,6 @@ int Frame::ByteSize() const {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         this->collision_message(i));
-  }
-  
-  // repeated .ast.ChatMessage chatMessage = 2;
-  total_size += 1 * this->chatmessage_size();
-  for (int i = 0; i < this->chatmessage_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->chatmessage(i));
-  }
-  
-  // repeated uint32 remove_id = 6 [packed = true];
-  {
-    int data_size = 0;
-    for (int i = 0; i < this->remove_id_size(); i++) {
-      data_size += ::google::protobuf::internal::WireFormatLite::
-        UInt32Size(this->remove_id(i));
-    }
-    if (data_size > 0) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
-    }
-    _remove_id_cached_byte_size_ = data_size;
-    total_size += data_size;
-  }
-  
-  // repeated uint32 firing_ships = 7 [packed = true];
-  {
-    int data_size = 0;
-    for (int i = 0; i < this->firing_ships_size(); i++) {
-      data_size += ::google::protobuf::internal::WireFormatLite::
-        UInt32Size(this->firing_ships(i));
-    }
-    if (data_size > 0) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
-    }
-    _firing_ships_cached_byte_size_ = data_size;
-    total_size += data_size;
   }
   
   if (!unknown_fields().empty()) {
@@ -7349,24 +7030,7 @@ void Frame::MergeFrom(const ::google::protobuf::Message& from) {
 void Frame::MergeFrom(const Frame& from) {
   GOOGLE_CHECK_NE(&from, this);
   collision_message_.MergeFrom(from.collision_message_);
-  chatmessage_.MergeFrom(from.chatmessage_);
-  remove_id_.MergeFrom(from.remove_id_);
-  firing_ships_.MergeFrom(from.firing_ships_);
-  if (from._has_bits_[2 / 32] & (0xffu << (2 % 32))) {
-    if (from.has_seq()) {
-      set_seq(from.seq());
-    }
-    if (from.has_ack()) {
-      set_ack(from.ack());
-    }
-    if (from.has_timestamp()) {
-      set_timestamp(from.timestamp());
-    }
-    if (from.has_diff_of()) {
-      set_diff_of(from.diff_of());
-    }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
     if (from.has_gamestate()) {
       mutable_gamestate()->::ast::GameState::MergeFrom(from.gamestate());
     }
@@ -7400,13 +7064,6 @@ bool Frame::IsInitialized() const {
 void Frame::Swap(Frame* other) {
   if (other != this) {
     collision_message_.Swap(&other->collision_message_);
-    chatmessage_.Swap(&other->chatmessage_);
-    std::swap(seq_, other->seq_);
-    std::swap(ack_, other->ack_);
-    std::swap(timestamp_, other->timestamp_);
-    remove_id_.Swap(&other->remove_id_);
-    firing_ships_.Swap(&other->firing_ships_);
-    std::swap(diff_of_, other->diff_of_);
     std::swap(gamestate_, other->gamestate_);
     std::swap(shipid_, other->shipid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);

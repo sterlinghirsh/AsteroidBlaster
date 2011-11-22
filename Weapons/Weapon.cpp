@@ -13,6 +13,10 @@
 
 #include "Network/gamestate.pb.h"
 
+// DEBUG
+#include <fstream>
+extern std::ofstream debugoutput;
+
 /**
  * Initialize the ship and timeLastFired.
  */

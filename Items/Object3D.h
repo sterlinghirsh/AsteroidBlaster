@@ -27,10 +27,10 @@ class Object3D : public Drawable {
       Vector3D* axis;
       Vector3D *up, *right, *forward;
       bool lockUpVector;
-      double angle;
-      double rotationSpeed;
+      float angle;
+      float rotationSpeed;
       unsigned id;
-      double yawSpeed, pitchSpeed, rollSpeed;
+      float yawSpeed, pitchSpeed, rollSpeed;
       
       
    //private variables------------------------------

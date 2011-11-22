@@ -57,12 +57,14 @@ void Electricity::update(double timeDiff) {
          SoundEffect::stopSoundEffect(soundHandle);
          soundPlaying = false;
       }
+
       if (ship->gameState->gsm != ClientMode) {
          shotsFired = 0;
          Object3D* shot = (*ship->custodian)[shotid];
          if (shot != NULL)
             shot->shouldRemove = true;
       }
+      shotid = 0;
    }
    ++currentFrame;
 
@@ -75,39 +77,43 @@ void Electricity::fire() {
       return;
    
    lastFiredFrame = currentFrame;
+     
+   if (shotsFired == 0) {
+      timeStartedFiring = ship->gameState->getGameTime();
+   }
+   
+   int shotsToFire = 1;
 
-   // If it's client mode, wait for the shot packet to arrive, 
-   // and then add to the game.
    if (ship->gameState->gsm != ClientMode) {
-      if (shotsFired == 0) {
-         timeStartedFiring = ship->gameState->getGameTime();
-      }
-      
       double curTime = ship->gameState->getGameTime();
       double timeFired = curTime - timeStartedFiring;
-      int shotsToFire = 0;
-
-      if (timeFired == 0) {
+      shotsToFire = 0;
+      if (timeFired <= 0.01) {
          shotsToFire = 1;
       } else {
          while (((shotsFired + shotsToFire) / timeFired) <= shotsPerSec) {
             shotsToFire++;
          }
       }
-      
-      ElectricityShot* shot;
+   }
+   
+   ElectricityShot* shot;
 
-      if (shotid != 0) {
-         shot = static_cast<ElectricityShot*>((*ship->custodian)[shotid]);
-         if (shot == NULL) {
-            // Oops!
-            shotid = 0;
-         } else {
-            // Update shot.
-            shot->setPosAndDir(ship->shotOrigin, ship->shotDirection);
-            shot->setStrength(shotsToFire);
-         }
+   if (shotid != 0) {
+      shot = static_cast<ElectricityShot*>((*ship->custodian)[shotid]);
+      if (shot == NULL) {
+         // Oops!
+         shotid = 0;
+      } else {
+         // Update shot.
+         shot->setPosAndDir(ship->shotOrigin, ship->shotDirection);
+         shot->setStrength(shotsToFire);
       }
+   }
+
+   // If it's client mode, wait for the shot packet to arrive, 
+   // and then add to the game.
+   if (ship->gameState->gsm != ClientMode) {
       // Catch the oops from before.
       if (shotid == 0) {
          Point3D start = ship->shotOrigin;
@@ -119,6 +125,8 @@ void Electricity::fire() {
 
       shotsFired += shotsToFire;
       addHeat(heatPerShot * shotsToFire);
+   } else if (shotsFired == 0) {
+      shotsFired = 1;
    }
 
    ship->setShakeAmount(0.1f);

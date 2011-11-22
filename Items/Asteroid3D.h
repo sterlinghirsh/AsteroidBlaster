@@ -23,19 +23,19 @@ class Asteroid3D : public Object3D {
    //public variables------------------------------
    public:
       Mesh3D mesh;
-      double scalex, scaley, scalez;
-      double worldSize;
-      double initH;
-      double health;
-      double sizeX, sizeY, sizeZ, collisionRadius;
+      float scalex, scaley, scalez;
+      float worldSize;
+      float initH;
+      float health;
+      float sizeX, sizeY, sizeZ, collisionRadius;
       Vector3D* newAcceleration;
       Vector3D* newVelocity;
 
       bool energyHitAsteroid;
-      double timeLastHitByEnergy;
-      double damagePerSecond;
+      float timeLastHitByEnergy;
+      float damagePerSecond;
 
-      double rotationSpeedChange;
+      float rotationSpeedChange;
       
       // Make this an id.
       AsteroidShip* lastHitShotOwner;

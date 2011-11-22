@@ -71,9 +71,9 @@ class AsteroidShip : public Object3D {
       Timer bankTimer; // This is set if there are any shards unbanked
 
       // Ship's current health
-      double health;
+      float health;
       // Ship's maximum health value
-      double healthMax;
+      float healthMax;
       // The ship's engine level
       int engineLevel;
       // The ship's health regen level
@@ -82,23 +82,23 @@ class AsteroidShip : public Object3D {
       int bankLevel;
 
 
-      double shotOriginScale;
-      double spin;
-      double flashiness;
-      double tracker;
+      float shotOriginScale;
+      float spin;
+      float flashiness;
+      float tracker;
       int rando;
-      double x2Change;
-      double y2Change;
-      double z2Change;
-      double xChange;
-      double yChange;
-      double zChange;
-      double backChange;
-      double lineMove;
-      double zMove;
-      double justGotHit;
-      double drawShieldTime;
-      double timeLeftToRespawn;
+      float x2Change;
+      float y2Change;
+      float z2Change;
+      float xChange;
+      float yChange;
+      float zChange;
+      float backChange;
+      float lineMove;
+      float zMove;
+      float justGotHit;
+      float drawShieldTime;
+      float timeLeftToRespawn;
       bool spawnInvulnerable;
       bool drawSpawn;
       int upOrDown;
@@ -125,8 +125,8 @@ class AsteroidShip : public Object3D {
       int currentWeapon;
       float shakeAmount;
       
-      double isBarrelRollingLeft;
-      double isBarrelRollingRight;
+      float isBarrelRollingLeft;
+      float isBarrelRollingRight;
       
       
    //private variables------------------------------
@@ -277,50 +277,50 @@ class AsteroidShip : public Object3D {
       SoundChannel* soundHandle;
       Radar* radar; // This is the ship's radar that it should query for information about its surroundings
 
-      double brakeFactor;
+      float brakeFactor;
       //NOT USED
       //double shipRadius; // Units, this is the distance from the center to assume that we're hitting something.
 
       // These could get changed with upgrades.
-      double maxForwardAccel;
-      double maxUpAccel;
-      double maxRightAccel;
-      double maxBoostForwardAccel;
-      double maxBoostUpAccel;
-      double maxBoostRightAccel;
-      double maxYawSpeed;
-      double maxPitchSpeed;
-      double maxRollSpeed;
+      float maxForwardAccel;
+      float maxUpAccel;
+      float maxRightAccel;
+      float maxBoostForwardAccel;
+      float maxBoostUpAccel;
+      float maxBoostRightAccel;
+      float maxYawSpeed;
+      float maxPitchSpeed;
+      float maxRollSpeed;
 
-      double shotPhi; // Radians
-      double shotTheta; // Radians
+      float shotPhi; // Radians
+      float shotTheta; // Radians
 
-      double curForwardAccel; // Units per second^2
-      double curRightAccel;
-      double curUpAccel;
+      float curForwardAccel; // Units per second^2
+      float curRightAccel;
+      float curUpAccel;
 
-      double targetYawSpeed;
-      double targetPitchSpeed;
-      double targetRollSpeed;
+      float targetYawSpeed;
+      float targetPitchSpeed;
+      float targetRollSpeed;
 
-      double maxSpeed; // Units per second
-      double maxBoostSpeed; // Units per second
-      double frontX;
-      double frontY;
-      double frontZ;
-      double cornerX;
-      double cornerY;
-      double cornerZ;
-      double middleXY;
-      double middleZ;
-      double backX;
-      double backY;
-      double backZ;
-      double skew;
+      float maxSpeed; // Units per second
+      float maxBoostSpeed; // Units per second
+      float frontX;
+      float frontY;
+      float frontZ;
+      float cornerX;
+      float cornerY;
+      float cornerZ;
+      float middleXY;
+      float middleZ;
+      float backX;
+      float backY;
+      float backZ;
+      float skew;
       
-      double hitX;
-      double hitY;
-      double hitZ;
+      float hitX;
+      float hitY;
+      float hitZ;
 
       bool isBraking;
       bool isFirstSpawn;
@@ -332,15 +332,15 @@ class AsteroidShip : public Object3D {
 
       int currentView; // Defined by view names above.
       
-      double aimX, aimY;
+      float aimX, aimY;
       
-      double accelerationStartTime;
+      float accelerationStartTime;
       int particlesEmitted;
 
       Timer respawnTimer;
       Timer aliveTimer;
 
-      double bankPeriod; // Time it takes for a single shard to bank.
+      float bankPeriod; // Time it takes for a single shard to bank.
       
       
    //protected functions------------------------------

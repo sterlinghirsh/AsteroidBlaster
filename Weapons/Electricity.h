@@ -24,7 +24,7 @@ class Electricity : public Weapon {
       int shotsFired;
       int shotsPerSec;
       unsigned shotid;
-      double timeStartedFiring;
+      float timeStartedFiring;
       virtual void stopSounds();
       
       virtual double getCoolDownAmount();

@@ -28,6 +28,11 @@ ClientSide::ClientSide(GameState* _gameState) :
       cerr << "Could not create client!" << endl;
       exit(EXIT_FAILURE);
    }
+   
+   if (enet_host_compress_with_range_coder(client) < 0) {
+      cerr << "Could not enable server range coder!" << endl;
+      exit(EXIT_FAILURE);
+   }
 
    event = new ENetEvent();
    serverAddress = new ENetAddress();

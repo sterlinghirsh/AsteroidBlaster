@@ -1,9 +1,9 @@
 package ast;
 
 message Vector {
-   optional double x = 1;
-   optional double y = 2;
-   optional double z = 3;
+   optional float x = 1;
+   optional float y = 2;
+   optional float z = 3;
 }
 
 // All items will live in this type.
@@ -197,14 +197,14 @@ message CreateEntityMessage {
 
 message Frame {
    repeated CollisionMessage collision_message = 1;
-   repeated ChatMessage chatMessage = 2;
-   optional uint64 seq = 3;
-   optional uint64 ack = 4;
-   optional double timestamp = 5;
-   repeated uint32 remove_id = 6 [packed=true];
-   repeated uint32 firing_ships = 7 [packed=true];
+   //repeated ChatMessage chatMessage = 2;
+   //optional uint64 seq = 3;
+   //optional uint64 ack = 4;
+   // optional double timestamp = 5;
+   //repeated uint32 remove_id = 6 [packed=true];
+   //repeated uint32 firing_ships = 7 [packed=true];
    // Gamestate id of what this gameState is a diff from.
-   optional uint32 diff_of = 8;
+   //optional uint32 diff_of = 8;
    optional GameState gameState = 9;
 
    optional uint32 shipid = 10;

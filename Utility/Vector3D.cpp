@@ -349,18 +349,13 @@ const Vector3D Vector3D::getNormalized() const {
 
 bool Vector3D::saveDiff(const ast::Vector& old, ast::Vector* vec) {
    bool somethingChanged = false;
-   if (x != old.x()) {
+   if (fabs((float)x - old.x()) > EPSILON ||
+    fabs((float)y - old.y()) > EPSILON ||
+    fabs((float)z - old.z()) > EPSILON) {
+
       somethingChanged = true;
       vec->set_x(x);
-   }
-
-   if (y != old.y()) {
-      somethingChanged = true;
       vec->set_y(y);
-   }
-
-   if (z != old.z()) {
-      somethingChanged = true;
       vec->set_z(z);
    }
 

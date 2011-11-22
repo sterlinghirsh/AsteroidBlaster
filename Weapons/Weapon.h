@@ -92,18 +92,18 @@ class Weapon {
 
       virtual void addHeat(double newHeat); // Not called by default.
       
-      double timeLastFired;
-      double coolDown;
-      double damage;
+      float timeLastFired;
+      float coolDown;
+      float damage;
 
       virtual void save(ast::Weapon* weap);
       virtual bool saveDiff(const ast::Weapon& old, ast::Weapon* weap);
       virtual void load(const ast::Weapon& weap);
 
    protected:
-      double currentHeat; // Measured in seconds.
-      double overheatLevel; // Also in seconds. When currentHeat hits this, we overheat.
-      double heatPerShot; // Added to currentHeat every shot.
+      float currentHeat; // Measured in seconds.
+      float overheatLevel; // Also in seconds. When currentHeat hits this, we overheat.
+      float heatPerShot; // Added to currentHeat every shot.
       bool overheated;
 
       std::string name;
