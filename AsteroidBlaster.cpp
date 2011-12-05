@@ -449,7 +449,7 @@ int main(int argc, char* argv[]) {
    lastUpdateTime = doubleTime();
 
    unsigned long frameLength = 50; // ms = 20 fps
-   frameLength = 100;
+   
    if (_gsm != ServerMode) {
       frameLength = 16; // ms = 60 fps
    }

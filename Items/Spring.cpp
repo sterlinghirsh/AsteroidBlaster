@@ -12,42 +12,79 @@
 #define UP_FORCE_SCALE 15.0
 
 Spring::Spring(const GameState* _gameState) :
-   Object3D(_gameState) {
+   Object3D(_gameState),
+   positionOffset(0, 0, 0) {
       isAttached = false;
    }
 
-void Spring::attach(AsteroidShip* anchorIn, Camera* itemIn) {
+void Spring::attach(AsteroidShip* anchorIn, Camera* cameraIn) {
    anchor = anchorIn;
-   item = itemIn;
+   camera = cameraIn;
    isAttached = true;
 }
 
-void Spring::update(double ms) {
+void Spring::update(double timeDiff) {
    // Connect the positions with a spring force.
    bool firstPerson = anchor->getCurrentView() == VIEW_FIRSTPERSON_SHIP;
 
    if (isAttached) {
       if (firstPerson) {
-         item->position->updateMagnitude((anchor->position)->add(*anchor->getCameraOffset()));
+         camera->position->updateMagnitude((anchor->position)->add(*anchor->getCameraOffset()));
       } else {
-         Vector3D targetVelocity = ((anchor->position)->add(*anchor->getCameraOffset()) - *item->position);
-         targetVelocity.addUpdate(item->up->scalarMultiply(2.5));
-         targetVelocity.scalarMultiplyUpdate(POS_FORCE_SCALE);
-         //*item->velocity = targetVelocity;
-         *item->velocity = anchor->velocity->lirp(targetVelocity, 0.5);
+         Vector3D targetPosition((anchor->position)->add(*anchor->getCameraOffset()));
+         
+         /*
+         Vector3D targetVelocity = targetPosition - *camera->position;
 
-         item->velocity->movePoint(*item->position, ms);
+         targetVelocity.addUpdate(camera->up->scalarMultiply(2.5));
+         targetVelocity.scalarMultiplyUpdate(POS_FORCE_SCALE);
+
+         *camera->velocity = anchor->velocity->lirp(targetVelocity, 0.5);
+
+         camera->velocity->movePoint(*camera->position, timeDiff);
+         */
+         targetPosition.addUpdate(camera->up->scalarMultiply(2.5));
+
+         Vector3D positionDiff = targetPosition - *camera->position;
+         positionDiff.scalarMultiplyUpdate(timeDiff);
+         
+         const double maxChange = 0.1;
+         if (positionDiff.getComparisonLength() > maxChange * maxChange) {
+            positionDiff.setLength(maxChange);
+         }
+         positionOffset.addUpdate(positionDiff);
+
+         *camera->position = targetPosition + positionOffset;
       }
-      /*
+      /* 
+         // Sterling's method 1
       if (firstPerson) {
-         item->position->updateMagnitude(displace);
+         camera->position->updateMagnitude((anchor->position)->add(*anchor->getCameraOffset()));
       } else {
-         displace.addUpdate(item->up->scalarMultiply(2.5));
-         Vector3D springVector = displace.subtract(*item->position);
+         Vector3D targetVelocity = ((anchor->position)->add(*anchor->getCameraOffset()) - *camera->position);
+         targetVelocity.addUpdate(camera->up->scalarMultiply(2.5));
+         targetVelocity.scalarMultiplyUpdate(POS_FORCE_SCALE);
+         // *camera->velocity = targetVelocity;
+         *camera->velocity = anchor->velocity->lirp(targetVelocity, 0.5);
+
+         camera->velocity->movePoint(*camera->position, timeDiff);
+      }
+      */
+
+
+
+
+      /*
+         // Chris's method
+      if (firstPerson) {
+         camera->position->updateMagnitude(displace);
+      } else {
+         displace.addUpdate(camera->up->scalarMultiply(2.5));
+         Vector3D springVector = displace.subtract(*camera->position);
          double length = springVector.getLength();
          if (length >= 0.001 || length <= -0.001) {
-            Vector3D forceVector = springVector.scalarMultiply(ms * POS_FORCE_SCALE);
-            item->position->addUpdate(forceVector);
+            Vector3D forceVector = springVector.scalarMultiply(timeDiff * POS_FORCE_SCALE);
+            camera->position->addUpdate(forceVector);
          }
       }
       */
@@ -56,18 +93,18 @@ void Spring::update(double ms) {
    if (isAttached && (firstPerson ||
     ((anchor->isBarrelRollingLeft <= 0) && (anchor->isBarrelRollingRight <= 0)))) {
       Vector3D displace = *anchor->up;
-      Vector3D springVector = displace.subtract(*item->up);
+      Vector3D springVector = displace.subtract(*camera->up);
       double length = springVector.getLength();
       if (length >= 0.001 || length <= -0.001) {
-         Vector3D forceVector = springVector.scalarMultiply(ms * UP_FORCE_SCALE);
-         item->up->addUpdate(forceVector);
+         Vector3D forceVector = springVector.scalarMultiply(timeDiff * UP_FORCE_SCALE);
+         camera->up->addUpdate(forceVector);
       }
       /*
       double forceScalar = (length - normalLength) / normalLength;
       springVector.scalarMultiplyUpdate(1.0 / length);
       Vector3D forceVector = springVector.scalarMultiply(forceScalar);
-      forceVector.scalarMultiplyUpdate(ms * UP_FORCE_SCALE);
-      item->up->addUpdate(forceVector);
+      forceVector.scalarMultiplyUpdate(timeDiff * UP_FORCE_SCALE);
+      camera->up->addUpdate(forceVector);
       */
    }
 }
