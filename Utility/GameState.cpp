@@ -53,6 +53,11 @@
 #define M_PI           3.14159265358979323846
 #endif
 
+// DEBUG
+#include <fstream>
+extern std::ofstream debugoutput;
+
+
 extern double minimapSizeFactor;
 
 std::ostringstream sstream2; // TODO: Better name plz.
@@ -1900,6 +1905,10 @@ void GameState::saveDiff(const ast::GameState& oldState, ast::GameState* newStat
       } else if (!obj->saveDiff(*oldEnt, newEnt)) {
          newState->mutable_entity()->RemoveLast();
       } else {
+         if (obj->shouldRemove) {
+            debugoutput << "Sending changed type " << obj->type << " id " << obj->id << "\n";
+                  
+         }
          assert(oldEnt->id() == newEnt->id());
       }
    }

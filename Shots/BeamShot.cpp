@@ -103,13 +103,13 @@ void BeamShot::update(double timeDiff) {
 }
 
 void BeamShot::drawBeam(bool drawDots) {
-   const double distanceDifference = 0.3; // :)
-   const double ballOffset = 0.4;
-   const double angleDiff = 40; // Degrees per unit of ball helix.
-   double beamRadius = 0.2;
-   double curTime = gameState->getGameTime();
-   double timeLeft;
-   const double sphereRadius = 0.05;
+   const float distanceDifference = 0.3; // :)
+   const float ballOffset = 0.4;
+   const float angleDiff = 40; // Degrees per unit of ball helix.
+   float beamRadius = 0.2;
+   float curTime = gameState->getGameTime();
+   float timeLeft;
+   const float sphereRadius = 0.05;
 
    glEnable(GL_LIGHTING);
    glDisable(GL_COLOR_MATERIAL);
@@ -129,18 +129,15 @@ void BeamShot::drawBeam(bool drawDots) {
    glRotate();
    glScalef(-1.0f, -1.0f, -1.0f);
    // It shrinks, probably should fade out.
-   if (!gameState->godMode) {
-      drawCylinder(beamRadius, drawLength);
-   } else {
-      drawCylinder(beamRadius, drawLength);
-   }
+   drawCylinder(beamRadius, drawLength);
+   
    glPopMatrix();
    if (drawDots) {
       if (!gameState->godMode) {
          // Dots
          Vector3D normal(velocity->getNormalVector());
          setMaterial(ballMaterial);
-         for (double distance = 0; distance < drawLength;
+         for (float distance = 0; distance < drawLength;
                distance += distanceDifference) {
             glPushMatrix();
             velocity->glTranslate(distance);

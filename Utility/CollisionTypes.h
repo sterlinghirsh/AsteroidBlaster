@@ -72,16 +72,16 @@ class CollisionBox : public CollisionType {
 
 class CollisionSphere : public CollisionType {
    public:
-      double radius;
-      double radiusSquared;
+      float radius;
+      float radiusSquared;
       Point3D& center;
 
-      inline void updateRadius(double _radius) {
+      inline void updateRadius(float _radius) {
          radius = _radius;
          radiusSquared = _radius * _radius;
       }
 
-      CollisionSphere(double _radius, Point3D& _center) :
+      CollisionSphere(float _radius, Point3D& _center) :
        radius(_radius), radiusSquared(_radius * _radius), center(_center) {
 
       }
@@ -141,11 +141,11 @@ class CollisionPoint : public CollisionType {
 
 class CollisionRay : public CollisionType {
    public:
-      double &length;
+      float &length;
       Vector3D& direction;
       Point3D& origin;
 
-      CollisionRay(double &_length, Vector3D& _direction, Point3D& _origin) :
+      CollisionRay(float &_length, Vector3D& _direction, Point3D& _origin) :
        length(_length), direction(_direction), origin(_origin) {
 
       }
@@ -178,17 +178,17 @@ class CollisionRay : public CollisionType {
 
 class CollisionCone : public CollisionType {
    public:
-      double angle;
-      double sinReciprocal;
-      double cosReciprocal;
-      double sinAngle;
-      double cosAngle;
-      double sinSquared;
-      double length;
+      float angle;
+      float sinReciprocal;
+      float cosReciprocal;
+      float sinAngle;
+      float cosAngle;
+      float sinSquared;
+      float length;
       Vector3D& direction;
       Point3D& origin;
 
-      CollisionCone(double _angle, double _length, Vector3D& _direction, Point3D& _origin) :
+      CollisionCone(float _angle, float _length, Vector3D& _direction, Point3D& _origin) :
        angle(_angle), length(_length), direction(_direction), origin(_origin) {
          sinAngle = sin(angle);
          cosAngle = cos(angle);

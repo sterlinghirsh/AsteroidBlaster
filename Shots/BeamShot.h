@@ -24,8 +24,8 @@ class BeamShot : public Shot {
       virtual void debug();
       virtual void hitWall(BoundingWall* wall);
       virtual Point3D getWallIntersectionPoint(BoundingWall* wall);
-      double drawLength;
-      double length;
+      float drawLength;
+      float length;
       // TODO: Could put in save/load for hitYet, but not yet.
 };
 

@@ -179,7 +179,7 @@ void EnergyShot::hitWall(BoundingWall* wall) {
 void EnergyShot::updateChargeTime(double newChargeTime) {
    // Charge time limit of 5 seconds.
    chargeTime = newChargeTime;
-   double cappedSquaredChargeTime = std::min(chargeTime * chargeTime, 5.0);
+   float cappedSquaredChargeTime = std::min(chargeTime * chargeTime, 5.0f);
    radius = baseRadius + baseRadius * cappedSquaredChargeTime;
 
    collisionSphere->updateRadius(radius);

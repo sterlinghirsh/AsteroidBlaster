@@ -22,7 +22,7 @@ class ElectricityShot : public Shot {
       virtual void drawShot(bool isGlow);
       virtual void update(double timeDiff);
       // TODO: Looks like this still has some cone logic. Remove.
-      double length;
+      float length;
       bool hitYet;
       virtual void save(ast::Entity* ent);
       virtual bool saveDiff(const ast::Entity& old, ast::Entity* ent);

@@ -21,10 +21,10 @@ class AsteroidShip;
 
 class Shot : public Object3D {
    public:
-      double timeFired;
-      double lifetime; // Seconds
+      float timeFired;
+      float lifetime; // Seconds
       bool persist;
-      static double frequency; // Shots per sec
+      static float frequency; // Shots per sec
       AsteroidShip* owner; // Who fired the shot?
       unsigned ownerid;
       Shot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShip* ownerIn, const GameState* _gameState);
@@ -39,7 +39,7 @@ class Shot : public Object3D {
 
       int weaponIndex;
 
-      double damage;
+      float damage;
 
       Point3D getWallIntersectionPoint(BoundingWall* wall);
       virtual double getDamage(Object3D* collidedObject);

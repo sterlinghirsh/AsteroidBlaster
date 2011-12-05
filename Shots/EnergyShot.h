@@ -16,10 +16,10 @@ class EnergyShot : public Shot {
       virtual void update(double timeDiff);
       int particleNum;
       Vector3D particleDirection;
-      double chargeTime;
+      float chargeTime;
       virtual void hitWall(BoundingWall* wall);
       virtual void updateChargeTime(double newChargeTime);
-      double damagePerSecond;
+      float damagePerSecond;
       Energy* weapon;
       CollisionSphere* collisionSphere;
       
