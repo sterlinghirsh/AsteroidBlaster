@@ -139,7 +139,7 @@ void MainMenu::keyDown(int key, int unicode) {
       }
       break;
    case SDLK_c:
-      if(!firstTime) {
+      if(!firstTime && menuActive) {
          deactivate();
          /* If there's no menu's left open after deactivating this one, then 
           * we should resume the timer. Otherwise, the Store menu should be in 

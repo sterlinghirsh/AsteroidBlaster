@@ -7,6 +7,10 @@
 #include "Items/Spring.h"
 #include "Items/AsteroidShip.h"
 
+// DEBUG
+#include <fstream>
+extern std::ofstream debugoutput;
+
 // The scaling factor of the forces (higher is stronger).
 #define POS_FORCE_SCALE 15.0
 #define UP_FORCE_SCALE 15.0
@@ -28,35 +32,22 @@ void Spring::update(double timeDiff) {
    bool firstPerson = anchor->getCurrentView() == VIEW_FIRSTPERSON_SHIP;
 
    if (isAttached) {
+      /*
       if (firstPerson) {
          camera->position->updateMagnitude((anchor->position)->add(*anchor->getCameraOffset()));
       } else {
+         // Sterling's method 2 (Smoothest)
          Vector3D targetPosition((anchor->position)->add(*anchor->getCameraOffset()));
-         
-         /*
-         Vector3D targetVelocity = targetPosition - *camera->position;
-
-         targetVelocity.addUpdate(camera->up->scalarMultiply(2.5));
-         targetVelocity.scalarMultiplyUpdate(POS_FORCE_SCALE);
-
-         *camera->velocity = anchor->velocity->lirp(targetVelocity, 0.5);
-
-         camera->velocity->movePoint(*camera->position, timeDiff);
-         */
          targetPosition.addUpdate(camera->up->scalarMultiply(2.5));
 
          Vector3D positionDiff = targetPosition - *camera->position;
-         positionDiff.scalarMultiplyUpdate(timeDiff);
+         positionDiff.scalarMultiplyUpdate(timeDiff * 2);
          
-         const double maxChange = 0.1;
-         if (positionDiff.getComparisonLength() > maxChange * maxChange) {
-            positionDiff.setLength(maxChange);
-         }
          positionOffset.addUpdate(positionDiff);
 
          *camera->position = targetPosition + positionOffset;
       }
-      /* 
+      */
          // Sterling's method 1
       if (firstPerson) {
          camera->position->updateMagnitude((anchor->position)->add(*anchor->getCameraOffset()));
@@ -69,10 +60,6 @@ void Spring::update(double timeDiff) {
 
          camera->velocity->movePoint(*camera->position, timeDiff);
       }
-      */
-
-
-
 
       /*
          // Chris's method
@@ -92,6 +79,20 @@ void Spring::update(double timeDiff) {
    // Connect the up vectors with a spring force.
    if (isAttached && (firstPerson ||
     ((anchor->isBarrelRollingLeft <= 0) && (anchor->isBarrelRollingRight <= 0)))) {
+         
+      // Sterling's method 2
+      /*
+         Vector3D targetUp(anchor->up);
+
+         Vector3D upDiff = targetUp - *camera->up;
+         upDiff.scalarMultiplyUpdate(timeDiff * 2);
+         
+         upOffset.addUpdate(upDiff);
+
+         *camera->up = (targetUp + upOffset).getNormalized();
+         */
+
+         // Sterling's method
       Vector3D displace = *anchor->up;
       Vector3D springVector = displace.subtract(*camera->up);
       double length = springVector.getLength();
@@ -100,6 +101,8 @@ void Spring::update(double timeDiff) {
          camera->up->addUpdate(forceVector);
       }
       /*
+         // Chris's method
+
       double forceScalar = (length - normalLength) / normalLength;
       springVector.scalarMultiplyUpdate(1.0 / length);
       Vector3D forceVector = springVector.scalarMultiply(forceScalar);

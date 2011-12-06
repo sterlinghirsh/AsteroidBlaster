@@ -19,6 +19,7 @@ class Spring : public Object3D {
       void attach(AsteroidShip* anchorIn, Camera* cameraIn);
       void update(double timeDiff);
       Vector3D positionOffset;
+      Vector3D upOffset;
       AsteroidShip* anchor;
       Camera* camera;
       bool isAttached;

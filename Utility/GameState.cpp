@@ -343,18 +343,32 @@ void GameState::update(double timeDiff) {
    std::set<CollisionBase*, compareByDistance>* collisions;
    std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
+   // Ensure at least 60 fps in physics.
+   const double maxTimeDiff = 0.02; // seconds;
+   int numSteps = (int) ceil(timeDiff / maxTimeDiff);
+   double tmpTimeDiff = timeDiff / numSteps;
+
+   // Just in case.
+   if (numSteps < 0)
+      numSteps = 1;
+
    // Update each item.
-   for (item = objects->begin(); item != objects->end(); ++item) {
-      if (*item == NULL)
-         continue;
-      (*item)->update(timeDiff);
-      cube->constrain(*item);
+
+   for (int i = 0; i < numSteps; ++i) {
+      for (item = objects->begin(); item != objects->end(); ++item) {
+         if (*item == NULL)
+            continue;
+         (*item)->update(tmpTimeDiff);
+         cube->constrain(*item);
+         if (ship == *item && shipCamera != NULL)
+            spring->update(tmpTimeDiff);
+      }
+
+      // Add items that should be added, remove items that should be removed, update
+      // positions in the sorted lists.
+      custodian.update();
    }
-
-   // Add items that should be added, remove items that should be removed, update
-   // positions in the sorted lists.
-   custodian.update();
-
+   
    // Get updated list. (Probably does nothing since the reference is the same.)
    objects = custodian.getListOfObjects();
 
@@ -420,7 +434,6 @@ void GameState::update(double timeDiff) {
       shardBankBar->setAmount(ship->bankTimer.isRunning ? ship->bankTimer.getAmountComplete() : 0);
       healthBar->setAmount(((float) ship->health / (float) ship->healthMax));
 
-      spring->update(timeDiff);
       minimap->update(timeDiff);
    }
 

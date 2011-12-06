@@ -58,8 +58,7 @@ void init() {
    }
 
    // Tell system which functions to process when exit() call is made
-   // THIS IS COMMENTED OUT BECAUSE THE EXIT TIME INCREASES BY 3-4 SECONDS
-   // But it should be on when testing with valgrind to bring down the still reachable count.
+   // This cleans up and fixes the monitor resolution if in full screen.
    atexit(SDL_Quit);
 
    // Get optimal video settings
