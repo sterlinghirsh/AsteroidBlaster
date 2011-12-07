@@ -233,14 +233,15 @@ void Shard::draw() {
  */
 void Shard::update(double timeDiff) {
    Object3D::update(timeDiff);
-   angle += rotationSpeed * timeDiff;
-   double speed = velocity->getLength();
-   if (speed != 0.0) {
-      speed *= (1.0 - DECEL_RATE * timeDiff);
-      velocity->setLength(speed);
+   if (gameState->gsm != ClientMode) {
+      double speed = velocity->getLength();
+      if (speed != 0.0) {
+         speed *= (1.0 - DECEL_RATE * timeDiff);
+         velocity->setLength(speed);
+      }
    }
-   drawOtherOrbiters();
 
+   drawOtherOrbiters();
 }
 
 /*

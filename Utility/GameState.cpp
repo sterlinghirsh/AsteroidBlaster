@@ -277,7 +277,10 @@ void GameState::addScreens() {
  * This is the step function.
  */
 void GameState::update(double timeDiff) {
-   updateGameTime(timeDiff);
+   //double oldGameTime = gameTime;
+   double newLocalGameTime = gameTime + timeDiff;
+
+   //updateGameTime(timeDiff); // Sets gameTime to newLocalTime.
    curGameStateId++;
    if (gsm != ServerMode) {
       // Cleanup here to make sure we're not depending on anything (hopefully.)
@@ -289,6 +292,29 @@ void GameState::update(double timeDiff) {
       clientSide->receive();
       clientSide->send(clientCommand, false);
    }
+   
+   custodian.update();
+   if (ship != NULL &&
+    (gsm == ClientMode || gsm == SingleMode) && 
+    !ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
+      ship->readCommand(clientCommand);
+   }
+   
+   if (!justLoadedFirstFrame) {
+      const double timeCorrectionAmount = 0.001; // seconds
+      double networkGameTime = gameTime;
+
+      if (newLocalGameTime > networkGameTime + timeCorrectionAmount * 3) {
+         newLocalGameTime -= timeCorrectionAmount;
+      } else if (newLocalGameTime < networkGameTime - timeCorrectionAmount * 3) {
+         newLocalGameTime += timeCorrectionAmount * 2;
+      }
+
+      // This advances the stuff.
+      debugoutput << "diff: " << newLocalGameTime - gameTime << std::endl;
+      advancePhysics(gameTime, newLocalGameTime);
+   }
+   
 
    // if the game over timer is set, and is over
    if (gameOverTimer.isRunning && gameOverTimer.getTimeLeft() < 0) {
@@ -333,42 +359,11 @@ void GameState::update(double timeDiff) {
    custodian.update();
    // Used to cleanup here, but that broke collisions.
 
-   if (ship != NULL &&
-    (gsm == ClientMode || gsm == SingleMode) && 
-    !ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
-      ship->readCommand(clientCommand);
-   }
    
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
    std::set<CollisionBase*, compareByDistance>* collisions;
    std::set<CollisionBase*, compareByDistance>::iterator curCollision;
 
-   // Ensure at least 60 fps in physics.
-   const double maxTimeDiff = 0.02; // seconds;
-   int numSteps = (int) ceil(timeDiff / maxTimeDiff);
-   double tmpTimeDiff = timeDiff / numSteps;
-
-   // Just in case.
-   if (numSteps < 0)
-      numSteps = 1;
-
-   // Update each item.
-
-   for (int i = 0; i < numSteps; ++i) {
-      for (item = objects->begin(); item != objects->end(); ++item) {
-         if (*item == NULL)
-            continue;
-         (*item)->update(tmpTimeDiff);
-         cube->constrain(*item);
-         if (ship == *item && shipCamera != NULL)
-            spring->update(tmpTimeDiff);
-      }
-
-      // Add items that should be added, remove items that should be removed, update
-      // positions in the sorted lists.
-      custodian.update();
-   }
-   
    // Get updated list. (Probably does nothing since the reference is the same.)
    objects = custodian.getListOfObjects();
 
@@ -485,6 +480,7 @@ void GameState::update(double timeDiff) {
    cube->update(timeDiff);
    spectatorCameraUpdate(timeDiff);
    ++curFrame;
+   justLoadedFirstFrame = false;
 }
 
 void GameState::networkUpdate(double timeDiff) {
@@ -1024,6 +1020,15 @@ void GameState::reset(bool shouldLoad) {
 
    curLevel = 1;
    cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
+
+
+   // Client Side network diff reset
+   if (gsm == ClientMode) {
+      justLoadedFirstFrame = false;
+      networkTimeDiff = 0;
+      timeDiffFromServer = 0;
+   }
+
    //temp
    if(shouldLoad) {
       loadFromDisk();
@@ -2097,7 +2102,61 @@ void GameState::handleFrame(ast::Frame* frame) {
             }
          }
 
+         double localGameTime = gameTime;
+         double newGameTime = frame->gamestate().gametime();
+
+         // This sets the time to the new time and moves everything to where it should be.
+         if (lastReceivedGameStateId != 0) {
+            advancePhysics(gameTime, newGameTime);
+         }
+
+         // This loads the new things for the current time.
          load(frame->gamestate());
+
+
+         // If this is below 0, the update is taking us back in time.
+         double frameTimeDiff = gameTime - localGameTime;
+         // frametimediff HEREEEEEEEE
+
+         justLoadedFirstFrame = true;
+         networkTimeDiff = fabs(frameTimeDiff);
+         
+         double timeChangeAmount = 0.001; // Seconds
+
+         if (frameTimeDiff > 0) {
+            // The new time is ahead of us. We set networkTimeDiff
+            // and be happy with our new up-to-date time.
+            networkTimeDiff = 0;
+            timeDiffFromServer = 0;
+            
+            /*
+            debugoutput << "> ftd: " << frameTimeDiff << "\n " 
+               << timeDiffFromServer << "\n "
+               << networkTimeDiff << std::endl;
+               */
+         } else if (frameTimeDiff < timeChangeAmount * -3) {
+            // The new time is behind us.
+            // Set networkTimeDiff to the negative difference.
+               // This will catch the old version up to where the client thinks we should be.
+            // Then reduce the gameTime and networkTimeDiff by a small numbr (timeChangeAmount).
+               // This will slow the game down by a tiny amount. 
+            /*
+            networkTimeDiff -= timeChangeAmount;
+            timeDiffFromServer -= timeChangeAmount;
+            gameTime = localGameTime - timeChangeAmount;
+            */
+            //gameTime = localGameTime;
+            //debugoutput << "diff: " << gameTime << " - " << localGameTime << " = " << frameTimeDiff << std::endl;
+            
+            /*
+            debugoutput << "< ftd: " << frameTimeDiff << "\n " 
+               << timeDiffFromServer << "\n "
+               << networkTimeDiff << std::endl;
+               */
+               
+         }
+
+
          custodian.update();
          lastReceivedGameStateId = frame->gamestate().id();
          clientCommand.set_lastreceivedgamestateid(lastReceivedGameStateId);
@@ -2173,4 +2232,39 @@ void GameState::removeNetworkPlayer(unsigned shipid) {
    if (ship != NULL) {
       ship->shouldRemove = true;
    }
+}
+
+void GameState::advancePhysics(double startTime, double endTime) {
+   double totalTimeDiff = endTime - startTime;
+   // Ensure at least 60 fps in physics.
+   const double maxTimeDiff = 0.02; // seconds;
+   int numSteps = (int) ceil(fabs(totalTimeDiff) / maxTimeDiff);
+
+   // Just in case.
+   if (numSteps <= 0)
+      numSteps = 1;
+
+   double stepTimeDiff = totalTimeDiff / numSteps;
+
+   // Update each item.
+   gameTime = startTime;
+   
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
+
+   for (int i = 0; i < numSteps; ++i) {
+      gameTime += stepTimeDiff;
+      for (item = objects->begin(); item != objects->end(); ++item) {
+         if (*item == NULL)
+            continue;
+         (*item)->update(stepTimeDiff);
+         cube->constrain(*item);
+         if (ship == *item && shipCamera != NULL)
+            spring->update(stepTimeDiff);
+      }
+
+      // Add items that should be added, remove items that should be removed, update
+      // positions in the sorted lists.
+      custodian.update();
+   }
+   
 }

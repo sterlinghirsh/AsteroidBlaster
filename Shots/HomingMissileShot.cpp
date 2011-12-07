@@ -453,12 +453,10 @@ void HomingMissileShot::update(double timeDiff) {
 
    const int particlesPerSecond = 4;
    Vector3D* shotAccel;
-   //spin += 500 * timeDiff;
-   if(!isExploded) {
+   
+   if (!isExploded) {
       roll(rollSpeed * timeDiff);
-      
       pitch(pitchSpeed * timeDiff);
-      
       yaw(yawSpeed * timeDiff);
    }
    
@@ -483,30 +481,6 @@ void HomingMissileShot::update(double timeDiff) {
       addSize = timeDiff * 14 * timeSinceExploded / (1.6 - timeSinceExploded);
    }
    
-   /*//ry += timeDiff * 3;
-   //rz += timeDiff * 3;
-   //rx += timeDiff * 4;
-   
-   //if(ry > 3 || ry < -3) shouldChangeY = !shouldChangeY;
-   
-   //if(rz > 3 || rz < -3) shouldChangeZ = !shouldChangeZ;
-   
-   //if(ry > 3) ry = -3;
-   //if(rz > 3) rz = -3;
-   
-   if(shouldChangeZ) {
-      rz += timeDiff * 5;
-   } else {
-      rz -= timeDiff * 5;
-   }
-   
-   if(shouldChangeY) {
-      ry += timeDiff * 3;
-   } else {
-      ry -= timeDiff * 3;
-   }*/
-   
-
    addSize += timeDiff;
    if(!isExploded){
       if (targetID != -1) {

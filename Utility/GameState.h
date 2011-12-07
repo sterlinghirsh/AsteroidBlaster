@@ -124,6 +124,9 @@ class GameState : public InputReceiver {
 
       double gameTime; // Starts at 0.
       double levelStartTime;
+      bool justLoadedFirstFrame;
+      double networkTimeDiff;
+      double timeDiffFromServer;
 
       ServerSide* serverSide;
       ClientSide* clientSide;
@@ -234,6 +237,7 @@ class GameState : public InputReceiver {
       void addWarningMessage();
       void debugPosition();
       void spectatorCameraUpdate(double timeDiff);
+      void advancePhysics(double startTime, double endTime);
 };
 
 #endif

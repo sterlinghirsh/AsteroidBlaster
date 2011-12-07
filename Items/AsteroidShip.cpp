@@ -940,9 +940,11 @@ void AsteroidShip::update(double timeDiff) {
          flashiness += (float)upOrDown * (float)(rando % 10) * timeDiff * 500;
       }
 
-      createEngineParticles(timeDiff);
-      if (health < 50)
-         createLowHealthParticles(timeDiff);
+      if (timeDiff > 0) {
+         createEngineParticles(timeDiff);
+         if (health < 50)
+            createLowHealthParticles(timeDiff);
+      }
 
       // Update the zoom level.
       const float minZoom = 1;

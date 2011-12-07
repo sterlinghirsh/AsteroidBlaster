@@ -35,8 +35,6 @@
 class Shard : public Object3D {
    public:
       Vector3D rotationVector;
-      double rotationSpeed;
-      double rotationAmount;
       double scalex, scaley, scalez;
       double worldSize;
       double sizeX, sizeY, sizeZ, collisionRadius;
@@ -50,6 +48,7 @@ class Shard : public Object3D {
       bool handleHit(std::list<Shard*>& asteroids);
       void drawInMinimap();
       void debug();
+
       GLuint cubeList;
       float transparentZ;
       
@@ -69,7 +68,5 @@ class Shard : public Object3D {
       virtual bool saveDiff(const ast::Entity& old, ast::Entity* ent);
       virtual void load(const ast::Entity& ent);
 };
-
-//BOOST_CLASS_EXPORT(Shard);
 
 #endif

@@ -428,10 +428,8 @@ void Asteroid3D::update(double timeDiff) {
          
          health -= timeDiff * damagePerSecond;
       }
-   }
       
-   if (health <= 0) {
-      if (gameState->gsm != ClientMode) {
+      if (health <= 0) {
          shouldRemove = true;
 
          if (radius > 2) {

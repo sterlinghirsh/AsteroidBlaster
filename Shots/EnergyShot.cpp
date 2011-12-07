@@ -144,25 +144,6 @@ void EnergyShot::draw() {
 // Spray particles.
 void EnergyShot::update(double timeDiff) {
    Shot::update(timeDiff);
-   const int particlesPerSecond = 1;
-   
-   //Vector3D normalizedVelocity(*velocity);
-   //normalizedVelocity.normalize();
-   //const double particleDirectionPeriod = 0.3;
-   //const double particleDirectionRotationSpeed = 2 * M_PI / particleDirectionPeriod;
-   //particleDirection.rotate(timeDiff * particleDirectionRotationSpeed, normalizedVelocity);
-   //particleDirection.normalize();
-   
-   for (int i = 0; i <= timeDiff * particlesPerSecond; ++i) {
-      particleNum = (particleNum + 1) % particleCycle;
-      // This is the random way...
-      particleDirection.randomMagnitude();
-      particleDirection.setLength(0.01);
-      
-      /*BlasterShotParticle::AddRainbow(new Point3D(*position), 
-       new Vector3D(particleDirection), particleNum, particleCycle, gameState);*/
-      // Reflect and Duplicate the above for a double helix.
-   }
    
    if (shouldRemove) {
       if (weapon->chargingShotid == id)

@@ -90,14 +90,16 @@ BeamShot::BeamShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex, AsteroidShi
  * Expire after a certain amount of time.
  */
 void BeamShot::update(double timeDiff) {
-   if (!gameState->godMode) {
+   if (gameState->gsm != ClientMode) {
+      if (!gameState->godMode) {
 
-      if (gameState->getGameTime() - timeFired > lifetime) {
-         shouldRemove = true;
-      }
-   } else {
-      if (gameState->getGameTime() - timeFired > 0.1) {
-         shouldRemove = true;
+         if (gameState->getGameTime() - timeFired > lifetime) {
+            shouldRemove = true;
+         }
+      } else {
+         if (gameState->getGameTime() - timeFired > 0.1) {
+            shouldRemove = true;
+         }
       }
    }
 }

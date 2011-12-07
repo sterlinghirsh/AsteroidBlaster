@@ -343,6 +343,7 @@ int main(int argc, char* argv[]) {
       std::string s(argv[1]);
       if (s.compare("-s") == 0) {
          _gsm = ServerMode;
+         new (&debugoutput) std::ofstream("serverdebug.txt");
          std::istringstream iss(argv[2]);
          iss >> portNumber;
       } else {
@@ -352,6 +353,7 @@ int main(int argc, char* argv[]) {
       std::string s(argv[1]);
       if (s.compare("-c") == 0) {
          _gsm = ClientMode;
+         new (&debugoutput) std::ofstream("clientdebug.txt");
          std::string tempIP(argv[2]);
          ipAddress = tempIP;
          std::string tempPort(argv[3]);
