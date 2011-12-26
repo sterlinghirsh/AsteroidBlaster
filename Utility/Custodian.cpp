@@ -239,14 +239,14 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
                if (a == a->gameState->ship) {
                   std::ostringstream gameMsg;
                   gameMsg << "Unlocked Regen Health level " << a->regenHealthLevel;
-                  GameMessage::Add(gameMsg.str(), 30, 3);
+                  GameMessage::Add(gameMsg.str(), 30, 3, a->gameState);
                }
             }
          } else {
             if (a == a->gameState->ship) {
                std::ostringstream gameMsg;
                gameMsg << "Unlocked Regen Health level " << a->regenHealthLevel;
-               GameMessage::Add(gameMsg.str(), 30, 3);
+               GameMessage::Add(gameMsg.str(), 30, 3, a->gameState);
             }
          }
          break;
@@ -258,7 +258,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
          if (a == a->gameState->ship) {
             std::ostringstream gameMsg;
             gameMsg << "Unlocked Engine level " << a->engineLevel;
-            GameMessage::Add(gameMsg.str(), 30, 3);
+            GameMessage::Add(gameMsg.str(), 30, 3, a->gameState);
          }
          break;
 
@@ -271,7 +271,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
          if (a == a->gameState->ship) {
             std::ostringstream gameMsg;
             gameMsg << "Shields upgraded to " << a->healthMax << "%";
-            GameMessage::Add(gameMsg.str(), 30, 3);
+            GameMessage::Add(gameMsg.str(), 30, 3, a->gameState);
          }
          break;
 
@@ -283,7 +283,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
          if (a == a->gameState->ship) {
             std::ostringstream gameMsg;
             gameMsg << "Extra Life!";
-            GameMessage::Add(gameMsg.str(), 30, 3);
+            GameMessage::Add(gameMsg.str(), 30, 3, a->gameState);
          }
          break;
       

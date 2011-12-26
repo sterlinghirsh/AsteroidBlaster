@@ -42,6 +42,8 @@
 #include "Network/ClientSide.h"
 #include "Network/ClientInfo.h"
 
+#include <utility>
+
 #include <math.h>
 #include <stdio.h>
 #include <fstream>
@@ -54,7 +56,6 @@
 #endif
 
 // DEBUG
-#include <fstream>
 extern std::ofstream debugoutput;
 
 
@@ -279,6 +280,10 @@ void GameState::addScreens() {
 void GameState::update(double timeDiff) {
    //double oldGameTime = gameTime;
    double newLocalGameTime = gameTime + timeDiff;
+   std::set< std::pair<unsigned, unsigned> >* recordedCollisions = NULL;
+   if (gsm == ServerMode) {
+      recordedCollisions = new std::set< std::pair<unsigned, unsigned> >();
+   }
 
    //updateGameTime(timeDiff); // Sets gameTime to newLocalTime.
    curGameStateId++;
@@ -312,7 +317,7 @@ void GameState::update(double timeDiff) {
 
       // This advances the stuff.
       debugoutput << "diff: " << newLocalGameTime - gameTime << std::endl;
-      advancePhysics(gameTime, newLocalGameTime);
+      advancePhysics(gameTime, newLocalGameTime, recordedCollisions);
    }
    
 
@@ -349,7 +354,7 @@ void GameState::update(double timeDiff) {
          } else {
             gameMsg << "Next level in " << (int)levelTimer.getTimeLeft() << "...";
          }
-         GameMessage::Add(gameMsg.str(), 30, 0);
+         GameMessage::Add(gameMsg.str(), 30, 0, this);
       }
    }
 
@@ -358,44 +363,29 @@ void GameState::update(double timeDiff) {
    // TODO: Do we need to do this here?
    custodian.update();
    // Used to cleanup here, but that broke collisions.
-
    
-   std::vector<Object3D*>* objects = custodian.getListOfObjects();
-   std::set<CollisionBase*, compareByDistance>* collisions;
-   std::set<CollisionBase*, compareByDistance>::iterator curCollision;
-
-   // Get updated list. (Probably does nothing since the reference is the same.)
-   objects = custodian.getListOfObjects();
-
    Particle::updateParticles(timeDiff);
    //Sprite::updateSprites(timeDiff);
    MeshFace::updateIndependentFaces(timeDiff);
    GameMessage::updateAllMessages(timeDiff);
-
+   
    ast::CollisionMessage* curFrameCollisions = NULL;
    if (gsm == ServerMode) {
       curFrameCollisions = new ast::CollisionMessage();
       curFrameCollisions->set_gamestateid(curGameStateId);
       savedCollisionMessages[curGameStateId] = curFrameCollisions;
+      std::set< std::pair<unsigned, unsigned> >::iterator collisionIter;
+            
+      for (collisionIter = recordedCollisions->begin(); collisionIter !=
+       recordedCollisions->end(); collisionIter++) {
+         // Every 2 is a collision.
+         curFrameCollisions->add_collider((*collisionIter).first);
+         curFrameCollisions->add_collider((*collisionIter).second);
+      }
    }
 
    // Check every object for collisions.
-   if (gsm != ClientMode) {
-      for (item = objects->begin(); item != objects->end(); ++item) {
-         collisions = custodian.findCollisions(*item, false);
-         for (curCollision = collisions->begin(); curCollision != collisions->end();
-          ++curCollision) {
-            (*curCollision)->handleCollision();
-            if (gsm == ServerMode) {
-               // Every 2 is a collision.
-               curFrameCollisions->add_collider((*curCollision)->aId);
-               curFrameCollisions->add_collider((*curCollision)->bId);
-            }
-         }
-         delete collisions;
-         // TODO: fix memory leak.
-      }
-   } else {
+   if (gsm == ClientMode) {
       // Read collisions and handle them.
       std::map<unsigned, ast::CollisionMessage*>::iterator collisionIter;
       collisionIter = savedCollisionMessages.begin();
@@ -1025,8 +1015,6 @@ void GameState::reset(bool shouldLoad) {
    // Client Side network diff reset
    if (gsm == ClientMode) {
       justLoadedFirstFrame = false;
-      networkTimeDiff = 0;
-      timeDiffFromServer = 0;
    }
 
    //temp
@@ -1090,7 +1078,7 @@ void GameState::addLevelMessage() {
    //add level message
    std::ostringstream levelMessage;
    levelMessage << "Level " << curLevel;
-   GameMessage::Add(levelMessage.str(), 30, 5);
+   GameMessage::Add(levelMessage.str(), 30, 5, this);
 }
 
 /**
@@ -1108,7 +1096,7 @@ void GameState::addWarningMessage() {
          gameMsg << "WARNING: " << numAIShips << " Enemy Ships Detected";
       }
       
-      GameMessage::Add(gameMsg.str(), 30, 5);
+      GameMessage::Add(gameMsg.str(), 30, 5, this);
    }
 }
 
@@ -1118,7 +1106,7 @@ void GameState::addWarningMessage() {
 void GameState::addWeaponUnlockMessage(Weapon* unlockedWeapon) {
    std::ostringstream gameMsg;
    gameMsg << unlockedWeapon->getName() << " level " << unlockedWeapon->level << " unlocked!";
-   GameMessage::Add(gameMsg.str(), 30, 3);
+   GameMessage::Add(gameMsg.str(), 30, 3, this);
 }
 
 /**
@@ -2035,7 +2023,7 @@ void GameState::gameOver() {
    GameMessage::Clear();
    std::ostringstream gameMsg;
    gameMsg << "Game Over ";
-   GameMessage::Add(gameMsg.str(), 30, 5);
+   GameMessage::Add(gameMsg.str(), 30, 5, this);
    gameOverTimer.setCountDown(5);
 }
 
@@ -2102,12 +2090,13 @@ void GameState::handleFrame(ast::Frame* frame) {
             }
          }
 
-         double localGameTime = gameTime;
+         //double localGameTime = gameTime;
          double newGameTime = frame->gamestate().gametime();
 
          // This sets the time to the new time and moves everything to where it should be.
          if (lastReceivedGameStateId != 0) {
-            advancePhysics(gameTime, newGameTime);
+            // Don't save collision data.
+            advancePhysics(gameTime, newGameTime, NULL);
          }
 
          // This loads the new things for the current time.
@@ -2115,47 +2104,12 @@ void GameState::handleFrame(ast::Frame* frame) {
 
 
          // If this is below 0, the update is taking us back in time.
-         double frameTimeDiff = gameTime - localGameTime;
+         //double frameTimeDiff = gameTime - localGameTime;
          // frametimediff HEREEEEEEEE
 
          justLoadedFirstFrame = true;
-         networkTimeDiff = fabs(frameTimeDiff);
          
-         double timeChangeAmount = 0.001; // Seconds
-
-         if (frameTimeDiff > 0) {
-            // The new time is ahead of us. We set networkTimeDiff
-            // and be happy with our new up-to-date time.
-            networkTimeDiff = 0;
-            timeDiffFromServer = 0;
-            
-            /*
-            debugoutput << "> ftd: " << frameTimeDiff << "\n " 
-               << timeDiffFromServer << "\n "
-               << networkTimeDiff << std::endl;
-               */
-         } else if (frameTimeDiff < timeChangeAmount * -3) {
-            // The new time is behind us.
-            // Set networkTimeDiff to the negative difference.
-               // This will catch the old version up to where the client thinks we should be.
-            // Then reduce the gameTime and networkTimeDiff by a small numbr (timeChangeAmount).
-               // This will slow the game down by a tiny amount. 
-            /*
-            networkTimeDiff -= timeChangeAmount;
-            timeDiffFromServer -= timeChangeAmount;
-            gameTime = localGameTime - timeChangeAmount;
-            */
-            //gameTime = localGameTime;
-            //debugoutput << "diff: " << gameTime << " - " << localGameTime << " = " << frameTimeDiff << std::endl;
-            
-            /*
-            debugoutput << "< ftd: " << frameTimeDiff << "\n " 
-               << timeDiffFromServer << "\n "
-               << networkTimeDiff << std::endl;
-               */
-               
-         }
-
+         //double timeChangeAmount = 0.001; // Seconds
 
          custodian.update();
          lastReceivedGameStateId = frame->gamestate().id();
@@ -2234,7 +2188,7 @@ void GameState::removeNetworkPlayer(unsigned shipid) {
    }
 }
 
-void GameState::advancePhysics(double startTime, double endTime) {
+void GameState::advancePhysics(double startTime, double endTime, std::set< std::pair<unsigned, unsigned> >* recordedCollisions) {
    double totalTimeDiff = endTime - startTime;
    // Ensure at least 60 fps in physics.
    const double maxTimeDiff = 0.02; // seconds;
@@ -2265,6 +2219,34 @@ void GameState::advancePhysics(double startTime, double endTime) {
       // Add items that should be added, remove items that should be removed, update
       // positions in the sorted lists.
       custodian.update();
+
+      if (stepTimeDiff >= 0)
+         testCollisions(recordedCollisions);
    }
+}
+
+void GameState::testCollisions(std::set< std::pair<unsigned, unsigned> >* recordedCollisions) {
+   std::vector<Object3D*>* objects = custodian.getListOfObjects();
+   std::set<CollisionBase*, compareByDistance>* collisions;
+   std::set<CollisionBase*, compareByDistance>::iterator curCollision;
+      
+   for (item = objects->begin(); item != objects->end(); ++item) {
+      collisions = custodian.findCollisions(*item, false);
+      for (curCollision = collisions->begin(); curCollision != collisions->end();
+       ++curCollision) {
+         (*curCollision)->handleCollision();
+         if (recordedCollisions != NULL) {
+            recordedCollisions->insert(std::make_pair((*curCollision)->aId, (*curCollision)->bId));
+            /*
+            // Every 2 is a collision.
+            curFrameCollisions->add_collider((*curCollision)->aId);
+            curFrameCollisions->add_collider((*curCollision)->bId);
+            */
+         }
+      }
+      delete collisions;
+      // TODO: fix memory leak.
+   }
+
    
 }

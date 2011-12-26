@@ -666,7 +666,7 @@ void AsteroidShip::update(double timeDiff) {
       if (this == gameState->ship && lives > 0) {
          std::ostringstream gameMsg;
          gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
-         GameMessage::Add(gameMsg.str(), 30, 0);
+         GameMessage::Add(gameMsg.str(), 30, 0, gameState);
       }
 
       if (gameState->gameIsRunning && respawnTimer.isRunning && timeLeftToRespawn <= 1.5) {
@@ -700,7 +700,7 @@ void AsteroidShip::update(double timeDiff) {
          if (this == gameState->ship && !isFirstSpawn) {
             std::ostringstream gameMsg;
             gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
-            GameMessage::Add(gameMsg.str(), 30, 0);
+            GameMessage::Add(gameMsg.str(), 30, 0, gameState);
          }
          timeLeftToRespawn -= timeDiff;
          fire(false);
@@ -824,7 +824,7 @@ void AsteroidShip::update(double timeDiff) {
                   sstream << "Banked " << totalBankedShards << " total shards!";
                }
 
-               GameMessage::Add(sstream.str(), 1, 2);
+               GameMessage::Add(sstream.str(), 1, 2, gameState);
             }
          }
       } else if (unbankedShards > 0 && gameState->gsm != ClientMode) {

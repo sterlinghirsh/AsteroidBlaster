@@ -42,7 +42,7 @@ HomingMissile::~HomingMissile() {
 void HomingMissile::update(double timeDiff) {
    Weapon::update(timeDiff);
    if (isOverheated() && this->ship == ship->gameState->ship)
-      GameMessage::Add("Homing Missiles overheated!", 30, 0);
+      GameMessage::Add("Homing Missiles overheated!", 30, 0, ship->gameState);
 }
 
 /**

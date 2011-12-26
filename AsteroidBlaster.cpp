@@ -145,11 +145,6 @@ void init() {
    //glClearColor(1.0, 1.0, 1.0, 1.0);
 
    //initialize some GL stuff
-   //glEnable(GL_DEPTH_TEST);
-   //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-
-   //glEnable( GL_TEXTURE_2D );
 
    // enables lighting so that minimap's sphere can have color
    glEnable(GL_LIGHTING);
@@ -158,7 +153,6 @@ void init() {
    //glEnable(GL_MULTISAMPLE_ARB);
    //glHint(GL_LINE_SMOOTH_HINT, GL_PERSPECTIVE_CORRECTION_HINT);
    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-   //glEnable(GL_POLYGON_SMOOTH);
 
    //initialize light
    //GLfloat headlight_pos[4] = {(float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), (float)(WORLD_SIZE / 2.0f), 1.0f};
@@ -171,18 +165,6 @@ void init() {
    GLfloat minimaplight_diff[4] = {1, 1, 1, 0.5};
    GLfloat minimaplight_spec[4] = {1, 1, 1, 0.5};
 
-   //GLfloat ambientlight_pos[4] = {0, 0, 0, 1};
-   //GLfloat ambientlight_amb[4] = {1, 1, 1, 0.5};
-   //GLfloat ambientlight_diff[4] = {0, 0, 0, 0.5};
-   //GLfloat ambientlight_spec[4] = {0, 0, 0, 0.5};
-
-
-   //glEnable(GL_LIGHT0);
-   //glLightfv(GL_LIGHT0, GL_AMBIENT, headlight_amb);
-   //glLightfv(GL_LIGHT0, GL_DIFFUSE, headlight_diff);
-   //glLightfv(GL_LIGHT0, GL_SPECULAR, headlight_spec);
-   //glLightfv(GL_LIGHT0, GL_POSITION, headlight_pos);
-
 
    glEnable(GL_LIGHT1);
    glLightfv(GL_LIGHT1, GL_AMBIENT, minimaplight_amb);
@@ -190,23 +172,12 @@ void init() {
    glLightfv(GL_LIGHT1, GL_SPECULAR, minimaplight_spec);
    glLightfv(GL_LIGHT1, GL_POSITION, minimaplight_pos);
 
-   //glEnable(GL_LIGHT2);
-   //glLightfv(GL_LIGHT2, GL_AMBIENT, ambientlight_amb);
-   //glLightfv(GL_LIGHT2, GL_DIFFUSE, ambientlight_diff);
-   //glLightfv(GL_LIGHT2, GL_SPECULAR, ambientlight_spec);
-   //glLightfv(GL_LIGHT2, GL_POSITION, ambientlight_pos);
-   //glShadeModel(GL_SMOOTH);
-   //glEnable(GL_NORMALIZE);
-
    //initialize textures
    // Might be slow?
    //glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
    //glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-   //glBlendEquation(GL_FUNC_ADD);
-
    glAlphaFunc(GL_GREATER, 0.1f);
-
 }
 
 void load() {
@@ -335,7 +306,6 @@ int main(int argc, char* argv[]) {
    std::cout << getcwd(NULL, 0) << std::endl;
 
 #endif
-   std::cerr << "too far\n";
 
    if (argc == 1) {
       _gsm = SingleMode;

@@ -7,15 +7,17 @@
 
 #include "Text/GameMessage.h"
 #include "Utility/GlobalUtility.h"
+#include "Utility/GameState.h"
 
 std::list<GameMessage*> GameMessage::activeMessages;
 SDL_Rect DefaultSDLRect = {0, 0};
 
-GameMessage::GameMessage(std::string _text, double _size, double _lifetime) : Text(_text, menuFont, DefaultSDLRect) {
+GameMessage::GameMessage(std::string _text, double _size, double _lifetime, GameState* _gameState) : Text(_text, menuFont, DefaultSDLRect),
+gameState(_gameState) {
    lifetime = _lifetime;
    alignment = CENTERED;
    // This is a good place to use doubletime.
-   timeCreated = doubleTime();
+   timeCreated = gameState->getGameTime();
    shouldRemove = false;
 }
 
@@ -25,7 +27,7 @@ GameMessage::~GameMessage() {
 
 void GameMessage::update(double timeDiff) {
    // This is a good place to use doubletime.
-   shouldRemove = doubleTime() > (timeCreated + lifetime);
+   shouldRemove = gameState->getGameTime() > (timeCreated + lifetime);
 }
 
 void GameMessage::drawAllMessages() {
@@ -56,8 +58,8 @@ void GameMessage::updateAllMessages(double timeDiff) {
    }
 }
 
-void GameMessage::Add(std::string _text, double _size, double _lifetime) {
-   activeMessages.push_back(new GameMessage(_text, _size, _lifetime));
+void GameMessage::Add(std::string _text, double _size, double _lifetime, GameState* _gameState) {
+   activeMessages.push_back(new GameMessage(_text, _size, _lifetime, _gameState));
 }
 
 void GameMessage::Clear() {

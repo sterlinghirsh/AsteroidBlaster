@@ -16,6 +16,8 @@ class MainMenu : public Menu {
 
    Text *newGameText,
         *continueText,
+        *joinGameText,
+        *hostGameText,
         *loadGameText,
         *saveGameText,
         *settingsText,

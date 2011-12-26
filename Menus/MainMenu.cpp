@@ -36,6 +36,12 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    
    continueText = new Text("Continue (c)",  menuFont, position);
    menuTexts.push_back(continueText);
+
+   joinGameText = new Text("Join Game",  menuFont, position);
+   menuTexts.push_back(joinGameText);
+
+   hostGameText = new Text("Host Game",  menuFont, position);
+   menuTexts.push_back(hostGameText);
    
    loadGameText = new Text("Load Game",  menuFont, position);
    menuTexts.push_back(loadGameText);
@@ -117,7 +123,6 @@ void MainMenu::draw() {
    Image::getImage("MainMenuLogo")->drawImage();
 
    SDL_GL_SwapBuffers();
-
 }
 
 /**
@@ -171,6 +176,10 @@ void MainMenu::mouseDown(int button) {
       gameDeactivate(false);
    } else if(continueText->mouseSelect(x,y) && !firstTime) {
       deactivate();
+   } else if (joinGameText->mouseSelect(x, y)) {
+      printf("join game.\n");
+   } else if (hostGameText->mouseSelect(x, y)) {
+      printf("host game.\n");
    } else if(settingsText->mouseSelect(x,y)) {
       menuActive = false;
       settingsMenu->menuActive = true;
