@@ -346,7 +346,7 @@ void GameState::update(double timeDiff) {
       }
 
       // the last 6 seconds of the stage
-      if (levelTimer.getTimeLeft() <= 6) {
+      if (levelTimer.getTimeLeft() <= 6 && levelTimer.getTimeLeft() > 0 && !gameOverTimer.isRunning) {
          // Check if it is done waiting until going to the next level
          std::ostringstream gameMsg;
          if (gsm == SingleMode) {
@@ -478,13 +478,11 @@ void GameState::networkUpdate(double timeDiff) {
 }
 
 void GameState::spectatorCameraUpdate(double timeDiff) {
-   static double pieCounter = M_PI*0.75;
-   if (pieCounter >= 2*M_PI) { pieCounter = 0; }
+   double pieCounter = fmod(M_PI * 0.75 + (getGameTime() * spectatorSpeed), 2 * M_PI);
    spectatorCamera->position->x = sin(pieCounter)*spectatorRadius;
    spectatorCamera->position->y = sin(pieCounter)*(spectatorRadius/3);
    spectatorCamera->position->z = -cos(pieCounter)*spectatorRadius;
    spectatorCamera->lookAt(0.0,0.0,0.0);
-   pieCounter += timeDiff*spectatorSpeed;
 }
 
 /**
@@ -2020,11 +2018,13 @@ void GameState::testFunction() {
 
 void GameState::gameOver() {
    // Check if it is done waiting until going to the next level
-   GameMessage::Clear();
-   std::ostringstream gameMsg;
-   gameMsg << "Game Over ";
-   GameMessage::Add(gameMsg.str(), 30, 5, this);
-   gameOverTimer.setCountDown(5);
+   if (!gameOverTimer.isRunning) {
+      GameMessage::Clear();
+      std::ostringstream gameMsg;
+      gameMsg << "Game Over ";
+      GameMessage::Add(gameMsg.str(), 30, 5, this);
+      gameOverTimer.setCountDown(5);
+   }
 }
 
 double GameState::getGameTime() {

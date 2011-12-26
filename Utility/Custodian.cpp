@@ -112,7 +112,8 @@ void Collision<AsteroidShip, AsteroidShip>::handleCollision() {
 
 template<>
 void Collision<AsteroidShip, Asteroid3D>::handleCollision() {
-   if (a->isRespawning()) { return;}
+   if (a->lives <= 0) { return; }
+   if (a->isRespawning()) { return; }
    if (a->isVulnerable()) {
       /* Remove health from both equal to minHealthDeduction + randomHealthDeduction 
        * or b->health or a->health, whichever is smallest.

@@ -535,9 +535,13 @@ void AsteroidShip::update(double timeDiff) {
          }
 
          if (gameState->gsm != ClientMode) {
-            ++deaths;
-            --lives;
-           
+            if (lives > 0) {
+               // We want this to happen if a user has 1 lives left, I guess.
+               ++deaths;
+               --lives;
+            }
+
+            // Since lives changed, let's check again.
             if (lives > 0) {
                respawnTimer.setCountDown(respawnTime);
                timeLeftToRespawn = respawnTimer.getTimeLeft();
