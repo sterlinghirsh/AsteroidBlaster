@@ -28,7 +28,7 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    firstTime = true;
    x = y = -1;
 
-   SDL_Rect position = {0,0};
+   SDL_Rect position = {0,1};
    std::string fontName = DEFAULT_FONT;
 
    newGameText = new Text("New Game (n)",  menuFont, position);
@@ -180,6 +180,8 @@ void MainMenu::mouseDown(int button) {
       printf("join game.\n");
    } else if (hostGameText->mouseSelect(x, y)) {
       printf("host game.\n");
+      mainGameState->setServerMode();
+      deactivate();
    } else if(settingsText->mouseSelect(x,y)) {
       menuActive = false;
       settingsMenu->menuActive = true;
@@ -267,10 +269,10 @@ void MainMenu::update(double timeDiff) {
    // done each update beacuse the window size could have changed
    SDL_Rect position;
    position.x = (Sint16) (gameSettings->GW/2);
-   position.y = (Sint16) (gameSettings->GH/2.3);
+   position.y = (Sint16) (gameSettings->GH/2.8);
    for(unsigned i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->setPosition(position);
-      position.y = (Sint16) (position.y + (gameSettings->GH/15));
+      position.y = (Sint16) (position.y + (gameSettings->GH/17));
    }
 
    // make stuff selectable and greyed out depending on stuff

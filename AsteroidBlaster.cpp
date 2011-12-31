@@ -220,7 +220,7 @@ void load() {
 
    
    Image::Add(Point3D(0.0, 0.3, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("StoreLogo"), "StoreMenuLogo");
-   Image::Add(Point3D(0.0, 0.2, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("MainLogo"), "MainMenuLogo");
+   Image::Add(Point3D(0.0, 0.25, -1.0), Point3D(0.3625, 0.1, 1.0), Texture::getTexture("MainLogo"), "MainMenuLogo");
 
    Particle::initDisplayList();
 
@@ -298,15 +298,14 @@ int main(int argc, char* argv[]) {
 #ifdef __APPLE__
    char* dn = dirname(argv[0]);
    std::string bn = basename(dn);
-   std::cout << bn << std::endl;
    if (bn.compare("MacOS") == 0) {
       // Go a dir up.
       chdir(dirname(dn));
    }
-   std::cout << getcwd(NULL, 0) << std::endl;
 
 #endif
 
+   // Decide what mode we were started in.
    if (argc == 1) {
       _gsm = SingleMode;
    } else if (argc == 3) {
@@ -339,12 +338,13 @@ int main(int argc, char* argv[]) {
       std::cerr << "Usage: AsteroidBlaster [-s <port number> | -c <ip> <port number>]" << std::endl;
       return 1;
    }
+   
+   // Seed random numbers.
+   srand((unsigned)time(NULL));
 
    // Initialize networking.
    initNetworking();
    atexit(deinitNetworking);
-
-   srand((unsigned)time(NULL));
 
    // This sets up defaults and reads in any necessary settings.
    gameSettings = new GameSettings();
@@ -354,6 +354,7 @@ int main(int argc, char* argv[]) {
       gameSettings->musicOn = false;
    }
 
+   // Initialize timing.
    updateStartTime();
    updateDoubleTime();
 
@@ -430,6 +431,9 @@ int main(int argc, char* argv[]) {
    unsigned long startTick = 0;
 
    while (running) {
+      if (gameState->gsm == ServerMode) {
+         frameLength = 50;
+      }
       startTick = SDL_GetTicks();
       
       updateDoubleTime();
@@ -515,7 +519,7 @@ int main(int argc, char* argv[]) {
    }
 
    // Closing up!
-   if (_gsm == ClientMode) {
+   if (gameState->gsm == ClientMode) {
       gameState->disconnect();
    }
 
@@ -527,7 +531,7 @@ int main(int argc, char* argv[]) {
       //SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
    }
 
-   if (_gsm != ServerMode) {
+   if (gameState->gsm != ServerMode) {
       gameSettings->writeOut();
    }
 

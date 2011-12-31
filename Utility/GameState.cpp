@@ -67,14 +67,40 @@ ast::ClientCommand localClientCommand;
 GameState::GameState(GameStateMode _gsm) :
    custodian(this),
    clientCommand(localClientCommand),
+   gsm(_gsm),
    levelTimer(this),
    gameOverTimer(this) {
+      initialize();
+   }
+
+/**
+ * Deconstructor: clean up all of our objects.
+ */
+GameState::~GameState() {
+   destruct();
+}
+
+void GameState::destruct() {
+   delete skybox;
+   delete ship;
+   delete shipCamera;
+   delete spectatorCamera;
+   delete spring;
+   delete cube;
+   delete shardBankBar;
+   // Somehow makes it segfault when quitting so commented out
+   /*if (io != NULL) {
+     io->stop();
+     delete io;
+     }*/
+}
+
+void GameState::initialize() {
       curGameStateId = 0;
       lastReceivedGameStateId = 0;
       ship = NULL;
 
       clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
-      gsm = _gsm;
       serverSide = NULL;
       clientSide = NULL;
 
@@ -192,24 +218,7 @@ GameState::GameState(GameStateMode _gsm) :
       isI = isJ = isK = isL = false;
 
       drawGraphics = true;
-   }
-
-/**
- * Deconstructor: clean up all of our objects.
- */
-GameState::~GameState() {
-   delete skybox;
-   delete ship;
-   delete shipCamera;
-   delete spectatorCamera;
-   delete spring;
-   delete cube;
-   delete shardBankBar;
-   // Somehow makes it segfault when quitting so commented out
-   /*if (io != NULL) {
-     io->stop();
-     delete io;
-     }*/
+   
 }
 
 /**
@@ -2250,3 +2259,10 @@ void GameState::testCollisions(std::set< std::pair<unsigned, unsigned> >* record
 
    
 }
+
+void GameState::setServerMode() {
+   destruct();
+   new (this) GameState(ServerMode); // Reconstruct this gamestate
+   reset();
+}
+

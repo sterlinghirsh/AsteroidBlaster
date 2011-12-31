@@ -228,6 +228,8 @@ class GameState : public InputReceiver {
       void gameOver();
 
       Camera* getCurrentCamera();
+      
+      void setServerMode();
    
    //private functions------------------------------
    private:
@@ -237,6 +239,8 @@ class GameState : public InputReceiver {
       void spectatorCameraUpdate(double timeDiff);
       void advancePhysics(double startTime, double endTime, std::set< std::pair<unsigned, unsigned> >* recordedCollisions);
       void testCollisions(std::set< std::pair<unsigned, unsigned> >* recordedCollisions);
+      void initialize();
+      void destruct();
 };
 
 #endif
