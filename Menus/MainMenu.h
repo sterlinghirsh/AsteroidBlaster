@@ -23,7 +23,8 @@ class MainMenu : public Menu {
         *settingsText,
         *helpText,
         *creditsText,
-        *quitText;
+        *quitText,
+        *ipInputText;
    
    
    void draw();

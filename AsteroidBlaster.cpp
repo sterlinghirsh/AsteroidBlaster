@@ -390,6 +390,7 @@ int main(int argc, char* argv[]) {
    helpMenu = new HelpMenu();
    creditsMenu = new CreditsMenu();
    chat = new Input(gameState);
+   ipInput = new Input(gameState);
 
    if (_gsm == ClientMode) {
       gameState->connect((char*) ipAddress.c_str());
@@ -412,6 +413,7 @@ int main(int argc, char* argv[]) {
    inputManager->addReceiver(helpMenu);
    inputManager->addReceiver(creditsMenu);
    inputManager->addReceiver(chat);
+   inputManager->addReceiver(ipInput);
 
    //declare the event that will be reused
    SDL_Event* event = new SDL_Event();
@@ -547,6 +549,7 @@ int main(int argc, char* argv[]) {
    delete creditsMenu;
    delete inputManager;
    delete chat;
+   delete ipInput;
    SoundEffect::FreeAll();
 
    return 0;

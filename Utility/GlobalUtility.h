@@ -81,6 +81,7 @@ extern HelpMenu* helpMenu;
 extern SettingsMenu* settingsMenu;
 extern CreditsMenu* creditsMenu;
 extern Input* chat;
+extern Input* ipInput;
 extern TTF_Font* hudFont;
 extern TTF_Font* menuFont;
 extern double currentTime;

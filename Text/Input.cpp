@@ -7,7 +7,7 @@
 #include <cctype>
 
 Input::Input(GameState*& _gameState) : gameState(_gameState) {
-   chatActive = false;
+   active = false;
    x = y = -1;
 
    ignoreNext = false;
@@ -17,12 +17,12 @@ Input::Input(GameState*& _gameState) : gameState(_gameState) {
 
    SDL_EnableUNICODE(1);
 
-   chatText = new Text("", menuFont, position);
-   chatText->alignment = CENTERED;
+   text = new Text("", menuFont, position);
+   text->alignment = CENTERED;
 }
 
 Input::~Input() {
-   delete chatText;
+   delete text;
 }
 
 void Input::update(double timeDiff) {
@@ -30,13 +30,13 @@ void Input::update(double timeDiff) {
 }
 
 void Input::draw() {
-   //chatText->textToDisplay += line;
-   //chatText->textToDisplay = line;
-   chatText->textToDisplay = "TEST";
+   //text->textToDisplay += line;
+   //text->textToDisplay = line;
+   text->textToDisplay = "TEST";
    SDL_Rect position;
    position.y = (Sint16) (gameSettings->GH/20 * 19);
    position.x = (Sint16) (gameSettings->GW/8);
-   chatText->setPosition(position);
+   text->setPosition(position);
 
    //fboBegin();
    glDrawBuffer(HUD_BUFFER);
@@ -49,7 +49,7 @@ void Input::draw() {
    glDisable(GL_CULL_FACE);
    glDisable(GL_LIGHTING);
 
-   chatText->draw();
+   text->draw();
 
    usePerspective();
    glPopMatrix();
@@ -65,7 +65,7 @@ void Input::draw() {
  * Handles the player pressing down a key
  */
 void Input::keyDown(int key, int unicode) {
-   if (!chatActive) { return; }
+   if (!active) { return; }
    if (ignoreNext) {
       ignoreNext = false;
       return;
@@ -73,6 +73,9 @@ void Input::keyDown(int key, int unicode) {
 
    if (key == SDLK_RETURN || key == SDLK_ESCAPE) {
       deactivate();
+   } else if (key == SDLK_DELETE || key == SDLK_BACKSPACE) {
+      if (line.length() > 0)
+         line.erase(line.length() - 1);
    } else if(unicode < 0x80 && unicode > 0 ) {
       line += (char)unicode;
    }
@@ -84,7 +87,7 @@ void Input::keyDown(int key, int unicode) {
  * Handles the player letting go of a key
  */
 void Input::keyUp(int key) {
-   if (!chatActive) { return; }
+   if (!active) { return; }
 }
 
 /**
@@ -105,20 +108,15 @@ void Input::mouseMove(int dx, int dy, int x, int y) {
    return;
 }
 
-void Input::activate() {
-   SDL_ShowCursor(SDL_ENABLE);
-   chatActive = true;
+void Input::activate(bool _ignoreNext) {
+   active = true;
    line = "";
-   //chatText->textToDisplay = "";
-   ignoreNext = true;
+   ignoreNext = _ignoreNext;
    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 }
 
 void Input::deactivate() {
    printf("line: %s\n", line.c_str());
-   SDL_ShowCursor(SDL_DISABLE);
-   chatActive = false;
-   line = "";
-   //chatText->textToDisplay = "";
+   active = false;
    SDL_EnableKeyRepeat(0, 0);
 }

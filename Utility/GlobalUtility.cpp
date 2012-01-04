@@ -70,8 +70,9 @@ SettingsMenu* settingsMenu = NULL;
 HelpMenu* helpMenu = NULL;
 CreditsMenu* creditsMenu = NULL;
 
-// What?
+// Declare text-inputs
 Input* chat = NULL;
+Input* ipInput = NULL;
 
 // Fonts used in this game
 TTF_Font* hudFont = NULL;

@@ -1203,7 +1203,7 @@ void GameState::nextLevel() {
  */
 void GameState::keyDown(int key, int unicode) {
    //If game is not running, do not take input anymore
-   if(!gameIsRunning || chat->chatActive){ return;}
+   if(!gameIsRunning || chat->active){ return;}
 
    switch(key) {
       //movement keys, not valid if flying AI is enabled
@@ -1430,7 +1430,7 @@ void GameState::keyDown(int key, int unicode) {
          // Enable chat.
          /*
       case SDLK_j:
-         chat->activate();
+         chat->activate(true);
          break;
          */
 
@@ -1534,7 +1534,7 @@ void GameState::keyDown(int key, int unicode) {
  */
 void GameState::keyUp(int key) {
    //If game is not running, do not take input anymore
-   if(!gameIsRunning || chat->chatActive){ return;}
+   if(!gameIsRunning || chat->active){ return;}
 
    switch(key) {
    case SDLK_s:
@@ -2267,3 +2267,15 @@ void GameState::setServerMode() {
    reset();
 }
 
+void GameState::setClientMode(char* serverAddr) {
+   destruct();
+   new (this) GameState(ClientMode); // Reconstruct this gameState
+   connect(serverAddr);
+   reset();
+}
+
+void GameState::setSingleMode() {
+   destruct();
+   new (this) GameState(SingleMode); // Reconstruct this gameState
+   reset();
+}

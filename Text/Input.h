@@ -24,16 +24,16 @@ class Input : public InputReceiver {
       void mouseMove(int dx, int dy, int x, int y);
       void mouseUp(int button);
 
-      void activate();
+      void activate(bool _ignoreNext = false);
       void deactivate();
 
       //the current mouse location
       double x, y;
 
-      bool chatActive;
+      bool active;
       bool ignoreNext;
 
-      Text* chatText; 
+      Text* text; 
 
       std::string line;
 };

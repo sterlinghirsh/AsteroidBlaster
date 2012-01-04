@@ -230,6 +230,8 @@ class GameState : public InputReceiver {
       Camera* getCurrentCamera();
       
       void setServerMode();
+      void setClientMode(char* serverAddr);
+      void setSingleMode();
    
    //private functions------------------------------
    private:

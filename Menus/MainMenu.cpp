@@ -15,6 +15,7 @@
 #include "Utility/SoundEffect.h"
 #include "Items/AsteroidShip.h"
 #include "Text/Text.h"
+#include "Text/Input.h"
 #include <iostream>
 #include <fstream>
 
@@ -60,6 +61,9 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    
    quitText = new Text("Quit (esc)", menuFont, position);
    menuTexts.push_back(quitText);
+
+   ipInputText = new Text("Server IP: ", "", "_", menuFont, position);
+   ipInputText->alignment = CENTERED;
 
    for (unsigned i = 0; i < menuTexts.size(); i++) {
       menuTexts[i]->selectable = true;
@@ -112,8 +116,17 @@ void MainMenu::draw() {
       glDisable(GL_CULL_FACE);
       glDisable(GL_LIGHTING);
 
-      for(unsigned i = 0; i < menuTexts.size(); i++) {
-         menuTexts[i]->draw();
+      if (!ipInput->active) {
+         for(unsigned i = 0; i < menuTexts.size(); i++) {
+            menuTexts[i]->draw();
+         }
+      } else {
+         SDL_Rect position;
+         position.x = (Sint16) (gameSettings->GW/2);
+         position.y = (Sint16) (gameSettings->GH/2.8);
+         ipInputText->setPosition(position);
+         ipInputText->updateBody(ipInput->line);
+         ipInputText->draw();
       }
 
       usePerspective();
@@ -129,6 +142,21 @@ void MainMenu::draw() {
  * Handles the player pressing down a key
  */
 void MainMenu::keyDown(int key, int unicode) {
+   if (ipInput->active) {
+      if (key == SDLK_RETURN) {
+         // Detect when ip picker is closed and connect to the server.
+         printf("joining!\n");
+         mainGameState->setClientMode((char*) ipInput->line.c_str());
+         deactivate();
+      } else {
+         // Don't accept commands if we're getting text.
+         return;
+      }
+   }
+   if (key != SDLK_RETURN && ipInput->active)
+      return;
+   else if (key == SDLK_RETURN && ipInput->active)
+
    switch(key) {
    case SDLK_m:
       if(menuActive) {
@@ -178,6 +206,7 @@ void MainMenu::mouseDown(int button) {
       deactivate();
    } else if (joinGameText->mouseSelect(x, y)) {
       printf("join game.\n");
+      ipInput->activate(false);
    } else if (hostGameText->mouseSelect(x, y)) {
       printf("host game.\n");
       mainGameState->setServerMode();
