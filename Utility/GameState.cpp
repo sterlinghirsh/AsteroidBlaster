@@ -2199,7 +2199,7 @@ void GameState::removeNetworkPlayer(unsigned shipid) {
 
 void GameState::advancePhysics(double startTime, double endTime, std::set< std::pair<unsigned, unsigned> >* recordedCollisions) {
    double totalTimeDiff = endTime - startTime;
-   // Ensure at least 60 fps in physics.
+   // Ensure at least 50 fps in physics.
    const double maxTimeDiff = 0.02; // seconds;
    int numSteps = (int) ceil(fabs(totalTimeDiff) / maxTimeDiff);
 
@@ -2209,11 +2209,12 @@ void GameState::advancePhysics(double startTime, double endTime, std::set< std::
 
    double stepTimeDiff = totalTimeDiff / numSteps;
 
-   // Update each item.
+   // Set the gameTime to startTime, then increment time until we get to endTime.
    gameTime = startTime;
    
    std::vector<Object3D*>* objects = custodian.getListOfObjects();
 
+   // Update each item.
    for (int i = 0; i < numSteps; ++i) {
       gameTime += stepTimeDiff;
       for (item = objects->begin(); item != objects->end(); ++item) {
@@ -2229,7 +2230,7 @@ void GameState::advancePhysics(double startTime, double endTime, std::set< std::
       // positions in the sorted lists.
       custodian.update();
 
-      if (stepTimeDiff >= 0)
+      if (stepTimeDiff >= 0 && gsm != ClientMode)
          testCollisions(recordedCollisions);
    }
 }
