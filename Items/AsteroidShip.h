@@ -131,8 +131,7 @@ class AsteroidShip : public Object3D {
       
    //private variables------------------------------
    private:
-   
-   
+
    //public functions------------------------------
    public:
       //constructor

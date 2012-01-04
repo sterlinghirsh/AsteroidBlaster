@@ -77,6 +77,11 @@ class Object3D : public Drawable {
       std::queue<Vector3D*> instantAccelerations;
       bool targeted;
       
+      Vector3D targetUp, targetRight, targetForward;
+      float orientationInterpolationAmount;
+      bool interpolateOrientation;
+   
+      
       
    //protected functions------------------------------
    protected:

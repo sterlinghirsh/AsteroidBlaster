@@ -18,9 +18,9 @@ message Entity {
    
    // Frequently-changing ship fields.
    repeated Weapon weapon = 5;
-   optional Vector up = 6;
-   optional Vector right = 7;
-   optional Vector forward = 8;
+   optional Vector targetup = 6;
+   optional Vector targetright = 7;
+   optional Vector targetforward = 8;
 
    // Some items have a radius etc.
    optional float radius = 19;
@@ -101,6 +101,10 @@ message Entity {
    // Shard
    optional uint32 shardType = 73;
    optional uint32 weapNum = 74;
+
+   optional Vector up = 75;
+   optional Vector right = 76;
+   optional Vector forward = 77;
 }
 
 message Weapon {

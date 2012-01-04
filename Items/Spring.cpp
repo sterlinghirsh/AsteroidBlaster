@@ -56,7 +56,7 @@ void Spring::update(double timeDiff) {
          targetVelocity.addUpdate(camera->up->scalarMultiply(2.5));
          targetVelocity.scalarMultiplyUpdate(POS_FORCE_SCALE);
          // *camera->velocity = targetVelocity;
-         *camera->velocity = anchor->velocity->lirp(targetVelocity, 0.5);
+         *camera->velocity = anchor->velocity->lerp(targetVelocity, 0.5);
 
          camera->velocity->movePoint(*camera->position, timeDiff);
       }

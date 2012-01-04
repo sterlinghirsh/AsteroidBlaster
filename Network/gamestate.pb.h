@@ -243,29 +243,29 @@ class Entity : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ast::Weapon >*
       mutable_weapon();
   
-  // optional .ast.Vector up = 6;
-  inline bool has_up() const;
-  inline void clear_up();
-  static const int kUpFieldNumber = 6;
-  inline const ::ast::Vector& up() const;
-  inline ::ast::Vector* mutable_up();
-  inline ::ast::Vector* release_up();
+  // optional .ast.Vector targetup = 6;
+  inline bool has_targetup() const;
+  inline void clear_targetup();
+  static const int kTargetupFieldNumber = 6;
+  inline const ::ast::Vector& targetup() const;
+  inline ::ast::Vector* mutable_targetup();
+  inline ::ast::Vector* release_targetup();
   
-  // optional .ast.Vector right = 7;
-  inline bool has_right() const;
-  inline void clear_right();
-  static const int kRightFieldNumber = 7;
-  inline const ::ast::Vector& right() const;
-  inline ::ast::Vector* mutable_right();
-  inline ::ast::Vector* release_right();
+  // optional .ast.Vector targetright = 7;
+  inline bool has_targetright() const;
+  inline void clear_targetright();
+  static const int kTargetrightFieldNumber = 7;
+  inline const ::ast::Vector& targetright() const;
+  inline ::ast::Vector* mutable_targetright();
+  inline ::ast::Vector* release_targetright();
   
-  // optional .ast.Vector forward = 8;
-  inline bool has_forward() const;
-  inline void clear_forward();
-  static const int kForwardFieldNumber = 8;
-  inline const ::ast::Vector& forward() const;
-  inline ::ast::Vector* mutable_forward();
-  inline ::ast::Vector* release_forward();
+  // optional .ast.Vector targetforward = 8;
+  inline bool has_targetforward() const;
+  inline void clear_targetforward();
+  static const int kTargetforwardFieldNumber = 8;
+  inline const ::ast::Vector& targetforward() const;
+  inline ::ast::Vector* mutable_targetforward();
+  inline ::ast::Vector* release_targetforward();
   
   // optional float radius = 19;
   inline bool has_radius() const;
@@ -636,6 +636,30 @@ class Entity : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 weapnum() const;
   inline void set_weapnum(::google::protobuf::uint32 value);
   
+  // optional .ast.Vector up = 75;
+  inline bool has_up() const;
+  inline void clear_up();
+  static const int kUpFieldNumber = 75;
+  inline const ::ast::Vector& up() const;
+  inline ::ast::Vector* mutable_up();
+  inline ::ast::Vector* release_up();
+  
+  // optional .ast.Vector right = 76;
+  inline bool has_right() const;
+  inline void clear_right();
+  static const int kRightFieldNumber = 76;
+  inline const ::ast::Vector& right() const;
+  inline ::ast::Vector* mutable_right();
+  inline ::ast::Vector* release_right();
+  
+  // optional .ast.Vector forward = 77;
+  inline bool has_forward() const;
+  inline void clear_forward();
+  static const int kForwardFieldNumber = 77;
+  inline const ::ast::Vector& forward() const;
+  inline ::ast::Vector* mutable_forward();
+  inline ::ast::Vector* release_forward();
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -646,12 +670,12 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_position();
   inline void set_has_velocity();
   inline void clear_has_velocity();
-  inline void set_has_up();
-  inline void clear_has_up();
-  inline void set_has_right();
-  inline void clear_has_right();
-  inline void set_has_forward();
-  inline void clear_has_forward();
+  inline void set_has_targetup();
+  inline void clear_has_targetup();
+  inline void set_has_targetright();
+  inline void clear_has_targetright();
+  inline void set_has_targetforward();
+  inline void clear_has_targetforward();
   inline void set_has_radius();
   inline void clear_has_radius();
   inline void set_has_axis();
@@ -756,6 +780,12 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_shardtype();
   inline void set_has_weapnum();
   inline void clear_has_weapnum();
+  inline void set_has_up();
+  inline void clear_has_up();
+  inline void set_has_right();
+  inline void clear_has_right();
+  inline void set_has_forward();
+  inline void clear_has_forward();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -764,9 +794,9 @@ class Entity : public ::google::protobuf::Message {
   ::ast::Vector* position_;
   ::ast::Vector* velocity_;
   ::google::protobuf::RepeatedPtrField< ::ast::Weapon > weapon_;
-  ::ast::Vector* up_;
-  ::ast::Vector* right_;
-  ::ast::Vector* forward_;
+  ::ast::Vector* targetup_;
+  ::ast::Vector* targetright_;
+  ::ast::Vector* targetforward_;
   ::ast::Vector* axis_;
   float radius_;
   float angle_;
@@ -818,10 +848,13 @@ class Entity : public ::google::protobuf::Message {
   float length_;
   ::google::protobuf::int32 releasedshards_;
   ::google::protobuf::uint32 shardtype_;
+  ::ast::Vector* up_;
+  ::ast::Vector* right_;
+  ::ast::Vector* forward_;
   ::google::protobuf::uint32 weapnum_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(60 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(63 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -2204,90 +2237,90 @@ Entity::mutable_weapon() {
   return &weapon_;
 }
 
-// optional .ast.Vector up = 6;
-inline bool Entity::has_up() const {
+// optional .ast.Vector targetup = 6;
+inline bool Entity::has_targetup() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void Entity::set_has_up() {
+inline void Entity::set_has_targetup() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void Entity::clear_has_up() {
+inline void Entity::clear_has_targetup() {
   _has_bits_[0] &= ~0x00000020u;
 }
-inline void Entity::clear_up() {
-  if (up_ != NULL) up_->::ast::Vector::Clear();
-  clear_has_up();
+inline void Entity::clear_targetup() {
+  if (targetup_ != NULL) targetup_->::ast::Vector::Clear();
+  clear_has_targetup();
 }
-inline const ::ast::Vector& Entity::up() const {
-  return up_ != NULL ? *up_ : *default_instance_->up_;
+inline const ::ast::Vector& Entity::targetup() const {
+  return targetup_ != NULL ? *targetup_ : *default_instance_->targetup_;
 }
-inline ::ast::Vector* Entity::mutable_up() {
-  set_has_up();
-  if (up_ == NULL) up_ = new ::ast::Vector;
-  return up_;
+inline ::ast::Vector* Entity::mutable_targetup() {
+  set_has_targetup();
+  if (targetup_ == NULL) targetup_ = new ::ast::Vector;
+  return targetup_;
 }
-inline ::ast::Vector* Entity::release_up() {
-  clear_has_up();
-  ::ast::Vector* temp = up_;
-  up_ = NULL;
+inline ::ast::Vector* Entity::release_targetup() {
+  clear_has_targetup();
+  ::ast::Vector* temp = targetup_;
+  targetup_ = NULL;
   return temp;
 }
 
-// optional .ast.Vector right = 7;
-inline bool Entity::has_right() const {
+// optional .ast.Vector targetright = 7;
+inline bool Entity::has_targetright() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void Entity::set_has_right() {
+inline void Entity::set_has_targetright() {
   _has_bits_[0] |= 0x00000040u;
 }
-inline void Entity::clear_has_right() {
+inline void Entity::clear_has_targetright() {
   _has_bits_[0] &= ~0x00000040u;
 }
-inline void Entity::clear_right() {
-  if (right_ != NULL) right_->::ast::Vector::Clear();
-  clear_has_right();
+inline void Entity::clear_targetright() {
+  if (targetright_ != NULL) targetright_->::ast::Vector::Clear();
+  clear_has_targetright();
 }
-inline const ::ast::Vector& Entity::right() const {
-  return right_ != NULL ? *right_ : *default_instance_->right_;
+inline const ::ast::Vector& Entity::targetright() const {
+  return targetright_ != NULL ? *targetright_ : *default_instance_->targetright_;
 }
-inline ::ast::Vector* Entity::mutable_right() {
-  set_has_right();
-  if (right_ == NULL) right_ = new ::ast::Vector;
-  return right_;
+inline ::ast::Vector* Entity::mutable_targetright() {
+  set_has_targetright();
+  if (targetright_ == NULL) targetright_ = new ::ast::Vector;
+  return targetright_;
 }
-inline ::ast::Vector* Entity::release_right() {
-  clear_has_right();
-  ::ast::Vector* temp = right_;
-  right_ = NULL;
+inline ::ast::Vector* Entity::release_targetright() {
+  clear_has_targetright();
+  ::ast::Vector* temp = targetright_;
+  targetright_ = NULL;
   return temp;
 }
 
-// optional .ast.Vector forward = 8;
-inline bool Entity::has_forward() const {
+// optional .ast.Vector targetforward = 8;
+inline bool Entity::has_targetforward() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
-inline void Entity::set_has_forward() {
+inline void Entity::set_has_targetforward() {
   _has_bits_[0] |= 0x00000080u;
 }
-inline void Entity::clear_has_forward() {
+inline void Entity::clear_has_targetforward() {
   _has_bits_[0] &= ~0x00000080u;
 }
-inline void Entity::clear_forward() {
-  if (forward_ != NULL) forward_->::ast::Vector::Clear();
-  clear_has_forward();
+inline void Entity::clear_targetforward() {
+  if (targetforward_ != NULL) targetforward_->::ast::Vector::Clear();
+  clear_has_targetforward();
 }
-inline const ::ast::Vector& Entity::forward() const {
-  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
+inline const ::ast::Vector& Entity::targetforward() const {
+  return targetforward_ != NULL ? *targetforward_ : *default_instance_->targetforward_;
 }
-inline ::ast::Vector* Entity::mutable_forward() {
-  set_has_forward();
-  if (forward_ == NULL) forward_ = new ::ast::Vector;
-  return forward_;
+inline ::ast::Vector* Entity::mutable_targetforward() {
+  set_has_targetforward();
+  if (targetforward_ == NULL) targetforward_ = new ::ast::Vector;
+  return targetforward_;
 }
-inline ::ast::Vector* Entity::release_forward() {
-  clear_has_forward();
-  ::ast::Vector* temp = forward_;
-  forward_ = NULL;
+inline ::ast::Vector* Entity::release_targetforward() {
+  clear_has_targetforward();
+  ::ast::Vector* temp = targetforward_;
+  targetforward_ = NULL;
   return temp;
 }
 
@@ -3468,6 +3501,93 @@ inline ::google::protobuf::uint32 Entity::weapnum() const {
 inline void Entity::set_weapnum(::google::protobuf::uint32 value) {
   set_has_weapnum();
   weapnum_ = value;
+}
+
+// optional .ast.Vector up = 75;
+inline bool Entity::has_up() const {
+  return (_has_bits_[1] & 0x10000000u) != 0;
+}
+inline void Entity::set_has_up() {
+  _has_bits_[1] |= 0x10000000u;
+}
+inline void Entity::clear_has_up() {
+  _has_bits_[1] &= ~0x10000000u;
+}
+inline void Entity::clear_up() {
+  if (up_ != NULL) up_->::ast::Vector::Clear();
+  clear_has_up();
+}
+inline const ::ast::Vector& Entity::up() const {
+  return up_ != NULL ? *up_ : *default_instance_->up_;
+}
+inline ::ast::Vector* Entity::mutable_up() {
+  set_has_up();
+  if (up_ == NULL) up_ = new ::ast::Vector;
+  return up_;
+}
+inline ::ast::Vector* Entity::release_up() {
+  clear_has_up();
+  ::ast::Vector* temp = up_;
+  up_ = NULL;
+  return temp;
+}
+
+// optional .ast.Vector right = 76;
+inline bool Entity::has_right() const {
+  return (_has_bits_[1] & 0x20000000u) != 0;
+}
+inline void Entity::set_has_right() {
+  _has_bits_[1] |= 0x20000000u;
+}
+inline void Entity::clear_has_right() {
+  _has_bits_[1] &= ~0x20000000u;
+}
+inline void Entity::clear_right() {
+  if (right_ != NULL) right_->::ast::Vector::Clear();
+  clear_has_right();
+}
+inline const ::ast::Vector& Entity::right() const {
+  return right_ != NULL ? *right_ : *default_instance_->right_;
+}
+inline ::ast::Vector* Entity::mutable_right() {
+  set_has_right();
+  if (right_ == NULL) right_ = new ::ast::Vector;
+  return right_;
+}
+inline ::ast::Vector* Entity::release_right() {
+  clear_has_right();
+  ::ast::Vector* temp = right_;
+  right_ = NULL;
+  return temp;
+}
+
+// optional .ast.Vector forward = 77;
+inline bool Entity::has_forward() const {
+  return (_has_bits_[1] & 0x40000000u) != 0;
+}
+inline void Entity::set_has_forward() {
+  _has_bits_[1] |= 0x40000000u;
+}
+inline void Entity::clear_has_forward() {
+  _has_bits_[1] &= ~0x40000000u;
+}
+inline void Entity::clear_forward() {
+  if (forward_ != NULL) forward_->::ast::Vector::Clear();
+  clear_has_forward();
+}
+inline const ::ast::Vector& Entity::forward() const {
+  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
+}
+inline ::ast::Vector* Entity::mutable_forward() {
+  set_has_forward();
+  if (forward_ == NULL) forward_ = new ::ast::Vector;
+  return forward_;
+}
+inline ::ast::Vector* Entity::release_forward() {
+  clear_has_forward();
+  ::ast::Vector* temp = forward_;
+  forward_ = NULL;
+  return temp;
 }
 
 // -------------------------------------------------------------------

@@ -75,15 +75,15 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector));
   Entity_descriptor_ = file->message_type(1);
-  static const int Entity_offsets_[60] = {
+  static const int Entity_offsets_[63] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, position_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, velocity_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, weapon_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, up_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, right_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, forward_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, targetup_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, targetright_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, targetforward_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, radius_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, axis_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, angle_),
@@ -136,6 +136,9 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, releasedshards_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, shardtype_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, weapnum_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, up_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, right_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, forward_),
   };
   Entity_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -382,74 +385,77 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027Network/gamestate.proto\022\003ast\")\n\006Vector"
-    "\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\"\317\n\n\006En"
+    "\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\"\264\013\n\006En"
     "tity\022\n\n\002id\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\035\n\010positi"
     "on\030\003 \001(\0132\013.ast.Vector\022\035\n\010velocity\030\004 \001(\0132"
     "\013.ast.Vector\022\033\n\006weapon\030\005 \003(\0132\013.ast.Weapo"
-    "n\022\027\n\002up\030\006 \001(\0132\013.ast.Vector\022\032\n\005right\030\007 \001("
-    "\0132\013.ast.Vector\022\034\n\007forward\030\010 \001(\0132\013.ast.Ve"
-    "ctor\022\016\n\006radius\030\023 \001(\002\022\031\n\004axis\030\025 \001(\0132\013.ast"
-    ".Vector\022\r\n\005angle\030\031 \001(\002\022\025\n\rrotationSpeed\030"
-    "\032 \001(\002\022\026\n\016targetYawSpeed\030\033 \001(\002\022\030\n\020targetP"
-    "itchSpeed\030\034 \001(\002\022\027\n\017targetRollSpeed\030\035 \001(\002"
-    "\022\016\n\006health\030\036 \001(\002\022\021\n\thealthMax\030\037 \001(\002\022\023\n\013e"
-    "ngineLevel\030  \001(\005\022\030\n\020regenHealthLevel\030! \001"
-    "(\005\022\021\n\tbankLevel\030\" \001(\005\022\016\n\006color1\030# \001(\002\022\016\n"
-    "\006color2\030$ \001(\002\022\"\n\rshotDirection\030% \001(\0132\013.a"
-    "st.Vector\022\020\n\010isFiring\030& \001(\010\022\025\n\rcurrentWe"
-    "apon\030\' \001(\005\022\033\n\023isBarrelRollingLeft\030( \001(\002\022"
-    "\034\n\024isBarrelRollingRight\030) \001(\002\022\027\n\017curForw"
-    "ardAccel\030* \001(\002\022\025\n\rcurRightAccel\030+ \001(\002\022\022\n"
-    "\ncurUpAccel\030, \001(\002\022\021\n\tisBraking\030- \001(\010\022\022\n\n"
-    "bankPeriod\030. \001(\002\022\027\n\017flyingAIEnabled\030/ \001("
-    "\010\022\031\n\021shootingAIEnabled\0300 \001(\010\022\035\n\tbankTime"
-    "r\0301 \001(\0132\n.ast.Timer\022\036\n\naliveTimer\0302 \001(\0132"
-    "\n.ast.Timer\022 \n\014respawnTimer\0303 \001(\0132\n.ast."
-    "Timer\022\031\n\021timeLeftToRespawn\0304 \001(\002\022\r\n\005scor"
-    "e\0305 \001(\005\022\r\n\005kills\0306 \001(\005\022\016\n\006deaths\0307 \001(\005\022\r"
-    "\n\005lives\0308 \001(\005\022\024\n\014bankedShards\0309 \001(\005\022\026\n\016u"
-    "nbankedShards\030: \001(\005\022\031\n\021totalBankedShards"
-    "\030; \001(\005\022\017\n\007ownerid\030< \001(\r\022\020\n\010lifetime\030= \001("
-    "\002\022\021\n\ttimeFired\030> \001(\002\022\023\n\013weaponIndex\030\? \001("
-    "\005\022\016\n\006damage\030@ \001(\002\022\022\n\nchargeTime\030A \001(\002\022\027\n"
-    "\017damagePerSecond\030B \001(\002\022\031\n\021timeSinceExplo"
-    "ded\030C \001(\002\022\021\n\tenergyHit\030D \001(\010\022\033\n\023timeLast"
-    "HitByEnergy\030E \001(\002\022\024\n\014shouldRemove\030F \001(\010\022"
-    "\016\n\006length\030G \001(\002\022\026\n\016releasedShards\030H \001(\005\022"
-    "\021\n\tshardType\030I \001(\r\022\017\n\007weapNum\030J \001(\r\"\324\002\n\006"
-    "Weapon\022\r\n\005index\030\001 \002(\r\022#\n\017activationTimer"
-    "\030\002 \001(\0132\n.ast.Timer\022\025\n\rtimeLastFired\030\003 \001("
-    "\002\022\020\n\010coolDown\030\004 \001(\002\022\016\n\006damage\030\005 \001(\002\022\023\n\013c"
-    "urrentHeat\030\006 \001(\002\022\022\n\nshotsFired\030\007 \001(\005\022\031\n\021"
-    "timeStartedFiring\030\010 \001(\002\022\016\n\006shotid\030\t \001(\r\022"
-    "\021\n\tpurchased\030\n \001(\010\022\023\n\013weaponPrice\030\013 \001(\005\022"
-    "\r\n\005level\030\014 \001(\005\022\r\n\005range\030\r \001(\002\022\025\n\roverhea"
-    "tLevel\030\016 \001(\002\022\023\n\013heatPerShot\030\017 \001(\002\022\027\n\017cha"
-    "rgeStartTime\030\020 \001(\002\"\231\002\n\rClientCommand\022\016\n\006"
-    "shipID\030\001 \002(\r\022\033\n\023forwardAcceleration\030\002 \001("
-    "\021\022\031\n\021rightAcceleration\030\003 \001(\021\022\026\n\016upAccele"
-    "ration\030\004 \001(\021\022\r\n\005brake\030\005 \001(\010\022\020\n\010yawSpeed\030"
-    "\006 \001(\002\022\021\n\trollSpeed\030\007 \001(\002\022\022\n\npitchSpeed\030\010"
-    " \001(\002\022\014\n\004fire\030\t \001(\010\022\021\n\tcurWeapon\030\n \001(\r\022\016\n"
-    "\006mouseX\030\013 \001(\002\022\016\n\006mouseY\030\014 \001(\002\022\037\n\027lastRec"
-    "eivedGameStateId\030\r \001(\r\"l\n\005Timer\022\023\n\013timeS"
-    "tarted\030\001 \001(\002\022\025\n\rcountDownTime\030\002 \001(\002\022\022\n\nt"
-    "imePaused\030\003 \001(\002\022\020\n\010isPaused\030\004 \001(\010\022\021\n\tisR"
-    "unning\030\005 \001(\010\"\214\001\n\tGameState\022\033\n\006entity\030\001 \003"
-    "(\0132\013.ast.Entity\022\020\n\010gameTime\030\002 \002(\001\022\022\n\npla"
-    "yerShip\030\003 \001(\r\022\036\n\nlevelTimer\030\004 \001(\0132\n.ast."
-    "Timer\022\020\n\010curLevel\030\005 \001(\005\022\n\n\002id\030\006 \001(\r\"\312\001\n\020"
-    "CollisionMessage\022\023\n\013gamestateid\030\001 \001(\r\022\024\n"
-    "\010collider\030\002 \003(\rB\002\020\001\022\024\n\010wall_top\030\003 \003(\rB\002\020"
-    "\001\022\027\n\013wall_bottom\030\004 \003(\rB\002\020\001\022\025\n\twall_left\030"
-    "\005 \003(\rB\002\020\001\022\026\n\nwall_right\030\006 \003(\rB\002\020\001\022\026\n\nwal"
-    "l_front\030\007 \003(\rB\002\020\001\022\025\n\twall_back\030\010 \003(\rB\002\020\001"
-    "\"-\n\013ChatMessage\022\020\n\010sourceid\030\001 \001(\r\022\014\n\004tex"
-    "t\030\002 \001(\t\"Q\n\023CreateEntityMessage\022\035\n\025create"
-    "EntityMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013."
-    "ast.Entity\"l\n\005Frame\0220\n\021collision_message"
-    "\030\001 \003(\0132\025.ast.CollisionMessage\022!\n\tgameSta"
-    "te\030\t \001(\0132\016.ast.GameState\022\016\n\006shipid\030\n \001(\r", 2760);
+    "n\022\035\n\010targetup\030\006 \001(\0132\013.ast.Vector\022 \n\013targ"
+    "etright\030\007 \001(\0132\013.ast.Vector\022\"\n\rtargetforw"
+    "ard\030\010 \001(\0132\013.ast.Vector\022\016\n\006radius\030\023 \001(\002\022\031"
+    "\n\004axis\030\025 \001(\0132\013.ast.Vector\022\r\n\005angle\030\031 \001(\002"
+    "\022\025\n\rrotationSpeed\030\032 \001(\002\022\026\n\016targetYawSpee"
+    "d\030\033 \001(\002\022\030\n\020targetPitchSpeed\030\034 \001(\002\022\027\n\017tar"
+    "getRollSpeed\030\035 \001(\002\022\016\n\006health\030\036 \001(\002\022\021\n\the"
+    "althMax\030\037 \001(\002\022\023\n\013engineLevel\030  \001(\005\022\030\n\020re"
+    "genHealthLevel\030! \001(\005\022\021\n\tbankLevel\030\" \001(\005\022"
+    "\016\n\006color1\030# \001(\002\022\016\n\006color2\030$ \001(\002\022\"\n\rshotD"
+    "irection\030% \001(\0132\013.ast.Vector\022\020\n\010isFiring\030"
+    "& \001(\010\022\025\n\rcurrentWeapon\030\' \001(\005\022\033\n\023isBarrel"
+    "RollingLeft\030( \001(\002\022\034\n\024isBarrelRollingRigh"
+    "t\030) \001(\002\022\027\n\017curForwardAccel\030* \001(\002\022\025\n\rcurR"
+    "ightAccel\030+ \001(\002\022\022\n\ncurUpAccel\030, \001(\002\022\021\n\ti"
+    "sBraking\030- \001(\010\022\022\n\nbankPeriod\030. \001(\002\022\027\n\017fl"
+    "yingAIEnabled\030/ \001(\010\022\031\n\021shootingAIEnabled"
+    "\0300 \001(\010\022\035\n\tbankTimer\0301 \001(\0132\n.ast.Timer\022\036\n"
+    "\naliveTimer\0302 \001(\0132\n.ast.Timer\022 \n\014respawn"
+    "Timer\0303 \001(\0132\n.ast.Timer\022\031\n\021timeLeftToRes"
+    "pawn\0304 \001(\002\022\r\n\005score\0305 \001(\005\022\r\n\005kills\0306 \001(\005"
+    "\022\016\n\006deaths\0307 \001(\005\022\r\n\005lives\0308 \001(\005\022\024\n\014banke"
+    "dShards\0309 \001(\005\022\026\n\016unbankedShards\030: \001(\005\022\031\n"
+    "\021totalBankedShards\030; \001(\005\022\017\n\007ownerid\030< \001("
+    "\r\022\020\n\010lifetime\030= \001(\002\022\021\n\ttimeFired\030> \001(\002\022\023"
+    "\n\013weaponIndex\030\? \001(\005\022\016\n\006damage\030@ \001(\002\022\022\n\nc"
+    "hargeTime\030A \001(\002\022\027\n\017damagePerSecond\030B \001(\002"
+    "\022\031\n\021timeSinceExploded\030C \001(\002\022\021\n\tenergyHit"
+    "\030D \001(\010\022\033\n\023timeLastHitByEnergy\030E \001(\002\022\024\n\014s"
+    "houldRemove\030F \001(\010\022\016\n\006length\030G \001(\002\022\026\n\016rel"
+    "easedShards\030H \001(\005\022\021\n\tshardType\030I \001(\r\022\017\n\007"
+    "weapNum\030J \001(\r\022\027\n\002up\030K \001(\0132\013.ast.Vector\022\032"
+    "\n\005right\030L \001(\0132\013.ast.Vector\022\034\n\007forward\030M "
+    "\001(\0132\013.ast.Vector\"\324\002\n\006Weapon\022\r\n\005index\030\001 \002"
+    "(\r\022#\n\017activationTimer\030\002 \001(\0132\n.ast.Timer\022"
+    "\025\n\rtimeLastFired\030\003 \001(\002\022\020\n\010coolDown\030\004 \001(\002"
+    "\022\016\n\006damage\030\005 \001(\002\022\023\n\013currentHeat\030\006 \001(\002\022\022\n"
+    "\nshotsFired\030\007 \001(\005\022\031\n\021timeStartedFiring\030\010"
+    " \001(\002\022\016\n\006shotid\030\t \001(\r\022\021\n\tpurchased\030\n \001(\010\022"
+    "\023\n\013weaponPrice\030\013 \001(\005\022\r\n\005level\030\014 \001(\005\022\r\n\005r"
+    "ange\030\r \001(\002\022\025\n\roverheatLevel\030\016 \001(\002\022\023\n\013hea"
+    "tPerShot\030\017 \001(\002\022\027\n\017chargeStartTime\030\020 \001(\002\""
+    "\231\002\n\rClientCommand\022\016\n\006shipID\030\001 \002(\r\022\033\n\023for"
+    "wardAcceleration\030\002 \001(\021\022\031\n\021rightAccelerat"
+    "ion\030\003 \001(\021\022\026\n\016upAcceleration\030\004 \001(\021\022\r\n\005bra"
+    "ke\030\005 \001(\010\022\020\n\010yawSpeed\030\006 \001(\002\022\021\n\trollSpeed\030"
+    "\007 \001(\002\022\022\n\npitchSpeed\030\010 \001(\002\022\014\n\004fire\030\t \001(\010\022"
+    "\021\n\tcurWeapon\030\n \001(\r\022\016\n\006mouseX\030\013 \001(\002\022\016\n\006mo"
+    "useY\030\014 \001(\002\022\037\n\027lastReceivedGameStateId\030\r "
+    "\001(\r\"l\n\005Timer\022\023\n\013timeStarted\030\001 \001(\002\022\025\n\rcou"
+    "ntDownTime\030\002 \001(\002\022\022\n\ntimePaused\030\003 \001(\002\022\020\n\010"
+    "isPaused\030\004 \001(\010\022\021\n\tisRunning\030\005 \001(\010\"\214\001\n\tGa"
+    "meState\022\033\n\006entity\030\001 \003(\0132\013.ast.Entity\022\020\n\010"
+    "gameTime\030\002 \002(\001\022\022\n\nplayerShip\030\003 \001(\r\022\036\n\nle"
+    "velTimer\030\004 \001(\0132\n.ast.Timer\022\020\n\010curLevel\030\005"
+    " \001(\005\022\n\n\002id\030\006 \001(\r\"\312\001\n\020CollisionMessage\022\023\n"
+    "\013gamestateid\030\001 \001(\r\022\024\n\010collider\030\002 \003(\rB\002\020\001"
+    "\022\024\n\010wall_top\030\003 \003(\rB\002\020\001\022\027\n\013wall_bottom\030\004 "
+    "\003(\rB\002\020\001\022\025\n\twall_left\030\005 \003(\rB\002\020\001\022\026\n\nwall_r"
+    "ight\030\006 \003(\rB\002\020\001\022\026\n\nwall_front\030\007 \003(\rB\002\020\001\022\025"
+    "\n\twall_back\030\010 \003(\rB\002\020\001\"-\n\013ChatMessage\022\020\n\010"
+    "sourceid\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\"Q\n\023CreateEn"
+    "tityMessage\022\035\n\025createEntityMessageid\030\001 \001"
+    "(\r\022\033\n\006entity\030\002 \003(\0132\013.ast.Entity\"l\n\005Frame"
+    "\0220\n\021collision_message\030\001 \003(\0132\025.ast.Collis"
+    "ionMessage\022!\n\tgameState\030\t \001(\0132\016.ast.Game"
+    "State\022\016\n\006shipid\030\n \001(\r", 2861);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -772,9 +778,9 @@ const int Entity::kTypeFieldNumber;
 const int Entity::kPositionFieldNumber;
 const int Entity::kVelocityFieldNumber;
 const int Entity::kWeaponFieldNumber;
-const int Entity::kUpFieldNumber;
-const int Entity::kRightFieldNumber;
-const int Entity::kForwardFieldNumber;
+const int Entity::kTargetupFieldNumber;
+const int Entity::kTargetrightFieldNumber;
+const int Entity::kTargetforwardFieldNumber;
 const int Entity::kRadiusFieldNumber;
 const int Entity::kAxisFieldNumber;
 const int Entity::kAngleFieldNumber;
@@ -827,6 +833,9 @@ const int Entity::kLengthFieldNumber;
 const int Entity::kReleasedShardsFieldNumber;
 const int Entity::kShardTypeFieldNumber;
 const int Entity::kWeapNumFieldNumber;
+const int Entity::kUpFieldNumber;
+const int Entity::kRightFieldNumber;
+const int Entity::kForwardFieldNumber;
 #endif  // !_MSC_VER
 
 Entity::Entity()
@@ -837,14 +846,17 @@ Entity::Entity()
 void Entity::InitAsDefaultInstance() {
   position_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   velocity_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
-  up_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
-  right_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
-  forward_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
+  targetup_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
+  targetright_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
+  targetforward_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   axis_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   shotdirection_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
   banktimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
   alivetimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
   respawntimer_ = const_cast< ::ast::Timer*>(&::ast::Timer::default_instance());
+  up_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
+  right_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
+  forward_ = const_cast< ::ast::Vector*>(&::ast::Vector::default_instance());
 }
 
 Entity::Entity(const Entity& from)
@@ -859,9 +871,9 @@ void Entity::SharedCtor() {
   type_ = 0u;
   position_ = NULL;
   velocity_ = NULL;
-  up_ = NULL;
-  right_ = NULL;
-  forward_ = NULL;
+  targetup_ = NULL;
+  targetright_ = NULL;
+  targetforward_ = NULL;
   radius_ = 0;
   axis_ = NULL;
   angle_ = 0;
@@ -914,6 +926,9 @@ void Entity::SharedCtor() {
   releasedshards_ = 0;
   shardtype_ = 0u;
   weapnum_ = 0u;
+  up_ = NULL;
+  right_ = NULL;
+  forward_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -925,14 +940,17 @@ void Entity::SharedDtor() {
   if (this != default_instance_) {
     delete position_;
     delete velocity_;
-    delete up_;
-    delete right_;
-    delete forward_;
+    delete targetup_;
+    delete targetright_;
+    delete targetforward_;
     delete axis_;
     delete shotdirection_;
     delete banktimer_;
     delete alivetimer_;
     delete respawntimer_;
+    delete up_;
+    delete right_;
+    delete forward_;
   }
 }
 
@@ -966,14 +984,14 @@ void Entity::Clear() {
     if (has_velocity()) {
       if (velocity_ != NULL) velocity_->::ast::Vector::Clear();
     }
-    if (has_up()) {
-      if (up_ != NULL) up_->::ast::Vector::Clear();
+    if (has_targetup()) {
+      if (targetup_ != NULL) targetup_->::ast::Vector::Clear();
     }
-    if (has_right()) {
-      if (right_ != NULL) right_->::ast::Vector::Clear();
+    if (has_targetright()) {
+      if (targetright_ != NULL) targetright_->::ast::Vector::Clear();
     }
-    if (has_forward()) {
-      if (forward_ != NULL) forward_->::ast::Vector::Clear();
+    if (has_targetforward()) {
+      if (targetforward_ != NULL) targetforward_->::ast::Vector::Clear();
     }
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
@@ -1051,6 +1069,15 @@ void Entity::Clear() {
     releasedshards_ = 0;
     shardtype_ = 0u;
     weapnum_ = 0u;
+    if (has_up()) {
+      if (up_ != NULL) up_->::ast::Vector::Clear();
+    }
+    if (has_right()) {
+      if (right_ != NULL) right_->::ast::Vector::Clear();
+    }
+    if (has_forward()) {
+      if (forward_ != NULL) forward_->::ast::Vector::Clear();
+    }
   }
   weapon_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1133,45 +1160,45 @@ bool Entity::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(42)) goto parse_weapon;
-        if (input->ExpectTag(50)) goto parse_up;
+        if (input->ExpectTag(50)) goto parse_targetup;
         break;
       }
       
-      // optional .ast.Vector up = 6;
+      // optional .ast.Vector targetup = 6;
       case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_up:
+         parse_targetup:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_up()));
+               input, mutable_targetup()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(58)) goto parse_right;
+        if (input->ExpectTag(58)) goto parse_targetright;
         break;
       }
       
-      // optional .ast.Vector right = 7;
+      // optional .ast.Vector targetright = 7;
       case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_right:
+         parse_targetright:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_right()));
+               input, mutable_targetright()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(66)) goto parse_forward;
+        if (input->ExpectTag(66)) goto parse_targetforward;
         break;
       }
       
-      // optional .ast.Vector forward = 8;
+      // optional .ast.Vector targetforward = 8;
       case 8: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_forward:
+         parse_targetforward:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_forward()));
+               input, mutable_targetforward()));
         } else {
           goto handle_uninterpreted;
         }
@@ -1997,6 +2024,48 @@ bool Entity::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(602)) goto parse_up;
+        break;
+      }
+      
+      // optional .ast.Vector up = 75;
+      case 75: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_up:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_up()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(610)) goto parse_right;
+        break;
+      }
+      
+      // optional .ast.Vector right = 76;
+      case 76: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_right:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_right()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(618)) goto parse_forward;
+        break;
+      }
+      
+      // optional .ast.Vector forward = 77;
+      case 77: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_forward:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_forward()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2047,22 +2116,22 @@ void Entity::SerializeWithCachedSizes(
       5, this->weapon(i), output);
   }
   
-  // optional .ast.Vector up = 6;
-  if (has_up()) {
+  // optional .ast.Vector targetup = 6;
+  if (has_targetup()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, this->up(), output);
+      6, this->targetup(), output);
   }
   
-  // optional .ast.Vector right = 7;
-  if (has_right()) {
+  // optional .ast.Vector targetright = 7;
+  if (has_targetright()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      7, this->right(), output);
+      7, this->targetright(), output);
   }
   
-  // optional .ast.Vector forward = 8;
-  if (has_forward()) {
+  // optional .ast.Vector targetforward = 8;
+  if (has_targetforward()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      8, this->forward(), output);
+      8, this->targetforward(), output);
   }
   
   // optional float radius = 19;
@@ -2330,6 +2399,24 @@ void Entity::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(74, this->weapnum(), output);
   }
   
+  // optional .ast.Vector up = 75;
+  if (has_up()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      75, this->up(), output);
+  }
+  
+  // optional .ast.Vector right = 76;
+  if (has_right()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      76, this->right(), output);
+  }
+  
+  // optional .ast.Vector forward = 77;
+  if (has_forward()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      77, this->forward(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2369,25 +2456,25 @@ void Entity::SerializeWithCachedSizes(
         5, this->weapon(i), target);
   }
   
-  // optional .ast.Vector up = 6;
-  if (has_up()) {
+  // optional .ast.Vector targetup = 6;
+  if (has_targetup()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        6, this->up(), target);
+        6, this->targetup(), target);
   }
   
-  // optional .ast.Vector right = 7;
-  if (has_right()) {
+  // optional .ast.Vector targetright = 7;
+  if (has_targetright()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        7, this->right(), target);
+        7, this->targetright(), target);
   }
   
-  // optional .ast.Vector forward = 8;
-  if (has_forward()) {
+  // optional .ast.Vector targetforward = 8;
+  if (has_targetforward()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        8, this->forward(), target);
+        8, this->targetforward(), target);
   }
   
   // optional float radius = 19;
@@ -2660,6 +2747,27 @@ void Entity::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(74, this->weapnum(), target);
   }
   
+  // optional .ast.Vector up = 75;
+  if (has_up()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        75, this->up(), target);
+  }
+  
+  // optional .ast.Vector right = 76;
+  if (has_right()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        76, this->right(), target);
+  }
+  
+  // optional .ast.Vector forward = 77;
+  if (has_forward()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        77, this->forward(), target);
+  }
+  
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2699,25 +2807,25 @@ int Entity::ByteSize() const {
           this->velocity());
     }
     
-    // optional .ast.Vector up = 6;
-    if (has_up()) {
+    // optional .ast.Vector targetup = 6;
+    if (has_targetup()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->up());
+          this->targetup());
     }
     
-    // optional .ast.Vector right = 7;
-    if (has_right()) {
+    // optional .ast.Vector targetright = 7;
+    if (has_targetright()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->right());
+          this->targetright());
     }
     
-    // optional .ast.Vector forward = 8;
-    if (has_forward()) {
+    // optional .ast.Vector targetforward = 8;
+    if (has_targetforward()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->forward());
+          this->targetforward());
     }
     
   }
@@ -3036,6 +3144,27 @@ int Entity::ByteSize() const {
           this->weapnum());
     }
     
+    // optional .ast.Vector up = 75;
+    if (has_up()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->up());
+    }
+    
+    // optional .ast.Vector right = 76;
+    if (has_right()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->right());
+    }
+    
+    // optional .ast.Vector forward = 77;
+    if (has_forward()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->forward());
+    }
+    
   }
   // repeated .ast.Weapon weapon = 5;
   total_size += 1 * this->weapon_size();
@@ -3084,14 +3213,14 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_velocity()) {
       mutable_velocity()->::ast::Vector::MergeFrom(from.velocity());
     }
-    if (from.has_up()) {
-      mutable_up()->::ast::Vector::MergeFrom(from.up());
+    if (from.has_targetup()) {
+      mutable_targetup()->::ast::Vector::MergeFrom(from.targetup());
     }
-    if (from.has_right()) {
-      mutable_right()->::ast::Vector::MergeFrom(from.right());
+    if (from.has_targetright()) {
+      mutable_targetright()->::ast::Vector::MergeFrom(from.targetright());
     }
-    if (from.has_forward()) {
-      mutable_forward()->::ast::Vector::MergeFrom(from.forward());
+    if (from.has_targetforward()) {
+      mutable_targetforward()->::ast::Vector::MergeFrom(from.targetforward());
     }
   }
   if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
@@ -3263,6 +3392,15 @@ void Entity::MergeFrom(const Entity& from) {
     if (from.has_weapnum()) {
       set_weapnum(from.weapnum());
     }
+    if (from.has_up()) {
+      mutable_up()->::ast::Vector::MergeFrom(from.up());
+    }
+    if (from.has_right()) {
+      mutable_right()->::ast::Vector::MergeFrom(from.right());
+    }
+    if (from.has_forward()) {
+      mutable_forward()->::ast::Vector::MergeFrom(from.forward());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -3294,9 +3432,9 @@ void Entity::Swap(Entity* other) {
     std::swap(position_, other->position_);
     std::swap(velocity_, other->velocity_);
     weapon_.Swap(&other->weapon_);
-    std::swap(up_, other->up_);
-    std::swap(right_, other->right_);
-    std::swap(forward_, other->forward_);
+    std::swap(targetup_, other->targetup_);
+    std::swap(targetright_, other->targetright_);
+    std::swap(targetforward_, other->targetforward_);
     std::swap(radius_, other->radius_);
     std::swap(axis_, other->axis_);
     std::swap(angle_, other->angle_);
@@ -3349,6 +3487,9 @@ void Entity::Swap(Entity* other) {
     std::swap(releasedshards_, other->releasedshards_);
     std::swap(shardtype_, other->shardtype_);
     std::swap(weapnum_, other->weapnum_);
+    std::swap(up_, other->up_);
+    std::swap(right_, other->right_);
+    std::swap(forward_, other->forward_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_has_bits_[1], other->_has_bits_[1]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

@@ -273,6 +273,9 @@ void AsteroidShip::reInitialize() {
    engineLevel = 1;
    regenHealthLevel = 0;
    bankLevel = 1;
+
+   interpolateOrientation = false;
+   orientationInterpolationAmount = 0;
 }
 
 /**
@@ -784,9 +787,28 @@ void AsteroidShip::update(double timeDiff) {
 
       if (isBarrelRollingLeft <= 0 && isBarrelRollingRight <= 0) {
          roll(timeDiff * rollSpeed);
+         pitch(timeDiff * pitchSpeed);
+         yaw(timeDiff * yawSpeed);
       }
-      pitch(timeDiff * pitchSpeed);
-      yaw(timeDiff * yawSpeed);
+      
+      if (interpolateOrientation && orientationInterpolationAmount >= 0) {
+         // Stop interpolating if we don't have further to go.
+         if (orientationInterpolationAmount == 0)
+            interpolateOrientation = false;
+
+         float curFrameInterpolation = 1 - orientationInterpolationAmount;
+         *up = up->lerp(targetUp, curFrameInterpolation);
+         *forward = forward->lerp(targetForward, curFrameInterpolation);
+         up->normalize();
+         forward->normalize();
+         *right = forward->cross(*up);
+         right->normalize();
+
+         orientationInterpolationAmount -= timeDiff * 10; // Interpolate over .1 sec
+
+         if (orientationInterpolationAmount < 0)
+            orientationInterpolationAmount = 0;
+      }
 
       if (!shooter->isEnabled()) {
          updateShotDirectionVector();
@@ -2230,6 +2252,7 @@ double AsteroidShip::getBankPeriod() {
 bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    bool changed = Object3D::saveDiff(old, ent);
    
+   /*
    if (!up->saveDiff(old.up(), ent->mutable_up())) {
       ent->clear_up();
    } else {
@@ -2241,6 +2264,7 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    } else {
       changed = true;
    }
+   */
    
    /*
    if (!right->saveDiff(old.right(), ent->mutable_right()))
@@ -2248,6 +2272,19 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
    else
       changed = true;
       */
+   
+   if (!up->saveDiff(old.up(), ent->mutable_targetup())) {
+      ent->clear_targetup();
+   } else {
+      changed = true;
+   }
+   
+   if (!forward->saveDiff(old.forward(), ent->mutable_targetforward())) {
+      ent->clear_targetforward();
+   } else {
+      changed = true;
+   }
+   
    
    if (!shotDirection.saveDiff(old.shotdirection(), ent->mutable_shotdirection())) {
       ent->clear_shotdirection();
@@ -2506,6 +2543,17 @@ void AsteroidShip::load(const ast::Entity& ent) {
       right->load(ent.right());
       */
    *right = forward->cross(*up);
+
+   if (ent.has_targetforward() || ent.has_targetup()) {
+      if (ent.has_targetforward())
+         targetForward.load(ent.targetforward());
+      if (ent.has_targetup())
+         targetUp.load(ent.targetup());
+
+      targetRight = targetForward.cross(targetUp);
+      interpolateOrientation = true;
+      orientationInterpolationAmount = 1;
+   }
 
    if (ent.has_health())
       health = ent.health();

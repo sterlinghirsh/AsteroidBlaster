@@ -40,6 +40,9 @@ Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState),
    radius = std::max(radius, (float) fabs(minZ));
    targeted = false;
    rotationSpeed = 0;
+   
+   interpolateOrientation = false;
+   orientationInterpolationAmount = 0;
 }
 
 Object3D::~Object3D() {
@@ -106,6 +109,11 @@ void Object3D::setRollSpeed(double radiansPerSecond) {
 void Object3D::yaw(double angle) {
    forward->rotate(angle, *up);
    right->rotate(angle, *up);
+
+   if (interpolateOrientation) {
+      targetForward.rotate(angle, up);
+      targetRight.rotate(angle, up);
+   }
 }
 
 /**
@@ -117,6 +125,12 @@ void Object3D::roll(double angle) {
    if (!lockUpVector)
       up->rotate(angle, *forward);
    right->rotate(angle, *forward);
+   
+   if (interpolateOrientation) {
+      if (!lockUpVector)
+         targetUp.rotate(angle, forward);
+      targetRight.rotate(angle, forward);
+   }
 }
 
 /**
@@ -128,6 +142,12 @@ void Object3D::pitch(double angle) {
    forward->rotate(-angle, *right);
    if (!lockUpVector)
       up->rotate(-angle, *right);
+   
+   if (interpolateOrientation) {
+      if (!lockUpVector)
+         targetUp.rotate(-angle, right);
+      targetForward.rotate(-angle, right);
+   }
 }
 
 void Object3D::drawBoundingBox() {
