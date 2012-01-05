@@ -294,6 +294,8 @@ void GameState::update(double timeDiff) {
       recordedCollisions = new std::set< std::pair<unsigned, unsigned> >();
    }
 
+   setMusic();
+
    //updateGameTime(timeDiff); // Sets gameTime to newLocalTime.
    curGameStateId++;
    if (gsm != ServerMode) {
@@ -1155,8 +1157,7 @@ void GameState::nextLevel() {
        ship != NULL && 
        !ship->shooter->isEnabled() && !ship->flyingAI->isEnabled()) {
       storeMenu->menuActive = true;
-      SoundEffect::stopMusic();
-      SoundEffect::playMusic("8-bit3.ogg");
+      setMusic();
    }
 
    setLevelTimer();
@@ -2278,4 +2279,21 @@ void GameState::setSingleMode() {
    destruct();
    new (this) GameState(SingleMode); // Reconstruct this gameState
    reset();
+}
+
+void GameState::setMusic() {
+   if (gsm == MenuMode || !gameIsRunning)
+      return;
+
+   if (storeMenu->menuActive) {
+      SoundEffect::playMusic("8-bit3.ogg");
+   } else {
+      const int numSongs = 3;
+      const int curSong = (curLevel - 1) % numSongs;
+      switch (curSong) {
+         case 0: SoundEffect::playMusic("Asteroids2.ogg"); break;
+         case 1: SoundEffect::playMusic("AsteroidsLevel2.ogg"); break;
+         case 2: SoundEffect::playMusic("dingding"); break;
+      }
+   }
 }

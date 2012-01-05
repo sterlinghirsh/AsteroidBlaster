@@ -232,6 +232,8 @@ class GameState : public InputReceiver {
       void setServerMode();
       void setClientMode(char* serverAddr);
       void setSingleMode();
+
+      void setMusic();
    
    //private functions------------------------------
    private:

@@ -167,8 +167,10 @@ void SoundEffect::playMusic(std::string keyName) {
    }
 
    if (currPlay == keyName) {
-      std::cout << keyName << " is already playing!" << std::endl;
-   } else if (currPlay != "\0" && curMusic != NULL) {
+      return;
+   }
+   
+   if (currPlay != "\0" && curMusic != NULL) {
       //Mix_HaltMusic();
       curMusic->stop();
    }
