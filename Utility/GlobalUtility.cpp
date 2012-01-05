@@ -92,8 +92,12 @@ int flopY(int yIn) {
 }
 
 double p2wx(int xp) {
-   double d = ((gameSettings->GW - 1.0) / 2.0);
-   double c = ((1 - gameSettings->GW) * gameSettings->GH) / (-2.0 * gameSettings->GW);
+   int width = gameSettings->GW;
+   if (drawStereo_enabled) {
+      width /= 2;
+   }
+   double d = ((width - 1.0) / 2.0);
+   double c = ((1 - width) * gameSettings->GH) / (-2.0 * width);
    return (xp - d) / c;
 }
 

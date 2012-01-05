@@ -176,8 +176,8 @@ void GameState::initialize() {
       shardBankBar = new ProgressBar(0.06f, 0.4f, p2wx(10), p2wy(10));
       shardBankBar->setHorizontal(true);
 
-      float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH *
-         2.0f * 0.5f;
+      float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH;
+
       const float healthHeight = 0.10f;
       const float weaponBarHeight = 0.3f;
       healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
@@ -777,6 +777,13 @@ void GameState::drawHud() {
 
          shardBankBar->draw();
       }
+
+      float width = gameSettings->GW / (float) gameSettings->GH;
+      if (drawStereo_enabled) {
+         width /= 2;
+      }
+
+      healthBar->width = width;
       healthBar->draw();
       weaponBar->draw();
       drawMinimap();
