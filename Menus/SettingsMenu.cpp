@@ -20,6 +20,7 @@
 #define CAMERA_VIEW_INDEX 14
 #define MUSIC_INDEX 16
 #define SFX_INDEX 18
+#define STEREO_INDEX 20
 #define RETURN_INDEX (menuTexts.size() - 1)
 
 #define TITLE_TYPE 0
@@ -51,7 +52,7 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getStatus(gameSettings->drawDeferred), menuFont, position));
    types.push_back(RIGHT_TYPE);
-
+   
    menuTexts.push_back(new Text("Mouse Capture:",  menuFont, position));
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getStatus(SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON), menuFont, position));
@@ -83,6 +84,12 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
    types.push_back(LEFT_TYPE);
    menuTexts.push_back(new Text(getStatus(gameSettings->soundOn), menuFont, position));
    types.push_back(RIGHT_TYPE);
+   
+   menuTexts.push_back(new Text("Stereoscopic 3D:",  menuFont, position));
+   types.push_back(LEFT_TYPE);
+   menuTexts.push_back(new Text(getStatus(gameSettings->drawStereo), menuFont, position));
+   types.push_back(RIGHT_TYPE);
+
 
    menuTexts.push_back(new Text("Return", menuFont, position));
    types.push_back(SINGLE_SELECTABLE_TYPE);
@@ -161,6 +168,7 @@ void SettingsMenu::draw() {
    menuTexts[CAMERA_VIEW_INDEX]->textToDisplay = getViewStatus(gameState->ship->getCurrentView());
    menuTexts[MUSIC_INDEX]->textToDisplay = getStatus(gameSettings->musicOn);
    menuTexts[SFX_INDEX]->textToDisplay = getStatus(gameSettings->soundOn);
+   menuTexts[STEREO_INDEX]->textToDisplay = getStatus(gameSettings->drawStereo);
    SDL_Rect position;
    position.y = (Sint16) (gameSettings->GH/20);
    for(unsigned i = 0; i < menuTexts.size(); i++) {
@@ -240,6 +248,8 @@ void SettingsMenu::mouseDown(int button) {
    } else if(menuTexts[DEFER_INDEX]->mouseSelect(x,y)) {
       gameSettings->drawDeferred = !gameSettings->drawDeferred
          && gameSettings->goodBuffers;
+   } else if(menuTexts[STEREO_INDEX]->mouseSelect(x,y)) {
+      gameSettings->drawStereo = !gameSettings->drawStereo;
    } else if(menuTexts[MOUSE_CAPTURE_INDEX]->mouseSelect(x,y)) {
       toggleGrabMode();
    } else if(menuTexts[FULLSCREEN_INDEX]->mouseSelect(x,y)) {
@@ -298,6 +308,7 @@ void SettingsMenu::mouseMove(int dx, int dy, int _x, int _y) {
    menuTexts[SFX_INDEX]->mouseHighlight(x,y);
    menuTexts[MUSIC_INDEX]->mouseHighlight(x,y);
    menuTexts[RETURN_INDEX]->mouseHighlight(x,y);
+   menuTexts[STEREO_INDEX]->mouseHighlight(x,y);
 
 }
 

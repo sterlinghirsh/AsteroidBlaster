@@ -35,7 +35,7 @@ GameSettings::GameSettings() {
    musicVolume = 0.2f;
    soundEffectVolume = 1.0f;
 
-   drawStereo = true;
+   drawStereo = false;
 
    readIn();
 
@@ -62,6 +62,7 @@ void GameSettings::writeOut() {
    }
    fprintf(configFile, "bloom %d\n", (int) bloom);
    fprintf(configFile, "drawDeferred %d\n", (int) drawDeferred);
+   fprintf(configFile, "drawStereo %d\n", (int) drawStereo);
    fprintf(configFile, "useOverlay %d\n", (int) useOverlay);
    fprintf(configFile, "fullscreen %d\n", (int) fullscreen);
    fprintf(configFile, "musicOn %d\n", (int) musicOn);
@@ -95,6 +96,10 @@ void GameSettings::readIn() {
    
    if (fscanf(configFile, "drawDeferred %d ", &readInt) > 0) {
       drawDeferred = (0 != readInt);
+   }
+   
+   if (fscanf(configFile, "drawStereo %d ", &readInt) > 0) {
+      drawStereo = (0 != readInt);
    }
 
    if (fscanf(configFile, "useOverlay %d ", &readInt) > 0) {

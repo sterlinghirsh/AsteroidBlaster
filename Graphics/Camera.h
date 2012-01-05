@@ -26,7 +26,6 @@ class Camera {
       float shakeAmount;
       
       double converganceDistance;
-      double distanceStereoOffset;
       double stereoOffsetAmount;
 
       Camera(bool lockUp);
