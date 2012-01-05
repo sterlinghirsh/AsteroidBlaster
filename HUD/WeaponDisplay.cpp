@@ -20,7 +20,6 @@ void WeaponDisplay::draw() {
    unsigned curWeapon = gameState->ship->currentWeapon;
    glPushMatrix();
    glTranslatef(x, y, 0);
-   glPushMatrix();
 
    // Make a list of weapons that are purchased.
    std::vector<Weapon*>* shipWeapons = &gameState->ship->weapons; // For convenience
@@ -41,14 +40,25 @@ void WeaponDisplay::draw() {
    double smallIconWidth = 1.2; // 1 + 0.2 space.
    double iconPosition =  -smallIconWidth * numWeapons / 2;
 
+   double eyeOffset = 0;
+   if (drawStereo_enabled) {
+      eyeOffset = stereo_eye_left ? -0.3 : 0.3;
+   }
+
    for (unsigned i = 0; i < shipWeapons->size(); i++) {
       if (!(*shipWeapons)[i]->purchased) {
          continue;
       }
       glPushMatrix();
+
       if (i == curWeapon)
          iconPosition += smallIconWidth / 2;
+
       glTranslated(iconPosition, 0, 0);
+
+      if (i == curWeapon) {
+         glTranslated(-eyeOffset, 0, 0);
+      }
 
       (*shipWeapons)[i]->drawIcon(i == curWeapon);
       glPopMatrix();
@@ -58,7 +68,6 @@ void WeaponDisplay::draw() {
       count++;
    }
    
-   glPopMatrix();
    glPopMatrix();
 }
 

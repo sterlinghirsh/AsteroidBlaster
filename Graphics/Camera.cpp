@@ -57,9 +57,9 @@ void Camera::setCamera(bool setPosition) {
             position->x + offset->x + stereoOffset.x,
             position->y + offset->y + stereoOffset.y,
             position->z + offset->z + stereoOffset.z,
-            position->x + offset->x + forward->x + random.x + stereoOffset.x,
-            position->y + offset->y + forward->y + random.y + stereoOffset.y,
-            position->z + offset->z + forward->z + random.z + stereoOffset.z,
+            position->x + offset->x + forward->x * 80.0 + random.x + stereoOffset.x,
+            position->y + offset->y + forward->y * 80.0 + random.y + stereoOffset.y,
+            position->z + offset->z + forward->z * 80.0 + random.z + stereoOffset.z,
             up->x, up->y, up->z);
    } else {
       gluLookAt(0, 0, 0, forward->x, forward->y, forward->z,
