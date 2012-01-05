@@ -20,6 +20,9 @@ Camera::Camera(bool lockUp) {
    offset = new Vector3D(0, 0, 0);
    lockUpVector = lockUp;
    shakeAmount = 0;
+   // Stereo stuff
+   converganceDistance = 20.0;
+   stereoOffsetAmount = 0.1;
 }
 
 Camera::Camera(Object3D* object) {
@@ -30,6 +33,8 @@ Camera::Camera(Object3D* object) {
    offset = new Vector3D(0, 0, 0);
    up = new Vector3D(0, 1, 0);
    viewFrom(object);
+   converganceDistance = 80.0;
+   stereoOffsetAmount = 0.1;
 }
 
 Camera::~Camera() {
@@ -45,7 +50,6 @@ void Camera::setCamera(bool setPosition) {
    Vector3D stereoOffset;
    if (drawStereo_enabled) {
       stereoOffset = forward->cross(*up);
-      const double stereoOffsetAmount = 0.3;
       if (stereo_eye_left)
          stereoOffset.scalarMultiplyUpdate(-stereoOffsetAmount);
       else
@@ -57,9 +61,12 @@ void Camera::setCamera(bool setPosition) {
             position->x + offset->x + stereoOffset.x,
             position->y + offset->y + stereoOffset.y,
             position->z + offset->z + stereoOffset.z,
-            position->x + offset->x + forward->x * 80.0 + random.x + stereoOffset.x,
-            position->y + offset->y + forward->y * 80.0 + random.y + stereoOffset.y,
-            position->z + offset->z + forward->z * 80.0 + random.z + stereoOffset.z,
+            position->x + offset->x + forward->x * converganceDistance + 
+             random.x + stereoOffset.x,
+            position->y + offset->y + forward->y * converganceDistance + 
+             random.y + stereoOffset.y,
+            position->z + offset->z + forward->z * converganceDistance + 
+             random.z + stereoOffset.z,
             up->x, up->y, up->z);
    } else {
       gluLookAt(0, 0, 0, forward->x, forward->y, forward->z,

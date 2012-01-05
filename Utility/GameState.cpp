@@ -1381,6 +1381,17 @@ void GameState::keyDown(int key, int unicode) {
       case SDLK_y:
             usingShipCamera = !usingShipCamera;
          break;
+
+         /*
+      case SDLK_c:
+            shipCamera->stereoOffsetAmount += 0.05;
+            printf("stereoOffset: %f\n", shipCamera->stereoOffsetAmount);
+            break;
+      case SDLK_x:
+            shipCamera->stereoOffsetAmount -= 0.05;
+            printf("stereoOffset: %f\n", shipCamera->stereoOffsetAmount);
+            break;
+            */
    }
 
    case SDLK_KP_PLUS:

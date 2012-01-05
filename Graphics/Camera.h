@@ -24,6 +24,10 @@ class Camera {
       Vector3D *offset;
       bool lockUpVector;
       float shakeAmount;
+      
+      double converganceDistance;
+      double distanceStereoOffset;
+      double stereoOffsetAmount;
 
       Camera(bool lockUp);
       Camera(Object3D*);
