@@ -102,6 +102,9 @@ extern int HOMINGMISSILE_WEAPON_INDEX;
 
 extern int NUMBER_OF_WEAPONS;
 
+extern bool stereo_eye_left;
+extern bool drawStereo_enabled;
+
 // Global functions used throughout the program
 double p2wx(int);
 double p2wy(int);

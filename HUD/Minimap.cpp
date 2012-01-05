@@ -127,7 +127,34 @@ void Minimap::draw() {
        * It should take up the bottom right corner of the screen.
        */
 
-      glViewport ((GLint) ((float) gameSettings->GW * (1.0f - displaySize)), 0, (GLsizei) ((float) gameSettings->GW * displaySize), (GLsizei) ((float) gameSettings->GH * displaySize));
+      GLint w0;
+      GLint h0 = 0;
+      GLsizei w;
+      GLsizei h;
+      float eyeOffset = 0;
+
+      if (drawStereo_enabled) {
+         float displaySizeFactor = 2;
+         if (displaySize > 0.5) {
+            targetDisplaySize = displaySize = 0.5;
+         }
+         w = (GLsizei) ((float) gameSettings->GW * displaySize * displaySizeFactor) / 2;
+         h = (GLsizei) ((float) gameSettings->GH * displaySize * displaySizeFactor) / 2;
+         if (stereo_eye_left) {
+            w0 = (gameSettings->GW / 2) + 
+               (GLint) ((gameSettings->GW / 2.0) * (1.0f - displaySize * displaySizeFactor));
+            eyeOffset = -0.3;
+         } else {
+            w0 = (GLint) ((gameSettings->GW / 2.0) * (1.0f - displaySize * displaySizeFactor));
+            eyeOffset = 0.3;
+         }
+      } else {
+         h = (GLsizei) ((float) gameSettings->GH * displaySize);
+         w0 = (GLint) ((float) gameSettings->GW * (1.0f - displaySize));
+         w = (GLsizei) ((float) gameSettings->GW * displaySize);
+      }
+
+      glViewport (w0, h0, w, h);
       glMatrixMode (GL_PROJECTION);      /* Select The Projection Matrix */
       glLoadIdentity ();                     /* Reset The Projection Matrix */
 
@@ -142,7 +169,7 @@ void Minimap::draw() {
       setMaterial(WhiteSolid);
 
       // eye, lookAt, and up vectors
-      gluLookAt(0, 2, 5, 0, 0, 0,  0, 1, 0);
+      gluLookAt(eyeOffset, 2, 5, eyeOffset, 0, 0,  0, 1, 0);
 
       positionVector.updateMagnitude(*ship->position);
 

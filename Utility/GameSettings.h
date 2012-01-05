@@ -31,6 +31,8 @@ class GameSettings {
       float musicVolume;
       float soundEffectVolume;
 
+      bool drawStereo;
+
       void toggleFullScreen();
 
       void writeOut();

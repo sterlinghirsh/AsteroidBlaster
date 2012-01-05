@@ -35,6 +35,8 @@ GameSettings::GameSettings() {
    musicVolume = 0.2f;
    soundEffectVolume = 1.0f;
 
+   drawStereo = true;
+
    readIn();
 
    GW = fullscreen ? fullscreenGW : windowedGW;

@@ -540,10 +540,16 @@ void  GameState::draw() {
    // the time difference since last update call
    double timeDiff = doubleTime() - lastDrawTime;
 
-   setCurFPS(1 / timeDiff);
+   if (stereo_eye_left || !drawStereo_enabled) {
+      setCurFPS(1 / timeDiff);
+      lastDrawTime = doubleTime();
 
-   // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      // Clear the screen
+      glClear(GL_COLOR_BUFFER_BIT);
+   }
+   
+   glClear(GL_DEPTH_BUFFER_BIT);
+
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    usePerspective();
 
@@ -603,9 +609,10 @@ void  GameState::draw() {
 
    // TODO: Make this clearer. Why not swap when lookAt is true?
    if (gsm != MenuMode) {
-      SDL_GL_SwapBuffers();
+      if ((!stereo_eye_left) || !drawStereo_enabled) {
+         SDL_GL_SwapBuffers();
+      }
    }
-   lastDrawTime = doubleTime();
 }
 
 Camera* GameState::getCurrentCamera() {

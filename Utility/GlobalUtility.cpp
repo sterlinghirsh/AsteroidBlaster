@@ -32,6 +32,8 @@ bool drawPerspective = true;
 bool showBloomScreen = false;
 bool cameraFollow = true;
 bool running = true;
+bool stereo_eye_left = true;
+bool drawStereo_enabled = false;
 GLUquadricObj *quadric = NULL;
 GLuint tractorBeamShader = 0;
 GLuint fadeShader = 0;
@@ -148,6 +150,18 @@ int w2py(double yw) {
 void reshape (GLsizei w, GLsizei h) {
    gameSettings->GW = w;
    gameSettings->GH = h;
+
+   GLsizei w0 = 0;
+   GLsizei h0 = 0;
+
+   if (drawStereo_enabled) {
+      w = w/2;
+      // Left eye is on the right side.
+      if (stereo_eye_left) {
+         w0 = w;
+      }
+   }
+
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
    if (drawPerspective) {
@@ -156,7 +170,7 @@ void reshape (GLsizei w, GLsizei h) {
       glOrtho((double)w/-h, (double) w/h, -1, 1, -1, 1);
    }
    glMatrixMode(GL_MODELVIEW);
-   glViewport(0, 0, w, h);
+   glViewport(w0, h0, w, h);
 }
 
 void usePerspective() {

@@ -443,6 +443,8 @@ int main(int argc, char* argv[]) {
       updateDoubleTime();
       timeDiff = doubleTime() - lastUpdateTime;
       lastUpdateTime = doubleTime();
+      
+      drawStereo_enabled = false;
       if (gameSettings->drawDeferred) {
          clearAllBuffers();
       }
@@ -478,7 +480,16 @@ int main(int argc, char* argv[]) {
          gameState->update(timeDiff);
          gameState->networkUpdate(timeDiff);
          lastUpdateTime = doubleTime();
-         gameState->draw();
+
+         if (gameSettings->drawStereo) {
+            drawStereo_enabled = true;
+            stereo_eye_left = true;
+            gameState->draw();
+            stereo_eye_left = false;
+            gameState->draw();
+         } else {
+            gameState->draw();
+         }
 
          //chat->update(timeDiff);
          //chat->draw();

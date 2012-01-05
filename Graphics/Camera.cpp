@@ -41,14 +41,25 @@ void Camera::setCamera(bool setPosition) {
    Vector3D random;
    random.randomMagnitude();
    random.setLength(shakeAmount / 50);
+   
+   Vector3D stereoOffset;
+   if (drawStereo_enabled) {
+      stereoOffset = forward->cross(*up);
+      const double stereoOffsetAmount = 0.3;
+      if (stereo_eye_left)
+         stereoOffset.scalarMultiplyUpdate(-stereoOffsetAmount);
+      else
+         stereoOffset.scalarMultiplyUpdate(stereoOffsetAmount);
+   }
+
    if (setPosition) {
       gluLookAt(
-            position->x + offset->x,
-            position->y + offset->y,
-            position->z + offset->z,
-            position->x + offset->x + forward->x + random.x,
-            position->y + offset->y + forward->y + random.y,
-            position->z + offset->z + forward->z + random.z,
+            position->x + offset->x + stereoOffset.x,
+            position->y + offset->y + stereoOffset.y,
+            position->z + offset->z + stereoOffset.z,
+            position->x + offset->x + forward->x + random.x + stereoOffset.x,
+            position->y + offset->y + forward->y + random.y + stereoOffset.y,
+            position->z + offset->z + forward->z + random.z + stereoOffset.z,
             up->x, up->y, up->z);
    } else {
       gluLookAt(0, 0, 0, forward->x, forward->y, forward->z,
