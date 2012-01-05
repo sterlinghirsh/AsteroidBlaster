@@ -153,9 +153,6 @@ void MainMenu::keyDown(int key, int unicode) {
          return;
       }
    }
-   if (key != SDLK_RETURN && ipInput->active)
-      return;
-   else if (key == SDLK_RETURN && ipInput->active)
 
    switch(key) {
    case SDLK_m:
