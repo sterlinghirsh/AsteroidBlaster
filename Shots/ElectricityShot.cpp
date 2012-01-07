@@ -202,6 +202,10 @@ void ElectricityShot::load(const ast::Entity& ent) {
    
    if (ent.has_length())
       length = ent.length();
+   
+   if (gameState->gsm == ClientMode && owner == gameState->ship) {
+      velocity->updateMagnitude(owner->shotDirection);
+   }
 
    setPosAndDir(*position, *velocity);
 }

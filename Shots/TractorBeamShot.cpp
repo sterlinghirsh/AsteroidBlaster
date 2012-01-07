@@ -194,6 +194,10 @@ void TractorBeamShot::save(ast::Entity* ent) {
 
 void TractorBeamShot::load(const ast::Entity& ent) {
    Shot::load(ent);
+   if (gameState->gsm == ClientMode && owner == gameState->ship) {
+      velocity->updateMagnitude(owner->shotDirection);
+   }
+
    setPosAndDir(*position, *velocity);
 }
 

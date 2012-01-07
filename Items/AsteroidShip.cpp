@@ -2583,8 +2583,11 @@ void AsteroidShip::load(const ast::Entity& ent) {
    if (ent.has_color2())
       color2 = ent.color2();
 
-   if (ent.has_shotdirection())
-      shotDirection.load(ent.shotdirection());
+   // We don't want to update shot direction for ourself because it causes choppy animation.
+   if (gameState->gsm != ClientMode && this != gameState->ship) {
+      if (ent.has_shotdirection())
+         shotDirection.load(ent.shotdirection());
+   }
 
    if (ent.has_isfiring())
       isFiring = ent.isfiring();
