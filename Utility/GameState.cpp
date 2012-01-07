@@ -771,20 +771,36 @@ void GameState::drawHud() {
          glDrawBuffer(HUD_BUFFER);
       }
 
+      float width = gameSettings->GW / (float) gameSettings->GH;
+      float stereoOffset = 0; // px
+      
       if (gsm == SingleMode) {
-         shardBankBar->x = p2wx(10);
+         if (drawStereo_enabled) {
+            stereoOffset = p2wx((gameSettings->GW / 4) + 3);
+            if (!stereo_eye_left) {
+               stereoOffset *= -1;
+            }
+         }
+
+         shardBankBar->x = p2wx(10) + stereoOffset;
          shardBankBar->y = p2wy(100);
 
          shardBankBar->draw();
       }
-
-      float width = gameSettings->GW / (float) gameSettings->GH;
+      
       if (drawStereo_enabled) {
          width /= 2;
+         stereoOffset = p2wx((gameSettings->GW / 4) + 5);
+         if (!stereo_eye_left) {
+            stereoOffset *= -1;
+         }
       }
 
+
       healthBar->width = width;
+      healthBar->x += stereoOffset;
       healthBar->draw();
+      healthBar->x -= stereoOffset;
       weaponBar->draw();
       drawMinimap();
       if (gameSettings->drawDeferred) {
@@ -833,13 +849,23 @@ void GameState::drawOverlay() {
  * one time here to improve efficiency.
  */
 void GameState::drawAllText() {
+   int rightEdge, leftEdge;
+   if (drawStereo_enabled) {
+      rightEdge = gameSettings->GW / 2;
+      rightEdge += stereo_eye_left ? 3 : -3;
+
+      leftEdge = 10 + (stereo_eye_left ? 3 : -3);
+
+   } else {
+      rightEdge = gameSettings->GW;
+      leftEdge = 10;
+   }
 
    SDL_Rect position;
    const Sint16 positionDifferenceY = 15;
 
-
    // Position all the text on left side
-   position.x = 10;
+   position.x = leftEdge;
    position.y = 30;
    FPSText->setPosition(position);
 
@@ -857,7 +883,7 @@ void GameState::drawAllText() {
    shardBankBar->y = p2wy(position.y);
 
    // Position all the text on right side
-   position.x = (Sint16)(gameSettings->GW - 30);
+   position.x = (Sint16)(rightEdge - 30);
    position.y = 30;
    curLevelText->setPosition(position);
 
@@ -868,6 +894,7 @@ void GameState::drawAllText() {
    lifeText->setPosition(position);
 
    // Draw all the text on left side
+
    FPSText->draw();
 
    if (ship != NULL) {
@@ -1791,6 +1818,8 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
    if(!gameIsRunning)
       return;
 
+   bool drawStereo_enabled_tmp = drawStereo_enabled;
+   drawStereo_enabled = false;
    shipControlX = p2wx(x);
    shipControlY = p2wy(y);
 
@@ -1802,6 +1831,8 @@ void GameState::mouseMove(int dx, int dy, int x, int y) {
 
    shipControlX = shipControlX / p2wx(gameSettings->GW);
    shipControlY = shipControlY / p2wy(0);
+   
+   drawStereo_enabled = drawStereo_enabled_tmp;
 
    shipControlX = clamp(shipControlX * fabs(shipControlX * shipControlX), -1, 1);
    shipControlY = clamp(-shipControlY * fabs(shipControlY * shipControlY), -1, 1);

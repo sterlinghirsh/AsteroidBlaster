@@ -9,6 +9,7 @@
  * CPE 476
  */
 
+#define STEREO_OFFSET_AMOUNT 0.2
 #include "Graphics/Camera.h"
 
 Camera::Camera(bool lockUp) {
@@ -22,7 +23,7 @@ Camera::Camera(bool lockUp) {
    shakeAmount = 0;
    // Stereo stuff
    converganceDistance = 20.0;
-   stereoOffsetAmount = 0.1;
+   stereoOffsetAmount = STEREO_OFFSET_AMOUNT;
 }
 
 Camera::Camera(Object3D* object) {
@@ -34,7 +35,7 @@ Camera::Camera(Object3D* object) {
    up = new Vector3D(0, 1, 0);
    viewFrom(object);
    converganceDistance = 80.0;
-   stereoOffsetAmount = 0.1;
+   stereoOffsetAmount = STEREO_OFFSET_AMOUNT;
 }
 
 Camera::~Camera() {

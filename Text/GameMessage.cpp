@@ -31,7 +31,18 @@ void GameMessage::update(double timeDiff) {
 }
 
 void GameMessage::drawAllMessages() {
-   SDL_Rect position = {(Sint16) (gameSettings->GW / 2), (Sint16) (gameSettings->GH / 4)};
+   int xPos;
+   if (drawStereo_enabled) {
+      xPos = gameSettings->GW / 4;
+      if (stereo_eye_left) {
+         xPos += 5;
+      } else {
+         xPos -= 5;
+      }
+   } else {
+      xPos = gameSettings->GW / 2;
+   }
+   SDL_Rect position = {(Sint16) xPos, (Sint16) (gameSettings->GH / 4)};
    int lineHeight = 30;
    std::list<GameMessage*>::iterator listIter = activeMessages.begin();
 
