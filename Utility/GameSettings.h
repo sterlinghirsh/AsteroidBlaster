@@ -33,6 +33,8 @@ class GameSettings {
 
       bool drawStereo;
 
+      bool enableMinimap;
+
       void toggleFullScreen();
 
       void writeOut();

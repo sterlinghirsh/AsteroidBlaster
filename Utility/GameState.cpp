@@ -437,7 +437,9 @@ void GameState::update(double timeDiff) {
       shardBankBar->setAmount(ship->bankTimer.isRunning ? ship->bankTimer.getAmountComplete() : 0);
       healthBar->setAmount(((float) ship->health / (float) ship->healthMax));
 
-      minimap->update(timeDiff);
+      if (gameSettings->enableMinimap) {
+         minimap->update(timeDiff);
+      }
    }
 
    if (gsm == ServerMode) {
@@ -532,7 +534,9 @@ bool GameState::minimapOn() {
  * Toggles the minimap on or off.
  */
 void GameState::toggleMinimap() {
-   minimap->toggle();
+   if (minimap != NULL) {
+      minimap->toggle();
+   }
 }
 
 /**
@@ -809,7 +813,10 @@ void GameState::drawHud() {
       healthBar->draw();
       healthBar->x -= stereoOffset;
       weaponBar->draw();
-      drawMinimap();
+
+      if (gameSettings->enableMinimap) {
+         drawMinimap();
+      }
       if (gameSettings->drawDeferred) {
          fboEnd();
       }

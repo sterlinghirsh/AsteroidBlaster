@@ -7,7 +7,6 @@
 #include "Graphics/Texture.h"
 #include "Text/Text.h"
 #include "Utility/SoundEffect.h"
-#include "Items/AsteroidShip.h"
 #include "Menus/MainMenu.h"
 
 #define TITLE_INDEX 0
@@ -17,10 +16,9 @@
 #define MOUSE_CAPTURE_INDEX 8
 #define FULLSCREEN_INDEX 10
 #define MINIMAP_INDEX 12
-#define CAMERA_VIEW_INDEX 14
-#define MUSIC_INDEX 16
-#define SFX_INDEX 18
-#define STEREO_INDEX 20
+#define MUSIC_INDEX 14
+#define SFX_INDEX 16
+#define STEREO_INDEX 18
 #define RETURN_INDEX (menuTexts.size() - 1)
 
 #define TITLE_TYPE 0
@@ -63,17 +61,10 @@ SettingsMenu::SettingsMenu(GameState*& _gameState) : gameState(_gameState) {
    menuTexts.push_back(new Text(getStatus(gameSettings->fullscreen), menuFont, position));
    types.push_back(RIGHT_TYPE);
 
-   if (gameState->ship != NULL) {
-      menuTexts.push_back(new Text("Minimap:",  menuFont, position));
-      types.push_back(LEFT_TYPE);
-      menuTexts.push_back(new Text(getStatus(gameState->minimapOn()), menuFont, position));
-      types.push_back(RIGHT_TYPE);
-
-      menuTexts.push_back(new Text("Camera:",  menuFont, position));
-      types.push_back(LEFT_TYPE);
-      menuTexts.push_back(new Text(getViewStatus(gameState->ship->getCurrentView()), menuFont, position));
-      types.push_back(RIGHT_TYPE);
-   }
+   menuTexts.push_back(new Text("Minimap:",  menuFont, position));
+   types.push_back(LEFT_TYPE);
+   menuTexts.push_back(new Text(getStatus(gameSettings->enableMinimap), menuFont, position));
+   types.push_back(RIGHT_TYPE);
 
    menuTexts.push_back(new Text("Music:",  menuFont, position));
    types.push_back(LEFT_TYPE);
@@ -153,19 +144,15 @@ std::string SettingsMenu::getViewStatus(int status) {
 }
 
 void SettingsMenu::draw() {
-   if (gameState->ship == NULL) {
-      return;
-   }
    menuTexts[BLOOM_INDEX]->textToDisplay =
       getStatus(gameSettings->bloom && gameSettings->drawDeferred);
    menuTexts[OVERLAY_INDEX]->textToDisplay =
       getStatus(gameSettings->useOverlay && gameSettings->drawDeferred);
-   //menuTexts[OVERLAY_INDEX]->textToDisplay = getStatus(gameSettings->useOverlay);
    menuTexts[DEFER_INDEX]->textToDisplay = getStatus(gameSettings->drawDeferred);
    menuTexts[MOUSE_CAPTURE_INDEX]->textToDisplay = getStatus(SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON);
    menuTexts[FULLSCREEN_INDEX]->textToDisplay = getStatus(gameSettings->fullscreen);
-   menuTexts[MINIMAP_INDEX]->textToDisplay = getStatus(gameState->minimapOn());
-   menuTexts[CAMERA_VIEW_INDEX]->textToDisplay = getViewStatus(gameState->ship->getCurrentView());
+   menuTexts[MINIMAP_INDEX]->textToDisplay = getStatus(gameSettings->enableMinimap);
+
    menuTexts[MUSIC_INDEX]->textToDisplay = getStatus(gameSettings->musicOn);
    menuTexts[SFX_INDEX]->textToDisplay = getStatus(gameSettings->soundOn);
    menuTexts[STEREO_INDEX]->textToDisplay = getStatus(gameSettings->drawStereo);
@@ -255,9 +242,10 @@ void SettingsMenu::mouseDown(int button) {
    } else if(menuTexts[FULLSCREEN_INDEX]->mouseSelect(x,y)) {
       toggleFullScreen();
    } else if(menuTexts[MINIMAP_INDEX]->mouseSelect(x,y)) {
-      gameState->toggleMinimap();
-   } else if(menuTexts[CAMERA_VIEW_INDEX]->mouseSelect(x,y)) {
-      gameState->ship->nextView();
+      gameSettings->enableMinimap = !gameSettings->enableMinimap;
+
+      if (gameState != NULL)
+         gameState->toggleMinimap();
    } else if(menuTexts[SFX_INDEX]->mouseSelect(x,y)) {
       gameSettings->soundOn = !gameSettings->soundOn;
    } else if(menuTexts[MUSIC_INDEX]->mouseSelect(x,y)) {
@@ -304,7 +292,6 @@ void SettingsMenu::mouseMove(int dx, int dy, int _x, int _y) {
    menuTexts[MOUSE_CAPTURE_INDEX]->mouseHighlight(x,y);
    menuTexts[FULLSCREEN_INDEX]->mouseHighlight(x,y);
    menuTexts[MINIMAP_INDEX]->mouseHighlight(x,y);
-   menuTexts[CAMERA_VIEW_INDEX]->mouseHighlight(x,y);
    menuTexts[SFX_INDEX]->mouseHighlight(x,y);
    menuTexts[MUSIC_INDEX]->mouseHighlight(x,y);
    menuTexts[RETURN_INDEX]->mouseHighlight(x,y);

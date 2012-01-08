@@ -37,6 +37,8 @@ GameSettings::GameSettings() {
 
    drawStereo = false;
 
+   enableMinimap = true;
+
    readIn();
 
    GW = fullscreen ? fullscreenGW : windowedGW;
@@ -65,6 +67,8 @@ void GameSettings::writeOut() {
    fprintf(configFile, "drawStereo %d\n", (int) drawStereo);
    fprintf(configFile, "useOverlay %d\n", (int) useOverlay);
    fprintf(configFile, "fullscreen %d\n", (int) fullscreen);
+   fprintf(configFile, "enableMinimap %d\n", (int) enableMinimap);
+
    fprintf(configFile, "musicOn %d\n", (int) musicOn);
    fprintf(configFile, "soundOn %d\n", (int) soundOn);
    
@@ -108,6 +112,10 @@ void GameSettings::readIn() {
 
    if (fscanf(configFile, "fullscreen %d ", &readInt) > 0) {
       fullscreen = (0 != readInt);
+   }
+   
+   if (fscanf(configFile, "enableMinimap %d ", &readInt) > 0) {
+      enableMinimap = (0 != readInt);
    }
 
    if (fscanf(configFile, "musicOn %d ", &readInt) > 0) {
