@@ -49,6 +49,8 @@ class MainMenu : public Menu {
    
    bool menuActive;
    bool firstTime;
+   bool canContinue;
+   bool canSave;
    
    std::vector<Text*> menuTexts;
 

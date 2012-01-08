@@ -27,6 +27,7 @@
 MainMenu::MainMenu(GameState* _mainGameState) {
    menuActive = false;
    firstTime = true;
+   canContinue = canSave = false;
    x = y = -1;
 
    SDL_Rect position = {0,1};
@@ -159,7 +160,8 @@ void MainMenu::keyDown(int key, int unicode) {
       if(menuActive) {
          // If we're in the menu already, don't do anything when the player presses m.
       } else {
-         mainGameState->pauseLevelTimer();
+         if (mainGameState->gsm == SingleMode)
+            mainGameState->pauseLevelTimer();
          activate();
       }
       break;
@@ -169,13 +171,13 @@ void MainMenu::keyDown(int key, int unicode) {
       }
       break;
    case SDLK_c:
-      if(!firstTime && menuActive) {
+      if(canContinue && menuActive) {
          deactivate();
          /* If there's no menu's left open after deactivating this one, then 
           * we should resume the timer. Otherwise, the Store menu should be in 
           * charge of resuming the timer when it is closed.
           */
-         if (!storeMenu->menuActive) {
+         if (!storeMenu->menuActive && mainGameState->gsm == SingleMode) {
             mainGameState->resumeLevelTimer();
          }
       }
@@ -199,7 +201,7 @@ void MainMenu::mouseDown(int button) {
 
    if(newGameText->mouseSelect(x,y)) {
       gameDeactivate(false);
-   } else if(continueText->mouseSelect(x,y) && !firstTime) {
+   } else if(continueText->mouseSelect(x,y)) {
       deactivate();
    } else if (joinGameText->mouseSelect(x, y)) {
       printf("join game.\n");
@@ -265,7 +267,6 @@ void MainMenu::activate() {
 void MainMenu::deactivate() {
    SDL_ShowCursor(SDL_DISABLE);
    menuActive = false;
-   SoundEffect::playMusic("Asteroids2.ogg");
    MeshFace::Clear();
    Particle::Clear();
 }
@@ -275,7 +276,6 @@ void MainMenu::gameDeactivate(bool shouldLoad) {
    mainGameState->setSingleMode();
    firstTime = false;
    mainGameState->reset(shouldLoad);
-   continueText->setColor(SDL_WHITE);
 }
 
 void MainMenu::update(double timeDiff) {
@@ -303,16 +303,23 @@ void MainMenu::update(double timeDiff) {
    }
 
    // make stuff selectable and greyed out depending on stuff
-   continueText->selectable = !firstTime;
-   saveGameText->selectable = !firstTime;
-   if(firstTime) {
+   canContinue = (!firstTime && mainGameState->gsm == SingleMode)
+      || mainGameState->gsm != SingleMode;
+   continueText->selectable = canContinue;
+   canSave = !firstTime && mainGameState->gsm == SingleMode;
+   saveGameText->selectable = canSave;
+
+   if(!canContinue) {
       continueText->setColor(SDL_GREY);
-      saveGameText->setColor(SDL_GREY);
    } else {
       continueText->setColor(SDL_WHITE);
-      saveGameText->setColor(SDL_WHITE);
    }
 
+   if(!canSave) {
+      saveGameText->setColor(SDL_GREY);
+   } else {
+      saveGameText->setColor(SDL_WHITE);
+   }
 
    menuGameState->update(timeDiff);
 }
