@@ -88,6 +88,12 @@ void GameState::destruct() {
    delete spring;
    delete cube;
    delete shardBankBar;
+
+   if (serverSide != NULL)
+      delete serverSide;
+
+   if (clientSide != NULL)
+      delete clientSide;
    // Somehow makes it segfault when quitting so commented out
    /*if (io != NULL) {
      io->stop();
@@ -100,6 +106,7 @@ void GameState::initialize() {
       lastReceivedGameStateId = 0;
       ship = NULL;
 
+      resetClientCommand(true);
       clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
       serverSide = NULL;
       clientSide = NULL;
@@ -1009,7 +1016,7 @@ void GameState::setCurFPS(double fpsIn) {
    curFPS = fpsIn;
 }
 
-void GameState::resetClientCommand() {
+void GameState::resetClientCommand(bool shouldClearMultiplayerInfo) {
    // Do stuff.
    clientCommand.clear_forwardacceleration();
    clientCommand.clear_rightacceleration();
@@ -1028,6 +1035,10 @@ void GameState::resetClientCommand() {
    clientCommand.set_mousey(0);
 
    // Do we need to clear shipid and lastreceivedgamestateid?
+   if (shouldClearMultiplayerInfo) {
+      clientCommand.clear_shipid();
+      clientCommand.clear_lastreceivedgamestateid();
+   }
 }
 
 /**
@@ -1245,7 +1256,9 @@ void GameState::nextLevel() {
  */
 void GameState::keyDown(int key, int unicode) {
    //If game is not running, do not take input anymore
-   if(!gameIsRunning || chat->active){ return;}
+   if (!gameIsRunning || chat->active || ipInput->active) {
+      return;
+   }
 
    switch(key) {
       //movement keys, not valid if flying AI is enabled

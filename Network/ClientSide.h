@@ -32,6 +32,7 @@ class ClientSide {
       ENetAddress* serverAddress;
       ENetPeer* server;
       GameState* gameState;
+      bool connected;
 };
 
 #endif

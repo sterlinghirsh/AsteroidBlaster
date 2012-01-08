@@ -204,7 +204,7 @@ class GameState : public InputReceiver {
       int decideNumAsteroidsToSpawn();
       void addWeaponUnlockMessage(Weapon* unlockedWeapon);
       void reset(bool shouldLoad = false);
-      void resetClientCommand();
+      void resetClientCommand(bool shouldClearMultiplayerInfo = false);
       void handleCommand(const ast::ClientCommand& command);
       void handleFrame(ast::Frame* frame);
       

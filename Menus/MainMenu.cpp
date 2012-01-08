@@ -272,6 +272,7 @@ void MainMenu::deactivate() {
 
 void MainMenu::gameDeactivate(bool shouldLoad) {
    deactivate();
+   mainGameState->setSingleMode();
    firstTime = false;
    mainGameState->reset(shouldLoad);
    continueText->setColor(SDL_WHITE);

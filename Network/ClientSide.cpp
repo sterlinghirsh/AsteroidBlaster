@@ -37,9 +37,12 @@ ClientSide::ClientSide(GameState* _gameState) :
    event = new ENetEvent();
    serverAddress = new ENetAddress();
    server = NULL;
+   connected = false;
 }
 
 ClientSide::~ClientSide() {
+   disconnect();
+
    if (client != NULL)
       enet_host_destroy(client);
    
@@ -104,9 +107,12 @@ void ClientSide::receive() {
 }
 
 void ClientSide::disconnect() {
-   // 0 is "data" to send with the disconnection.
-   enet_peer_disconnect(server, 0);
-   enet_host_flush(client);
+   if (connected) {
+      // 0 is "data" to send with the disconnection.
+      enet_peer_disconnect(server, 0);
+      enet_host_flush(client);
+      connected = false;
+   }
 }
 
 void ClientSide::connect(char* stringAddr) {
@@ -139,6 +145,7 @@ void ClientSide::connect(char* stringAddr) {
    
    // Looks like the connection worked!
    cout << "Connected!" << endl;
+   connected = true;
 }
 
 void ClientSide::send(const ast::ClientCommand& clientCommand, bool reliable) {
