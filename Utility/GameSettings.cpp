@@ -13,6 +13,9 @@
 
 #include <string>
 #include <stdio.h>
+#include <iostream>
+
+using namespace std;
 
 GameSettings::GameSettings() {
    // Default Settings.
@@ -39,6 +42,8 @@ GameSettings::GameSettings() {
 
    enableMinimap = true;
 
+   name = "NewPlayer";
+
    readIn();
 
    GW = fullscreen ? fullscreenGW : windowedGW;
@@ -62,6 +67,8 @@ void GameSettings::writeOut() {
    } else {
       printf("Writing config...\n");
    }
+
+   fprintf(configFile, "name %s\n", name.c_str());
    fprintf(configFile, "bloom %d\n", (int) bloom);
    fprintf(configFile, "drawDeferred %d\n", (int) drawDeferred);
    fprintf(configFile, "drawStereo %d\n", (int) drawStereo);
@@ -89,10 +96,17 @@ void GameSettings::writeOut() {
 void GameSettings::readIn() {
    int readInt;
    float readFloat;
+   char readName[MAX_NAME_LENGTH + 1];
+   
    FILE* configFile = fopen(CONFIG_FILE, "r");
 
    if (configFile == NULL)
       return;
+   
+   if (fscanf(configFile, "name " MAX_NAME_LENGTH_FORMAT " ", readName) > 0) {
+       name = readName;
+       cout << "Read name " << name << endl;
+   }
 
    if (fscanf(configFile, "bloom %d ", &readInt) > 0) {
       bloom = (0 != readInt);

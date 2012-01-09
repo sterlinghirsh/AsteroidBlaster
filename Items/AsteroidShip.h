@@ -34,6 +34,7 @@
 #include "Weapons/HomingMissile.h"
 
 #include <list>
+#include <string>
 
 #define DAMAGER_INDEX_ASTEROID -1
 
@@ -127,6 +128,8 @@ class AsteroidShip : public Object3D {
       
       float isBarrelRollingLeft;
       float isBarrelRollingRight;
+
+      std::string name;
       
       
    //private variables------------------------------

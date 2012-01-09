@@ -20,7 +20,9 @@
 
 // DEBUG
 #include <fstream>
-extern std::ofstream debugoutput;
+
+using namespace std;
+extern ofstream debugoutput;
 
 
 #ifndef M_PI
@@ -44,7 +46,6 @@ int HOMINGMISSILE_WEAPON_INDEX = 0;
 
 int NUMBER_OF_WEAPONS = 0;
 
-using namespace std;
 const double rotationFactor = 2.6;
 const float shipScale = 5;
 const double rotationalAcceleration = 10; // rad/sec^2
@@ -56,8 +57,10 @@ const double spawnRate = .5;
 AsteroidShip::AsteroidShip(const GameState* _gameState) :
  Object3D(_gameState),
  bankTimer(gameState),
+ name("UnnamedPlayer"),
  respawnTimer(gameState),
- aliveTimer(gameState) {
+ aliveTimer(gameState)
+{
    type = TYPE_ASTEROIDSHIP;
 
    cullRadius = 12;
@@ -555,7 +558,7 @@ void AsteroidShip::update(double timeDiff) {
             
             } else {
                // Update weapons one last time.
-               for (std::vector<Weapon*>::iterator iter = weapons.begin();
+               for (vector<Weapon*>::iterator iter = weapons.begin();
                      iter != weapons.end(); ++iter) {
                   (*iter)->update(timeDiff);
                }
@@ -582,15 +585,15 @@ void AsteroidShip::update(double timeDiff) {
                if (gameState->gsm != ClientMode) {
                   lastDamagerShip->kills++;
                }
-               std::cout << lastDamagerShip->id << " killed " << id << " with a " 
-                << weapons[lastDamagerWeapon]->getName() << "." << std::endl;
+               cout << lastDamagerShip->name << " killed " << name << " with a " 
+                << weapons[lastDamagerWeapon]->getName() << "." << endl;
             } else {
-               std::cout << id << " was killed by an asteroid." << std::endl;
+               cout << name << " was killed by an asteroid." << endl;
             }
          }
 
          // Update weapons one last time.
-         for (std::vector<Weapon*>::iterator iter = weapons.begin();
+         for (vector<Weapon*>::iterator iter = weapons.begin();
                iter != weapons.end(); ++iter) {
             (*iter)->update(timeDiff);
          }
@@ -671,7 +674,7 @@ void AsteroidShip::update(double timeDiff) {
       timeLeftToRespawn = respawnTimer.getTimeLeft();
 
       if (this == gameState->ship && lives > 0) {
-         std::ostringstream gameMsg;
+         ostringstream gameMsg;
          gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
          GameMessage::Add(gameMsg.str(), 30, 0, gameState);
       }
@@ -705,7 +708,7 @@ void AsteroidShip::update(double timeDiff) {
    if (lives > 0) {
       if (timeLeftToRespawn > 0 && (gameState->gsm != MenuMode)) {
          if (this == gameState->ship && !isFirstSpawn) {
-            std::ostringstream gameMsg;
+            ostringstream gameMsg;
             gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
             GameMessage::Add(gameMsg.str(), 30, 0, gameState);
          }
@@ -830,7 +833,7 @@ void AsteroidShip::update(double timeDiff) {
 
             // Play the sound effect only sometimes.
             // Something else special should happen.
-            std::ostringstream sstream;
+            ostringstream sstream;
 
             switch (totalBankedShards) {
                case 1: case 5: case 10: case 25: case 50:
@@ -859,7 +862,7 @@ void AsteroidShip::update(double timeDiff) {
    }
 
    // Update weapons.
-   for (std::vector<Weapon*>::iterator iter = weapons.begin();
+   for (vector<Weapon*>::iterator iter = weapons.begin();
          iter != weapons.end(); ++iter) {
       (*iter)->update(timeDiff);
    }
@@ -1866,9 +1869,9 @@ Weapon* AsteroidShip::getCurrentWeapon() {
  */
 Weapon* AsteroidShip :: getNextWeapon() {
    //return weapons[(currentWeapon + 1) %weapons.size()];
-   //int tmpIndex = std::min(currentWeapon + 1, (int)weapons.size() - 1);
+   //int tmpIndex = min(currentWeapon + 1, (int)weapons.size() - 1);
    printf("getNext\n");
-   int tmpIndex = std::max(currentWeapon, (currentWeapon + 1) % (int) weapons.size());
+   int tmpIndex = max(currentWeapon, (currentWeapon + 1) % (int) weapons.size());
    return weapons[tmpIndex];
 }
 
@@ -1878,10 +1881,10 @@ Weapon* AsteroidShip :: getNextWeapon() {
  */
 Weapon* AsteroidShip :: getPreviousWeapon() {
    //return weapons[(currentWeapon - 1) %weapons.size()];
-   //int tmpIndex = std::max(currentWeapon - 1, 0);
-   //int tmpIndex = std::min(currentWeapon - 1, (currentWeapon + (int) weapons.size() - 1) % (int) weapons.size());
+   //int tmpIndex = max(currentWeapon - 1, 0);
+   //int tmpIndex = min(currentWeapon - 1, (currentWeapon + (int) weapons.size() - 1) % (int) weapons.size());
    printf("getPrev\n");
-   int tmpIndex = std::max(currentWeapon - 1, 0);
+   int tmpIndex = max(currentWeapon - 1, 0);
    return weapons[tmpIndex];
 }
 

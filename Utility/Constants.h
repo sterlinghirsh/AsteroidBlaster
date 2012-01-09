@@ -10,6 +10,9 @@
 
 #define WORLD_SIZE 80.00
 
+#define MAX_NAME_LENGTH 16
+#define MAX_NAME_LENGTH_FORMAT "%16s"
+
 #define VERT_FOV 45.0
 #define LEFT_ALIGN 0
 #define CENTERED 1

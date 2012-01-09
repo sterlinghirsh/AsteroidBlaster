@@ -252,6 +252,19 @@ void GameState::resumeLevelTimer() {
 }
 
 void GameState::addAIPlayer() {
+   static int nextName = 0;
+
+   int numNames = 7;
+   std::string names[] = {
+      "CPU1",
+      "CPU2",
+      "CPU3",
+      "CPU4",
+      "CPU5",
+      "CPU6",
+      "CPU7"
+   };
+
    AsteroidShip* otherShip = new AsteroidShip(this);
    double randX = (randdouble())*(worldSize / 2);
    double randY = (randdouble())*(worldSize / 2);
@@ -260,6 +273,7 @@ void GameState::addAIPlayer() {
    otherShip->flyingAI->enable();
    otherShip->shooter->enable();
    otherShip->lives = 1;
+   otherShip->name = names[nextName++ % numNames];
    custodian.add(otherShip);
 }
 
@@ -2249,6 +2263,7 @@ ast::GameState* GameState::getSavedGameState(unsigned id) {
 
 void GameState::setShip(AsteroidShip* newShip) {
    ship = newShip;
+   ship->name = gameSettings->name;
    clientCommand.set_shipid(ship->id);
 
    if (minimap != NULL) {

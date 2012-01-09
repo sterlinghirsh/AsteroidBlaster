@@ -9,6 +9,8 @@
 #ifndef __GAMESETTINGS_H__
 #define __GAMESETTINGS_H__
 
+#include <string>
+
 class GameSettings {
    public:
       GameSettings();
@@ -34,6 +36,8 @@ class GameSettings {
       bool drawStereo;
 
       bool enableMinimap;
+
+      std::string name;
 
       void toggleFullScreen();
 
