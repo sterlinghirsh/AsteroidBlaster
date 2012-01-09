@@ -1986,6 +1986,7 @@ void GameState::saveDiff(const ast::GameState& oldState, ast::GameState* newStat
 
       while (curOldId < oldState.entity_size()) {
          oldEnt = &oldState.entity(curOldId);
+
          if (oldEnt->id() < obj->id) {
             // We must have removed this object.
             ++curOldId;
@@ -1997,26 +1998,36 @@ void GameState::saveDiff(const ast::GameState& oldState, ast::GameState* newStat
             ++curOldId;
             break;
          } else if (oldEnt->id() > obj->id) {
-            // We've gone too far!
-            // We we should be able to add an object that we haven't already seen.
-            // Kind of a weird error message, but it's unique.
-            std::cerr << "Found serialized object with id > next real object." << std::endl;
-            exit(EXIT_FAILURE);
-            oldEnt = NULL;
-            break;
+            if (obj->shouldRemove) {
+               // If we get here, we want to just not send this entity.
+               // The entity has been previously removed, so don't send more updates.
+               oldEnt = NULL;
+               break;
+            } else {
+               // We've gone too far!
+               // We we should be able to add an object that we haven't already seen.
+               // Kind of a weird error message, but it's unique.
+               std::cerr << "Found serialized object with id > next real object." << std::endl;
+               exit(EXIT_FAILURE);
+            }
          }
       }
 
       if (oldEnt == NULL) {
-         obj->save(newEnt);
-      } else if (!obj->saveDiff(*oldEnt, newEnt)) {
-         newState->mutable_entity()->RemoveLast();
-      } else {
-         if (obj->shouldRemove) {
-            debugoutput << "Sending changed type " << obj->type << " id " << obj->id << "\n";
-                  
+         if (!obj->shouldRemove) {
+            obj->save(newEnt);
          }
-         assert(oldEnt->id() == newEnt->id());
+      } else if (!oldEnt->shouldremove()) {
+         // Don't send old stuff.
+         if (!obj->saveDiff(*oldEnt, newEnt)) {
+            newState->mutable_entity()->RemoveLast();
+         } else {
+            if (obj->shouldRemove) {
+               debugoutput << "Sending changed type " << obj->type << " id " << obj->id << "\n";
+                     
+            }
+            assert(oldEnt->id() == newEnt->id());
+         }
       }
    }
 }
@@ -2051,8 +2062,10 @@ void GameState::save(ast::GameState* gs) {
 
    for (; iter != objects.end(); ++iter) {
       obj = (*iter).second;
-      ent = gs->add_entity();
-      obj->save(ent);
+      if (!obj->shouldRemove) {
+         ent = gs->add_entity();
+         obj->save(ent);
+      }
       //std::cout << "ID: " << ent->id() << " Type: " << ent->type() << std::endl;
    }
 }

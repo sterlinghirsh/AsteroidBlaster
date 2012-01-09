@@ -35,7 +35,7 @@ BlasterShot::BlasterShot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
    damage = 4;
    collisionType = collisionPoint = new CollisionPoint(*position);
    
-   soundHandle = SoundEffect::playSoundEffect("BlasterDrone", position, velocity, false, DEFAULT_VOLUME, true);
+   soundHandle = NULL;
 }
 
 BlasterShot::~BlasterShot() {
@@ -43,8 +43,10 @@ BlasterShot::~BlasterShot() {
 
 void BlasterShot::onRemove() {
    Shot::onRemove();
-   SoundEffect::stopSoundEffect(soundHandle);
-   SoundEffect::playSoundEffect("BlasterEnd", position, velocity);
+   if (soundHandle != NULL) {
+      SoundEffect::stopSoundEffect(soundHandle);
+      SoundEffect::playSoundEffect("BlasterEnd", position, velocity);
+   }
 }
 
 void BlasterShot::draw() {
@@ -68,7 +70,11 @@ void BlasterShot::update(double timeDiff) {
    Shot::update(timeDiff);
    const int particlesPerSecond = 4;
 
-   SoundEffect::updateSource(soundHandle, position, velocity);
+   if (soundHandle == NULL) {
+      soundHandle = SoundEffect::playSoundEffect("BlasterDrone", position, velocity, false, DEFAULT_VOLUME, true);
+   } else {
+      SoundEffect::updateSource(soundHandle, position, velocity);
+   }
    
    //Vector3D normalizedVelocity(*velocity);
    //normalizedVelocity.normalize();
