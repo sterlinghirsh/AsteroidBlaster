@@ -105,6 +105,9 @@ message Entity {
    optional Vector up = 75;
    optional Vector right = 76;
    optional Vector forward = 77;
+
+   // Ship again
+   optional string name = 78;
 }
 
 message Weapon {
@@ -151,6 +154,7 @@ message ClientCommand {
    optional float mouseX = 11;
    optional float mouseY = 12;
    optional uint32 lastReceivedGameStateId = 13;
+   optional string name = 14;
 }
 
 message Timer {

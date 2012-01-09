@@ -660,6 +660,17 @@ class Entity : public ::google::protobuf::Message {
   inline ::ast::Vector* mutable_forward();
   inline ::ast::Vector* release_forward();
   
+  // optional string name = 78;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 78;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -786,6 +797,8 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_right();
   inline void set_has_forward();
   inline void clear_has_forward();
+  inline void set_has_name();
+  inline void clear_has_name();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -822,9 +835,9 @@ class Entity : public ::google::protobuf::Message {
   bool isbraking_;
   bool flyingaienabled_;
   bool shootingaienabled_;
-  ::ast::Timer* banktimer_;
   float bankperiod_;
   float timelefttorespawn_;
+  ::ast::Timer* banktimer_;
   ::ast::Timer* alivetimer_;
   ::ast::Timer* respawntimer_;
   ::google::protobuf::int32 score_;
@@ -851,10 +864,11 @@ class Entity : public ::google::protobuf::Message {
   ::ast::Vector* up_;
   ::ast::Vector* right_;
   ::ast::Vector* forward_;
+  ::std::string* name_;
   ::google::protobuf::uint32 weapnum_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(63 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(64 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -1243,6 +1257,17 @@ class ClientCommand : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 lastreceivedgamestateid() const;
   inline void set_lastreceivedgamestateid(::google::protobuf::uint32 value);
   
+  // optional string name = 14;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 14;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  
   // @@protoc_insertion_point(class_scope:ast.ClientCommand)
  private:
   inline void set_has_shipid();
@@ -1271,6 +1296,8 @@ class ClientCommand : public ::google::protobuf::Message {
   inline void clear_has_mousey();
   inline void set_has_lastreceivedgamestateid();
   inline void clear_has_lastreceivedgamestateid();
+  inline void set_has_name();
+  inline void clear_has_name();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -1287,9 +1314,10 @@ class ClientCommand : public ::google::protobuf::Message {
   float mousex_;
   float mousey_;
   ::google::protobuf::uint32 lastreceivedgamestateid_;
+  ::std::string* name_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(13 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -3590,6 +3618,64 @@ inline ::ast::Vector* Entity::release_forward() {
   return temp;
 }
 
+// optional string name = 78;
+inline bool Entity::has_name() const {
+  return (_has_bits_[1] & 0x80000000u) != 0;
+}
+inline void Entity::set_has_name() {
+  _has_bits_[1] |= 0x80000000u;
+}
+inline void Entity::clear_has_name() {
+  _has_bits_[1] &= ~0x80000000u;
+}
+inline void Entity::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& Entity::name() const {
+  return *name_;
+}
+inline void Entity::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void Entity::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void Entity::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Entity::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* Entity::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
 // -------------------------------------------------------------------
 
 // Weapon
@@ -4241,6 +4327,64 @@ inline ::google::protobuf::uint32 ClientCommand::lastreceivedgamestateid() const
 inline void ClientCommand::set_lastreceivedgamestateid(::google::protobuf::uint32 value) {
   set_has_lastreceivedgamestateid();
   lastreceivedgamestateid_ = value;
+}
+
+// optional string name = 14;
+inline bool ClientCommand::has_name() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void ClientCommand::set_has_name() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void ClientCommand::clear_has_name() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void ClientCommand::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& ClientCommand::name() const {
+  return *name_;
+}
+inline void ClientCommand::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void ClientCommand::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void ClientCommand::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ClientCommand::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* ClientCommand::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
 }
 
 // -------------------------------------------------------------------

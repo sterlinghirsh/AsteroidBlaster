@@ -1055,6 +1055,8 @@ void GameState::resetClientCommand(bool shouldClearMultiplayerInfo) {
    clientCommand.set_mousex(0);
    clientCommand.set_mousey(0);
 
+   clientCommand.set_name(gameSettings->name);
+
    // Do we need to clear shipid and lastreceivedgamestateid?
    if (shouldClearMultiplayerInfo) {
       clientCommand.clear_shipid();

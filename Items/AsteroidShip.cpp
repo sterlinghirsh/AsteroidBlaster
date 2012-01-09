@@ -2093,7 +2093,7 @@ Shard* AsteroidShip::makeShard() {
 void AsteroidShip::readCommand(const ast::ClientCommand& command) {
    accelerateForward(command.forwardacceleration());
    //accelerateRight(command.rightAcceleration);
-   accelerateUp(command.upacceleration());
+   //accelerateUp(command.upacceleration());
 
    setYawSpeed(command.yawspeed());
    setRollSpeed(command.rollspeed());
@@ -2116,6 +2116,9 @@ void AsteroidShip::readCommand(const ast::ClientCommand& command) {
       isBarrelRollingRight = 1;
    }
 
+   if (command.has_name()) {
+      name = command.name();
+   }
 }
 
 /**
@@ -2315,6 +2318,12 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
       }
    }
 
+   if (name.compare(old.name()) != 0) {
+      ent->set_name(name);
+      changed = true;
+      // Maybe print name change message?
+   }
+
 
    if (targetRollSpeed != old.targetrollspeed()) {
       ent->set_targetrollspeed(targetRollSpeed);
@@ -2489,6 +2498,8 @@ void AsteroidShip::save(ast::Entity* ent) {
       getWeapon(i)->save(weap);
    }
 
+   ent->set_name(name);
+
    ent->set_targetrollspeed(targetRollSpeed);
    ent->set_targetyawspeed(targetYawSpeed);
    ent->set_targetpitchspeed(targetPitchSpeed);
@@ -2536,6 +2547,9 @@ void AsteroidShip::load(const ast::Entity& ent) {
       getWeapon(index)->load(weap);
    }
 
+   if (ent.has_name()) {
+      name = ent.name();
+   }
 
    if (ent.has_forward())
       forward->load(ent.forward());
