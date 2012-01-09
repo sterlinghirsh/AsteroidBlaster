@@ -498,6 +498,7 @@ void GameState::update(double timeDiff) {
       }
 
       serverSide->receive();
+      clearOldSavedGameStates();
    }
 
    updateText();
@@ -2389,4 +2390,37 @@ void GameState::setMusic() {
          case 2: SoundEffect::playMusic("dingding"); break;
       }
    }
+}
+
+/**
+ * This clears all the old saved game states in savedGameStates[].
+ * This should only be called in server mode.
+ */
+void GameState::clearOldSavedGameStates() {
+   if (gsm != ServerMode || curGameStateId <= 2) {
+      return;
+   }
+   
+   // This is the oldest gamestate to keep.
+   unsigned oldestGameState = curGameStateId - 2;
+
+   std::map<unsigned, ClientInfo*>& clients = serverSide->getClients();
+   std::map<unsigned, ClientInfo*>::iterator clientIter = clients.begin();
+
+   for (; clientIter != clients.end(); clientIter++) {
+      ClientInfo* client = clientIter->second;
+      if (client->ackGameState != 0 && client->ackGameState - 2 < oldestGameState) {
+         oldestGameState = client->ackGameState - 2;
+      }
+   }
+
+   std::map<unsigned, ast::GameState*>::iterator curState, endState;
+   curState = savedGameStates.begin();
+   endState = savedGameStates.upper_bound(oldestGameState);
+   
+   for (; curState != endState; ++curState) {
+      delete curState->second;
+   }
+
+   savedGameStates.erase(savedGameStates.begin(), endState);
 }

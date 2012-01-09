@@ -97,7 +97,10 @@ void ServerSide::receive() {
             gameState->handleCommand(cc);
 
             if (cc.has_lastreceivedgamestateid()) {
-               clients[event->peer->connectID]->ackGameState = cc.lastreceivedgamestateid();
+               unsigned gsid = cc.lastreceivedgamestateid();
+               if (clients[event->peer->connectID]->ackGameState < gsid) {
+                  clients[event->peer->connectID]->ackGameState = gsid;
+               }
             }
 
             //cout << "Packet received from client: " << (char*) event->packet->data << endl;

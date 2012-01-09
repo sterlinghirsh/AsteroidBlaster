@@ -243,6 +243,9 @@ class GameState : public InputReceiver {
       void spectatorCameraUpdate(double timeDiff);
       void advancePhysics(double startTime, double endTime, std::set< std::pair<unsigned, unsigned> >* recordedCollisions);
       void testCollisions(std::set< std::pair<unsigned, unsigned> >* recordedCollisions);
+
+      void clearOldSavedGameStates();
+
       void initialize();
       void destruct();
 };
