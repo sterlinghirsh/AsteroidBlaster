@@ -454,6 +454,14 @@ void GameState::update(double timeDiff) {
       if (gameSettings->enableMinimap) {
          minimap->update(timeDiff);
       }
+   } else {
+      Vector3D up(0, 1, 0);
+      Vector3D center(0, 0, 0);
+      Vector3D fwd(spectatorCamera->position, &center);
+      fwd.normalize();
+      Vector3D velocity(up.cross(fwd).scalarMultiply(20));
+      SoundEffect::updatePositions(spectatorCamera->position, &velocity,
+       &fwd, &up);
    }
 
    if (gsm == ServerMode) {
