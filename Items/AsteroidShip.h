@@ -105,7 +105,7 @@ class AsteroidShip : public Object3D {
       int upOrDown;
       CollisionSphere* collisionSphere;
 
-      unsigned lastDamagerId;
+      int lastDamagerId;
       int lastDamagerWeapon;
       
       float color1;
@@ -134,6 +134,8 @@ class AsteroidShip : public Object3D {
       
    //private variables------------------------------
    private:
+      bool deathAcknowledged;
+      int killedBy;
 
    //public functions------------------------------
    public:
@@ -370,6 +372,8 @@ class AsteroidShip : public Object3D {
        Vector3D& offsetDirectionY, double color = 1.0);
       void addNewParticle(Point3D& emitter, Vector3D& initialOffset, Vector3D& offsetDirectionX,
        Vector3D& offsetDirectionY, double color = 1.0);
+
+      void dropShards();
       Shard* makeShard();
 
       void createExplosionParticles();

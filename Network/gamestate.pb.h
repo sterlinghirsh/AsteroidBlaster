@@ -671,6 +671,27 @@ class Entity : public ::google::protobuf::Message {
   inline ::std::string* mutable_name();
   inline ::std::string* release_name();
   
+  // optional sint32 killedby = 79;
+  inline bool has_killedby() const;
+  inline void clear_killedby();
+  static const int kKilledbyFieldNumber = 79;
+  inline ::google::protobuf::int32 killedby() const;
+  inline void set_killedby(::google::protobuf::int32 value);
+  
+  // optional sint32 lastdamagerid = 80;
+  inline bool has_lastdamagerid() const;
+  inline void clear_lastdamagerid();
+  static const int kLastdamageridFieldNumber = 80;
+  inline ::google::protobuf::int32 lastdamagerid() const;
+  inline void set_lastdamagerid(::google::protobuf::int32 value);
+  
+  // optional sint32 lastdamagerweapon = 81;
+  inline bool has_lastdamagerweapon() const;
+  inline void clear_lastdamagerweapon();
+  static const int kLastdamagerweaponFieldNumber = 81;
+  inline ::google::protobuf::int32 lastdamagerweapon() const;
+  inline void set_lastdamagerweapon(::google::protobuf::int32 value);
+  
   // @@protoc_insertion_point(class_scope:ast.Entity)
  private:
   inline void set_has_id();
@@ -799,6 +820,12 @@ class Entity : public ::google::protobuf::Message {
   inline void clear_has_forward();
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_killedby();
+  inline void clear_has_killedby();
+  inline void set_has_lastdamagerid();
+  inline void clear_has_lastdamagerid();
+  inline void set_has_lastdamagerweapon();
+  inline void clear_has_lastdamagerweapon();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -863,12 +890,15 @@ class Entity : public ::google::protobuf::Message {
   ::google::protobuf::uint32 shardtype_;
   ::ast::Vector* up_;
   ::ast::Vector* right_;
+  ::google::protobuf::uint32 weapnum_;
+  ::google::protobuf::int32 killedby_;
   ::ast::Vector* forward_;
   ::std::string* name_;
-  ::google::protobuf::uint32 weapnum_;
+  ::google::protobuf::int32 lastdamagerid_;
+  ::google::protobuf::int32 lastdamagerweapon_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(64 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(67 + 31) / 32];
   
   friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
   friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
@@ -3674,6 +3704,72 @@ inline ::std::string* Entity::release_name() {
     name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
+}
+
+// optional sint32 killedby = 79;
+inline bool Entity::has_killedby() const {
+  return (_has_bits_[2] & 0x00000001u) != 0;
+}
+inline void Entity::set_has_killedby() {
+  _has_bits_[2] |= 0x00000001u;
+}
+inline void Entity::clear_has_killedby() {
+  _has_bits_[2] &= ~0x00000001u;
+}
+inline void Entity::clear_killedby() {
+  killedby_ = 0;
+  clear_has_killedby();
+}
+inline ::google::protobuf::int32 Entity::killedby() const {
+  return killedby_;
+}
+inline void Entity::set_killedby(::google::protobuf::int32 value) {
+  set_has_killedby();
+  killedby_ = value;
+}
+
+// optional sint32 lastdamagerid = 80;
+inline bool Entity::has_lastdamagerid() const {
+  return (_has_bits_[2] & 0x00000002u) != 0;
+}
+inline void Entity::set_has_lastdamagerid() {
+  _has_bits_[2] |= 0x00000002u;
+}
+inline void Entity::clear_has_lastdamagerid() {
+  _has_bits_[2] &= ~0x00000002u;
+}
+inline void Entity::clear_lastdamagerid() {
+  lastdamagerid_ = 0;
+  clear_has_lastdamagerid();
+}
+inline ::google::protobuf::int32 Entity::lastdamagerid() const {
+  return lastdamagerid_;
+}
+inline void Entity::set_lastdamagerid(::google::protobuf::int32 value) {
+  set_has_lastdamagerid();
+  lastdamagerid_ = value;
+}
+
+// optional sint32 lastdamagerweapon = 81;
+inline bool Entity::has_lastdamagerweapon() const {
+  return (_has_bits_[2] & 0x00000004u) != 0;
+}
+inline void Entity::set_has_lastdamagerweapon() {
+  _has_bits_[2] |= 0x00000004u;
+}
+inline void Entity::clear_has_lastdamagerweapon() {
+  _has_bits_[2] &= ~0x00000004u;
+}
+inline void Entity::clear_lastdamagerweapon() {
+  lastdamagerweapon_ = 0;
+  clear_has_lastdamagerweapon();
+}
+inline ::google::protobuf::int32 Entity::lastdamagerweapon() const {
+  return lastdamagerweapon_;
+}
+inline void Entity::set_lastdamagerweapon(::google::protobuf::int32 value) {
+  set_has_lastdamagerweapon();
+  lastdamagerweapon_ = value;
 }
 
 // -------------------------------------------------------------------

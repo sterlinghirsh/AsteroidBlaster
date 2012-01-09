@@ -108,6 +108,9 @@ message Entity {
 
    // Ship again
    optional string name = 78;
+   optional sint32 killedby = 79;
+   optional sint32 lastdamagerid = 80;
+   optional sint32 lastdamagerweapon = 81;
 }
 
 message Weapon {

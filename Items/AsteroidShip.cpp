@@ -129,6 +129,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    lives = PLAYER_LIVES;
 
    lastDamagerId = -1;
+   killedBy = -1;
    lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
 
    // The number of shard collected. This number is displayed to the screen.
@@ -271,6 +272,8 @@ void AsteroidShip::reInitialize() {
    respawnTimer.reset();
    aliveTimer.countUp();
 
+   deathAcknowledged = false;
+
    // Reset powerups.
    healthMax = 100;
    engineLevel = 1;
@@ -279,6 +282,8 @@ void AsteroidShip::reInitialize() {
 
    interpolateOrientation = false;
    orientationInterpolationAmount = 0;
+
+   killedBy = -1;
 }
 
 /**
@@ -535,7 +540,9 @@ void AsteroidShip::update(double timeDiff) {
       stopSounds();
 
       // Handle respawning.
-      if (!respawnTimer.isRunning) {
+      if (!respawnTimer.isRunning || 
+       (gameState->gsm == ClientMode && !deathAcknowledged)) {
+         deathAcknowledged = true;
          if (this == gameState->ship) {
             gameState->usingShipCamera = false;
          }
@@ -578,14 +585,18 @@ void AsteroidShip::update(double timeDiff) {
             }
          }
 
-         Object3D* lastDamager = (*custodian)[lastDamagerId];
-         if (lastDamager != NULL) {
-            if (lastDamager->type == TYPE_ASTEROIDSHIP) {
-               AsteroidShip* lastDamagerShip = static_cast<AsteroidShip*>(lastDamager);
+         if (gameState->gsm != ClientMode) {
+            killedBy = lastDamagerId;
+         }
+
+         Object3D* killer = (*custodian)[lastDamagerId];
+         if (killer != NULL) {
+            if (killer->type == TYPE_ASTEROIDSHIP) {
+               AsteroidShip* killerShip = static_cast<AsteroidShip*>(killer);
                if (gameState->gsm != ClientMode) {
-                  lastDamagerShip->kills++;
+                  killerShip->kills++;
                }
-               cout << lastDamagerShip->name << " killed " << name << " with a " 
+               cout << killerShip->name << " killed " << name << " with a " 
                 << weapons[lastDamagerWeapon]->getName() << "." << endl;
             } else {
                cout << name << " was killed by an asteroid." << endl;
@@ -604,71 +615,8 @@ void AsteroidShip::update(double timeDiff) {
          createExplosionParticles();
          // Release all the shards.
          if (gameState->gsm != ClientMode) {
-            Shard* tmp;
-            while (unbankedShards > 0) {
-               custodian->add(makeShard());
-               --unbankedShards;
-            }
-            
-            // Make a few more for good measure.
-            do {
-               tmp = makeShard();
-               custodian->add(tmp);
-            } while(rand() % 2 == 0);
-
-            if (gameState->gsm == ServerMode) {
-               while (healthMax > 100) {
-                  tmp = makeShard();
-                  tmp->shardType = SHARD_TYPE_MAXHEALTH;
-                  custodian->add(tmp);
-                  healthMax -= 10;
-               }
-
-               while (engineLevel > 1) {
-                  tmp = makeShard();
-                  tmp->shardType = SHARD_TYPE_ENGINE;
-                  custodian->add(tmp);
-                  --engineLevel;
-               }
-
-               while (regenHealthLevel > 0) {
-                  tmp = makeShard();
-                  tmp->shardType = SHARD_TYPE_REGEN;
-                  custodian->add(tmp);
-                  --regenHealthLevel;
-               }
-
-               Weapon* weap;
-               for (int i = 0; i < NUMBER_OF_WEAPONS; ++i) {
-                  weap = getWeapon(i); 
-                  if (weap->purchased) {
-                     weap->level = 1;
-                     /*
-                     while (weap->level > 1) {
-                        tmp = makeShard();
-                        tmp->shardType = SHARD_TYPE_WEAPON;
-                        tmp->weapNum = i;
-                        custodian->add(tmp);
-                        --weap->level;
-                        
-                     }
-                     */
-                     
-                     if (i > BLASTER_WEAPON_INDEX) {
-                        tmp = makeShard();
-                        tmp->shardType = SHARD_TYPE_WEAPON;
-                        tmp->weapNum = i;
-                        custodian->add(tmp);
-
-                        weap->purchased = false;
-                     }
-                  }
-               }
-
-
-            }
+            dropShards();
          }
-
       }
 
       timeLeftToRespawn = respawnTimer.getTimeLeft();
@@ -2324,6 +2272,20 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
       // Maybe print name change message?
    }
 
+   if (killedBy != old.killedby()) {
+      ent->set_killedby(killedBy);
+      changed = true;
+   }
+   
+   if (lastDamagerId != old.lastdamagerid()) {
+      ent->set_lastdamagerid(lastDamagerId);
+      changed = true;
+   }
+   
+   if (lastDamagerWeapon != old.lastdamagerweapon()) {
+      ent->set_lastdamagerweapon(lastDamagerWeapon);
+      changed = true;
+   }
 
    if (targetRollSpeed != old.targetrollspeed()) {
       ent->set_targetrollspeed(targetRollSpeed);
@@ -2499,6 +2461,10 @@ void AsteroidShip::save(ast::Entity* ent) {
    }
 
    ent->set_name(name);
+      
+   ent->set_killedby(killedBy);
+   ent->set_lastdamagerid(lastDamagerId);
+   ent->set_lastdamagerweapon(lastDamagerWeapon);
 
    ent->set_targetrollspeed(targetRollSpeed);
    ent->set_targetyawspeed(targetYawSpeed);
@@ -2545,6 +2511,26 @@ void AsteroidShip::load(const ast::Entity& ent) {
       const ast::Weapon& weap = ent.weapon(i);
       unsigned index = weap.index();
       getWeapon(index)->load(weap);
+   }
+
+   // When killedby is set by the server, deathAcknowledged is set to false.
+   // We only do this when the local killedBy is -1 (meaning player is alive 
+   // and just getting killed) or when ent.killedby() is -1, meaning player 
+   // is getting reset right now.
+   // We don't set deathAcknowledged to false when getting reset, though.
+   if (ent.has_killedby() && (killedBy == -1 || ent.killedby() == -1)) {
+      killedBy = ent.killedby();
+      if (killedBy != -1) {
+         deathAcknowledged = false;
+      }
+   }
+
+   if (ent.has_lastdamagerid()) {
+      lastDamagerId = ent.lastdamagerid();
+   }
+   
+   if (ent.has_lastdamagerweapon()) {
+      lastDamagerWeapon = ent.lastdamagerweapon();
    }
 
    if (ent.has_name()) {
@@ -2668,7 +2654,7 @@ void AsteroidShip::createExplosionParticles() {
       Point3D* particleStartPoint = new Point3D(*position);
       Vector3D* particleDirection = new Vector3D();
       particleDirection->randomMagnitude();
-      particleDirection->setLength(3 * randdouble());
+      particleDirection->setLength(10 * randdouble());
       particleDirection->addUpdate(velocity->scalarMultiply(randdouble()));
       ElectricityImpactParticle::Add(particleStartPoint, particleDirection, gameState);
    }
@@ -2677,4 +2663,68 @@ void AsteroidShip::createExplosionParticles() {
 void AsteroidShip::onRemove() {
    Object3D::onRemove();
    createExplosionParticles();
+}
+
+void AsteroidShip::dropShards() {
+   Shard* tmp;
+   while (unbankedShards > 0) {
+      custodian->add(makeShard());
+      --unbankedShards;
+   }
+
+   // Make a few more for good measure.
+   do {
+      tmp = makeShard();
+      custodian->add(tmp);
+   } while(rand() % 2 == 0);
+
+   if (gameState->gsm == ServerMode) {
+      while (healthMax > 100) {
+         tmp = makeShard();
+         tmp->shardType = SHARD_TYPE_MAXHEALTH;
+         custodian->add(tmp);
+         healthMax -= 10;
+      }
+
+      while (engineLevel > 1) {
+         tmp = makeShard();
+         tmp->shardType = SHARD_TYPE_ENGINE;
+         custodian->add(tmp);
+         --engineLevel;
+      }
+
+      while (regenHealthLevel > 0) {
+         tmp = makeShard();
+         tmp->shardType = SHARD_TYPE_REGEN;
+         custodian->add(tmp);
+         --regenHealthLevel;
+      }
+
+      Weapon* weap;
+      for (int i = 0; i < NUMBER_OF_WEAPONS; ++i) {
+         weap = getWeapon(i); 
+         if (weap->purchased) {
+            weap->level = 1;
+            /*
+               while (weap->level > 1) {
+               tmp = makeShard();
+               tmp->shardType = SHARD_TYPE_WEAPON;
+               tmp->weapNum = i;
+               custodian->add(tmp);
+               --weap->level;
+
+               }
+             */
+
+            if (i > BLASTER_WEAPON_INDEX) {
+               tmp = makeShard();
+               tmp->shardType = SHARD_TYPE_WEAPON;
+               tmp->weapNum = i;
+               custodian->add(tmp);
+
+               weap->purchased = false;
+            }
+         }
+      }
+   }
 }
