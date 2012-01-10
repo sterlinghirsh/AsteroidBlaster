@@ -128,8 +128,8 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    deaths = 0;
    lives = PLAYER_LIVES;
 
-   lastDamagerId = -1;
-   killedBy = -1;
+   lastDamagerId = 0;
+   killedBy = 0;
    lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
 
    // The number of shard collected. This number is displayed to the screen.
@@ -218,23 +218,18 @@ AsteroidShip::~AsteroidShip() {
  * Reset the ship as if it just spawned.
  */
 void AsteroidShip::reInitialize() {
-   shotDirection.updateMagnitude(0, 0, 1);
-   /* Currently not braking or acceleration. */
-   isBraking = false;
    shakeAmount = 0;
-   brakeFactor = 2;
+   
    /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
    curForwardAccel = curRightAccel = curUpAccel = 0;
    yawSpeed = rollSpeed = pitchSpeed = 0;
    targetYawSpeed = targetRollSpeed = targetPitchSpeed = 0;
    maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
    maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
-   /*shotOrigin = *position;
-   forward->movePoint(shotOrigin, shotOriginScale);
-
-   forward->updateMagnitude(0, 0, 1);
-   up->updateMagnitude(0, 1, 0);
-   right->updateMagnitude(-1, 0, 0);*/
+   
+   /* Currently not braking or acceleration. */
+   isBraking = false;
+   brakeFactor = 2;
 
    // Is the ship firing? Not when it's instantiated.
    isFiring = false;
@@ -253,37 +248,27 @@ void AsteroidShip::reInitialize() {
 
    velocity->updateMagnitude(0, 0, 0);
    
-   int posOrNeg = (rand()%2)*2 - 1;
-   int littleBitLessThanHalfOfWorldSize = int(gameState->worldSize / 2) - 4;
+   // This does its own gsm check.
+   randomizePosition();
 
-   double randX = posOrNeg*((double)(rand() % littleBitLessThanHalfOfWorldSize));//*(gameState->worldSize / 2);
-   double randY = posOrNeg*((double)(rand() % littleBitLessThanHalfOfWorldSize));//*(gameState->worldSize / 2);
-   double randZ = posOrNeg*((double)(rand() % littleBitLessThanHalfOfWorldSize));//*(gameState->worldSize / 2);
-   position->updateMagnitude(randX, randY, randZ);
-   shotOrigin = *position;
+   if (gameState->gsm != ClientMode) {
 
-   forward->updateMagnitude(-position->x, -position->y, -position->z);
-   forward->normalize();
-   up->updateMagnitude(forward->getNormalVector());
-   up->normalize();
-   right->updateMagnitude(forward->cross(*up));
-   right->normalize();
-   forward->movePoint(shotOrigin, shotOriginScale);
-   respawnTimer.reset();
-   aliveTimer.countUp();
+      respawnTimer.reset();
+      aliveTimer.countUp();
+      
+      // Reset powerups.
+      healthMax = 100;
+      engineLevel = 1;
+      regenHealthLevel = 0;
+      bankLevel = 1;
+   }
 
    deathAcknowledged = false;
-
-   // Reset powerups.
-   healthMax = 100;
-   engineLevel = 1;
-   regenHealthLevel = 0;
-   bankLevel = 1;
 
    interpolateOrientation = false;
    orientationInterpolationAmount = 0;
 
-   killedBy = -1;
+   killedBy = 0;
 }
 
 /**
@@ -2440,12 +2425,10 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
 
 void AsteroidShip::save(ast::Entity* ent) {
    Object3D::save(ent);
-   // TODO: Only save two of these and calc the third?
+   // Only save two of these and calc the third.
    up->save(ent->mutable_up());
    forward->save(ent->mutable_forward());
-   /*
-   right->save(ent->mutable_right());
-   */
+   // Don't save right.
    
    shotDirection.save(ent->mutable_shotdirection());
    
@@ -2518,9 +2501,9 @@ void AsteroidShip::load(const ast::Entity& ent) {
    // and just getting killed) or when ent.killedby() is -1, meaning player 
    // is getting reset right now.
    // We don't set deathAcknowledged to false when getting reset, though.
-   if (ent.has_killedby() && (killedBy == -1 || ent.killedby() == -1)) {
+   if (ent.has_killedby() && (killedBy == 0 || ent.killedby() == 0)) {
       killedBy = ent.killedby();
-      if (killedBy != -1) {
+      if (killedBy != 0) {
          deathAcknowledged = false;
       }
    }
@@ -2537,15 +2520,25 @@ void AsteroidShip::load(const ast::Entity& ent) {
       name = ent.name();
    }
 
-   if (ent.has_forward())
-      forward->load(ent.forward());
-   if (ent.has_up())
-      up->load(ent.up());
-   /*
-   if (ent.has_right())
-      right->load(ent.right());
-      */
-   *right = forward->cross(*up);
+   if (ent.has_forward() || ent.has_up()) {
+      printf("got original fwd / up\n");
+      if (ent.has_forward())
+         forward->load(ent.forward());
+      if (ent.has_up())
+         up->load(ent.up());
+
+      forward->normalize();
+      up->normalize();
+      *right = forward->cross(*up);
+
+      targetForward = *forward;
+      targetUp = *up;
+      targetRight = *right;
+
+      interpolateOrientation = false;
+      orientationInterpolationAmount = 0;
+      
+   }
 
    if (ent.has_targetforward() || ent.has_targetup()) {
       if (ent.has_targetforward())
@@ -2553,6 +2546,8 @@ void AsteroidShip::load(const ast::Entity& ent) {
       if (ent.has_targetup())
          targetUp.load(ent.targetup());
 
+      targetForward.normalize();
+      targetUp.normalize();
       targetRight = targetForward.cross(targetUp);
       interpolateOrientation = true;
       orientationInterpolationAmount = 1;
@@ -2727,4 +2722,24 @@ void AsteroidShip::dropShards() {
          }
       }
    }
+}
+
+void AsteroidShip::randomizePosition() {
+   if (gameState->gsm != ClientMode) {
+      double worldSize = gameState->worldSize - 4; // Give some space.
+      double randX = (randdouble())*(worldSize / 2);
+      double randY = (randdouble())*(worldSize / 2);
+      double randZ = (randdouble())*(worldSize / 2);
+      position->update(randX, randY, randZ);
+      forward->updateMagnitude(-position->x, -position->y, -position->z);
+      forward->normalize();
+      up->updateMagnitude(forward->getNormalVector());
+      up->normalize();
+      right->updateMagnitude(forward->cross(*up));
+      right->normalize();
+   }
+   
+   shotDirection.updateMagnitude(0, 0, 1);
+   shotOrigin = *position;
+   forward->movePoint(shotOrigin, shotOriginScale);
 }

@@ -279,10 +279,7 @@ void GameState::addAIPlayer() {
 
 unsigned GameState::addNetworkPlayer(unsigned clientID) {
    AsteroidShip* otherShip = new AsteroidShip(this);
-   double randX = (randdouble())*(worldSize / 2);
-   double randY = (randdouble())*(worldSize / 2);
-   double randZ = (randdouble())*(worldSize / 2);
-   otherShip->position->update(randX, randY, randZ);
+   otherShip->randomizePosition();
    custodian.add(otherShip);
    custodian.shipsByClientID.insert(std::pair<unsigned, AsteroidShip*>(clientID, otherShip));
    return otherShip->id;

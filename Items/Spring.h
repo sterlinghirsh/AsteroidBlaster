@@ -18,6 +18,8 @@ class Spring : public Object3D {
       ~Spring() {};
       void attach(AsteroidShip* anchorIn, Camera* cameraIn);
       void update(double timeDiff);
+
+      // Vars
       Vector3D positionOffset;
       Vector3D upOffset;
       AsteroidShip* anchor;

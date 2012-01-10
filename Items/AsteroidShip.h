@@ -105,7 +105,7 @@ class AsteroidShip : public Object3D {
       int upOrDown;
       CollisionSphere* collisionSphere;
 
-      int lastDamagerId;
+      unsigned lastDamagerId;
       int lastDamagerWeapon;
       
       float color1;
@@ -135,7 +135,7 @@ class AsteroidShip : public Object3D {
    //private variables------------------------------
    private:
       bool deathAcknowledged;
-      int killedBy;
+      unsigned killedBy;
 
    //public functions------------------------------
    public:
@@ -181,6 +181,7 @@ class AsteroidShip : public Object3D {
       void nextView();
 
       void reInitialize();
+      void randomizePosition();
       
       /**
        * These are going to be the functions that either the local player

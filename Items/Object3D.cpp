@@ -15,7 +15,10 @@
 #include "Utility/GameState.h"
 
 Object3D::Object3D(const GameState* _gameState) : Drawable(_gameState),
- removed(false) {
+ removed(false),
+ targetUp(0, 1, 0),
+ targetRight(1, 0, 0),
+ targetForward(0, 0, 1) {
    id = custodian->getNextID();
 
    minX = minY = minZ = -0.5;

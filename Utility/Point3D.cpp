@@ -23,6 +23,6 @@ Point3D::Point3D(const Vector3D& copy) {
 const Point3D Point3D::Zero(0, 0, 0);
 
 void Point3D::print() {
-   printf("(%f, %f, %f)\n", x, y, z);
+   printf("Point: (%f, %f, %f)\n", x, y, z);
 }
 

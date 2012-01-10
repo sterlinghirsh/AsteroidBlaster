@@ -428,7 +428,7 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "weapNum\030J \001(\r\022\027\n\002up\030K \001(\0132\013.ast.Vector\022\032"
     "\n\005right\030L \001(\0132\013.ast.Vector\022\034\n\007forward\030M "
     "\001(\0132\013.ast.Vector\022\014\n\004name\030N \001(\t\022\020\n\010killed"
-    "by\030O \001(\021\022\025\n\rlastdamagerid\030P \001(\021\022\031\n\021lastd"
+    "by\030O \001(\r\022\025\n\rlastdamagerid\030P \001(\r\022\031\n\021lastd"
     "amagerweapon\030Q \001(\021\"\324\002\n\006Weapon\022\r\n\005index\030\001"
     " \002(\r\022#\n\017activationTimer\030\002 \001(\0132\n.ast.Time"
     "r\022\025\n\rtimeLastFired\030\003 \001(\002\022\020\n\010coolDown\030\004 \001"
@@ -941,8 +941,8 @@ void Entity::SharedCtor() {
   right_ = NULL;
   forward_ = NULL;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  killedby_ = 0;
-  lastdamagerid_ = 0;
+  killedby_ = 0u;
+  lastdamagerid_ = 0u;
   lastdamagerweapon_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -1103,8 +1103,8 @@ void Entity::Clear() {
     }
   }
   if (_has_bits_[64 / 32] & (0xffu << (64 % 32))) {
-    killedby_ = 0;
-    lastdamagerid_ = 0;
+    killedby_ = 0u;
+    lastdamagerid_ = 0u;
     lastdamagerweapon_ = 0;
   }
   weapon_.Clear();
@@ -2115,13 +2115,13 @@ bool Entity::MergePartialFromCodedStream(
         break;
       }
       
-      // optional sint32 killedby = 79;
+      // optional uint32 killedby = 79;
       case 79: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_killedby:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_SINT32>(
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &killedby_)));
           set_has_killedby();
         } else {
@@ -2131,13 +2131,13 @@ bool Entity::MergePartialFromCodedStream(
         break;
       }
       
-      // optional sint32 lastdamagerid = 80;
+      // optional uint32 lastdamagerid = 80;
       case 80: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_lastdamagerid:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_SINT32>(
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &lastdamagerid_)));
           set_has_lastdamagerid();
         } else {
@@ -2519,14 +2519,14 @@ void Entity::SerializeWithCachedSizes(
       78, this->name(), output);
   }
   
-  // optional sint32 killedby = 79;
+  // optional uint32 killedby = 79;
   if (has_killedby()) {
-    ::google::protobuf::internal::WireFormatLite::WriteSInt32(79, this->killedby(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(79, this->killedby(), output);
   }
   
-  // optional sint32 lastdamagerid = 80;
+  // optional uint32 lastdamagerid = 80;
   if (has_lastdamagerid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteSInt32(80, this->lastdamagerid(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(80, this->lastdamagerid(), output);
   }
   
   // optional sint32 lastdamagerweapon = 81;
@@ -2895,14 +2895,14 @@ void Entity::SerializeWithCachedSizes(
         78, this->name(), target);
   }
   
-  // optional sint32 killedby = 79;
+  // optional uint32 killedby = 79;
   if (has_killedby()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteSInt32ToArray(79, this->killedby(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(79, this->killedby(), target);
   }
   
-  // optional sint32 lastdamagerid = 80;
+  // optional uint32 lastdamagerid = 80;
   if (has_lastdamagerid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteSInt32ToArray(80, this->lastdamagerid(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(80, this->lastdamagerid(), target);
   }
   
   // optional sint32 lastdamagerweapon = 81;
@@ -3316,17 +3316,17 @@ int Entity::ByteSize() const {
     
   }
   if (_has_bits_[64 / 32] & (0xffu << (64 % 32))) {
-    // optional sint32 killedby = 79;
+    // optional uint32 killedby = 79;
     if (has_killedby()) {
       total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::SInt32Size(
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->killedby());
     }
     
-    // optional sint32 lastdamagerid = 80;
+    // optional uint32 lastdamagerid = 80;
     if (has_lastdamagerid()) {
       total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::SInt32Size(
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->lastdamagerid());
     }
     

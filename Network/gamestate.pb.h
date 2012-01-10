@@ -671,19 +671,19 @@ class Entity : public ::google::protobuf::Message {
   inline ::std::string* mutable_name();
   inline ::std::string* release_name();
   
-  // optional sint32 killedby = 79;
+  // optional uint32 killedby = 79;
   inline bool has_killedby() const;
   inline void clear_killedby();
   static const int kKilledbyFieldNumber = 79;
-  inline ::google::protobuf::int32 killedby() const;
-  inline void set_killedby(::google::protobuf::int32 value);
+  inline ::google::protobuf::uint32 killedby() const;
+  inline void set_killedby(::google::protobuf::uint32 value);
   
-  // optional sint32 lastdamagerid = 80;
+  // optional uint32 lastdamagerid = 80;
   inline bool has_lastdamagerid() const;
   inline void clear_lastdamagerid();
   static const int kLastdamageridFieldNumber = 80;
-  inline ::google::protobuf::int32 lastdamagerid() const;
-  inline void set_lastdamagerid(::google::protobuf::int32 value);
+  inline ::google::protobuf::uint32 lastdamagerid() const;
+  inline void set_lastdamagerid(::google::protobuf::uint32 value);
   
   // optional sint32 lastdamagerweapon = 81;
   inline bool has_lastdamagerweapon() const;
@@ -891,10 +891,10 @@ class Entity : public ::google::protobuf::Message {
   ::ast::Vector* up_;
   ::ast::Vector* right_;
   ::google::protobuf::uint32 weapnum_;
-  ::google::protobuf::int32 killedby_;
+  ::google::protobuf::uint32 killedby_;
   ::ast::Vector* forward_;
   ::std::string* name_;
-  ::google::protobuf::int32 lastdamagerid_;
+  ::google::protobuf::uint32 lastdamagerid_;
   ::google::protobuf::int32 lastdamagerweapon_;
   
   mutable int _cached_size_;
@@ -3706,7 +3706,7 @@ inline ::std::string* Entity::release_name() {
   }
 }
 
-// optional sint32 killedby = 79;
+// optional uint32 killedby = 79;
 inline bool Entity::has_killedby() const {
   return (_has_bits_[2] & 0x00000001u) != 0;
 }
@@ -3717,18 +3717,18 @@ inline void Entity::clear_has_killedby() {
   _has_bits_[2] &= ~0x00000001u;
 }
 inline void Entity::clear_killedby() {
-  killedby_ = 0;
+  killedby_ = 0u;
   clear_has_killedby();
 }
-inline ::google::protobuf::int32 Entity::killedby() const {
+inline ::google::protobuf::uint32 Entity::killedby() const {
   return killedby_;
 }
-inline void Entity::set_killedby(::google::protobuf::int32 value) {
+inline void Entity::set_killedby(::google::protobuf::uint32 value) {
   set_has_killedby();
   killedby_ = value;
 }
 
-// optional sint32 lastdamagerid = 80;
+// optional uint32 lastdamagerid = 80;
 inline bool Entity::has_lastdamagerid() const {
   return (_has_bits_[2] & 0x00000002u) != 0;
 }
@@ -3739,13 +3739,13 @@ inline void Entity::clear_has_lastdamagerid() {
   _has_bits_[2] &= ~0x00000002u;
 }
 inline void Entity::clear_lastdamagerid() {
-  lastdamagerid_ = 0;
+  lastdamagerid_ = 0u;
   clear_has_lastdamagerid();
 }
-inline ::google::protobuf::int32 Entity::lastdamagerid() const {
+inline ::google::protobuf::uint32 Entity::lastdamagerid() const {
   return lastdamagerid_;
 }
-inline void Entity::set_lastdamagerid(::google::protobuf::int32 value) {
+inline void Entity::set_lastdamagerid(::google::protobuf::uint32 value) {
   set_has_lastdamagerid();
   lastdamagerid_ = value;
 }
