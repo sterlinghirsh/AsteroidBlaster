@@ -1136,12 +1136,14 @@ void Custodian::add(Object3D* objectIn) {
  */
 void Custodian::cleanup() {
    std::map<unsigned, Object3D*>::iterator iter = objectsByID.begin();
-   for (; iter != objectsByID.end(); iter++) {
+   while (iter != objectsByID.end()) {
       if (iter->second->isRemoved()) {
          // DEBUG
          // printf("Deleting %d\n", iter->second->id);
          delete iter->second;
-         objectsByID.erase(iter);
+         objectsByID.erase(iter++);
+      } else {
+         iter++;
       }
    }
 }

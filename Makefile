@@ -72,7 +72,7 @@ NETWORKFILES:=Network/ClientSide.cpp Network/ServerSide.cpp Network/NetUtility.c
 WEAPONSFILES:=Weapons/Blaster.cpp Weapons/RailGun.cpp Weapons/Weapon.cpp Weapons/TractorBeam.cpp Weapons/Electricity.cpp Weapons/TimedBomber.cpp Weapons/Energy.cpp Weapons/RemoteBomber.cpp Weapons/HomingMissile.cpp Weapons/Ram.cpp
 
 
-HUDFILES:=HUD/ProgressBar.cpp HUD/Minimap.cpp HUD/Screen.cpp HUD/WeaponDisplay.cpp
+HUDFILES:=HUD/ProgressBar.cpp HUD/Minimap.cpp HUD/Screen.cpp HUD/WeaponDisplay.cpp HUD/ScoreDisplay.cpp
 
 PARTICLEFILES:=Particles/Particle.cpp Particles/BlasterShotParticle.cpp Particles/EngineParticle.cpp Particles/BlasterImpactParticle.cpp Particles/TractorAttractionParticle.cpp Particles/ElectricityImpactParticle.cpp Particles/ShardParticle.cpp
 

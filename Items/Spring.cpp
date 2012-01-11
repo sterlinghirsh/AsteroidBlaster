@@ -49,8 +49,6 @@ void Spring::update(double timeDiff) {
       }
       */
          // Sterling's method 1
-      // DEBUG
-      printf("--\n");
       if (firstPerson) {
          camera->position->updateMagnitude((anchor->position)->add(*anchor->getCameraOffset()));
       } else {
@@ -61,9 +59,6 @@ void Spring::update(double timeDiff) {
          *camera->velocity = anchor->velocity->lerp(targetVelocity, 0.5);
 
          camera->velocity->movePoint(*camera->position, timeDiff);
-         // DEBUG
-         camera->velocity->print();
-         camera->position->print();
       }
 
       /*
@@ -105,10 +100,6 @@ void Spring::update(double timeDiff) {
          Vector3D forceVector = springVector.scalarMultiply(timeDiff * UP_FORCE_SCALE);
          camera->up->addUpdate(forceVector);
       }
-      // DEBUG
-      anchor->up->print();
-      springVector.print();
-      camera->up->print();
       /*
          // Chris's method
 

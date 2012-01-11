@@ -1590,6 +1590,10 @@ void AsteroidShip::draw_ram() {
 }
 
 bool AsteroidShip::isVulnerable() {
+   if (health <= 0 || lives < 0) {
+      return false;
+   }
+
    return (!(spawnInvulnerable ||
       (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode) 
        && weapons[RAM_WEAPON_INDEX]->isReady())));

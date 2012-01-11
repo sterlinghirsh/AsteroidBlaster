@@ -36,6 +36,7 @@
 #include "HUD/WeaponDisplay.h"
 #include "HUD/Minimap.h"
 #include "HUD/Screen.h"
+#include "HUD/ScoreDisplay.h"
 
 #include "Network/gamestate.pb.h"
 #include "Network/ServerSide.h"
@@ -65,13 +66,14 @@ std::ostringstream sstream2; // TODO: Better name plz.
 ast::ClientCommand localClientCommand;
 
 GameState::GameState(GameStateMode _gsm) :
-   custodian(this),
-   clientCommand(localClientCommand),
-   gsm(_gsm),
-   levelTimer(this),
-   gameOverTimer(this) {
-      initialize();
-   }
+ custodian(this),
+ clientCommand(localClientCommand),
+ gsm(_gsm),
+ levelTimer(this),
+ gameOverTimer(this),
+ scoreDisplay(this) {
+   initialize();
+}
 
 /**
  * Deconstructor: clean up all of our objects.
@@ -102,130 +104,131 @@ void GameState::destruct() {
 }
 
 void GameState::initialize() {
-      curGameStateId = 0;
-      lastReceivedGameStateId = 0;
-      ship = NULL;
+   curGameStateId = 0;
+   lastReceivedGameStateId = 0;
+   ship = NULL;
 
-      resetClientCommand(true);
-      clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
-      serverSide = NULL;
-      clientSide = NULL;
+   resetClientCommand(true);
+   clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
+   serverSide = NULL;
+   clientSide = NULL;
 
-      shipCamera = NULL;
-      minimap = NULL;
+   shipCamera = NULL;
+   minimap = NULL;
 
-      if (gsm == SingleMode) {
-      } else if (gsm == MenuMode) {
-      } else if (gsm == ClientMode) {
-         clientSide = new ClientSide(this);
-      } else if (gsm == ServerMode) {
-         serverSide = new ServerSide(this);
-      }
+   if (gsm == SingleMode) {
+   } else if (gsm == MenuMode) {
+   } else if (gsm == ClientMode) {
+      clientSide = new ClientSide(this);
+   } else if (gsm == ServerMode) {
+      serverSide = new ServerSide(this);
+   }
 
-      gameTime = 0;
-      levelStartTime = 0;
+   gameTime = 0;
+   levelStartTime = 0;
 
-      godMode = false;
-      gameIsRunning = true;
-      levelOver = false;
-      if (gsm == ServerMode || gsm == MenuMode) {
-         usingShipCamera = false;
-      } else {
-         usingShipCamera = true;
-      }
+   godMode = false;
+   gameIsRunning = true;
+   levelOver = false;
+   if (gsm == ServerMode || gsm == MenuMode) {
+      usingShipCamera = false;
+   } else {
+      usingShipCamera = true;
+   }
 
-      /* A view frustum culled list of objects to be used for drawing and by
-         the shooting AI.
-         */
-      viewFrustumObjects = NULL;
-      targetableViewFrustumObjects = NULL;
+   /* A view frustum culled list of objects to be used for drawing and by
+      the shooting AI.
+      */
+   viewFrustumObjects = NULL;
+   targetableViewFrustumObjects = NULL;
 
-      worldSize = WORLD_SIZE;
-      skybox = new Skybox();
+   worldSize = WORLD_SIZE;
+   skybox = new Skybox();
 
-      spring = new Spring(this);
-      if (gsm == SingleMode)
-         setShip(new AsteroidShip(this));
+   spring = new Spring(this);
+   if (gsm == SingleMode)
+      setShip(new AsteroidShip(this));
 
-      spectatorCamera = new Camera(false);
-      //make it look at the center of the map for spectator mode
-      spectatorCamera->lookAt(0.0, 0.0, 0.0);
-      spectatorSpeed = 0.2;
-      spectatorRadius = 120.0;
-
-
-      cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
-      //sphere = new BoundingSphere(worldSize, 0, 0, 0);
-      // Set up our text objects to be displayed on screen.
-      curFPS = 0;
-
-      // Init Text Objects
-      SDL_Rect position = {0,0};
-      std::string fontName = DEFAULT_FONT;
-
-      //new all the text class we will be using
-      FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
-      scoreText = new Text("Score: ", 0, "",  hudFont, position);
-      bankedShardText = new Text("Banked Shards: ", 0, "",  hudFont, position);
-      unbankedShardText = new Text("Unbanked Shards: ", 0, "",  hudFont, position);
-      timerText = new Text("", sstream2.str(), "", hudFont, position);
-      timerText->alignment = RIGHT_ALIGN;
-      curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
-      curLevelText->alignment = RIGHT_ALIGN;
-      lifeText = new Text("Lives: ", 3, "",  hudFont, position);
-      lifeText->alignment = RIGHT_ALIGN;
-
-      // Clear the sstream2
-      sstream2.str("");
-
-      // Improve the positioning code.
-
-      shardBankBar = new ProgressBar(0.06f, 0.4f, p2wx(10), p2wy(10));
-      shardBankBar->setHorizontal(true);
-
-      float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH;
-
-      const float healthHeight = 0.10f;
-      const float weaponBarHeight = 0.3f;
-      healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
-      healthBar->setHorizontal(true);
-      healthBar->setSkew(0.0, 0.05f);
-      healthBar->setCentered(true);
-      
-      weaponBar = new WeaponDisplay(weaponBarHeight, weaponBarHeight, 0.0f, -0.9f + (weaponBarHeight * 0.5f), this);
-
-      // Start off at level 1.
-      curLevel = 1;
-     
-      // Spawn one more asteroid for each level, to a point..
-      numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
-
-      if (gsm != SingleMode) {
-         custodian.update();
-      } else {
-         // For single.
-         // Set up objects.
-         custodian.add(ship);
-         // It crashes without this. :/
-         initAsteroids();
-      }
+   spectatorCamera = new Camera(false);
+   //make it look at the center of the map for spectator mode
+   spectatorCamera->lookAt(0.0, 0.0, 0.0);
+   spectatorSpeed = 0.2;
+   spectatorRadius = 120.0;
 
 
-      doYaw = false;
-      mouseX = 0;
-      mouseY = 0;
+   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
+   //sphere = new BoundingSphere(worldSize, 0, 0, 0);
+   // Set up our text objects to be displayed on screen.
+   curFPS = 0;
 
-      // Make a good formula here for how many seconds a level should last.
-      levelDuration = 120;
+   // Init Text Objects
+   SDL_Rect position = {0,0};
+   std::string fontName = DEFAULT_FONT;
 
-      godMode = false;
+   //new all the text class we will be using
+   FPSText = new Text("FPS: ", curFPS, "",  hudFont, position);
+   scoreText = new Text("Score: ", 0, "",  hudFont, position);
+   bankedShardText = new Text("Banked Shards: ", 0, "",  hudFont, position);
+   unbankedShardText = new Text("Unbanked Shards: ", 0, "",  hudFont, position);
+   timerText = new Text("", sstream2.str(), "", hudFont, position);
+   timerText->alignment = RIGHT_ALIGN;
+   curLevelText = new Text("Level: ", curLevel, "",  hudFont, position);
+   curLevelText->alignment = RIGHT_ALIGN;
+   lifeText = new Text("Lives: ", 3, "",  hudFont, position);
+   lifeText->alignment = RIGHT_ALIGN;
 
-      // TODO: comment this or rename it.
-      isW = isA = isS = isD = false;
-      isI = isJ = isK = isL = false;
+   // Clear the sstream2
+   sstream2.str("");
 
-      drawGraphics = true;
+   // Improve the positioning code.
+
+   shardBankBar = new ProgressBar(0.06f, 0.4f, p2wx(10), p2wy(10));
+   shardBankBar->setHorizontal(true);
+
+   float healthSpan = (float)gameSettings->GW / (float)gameSettings->GH;
+
+   const float healthHeight = 0.10f;
+   const float weaponBarHeight = 0.3f;
+   healthBar = new ProgressBar(healthHeight, healthSpan, 0.0f, 0.95f - (healthHeight * 0.5f));
+   healthBar->setHorizontal(true);
+   healthBar->setSkew(0.0, 0.05f);
+   healthBar->setCentered(true);
    
+   weaponBar = new WeaponDisplay(weaponBarHeight, weaponBarHeight, 0.0f, -0.9f + (weaponBarHeight * 0.5f), this);
+
+   // Start off at level 1.
+   curLevel = 1;
+  
+   // Spawn one more asteroid for each level, to a point..
+   numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
+
+   if (gsm != SingleMode) {
+      custodian.update();
+   } else {
+      // For single.
+      // Set up objects.
+      custodian.add(ship);
+      // It crashes without this. :/
+      initAsteroids();
+   }
+
+
+   doYaw = false;
+   mouseX = 0;
+   mouseY = 0;
+
+   // Make a good formula here for how many seconds a level should last.
+   levelDuration = 120;
+
+   godMode = false;
+
+   // TODO: comment this or rename it.
+   isW = isA = isS = isD = false;
+   isI = isJ = isK = isL = false;
+
+   drawGraphics = true;
+
+   showScoreDisplay = false;
 }
 
 /**
@@ -833,6 +836,10 @@ void GameState::drawHud() {
       healthBar->draw();
       healthBar->x -= stereoOffset;
       weaponBar->draw();
+   
+      if (showScoreDisplay) {
+         scoreDisplay.draw();
+      }
 
       if (gameSettings->enableMinimap) {
          drawMinimap();
@@ -841,6 +848,7 @@ void GameState::drawHud() {
          fboEnd();
       }
    }
+
    usePerspective();
 
    glEnable(GL_CULL_FACE);
@@ -1158,6 +1166,8 @@ void GameState::reset(bool shouldLoad) {
                levelTimer.getTimeLeft());
       }
    }
+
+   showScoreDisplay = false;
 }
 
 /**
@@ -1621,6 +1631,10 @@ void GameState::keyDown(int key, int unicode) {
       godMode = !godMode;
       printf("Zoe mode: %d\n", godMode);
       break;
+
+   case SDLK_TAB:
+      showScoreDisplay = true;
+      break;
    }
 }
 
@@ -1779,28 +1793,33 @@ void GameState::keyUp(int key) {
    case SDLK_b:
       clientCommand.set_brake(false);
       break;
-      // Minimap Size
-   if (ship != NULL) {
-      case SDLK_1:
-         minimap->adjustDisplaySizeDirection = 0;
-         break;
-      case SDLK_2:
-         minimap->adjustDisplaySizeDirection = 0;
-         break;
-         // Minimap Zoom
-      case SDLK_3:
-         minimap->adjustZoomDirection = 0;
-         break;
-      case SDLK_4:
-         minimap->adjustZoomDirection = 0;
-         break;
 
-         // Camera
-      case SDLK_8:
-      case SDLK_9:
-         ship->setZoomSpeed(0);
-         break;
+      // Minimap Size
+      if (ship != NULL) {
+         case SDLK_1:
+            minimap->adjustDisplaySizeDirection = 0;
+            break;
+         case SDLK_2:
+            minimap->adjustDisplaySizeDirection = 0;
+            break;
+            // Minimap Zoom
+         case SDLK_3:
+            minimap->adjustZoomDirection = 0;
+            break;
+         case SDLK_4:
+            minimap->adjustZoomDirection = 0;
+            break;
+
+            // Camera
+         case SDLK_8:
+         case SDLK_9:
+            ship->setZoomSpeed(0);
+            break;
       }
+      
+   case SDLK_TAB:
+         showScoreDisplay = false;
+         break;
    }
 }
 

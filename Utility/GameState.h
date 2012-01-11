@@ -12,6 +12,7 @@
 #include "Utility/Custodian.h"
 #include "Utility/InputManager.h"
 #include "Utility/Timer.h"
+#include "HUD/ScoreDisplay.h"
 
 #include <list>
 #include <map>
@@ -133,6 +134,9 @@ class GameState : public InputReceiver {
       std::map<unsigned, ast::CollisionMessage*> savedCollisionMessages;
       unsigned curGameStateId;
       unsigned lastReceivedGameStateId;
+
+      bool showScoreDisplay;
+      ScoreDisplay scoreDisplay;
    
    
    //public functions------------------------------
