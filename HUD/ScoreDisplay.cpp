@@ -54,14 +54,34 @@ void ScoreDisplay::draw() {
    glDisable(GL_LIGHTING);
    glDisable(GL_CULL_FACE);
 
-   float margin = 50; // px
-   float leftSide = margin;
-   float rightSide = gameSettings->GW - margin;
-   float top = margin;
-   float bottom = gameSettings->GH - margin;
+   int margin;
+   int leftSide;
+   int rightSide;
+   int eyeOffset;
+
+   if (drawStereo_enabled) {
+      margin = 25;
+      rightSide = gameSettings->GW / 2;
+      leftSide = 0;
+      eyeOffset = stereo_eye_left ? 5 : -5;
+      leftSide += eyeOffset;
+      rightSide += eyeOffset;
+   } else {
+      margin = 50; // px
+      leftSide = 0;
+      rightSide = gameSettings->GW;
+      eyeOffset = 0;
+   }
+
+
+   leftSide += margin;
+   rightSide -= margin;
+
+   int top = margin;
+   int bottom = gameSettings->GH - margin;
 
    // Draw a quad.
-   glColor4f(0, 0, 0, 0.85);
+   glColor4f(0, 0, 0, 0.75);
    glBegin(GL_QUADS);
       glVertex2f(p2wx(leftSide), p2wy(top));
       glVertex2f(p2wx(rightSide), p2wy(top));
@@ -70,14 +90,21 @@ void ScoreDisplay::draw() {
 
    glEnd();
 
-   float rowHeight = 30; // px
-   float colPadding = 20; // px
-   float topPadding = 10; // px
-   float col1Start = leftSide + colPadding;
+   const int rowHeight = 30; // px
+   const int topPadding = 10; // px
 
-   float nameWidth = 200; // px
-   float scoreWidth = 100;
-   float killsWidth = 100;
+   int colPadding = 20; // px
+   int col1Start = leftSide + colPadding + eyeOffset;
+
+   int numColumns = 4; // Name, Score, Kills, Deaths
+   int tableWidth = rightSide - leftSide - (numColumns * colPadding);
+
+   int baseColWidth = tableWidth / 6;
+
+
+   int nameWidth = 3 * baseColWidth; // px
+   int scoreWidth = baseColWidth;
+   int killsWidth = baseColWidth;
 
    textPosition.x = col1Start;
    textPosition.y = top + topPadding + rowHeight;
