@@ -1218,7 +1218,9 @@ int GameState::decideNumAsteroidsToSpawn() {
 }
 
 void GameState::nextLevel() {
-   SoundEffect::stopAllSoundEffect();
+   if (gsm == SingleMode) {
+      SoundEffect::stopAllSoundEffect();
+   }
 
    std::set<AsteroidShip*>::iterator shipIter;
 
@@ -1228,20 +1230,22 @@ void GameState::nextLevel() {
 
    std::set<Asteroid3D*>::iterator asteroidIter;
 
-   for (asteroidIter = custodian.asteroids.begin(); asteroidIter != custodian.asteroids.end(); ++asteroidIter) {
-      (*asteroidIter)->shouldRemove = true;
-   }
+   if (gsm != ClientMode) {
+      for (asteroidIter = custodian.asteroids.begin(); asteroidIter != custodian.asteroids.end(); ++asteroidIter) {
+         (*asteroidIter)->shouldRemove = true;
+      }
 
-   std::set<Shard*>::iterator shardIter;
+      std::set<Shard*>::iterator shardIter;
 
-   for (shardIter = custodian.shards.begin(); shardIter != custodian.shards.end(); ++shardIter) {
-      (*shardIter)->shouldRemove = true;
-   }
+      for (shardIter = custodian.shards.begin(); shardIter != custodian.shards.end(); ++shardIter) {
+         (*shardIter)->shouldRemove = true;
+      }
 
-   std::set<Shot*>::iterator shotIter;
+      std::set<Shot*>::iterator shotIter;
 
-   for (shotIter = custodian.shots.begin(); shotIter != custodian.shots.end(); ++shotIter) {
-      (*shotIter)->shouldRemove = true;
+      for (shotIter = custodian.shots.begin(); shotIter != custodian.shots.end(); ++shotIter) {
+         (*shotIter)->shouldRemove = true;
+      }
    }
 
    if (gsm == SingleMode && 
@@ -1251,15 +1255,19 @@ void GameState::nextLevel() {
       setMusic();
    }
 
-   setLevelTimer();
+   if (gsm != ClientMode) {
+      // TODO: Is this the right place for this?
+      setLevelTimer();
+      
+      gameIsRunning = true;
+      // The current level is over when we're advancing to the next level.
+      levelOver = true;
+      curLevel++;
+      printf("Level'd up to %d!\n", curLevel);
+   }
    
-   gameIsRunning = true;
-   // The current level is over when we're advancing to the next level.
-   levelOver = true;
-   curLevel++;
    curLevelText->updateBody(curLevel);
    numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
-   printf("Level'd up to %d!\n", curLevel);
 
    // Add AI players
    if (gsm == SingleMode && (curLevel > 1)) {
@@ -1286,8 +1294,10 @@ void GameState::nextLevel() {
       addWarningMessage();
    }
 
-   // Reset the ship's controls so that the ship isn't stuck moving in a direction
-   resetClientCommand();
+   if (gsm != ClientMode) {
+      // Reset the ship's controls so that the ship isn't stuck moving in a direction
+      resetClientCommand();
+   }
 }
 
 /**
@@ -2119,6 +2129,7 @@ void GameState::load(const ast::GameState& gs) {
 
    if (gs.has_curlevel()) {
       curLevel = gs.curlevel();
+      curLevelText->updateBody(curLevel);
    }
 
    for (int i = 0; i < gs.entity_size(); ++i) {
@@ -2240,7 +2251,13 @@ void GameState::handleFrame(ast::Frame* frame) {
          }
 
          // This loads the new things for the current time.
+         int preLevel = curLevel;
          load(frame->gamestate());
+         int postLevel = curLevel;
+         if (postLevel > preLevel) {
+            nextLevel();
+         }
+
 
 
          // If this is below 0, the update is taking us back in time.
