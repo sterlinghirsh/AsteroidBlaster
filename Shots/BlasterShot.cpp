@@ -45,7 +45,8 @@ void BlasterShot::onRemove() {
    Shot::onRemove();
    if (soundHandle != NULL) {
       SoundEffect::stopSoundEffect(soundHandle);
-      SoundEffect::playSoundEffect("BlasterEnd", position, velocity);
+      SoundEffect::playSoundEffect("BlasterEnd", position, velocity,
+       false, BLASTER_SHOT_VOLUME);
    }
 }
 
@@ -71,7 +72,8 @@ void BlasterShot::update(double timeDiff) {
    const int particlesPerSecond = 4;
 
    if (soundHandle == NULL) {
-      soundHandle = SoundEffect::playSoundEffect("BlasterDrone", position, velocity, false, DEFAULT_VOLUME, true);
+      soundHandle = SoundEffect::playSoundEffect("BlasterDrone", position, velocity,
+       false, BLASTER_SHOT_VOLUME, true);
    } else {
       SoundEffect::updateSource(soundHandle, position, velocity);
    }
@@ -96,6 +98,7 @@ void BlasterShot::update(double timeDiff) {
 }
 
 void BlasterShot::hitWall(BoundingWall* wall) {
-   SoundEffect::playSoundEffect("BlasterShotWallBounce", position, NULL, false);
+   SoundEffect::playSoundEffect("BlasterShotWallBounce", position, NULL, false,
+    BLASTER_SHOT_VOLUME);
    Shot::hitWall(wall);
 }

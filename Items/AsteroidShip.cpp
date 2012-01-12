@@ -32,7 +32,6 @@ extern ofstream debugoutput;
 #define BOOST_SCALE 2.0
 
 #define SHOT_ANGLE_FACTOR ((M_PI/180) * VERT_FOV / 2)
-#define PLAYER_LIVES 2
 
 int TRACTOR_WEAPON_INDEX = 0;
 int BLASTER_WEAPON_INDEX = 0;
@@ -64,8 +63,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    type = TYPE_ASTEROIDSHIP;
 
    cullRadius = 12;
-   health = 100;
-   healthMax = 100;
+   health = healthMax = 100;
 
    // Bounding box stuff.
    maxX = maxY = maxZ = 3;
@@ -144,11 +142,6 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    maxRightAccel = 20;
    maxUpAccel = 5;
    maxYawSpeed = maxPitchSpeed = maxRollSpeed = 3;
-
-   // The ship's health
-   health = 100;
-   // health max
-   healthMax = 100;
 
    // levels
    engineLevel = 1;
@@ -524,6 +517,10 @@ void AsteroidShip::update(double timeDiff) {
       shakeAmount = 0;
       stopSounds();
 
+      if (this == gameState->ship) {
+         gameState->usingShipCamera = false;
+      }
+
       // Handle respawning.
       if (!respawnTimer.isRunning || 
        (gameState->gsm == ClientMode && !deathAcknowledged)) {
@@ -559,7 +556,6 @@ void AsteroidShip::update(double timeDiff) {
                      gameState->gameOver();
                   }
 
-                  gameState->usingShipCamera = false;
                   return;
                } else {
                   if (gameState->gsm == SingleMode || 
@@ -612,7 +608,7 @@ void AsteroidShip::update(double timeDiff) {
          GameMessage::Add(gameMsg.str(), 30, 0, gameState);
       }
 
-      if (gameState->gameIsRunning && respawnTimer.isRunning && timeLeftToRespawn <= 1.5) {
+      if (gameState->gameIsRunning && respawnTimer.isRunning && timeLeftToRespawn <= 1.5 && lives > 0) {
          timeLeftToRespawn = 1.5;
          reInitialize();
       } else {
@@ -1590,7 +1586,7 @@ void AsteroidShip::draw_ram() {
 }
 
 bool AsteroidShip::isVulnerable() {
-   if (health <= 0 || lives < 0) {
+   if (health <= 0 || lives <= 0) {
       return false;
    }
 
@@ -1601,7 +1597,7 @@ bool AsteroidShip::isVulnerable() {
 }
 
 void AsteroidShip::draw() {
-   if (getHealth() <= 0)
+   if (getHealth() <= 0 || lives <= 0)
       return;
 
    glPushMatrix();
@@ -2746,4 +2742,8 @@ void AsteroidShip::randomizePosition() {
    shotDirection.updateMagnitude(0, 0, 1);
    shotOrigin = *position;
    forward->movePoint(shotOrigin, shotOriginScale);
+}
+
+bool AsteroidShip::isFullAIEnabled() {
+   return shooter->isEnabled() && flyingAI->isEnabled();
 }

@@ -103,64 +103,48 @@ void GameState::destruct() {
      }*/
 }
 
-void GameState::initialize() {
-   curGameStateId = 0;
-   lastReceivedGameStateId = 0;
+void GameState::initConstantValues() {
+   // Set Null Objects 
    ship = NULL;
-
-   resetClientCommand(true);
-   clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
    serverSide = NULL;
    clientSide = NULL;
-
    shipCamera = NULL;
    minimap = NULL;
-
-   if (gsm == SingleMode) {
-   } else if (gsm == MenuMode) {
-   } else if (gsm == ClientMode) {
-      clientSide = new ClientSide(this);
-   } else if (gsm == ServerMode) {
-      serverSide = new ServerSide(this);
-   }
-
-   gameTime = 0;
-   levelStartTime = 0;
-
-   godMode = false;
-   gameIsRunning = true;
-   levelOver = false;
-   if (gsm == ServerMode || gsm == MenuMode) {
-      usingShipCamera = false;
-   } else {
-      usingShipCamera = true;
-   }
-
-   /* A view frustum culled list of objects to be used for drawing and by
-      the shooting AI.
-      */
    viewFrustumObjects = NULL;
    targetableViewFrustumObjects = NULL;
-
+   
+   // Set int values
+   curGameStateId = 0;
+   lastReceivedGameStateId = 0;
+   
+   gameTime = 0;
+   levelStartTime = 0;
    worldSize = WORLD_SIZE;
-   skybox = new Skybox();
+   
+   curFPS = 0;
+   
+   mouseX = 0;
+   mouseY = 0;
 
-   spring = new Spring(this);
-   if (gsm == SingleMode)
-      setShip(new AsteroidShip(this));
+   // Make a good formula here for how many seconds a level should last.
+   levelDuration = 120;
 
-   spectatorCamera = new Camera(false);
-   //make it look at the center of the map for spectator mode
-   spectatorCamera->lookAt(0.0, 0.0, 0.0);
+   // Set float values
    spectatorSpeed = 0.2;
    spectatorRadius = 120.0;
 
+   // Set bool values
+   godMode = false;
+   gameIsRunning = true;
+   levelOver = false;
+   doYaw = false;
+   
+   drawGraphics = true;
 
-   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
-   //sphere = new BoundingSphere(worldSize, 0, 0, 0);
-   // Set up our text objects to be displayed on screen.
-   curFPS = 0;
+   showScoreDisplay = false;
+}
 
+void GameState::initTextObjects() {
    // Init Text Objects
    SDL_Rect position = {0,0};
    std::string fontName = DEFAULT_FONT;
@@ -180,8 +164,11 @@ void GameState::initialize() {
    // Clear the sstream2
    sstream2.str("");
 
-   // Improve the positioning code.
+}
 
+void GameState::initHUD() {
+   initTextObjects();
+   
    shardBankBar = new ProgressBar(0.06f, 0.4f, p2wx(10), p2wy(10));
    shardBankBar->setHorizontal(true);
 
@@ -196,46 +183,72 @@ void GameState::initialize() {
    
    weaponBar = new WeaponDisplay(weaponBarHeight, weaponBarHeight, 0.0f, -0.9f + (weaponBarHeight * 0.5f), this);
 
+}
+
+void GameState::initialize() {
+   initConstantValues();
+
+   resetClientCommand(true);
+   clientCommand.set_curweapon(BLASTER_WEAPON_INDEX);
+
+   // Here because we change it.
    // Start off at level 1.
-   curLevel = 1;
+
+   if (gsm == ServerMode) {
+      curLevel = LEVEL_WARMUP;
+   } else {
+      curLevel = 1;
+   }
+
+   if (gsm == ClientMode) {
+      clientSide = new ClientSide(this);
+   } else if (gsm == ServerMode) {
+      serverSide = new ServerSide(this);
+   }
+
+   if (gsm == ServerMode || gsm == MenuMode) {
+      usingShipCamera = false;
+   } else {
+      usingShipCamera = true;
+   }
+
+   skybox = new Skybox();
+
+   spring = new Spring(this);
+
+   if (gsm == SingleMode)
+      setShip(new AsteroidShip(this));
+
+   spectatorCamera = new Camera(false);
+   // Make it look at the center of the map for spectator mode.
+   spectatorCamera->lookAt(0.0, 0.0, 0.0);
+
+   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
   
    // Spawn one more asteroid for each level, to a point..
    numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
 
-   if (gsm != SingleMode) {
-      custodian.update();
-   } else {
-      // For single.
-      // Set up objects.
+   initHUD();
+
+   if (gsm == SingleMode) {
+      // For single, Set up objects.
       custodian.add(ship);
       // It crashes without this. :/
       initAsteroids();
+   } else {
+      custodian.update();
    }
-
-
-   doYaw = false;
-   mouseX = 0;
-   mouseY = 0;
-
-   // Make a good formula here for how many seconds a level should last.
-   levelDuration = 120;
-
-   godMode = false;
-
-   // TODO: comment this or rename it.
-   isW = isA = isS = isD = false;
-   isI = isJ = isK = isL = false;
-
-   drawGraphics = true;
-
-   showScoreDisplay = false;
 }
 
 /**
  * The game should run for levelDuration # of seconds.
  */
 void GameState::setLevelTimer() {
-   levelTimer.setCountDown(levelDuration);
+   if (curLevel <= LEVEL_WARMUP) {
+      levelTimer.countUp();
+   } else {
+      levelTimer.setCountDown(levelDuration);
+   }
    // levelTimer is implicltly now 'active'.
 }
 
@@ -259,13 +272,13 @@ void GameState::addAIPlayer() {
 
    int numNames = 7;
    std::string names[] = {
-      "CPU1",
-      "CPU2",
-      "CPU3",
-      "CPU4",
-      "CPU5",
-      "CPU6",
-      "CPU7"
+      "ReggieTheCPU",
+      "AlfredCPU",
+      "Dr.CPU",
+      "FriendlyCPU",
+      "IgnorantCPU",
+      "HilariousCPU",
+      "Facebook"
    };
 
    AsteroidShip* otherShip = new AsteroidShip(this);
@@ -308,20 +321,21 @@ void GameState::addScreens() {
  * This is the step function.
  */
 void GameState::update(double timeDiff) {
-   //double oldGameTime = gameTime;
    double newLocalGameTime = gameTime + timeDiff;
    std::set< std::pair<unsigned, unsigned> >* recordedCollisions = NULL;
+
    if (gsm == ServerMode) {
       recordedCollisions = new std::set< std::pair<unsigned, unsigned> >();
    }
 
    setMusic();
 
-   //updateGameTime(timeDiff); // Sets gameTime to newLocalTime.
    curGameStateId++;
+
    if (gsm != ServerMode) {
       // Cleanup here to make sure we're not depending on anything (hopefully.)
-      // Don't cleanup if on server side.
+      // TODO: Cleanup if on server side based on what's still referenced in the oldest saved gamestate.
+      // Probably should store the most recent gamestate in which each object was modified.
       custodian.cleanup();
    }
 
@@ -331,12 +345,13 @@ void GameState::update(double timeDiff) {
    }
    
    custodian.update();
-   if (ship != NULL &&
-    (gsm == ClientMode || gsm == SingleMode) && 
+
+   if (ship != NULL && (gsm == ClientMode || gsm == SingleMode) && 
     !ship->flyingAI->isEnabled() && !ship->shooter->isEnabled()) {
       ship->readCommand(clientCommand);
    }
    
+   // Fix time slowly over a few frames.
    if (!justLoadedFirstFrame) {
       const double timeCorrectionAmount = 0.001; // seconds
       double networkGameTime = gameTime;
@@ -348,10 +363,8 @@ void GameState::update(double timeDiff) {
       }
 
       // This advances the stuff.
-      debugoutput << "diff: " << newLocalGameTime - gameTime << std::endl;
       advancePhysics(gameTime, newLocalGameTime, recordedCollisions);
    }
-   
 
    // if the game over timer is set, and is over
    if (gameOverTimer.isRunning && gameOverTimer.getTimeLeft() < 0) {
@@ -364,31 +377,50 @@ void GameState::update(double timeDiff) {
       custodian.update();
       GameMessage::Clear();
    }
+   
+   int playerCount = custodian.shipsByClientID.size();
 
    // if it's not in MenuMode
    if (gsm != MenuMode) {
-      // If the level should be over, let's go to the store menu.
-      if(!gameOverTimer.isRunning && ((levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) ||
-            (gameIsRunning &&
-             (gsm == SingleMode) &&
-             custodian.asteroidCount == 0 &&
-             custodian.shardCount == 0)) ) {
-         nextLevel();
-         return;
-      }
-
-      // the last 6 seconds of the stage
-      if (levelTimer.getTimeLeft() <= 6 && levelTimer.getTimeLeft() > 0 && !gameOverTimer.isRunning) {
-         // Check if it is done waiting until going to the next level
-         std::ostringstream gameMsg;
-         if (gsm == SingleMode) {
-            gameMsg << "Entering store in " << (int)levelTimer.getTimeLeft() << "...";
-         } else {
-            gameMsg << "Next level in " << (int)levelTimer.getTimeLeft() << "...";
+      if (curLevel > LEVEL_WARMUP) {
+         // If the level should be over, let's go to the store menu.
+         if(!gameOverTimer.isRunning && ((levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) ||
+               (gameIsRunning &&
+                (gsm == SingleMode) &&
+                custodian.asteroidCount == 0 &&
+                custodian.shardCount == 0)) ) {
+            nextLevel();
+            return;
          }
+
+         // the last 6 seconds of the stage
+         if (levelTimer.getTimeLeft() <= 6 && levelTimer.getTimeLeft() > 0 && !gameOverTimer.isRunning) {
+            // Check if it is done waiting until going to the next level
+            std::ostringstream gameMsg;
+            if (gsm == SingleMode) {
+               gameMsg << "Entering store in " << (int)levelTimer.getTimeLeft() << "...";
+            } else {
+               gameMsg << "Next level in " << (int)levelTimer.getTimeLeft() << "...";
+            }
+            GameMessage::Add(gameMsg.str(), 30, 0, this);
+         }
+
+         if (gsm == ServerMode && playerCount < MIN_MULTIPLAYER_PLAYERS) {
+            goToWarmup();
+         }
+      } else {
+         std::ostringstream gameMsg;
+         int remainingPlayers = MIN_MULTIPLAYER_PLAYERS - playerCount;
+         gameMsg << "Waiting for " << remainingPlayers << 
+            ((remainingPlayers == 1) ? " more player." : " more players.");
          GameMessage::Add(gameMsg.str(), 30, 0, this);
       }
    }
+
+   if (gsm == ServerMode && curLevel == LEVEL_WARMUP && playerCount >= MIN_MULTIPLAYER_PLAYERS) {
+      nextLevel();
+   }
+
 
 
    // Update before proceeding.
@@ -511,7 +543,9 @@ void GameState::update(double timeDiff) {
 
    updateText();
    cube->update(timeDiff);
-   spectatorCameraUpdate(timeDiff);
+   if (!usingShipCamera) {
+      spectatorCameraUpdate(timeDiff);
+   }
    ++curFrame;
    justLoadedFirstFrame = false;
 }
@@ -799,11 +833,13 @@ void GameState::drawHud() {
    glDisable(GL_LIGHTING);
    glDisable(GL_CULL_FACE);
    drawAllText();
+
+   if (gameSettings->drawDeferred) {
+      fboBegin();
+      glDrawBuffer(HUD_BUFFER);
+   }
+
    if(usingShipCamera && ship != NULL && !ship->isRespawning()){
-      if (gameSettings->drawDeferred) {
-         fboBegin();
-         glDrawBuffer(HUD_BUFFER);
-      }
 
       float width = gameSettings->GW / (float) gameSettings->GH;
       float stereoOffset = 0; // px
@@ -836,17 +872,20 @@ void GameState::drawHud() {
       healthBar->draw();
       healthBar->x -= stereoOffset;
       weaponBar->draw();
-   
-      if (showScoreDisplay) {
-         scoreDisplay.draw();
-      }
+   }
 
+   if (showScoreDisplay) {
+      scoreDisplay.draw();
+   }
+
+   if(usingShipCamera && ship != NULL && !ship->isRespawning()) {
       if (gameSettings->enableMinimap) {
          drawMinimap();
       }
-      if (gameSettings->drawDeferred) {
-         fboEnd();
-      }
+   }
+   
+   if (gameSettings->drawDeferred) {
+      fboEnd();
    }
 
    usePerspective();
@@ -945,12 +984,16 @@ void GameState::drawAllText() {
          bankedShardText->draw();
          unbankedShardText->draw();
       }
-      lifeText->draw();
+      if (curLevel > LEVEL_WARMUP) {
+         lifeText->draw();
+      }
    }
 
    // Draw all the text on right side
-   timerText->draw();
-   curLevelText->draw();
+   if (curLevel > LEVEL_WARMUP) {
+      timerText->draw();
+      curLevelText->draw();
+   }
 
    // Draw all messages
    GameMessage::drawAllMessages();
@@ -1076,6 +1119,10 @@ void GameState::resetClientCommand(bool shouldClearMultiplayerInfo) {
       clientCommand.clear_shipid();
       clientCommand.clear_lastreceivedgamestateid();
    }
+   
+   // These are for controls. isW is set when W is pressed, cleared when it's released
+   isW = isA = isS = isD = false;
+   isI = isJ = isK = isL = false;
 }
 
 /**
@@ -1100,15 +1147,14 @@ void GameState::reset(bool shouldLoad) {
    custodian.cleanup();
    resetClientCommand();
 
-   setLevelTimer();
-
    gameIsRunning = true;
    // The level is not over when we're starting a new game.
    levelOver = false;
 
-   curLevel = 1;
-   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
+   curLevel = gsm == ServerMode ? LEVEL_WARMUP : 1;
+   setLevelTimer();
 
+   cube = new BoundingSpace(worldSize / 2, 0, 0, 0, this);
 
    // Client Side network diff reset
    if (gsm == ClientMode) {
@@ -1177,7 +1223,11 @@ void GameState::reset(bool shouldLoad) {
 void GameState::addLevelMessage() {
    //add level message
    std::ostringstream levelMessage;
-   levelMessage << "Level " << curLevel;
+   if (curLevel > LEVEL_WARMUP) {
+      levelMessage << "Level " << curLevel;
+   } else {
+      levelMessage << "Warmup";
+   }
    GameMessage::Add(levelMessage.str(), 30, 5, this);
 }
 
@@ -1217,17 +1267,7 @@ int GameState::decideNumAsteroidsToSpawn() {
    return std::min(curLevel, 8);
 }
 
-void GameState::nextLevel() {
-   if (gsm == SingleMode) {
-      SoundEffect::stopAllSoundEffect();
-   }
-
-   std::set<AsteroidShip*>::iterator shipIter;
-
-   for (shipIter = custodian.ships.begin(); shipIter != custodian.ships.end(); ++shipIter) {
-      (*shipIter)->atLevelEnd();
-   }
-
+void GameState::clearNonShips() {
    std::set<Asteroid3D*>::iterator asteroidIter;
 
    if (gsm != ClientMode) {
@@ -1247,27 +1287,51 @@ void GameState::nextLevel() {
          (*shotIter)->shouldRemove = true;
       }
    }
+}
 
-   if (gsm == SingleMode && 
-       ship != NULL && 
-       !ship->shooter->isEnabled() && !ship->flyingAI->isEnabled()) {
-      storeMenu->menuActive = true;
-      setMusic();
+void GameState::goToStore() {
+   storeMenu->menuActive = true;
+   setMusic();
+}
+
+void GameState::goToWarmup() {
+   curLevel = LEVEL_PREWARMUP;
+   nextLevel();
+}
+
+void GameState::nextLevel() {
+   if (gsm == SingleMode) {
+      SoundEffect::stopAllSoundEffect();
+   }
+
+   std::set<AsteroidShip*>::iterator shipIter;
+
+   for (shipIter = custodian.ships.begin(); shipIter != custodian.ships.end(); ++shipIter) {
+      (*shipIter)->atLevelEnd();
+
+      if (gsm != ClientMode && curLevel <= LEVEL_WARMUP) {
+         (*shipIter)->reInitialize();
+         (*shipIter)->lives = PLAYER_LIVES;
+      }
+   }
+
+   clearNonShips();
+
+   if (gsm == SingleMode && ship != NULL && !ship->isFullAIEnabled()) {
+      goToStore();
    }
 
    if (gsm != ClientMode) {
-      // TODO: Is this the right place for this?
-      setLevelTimer();
-      
       gameIsRunning = true;
       // The current level is over when we're advancing to the next level.
       levelOver = true;
       curLevel++;
+      setLevelTimer();
+
       printf("Level'd up to %d!\n", curLevel);
    }
    
    curLevelText->updateBody(curLevel);
-   numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
 
    // Add AI players
    if (gsm == SingleMode && (curLevel > 1)) {
@@ -1282,9 +1346,9 @@ void GameState::nextLevel() {
 
    // Add Asteroids
    if (gsm == SingleMode || gsm == ServerMode) {
+      numAsteroidsToSpawn = decideNumAsteroidsToSpawn();
       initAsteroids();
    }
-
 
    custodian.update();
    GameMessage::Clear();
@@ -2406,8 +2470,6 @@ void GameState::testCollisions(std::set< std::pair<unsigned, unsigned> >* record
       delete collisions;
       // TODO: fix memory leak.
    }
-
-   
 }
 
 void GameState::setServerMode() {

@@ -10,8 +10,16 @@
 
 #define WORLD_SIZE 80.00
 
+#define LEVEL_WARMUP 0
+#define LEVEL_PREWARMUP -1
+#define MIN_MULTIPLAYER_PLAYERS 2
+
+#define PLAYER_LIVES 2
+
 #define MAX_NAME_LENGTH 16
 #define MAX_NAME_LENGTH_FORMAT "%16s"
+
+#define BLASTER_SHOT_VOLUME 0.4f
 
 #define VERT_FOV 45.0
 #define LEFT_ALIGN 0

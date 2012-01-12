@@ -68,6 +68,11 @@ class GameState : public InputReceiver {
       // Used when looping over Drawable objects in drawMinimap
       std::list<Drawable*>::iterator listIter;
 
+   
+      /**
+       *A view frustum culled list of objects to be used for drawing and by
+       * the shooting AI.
+       */
       std::list<Drawable*>* viewFrustumObjects;
       std::list<Drawable*>* targetableViewFrustumObjects;
       
@@ -251,6 +256,14 @@ class GameState : public InputReceiver {
       void clearOldSavedGameStates();
 
       void initialize();
+      void initConstantValues();
+      void initTextObjects();
+      void initHUD();
+      void clearNonShips();
+      void resetShips();
+      void goToStore();
+      void goToWarmup();
+
       void destruct();
 };
 

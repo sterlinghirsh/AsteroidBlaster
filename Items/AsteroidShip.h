@@ -269,6 +269,8 @@ class AsteroidShip : public Object3D {
 
       // calculates the correct bank period depending on the bankLevel
       double getBankPeriod();
+
+      bool isFullAIEnabled(); // True when either AI is enabled.
       
       virtual void save(ast::Entity* ent);
       virtual bool saveDiff(const ast::Entity& old, ast::Entity* ent);
