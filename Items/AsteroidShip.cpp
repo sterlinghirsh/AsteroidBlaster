@@ -318,9 +318,9 @@ void AsteroidShip::setRollSpeed(double rollAmountIn) {
 void AsteroidShip::updatePlayerAcceleration() {
    if (gameState->gsm != ClientMode) {
       Vector3D* newAcceleration = new Vector3D(
-               forward->scalarMultiply(curForwardAccel).add(
-                  right->scalarMultiply(curRightAccel).add(
-                     up->scalarMultiply(curUpAccel))));
+            forward->scalarMultiply(curForwardAccel).add(
+               right->scalarMultiply(curRightAccel).add(
+                  up->scalarMultiply(curUpAccel))));
       Vector3D normalizedAccel = newAcceleration->getNormalized();
       double topAccelSpeed = maxSpeed + engineLevel * 2;
       if (isFiring && currentWeapon == RAM_WEAPON_INDEX  && weapons[RAM_WEAPON_INDEX]->isReady()) {
@@ -501,135 +501,34 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
    }
 }
 
+void AsteroidShip::addRespawnMessage() {
+   ostringstream gameMsg;
+   gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
+   GameMessage::Add(gameMsg.str(), 30, 0, gameState);
+
+}
+
 void AsteroidShip::update(double timeDiff) {
    if (health <= 0) {
+      doDeadStuff(timeDiff);
+
+      if (health <= 0) {
+         // Must not have respawned here.
+         return;
+      }
+   } else if (lives <= 0) {
       shouldDrawInMinimap = false;
-      fire(false);
-      setRollSpeed(0);
-      accelerateForward(0);
-      accelerateUp(0);
-      accelerateRight(0);
-      setYawSpeed(0.0);
-      setPitchSpeed(0.0);
-      setRollSpeed(0.0);
-
-      const double respawnTime = 8;
-      shakeAmount = 0;
-      stopSounds();
-
+      zeroControls();
+      
       if (this == gameState->ship) {
          gameState->usingShipCamera = false;
       }
-
-      // Handle respawning.
-      if (!respawnTimer.isRunning || 
-       (gameState->gsm == ClientMode && !deathAcknowledged)) {
-         deathAcknowledged = true;
-         if (this == gameState->ship) {
-            gameState->usingShipCamera = false;
-         }
-
-         if (gameState->gsm != ClientMode) {
-            if (lives > 0) {
-               // We want this to happen if a user has 1 lives left, I guess.
-               ++deaths;
-               --lives;
-            }
-
-            // Since lives changed, let's check again.
-            if (lives > 0) {
-               respawnTimer.setCountDown(respawnTime);
-               timeLeftToRespawn = respawnTimer.getTimeLeft();
-               
-               // Make sure to stop barrel rolling.
-               isBarrelRollingLeft = -1;
-               isBarrelRollingRight = -1;
-            
-            } else {
-               // Update weapons one last time.
-               for (vector<Weapon*>::iterator iter = weapons.begin();
-                     iter != weapons.end(); ++iter) {
-                  (*iter)->update(timeDiff);
-               }
-               if (this == gameState->ship) {
-                  if (gameState->gsm == SingleMode) {
-                     gameState->gameOver();
-                  }
-
-                  return;
-               } else {
-                  if (gameState->gsm == SingleMode || 
-                    shooter->isEnabled() || flyingAI->isEnabled()) {
-                     shouldRemove = true;
-                  }
-               }
-            }
-         }
-
-         if (gameState->gsm != ClientMode) {
-            killedBy = lastDamagerId;
-         }
-
-         Object3D* killer = (*custodian)[lastDamagerId];
-         if (killer != NULL) {
-            if (killer->type == TYPE_ASTEROIDSHIP) {
-               AsteroidShip* killerShip = static_cast<AsteroidShip*>(killer);
-               if (gameState->gsm != ClientMode) {
-                  killerShip->kills++;
-               }
-               cout << killerShip->name << " killed " << name << " with a " 
-                << weapons[lastDamagerWeapon]->getName() << "." << endl;
-            } else {
-               cout << name << " was killed by an asteroid." << endl;
-            }
-         }
-
-         // Update weapons one last time.
-         for (vector<Weapon*>::iterator iter = weapons.begin();
-               iter != weapons.end(); ++iter) {
-            (*iter)->update(timeDiff);
-         }
-
-         // Fix all the velocities with anything added from the killer.
-         Object3D::update(timeDiff);       
-
-         createExplosionParticles();
-         // Release all the shards.
-         if (gameState->gsm != ClientMode) {
-            dropShards();
-         }
-      }
-
-      timeLeftToRespawn = respawnTimer.getTimeLeft();
-
-      if (this == gameState->ship && lives > 0) {
-         ostringstream gameMsg;
-         gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
-         GameMessage::Add(gameMsg.str(), 30, 0, gameState);
-      }
-
-      if (gameState->gameIsRunning && respawnTimer.isRunning && timeLeftToRespawn <= 1.5 && lives > 0) {
-         timeLeftToRespawn = 1.5;
-         reInitialize();
-      } else {
-         fire(false);
-         setRollSpeed(0);
-         accelerateForward(0);
-         accelerateUp(0);
-         accelerateRight(0);
-         setYawSpeed(0.0);
-         setPitchSpeed(0.0);
-         setRollSpeed(0.0);
-         return;
-      }
-
-
    } else if (!shouldDrawInMinimap) {
       // If health > 0.
       shouldDrawInMinimap = true;
    }
    
-   if (this == gameState->ship && health > 0) {
+   if (this == gameState->ship && health > 0 && lives > 0) {
       gameState->usingShipCamera = true;
    }
 
@@ -642,14 +541,6 @@ void AsteroidShip::update(double timeDiff) {
             GameMessage::Add(gameMsg.str(), 30, 0, gameState);
          }
          timeLeftToRespawn -= timeDiff;
-         fire(false);
-         setRollSpeed(0);
-         accelerateForward(0);
-         accelerateUp(0);
-         accelerateRight(0);
-         setYawSpeed(0.0);
-         setPitchSpeed(0.0);
-         setRollSpeed(0.0);
          drawSpawn = true;
          return;
       } else {
@@ -657,160 +548,42 @@ void AsteroidShip::update(double timeDiff) {
       }
 
       if (gameState->gsm != ClientMode) {
-         health += regenHealthLevel * timeDiff;
-         if (health > healthMax) {
-            health = healthMax;
-         }
+         doRegenHealth(timeDiff);
          
          if (shooter->isEnabled()) {
             shooter->think(timeDiff);
          }
 
-         if(flyingAI->isEnabled()) {
+         if (flyingAI->isEnabled()) {
             flyingAI->think(timeDiff);
          } else {
             updatePlayerAcceleration();
          }
-         
-         if (isBraking) {
-            if (velocity->getComparisonLength() < 0.01) {
-               velocity->updateMagnitude(0, 0, 0);
-            } else {
-               velocity->x -= velocity->x * timeDiff * brakeFactor;
-               velocity->y -= velocity->y * timeDiff * brakeFactor;
-               velocity->z -= velocity->z * timeDiff * brakeFactor;
-            }
-         }
+
+         doBraking(timeDiff);
       }
    }
 
    Object3D::update(timeDiff);         
    
    if (lives > 0) {
-      if (velocity->getComparisonLength() > 
-       (maxSpeed + engineLevel * 2) * (maxSpeed + engineLevel * 2)) {
-         Vector3D* slowDown = new Vector3D(velocity->scalarMultiply(-0.8 * timeDiff));
-         velocity->addUpdate(slowDown);
-      }  
-
-      if (rollSpeed > targetRollSpeed) {
-         rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration),
-               targetRollSpeed, rollSpeed);
-      } else if (rollSpeed < targetRollSpeed) {
-         rollSpeed = clamp(rollSpeed + (timeDiff * rotationalAcceleration),
-               rollSpeed, targetRollSpeed);
-      }
-
-      if (pitchSpeed > targetPitchSpeed) {
-         pitchSpeed = clamp(pitchSpeed - (timeDiff * rotationalAcceleration),
-               targetPitchSpeed, pitchSpeed);
-      } else if (pitchSpeed < targetPitchSpeed) {
-         pitchSpeed = clamp(pitchSpeed + (timeDiff * rotationalAcceleration),
-               pitchSpeed, targetPitchSpeed);
-      }
-
-      if (yawSpeed > targetYawSpeed) {
-         yawSpeed = clamp(yawSpeed - (timeDiff * rotationalAcceleration),
-               targetYawSpeed, yawSpeed);
-      } else if (yawSpeed < targetYawSpeed) {
-         yawSpeed = clamp(yawSpeed + (timeDiff * rotationalAcceleration),
-               yawSpeed, targetYawSpeed);
-      }
-
-      if (isBarrelRollingLeft <= 0 && isBarrelRollingRight <= 0) {
-         roll(timeDiff * rollSpeed);
-         pitch(timeDiff * pitchSpeed);
-         yaw(timeDiff * yawSpeed);
-      }
-      
-      if (interpolateOrientation && orientationInterpolationAmount >= 0) {
-         // Stop interpolating if we don't have further to go.
-         if (orientationInterpolationAmount == 0)
-            interpolateOrientation = false;
-
-         float curFrameInterpolation = 1 - orientationInterpolationAmount;
-         *up = up->lerp(targetUp, curFrameInterpolation);
-         *forward = forward->lerp(targetForward, curFrameInterpolation);
-         up->normalize();
-         forward->normalize();
-         *right = forward->cross(*up);
-         right->normalize();
-
-         orientationInterpolationAmount -= timeDiff * 10; // Interpolate over .1 sec
-
-         if (orientationInterpolationAmount < 0)
-            orientationInterpolationAmount = 0;
-      }
+      limitVelocity(timeDiff);
+      applyRotationalAcceleration(timeDiff); // Only if not barrel rolling
+      doInterpolateOrientation(timeDiff);
 
       if (!shooter->isEnabled()) {
          updateShotDirectionVector();
       }
 
-      bool showBankedShardsMessage = false;
-      // Bank shards.
-      if (bankTimer.isRunning) {
-         if (unbankedShards <= 0) {
-            // This is awkward. Recover silently.
-            bankTimer.reset();
-         } else if (bankTimer.getTimeLeft() < 0) {
-            bankTimer.reset();
-            if (gameState->gsm != ClientMode) {
-               bankedShards++;
-               totalBankedShards++;
-               unbankedShards--;
-            }
-
-            // Play the sound effect only sometimes.
-            // Something else special should happen.
-            ostringstream sstream;
-
-            switch (totalBankedShards) {
-               case 1: case 5: case 10: case 25: case 50:
-                  showBankedShardsMessage = true;
-                  break;
-               default:
-                  if (totalBankedShards % 100 == 0) {
-                     showBankedShardsMessage = true;
-                  }
-            }
-            
-            if (gameState->ship == this && showBankedShardsMessage) {
-               SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true, 0.3f);
-               if (totalBankedShards == 1) {
-                  sstream << "Banked first shard!";
-               } else {
-                  sstream << "Banked " << totalBankedShards << " total shards!";
-               }
-
-               GameMessage::Add(sstream.str(), 1, 2, gameState);
-            }
-         }
-      } else if (unbankedShards > 0 && gameState->gsm != ClientMode) {
-         bankTimer.setCountDown(getBankPeriod());
+      if (gameState->gsm == SingleMode) {
+         bankShards();
       }
    }
 
-   // Update weapons.
-   for (vector<Weapon*>::iterator iter = weapons.begin();
-         iter != weapons.end(); ++iter) {
-      (*iter)->update(timeDiff);
-   }
+   updateWeapons(timeDiff);
 
    if (lives > 0) {
-      if ((gameState->gsm != MenuMode) && (storeMenu != NULL) && !storeMenu->menuActive &&
-            (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
-         if (soundHandle == NULL) {
-            soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav",
-                  position, velocity, (this == gameState->ship), 0.05f, true);
-         } else {
-            SoundEffect::updateSource(soundHandle, position, velocity);
-         }
-      } else {
-         if (soundHandle != NULL) {
-            SoundEffect::stopSoundEffect(soundHandle);
-            soundHandle = NULL;
-         }
-      }
+      updateSound();
 
       shotOrigin = *position;
       // I don't think anything does fireBackwards.
@@ -818,85 +591,16 @@ void AsteroidShip::update(double timeDiff) {
       forward->movePoint(shotOrigin, shotOriginScale);
 
       // Actually fire the weapons.
-      keepFiring();
+      keepFiring(); // This calls fire() on the right weapon.
 
-      // Reduce shake.
-      if (shakeAmount != 0) {
-         shakeAmount -= (float) (5 * shakeAmount * timeDiff);
-         if (shakeAmount < 0.01) {
-            shakeAmount = 0;
-         }
-      }
+      reduceShake(timeDiff);
+      updateSpaceBoner(timeDiff);
 
-      if (curForwardAccel == 10) {
-         backChange += (zMove * timeDiff);
-         if (backChange > (backZ - middleZ)) {
-            backChange = (backZ - middleZ);
-         }
+      drawHit = (gameState->getGameTime() - justGotHit) < drawShieldTime;
 
-         if (backChange == (backZ - middleZ)) {
-            xChange += lineMove * timeDiff;
-            yChange += lineMove * timeDiff;
-            zChange += zMove * timeDiff;
-            x2Change += lineMove * timeDiff;
-            y2Change += lineMove * timeDiff;
-            z2Change += zMove * timeDiff;
-         }
-
-         if (x2Change > middleXY) {
-            xChange = 0;
-            yChange = 0;
-            zChange = 0;
-            x2Change = middleXY / 2;
-            y2Change = middleXY / 2;
-            z2Change = (backZ - middleZ) / 2;
-         }
-
-      } else {
-         backChange -= zMove * timeDiff;
-         if (backChange < 0) {
-            backChange = 0;
-         }
-      }
-
-      if (gameState->getGameTime() - justGotHit < drawShieldTime) {
-         drawHit = true;
-      } else {
-         drawHit = false;
-      }
+      handleBarrelRoll(timeDiff);
    
-      if (gameState->gsm != ClientMode) {
-         if (isBarrelRollingLeft == 1)
-            addInstantAcceleration(new Vector3D(right->scalarMultiply(-20)));
-         if (isBarrelRollingRight == 1)
-            addInstantAcceleration(new Vector3D(right->scalarMultiply(20)));
-      }
-
-      // Do this client side too.
-      if (isBarrelRollingLeft > 0) {
-         if (isBarrelRollingLeft < timeDiff) {
-            roll(isBarrelRollingLeft * -2 * M_PI);
-         } else {
-            roll(timeDiff * -2 * M_PI);
-         }
-         
-         isBarrelRollingLeft -= timeDiff;
-      }
-
-      if (isBarrelRollingRight > 0) {
-         if (isBarrelRollingRight < timeDiff) {
-            roll(isBarrelRollingRight * 2 * M_PI);
-         } else {
-            roll(timeDiff * 2 * M_PI);
-         }
-
-         isBarrelRollingRight -= timeDiff;
-      }
-
-      if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode) && weapons[RAM_WEAPON_INDEX]->isReady()) {
-         tracker += 20 * timeDiff;
-         flashiness += (float)upOrDown * (float)(rando % 10) * timeDiff * 500;
-      }
+      handleRamShotEffect(timeDiff);
 
       if (timeDiff > 0) {
          createEngineParticles(timeDiff);
@@ -904,11 +608,7 @@ void AsteroidShip::update(double timeDiff) {
             createLowHealthParticles(timeDiff);
       }
 
-      // Update the zoom level.
-      const float minZoom = 1;
-      const float maxZoom = 3;
-      zoomFactor = (float) clamp(zoomFactor + (timeDiff * zoomSpeed)
-            , minZoom, maxZoom);
+      updateZoomLevel(timeDiff);
    }
 }
 
@@ -2746,4 +2446,360 @@ void AsteroidShip::randomizePosition() {
 
 bool AsteroidShip::isFullAIEnabled() {
    return shooter->isEnabled() && flyingAI->isEnabled();
+}
+
+void AsteroidShip::doRespawn(double timeDiff) {
+   // Handle respawning.
+   if (!respawnTimer.isRunning || 
+    (gameState->gsm == ClientMode && !deathAcknowledged)) {
+      deathAcknowledged = true;
+      if (this == gameState->ship) {
+         gameState->usingShipCamera = false;
+      }
+
+      if (gameState->gsm != ClientMode) {
+         if (lives > 0) {
+            // We want this to happen if a user has 1 lives left, I guess.
+            ++deaths;
+            --lives;
+         }
+
+         // Since lives changed, let's check again.
+         if (lives > 0) {
+            respawnTimer.setCountDown(RESPAWN_TIME);
+            timeLeftToRespawn = respawnTimer.getTimeLeft();
+            
+            // Make sure to stop barrel rolling.
+            isBarrelRollingLeft = -1;
+            isBarrelRollingRight = -1;
+         
+         } else {
+            // Update weapons one last time.
+            for (vector<Weapon*>::iterator iter = weapons.begin();
+                  iter != weapons.end(); ++iter) {
+               (*iter)->update(timeDiff);
+            }
+            if (this == gameState->ship) {
+               if (gameState->gsm == SingleMode) {
+                  gameState->gameOver();
+               }
+
+               return;
+            } else {
+               if (gameState->gsm == SingleMode || 
+                 shooter->isEnabled() || flyingAI->isEnabled()) {
+                  shouldRemove = true;
+               }
+            }
+         }
+      }
+
+      if (gameState->gsm != ClientMode) {
+         killedBy = lastDamagerId;
+      }
+      
+      Object3D* killer = (*custodian)[lastDamagerId];
+      if (killer != NULL) {
+         if (killer->type == TYPE_ASTEROIDSHIP) {
+            AsteroidShip* killerShip = static_cast<AsteroidShip*>(killer);
+            if (gameState->gsm != ClientMode) {
+               killerShip->kills++;
+            }
+            cout << killerShip->name << " killed " << name << " with a " 
+             << weapons[lastDamagerWeapon]->getName() << "." << endl;
+         } else {
+            cout << name << " was killed by an asteroid." << endl;
+         }
+      }
+
+      // Update weapons one last time.
+      for (vector<Weapon*>::iterator iter = weapons.begin();
+            iter != weapons.end(); ++iter) {
+         (*iter)->update(timeDiff);
+      }
+
+      // Fix all the velocities with anything added from the killer.
+      Object3D::update(timeDiff);       
+
+      createExplosionParticles();
+      // Release all the shards.
+      if (gameState->gsm != ClientMode) {
+         dropShards();
+      }
+   }
+}
+
+void AsteroidShip::zeroControls() {
+   // Set dead state.
+   shouldDrawInMinimap = false;
+   fire(false);
+   setRollSpeed(0);
+   accelerateForward(0);
+   accelerateUp(0);
+   accelerateRight(0);
+   setYawSpeed(0.0);
+   setPitchSpeed(0.0);
+   setRollSpeed(0.0);
+}
+
+void AsteroidShip::doDeadStuff(double timeDiff) {
+   zeroControls();
+   shakeAmount = 0;
+
+   stopSounds();
+
+   if (this == gameState->ship) {
+      gameState->usingShipCamera = false;
+   }
+
+   // This only happens when it needs to, I guess.
+   doRespawn(timeDiff);
+
+   timeLeftToRespawn = respawnTimer.getTimeLeft();
+
+   if (this == gameState->ship && lives > 0) {
+      addRespawnMessage();
+   }
+      
+   if (gameState->gameIsRunning && respawnTimer.isRunning && 
+    timeLeftToRespawn <= 1.5 && lives > 0) {
+      timeLeftToRespawn = 1.5;
+      reInitialize();
+   }
+}
+
+void AsteroidShip::doRegenHealth(double timeDiff) {
+   health += regenHealthLevel * timeDiff;
+   if (health > healthMax) {
+      health = healthMax;
+   }
+}
+
+void AsteroidShip::doBraking(double timeDiff) {
+   if (isBraking) {
+      if (velocity->getComparisonLength() < 0.01) {
+         velocity->updateMagnitude(0, 0, 0);
+      } else {
+         velocity->x -= velocity->x * timeDiff * brakeFactor;
+         velocity->y -= velocity->y * timeDiff * brakeFactor;
+         velocity->z -= velocity->z * timeDiff * brakeFactor;
+      }
+   }
+}
+
+void AsteroidShip::limitVelocity(double timeDiff) {
+   if (velocity->getComparisonLength() > 
+    (maxSpeed + engineLevel * 2) * (maxSpeed + engineLevel * 2)) {
+      Vector3D* slowDown = new Vector3D(velocity->scalarMultiply(-0.8 * timeDiff));
+      velocity->addUpdate(slowDown);
+   }  
+}
+
+void AsteroidShip::applyRotationalAcceleration(double timeDiff) {
+   if (rollSpeed > targetRollSpeed) {
+      rollSpeed = clamp(rollSpeed - (timeDiff * rotationalAcceleration),
+            targetRollSpeed, rollSpeed);
+   } else if (rollSpeed < targetRollSpeed) {
+      rollSpeed = clamp(rollSpeed + (timeDiff * rotationalAcceleration),
+            rollSpeed, targetRollSpeed);
+   }
+
+   if (pitchSpeed > targetPitchSpeed) {
+      pitchSpeed = clamp(pitchSpeed - (timeDiff * rotationalAcceleration),
+            targetPitchSpeed, pitchSpeed);
+   } else if (pitchSpeed < targetPitchSpeed) {
+      pitchSpeed = clamp(pitchSpeed + (timeDiff * rotationalAcceleration),
+            pitchSpeed, targetPitchSpeed);
+   }
+
+   if (yawSpeed > targetYawSpeed) {
+      yawSpeed = clamp(yawSpeed - (timeDiff * rotationalAcceleration),
+            targetYawSpeed, yawSpeed);
+   } else if (yawSpeed < targetYawSpeed) {
+      yawSpeed = clamp(yawSpeed + (timeDiff * rotationalAcceleration),
+            yawSpeed, targetYawSpeed);
+   }
+   
+   if (isBarrelRollingLeft <= 0 && isBarrelRollingRight <= 0) {
+      roll(timeDiff * rollSpeed);
+      pitch(timeDiff * pitchSpeed);
+      yaw(timeDiff * yawSpeed);
+   }
+}
+
+void AsteroidShip::doInterpolateOrientation(double timeDiff) {
+   if (interpolateOrientation && orientationInterpolationAmount >= 0) {
+      // Stop interpolating if we don't have further to go.
+      if (orientationInterpolationAmount == 0)
+         interpolateOrientation = false;
+
+      float curFrameInterpolation = 1 - orientationInterpolationAmount;
+      *up = up->lerp(targetUp, curFrameInterpolation);
+      *forward = forward->lerp(targetForward, curFrameInterpolation);
+      up->normalize();
+      forward->normalize();
+      *right = forward->cross(*up);
+      right->normalize();
+
+      orientationInterpolationAmount -= timeDiff * 10; // Interpolate over .1 sec
+
+      if (orientationInterpolationAmount < 0)
+         orientationInterpolationAmount = 0;
+   }
+}
+
+void AsteroidShip::bankShards() {
+   bool showBankedShardsMessage = false;
+   // Bank shards.
+   if (bankTimer.isRunning) {
+      if (unbankedShards <= 0) {
+         // This is awkward. Recover silently.
+         bankTimer.reset();
+      } else if (bankTimer.getTimeLeft() < 0) {
+         bankTimer.reset();
+         if (gameState->gsm != ClientMode) {
+            bankedShards++;
+            totalBankedShards++;
+            unbankedShards--;
+         }
+
+         // Play the sound effect only sometimes.
+         // Something else special should happen.
+         ostringstream sstream;
+
+         switch (totalBankedShards) {
+            case 1: case 5: case 10: case 25: case 50:
+               showBankedShardsMessage = true;
+               break;
+            default:
+               if (totalBankedShards % 100 == 0) {
+                  showBankedShardsMessage = true;
+               }
+         }
+         
+         if (gameState->ship == this && showBankedShardsMessage) {
+            SoundEffect::playSoundEffect("ShardBank", NULL, NULL, true, 0.3f);
+            if (totalBankedShards == 1) {
+               sstream << "Banked first shard!";
+            } else {
+               sstream << "Banked " << totalBankedShards << " total shards!";
+            }
+
+            GameMessage::Add(sstream.str(), 1, 2, gameState);
+         }
+      }
+   } else if (unbankedShards > 0 && gameState->gsm != ClientMode) {
+      bankTimer.setCountDown(getBankPeriod());
+   }
+}
+
+void AsteroidShip::updateWeapons(double timeDiff) {
+   for (vector<Weapon*>::iterator iter = weapons.begin();
+         iter != weapons.end(); ++iter) {
+      (*iter)->update(timeDiff);
+   }
+}
+
+void AsteroidShip::updateSound() {
+   if ((gameState->gsm != MenuMode) && (storeMenu != NULL) && !storeMenu->menuActive &&
+         (curForwardAccel != 0 || curUpAccel != 0 || curRightAccel != 0)) {
+      if (soundHandle == NULL) {
+         soundHandle = SoundEffect::playSoundEffect("ShipEngine.wav",
+               position, velocity, (this == gameState->ship), 0.05f, true);
+      } else {
+         SoundEffect::updateSource(soundHandle, position, velocity);
+      }
+   } else {
+      if (soundHandle != NULL) {
+         SoundEffect::stopSoundEffect(soundHandle);
+         soundHandle = NULL;
+      }
+   }
+}
+
+void AsteroidShip::reduceShake(double timeDiff) {
+   if (shakeAmount != 0) {
+      shakeAmount -= (float) (5 * shakeAmount * timeDiff);
+      if (shakeAmount < 0.01) {
+         shakeAmount = 0;
+      }
+   }
+}
+
+void AsteroidShip::updateSpaceBoner(double timeDiff) {
+   if (curForwardAccel == 10) {
+      backChange += (zMove * timeDiff);
+      if (backChange > (backZ - middleZ)) {
+         backChange = (backZ - middleZ);
+      }
+
+      if (backChange == (backZ - middleZ)) {
+         xChange += lineMove * timeDiff;
+         yChange += lineMove * timeDiff;
+         zChange += zMove * timeDiff;
+         x2Change += lineMove * timeDiff;
+         y2Change += lineMove * timeDiff;
+         z2Change += zMove * timeDiff;
+      }
+
+      if (x2Change > middleXY) {
+         xChange = 0;
+         yChange = 0;
+         zChange = 0;
+         x2Change = middleXY / 2;
+         y2Change = middleXY / 2;
+         z2Change = (backZ - middleZ) / 2;
+      }
+
+   } else {
+      backChange -= zMove * timeDiff;
+      if (backChange < 0) {
+         backChange = 0;
+      }
+   }
+}
+
+void AsteroidShip::handleBarrelRoll(double timeDiff) {
+      if (gameState->gsm != ClientMode) {
+         if (isBarrelRollingLeft == 1)
+            addInstantAcceleration(new Vector3D(right->scalarMultiply(-20)));
+         if (isBarrelRollingRight == 1)
+            addInstantAcceleration(new Vector3D(right->scalarMultiply(20)));
+      }
+
+      // Do this client side too.
+      if (isBarrelRollingLeft > 0) {
+         if (isBarrelRollingLeft < timeDiff) {
+            roll(isBarrelRollingLeft * -2 * M_PI);
+         } else {
+            roll(timeDiff * -2 * M_PI);
+         }
+         
+         isBarrelRollingLeft -= timeDiff;
+      }
+
+      if (isBarrelRollingRight > 0) {
+         if (isBarrelRollingRight < timeDiff) {
+            roll(isBarrelRollingRight * 2 * M_PI);
+         } else {
+            roll(timeDiff * 2 * M_PI);
+         }
+
+         isBarrelRollingRight -= timeDiff;
+      }
+
+}
+
+void AsteroidShip::handleRamShotEffect(double timeDiff) {
+   if (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode) && weapons[RAM_WEAPON_INDEX]->isReady()) {
+      tracker += 20 * timeDiff;
+      flashiness += (float)upOrDown * (float)(rando % 10) * timeDiff * 500;
+   }
+}
+
+void AsteroidShip::updateZoomLevel(double timeDiff) {
+      const float minZoom = 1;
+      const float maxZoom = 3;
+      zoomFactor = (float) clamp(zoomFactor + (timeDiff * zoomSpeed)
+            , minZoom, maxZoom);
 }

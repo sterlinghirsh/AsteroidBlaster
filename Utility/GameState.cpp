@@ -378,7 +378,8 @@ void GameState::update(double timeDiff) {
       GameMessage::Clear();
    }
    
-   int playerCount = custodian.shipsByClientID.size();
+   // This counts CPUs too.
+   int playerCount = custodian.ships.size();
 
    // if it's not in MenuMode
    if (gsm != MenuMode) {

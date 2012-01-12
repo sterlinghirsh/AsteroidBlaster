@@ -381,6 +381,27 @@ class AsteroidShip : public Object3D {
 
       void createExplosionParticles();
 
+      void doRespawn(double timeDiff);
+      void doDeadStuff(double timeDiff);
+      void addRespawnMessage();
+
+      void doRegenHealth(double timeDiff);
+      void doBraking(double timeDiff);
+
+      void limitVelocity(double timeDiff);
+      void doInterpolateOrientation(double timeDiff);
+      void bankShards();
+      void updateSound();
+
+      void updateWeapons(double timeDiff);
+      void reduceShake(double timeDiff);
+      void updateSpaceBoner(double timeDiff);
+      void handleBarrelRoll(double timeDiff);
+      void handleRamShotEffect(double timeDiff);
+      void updateZoomLevel(double timeDiff);
+      void applyRotationalAcceleration(double timeDiff);
+      void zeroControls();
+
 };
 
 #endif
