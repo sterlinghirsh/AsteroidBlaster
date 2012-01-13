@@ -111,6 +111,39 @@ MainMenu::~MainMenu() {
 void MainMenu::draw() {
    menuGameState->draw();
    
+   // Set menu Positions depending on current window size, has to be 
+   // done each update beacuse the window size could have changed
+   SDL_Rect position;
+   position.x = (Sint16) (drawStereo_enabled ? 
+    (gameSettings->GW / 4) : (gameSettings->GW/2));
+
+   position.y = (Sint16) (gameSettings->GH/2.8);
+
+   for(unsigned i = 0; i < menuTexts.size(); i++) {
+      menuTexts[i]->setPosition(position);
+      position.y = (Sint16) (position.y + (gameSettings->GH/17));
+   }
+
+   // make stuff selectable and greyed out depending on stuff
+   canContinue = (!firstTime && mainGameState->gsm == SingleMode)
+      || mainGameState->gsm != SingleMode;
+   continueText->selectable = canContinue;
+   canSave = !firstTime && mainGameState->gsm == SingleMode;
+   saveGameText->selectable = canSave;
+
+   if(!canContinue) {
+      continueText->setColor(SDL_GREY);
+   } else {
+      continueText->setColor(SDL_WHITE);
+   }
+
+   if(!canSave) {
+      saveGameText->setColor(SDL_GREY);
+   } else {
+      saveGameText->setColor(SDL_WHITE);
+   }
+
+   
    //draw the text
    glPushMatrix();
       useOrtho();
@@ -123,7 +156,8 @@ void MainMenu::draw() {
          }
       } else {
          SDL_Rect position;
-         position.x = (Sint16) (gameSettings->GW/2);
+         position.x = (Sint16) (drawStereo_enabled ?
+          gameSettings->GW/4 : gameSettings->GW/2);
          position.y = (Sint16) (gameSettings->GH/2.8);
          ipInputText->setPosition(position);
          ipInputText->updateBody(ipInput->line);
@@ -136,7 +170,9 @@ void MainMenu::draw() {
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    Image::getImage("MainMenuLogo")->drawImage();
 
-   SDL_GL_SwapBuffers();
+   if ((!stereo_eye_left) || !drawStereo_enabled) {
+      SDL_GL_SwapBuffers();
+   }
 }
 
 /**
@@ -291,35 +327,6 @@ void MainMenu::update(double timeDiff) {
             -1, 0, 0);
    }
 
-
-   // Set menu Positions depending on current window size, has to be 
-   // done each update beacuse the window size could have changed
-   SDL_Rect position;
-   position.x = (Sint16) (gameSettings->GW/2);
-   position.y = (Sint16) (gameSettings->GH/2.8);
-   for(unsigned i = 0; i < menuTexts.size(); i++) {
-      menuTexts[i]->setPosition(position);
-      position.y = (Sint16) (position.y + (gameSettings->GH/17));
-   }
-
-   // make stuff selectable and greyed out depending on stuff
-   canContinue = (!firstTime && mainGameState->gsm == SingleMode)
-      || mainGameState->gsm != SingleMode;
-   continueText->selectable = canContinue;
-   canSave = !firstTime && mainGameState->gsm == SingleMode;
-   saveGameText->selectable = canSave;
-
-   if(!canContinue) {
-      continueText->setColor(SDL_GREY);
-   } else {
-      continueText->setColor(SDL_WHITE);
-   }
-
-   if(!canSave) {
-      saveGameText->setColor(SDL_GREY);
-   } else {
-      saveGameText->setColor(SDL_WHITE);
-   }
 
    menuGameState->update(timeDiff);
 }

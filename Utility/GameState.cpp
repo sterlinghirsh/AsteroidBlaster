@@ -551,10 +551,6 @@ void GameState::update(double timeDiff) {
    justLoadedFirstFrame = false;
 }
 
-void GameState::networkUpdate(double timeDiff) {
-   
-}
-
 void GameState::spectatorCameraUpdate(double timeDiff) {
    double pieCounter = fmod(M_PI * 0.75 + (getGameTime() * spectatorSpeed), 2 * M_PI);
    spectatorCamera->position->x = sin(pieCounter)*spectatorRadius;

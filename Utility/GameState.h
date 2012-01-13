@@ -172,7 +172,6 @@ class GameState : public InputReceiver {
 
       // Update functions of various kinds
       void updateText();
-      void networkUpdate(double timeDiff);
 
       // Draw functions of various kinds
       void drawObjects();

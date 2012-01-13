@@ -451,8 +451,19 @@ int main(int argc, char* argv[]) {
 
       if (mainMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
-         mainMenu->update(timeDiff);
-         mainMenu->draw();
+         
+         if (gameSettings->drawStereo) {
+            drawStereo_enabled = true;
+            // This requires drawStereo_enabled.
+            mainMenu->update(timeDiff);
+            stereo_eye_left = true;
+            mainMenu->draw();
+            stereo_eye_left = false;
+            mainMenu->draw();
+         } else {
+            mainMenu->update(timeDiff);
+            mainMenu->draw();
+         }
 
       } else if (storeMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
@@ -478,7 +489,6 @@ int main(int argc, char* argv[]) {
       } else {
          gameState->gameIsRunning = true;
          gameState->update(timeDiff);
-         gameState->networkUpdate(timeDiff);
          lastUpdateTime = doubleTime();
 
          if (gameSettings->drawStereo) {
