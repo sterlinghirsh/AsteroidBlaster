@@ -140,38 +140,46 @@ void StoreMenu::draw() {
       glDrawBuffer(OVERLAY_BUFFER);
    }
 
+   int width = drawStereo_enabled ? gameSettings->GW / 2 : gameSettings->GW;
+
    SDL_Rect position;
    std::stringstream out;
 
    // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   if (!drawStereo_enabled || stereo_eye_left) {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   } else {
+      glClear(GL_DEPTH_BUFFER_BIT);
+   }
    
    //Done
-   position.x = (Sint16) (gameSettings->GW*(8.0/10.0));
+   position.x = (Sint16) (width*(9.8/10.0));
    position.y = (Sint16) (gameSettings->GH*(9.5/10.0));
+   doneText->alignment = RIGHT_ALIGN;
    doneText->setPosition(position);
    
    //shards
-   position.x = (Sint16) (gameSettings->GW*(0.1/10.0));
-   position.y = (Sint16) (gameSettings->GH*(9.5/10.0));
+   position.x = (Sint16) (width*(9.8/10.0));
+   position.y = (Sint16) (gameSettings->GH*(9.0/10.0));
    shardsText->updateBody(gameState->ship->bankedShards);
+   shardsText->alignment = RIGHT_ALIGN;
    shardsText->setPosition(position);
    
    //max health
-   position.x = (Sint16) (gameSettings->GW*(2.4/10.0));
+   position.x = (Sint16) (width*(0.2/10.0));
    position.y = (Sint16) (gameSettings->GH*(9.5/10.0));
    maxHealthText->updateBody((int)gameState->ship->healthMax);
    maxHealthText->setPosition(position);
 
    //lives
-   position.x = (Sint16) (gameSettings->GW*(5.0/10.0));
-   position.y = (Sint16) (gameSettings->GH*(9.5/10.0));
+   position.x = (Sint16) (width*(0.2/10.0));
+   position.y = (Sint16) (gameSettings->GH*(9.0/10.0));
    lifeText->updateBody((int)gameState->ship->lives);
    lifeText->setPosition(position);
    
    
    //weapons
-   position.x = (Sint16) (gameSettings->GW*(1.0/10.0));
+   position.x = (Sint16) (width*(1.0/10.0));
    position.y = (Sint16) (gameSettings->GH*(3.5/10.0));
    weaponsText->setPosition(position);
    
@@ -192,7 +200,7 @@ void StoreMenu::draw() {
    shipText->setColor(SDL_WHITE);
    
    //initialize the first position
-   position.x = (Sint16) (gameSettings->GW*(3.0/10.0));
+   position.x = (Sint16) (width*(3.0/10.0));
    position.y = (Sint16) (gameSettings->GH*(3.5/10.0));
    
    //get the list of weapons from ship
@@ -341,7 +349,7 @@ void StoreMenu::draw() {
    usePerspective();
 
    // We swap buffers in gameSettings if we're using the overlay.
-   if (!gameSettings->useOverlay) {
+   if (!gameSettings->useOverlay && (!stereo_eye_left || !drawStereo_enabled)) {
       SDL_GL_SwapBuffers();
    }
 }

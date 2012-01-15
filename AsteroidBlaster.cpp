@@ -451,29 +451,45 @@ int main(int argc, char* argv[]) {
 
       if (mainMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
+         mainMenu->update(timeDiff);
          
          if (gameSettings->drawStereo) {
             drawStereo_enabled = true;
             // This requires drawStereo_enabled.
-            mainMenu->update(timeDiff);
             stereo_eye_left = true;
             mainMenu->draw();
             stereo_eye_left = false;
             mainMenu->draw();
          } else {
-            mainMenu->update(timeDiff);
             mainMenu->draw();
          }
 
       } else if (storeMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          storeMenu->update(timeDiff);
-         storeMenu->draw();
          gameState->gameIsRunning = false;
 
-         if (gameSettings->useOverlay) {
-            gameState->draw();
+         if (gameSettings->drawStereo) {
+            drawStereo_enabled = true;
+            // This requires drawStereo_enabled.
+            stereo_eye_left = true;
+            storeMenu->draw();
+            if (gameSettings->useOverlay) {
+               gameState->draw();
+            }
+
+            stereo_eye_left = false;
+            storeMenu->draw();
+            if (gameSettings->useOverlay) {
+               gameState->draw();
+            }
+         } else {
+            storeMenu->draw();
+            if (gameSettings->useOverlay) {
+               gameState->draw();
+            }
          }
+
       } else if (settingsMenu->menuActive) {
          SDL_ShowCursor(SDL_ENABLE);
          settingsMenu->draw();
