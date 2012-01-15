@@ -31,6 +31,7 @@
 
 #include "Menus/MainMenu.h"
 #include "Menus/StoreMenu.h"
+#include "Menus/HighScoreList.h"
 
 #include "HUD/ProgressBar.h"
 #include "HUD/WeaponDisplay.h"
@@ -2225,9 +2226,14 @@ void GameState::testFunction() {
    if (ship != NULL) {
       ship->health = 1;
    }
+   
+   highScoreList->addNewScore(ship->score, curLevel);
 
 }
 
+/**
+ * Called from AsteroidShip's doDeadStuff()
+ */
 void GameState::gameOver() {
    // Check if it is done waiting until going to the next level
    if (!gameOverTimer.isRunning) {
@@ -2236,6 +2242,11 @@ void GameState::gameOver() {
       gameMsg << "Game Over ";
       GameMessage::Add(gameMsg.str(), 30, 5, this);
       gameOverTimer.setCountDown(5);
+      // This should only get called in single mode anyway, but whatever.
+      if (gsm == SingleMode) {
+         highScoreList->addNewScore(ship->score, curLevel);
+      }
+
    }
 }
 

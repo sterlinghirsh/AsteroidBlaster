@@ -42,6 +42,8 @@ class CollisionMessage;
 class ChatMessage;
 class CreateEntityMessage;
 class Frame;
+class HighScoreList;
+class HighScoreEntry;
 
 // ===================================================================
 
@@ -2090,6 +2092,207 @@ class Frame : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static Frame* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class HighScoreList : public ::google::protobuf::Message {
+ public:
+  HighScoreList();
+  virtual ~HighScoreList();
+  
+  HighScoreList(const HighScoreList& from);
+  
+  inline HighScoreList& operator=(const HighScoreList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const HighScoreList& default_instance();
+  
+  void Swap(HighScoreList* other);
+  
+  // implements Message ----------------------------------------------
+  
+  HighScoreList* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const HighScoreList& from);
+  void MergeFrom(const HighScoreList& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // repeated .ast.HighScoreEntry entry = 1;
+  inline int entry_size() const;
+  inline void clear_entry();
+  static const int kEntryFieldNumber = 1;
+  inline const ::ast::HighScoreEntry& entry(int index) const;
+  inline ::ast::HighScoreEntry* mutable_entry(int index);
+  inline ::ast::HighScoreEntry* add_entry();
+  inline const ::google::protobuf::RepeatedPtrField< ::ast::HighScoreEntry >&
+      entry() const;
+  inline ::google::protobuf::RepeatedPtrField< ::ast::HighScoreEntry >*
+      mutable_entry();
+  
+  // @@protoc_insertion_point(class_scope:ast.HighScoreList)
+ private:
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::RepeatedPtrField< ::ast::HighScoreEntry > entry_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_ShutdownFile_Network_2fgamestate_2eproto();
+  
+  void InitAsDefaultInstance();
+  static HighScoreList* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class HighScoreEntry : public ::google::protobuf::Message {
+ public:
+  HighScoreEntry();
+  virtual ~HighScoreEntry();
+  
+  HighScoreEntry(const HighScoreEntry& from);
+  
+  inline HighScoreEntry& operator=(const HighScoreEntry& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const HighScoreEntry& default_instance();
+  
+  void Swap(HighScoreEntry* other);
+  
+  // implements Message ----------------------------------------------
+  
+  HighScoreEntry* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const HighScoreEntry& from);
+  void MergeFrom(const HighScoreEntry& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  
+  // required uint32 score = 2;
+  inline bool has_score() const;
+  inline void clear_score();
+  static const int kScoreFieldNumber = 2;
+  inline ::google::protobuf::uint32 score() const;
+  inline void set_score(::google::protobuf::uint32 value);
+  
+  // required fixed32 date = 3;
+  inline bool has_date() const;
+  inline void clear_date();
+  static const int kDateFieldNumber = 3;
+  inline ::google::protobuf::uint32 date() const;
+  inline void set_date(::google::protobuf::uint32 value);
+  
+  // required uint32 level = 4;
+  inline bool has_level() const;
+  inline void clear_level();
+  static const int kLevelFieldNumber = 4;
+  inline ::google::protobuf::uint32 level() const;
+  inline void set_level(::google::protobuf::uint32 value);
+  
+  // @@protoc_insertion_point(class_scope:ast.HighScoreEntry)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_score();
+  inline void clear_has_score();
+  inline void set_has_date();
+  inline void clear_has_date();
+  inline void set_has_level();
+  inline void clear_has_level();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::std::string* name_;
+  ::google::protobuf::uint32 score_;
+  ::google::protobuf::uint32 date_;
+  ::google::protobuf::uint32 level_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_AssignDesc_Network_2fgamestate_2eproto();
+  friend void protobuf_ShutdownFile_Network_2fgamestate_2eproto();
+  
+  void InitAsDefaultInstance();
+  static HighScoreEntry* default_instance_;
 };
 // ===================================================================
 
@@ -5157,6 +5360,163 @@ inline ::google::protobuf::uint32 Frame::shipid() const {
 inline void Frame::set_shipid(::google::protobuf::uint32 value) {
   set_has_shipid();
   shipid_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// HighScoreList
+
+// repeated .ast.HighScoreEntry entry = 1;
+inline int HighScoreList::entry_size() const {
+  return entry_.size();
+}
+inline void HighScoreList::clear_entry() {
+  entry_.Clear();
+}
+inline const ::ast::HighScoreEntry& HighScoreList::entry(int index) const {
+  return entry_.Get(index);
+}
+inline ::ast::HighScoreEntry* HighScoreList::mutable_entry(int index) {
+  return entry_.Mutable(index);
+}
+inline ::ast::HighScoreEntry* HighScoreList::add_entry() {
+  return entry_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::ast::HighScoreEntry >&
+HighScoreList::entry() const {
+  return entry_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::ast::HighScoreEntry >*
+HighScoreList::mutable_entry() {
+  return &entry_;
+}
+
+// -------------------------------------------------------------------
+
+// HighScoreEntry
+
+// required string name = 1;
+inline bool HighScoreEntry::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void HighScoreEntry::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void HighScoreEntry::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void HighScoreEntry::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& HighScoreEntry::name() const {
+  return *name_;
+}
+inline void HighScoreEntry::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void HighScoreEntry::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void HighScoreEntry::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* HighScoreEntry::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* HighScoreEntry::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// required uint32 score = 2;
+inline bool HighScoreEntry::has_score() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void HighScoreEntry::set_has_score() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void HighScoreEntry::clear_has_score() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void HighScoreEntry::clear_score() {
+  score_ = 0u;
+  clear_has_score();
+}
+inline ::google::protobuf::uint32 HighScoreEntry::score() const {
+  return score_;
+}
+inline void HighScoreEntry::set_score(::google::protobuf::uint32 value) {
+  set_has_score();
+  score_ = value;
+}
+
+// required fixed32 date = 3;
+inline bool HighScoreEntry::has_date() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void HighScoreEntry::set_has_date() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void HighScoreEntry::clear_has_date() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void HighScoreEntry::clear_date() {
+  date_ = 0u;
+  clear_has_date();
+}
+inline ::google::protobuf::uint32 HighScoreEntry::date() const {
+  return date_;
+}
+inline void HighScoreEntry::set_date(::google::protobuf::uint32 value) {
+  set_has_date();
+  date_ = value;
+}
+
+// required uint32 level = 4;
+inline bool HighScoreEntry::has_level() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void HighScoreEntry::set_has_level() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void HighScoreEntry::clear_has_level() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void HighScoreEntry::clear_level() {
+  level_ = 0u;
+  clear_has_level();
+}
+inline ::google::protobuf::uint32 HighScoreEntry::level() const {
+  return level_;
+}
+inline void HighScoreEntry::set_level(::google::protobuf::uint32 value) {
+  set_has_level();
+  level_ = value;
 }
 
 

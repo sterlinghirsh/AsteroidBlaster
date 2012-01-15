@@ -9,6 +9,7 @@
 #include "Menus/SettingsMenu.h"
 #include "Menus/HelpMenu.h"
 #include "Menus/CreditsMenu.h"
+#include "Menus/HighScoreList.h"
 
 #include "Particles/Particle.h"
 #include "Graphics/Image.h"
@@ -28,7 +29,9 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    menuActive = false;
    firstTime = true;
    canContinue = canSave = false;
+   showHighScores = false;
    x = y = -1;
+
 
    SDL_Rect position = {0,1};
    std::string fontName = DEFAULT_FONT;
@@ -53,6 +56,9 @@ MainMenu::MainMenu(GameState* _mainGameState) {
    
    settingsText = new Text("Settings",  menuFont, position);
    menuTexts.push_back(settingsText);
+
+   highScoresText = new Text("High Scores", menuFont, position);
+   menuTexts.push_back(highScoresText);
    
    helpText = new Text("Help",  menuFont, position);
    menuTexts.push_back(helpText);
@@ -111,64 +117,70 @@ MainMenu::~MainMenu() {
 void MainMenu::draw() {
    menuGameState->draw();
    
-   // Set menu Positions depending on current window size, has to be 
-   // done each update beacuse the window size could have changed
-   SDL_Rect position;
-   position.x = (Sint16) (drawStereo_enabled ? 
-    (gameSettings->GW / 4) : (gameSettings->GW/2));
-
-   position.y = (Sint16) (gameSettings->GH/2.8);
-
-   for(unsigned i = 0; i < menuTexts.size(); i++) {
-      menuTexts[i]->setPosition(position);
-      position.y = (Sint16) (position.y + (gameSettings->GH/17));
-   }
-
-   // make stuff selectable and greyed out depending on stuff
-   canContinue = (!firstTime && mainGameState->gsm == SingleMode)
-      || mainGameState->gsm != SingleMode;
-   continueText->selectable = canContinue;
-   canSave = !firstTime && mainGameState->gsm == SingleMode;
-   saveGameText->selectable = canSave;
-
-   if(!canContinue) {
-      continueText->setColor(SDL_GREY);
-   } else {
-      continueText->setColor(SDL_WHITE);
-   }
-
-   if(!canSave) {
-      saveGameText->setColor(SDL_GREY);
-   } else {
-      saveGameText->setColor(SDL_WHITE);
-   }
-
-   
-   //draw the text
-   glPushMatrix();
+   if (showHighScores) {
+      glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
       useOrtho();
-      glDisable(GL_CULL_FACE);
-      glDisable(GL_LIGHTING);
+      highScoreList->draw();
+   } else {
+      // Set menu Positions depending on current window size, has to be 
+      // done each update beacuse the window size could have changed
+      SDL_Rect position;
+      position.x = (Sint16) (drawStereo_enabled ? 
+       (gameSettings->GW / 4) : (gameSettings->GW/2));
 
-      if (!ipInput->active) {
-         for(unsigned i = 0; i < menuTexts.size(); i++) {
-            menuTexts[i]->draw();
-         }
-      } else {
-         SDL_Rect position;
-         position.x = (Sint16) (drawStereo_enabled ?
-          gameSettings->GW/4 : gameSettings->GW/2);
-         position.y = (Sint16) (gameSettings->GH/2.8);
-         ipInputText->setPosition(position);
-         ipInputText->updateBody(ipInput->line);
-         ipInputText->draw();
+      position.y = (Sint16) (gameSettings->GH/2.8);
+
+      for(unsigned i = 0; i < menuTexts.size(); i++) {
+         menuTexts[i]->setPosition(position);
+         position.y = (Sint16) (position.y + (gameSettings->GH/17));
       }
 
-      usePerspective();
-   glPopMatrix();
+      // make stuff selectable and greyed out depending on stuff
+      canContinue = (!firstTime && mainGameState->gsm == SingleMode)
+         || mainGameState->gsm != SingleMode;
+      continueText->selectable = canContinue;
+      canSave = !firstTime && mainGameState->gsm == SingleMode;
+      saveGameText->selectable = canSave;
 
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   Image::getImage("MainMenuLogo")->drawImage();
+      if(!canContinue) {
+         continueText->setColor(SDL_GREY);
+      } else {
+         continueText->setColor(SDL_WHITE);
+      }
+
+      if(!canSave) {
+         saveGameText->setColor(SDL_GREY);
+      } else {
+         saveGameText->setColor(SDL_WHITE);
+      }
+
+      
+      //draw the text
+      glPushMatrix();
+         useOrtho();
+         glDisable(GL_CULL_FACE);
+         glDisable(GL_LIGHTING);
+
+         if (!ipInput->active) {
+            for(unsigned i = 0; i < menuTexts.size(); i++) {
+               menuTexts[i]->draw();
+            }
+         } else {
+            SDL_Rect position;
+            position.x = (Sint16) (drawStereo_enabled ?
+             gameSettings->GW/4 : gameSettings->GW/2);
+            position.y = (Sint16) (gameSettings->GH/2.8);
+            ipInputText->setPosition(position);
+            ipInputText->updateBody(ipInput->line);
+            ipInputText->draw();
+         }
+
+         usePerspective();
+      glPopMatrix();
+
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      Image::getImage("MainMenuLogo")->drawImage();
+   }
 
    if ((!stereo_eye_left) || !drawStereo_enabled) {
       SDL_GL_SwapBuffers();
@@ -179,6 +191,11 @@ void MainMenu::draw() {
  * Handles the player pressing down a key
  */
 void MainMenu::keyDown(int key, int unicode) {
+   if (showHighScores) {
+      showHighScores = false;
+      return;
+   }
+
    if (ipInput->active) {
       if (key == SDLK_RETURN) {
          // Detect when ip picker is closed and connect to the server.
@@ -234,6 +251,10 @@ void MainMenu::keyUp(int key) {
  */
 void MainMenu::mouseDown(int button) {
    if (!menuActive) { return; }
+   if (showHighScores) {
+      showHighScores = false;
+      return;
+   }
 
    if(newGameText->mouseSelect(x,y)) {
       gameDeactivate(false);
@@ -262,6 +283,8 @@ void MainMenu::mouseDown(int button) {
       SoundEffect::playMusic("Careless_Whisper.ogg");
    } else if(quitText->mouseSelect(x,y)) {
       running = false;
+   } else if (highScoresText->mouseSelect(x, y)) {
+      showHighScores = true;
    }
 }
 

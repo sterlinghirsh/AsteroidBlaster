@@ -221,3 +221,14 @@ message Frame {
    optional uint32 shipid = 10;
    // Ids of objects to remove after collisions are processed.
 }
+
+message HighScoreList {
+   repeated HighScoreEntry entry = 1;
+}
+
+message HighScoreEntry {
+   required string name = 1;
+   required uint32 score = 2;
+   required fixed32 date = 3;
+   required uint32 level = 4;
+}

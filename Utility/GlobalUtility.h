@@ -33,6 +33,7 @@
 // Forward declaration
 class GameState;
 class MainMenu;
+class HighScoreList;
 class StoreMenu;
 class SettingsMenu;
 class HelpMenu;
@@ -82,6 +83,7 @@ extern SettingsMenu* settingsMenu;
 extern CreditsMenu* creditsMenu;
 extern Input* chat;
 extern Input* ipInput;
+extern HighScoreList* highScoreList;
 extern TTF_Font* hudFont;
 extern TTF_Font* menuFont;
 extern double currentTime;

@@ -31,7 +31,9 @@
 #include "Menus/SettingsMenu.h"
 #include "Menus/HelpMenu.h"
 #include "Menus/CreditsMenu.h"
+#include "Menus/HighScoreList.h"
 #include "Text/Input.h"
+
 
 #include "Network/NetUtility.h"
 #include "Network/ClientSide.h"
@@ -393,6 +395,7 @@ int main(int argc, char* argv[]) {
    creditsMenu = new CreditsMenu();
    chat = new Input(gameState);
    ipInput = new Input(gameState);
+   highScoreList = new HighScoreList();
 
    if (_gsm == ClientMode) {
       gameState->connect((char*) ipAddress.c_str());
@@ -589,6 +592,7 @@ int main(int argc, char* argv[]) {
    delete inputManager;
    delete chat;
    delete ipInput;
+   delete highScoreList;
    SoundEffect::FreeAll();
 
    return 0;

@@ -47,6 +47,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Frame_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Frame_reflection_ = NULL;
+const ::google::protobuf::Descriptor* HighScoreList_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  HighScoreList_reflection_ = NULL;
+const ::google::protobuf::Descriptor* HighScoreEntry_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  HighScoreEntry_reflection_ = NULL;
 
 }  // namespace
 
@@ -323,6 +329,39 @@ void protobuf_AssignDesc_Network_2fgamestate_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Frame));
+  HighScoreList_descriptor_ = file->message_type(10);
+  static const int HighScoreList_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HighScoreList, entry_),
+  };
+  HighScoreList_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      HighScoreList_descriptor_,
+      HighScoreList::default_instance_,
+      HighScoreList_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HighScoreList, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HighScoreList, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(HighScoreList));
+  HighScoreEntry_descriptor_ = file->message_type(11);
+  static const int HighScoreEntry_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HighScoreEntry, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HighScoreEntry, score_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HighScoreEntry, date_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HighScoreEntry, level_),
+  };
+  HighScoreEntry_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      HighScoreEntry_descriptor_,
+      HighScoreEntry::default_instance_,
+      HighScoreEntry_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HighScoreEntry, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HighScoreEntry, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(HighScoreEntry));
 }
 
 namespace {
@@ -355,6 +394,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
     CreateEntityMessage_descriptor_, &CreateEntityMessage::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Frame_descriptor_, &Frame::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    HighScoreList_descriptor_, &HighScoreList::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    HighScoreEntry_descriptor_, &HighScoreEntry::default_instance());
 }
 
 }  // namespace
@@ -380,6 +423,10 @@ void protobuf_ShutdownFile_Network_2fgamestate_2eproto() {
   delete CreateEntityMessage_reflection_;
   delete Frame::default_instance_;
   delete Frame_reflection_;
+  delete HighScoreList::default_instance_;
+  delete HighScoreList_reflection_;
+  delete HighScoreEntry::default_instance_;
+  delete HighScoreEntry_reflection_;
 }
 
 void protobuf_AddDesc_Network_2fgamestate_2eproto() {
@@ -462,7 +509,11 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
     "ityMessageid\030\001 \001(\r\022\033\n\006entity\030\002 \003(\0132\013.ast"
     ".Entity\"l\n\005Frame\0220\n\021collision_message\030\001 "
     "\003(\0132\025.ast.CollisionMessage\022!\n\tgameState\030"
-    "\t \001(\0132\016.ast.GameState\022\016\n\006shipid\030\n \001(\r", 2957);
+    "\t \001(\0132\016.ast.GameState\022\016\n\006shipid\030\n \001(\r\"3\n"
+    "\rHighScoreList\022\"\n\005entry\030\001 \003(\0132\023.ast.High"
+    "ScoreEntry\"J\n\016HighScoreEntry\022\014\n\004name\030\001 \002"
+    "(\t\022\r\n\005score\030\002 \002(\r\022\014\n\004date\030\003 \002(\007\022\r\n\005level"
+    "\030\004 \002(\r", 3086);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Network/gamestate.proto", &protobuf_RegisterTypes);
   Vector::default_instance_ = new Vector();
@@ -475,6 +526,8 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
   ChatMessage::default_instance_ = new ChatMessage();
   CreateEntityMessage::default_instance_ = new CreateEntityMessage();
   Frame::default_instance_ = new Frame();
+  HighScoreList::default_instance_ = new HighScoreList();
+  HighScoreEntry::default_instance_ = new HighScoreEntry();
   Vector::default_instance_->InitAsDefaultInstance();
   Entity::default_instance_->InitAsDefaultInstance();
   Weapon::default_instance_->InitAsDefaultInstance();
@@ -485,6 +538,8 @@ void protobuf_AddDesc_Network_2fgamestate_2eproto() {
   ChatMessage::default_instance_->InitAsDefaultInstance();
   CreateEntityMessage::default_instance_->InitAsDefaultInstance();
   Frame::default_instance_->InitAsDefaultInstance();
+  HighScoreList::default_instance_->InitAsDefaultInstance();
+  HighScoreEntry::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_Network_2fgamestate_2eproto);
 }
 
@@ -7466,6 +7521,554 @@ void Frame::Swap(Frame* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = Frame_descriptor_;
   metadata.reflection = Frame_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int HighScoreList::kEntryFieldNumber;
+#endif  // !_MSC_VER
+
+HighScoreList::HighScoreList()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void HighScoreList::InitAsDefaultInstance() {
+}
+
+HighScoreList::HighScoreList(const HighScoreList& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void HighScoreList::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+HighScoreList::~HighScoreList() {
+  SharedDtor();
+}
+
+void HighScoreList::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void HighScoreList::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* HighScoreList::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return HighScoreList_descriptor_;
+}
+
+const HighScoreList& HighScoreList::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_Network_2fgamestate_2eproto();  return *default_instance_;
+}
+
+HighScoreList* HighScoreList::default_instance_ = NULL;
+
+HighScoreList* HighScoreList::New() const {
+  return new HighScoreList;
+}
+
+void HighScoreList::Clear() {
+  entry_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool HighScoreList::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .ast.HighScoreEntry entry = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_entry:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_entry()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(10)) goto parse_entry;
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void HighScoreList::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // repeated .ast.HighScoreEntry entry = 1;
+  for (int i = 0; i < this->entry_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->entry(i), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* HighScoreList::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // repeated .ast.HighScoreEntry entry = 1;
+  for (int i = 0; i < this->entry_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->entry(i), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int HighScoreList::ByteSize() const {
+  int total_size = 0;
+  
+  // repeated .ast.HighScoreEntry entry = 1;
+  total_size += 1 * this->entry_size();
+  for (int i = 0; i < this->entry_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->entry(i));
+  }
+  
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void HighScoreList::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const HighScoreList* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const HighScoreList*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void HighScoreList::MergeFrom(const HighScoreList& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  entry_.MergeFrom(from.entry_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void HighScoreList::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void HighScoreList::CopyFrom(const HighScoreList& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool HighScoreList::IsInitialized() const {
+  
+  for (int i = 0; i < entry_size(); i++) {
+    if (!this->entry(i).IsInitialized()) return false;
+  }
+  return true;
+}
+
+void HighScoreList::Swap(HighScoreList* other) {
+  if (other != this) {
+    entry_.Swap(&other->entry_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata HighScoreList::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = HighScoreList_descriptor_;
+  metadata.reflection = HighScoreList_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int HighScoreEntry::kNameFieldNumber;
+const int HighScoreEntry::kScoreFieldNumber;
+const int HighScoreEntry::kDateFieldNumber;
+const int HighScoreEntry::kLevelFieldNumber;
+#endif  // !_MSC_VER
+
+HighScoreEntry::HighScoreEntry()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void HighScoreEntry::InitAsDefaultInstance() {
+}
+
+HighScoreEntry::HighScoreEntry(const HighScoreEntry& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void HighScoreEntry::SharedCtor() {
+  _cached_size_ = 0;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  score_ = 0u;
+  date_ = 0u;
+  level_ = 0u;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+HighScoreEntry::~HighScoreEntry() {
+  SharedDtor();
+}
+
+void HighScoreEntry::SharedDtor() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void HighScoreEntry::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* HighScoreEntry::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return HighScoreEntry_descriptor_;
+}
+
+const HighScoreEntry& HighScoreEntry::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_Network_2fgamestate_2eproto();  return *default_instance_;
+}
+
+HighScoreEntry* HighScoreEntry::default_instance_ = NULL;
+
+HighScoreEntry* HighScoreEntry::New() const {
+  return new HighScoreEntry;
+}
+
+void HighScoreEntry::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
+        name_->clear();
+      }
+    }
+    score_ = 0u;
+    date_ = 0u;
+    level_ = 0u;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool HighScoreEntry::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required string name = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_score;
+        break;
+      }
+      
+      // required uint32 score = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_score:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &score_)));
+          set_has_score();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(29)) goto parse_date;
+        break;
+      }
+      
+      // required fixed32 date = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_date:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_FIXED32>(
+                 input, &date_)));
+          set_has_date();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_level;
+        break;
+      }
+      
+      // required uint32 level = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_level:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &level_)));
+          set_has_level();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void HighScoreEntry::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->name(), output);
+  }
+  
+  // required uint32 score = 2;
+  if (has_score()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->score(), output);
+  }
+  
+  // required fixed32 date = 3;
+  if (has_date()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFixed32(3, this->date(), output);
+  }
+  
+  // required uint32 level = 4;
+  if (has_level()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->level(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* HighScoreEntry::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+  
+  // required uint32 score = 2;
+  if (has_score()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->score(), target);
+  }
+  
+  // required fixed32 date = 3;
+  if (has_date()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFixed32ToArray(3, this->date(), target);
+  }
+  
+  // required uint32 level = 4;
+  if (has_level()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->level(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int HighScoreEntry::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+    
+    // required uint32 score = 2;
+    if (has_score()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->score());
+    }
+    
+    // required fixed32 date = 3;
+    if (has_date()) {
+      total_size += 1 + 4;
+    }
+    
+    // required uint32 level = 4;
+    if (has_level()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->level());
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void HighScoreEntry::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const HighScoreEntry* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const HighScoreEntry*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void HighScoreEntry::MergeFrom(const HighScoreEntry& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+    if (from.has_score()) {
+      set_score(from.score());
+    }
+    if (from.has_date()) {
+      set_date(from.date());
+    }
+    if (from.has_level()) {
+      set_level(from.level());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void HighScoreEntry::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void HighScoreEntry::CopyFrom(const HighScoreEntry& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool HighScoreEntry::IsInitialized() const {
+  if ((_has_bits_[0] & 0x0000000f) != 0x0000000f) return false;
+  
+  return true;
+}
+
+void HighScoreEntry::Swap(HighScoreEntry* other) {
+  if (other != this) {
+    std::swap(name_, other->name_);
+    std::swap(score_, other->score_);
+    std::swap(date_, other->date_);
+    std::swap(level_, other->level_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata HighScoreEntry::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = HighScoreEntry_descriptor_;
+  metadata.reflection = HighScoreEntry_reflection_;
   return metadata;
 }
 

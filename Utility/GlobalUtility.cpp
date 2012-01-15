@@ -71,6 +71,7 @@ StoreMenu* storeMenu = NULL;
 SettingsMenu* settingsMenu = NULL;
 HelpMenu* helpMenu = NULL;
 CreditsMenu* creditsMenu = NULL;
+HighScoreList* highScoreList = NULL;
 
 // Declare text-inputs
 Input* chat = NULL;

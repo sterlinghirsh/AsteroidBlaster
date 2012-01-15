@@ -24,6 +24,7 @@ class MainMenu : public Menu {
         *helpText,
         *creditsText,
         *quitText,
+        *highScoresText,
         *ipInputText;
    
    
@@ -51,6 +52,7 @@ class MainMenu : public Menu {
    bool firstTime;
    bool canContinue;
    bool canSave;
+   bool showHighScores;
    
    std::vector<Text*> menuTexts;
 
