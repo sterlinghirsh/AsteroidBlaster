@@ -46,7 +46,7 @@ HighScoreList::HighScoreList() {
 
       highScoreTable = new Table(headers, "High Scores");
       highScoreTable->setColWidth(0, 3);
-      highScoreTable->setColWidth(3, 2);
+      highScoreTable->setColWidth(3, 3);
    }
 
    highlightMostRecentScore = false;

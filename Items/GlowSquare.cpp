@@ -137,21 +137,26 @@ void GlowSquare::drawGlow() {
    draw();
 }
 
+/**
+ * Update method for glowsquare.
+ * TODO: Make a priority queue of time, square pairs.
+ * Store the appropriate times in a texture or something.
+ * Handle the glow squares in a shader, and only update the texture when a new
+ * value is the next timeLastHit.
+ */
 void GlowSquare::update(double timeDiff) {
    // Set the timeLastHit to the latest time that is <= the current time.
    
-   if (curFrame % 3 == 0) {
+   timeSinceLastHit = (doubleTime() - timeLastHit) / fadeTime;
+   while (!flashTimes.empty() && flashTimes.top() <= doubleTime()) {
+      timeLastHit = flashTimes.top();
+      flashTimes.pop();
       timeSinceLastHit = (doubleTime() - timeLastHit) / fadeTime;
-      while (!flashTimes.empty() && flashTimes.top() <= doubleTime()) {
-         timeLastHit = flashTimes.top();
-         flashTimes.pop();
-         timeSinceLastHit = (doubleTime() - timeLastHit) / fadeTime;
-      }
+   }
 
-      if (flashTimes.empty() && timeSinceLastHit > fadeTime) {
-         // Deactive the square.
-         active = false;
-      }
+   if (flashTimes.empty() && timeSinceLastHit > fadeTime) {
+      // Deactive the square.
+      active = false;
    }
 }
 
