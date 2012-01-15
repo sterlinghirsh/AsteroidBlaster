@@ -48,13 +48,31 @@ HighScoreList::HighScoreList() {
       highScoreTable->setColWidth(0, 3);
       highScoreTable->setColWidth(3, 2);
    }
+
+   highlightMostRecentScore = false;
 }
 
 HighScoreList::~HighScoreList() {
 
 }
 
-void HighScoreList::addNewScore(int score, int level) {
+/**
+ * Return true when the new score is a new high score.
+ */
+bool HighScoreList::addNewScore(int score, int level) {
+   int lowestScore = 0;
+   bool isNewHighScore = false;
+
+   if (highScores.entry_size() > 0) {
+      lowestScore = highScores.entry(highScores.entry_size() - 1).score();
+   }
+
+   if (highScores.entry_size() < MAX_HIGH_SCORES) {
+      isNewHighScore = true;
+   } else if (score > lowestScore) {
+      isNewHighScore = true;
+   }
+
    // Something
    ast::HighScoreEntry* entry = highScores.add_entry();
    entry->set_score(score);
@@ -62,8 +80,10 @@ void HighScoreList::addNewScore(int score, int level) {
    entry->set_date(time(0));
    entry->set_level(level);
 
+
    sort();
    save();
+   return isNewHighScore;
 }
 
 void HighScoreList::load() {
@@ -83,6 +103,7 @@ void HighScoreList::save() {
 }
 
 void HighScoreList::sort() {
+   // Inefficient sort, but it's a max of 10 elements so whatever.
    for (int i = 0; i < highScores.entry_size() - 1; ++i) {
       for (int j = i + 1; j < highScores.entry_size(); ++j) {
          if (highScores.entry(i).score() < highScores.entry(j).score()) {
@@ -92,6 +113,7 @@ void HighScoreList::sort() {
    }
 
    while (highScores.entry_size() > MAX_HIGH_SCORES) {
+      // Because they're sorted.
       highScores.mutable_entry()->RemoveLast();
    }
 }
@@ -102,13 +124,24 @@ void HighScoreList::draw() {
 
    highScoreTable->setRows(highScores.entry_size());
 
+   unsigned mostRecentScoreDate = 0;
+   unsigned mostRecentRow = 0;
+
    for (int i = 0; i < highScores.entry_size(); ++i) {
       entry = &(highScores.entry(i));
+      if (highlightMostRecentScore && entry->date() > mostRecentScoreDate) {
+         mostRecentScoreDate = entry->date();
+         mostRecentRow = i;
+      }
       
       highScoreTable->setCell(i, 0, entry->name());
       highScoreTable->setCell(i, 1, entry->score());
       highScoreTable->setCell(i, 2, entry->level());
       highScoreTable->setCell(i, 3, getStringFromDate(entry->date()));
+   }
+   
+   if (highlightMostRecentScore) {
+      highScoreTable->setHighlight(mostRecentRow);
    }
 
    highScoreTable->draw();

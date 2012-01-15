@@ -2225,10 +2225,8 @@ void GameState::testFunction() {
    
    if (ship != NULL) {
       ship->health = 1;
+      ship->lives = 1;
    }
-   
-   highScoreList->addNewScore(ship->score, curLevel);
-
 }
 
 /**
@@ -2244,7 +2242,10 @@ void GameState::gameOver() {
       gameOverTimer.setCountDown(5);
       // This should only get called in single mode anyway, but whatever.
       if (gsm == SingleMode) {
-         highScoreList->addNewScore(ship->score, curLevel);
+         if (highScoreList->addNewScore(ship->score, curLevel)) {
+            mainMenu->showHighScores = true;
+            highScoreList->highlightMostRecentScore = true;
+         }
       }
 
    }

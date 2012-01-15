@@ -27,6 +27,8 @@ Table::Table(std::vector<std::string> _headers, std::string _title) :
     rowHeight = 30; // px
     topPadding = 10; // px
     totalColWidths = numColumns;
+    highlight = false;
+    highlightRow = 0;
    
     if (tableDisplayText == NULL)
       tableDisplayText = new Text("ScoreDisplay", hudFont, textPosition);
@@ -139,9 +141,13 @@ void Table::draw() {
       colStart += (colWidths[col] * baseColWidth) + colPadding;
    }
    
-   tableDisplayText->setColor(SDL_WHITE);
-
    for (unsigned row = 0; row < numRows; ++row) {
+      if (highlight && row == highlightRow) {
+         tableDisplayText->setColor(SDL_GREEN);
+      } else {
+         tableDisplayText->setColor(SDL_WHITE);
+      }
+
       colStart = leftSide + colPadding;
       textPosition.y += rowHeight;
 
@@ -156,4 +162,14 @@ void Table::draw() {
          colStart += (colWidths[col] * baseColWidth) + colPadding;
       }
    }
+}
+
+void Table::setHighlight(unsigned row) {
+   assert (row < numRows);
+   highlightRow = row;
+   highlight = true;
+}
+
+void Table::clearHighlight() {
+   highlight = false;
 }

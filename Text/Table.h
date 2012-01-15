@@ -17,6 +17,8 @@ class Table {
       void setCell(unsigned row, unsigned column, int newInt);
       void setRows(int _numRows);
       void setColWidth(unsigned col, unsigned relativeWidth);
+      void setHighlight(unsigned row);
+      void clearHighlight();
       void draw();
    private:
       std::vector<std::string> headers;
@@ -26,6 +28,8 @@ class Table {
       int colPadding;
       int rowHeight;
       int topPadding;
+      bool highlight;
+      unsigned highlightRow;
       std::vector< std::vector<std::string> > rows;
       std::vector<unsigned> colWidths;
       std::string title;

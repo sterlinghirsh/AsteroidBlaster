@@ -11,11 +11,12 @@ class HighScoreList {
    public:
       HighScoreList();
       ~HighScoreList();
-      void addNewScore(int score, int level);
+      bool addNewScore(int score, int level);
       void load();
       void save();
       void draw();
       void sort();
+      bool highlightMostRecentScore;
 };
 
 #endif

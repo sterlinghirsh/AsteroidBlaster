@@ -193,6 +193,7 @@ void MainMenu::draw() {
 void MainMenu::keyDown(int key, int unicode) {
    if (showHighScores) {
       showHighScores = false;
+      highScoreList->highlightMostRecentScore = false;
       return;
    }
 
@@ -253,6 +254,7 @@ void MainMenu::mouseDown(int button) {
    if (!menuActive) { return; }
    if (showHighScores) {
       showHighScores = false;
+      highScoreList->highlightMostRecentScore = false;
       return;
    }
 
