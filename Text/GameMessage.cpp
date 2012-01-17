@@ -12,10 +12,13 @@
 std::list<GameMessage*> GameMessage::activeMessages;
 SDL_Rect DefaultSDLRect = {0, 0};
 
-GameMessage::GameMessage(std::string _text, double _size, double _lifetime, GameState* _gameState) : Text(_text, menuFont, DefaultSDLRect),
-gameState(_gameState) {
+GameMessage::GameMessage(std::string _text, double _size, double _lifetime, 
+ GameState* _gameState, bool _inSidebar) : 
+ Text(_text, (_inSidebar ? hudFont : menuFont), DefaultSDLRect),
+ inSidebar(_inSidebar),
+ gameState(_gameState) {
    lifetime = _lifetime;
-   alignment = CENTERED;
+   alignment = inSidebar ? LEFT_ALIGN : CENTERED;
    // This is a good place to use doubletime.
    timeCreated = gameState->getGameTime();
    shouldRemove = false;
@@ -46,12 +49,36 @@ void GameMessage::drawAllMessages() {
    int lineHeight = 30;
    std::list<GameMessage*>::iterator listIter = activeMessages.begin();
 
+   int messageCount = 0;
+   const int maxMessages = 5;
+
    while(listIter != activeMessages.end()) {
-      (*listIter)->setPosition(position);
-      (*listIter)->draw();
-      position.y = (Sint16) (position.y + lineHeight);
+      if (!(*listIter)->inSidebar) {
+         if (++messageCount <= maxMessages) {
+            (*listIter)->setPosition(position);
+            (*listIter)->draw();
+            position.y = (Sint16) (position.y + lineHeight);
+         }
+      }
       ++listIter;
    }
+
+   position.x = 30; // px from left
+   position.y = (gameSettings->GH * 3) / 4;
+   listIter = activeMessages.begin();
+   messageCount = 0;
+
+   while(listIter != activeMessages.end()) {
+      if ((*listIter)->inSidebar) {
+         if (++messageCount <= maxMessages) {
+            (*listIter)->setPosition(position);
+            (*listIter)->draw();
+            position.y = (Sint16) (position.y + lineHeight);
+         }
+      }
+      ++listIter;
+   }
+
 }
 
 void GameMessage::updateAllMessages(double timeDiff) {
@@ -69,8 +96,8 @@ void GameMessage::updateAllMessages(double timeDiff) {
    }
 }
 
-void GameMessage::Add(std::string _text, double _size, double _lifetime, GameState* _gameState) {
-   activeMessages.push_back(new GameMessage(_text, _size, _lifetime, _gameState));
+void GameMessage::Add(std::string _text, double _size, double _lifetime, GameState* _gameState, bool _inSidebar) {
+   activeMessages.push_back(new GameMessage(_text, _size, _lifetime, _gameState, _inSidebar));
 }
 
 void GameMessage::Clear() {

@@ -2500,16 +2500,20 @@ void AsteroidShip::doRespawn(double timeDiff) {
       
       Object3D* killer = (*custodian)[lastDamagerId];
       if (killer != NULL) {
+         ostringstream killMessage;
          if (killer->type == TYPE_ASTEROIDSHIP) {
             AsteroidShip* killerShip = static_cast<AsteroidShip*>(killer);
             if (gameState->gsm != ClientMode) {
                killerShip->kills++;
             }
-            cout << killerShip->name << " killed " << name << " with a " 
-             << weapons[lastDamagerWeapon]->getName() << "." << endl;
+            killMessage << killerShip->name << " killed " << name << " with a " 
+             << weapons[lastDamagerWeapon]->getName() << ".";
          } else {
-            cout << name << " was killed by an asteroid." << endl;
+            killMessage << name << " was killed by an asteroid.";
          }
+
+         // Add the kill message to the list.
+         GameMessage::Add(killMessage.str(), 15, 5, gameState, true);
       }
 
       // Update weapons one last time.
@@ -2552,8 +2556,10 @@ void AsteroidShip::doDeadStuff(double timeDiff) {
       gameState->usingShipCamera = false;
    }
 
-   // This only happens when it needs to, I guess.
-   doRespawn(timeDiff);
+   if (!isRespawning()) {
+      // This only happens when it needs to, I guess.
+      doRespawn(timeDiff);
+   }
 
    timeLeftToRespawn = respawnTimer.getTimeLeft();
 

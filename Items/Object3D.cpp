@@ -314,9 +314,13 @@ bool Object3D::saveDiff(const ast::Entity& old, ast::Entity* ent) {
 
    // The type never changes, don't don't send that again.
 
+   bool velocityChanged = true;
    if (!velocity->saveDiff(old.velocity(), ent->mutable_velocity())) {
       ent->clear_velocity();
-   } else {
+      velocityChanged = false;
+   }
+   
+   if (velocityChanged || velocity->getComparisonLength() < 0.01) {
       // Velocity changed.
       somethingChanged = true;
 

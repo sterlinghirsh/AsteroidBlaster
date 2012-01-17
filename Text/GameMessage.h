@@ -15,10 +15,12 @@ class GameState;
 
 class GameMessage : public Text {
    public:
-      GameMessage(std::string _text, double _size, double _lifetime, GameState* _gameState);
+      GameMessage(std::string _text, double _size, double _lifetime, 
+       GameState* _gameState, bool _inSidebar = false);
       virtual ~GameMessage();
       virtual void update(double timeDiff);
 
+      bool inSidebar;
       bool shouldRemove;
       double lifetime; // Secs
       double timeCreated;
@@ -28,7 +30,7 @@ class GameMessage : public Text {
       static std::list<GameMessage*> activeMessages;
       static void drawAllMessages();
       static void updateAllMessages(double timeDiff);
-      static void Add(std::string _text, double _size, double _lifetime, GameState* _gameState);
+      static void Add(std::string _text, double _size, double _lifetime, GameState* _gameState, bool _inSidebar = false);
       static void Clear();
 };
 

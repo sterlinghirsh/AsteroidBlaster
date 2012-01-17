@@ -434,6 +434,8 @@ void GameState::update(double timeDiff) {
    //Sprite::updateSprites(timeDiff);
    MeshFace::updateIndependentFaces(timeDiff);
    GameMessage::updateAllMessages(timeDiff);
+
+   //GameMessage::Add("test", 15, 0, this, true);
    
    ast::CollisionMessage* curFrameCollisions = NULL;
    if (gsm == ServerMode) {
