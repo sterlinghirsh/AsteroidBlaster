@@ -337,7 +337,7 @@ void GameState::update(double timeDiff) {
       // Cleanup here to make sure we're not depending on anything (hopefully.)
       // TODO: Cleanup if on server side based on what's still referenced in the oldest saved gamestate.
       // Probably should store the most recent gamestate in which each object was modified.
-      custodian.cleanup();
+      //custodian.cleanup();
    }
 
    if (gsm == ClientMode) {
@@ -354,13 +354,15 @@ void GameState::update(double timeDiff) {
    
    // Fix time slowly over a few frames.
    if (!justLoadedFirstFrame) {
-      const double timeCorrectionAmount = 0.001; // seconds
-      double networkGameTime = gameTime;
+      if (gsm == ClientMode) {
+         const double timeCorrectionAmount = 0.001; // seconds
+         double networkGameTime = gameTime;
 
-      if (newLocalGameTime > networkGameTime + timeCorrectionAmount * 3) {
-         newLocalGameTime -= timeCorrectionAmount;
-      } else if (newLocalGameTime < networkGameTime - timeCorrectionAmount * 3) {
-         newLocalGameTime += timeCorrectionAmount * 2;
+         if (newLocalGameTime > networkGameTime + timeCorrectionAmount * 3) {
+            newLocalGameTime -= timeCorrectionAmount;
+         } else if (newLocalGameTime < networkGameTime - timeCorrectionAmount * 3) {
+            newLocalGameTime += timeCorrectionAmount * 2;
+         }
       }
 
       // This advances the stuff.
@@ -369,61 +371,11 @@ void GameState::update(double timeDiff) {
 
    // if the game over timer is set, and is over
    if (gameOverTimer.isRunning && gameOverTimer.getTimeLeft() < 0) {
-      mainMenu->firstTime = true;
-      mainMenu->activate();
-      gameOverTimer.reset();
-      custodian.clear();
-      Particle::Clear();
-      MeshFace::Clear();
-      custodian.update();
-      GameMessage::Clear();
+      handleGameOver();
    }
-   
-   // This counts CPUs too.
-   int playerCount = custodian.ships.size();
 
    // if it's not in MenuMode
-   if (gsm != MenuMode) {
-      if (curLevel > LEVEL_WARMUP) {
-         // If the level should be over, let's go to the store menu.
-         if(!gameOverTimer.isRunning && ((levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) ||
-               (gameIsRunning &&
-                (gsm == SingleMode) &&
-                custodian.asteroidCount == 0 &&
-                custodian.shardCount == 0)) ) {
-            nextLevel();
-            return;
-         }
-
-         // the last 6 seconds of the stage
-         if (levelTimer.getTimeLeft() <= 6 && levelTimer.getTimeLeft() > 0 && !gameOverTimer.isRunning) {
-            // Check if it is done waiting until going to the next level
-            std::ostringstream gameMsg;
-            if (gsm == SingleMode) {
-               gameMsg << "Entering store in " << (int)levelTimer.getTimeLeft() << "...";
-            } else {
-               gameMsg << "Next level in " << (int)levelTimer.getTimeLeft() << "...";
-            }
-            GameMessage::Add(gameMsg.str(), 30, 0, this);
-         }
-
-         if (gsm == ServerMode && playerCount < MIN_MULTIPLAYER_PLAYERS) {
-            goToWarmup();
-         }
-      } else {
-         std::ostringstream gameMsg;
-         int remainingPlayers = MIN_MULTIPLAYER_PLAYERS - playerCount;
-         gameMsg << "Waiting for " << remainingPlayers << 
-            ((remainingPlayers == 1) ? " more player." : " more players.");
-         GameMessage::Add(gameMsg.str(), 30, 0, this);
-      }
-   }
-
-   if (gsm == ServerMode && curLevel == LEVEL_WARMUP && playerCount >= MIN_MULTIPLAYER_PLAYERS) {
-      nextLevel();
-   }
-
-
+   handleLevelEndStuff();
 
    // Update before proceeding.
    // TODO: Do we need to do this here?
@@ -431,52 +383,16 @@ void GameState::update(double timeDiff) {
    // Used to cleanup here, but that broke collisions.
    
    Particle::updateParticles(timeDiff);
-   //Sprite::updateSprites(timeDiff);
    MeshFace::updateIndependentFaces(timeDiff);
    GameMessage::updateAllMessages(timeDiff);
-
-   //GameMessage::Add("test", 15, 0, this, true);
    
-   ast::CollisionMessage* curFrameCollisions = NULL;
    if (gsm == ServerMode) {
-      curFrameCollisions = new ast::CollisionMessage();
-      curFrameCollisions->set_gamestateid(curGameStateId);
-      savedCollisionMessages[curGameStateId] = curFrameCollisions;
-      std::set< std::pair<unsigned, unsigned> >::iterator collisionIter;
-            
-      for (collisionIter = recordedCollisions->begin(); collisionIter !=
-       recordedCollisions->end(); collisionIter++) {
-         // Every 2 is a collision.
-         curFrameCollisions->add_collider((*collisionIter).first);
-         curFrameCollisions->add_collider((*collisionIter).second);
-      }
+      handleServerCollisions(recordedCollisions);
    }
 
    // Check every object for collisions.
    if (gsm == ClientMode) {
-      // Read collisions and handle them.
-      std::map<unsigned, ast::CollisionMessage*>::iterator collisionIter;
-      collisionIter = savedCollisionMessages.begin();
-      CollisionBase* collision;
-      unsigned aId, bId;
-      for (; collisionIter != savedCollisionMessages.end(); ++collisionIter) {
-         // Go by 2s.
-         for (int i = 0; i < collisionIter->second->collider_size(); i += 2) {
-            aId = collisionIter->second->collider(i);
-            bId = collisionIter->second->collider(i + 1);
-            // DEBUG
-            // printf("aid: %d, bid: %d\n", aId, bId);
-            collision = custodian.getCollision(custodian[aId], custodian[bId]);
-            if (collision != NULL) {
-               collision->handleCollision();
-               delete collision;
-            } else {
-               // DEBUG
-               printf("Null collision.\n");
-            }
-         }
-         savedCollisionMessages.erase(collisionIter);
-      }
+      handleClientCollisions();
    }
 
    // TODO: Add code to handle sound on client side, when ship is null.
@@ -484,65 +400,13 @@ void GameState::update(double timeDiff) {
       SoundEffect::updatePositions(shipCamera->position,
        ship->velocity, shipCamera->forward, shipCamera->up);
 
-      shardBankBar->setAmount(ship->bankTimer.isRunning ? ship->bankTimer.getAmountComplete() : 0);
-      healthBar->setAmount(((float) ship->health / (float) ship->healthMax));
-
-      if (gameSettings->enableMinimap) {
-         minimap->update(timeDiff);
-      }
+      updateHud(timeDiff);
    } else {
-      Vector3D up(0, 1, 0);
-      Vector3D center(0, 0, 0);
-      Vector3D fwd(spectatorCamera->position, &center);
-      fwd.normalize();
-      Vector3D velocity(up.cross(fwd).scalarMultiply(20));
-      SoundEffect::updatePositions(spectatorCamera->position, &velocity,
-       &fwd, &up);
+      updateSpectatorCamera();
    }
 
    if (gsm == ServerMode) {
-      // Send the gamestate to everyone.
-      unsigned gameStateId = storeFullGameState();
-      std::map<unsigned, ClientInfo*>& clients = serverSide->getClients();
-      std::map<unsigned, ClientInfo*>::iterator clientIter = clients.begin();
-
-      ast::Frame frame;
-      bool sendReliable;
-
-      for (; clientIter != clients.end(); clientIter++) {
-         sendReliable = false;
-         if (clientIter->second == NULL) {
-            clients.erase(clientIter);
-         } else if (!clientIter->second->connected) {
-            delete clientIter->second;
-            clients.erase(clientIter);
-         } else {
-            ClientInfo* client = clientIter->second;
-
-            if (client->ackGameState == 0) {
-               // Send the initial update.
-               sendReliable = true;
-               // No diff.
-               frame.set_shipid(client->shipid);
-               frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
-            } else {
-               saveDiff(*(savedGameStates[client->ackGameState]), frame.mutable_gamestate());
-               
-               unsigned i;
-               for (i = client->ackGameState + 1; i <= gameStateId; ++i) {
-                  if (savedCollisionMessages[i] != NULL)
-                     frame.add_collision_message()->CopyFrom(*(savedCollisionMessages[i]));
-               }
-            }
-
-            serverSide->send(client->client, frame, sendReliable);
-            
-            frame.Clear();
-         }
-      }
-
-      serverSide->receive();
-      clearOldSavedGameStates();
+      doServerNetworking();
    }
 
    updateText();
@@ -1310,8 +1174,7 @@ void GameState::nextLevel() {
       (*shipIter)->atLevelEnd();
 
       if (gsm != ClientMode && curLevel <= LEVEL_WARMUP) {
-         (*shipIter)->reInitialize();
-         (*shipIter)->lives = PLAYER_LIVES;
+         (*shipIter)->reset();
       }
    }
 
@@ -2471,11 +2334,6 @@ void GameState::testCollisions(std::set< std::pair<unsigned, unsigned> >* record
          (*curCollision)->handleCollision();
          if (recordedCollisions != NULL) {
             recordedCollisions->insert(std::make_pair((*curCollision)->aId, (*curCollision)->bId));
-            /*
-            // Every 2 is a collision.
-            curFrameCollisions->add_collider((*curCollision)->aId);
-            curFrameCollisions->add_collider((*curCollision)->bId);
-            */
          }
       }
       delete collisions;
@@ -2550,4 +2408,170 @@ void GameState::clearOldSavedGameStates() {
    }
 
    savedGameStates.erase(savedGameStates.begin(), endState);
+}
+
+void GameState::handleGameOver() {
+   mainMenu->firstTime = true;
+   mainMenu->activate();
+   gameOverTimer.reset();
+   custodian.clear();
+   Particle::Clear();
+   MeshFace::Clear();
+   custodian.update();
+   GameMessage::Clear();
+}
+
+/**
+ * This is a function called every frame that handles a few end-of-level
+ * or near-end-of-level conditions.
+ */
+void GameState::handleLevelEndStuff() {
+   if (gsm != MenuMode) {
+      // This counts AI players too.
+      int playerCount = custodian.ships.size();
+
+      if (curLevel > LEVEL_WARMUP) {
+         // If the level should be over, let's go to the store menu.
+         if(!gameOverTimer.isRunning && ((levelTimer.isRunning && levelTimer.getTimeLeft() <= 0) ||
+               (gameIsRunning &&
+                (gsm == SingleMode) &&
+                custodian.asteroidCount == 0 &&
+                custodian.shardCount == 0)) ) {
+            nextLevel();
+            return;
+         }
+
+         // the last 6 seconds of the stage
+         if (levelTimer.getTimeLeft() <= 6 && levelTimer.getTimeLeft() > 0 && !gameOverTimer.isRunning) {
+            // Check if it is done waiting until going to the next level
+            std::ostringstream gameMsg;
+            if (gsm == SingleMode) {
+               gameMsg << "Entering store in " << (int)levelTimer.getTimeLeft() << "...";
+            } else {
+               gameMsg << "Next level in " << (int)levelTimer.getTimeLeft() << "...";
+            }
+            GameMessage::Add(gameMsg.str(), 30, 0, this);
+         }
+
+         if (gsm == ServerMode && playerCount < MIN_MULTIPLAYER_PLAYERS) {
+            goToWarmup();
+         }
+      } else {
+         std::ostringstream gameMsg;
+         int remainingPlayers = MIN_MULTIPLAYER_PLAYERS - playerCount;
+         gameMsg << "Waiting for " << remainingPlayers << 
+            ((remainingPlayers == 1) ? " more player." : " more players.");
+         GameMessage::Add(gameMsg.str(), 30, 0, this);
+      }
+
+      if (gsm == ServerMode && curLevel == LEVEL_WARMUP && playerCount >= MIN_MULTIPLAYER_PLAYERS) {
+         nextLevel();
+      }
+   }
+
+}
+
+void GameState::handleServerCollisions(std::set < std::pair<unsigned, unsigned> >* recordedCollisions) {
+   ast::CollisionMessage* curFrameCollisions = NULL;
+   curFrameCollisions = new ast::CollisionMessage();
+   curFrameCollisions->set_gamestateid(curGameStateId);
+   savedCollisionMessages[curGameStateId] = curFrameCollisions;
+   std::set< std::pair<unsigned, unsigned> >::iterator collisionIter;
+         
+   for (collisionIter = recordedCollisions->begin(); collisionIter !=
+    recordedCollisions->end(); collisionIter++) {
+      // Every 2 is a collision.
+      curFrameCollisions->add_collider((*collisionIter).first);
+      curFrameCollisions->add_collider((*collisionIter).second);
+   }
+}
+
+void GameState::handleClientCollisions() {
+   // Read collisions and handle them.
+   std::map<unsigned, ast::CollisionMessage*>::iterator collisionIter;
+   collisionIter = savedCollisionMessages.begin();
+   CollisionBase* collision;
+   unsigned aId, bId;
+   for (; collisionIter != savedCollisionMessages.end(); ++collisionIter) {
+      // Go by 2s.
+      for (int i = 0; i < collisionIter->second->collider_size(); i += 2) {
+         aId = collisionIter->second->collider(i);
+         bId = collisionIter->second->collider(i + 1);
+         // DEBUG
+         // printf("aid: %d, bid: %d\n", aId, bId);
+         collision = custodian.getCollision(custodian[aId], custodian[bId]);
+         if (collision != NULL) {
+            collision->handleCollision();
+            delete collision;
+         } else {
+            // DEBUG
+            printf("Null collision.\n");
+         }
+      }
+      savedCollisionMessages.erase(collisionIter);
+   }
+}
+
+void GameState::updateSpectatorCamera() {
+   Vector3D up(0, 1, 0);
+   Vector3D center(0, 0, 0);
+   Vector3D fwd(spectatorCamera->position, &center);
+   fwd.normalize();
+   Vector3D velocity(up.cross(fwd).scalarMultiply(20));
+   SoundEffect::updatePositions(spectatorCamera->position, &velocity,
+    &fwd, &up);
+}
+
+void GameState::updateHud(double timeDiff) {
+   shardBankBar->setAmount(ship->bankTimer.isRunning ? ship->bankTimer.getAmountComplete() : 0);
+   healthBar->setAmount(((float) ship->health / (float) ship->healthMax));
+
+   if (gameSettings->enableMinimap) {
+      minimap->update(timeDiff);
+   }
+}
+
+void GameState::doServerNetworking() {
+   // Send the gamestate to everyone.
+   unsigned gameStateId = storeFullGameState();
+   std::map<unsigned, ClientInfo*>& clients = serverSide->getClients();
+   std::map<unsigned, ClientInfo*>::iterator clientIter = clients.begin();
+
+   ast::Frame frame;
+   bool sendReliable;
+
+   for (; clientIter != clients.end(); clientIter++) {
+      sendReliable = false;
+      if (clientIter->second == NULL) {
+         clients.erase(clientIter);
+      } else if (!clientIter->second->connected) {
+         delete clientIter->second;
+         clients.erase(clientIter);
+      } else {
+         ClientInfo* client = clientIter->second;
+
+         if (client->ackGameState == 0) {
+            // Send the initial update.
+            sendReliable = true;
+            // No diff.
+            frame.set_shipid(client->shipid);
+            frame.mutable_gamestate()->CopyFrom(*(savedGameStates[gameStateId]));
+         } else {
+            saveDiff(*(savedGameStates[client->ackGameState]), frame.mutable_gamestate());
+            
+            unsigned i;
+            for (i = client->ackGameState + 1; i <= gameStateId; ++i) {
+               if (savedCollisionMessages[i] != NULL)
+                  frame.add_collision_message()->CopyFrom(*(savedCollisionMessages[i]));
+            }
+         }
+
+         serverSide->send(client->client, frame, sendReliable);
+         
+         frame.Clear();
+      }
+   }
+
+   serverSide->receive();
+   clearOldSavedGameStates();
 }

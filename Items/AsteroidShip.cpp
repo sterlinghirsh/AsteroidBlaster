@@ -33,6 +33,8 @@ extern ofstream debugoutput;
 
 #define SHOT_ANGLE_FACTOR ((M_PI/180) * VERT_FOV / 2)
 
+#define KILLEDBY_DEFAULT 0
+
 int TRACTOR_WEAPON_INDEX = 0;
 int BLASTER_WEAPON_INDEX = 0;
 int RAILGUN_WEAPON_INDEX = 0;
@@ -127,7 +129,7 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    lives = PLAYER_LIVES;
 
    lastDamagerId = 0;
-   killedBy = 0;
+   killedBy = KILLEDBY_DEFAULT;
    lastDamagerWeapon = DAMAGER_INDEX_ASTEROID;
 
    // The number of shard collected. This number is displayed to the screen.
@@ -208,9 +210,23 @@ AsteroidShip::~AsteroidShip() {
 }
 
 /**
+ * Reset the ship as if the game just started.
+ */
+void AsteroidShip::reset() {
+   reInitialize();
+
+   if (gameState->gsm != ClientMode) {
+      lives = PLAYER_LIVES;
+      kills = deaths = score = 0;
+   }
+}
+
+/**
  * Reset the ship as if it just spawned.
  */
 void AsteroidShip::reInitialize() {
+   // DEBUG
+   cout << "reinitializing!" << endl;
    shakeAmount = 0;
    
    /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
@@ -218,33 +234,37 @@ void AsteroidShip::reInitialize() {
    yawSpeed = rollSpeed = pitchSpeed = 0;
    targetYawSpeed = targetRollSpeed = targetPitchSpeed = 0;
    maxSpeed = 5; // Units/s, probably will be changed with an upgrade.
-   maxBoostSpeed = maxSpeed * 1.5; // Units/s, probably will be changed with an upgrade.
    
    /* Currently not braking or acceleration. */
    isBraking = false;
    brakeFactor = 2;
 
-   // Is the ship firing? Not when it's instantiated.
-   isFiring = false;
    shotPhi = shotTheta = 0;
 
    // The ship's currently selected weapon.
    currentWeapon = BLASTER_WEAPON_INDEX; // Blaster
 
-   health = healthMax;
-   
    isBarrelRollingLeft = -1;
    isBarrelRollingRight = -1;
 
    accelerationStartTime = gameState->getGameTime();
    particlesEmitted = 0;
-
-   velocity->updateMagnitude(0, 0, 0);
    
-   // This does its own gsm check.
-   randomizePosition();
+   deathAcknowledged = true;
+
+   interpolateOrientation = false;
+   orientationInterpolationAmount = 0;
 
    if (gameState->gsm != ClientMode) {
+      // Is the ship firing? Not when it's instantiated.
+      isFiring = false;
+
+      health = healthMax;
+   
+      // This does its own gsm check.
+      randomizePosition();
+
+      velocity->updateMagnitude(0, 0, 0);
 
       respawnTimer.reset();
       aliveTimer.countUp();
@@ -254,14 +274,8 @@ void AsteroidShip::reInitialize() {
       engineLevel = 1;
       regenHealthLevel = 0;
       bankLevel = 1;
+      killedBy = KILLEDBY_DEFAULT;
    }
-
-   deathAcknowledged = false;
-
-   interpolateOrientation = false;
-   orientationInterpolationAmount = 0;
-
-   killedBy = 0;
 }
 
 /**
@@ -501,6 +515,26 @@ void AsteroidShip::createLowHealthParticles(double timeDiff){
    }
 }
 
+void AsteroidShip::addKillMessage() {
+   Object3D* killer = (*custodian)[lastDamagerId];
+   if (killer != NULL) {
+      ostringstream killMessage;
+      if (killer->type == TYPE_ASTEROIDSHIP) {
+         AsteroidShip* killerShip = static_cast<AsteroidShip*>(killer);
+         if (gameState->gsm != ClientMode) {
+            killerShip->kills++;
+         }
+         killMessage << killerShip->name << " killed " << name << " with a " 
+          << weapons[lastDamagerWeapon]->getName() << ".";
+      } else {
+         killMessage << name << " flew into an asteroid.";
+      }
+
+      // Add the kill message to the list.
+      GameMessage::Add(killMessage.str(), 15, 5, gameState, true);
+   }
+}
+
 void AsteroidShip::addRespawnMessage() {
    ostringstream gameMsg;
    gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
@@ -527,6 +561,9 @@ void AsteroidShip::update(double timeDiff) {
       // If health > 0.
       shouldDrawInMinimap = true;
    }
+
+
+   // We don't make it past here if health is <= 0.
    
    if (this == gameState->ship && health > 0 && lives > 0) {
       gameState->usingShipCamera = true;
@@ -535,11 +572,6 @@ void AsteroidShip::update(double timeDiff) {
 
    if (lives > 0) {
       if (timeLeftToRespawn > 0 && (gameState->gsm != MenuMode)) {
-         if (this == gameState->ship && !isFirstSpawn) {
-            ostringstream gameMsg;
-            gameMsg << "Respawning in " << (int)(timeLeftToRespawn);
-            GameMessage::Add(gameMsg.str(), 30, 0, gameState);
-         }
          timeLeftToRespawn -= timeDiff;
          drawSpawn = true;
          return;
@@ -1706,7 +1738,8 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
 
 bool AsteroidShip::isRespawning() {
    //printf("Is it respawning? : %d\n", respawnTimer.isRunning && (respawnTimer.getTimeLeft() + spawnRate) > 0);
-   return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0 && timeLeftToRespawn > 0;
+   return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0
+    && timeLeftToRespawn > 0;
 }
 
 Shard* AsteroidShip::makeShard() {
@@ -2197,13 +2230,16 @@ void AsteroidShip::load(const ast::Entity& ent) {
    }
 
    // When killedby is set by the server, deathAcknowledged is set to false.
-   // We only do this when the local killedBy is -1 (meaning player is alive 
-   // and just getting killed) or when ent.killedby() is -1, meaning player 
+   // We only do this when the local killedBy is 0 (meaning player is alive 
+   // and just getting killed) or when ent.killedby() is 0, meaning player 
    // is getting reset right now.
    // We don't set deathAcknowledged to false when getting reset, though.
-   if (ent.has_killedby() && (killedBy == 0 || ent.killedby() == 0)) {
+   if (ent.has_killedby() && (killedBy == KILLEDBY_DEFAULT || ent.killedby() == KILLEDBY_DEFAULT) &&
+    killedBy != ent.killedby()) {
       killedBy = ent.killedby();
-      if (killedBy != 0) {
+      // DEBUG
+      cout << "Setting killedby to " << killedBy << " for " << name << endl;
+      if (killedBy != KILLEDBY_DEFAULT) {
          deathAcknowledged = false;
       }
    }
@@ -2448,88 +2484,68 @@ bool AsteroidShip::isFullAIEnabled() {
    return shooter->isEnabled() && flyingAI->isEnabled();
 }
 
+/**
+ * Handle respawning.
+ */
 void AsteroidShip::doRespawn(double timeDiff) {
-   // Handle respawning.
-   if (!respawnTimer.isRunning || 
-    (gameState->gsm == ClientMode && !deathAcknowledged)) {
-      deathAcknowledged = true;
-      if (this == gameState->ship) {
-         gameState->usingShipCamera = false;
+   deathAcknowledged = true;
+   if (this == gameState->ship) {
+      gameState->usingShipCamera = false;
+   }
+
+   if (gameState->gsm != ClientMode) {
+      if (lives > 0) {
+         // We want this to happen if a user has 1 lives left, I guess.
+         ++deaths;
+         --lives;
       }
 
-      if (gameState->gsm != ClientMode) {
-         if (lives > 0) {
-            // We want this to happen if a user has 1 lives left, I guess.
-            ++deaths;
-            --lives;
-         }
-
-         // Since lives changed, let's check again.
-         if (lives > 0) {
-            respawnTimer.setCountDown(RESPAWN_TIME);
-            timeLeftToRespawn = respawnTimer.getTimeLeft();
-            
-            // Make sure to stop barrel rolling.
-            isBarrelRollingLeft = -1;
-            isBarrelRollingRight = -1;
+      // Since lives changed, let's check again.
+      if (lives > 0) {
+         respawnTimer.setCountDown(RESPAWN_TIME);
+         timeLeftToRespawn = respawnTimer.getTimeLeft();
          
-         } else {
-            // Update weapons one last time.
-            for (vector<Weapon*>::iterator iter = weapons.begin();
-                  iter != weapons.end(); ++iter) {
-               (*iter)->update(timeDiff);
-            }
-            if (this == gameState->ship) {
-               if (gameState->gsm == SingleMode) {
-                  gameState->gameOver();
-               }
-
-               return;
-            } else {
-               if (gameState->gsm == SingleMode || 
-                 shooter->isEnabled() || flyingAI->isEnabled()) {
-                  shouldRemove = true;
-               }
-            }
-         }
-      }
-
-      if (gameState->gsm != ClientMode) {
-         killedBy = lastDamagerId;
-      }
+         // Make sure to stop barrel rolling.
+         isBarrelRollingLeft = -1;
+         isBarrelRollingRight = -1;
       
-      Object3D* killer = (*custodian)[lastDamagerId];
-      if (killer != NULL) {
-         ostringstream killMessage;
-         if (killer->type == TYPE_ASTEROIDSHIP) {
-            AsteroidShip* killerShip = static_cast<AsteroidShip*>(killer);
-            if (gameState->gsm != ClientMode) {
-               killerShip->kills++;
-            }
-            killMessage << killerShip->name << " killed " << name << " with a " 
-             << weapons[lastDamagerWeapon]->getName() << ".";
-         } else {
-            killMessage << name << " was killed by an asteroid.";
+      } else {
+         // No more lives, just stay quiet.
+         // Update weapons one last time.
+         for (vector<Weapon*>::iterator iter = weapons.begin();
+               iter != weapons.end(); ++iter) {
+            (*iter)->update(timeDiff);
          }
-
-         // Add the kill message to the list.
-         GameMessage::Add(killMessage.str(), 15, 5, gameState, true);
+         if (this == gameState->ship) {
+            if (gameState->gsm == SingleMode) {
+               gameState->gameOver();
+            }
+         } else {
+            if (gameState->gsm == SingleMode || 
+              shooter->isEnabled() || flyingAI->isEnabled()) {
+               shouldRemove = true;
+            }
+         }
       }
 
-      // Update weapons one last time.
-      for (vector<Weapon*>::iterator iter = weapons.begin();
-            iter != weapons.end(); ++iter) {
-         (*iter)->update(timeDiff);
-      }
+      killedBy = lastDamagerId;
+   }
 
-      // Fix all the velocities with anything added from the killer.
-      Object3D::update(timeDiff);       
+   addKillMessage();
 
-      createExplosionParticles();
-      // Release all the shards.
-      if (gameState->gsm != ClientMode) {
-         dropShards();
-      }
+   // Update weapons one last time.
+   for (vector<Weapon*>::iterator iter = weapons.begin();
+         iter != weapons.end(); ++iter) {
+      (*iter)->update(timeDiff);
+   }
+
+   // Fix all the velocities with anything added from the killer.
+   Object3D::update(timeDiff);       
+
+   createExplosionParticles();
+   // Release all the shards.
+   if (gameState->gsm != ClientMode) {
+      dropShards();
    }
 }
 
@@ -2556,8 +2572,8 @@ void AsteroidShip::doDeadStuff(double timeDiff) {
       gameState->usingShipCamera = false;
    }
 
-   if (!isRespawning()) {
-      // This only happens when it needs to, I guess.
+   if ((gameState->gsm != ClientMode && !isRespawning()) ||
+    (gameState->gsm == ClientMode && !deathAcknowledged)) {
       doRespawn(timeDiff);
    }
 
@@ -2570,6 +2586,7 @@ void AsteroidShip::doDeadStuff(double timeDiff) {
    if (gameState->gameIsRunning && respawnTimer.isRunning && 
     timeLeftToRespawn <= 1.5 && lives > 0) {
       timeLeftToRespawn = 1.5;
+      // This cancels the respawn timer.
       reInitialize();
    }
 }

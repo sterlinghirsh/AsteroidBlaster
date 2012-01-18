@@ -215,6 +215,9 @@ class GameState : public InputReceiver {
       void resetClientCommand(bool shouldClearMultiplayerInfo = false);
       void handleCommand(const ast::ClientCommand& command);
       void handleFrame(ast::Frame* frame);
+
+      void handleGameOver();
+      void handleLevelEndStuff();
       
       void setLevelTimer();
       
@@ -251,8 +254,15 @@ class GameState : public InputReceiver {
       void spectatorCameraUpdate(double timeDiff);
       void advancePhysics(double startTime, double endTime, std::set< std::pair<unsigned, unsigned> >* recordedCollisions);
       void testCollisions(std::set< std::pair<unsigned, unsigned> >* recordedCollisions);
+      void handleServerCollisions(std::set < std::pair<unsigned, unsigned> >* recordedCollisions);
+      void handleClientCollisions();
 
       void clearOldSavedGameStates();
+
+      void updateSpectatorCamera();
+      void updateHud(double timeDiff);
+
+      void doServerNetworking();
 
       void initialize();
       void initConstantValues();

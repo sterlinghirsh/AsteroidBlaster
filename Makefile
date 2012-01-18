@@ -113,6 +113,12 @@ runServer:
 runClient:
 	./${PROGNAME} -c localhost 5001
 
+testNetworking:
+	./${PROGNAME} -s 5001 &
+	./${PROGNAME} -c localhost 5001 &
+	./${PROGNAME} -c localhost 5001 
+	
+
 lib:
 	./lib.sh make
 

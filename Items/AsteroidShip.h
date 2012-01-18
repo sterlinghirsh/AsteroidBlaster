@@ -180,6 +180,7 @@ class AsteroidShip : public Object3D {
       Vector3D* getCameraOffset();
       void nextView();
 
+      void reset();
       void reInitialize();
       void randomizePosition();
       
@@ -311,7 +312,6 @@ class AsteroidShip : public Object3D {
       float targetRollSpeed;
 
       float maxSpeed; // Units per second
-      float maxBoostSpeed; // Units per second
       float frontX;
       float frontY;
       float frontZ;
@@ -384,6 +384,7 @@ class AsteroidShip : public Object3D {
       void doRespawn(double timeDiff);
       void doDeadStuff(double timeDiff);
       void addRespawnMessage();
+      void addKillMessage();
 
       void doRegenHealth(double timeDiff);
       void doBraking(double timeDiff);
