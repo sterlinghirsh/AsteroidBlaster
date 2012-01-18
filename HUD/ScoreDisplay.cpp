@@ -70,6 +70,9 @@ void ScoreDisplay::draw() {
    unsigned curRow = 0;
    for (; curShip != ships.end(); ++curShip) {
       ship = *curShip;
+      if (ship == gameState->ship) {
+         scoreDisplayTable->setHighlight(curRow);
+      }
       scoreDisplayTable->setCell(curRow, 0, ship->name);
       scoreDisplayTable->setCell(curRow, 1, ship->score);
       scoreDisplayTable->setCell(curRow, 2, ship->kills);
