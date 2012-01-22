@@ -226,7 +226,7 @@ void AsteroidShip::reset() {
  */
 void AsteroidShip::reInitialize() {
    // DEBUG
-   cout << "reinitializing!" << endl;
+   debugoutput << "reinitializing!" << endl;
    shakeAmount = 0;
    
    /* We store acceleration as scalars to multiply forward, right, and up by each tick. */
@@ -532,6 +532,8 @@ void AsteroidShip::addKillMessage() {
 
       // Add the kill message to the list.
       GameMessage::Add(killMessage.str(), 15, 5, gameState, true);
+   } else {
+      debugoutput << "Null killer!" << endl;
    }
 }
 
@@ -1738,8 +1740,9 @@ void AsteroidShip::lookAt(double lookAtX, double lookAtY, double lookAtZ,
 
 bool AsteroidShip::isRespawning() {
    //printf("Is it respawning? : %d\n", respawnTimer.isRunning && (respawnTimer.getTimeLeft() + spawnRate) > 0);
-   return respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0
-    && timeLeftToRespawn > 0;
+   return lives <= 0 || 
+    (respawnTimer.isRunning && respawnTimer.getTimeLeft() > 0
+     && timeLeftToRespawn > 0);
 }
 
 Shard* AsteroidShip::makeShard() {
@@ -1980,7 +1983,7 @@ bool AsteroidShip::saveDiff(const ast::Entity& old, ast::Entity* ent) {
          ent->mutable_weapon()->RemoveLast();
       else {
          changed = true;
-         debugoutput << "weap " << i << " changed.\n";
+         //debugoutput << "weap " << i << " changed.\n";
       }
    }
 
@@ -2563,6 +2566,9 @@ void AsteroidShip::zeroControls() {
 }
 
 void AsteroidShip::doDeadStuff(double timeDiff) {
+   if (timeDiff <= 0)
+      return;
+
    zeroControls();
    shakeAmount = 0;
 
@@ -2575,9 +2581,10 @@ void AsteroidShip::doDeadStuff(double timeDiff) {
    if ((gameState->gsm != ClientMode && !isRespawning()) ||
     (gameState->gsm == ClientMode && !deathAcknowledged)) {
       doRespawn(timeDiff);
+   } else {
+      // This is set in doRespawn()
+      timeLeftToRespawn = respawnTimer.getTimeLeft();
    }
-
-   timeLeftToRespawn = respawnTimer.getTimeLeft();
 
    if (this == gameState->ship && lives > 0) {
       addRespawnMessage();

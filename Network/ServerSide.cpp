@@ -122,7 +122,7 @@ void ServerSide::send(_ENetPeer* client, const ast::Frame& frame, bool reliable)
    }
 
    // DEBUG
-   debugoutput << "Plen: " << outgoing.length() << std::endl;
+   // debugoutput << "Plen: " << outgoing.length() << std::endl;
 
    ENetPacket* packet = enet_packet_create(outgoing.c_str(), outgoing.length(), 
     reliable ? ENET_PACKET_FLAG_RELIABLE : 0);
