@@ -595,6 +595,9 @@ void Asteroid3D::load(const ast::Entity& ent) {
 }
 
 void Asteroid3D::onRemove() {
+   if (!enableUI) {
+      return;
+   }
    // Get the modelview matrix.
    Matrix4 modelView;
    glPushMatrix();

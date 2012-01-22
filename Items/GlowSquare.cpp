@@ -58,7 +58,9 @@ GlowSquare::GlowSquare(Color* _color,
    midpoint3.midpoint(p3, p4);
    midpoint4.midpoint(p4, p1);
 
-   initDisplayList();
+   if (enableUI) {
+      initDisplayList();
+   }
 }
 
 GlowSquare::~GlowSquare() {

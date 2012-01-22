@@ -28,6 +28,7 @@ GameSettings* gameSettings;
 //int texSize = nextPowerOfTwo(std::max(gameSettings->GW, gameSettings->GH));
 int texSize = 512;
 unsigned long curFrame = 0;
+bool enableUI = true;
 bool drawPerspective = true;
 bool showBloomScreen = false;
 bool cameraFollow = true;

@@ -102,7 +102,6 @@ AsteroidShip::AsteroidShip(const GameState* _gameState) :
    hitY = 0;
    hitZ = 0;
 
-   spawnInvulnerable = true;
    drawShieldTime = 0.4; // Seconds
    justGotHit = 0;
    timeLeftToRespawn = -1;
@@ -1324,7 +1323,7 @@ bool AsteroidShip::isVulnerable() {
       return false;
    }
 
-   return (!(spawnInvulnerable ||
+   return (!(isRespawning() ||
       (isFiring && (currentWeapon == RAM_WEAPON_INDEX || gameState->godMode) 
        && weapons[RAM_WEAPON_INDEX]->isReady())));
 
@@ -1346,7 +1345,6 @@ void AsteroidShip::draw() {
    glColor4d(0, 0, 0, 1);
 
    if (drawSpawn && !(gameState->gsm == MenuMode)) {
-      spawnInvulnerable = true;
       if (timeLeftToRespawn < 1.5) {
          glPushMatrix();
          draw_spawn();
@@ -1355,7 +1353,6 @@ void AsteroidShip::draw() {
    } else if (isFirstSpawn && timeLeftToRespawn == -1) {
       timeLeftToRespawn = 1.5;
    } else {
-      spawnInvulnerable = false;
       draw_ship();
       if(drawHit) {
          draw_hitEffect();

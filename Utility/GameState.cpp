@@ -306,6 +306,8 @@ unsigned GameState::addNetworkPlayer(unsigned clientID) {
  * Initialize the displays once the textures have been loaded.
  */
 void GameState::addScreens() {
+   if (!enableUI)
+      return;
    printf("screens added\n");
    screens.push_back(Screen(0, 0, Texture::getTexture("fboTex")));
    screens.push_back(Screen(0, 1, Texture::getTexture("hblurTex")));

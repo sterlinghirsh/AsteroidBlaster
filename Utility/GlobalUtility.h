@@ -50,6 +50,7 @@ extern bool drawPerspective;
 extern bool showBloomScreen;
 extern bool cameraFollow;
 extern bool running;
+extern bool enableUI;
 extern GLUquadricObj *quadric;
 extern GLuint tractorBeamShader;
 extern GLuint fadeShader;

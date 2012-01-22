@@ -312,25 +312,30 @@ int main(int argc, char* argv[]) {
    // Decide what mode we were started in.
    if (argc == 1) {
       _gsm = SingleMode;
-   } else if (argc == 3) {
+   } else if (argc == 2) {
       std::string s(argv[1]);
       if (s.compare("-s") == 0) {
          _gsm = ServerMode;
+         enableUI = false; // Defaults to true.
          new (&debugoutput) std::ofstream("serverdebug.txt");
+         /*
          std::istringstream iss(argv[2]);
          iss >> portNumber;
+         */
       } else {
          badArugment = true;
       }
-   } else if (argc == 4) {
+   } else if (argc == 3) {
       std::string s(argv[1]);
       if (s.compare("-c") == 0) {
          _gsm = ClientMode;
          new (&debugoutput) std::ofstream("clientdebug.txt");
          std::string tempIP(argv[2]);
          ipAddress = tempIP;
+         /*
          std::string tempPort(argv[3]);
          portNumber = tempPort;
+         */
       } else {
          badArugment = true;
       }
@@ -339,7 +344,7 @@ int main(int argc, char* argv[]) {
    }
 
    if (badArugment) {
-      std::cerr << "Usage: AsteroidBlaster [-s <port number> | -c <ip> <port number>]" << std::endl;
+      std::cerr << "Usage: AsteroidBlaster [-s | -c <ip>]" << std::endl;
       return 1;
    }
    
@@ -368,23 +373,27 @@ int main(int argc, char* argv[]) {
    double timeDiff;
 
    // Initialize GL/SDL/glew/GLSL related things
-   init();
+   if (enableUI) {
+      init();
 
-   //get the quadradic up
-   quadric = gluNewQuadric();
-   //set the quadradic up
-   gluQuadricNormals(quadric, GLU_SMOOTH);
-   gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
+      //get the quadradic up
+      quadric = gluNewQuadric();
+      //set the quadradic up
+      gluQuadricNormals(quadric, GLU_SMOOTH);
+      gluQuadricTexture(quadric, GL_TRUE); // Create Texture Coords
 
 
-   // Load the textures, sounds, and music.
-   load();
+      // Load the textures, sounds, and music.
+      load();
+   }
    
    // Initialize the gameState
    gameState = new GameState(_gsm);
    
-   // Initialize the screens
-   gameState->addScreens();
+   if (enableUI) {
+      // Initialize the screens
+      gameState->addScreens();
+   }
    
    // Initialize the menus
    mainMenu = new MainMenu(gameState);
@@ -421,7 +430,10 @@ int main(int argc, char* argv[]) {
    inputManager->addReceiver(ipInput);
 
    //declare the event that will be reused
-   SDL_Event* event = new SDL_Event();
+   SDL_Event* event = NULL;
+   if (enableUI) {
+      event = new SDL_Event();
+   }
 
    updateDoubleTime();
    timeDiff = doubleTime() - lastUpdateTime;
@@ -509,23 +521,23 @@ int main(int argc, char* argv[]) {
          gameState->gameIsRunning = true;
          gameState->update(timeDiff);
          lastUpdateTime = doubleTime();
-
-         if (gameSettings->drawStereo) {
-            drawStereo_enabled = true;
-            stereo_eye_left = true;
-            gameState->draw();
-            stereo_eye_left = false;
-            gameState->draw();
-         } else {
-            gameState->draw();
+         if (enableUI) {
+            if (gameSettings->drawStereo) {
+               drawStereo_enabled = true;
+               stereo_eye_left = true;
+               gameState->draw();
+               stereo_eye_left = false;
+               gameState->draw();
+            } else {
+               gameState->draw();
+            }
          }
-
-         //chat->update(timeDiff);
-         //chat->draw();
       }
 
-      while (SDL_PollEvent(event)) {
-         inputManager->update(*event);
+      if (enableUI) {
+         while (SDL_PollEvent(event)) {
+            inputManager->update(*event);
+         }
       }
 
       nextFrameDelay = startTick + frameLength - SDL_GetTicks();

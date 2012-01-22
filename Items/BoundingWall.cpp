@@ -55,7 +55,11 @@ BoundingWall::BoundingWall(int _squareSize, int _wallSize, Color* _wallColor, in
             }
          }
       }
-      initDisplayList();
+
+      if (enableUI) {
+         initDisplayList();
+      }
+
       switch(wallID) {
       case WALL_TOP: normal.updateMagnitude(0, -1, 0); break;
       case WALL_BOTTOM: normal.updateMagnitude(0, 1, 0); break;

@@ -100,7 +100,6 @@ class AsteroidShip : public Object3D {
       float justGotHit;
       float drawShieldTime;
       float timeLeftToRespawn;
-      bool spawnInvulnerable;
       bool drawSpawn;
       int upOrDown;
       CollisionSphere* collisionSphere;

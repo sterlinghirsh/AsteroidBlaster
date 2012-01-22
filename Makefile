@@ -108,15 +108,15 @@ run:
 	./${PROGNAME}
 
 runServer:
-	./${PROGNAME} -s 5001
+	./${PROGNAME} -s
 
 runClient:
-	./${PROGNAME} -c localhost 5001
+	./${PROGNAME} -c localhost
 
 testNetworking:
-	./${PROGNAME} -s 5001 &
-	./${PROGNAME} -c localhost 5001 &
-	./${PROGNAME} -c localhost 5001 
+	./${PROGNAME} -s  &
+	./${PROGNAME} -c localhost  &
+	./${PROGNAME} -c localhost
 	
 
 lib:
@@ -126,16 +126,19 @@ libClean:
 	./lib.sh clean
 
 valgrind:
-	valgrind --leak-check=no --track-origins=yes --log-file=valgrindOutput ./${PROGNAME}
+	/sw/bin/valgrind --leak-check=no --track-origins=yes --log-file=valgrindOutput --dsymutil=yes ./${PROGNAME}
+
+valgrindServer:
+	/sw/bin/valgrind --leak-check=no --track-origins=yes --log-file=valgrindOutput --dsymutil=yes ./${PROGNAME} -s
 
 valgrindClient:
-	valgrind --leak-check=no --log-file=valgrindOutput ./${PROGNAME} -c localhost 5001
+	/sw/bin/valgrind --leak-check=no --log-file=valgrindOutput ./${PROGNAME} -c localhost
 
 gdb:
 	gdb ./${PROGNAME}
 
 clean:
-	rm -f *.o */*.o ${PROGNAME} ${PROGNAME}.dSYM Client Server
+	rm -rf *.o */*.o ${PROGNAME} ${PROGNAME}.dSYM Client Server
 
 gprof:
 	gprof ${PROGNAME} gmon.out | less

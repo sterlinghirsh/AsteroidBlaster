@@ -316,7 +316,7 @@ void Collision<AsteroidShip, BlasterShot>::handleCollision() {
    if (!(a->isVulnerable())) { return;}
    if (a->isRespawning()) { return;}
    int particlesToEmit = 30;
-   if (a != b->owner  && !(a->spawnInvulnerable)) {
+   if (a != b->owner) {
       if (a->gameState->gsm != ClientMode) {
          a->health -= b->getDamage(a);
          b->shouldRemove = true;
@@ -342,7 +342,7 @@ template<>
 void Collision<AsteroidShip, BeamShot>::handleCollision() {
    if (!(a->isVulnerable())) { return;}
    if (a->isRespawning()) { return;}
-   if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame  && !(a->spawnInvulnerable)) {
+   if (a != b->owner && !b->hitYet && curFrame - 1 <= b->firstFrame) {
       //TODO addInstantVelocity b->velocity->scalarMultiply(10)
       if (a->gameState->gsm != ClientMode) {
          a->health -= b->getDamage(a);
@@ -370,7 +370,7 @@ void Collision<AsteroidShip, ElectricityShot>::handleCollision() {
    const int numElecParticles = 1;
    double hitDistance = 0;
 
-   if (a != b->owner  && !(a->spawnInvulnerable)) {
+   if (a != b->owner) {
 
       /* Normal collision detection gets done in CollisionTypes.h. 
        * I can't think of an efficient way to do this, so I'm leaving it here
@@ -411,7 +411,7 @@ template<>
 void Collision<AsteroidShip, EnergyShot>::handleCollision() {
    if (!(a->isVulnerable())) { return;}
    if (a->isRespawning()) { return;}
-   if (a != b->owner  && !(a->spawnInvulnerable)) {
+   if (a != b->owner) {
       if (a->gameState->gsm != ClientMode) {
          a->health -= clamp(b->chargeTime, 0, 5) * 15.0;
          a->velocity->updateMagnitude(0, 0, 0);
