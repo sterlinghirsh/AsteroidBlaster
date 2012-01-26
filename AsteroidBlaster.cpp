@@ -106,8 +106,8 @@ void init() {
 
 
    //setup glew and GLSL
-#ifdef __APPLE__
-#else
+#ifndef __APPLE__
+#ifndef ATSCHOOL
    glewInit();
    if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader &&
          GL_EXT_geometry_shader4)
@@ -119,6 +119,7 @@ void init() {
    printf("GL multitexturing: %d\n", GL_ARB_multitexture);
    printf("GLEW multitexturing: %d\n", GLEW_ARB_multitexture);
 
+#endif
 #endif
 
 

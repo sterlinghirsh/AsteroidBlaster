@@ -12,13 +12,22 @@
 #include <time.h>
 #include <list>
 
+#ifdef ATSCHOOL
+   // To compile at school...
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glext.h>
+
+#else // Not at calpoly
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <OpenGL/glext.h>
 #else
 #include <GL/glew.h>
-#endif
+#endif // __APPLE__
+#endif // AT_CALPOLY
 
 #include "SDL.h"
 #include "SDL_ttf.h"

@@ -15,13 +15,7 @@
 #include <sstream>
 #include "SDL.h"
 #include <SDL_ttf.h>
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <OpenGL/glext.h>
-#else
-#include <GL/glew.h>
-#endif
+#include "Utility/GlobalUtility.h"
 
 static const SDL_Color SDL_WHITE = {255,255,255};
 static const SDL_Color SDL_GREY = {128,128,128};

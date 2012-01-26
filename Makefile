@@ -5,6 +5,15 @@ FMODLIB_PATH          = Libraries/fmod
 # Looks like you have to run this. Not sure why.
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
 DOEXPORT:=export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
+ATSCHOOL:=0
+ATSCHOOL:=1
+ATSCHOOL_CFLAGS:=
+
+PROTOBUF_CFLAGS:=
+PROTOBUF_LIBS:=
+PROTOC_BIN:=protoc
+
+CC:=ccache g++
 
 UNAME:=$(shell uname)
 ifeq ($(UNAME), Linux)
@@ -13,14 +22,30 @@ ifeq ($(UNAME), Linux)
 	# We have to use this version on linux since the -mt version doesn't exist.
    SDL_LIBS:=$(shell "sdl-config" "--libs") -lSDL_ttf -lSDL_image
    SDL_CFLAGS:=$(shell "sdl-config" "--cflags")
-   PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_image-1.2.10 
-
-   PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs $(FMODLIB_PATH)/libfmodex.so  -lGL -lGLU -lSDL -lGLEW -lpthread -Wl,-Bstatic -lenet -Wl,-Bdynamic
-   FMODLIB_NAME_RELEASE  = libfmodex.so
+	#FMODLIB_NAME_RELEASE:= libfmodex64.so
+	FMODLIB_NAME_RELEASE:= libfmodex.so
+	# school
    FMODLIB_NAME_LOGGING  = libfmodexL.so
-   INSTALL_NAME_TOOL_LINE = 
+ifeq ($(ATSCHOOL), 1)
+	# school
+	ENETINCLUDE:=Libraries/enet-1.3.3/.libs/libenet.a
+	GLEWINCLUDE:=
+	FMODLIB_NAME_RELEASE:= libfmodex64.so
+	PROTOBUF_LIBS:=-lz Libraries/protobuf-2.4.1/src/.libs/libprotobuf.a  Libraries/protobuf-2.4.1/src/.libs/libprotoc.a
+	ATSCHOOL_CFLAGS:=-DATSCHOOL -I Libraries/enet-1.3.3/include/ -I Libraries/protobuf-2.4.1/src/
+	PROTOC_BIN:=Libraries/protobuf-2.4.1/src/protoc
+	CC:=g++
+else
+	ENETINCLUDE:=-lenet
+	GLEWINCLUDE:=-lGLEW
    PROTOBUF_CFLAGS:=$(shell "pkg-config" "--cflags" "protobuf")
    PROTOBUF_LIBS:=-Wl,-Bstatic $(shell "pkg-config" "--libs" "protobuf") -Wl,-Bdynamic
+endif
+
+   PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_image-1.2.10 
+
+   PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs $(FMODLIB_PATH)/$(FMODLIB_NAME_RELEASE)  -lGL -lGLU -lSDL $(GLEWINCLUDE) -lpthread -Wl,-Bstatic $(ENETINCLUDE) -Wl,-Bdynamic
+   INSTALL_NAME_TOOL_LINE = 
 else
    # Mac stuff
    #SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--static-libs") -lSDL_image -lSDL_ttf 
@@ -39,16 +64,13 @@ else
    PROTOBUF_LIBS:=-L/usr/local/lib /usr/local/lib/libprotobuf.a -lz
 endif
 
-
-
 LDFLAGS:=$(PLATFORMSPECIFICLDFLAGS) $(SDL_LIBS) $(PROTOBUF_LIBS) -g -O3 -Wall -Werror
 # -I. -iquote makes it so quoted #includes look in ./
 # -Wall makes warnings appear
 # -c makes .o files
 
 
-CFLAGS:=$(PLATFORMSPECIFICCFLAGS) -I. -I Libraries/ -c $(SDL_CFLAGS) $(PROTOBUF_CFLAGS) -g -O3 -Wall -Werror
-CC:=ccache g++
+CFLAGS:=$(PLATFORMSPECIFICCFLAGS) -I. -I Libraries/ -c $(SDL_CFLAGS) $(PROTOBUF_CFLAGS) -g -O3 -Wall -Werror $(ATSCHOOL_CFLAGS)
 
 PROGNAME:=AsteroidBlaster
 OSX_APP_NAME:=$(PROGNAME).app
@@ -101,7 +123,7 @@ AsteroidBlaster.o: AsteroidBlaster.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
 Network/gamestate.pb.h: Network/gamestate.proto
-	protoc --cpp_out=./  Network/gamestate.proto
+	$(PROTOC_BIN) --cpp_out=./  Network/gamestate.proto
 
 
 run:
