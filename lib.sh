@@ -23,23 +23,6 @@ then
    echo "Done!"
    cd ..
    
-   #SDL_mixer--------------------
-   echo "SDL_mixer"
-   echo "Unzipping.."
-   gunzip SDL_mixer-1.2.11.tar.gz
-   echo "Extracting.."
-   tar -xf SDL_mixer-1.2.11.tar
-   #deleting gunziped file
-   rm SDL_mixer-1.2.11.tar
-   git checkout -- SDL_mixer-1.2.11.tar.gz
-   cd SDL_mixer-1.2.11
-   echo "Configuring.."
-   ./configure || exit
-   echo "Making.."
-   make -j 3 || exit
-   echo "Done!"
-   cd ..
-   
    #SDL_image--------------------
    echo "SDL_image"
    echo "Unzipping.."
@@ -79,10 +62,6 @@ then
    #SDL_ttf--------------------
    echo "Cleaning SDL_ttf..."
    rm -rf SDL_ttf-2.0.10
-   
-   #SDL_mixer--------------------
-   echo "Cleaning SDL_mixer..."
-   rm -rf SDL_mixer-1.2.11
    
    #SDL_image--------------------
    echo "Cleaning SDL_image..."
