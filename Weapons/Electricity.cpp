@@ -12,7 +12,8 @@
 #include "Text/GameMessage.h"
 #include "Network/gamestate.pb.h"
 
-Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index) {
+Electricity::Electricity(AsteroidShip* owner, int _index) : Weapon(owner, _index),
+ timeStartedFiring(0) {
    ELECTRICITY_WEAPON_INDEX = index;
    shotsFired = 0;
    shotsPerSec = 10;

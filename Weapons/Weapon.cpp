@@ -20,8 +20,9 @@ extern std::ofstream debugoutput;
 /**
  * Initialize the ship and timeLastFired.
  */
-Weapon::Weapon(AsteroidShip* owner, int _index)
-: ship(owner), index(_index), timeLastFired(0), icon("ZoeRedEyes") {
+Weapon::Weapon(AsteroidShip* owner, int _index) :
+ ship(owner), index(_index), timeLastFired(0), damage(0), 
+ name("UnnamedWeapon"), icon("ZoeRedEyes") {
    activationTimer.setGameState(owner->gameState);
    level = 1;
    levelMax = 5;

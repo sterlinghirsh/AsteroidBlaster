@@ -72,7 +72,9 @@ GameState::GameState(GameStateMode _gsm) :
  gsm(_gsm),
  levelTimer(this),
  gameOverTimer(this),
- scoreDisplay(this) {
+ justLoadedFirstFrame(false),
+ scoreDisplay(this)
+{
    initialize();
 }
 
@@ -2471,6 +2473,7 @@ void GameState::handleServerCollisions(std::set < std::pair<unsigned, unsigned> 
    savedCollisionMessages[curGameStateId] = curFrameCollisions;
    std::set< std::pair<unsigned, unsigned> >::iterator collisionIter;
          
+   // TODO: include the gamestateid in each collision.
    for (collisionIter = recordedCollisions->begin(); collisionIter !=
     recordedCollisions->end(); collisionIter++) {
       // Every 2 is a collision.
@@ -2533,13 +2536,13 @@ void GameState::doServerNetworking() {
    ast::Frame frame;
    bool sendReliable;
 
-   for (; clientIter != clients.end(); clientIter++) {
+   while (clientIter != clients.end()) {
       sendReliable = false;
       if (clientIter->second == NULL) {
-         clients.erase(clientIter);
+         clients.erase(clientIter++);
       } else if (!clientIter->second->connected) {
          delete clientIter->second;
-         clients.erase(clientIter);
+         clients.erase(clientIter++);
       } else {
          ClientInfo* client = clientIter->second;
 
@@ -2562,6 +2565,7 @@ void GameState::doServerNetworking() {
          serverSide->send(client->client, frame, sendReliable);
          
          frame.Clear();
+         clientIter++;
       }
    }
 

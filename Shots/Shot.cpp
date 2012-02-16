@@ -19,6 +19,7 @@ materialStruct ShotMaterial = {
 Shot::Shot(Point3D& posIn, Vector3D dirIn, int _weaponIndex,
  AsteroidShip* const ownerIn, const GameState* _gameState) : 
  Object3D(_gameState),
+ lifetime(0),
  owner(ownerIn),
  weaponIndex(_weaponIndex) {
    *position = posIn;

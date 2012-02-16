@@ -187,7 +187,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
                   while (weapNum != startWeapNum) {
                      weapon = a->getWeapon(weapNum);
                      if (weapon == NULL) {
-                        std::cerr << "Null weapon " << weapNum << " in Ship/Shard collision." << std::endl;;
+                        std::cerr << "Null weapon " << weapNum << " in Ship/Shard collision part 1." << std::endl;;
                         break;
                      }
                      
@@ -206,7 +206,7 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
                   weapNum = b->weapNum;
                   weapon = a->getWeapon(weapNum);
                   if (weapon == NULL) {
-                     std::cerr << "Null weapon " << weapNum << " in Ship/Shard collision." << std::endl;;
+                     std::cerr << "Null weapon " << weapNum << " in Ship/Shard collision part 2." << std::endl;;
                   } else if (!weapon->purchased) {
                      weapon->purchased = true;
                   } else if (weapon->level < weapon->levelMax) {
@@ -220,12 +220,15 @@ void Collision<AsteroidShip, Shard>::handleCollision() {
 
             if (a == a->gameState->ship) {
                weapon = a->getWeapon(weapNum);
-               if (weapon != NULL) {
-                  if (!weapon->purchased) {
-                     a->gameState->addWeaponUnlockMessage(weapon);
-                  } else if (weapon->level < weapon->levelMax) {
-                     a->gameState->addWeaponUnlockMessage(weapon);
-                  }
+               if (weapon == NULL) {
+                  std::cerr << "Null weapon " << weapNum << " in Ship/Shard collision part 3." << std::endl;;
+               }
+               assert(weapon != NULL);
+               
+               if (!weapon->purchased) {
+                  a->gameState->addWeaponUnlockMessage(weapon);
+               } else if (weapon->level < weapon->levelMax) {
+                  a->gameState->addWeaponUnlockMessage(weapon);
                }
             }
             // If we get here, oh well.

@@ -25,7 +25,8 @@ else
    # Mac stuff
    #SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--static-libs") -lSDL_image -lSDL_ttf 
    #SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--static-libs") /sw/lib/libSDL_image.a /sw/lib/libSDL_ttf.a /sw/lib/libfreetype.a
-   SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--static-libs") /sw/lib/libSDL_image.a /sw/lib/libSDL_ttf.a -lfreetype
+   #SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--static-libs") /sw/lib/libSDL_image.a /sw/lib/libSDL_ttf.a -lfreetype
+   SDL_LIBS:=$(shell "/sw/bin/sdl-config" "--static-libs") -lSDL_image /sw/lib/libSDL_ttf.a -lfreetype
    # We need to handle copying the freetype business.
    SDL_CFLAGS:=$(shell "/sw/bin/sdl-config" "--cflags")
    #SDL_LIBS:=-framework SDL -framework SDL_ttf -framework SDL_image
