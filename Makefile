@@ -6,7 +6,7 @@ FMODLIB_PATH          = Libraries/fmod
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
 DOEXPORT:=export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
 ATSCHOOL:=0
-ATSCHOOL:=1
+#ATSCHOOL:=1
 ATSCHOOL_CFLAGS:=
 
 PROTOBUF_CFLAGS:=
@@ -22,8 +22,8 @@ ifeq ($(UNAME), Linux)
 	# We have to use this version on linux since the -mt version doesn't exist.
    SDL_LIBS:=$(shell "sdl-config" "--libs") -lSDL_ttf -lSDL_image
    SDL_CFLAGS:=$(shell "sdl-config" "--cflags")
-	#FMODLIB_NAME_RELEASE:= libfmodex64.so
-	FMODLIB_NAME_RELEASE:= libfmodex.so
+	FMODLIB_NAME_RELEASE:= libfmodex64.so
+	#FMODLIB_NAME_RELEASE:= libfmodex.so
 	# school
    FMODLIB_NAME_LOGGING  = libfmodexL.so
 ifeq ($(ATSCHOOL), 1)
@@ -42,7 +42,7 @@ else
    PROTOBUF_LIBS:=-Wl,-Bstatic $(shell "pkg-config" "--libs" "protobuf") -Wl,-Bdynamic
 endif
 
-   PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_image-1.2.10 
+   PLATFORMSPECIFICCFLAGS=-I./Libraries/SDL_ttf-2.0.10 -I./Libraries/SDL_image-1.2.12
 
    PLATFORMSPECIFICLDFLAGS= -L./Libraries/SDL_ttf-2.0.10/.libs -L./Libraries/SDL_image-1.2.10/.libs -Wl,-rpath=./Libraries/glew-1.5.8/lib -Wl,-rpath=./Libraries/SDL_ttf-2.0.10/.libs -Wl,-rpath=./Libraries/SDL_image-1.2.10/.libs $(FMODLIB_PATH)/$(FMODLIB_NAME_RELEASE)  -lGL -lGLU -lSDL $(GLEWINCLUDE) -lpthread -Wl,-Bstatic $(ENETINCLUDE) -Wl,-Bdynamic
    INSTALL_NAME_TOOL_LINE = 

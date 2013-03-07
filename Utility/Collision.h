@@ -14,6 +14,7 @@
 struct CollisionBase {
    double squaredDistance;
    CollisionBase() : squaredDistance(0) {}
+   virtual ~CollisionBase() {}
    CollisionBase(double _squaredDistance) : squaredDistance(_squaredDistance) {}
    virtual CollisionBase* tryExecute(Drawable* _a, Drawable* _b) =0;
    virtual void handleCollision() = 0;

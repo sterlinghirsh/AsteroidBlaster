@@ -217,7 +217,7 @@ void ShootingAI::chooseWeapon(Object3D* target) {
    double weaponWeights[NUMBER_OF_WEAPONS];
 
    // States whether or not the chosen target is a ship
-   bool isAShip = false;
+   //bool isAShip = false;
 
    // Only consider any weapon if it's purchased & has ammo & is cooled down.
    bool considerTractor = (ship->weapons[TRACTOR_WEAPON_INDEX]->purchased && (ship->getWeapon(TRACTOR_WEAPON_INDEX)->curAmmo != 0));
@@ -242,7 +242,7 @@ void ShootingAI::chooseWeapon(Object3D* target) {
     */
 
    if (target->type == TYPE_ASTEROIDSHIP) {
-      isAShip = true;
+      //isAShip = true;
    } else if (considerTractor && target->type == TYPE_SHARD) {
       // If the target is a shard, only ever choose the tractor beam.
       selectWeaponUpdateChosen(TRACTOR_WEAPON_INDEX);

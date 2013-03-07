@@ -30,6 +30,8 @@ class Vector3D {
       Vector3D(const Vector3D* v)
        : x(v->x), y(v->y), z(v->z) {}
 
+      virtual ~Vector3D() {}
+
       inline double dot(const Vector3D& rhs) {
          return (x * rhs.x) + (y * rhs.y) + (z * rhs.z);
       }

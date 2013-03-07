@@ -22,7 +22,7 @@ class BoundingSpace {
       double xMax, xMin, yMax, yMin, zMax, zMin;
 
       BoundingSpace(double extentIn, double x, double y, double z, const GameState* _gameState);
-      ~BoundingSpace();
+      virtual ~BoundingSpace();
       virtual void constrain(Drawable* item);
       void draw();
       void drawGlow();

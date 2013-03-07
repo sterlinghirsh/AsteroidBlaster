@@ -60,9 +60,10 @@ void Texture::Add(std::string file, std::string keyName) {
 
    /* Create a 32-bit surface with the bytes of each pixel in R,G,B,A order,       
    as expected by OpenGL for textures */    
-   Uint32 rmask, gmask, bmask, amask;    
+   //Uint32 rmask, gmask, bmask, amask;    
    /* SDL interprets each pixel as a 32-bit number, so our masks must depend       
    on the endianness (byte order) of the machine */
+   /*
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN    
    rmask = 0xff000000;
    gmask = 0x00ff0000;
@@ -74,6 +75,7 @@ void Texture::Add(std::string file, std::string keyName) {
    bmask = 0x00ff0000;
    amask = 0xff000000;
 #endif
+   */
 
    GLenum texture_format = GL_RGBA;
    GLint  nOfColors;

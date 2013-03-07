@@ -35,7 +35,6 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
    // Load just the rotation matrix.
    static Matrix4 modelViewMatrix;
    const float ringWidth = (zoomLevel / 80) / displaySize;
-   double radius2D; // Radius when an object is projected onto the forward-right plane of the ship.
    const float scaleFactor = 1 / zoomLevel;
    std::list<Drawable*>::iterator listIter;
    static Point3D objectPosition;
@@ -73,7 +72,6 @@ void Minimap::drawLines(std::list<Drawable*>* objects) {
             objectPosition = *(*listIter)->position; // Get the position.
             positionVector.movePoint(objectPosition, -1); // Center on the ship
             objectPosition = modelViewMatrix * (objectPosition); // Rotate about the ship
-            radius2D = distance2D(objectPosition.x, objectPosition.z);
 
             if ((*listIter)->type == TYPE_ASTEROID3D) {
                glColor3f(1, 0, 0);

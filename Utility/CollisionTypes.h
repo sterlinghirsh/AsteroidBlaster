@@ -21,6 +21,7 @@ class CollisionType {
       // Axis-aligned bounding box.
       Point3D minPosition;
       Point3D maxPosition;
+      virtual ~CollisionType() {}
       
       virtual bool collides(CollisionType* obj) {
          printf("Un-Overridden CollisionType::collides.\n");
