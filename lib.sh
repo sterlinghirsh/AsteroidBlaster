@@ -26,13 +26,13 @@ then
    #SDL_image--------------------
    echo "SDL_image"
    echo "Unzipping.."
-   gunzip SDL_image-1.2.10.tar.gz
+   gunzip SDL_image-1.2.12.tar.gz
    echo "Extracting.."
-   tar -xf SDL_image-1.2.10.tar
+   tar -xf SDL_image-1.2.12.tar
    #deleting gunziped file
-   rm SDL_image-1.2.10.tar
-   git checkout -- SDL_image-1.2.10.tar.gz
-   cd SDL_image-1.2.10
+   rm SDL_image-1.2.12.tar
+   git checkout -- SDL_image-1.2.12.tar.gz
+   cd SDL_image-1.2.12
    echo "Configuring.."
    ./configure || exit
    echo "Making.."
