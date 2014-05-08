@@ -504,11 +504,11 @@ GLuint setShaders(char * vert, char * frag) {
    glAttachShader(pro,v);
    glAttachShader(pro,f);
 
-   glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
-   glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
+   //glProgramParameteriEXT(pro,GL_GEOMETRY_INPUT_TYPE_EXT,GL_LINES);
+   //glProgramParameteriEXT(pro,GL_GEOMETRY_OUTPUT_TYPE_EXT,GL_LINE_STRIP);
    int temp;
    glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT,&temp);
-   glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
+   //glProgramParameteriEXT(pro,GL_GEOMETRY_VERTICES_OUT_EXT,temp);
 
    glLinkProgram(pro);
    printProgramLog(pro);
